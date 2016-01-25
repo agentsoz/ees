@@ -1,0 +1,158 @@
+<!--
+  #%L
+  BDI-ABM Integration Package
+  %%
+  Copyright (C) 2014 - 2015 by its authors. See AUTHORS file.
+  %%
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as
+  published by the Free Software Foundation, either version 3 of the
+  License, or (at your option) any later version.
+  
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Lesser Public License for more details.
+  
+  You should have received a copy of the GNU General Lesser Public
+  License along with this program.  If not, see
+  <http://www.gnu.org/licenses/lgpl-3.0.html>.
+  #L%
+  -->
+<!-- 
+	The following data relates to defining regions etc for the town
+
+	The geography file contains a list of locations. 
+	These can be of the types:
+		s = school
+		e = evacuation point
+		c = control point
+
+	Schools are used for residents who have children. They will travel to
+	one of the schools before evacuating.
+
+	TODO check that zero and 2+ schools work correctly
+
+	Evacuation points are where residents will evacuate too.
+
+	Control points are used to define evacuation routes.
+
+	Locations require a coordinate (lat, long).
+	They should also refer to a link id that matches a link in the
+	MATSim road network.
+	TODO need to know why/ if this is required and how to calculate it.
+
+	The town is divided into "regions".
+	TODO check if zero regions works.
+	Each region should have a route defined to each evac point.
+
+	Routes are defined by a sequence of control points.
+
+-->
+<geography>
+<location 
+	name = "school"
+	long="142.5226625"
+	lat = "-37.1377317"
+	id = "336"
+	type = "s"
+/>
+<location 
+	name = "evacPoint"
+	long="144.4939473"
+	lat = "-38.2824994"
+	id = "290"
+	type = "e"
+/>
+<location 
+	name = "evacPoint01"
+	long="142.756591"
+	lat = "-37.060451"
+	id = "1082"
+	type = "e"
+/>
+<location 
+	name = "evacPoint02"
+	long="142.765861"
+	lat = "-37.301299"
+	id = "876"
+	type = "e"
+/>
+<location 
+	name = "evacPoint03"
+	long="142.5285791"
+	lat = "-37.2999754"
+	id = "1442"
+	type = "e"
+/>
+<location 
+	name = "controlPoint01"
+	long="142.5394549"
+	lat = "-37.1283552"
+	id = "1103"
+	type = "c"
+/>
+<location 
+	name = "controlPoint02"
+	long="142.5199622"
+	lat = "-37.1364573"
+	id = "1210"
+	type = "c"
+/>
+<location 
+	name = "controlPoint03"
+	long="142.542254"
+	lat = "-37.1963813"
+	id = "1438"
+	type = "c"
+/>
+<location 
+   name = "controlPoint04"
+   long="142.5375015"
+   lat = "-37.1687214"
+   id = "1435"
+   type = "c"
+/>
+<location 
+   name = "controlPoint05"
+   long="142.5305"
+   lat = "-37.15981"
+   id = "1435"
+   type = "c"
+/>
+<location 
+   name = "southCentre"
+   long = "142.5217"
+   lat = "-37.15543"
+   id = "1435"
+   type = "c"
+/>
+
+<relief_centre>
+	<data
+		name = "Stawell"
+		location = "evacPoint01"
+		capacity = "300"
+	/>
+</relief_centre>
+
+<relief_centre>
+	<data
+		name = "Ararat"
+		location = "evacPoint02"
+		capacity = "500"
+	/>
+</relief_centre>
+
+<relief_centre>
+	<data
+		name = "Hamilton"
+		location = "evacPoint03"
+		capacity = "500"
+	/>
+</relief_centre>
+
+
+</geography>
+
+

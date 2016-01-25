@@ -1,0 +1,48 @@
+/*******************************************************************
+ * Created by the JDE: Thu Jun 11 19:23:38 AEST 2015
+ * WARNING: If you are editing this file from outside the JDE, you
+ * should make sure to load the changes back into the JDE by setting
+ * the preference "Check for outside changes..." in the "Text Editor"
+ * preference tab or reload the component manually.
+ * Otherwise you will lose your changes next time the file is generated.
+ *******************************************************************/
+
+package io.github.agentsoz.bushfire.jack.plans;
+
+import io.github.agentsoz.bushfire.jack.agents.BasicResident;
+import io.github.agentsoz.bushfire.jack.events.EvacHouse;
+import io.github.agentsoz.bushfire.jack.events.EvacMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * @author Sewwandi Perera
+ */
+public plan EvacMessageP extends Plan {
+    #handles event EvacMessage h_EvacMessage;
+    #posts event EvacHouse p_EvacHouse;
+    #uses interface BasicResident enc;
+    Logger logger = LoggerFactory.getLogger("");
+    
+    static boolean relevant(EvacMessage ev)
+    {
+        return true;
+    }
+    
+    context()
+    {
+        true;
+    }
+    
+    #reasoning method
+    body()
+    {
+        logger.trace("Agent " + enc.getBasename() + " : EvacMessageP is initiated");
+        enc.evacRoute = h_EvacMessage.route;
+        enc.waypointNames = h_EvacMessage.waypointNames;
+        @subtask(p_EvacHouse.post());
+    }
+    
+
+}
+

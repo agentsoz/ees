@@ -1,0 +1,98 @@
+/*******************************************************************
+ * Created by the JDE: Thu Jun 11 19:23:37 AEST 2015
+ * WARNING: If you are editing this file from outside the JDE, you
+ * should make sure to load the changes back into the JDE by setting
+ * the preference "Check for outside changes..." in the "Text Editor"
+ * preference tab or reload the component manually.
+ * Otherwise you will lose your changes next time the file is generated.
+ *******************************************************************/
+
+package io.github.agentsoz.bushfire.jack.plans;
+
+import io.github.agentsoz.bushfire.bdi.BDIConstants;
+import io.github.agentsoz.bushfire.jack.agents.EvacController;
+import io.github.agentsoz.bushfire.jack.data.Areas;
+import io.github.agentsoz.bushfire.jack.data.Fire;
+import io.github.agentsoz.bushfire.jack.data.Shelters;
+import io.github.agentsoz.bushfire.jack.data.Sheltor_Vectors;
+import io.github.agentsoz.bushfire.jack.events.Calculate_sheltersG;
+import java.awt.Polygon;
+import java.awt.geom.Line2D;
+import java.awt.geom.Rectangle2D;
+import java.awt.geom.Rectangle2D.Double;
+import java.util.ArrayList;
+import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * @author Sewwandi Perera
+ */
+public plan Calc_sheltersP extends Plan {
+
+    #handles event Calculate_sheltersG h_Calculate_sheltersG;
+    #uses interface EvacController enc;
+    #uses data Sheltor_Vectors sheltorVectors;
+    #uses data Shelters shelters;
+    #uses data Fire fire;
+    #uses data Areas areas;
+    final Logger logger = LoggerFactory.getLogger("");
+    
+    static boolean relevant(Calculate_sheltersG ev)
+    {
+        return true;
+    }
+    
+    context()
+    {
+        true;
+    }
+    
+    #reasoning method
+    body()
+    {
+        logger.trace("Calc_sheltersP is initiated for area " + h_Calculate_sheltersG.areaName);
+        
+        //Query and get all shelters configured in the application
+        List shelterNames = shelters.getAllShelterNames();
+        
+        //Collect fire information
+        Polygon fireArea = fire.getLatestFirePolygon();
+        double safeDistance = ((EvacController)getAgent()).bdiConnector.getSafeDistanceInMeters();
+        Rectangle2D boundingBox = fireArea.getBounds2D();
+        Rectangle2D safeBoundary = new Rectangle2D.Double(
+                        boundingBox.getX() - safeDistance,
+                        boundingBox.getY() - safeDistance,
+                        boundingBox.getWidth() + 2*safeDistance,
+                        boundingBox.getHeight() + 2*safeDistance);     
+        
+        Line2D path;
+        List selectedShelters = new ArrayList();
+        
+        for(int i = 0 ; i < shelterNames.size() ; i++){
+            if(((String)shelterNames.get(i)).startsWith(enc.bdiConnector.getNewShelterNamePrefix())){
+                //This is used to skip the newly added shelters during previous iterations
+                continue;
+            }
+            
+            path = sheltorVectors.getPathToShelter(h_Calculate_sheltersG.areaName, (String)shelterNames.get(i));
+            
+            //Check if the path intersects the fire polygon
+            if(path.intersects(boundingBox)){
+                logger.debug("Path to " + shelterNames.get(i) + " from " + h_Calculate_sheltersG.areaName + " intersects fire");
+            } else {
+                if(path.intersects(safeBoundary)){
+                    logger.debug("Path to " + shelterNames.get(i) + " from " + h_Calculate_sheltersG.areaName + " is not within safe boundary");
+                }else {
+                    logger.debug("Path to " + shelterNames.get(i) + " from " + h_Calculate_sheltersG.areaName + " is within safe boundary");
+                    selectedShelters.add((String)shelterNames.get(i));
+                }                
+            }                        
+        }
+        
+        areas.addViableSheltersToArea(selectedShelters, h_Calculate_sheltersG.areaName, enc.getCurrentTime());
+    }
+    
+
+}
+

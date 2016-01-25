@@ -1,0 +1,83 @@
+This folder contains a number of UML diagrams generated from the Violet UML Editor.
+
+This can be downloaded (free) here.
+http://alexdp.free.fr/violetumleditor/page.php
+
+==================================
+
+BushFireApplicationComponents.class
+
+This shows all of the high level components of the bushfire application and the MATSim components they connect with. It combines both BushFireApplication-Matsim.class and BushFireApplicationMain.class.
+
+See BushFireApplicationMain.class and BushFireApplication-Matsim.class
+
+==================================
+
+BushFireApplication-Matsim.class
+
+This shows the high level components of MATSim that are used (or extended) by the bushfire application.
+
+This is an attempt to try to untangle the cross-referencing that occurs within the MATSim simulation.
+
+BushfireMain instantiates the MATSimModel, ABMServermodel and the MATSimAgentManager and establishes the links between these objects. The MATSimModel instantiates a controler which runs the simulation.
+
+The doSimStep method within the BDIMATSimWithinDayEngine provides the point at which control is passed from MATSim back to the BDI component of the simulation.
+
+
+==================================
+
+BushFireApplicationMain.class
+
+This diagram shows the classes associated with the BushfireApplication and BushfireMain classes.
+
+BushfireMain provides a wrapper around the application and instantiates the high level components. This includes the bushfire application itself, the MATSim model, and the data server that is used for communication between the components of the simulation.
+
+This also shows how the BushfireApplication builds on the BDI-ABM integration layer as it ultimately derives from the BDIServerInterface.
+
+==================================
+
+BushfireGeography.class
+
+This illustrates how the geography is defined for the bushfire application. Refer to the geography xml file for a given scenario to see how to define the data for a scenario.
+
+None of these classes directly link to others. Instead, they use the name attributes (Strings) to establish references.
+
+Each town is divided into regions that can be evacuated separately. All residents in a region will evacuate at the same time to the same relief centre, however regions may be evacuated at different times and to different relief centres.
+
+The scenario requires at least one region and one relief centre, however, there could be many regions and many relief centres. 
+
+Each resident belongs to (lives in) one region.
+
+There should be at least one route between each region and relief centre.
+
+Routes are defined as a sequence of way points, which implicitly includes the relief centre as the final way point. If no route exists between a region and a relief centre, an implicit route exists comprising the relief centre as its only way point.
+
+Way points and relief centres must all refer (by name) to defined locations. A location object provides the link between the application geography and the MATSim road network. Each location must reference a MATSim "link ID".
+
+==================================
+
+evacPlanChooser.activity
+
+This describes the steps involved in intercepting the JACK meta-plan and proding plan choices and information to the user through the visualiser.
+
+
+==================================
+
+evacuationOverview.activity
+
+This describes the basic functionality of the simulation.
+
+After initialisation, MATSim has primary control. It provides time based updates which are intercepted by the data server and used to poll the fire module for fire updates. Internal to MATSim, the BDI and ABM components of the resident agents alternate making decisions about where to go at the macro level and moving around the road network to arrive at those destinations.
+
+==================================
+
+ResidentAgent.seq
+
+The behaviour of the residents is split between the BDI and AMB (MATSim) components of the simulation. This diagram shows how a resident responds to an evacuation instruction.
+
+The BDI component makes decisions about what the resident will do in response to the evacuation. Once a resident decides to move to another location, the actual movement within the road network is controlled by the MATSim component.
+
+
+
+
+

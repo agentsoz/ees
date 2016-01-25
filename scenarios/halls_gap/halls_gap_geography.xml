@@ -1,0 +1,322 @@
+<!--
+  #%L
+  BDI-ABM Integration Package
+  %%
+  Copyright (C) 2014 - 2015 by its authors. See AUTHORS file.
+  %%
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as
+  published by the Free Software Foundation, either version 3 of the
+  License, or (at your option) any later version.
+  
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Lesser Public License for more details.
+  
+  You should have received a copy of the GNU General Lesser Public
+  License along with this program.  If not, see
+  <http://www.gnu.org/licenses/lgpl-3.0.html>.
+  #L%
+  -->
+<!-- 
+	The following data relates to defining regions etc for the town
+
+	The geography file contains a list of locations. 
+	These can be of the types:
+		s = school
+		e = evacuation point
+		c = control point
+
+	Schools are used for residents who have children. They will travel to
+	one of the schools before evacuating.
+
+	TODO check that zero and 2+ schools work correctly
+
+	Evacuation points are where residents will evacuate too.
+
+	Control points are used to define evacuation routes.
+
+	Locations require a coordinate (easting, northing).
+
+	The town is divided into "regions".
+	If no regions are defined, the software assumes the whole area is one region.
+
+	Routes are defined by a sequence of control points.
+	If no routes are defined, a route with a single waypoint (the relief centre) is created for each region.
+
+-->
+<geography>
+<location 
+	name = "school"
+	easting="634810.1718"
+	northing = "5888786.360"
+	type = "s"
+/>
+<location 
+	name = "Stawell"
+	easting="657599.9547"
+	northing = "5897382.907"
+	type = "e"
+/>
+<location 
+	name = "Ararat"
+	easting="670391.7117"
+	northing = "5871742.627"
+	type = "e"
+/>
+<location 
+	name = "Hamilton"
+	easting="591193.9517"
+	northing = "5822925.616"
+	type = "e"
+/>
+<location 
+	name = "Pamonal"
+	easting="642820.4009"
+	northing = "5882640.997"
+	type = "c"
+/>
+
+<location 
+	name = "Moyston"
+	easting="656483.9238"
+	northing = "5870248.443"
+	type = "c"
+/>
+
+<location 
+	name = "Dunkeld"
+	easting="618637.4898"
+	northing = "5832314.904"
+	type = "c"
+/>
+
+<route>
+   <data
+      name = "FastRouteToStawellFromCentral"
+      region = "Central"
+      shelter = "ShelterAtStawell"
+      description = "FAST"
+   />
+   
+   <path>
+	   <waypoint 
+	      name="Stawell"
+	   />
+   </path>   
+</route>
+
+<route>
+   <data
+      name = "SafeRouteToStawellFromCentral"
+      region = "Central"
+      shelter = "ShelterAtStawell"
+      description = "SAFE"
+   />
+   
+   <path>
+   		<waypoint 
+	      name="Pamonal"
+	   />
+	   <waypoint 
+	      name="Stawell"
+	   />
+   </path>   
+</route>
+
+<route>
+   <data
+      name = "SafeRouteToAraratFromCentral"
+      region = "Central"
+      shelter = "ShelterAtArarat"
+      description = "SAFE"
+   />
+   
+   <path>
+	   <waypoint 
+	      name="Pamonal"
+	   />
+	   <waypoint 
+	      name="Moyston"
+	   />
+	   <waypoint 
+	      name="Ararat"
+	   />
+   </path>   
+</route>
+
+<route>
+   <data
+      name = "SafeRouteToHamiltonFromCentral"
+      region = "Central"
+      shelter = "ShelterAtHamilton"
+      description = "SAFE"
+   />
+   <path>
+	   <waypoint 
+	      name="Dunkeld"
+	   />
+	   <waypoint 
+	      name="Hamilton"
+	   />
+   </path>   
+</route>
+
+<route>
+   <data
+      name = "FastRouteToHamiltonFromCentral"
+      region = "Central"
+      shelter = "ShelterAtHamilton"
+      description = "FAST"
+   />
+   <path>
+	   <waypoint 
+	      name="Hamilton"
+	   />
+   </path>   
+</route>
+
+<route>
+   <data
+      name = "FastRouteToAraratFromSouth"
+      region = "South"
+      shelter = "ShelterAtArarat"
+      description = "SAFE"
+   />
+   
+   <path>
+	   <waypoint 
+	      name="Pamonal"
+	   />
+	   <waypoint 
+	      name="Ararat"
+	   />
+   </path>   
+</route>
+
+<route>
+   <data
+      name = "CustomRouteToHamiltonFromSouth"
+      region = "South"
+      shelter = "ShelterAtHamilton"
+      description = "CUSTOM"
+   />
+   <path>
+	   <waypoint 
+	      name="Dunkeld"
+	   />
+	   <waypoint 
+	      name="Hamilton"
+	   />
+   </path>   
+</route>
+
+<region>
+	<data
+		name = "Central"
+      	easting="634908"
+      	northing="5888580"
+      	population="100"
+	/>
+	<polygon>
+		<vertex 
+			easting="634380.0729"
+			northing = "5888315.7473"
+		/>
+		<vertex 
+			easting="634380.0729"
+			northing = "5889010"
+		/>
+		<vertex 
+			easting="635544.4606"
+			northing = "5889010"
+		/>
+		<vertex 
+			easting="635544.4606"
+			northing = "5888315.7473"
+		/>
+	</polygon>	
+</region>
+
+<region>
+	<data
+		name = "South"
+      	easting="635241"
+      	northing="5887794"
+      	population="275"
+	/>
+	<polygon>
+		<vertex 
+			easting="634119"
+			northing = "5887023"
+		/>
+		<vertex 
+			easting="634119"
+			northing = "5888587"
+		/>
+		<vertex 
+			easting="636410"
+			northing = "5888587"
+		/>
+		<vertex 
+			easting="636410"
+			northing = "5887023"
+		/>
+	</polygon>	
+</region>
+
+<region>
+	<data
+		name = "North"
+      	easting="635476"
+      	northing="5889752"
+      	population="125"
+	/>
+	<polygon>
+		<vertex 
+			easting="634806"
+			northing = "5888746"
+		/>
+		<vertex 
+			easting="634806"
+			northing = "5889940"
+		/>
+		<vertex 
+			easting="636464"
+			northing = "5889940"
+		/>
+		<vertex 
+			easting="636464"
+			northing = "5888746"
+		/>
+	</polygon>	
+</region>
+
+<relief_centre>
+	<data
+		name = "ShelterAtStawell"
+		location = "Stawell"
+		capacity = "100"
+	/>
+</relief_centre>
+
+<relief_centre>
+	<data
+		name = "ShelterAtHamilton"
+		location = "Hamilton"
+		capacity = "200"
+	/>
+</relief_centre>
+
+<relief_centre>
+	<data
+		name = "ShelterAtArarat"
+		location = "Ararat"
+		capacity = "300"
+	/>
+</relief_centre>
+
+</geography>
+
+

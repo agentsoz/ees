@@ -1,0 +1,49 @@
+/*******************************************************************
+ * Created by the JDE: Thu Jun 11 19:23:37 AEST 2015
+ * WARNING: If you are editing this file from outside the JDE, you
+ * should make sure to load the changes back into the JDE by setting
+ * the preference "Check for outside changes..." in the "Text Editor"
+ * preference tab or reload the component manually.
+ * Otherwise you will lose your changes next time the file is generated.
+ *******************************************************************/
+
+package io.github.agentsoz.bushfire.jack.plans;
+
+import io.github.agentsoz.bushfire.jack.agents.EvacController;
+import io.github.agentsoz.bushfire.jack.events.PlanAllAreasG;
+import io.github.agentsoz.bushfire.jack.events.Respond_fireG;
+import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * @author Sewwandi Perera
+ */
+public plan Respond_FireP extends Plan {
+
+    #handles event Respond_fireG h_Respond_fireG;
+    #posts event PlanAllAreasG p_PlanAllAreasG;
+    #uses interface EvacController enc;
+    final Logger logger = LoggerFactory.getLogger("");
+    
+    static boolean relevant(Respond_fireG ev)
+    {
+        return true;
+    }
+    
+    context()
+    {
+        true;
+    }
+    
+    #reasoning method
+    body()
+    {
+        logger.trace("Respond_FireP is initiated");
+        @post(p_PlanAllAreasG.post());
+        //routes.qGet(key, "Central", "Stawell", waypoints2, "Safest", 10.30);
+    }
+    
+
+}
+

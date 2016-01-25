@@ -1,0 +1,43 @@
+/*******************************************************************
+ * Created by the JDE: Thu Jun 11 19:23:36 AEST 2015
+ * WARNING: If you are editing this file from outside the JDE, you
+ * should make sure to load the changes back into the JDE by setting
+ * the preference "Check for outside changes..." in the "Text Editor"
+ * preference tab or reload the component manually.
+ * Otherwise you will lose your changes next time the file is generated.
+ *******************************************************************/
+
+package io.github.agentsoz.bushfire.jack.data;
+
+import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * @author Sewwandi Perera
+ */
+public beliefset Routes extends OpenWorld {
+    #key field String area;
+    #key field String shelter;
+    #key field String routeName;
+    #value field List route;
+    #value field List waypointNames;
+    #value field String desc;
+    #value field long desc_time;
+    #indexed query qGetData(String area, String shelter, String routeName, List route, List waypointNames, String desc, long desc_time);
+    #indexed query qGetRoute(String area, String shelter, logical String routeName, logical List route, logical List waypointNames, String desc, logical long desc_time);
+
+	final Logger logger = LoggerFactory.getLogger("");
+
+    public void insert(String area, String shelter, String routeName, List route, List waypointNames, String desc, long desc_time){
+        try {
+            add(area, shelter, routeName, route, waypointNames, desc, desc_time);
+            logger.debug("Added new route [area:" + area + ", shelter:" + shelter + ", route:" + routeName + ", waypoints:" + waypointNames + ", desc:" + desc + ", time:" + desc_time +"]");
+        }
+        catch(BeliefSetException bse) {
+            logger.error("Error: " + bse.getMessage());
+        }
+    }
+
+}
+

@@ -1,0 +1,89 @@
+/*******************************************************************
+ * Created by the JDE: Thu Jun 11 19:23:37 AEST 2015
+ * WARNING: If you are editing this file from outside the JDE, you
+ * should make sure to load the changes back into the JDE by setting
+ * the preference "Check for outside changes..." in the "Text Editor"
+ * preference tab or reload the component manually.
+ * Otherwise you will lose your changes next time the file is generated.
+ *******************************************************************/
+
+package io.github.agentsoz.bushfire.jack.plans;
+
+import io.github.agentsoz.bushfire.jack.agents.BasicResident;
+import io.github.agentsoz.bushfire.jack.agents.EvacController;
+import io.github.agentsoz.bushfire.jack.data.Plan_Checks;
+import io.github.agentsoz.bushfire.jack.events.CheckplanG;
+import io.github.agentsoz.bushfire.jack.events.EvacMessage;
+import io.github.agentsoz.bushfire.jack.events.Evac_timeG;
+import io.github.agentsoz.bushfire.jack.events.Replan_areaG;
+import io.github.agentsoz.bushfire.jack.data.Route_Assignments;
+import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * @author Sewwandi Perera
+ */
+public plan Evac_timeP extends Plan {
+
+    logical boolean checkOK;
+    logical long timestamp;
+    logical String shelter;
+    logical String routeName;
+    logical List route;
+    logical List waypointNames;
+    #handles event Evac_timeG h_Evac_timeG;
+    #posts event CheckplanG p_CheckplanG;
+    #posts event Replan_areaG p_Replan_areaG;
+    #sends event EvacMessage s_EvacMessage;
+    #uses interface EvacController enc;
+    #uses data Plan_Checks planChecks;
+    #uses data Route_Assignments routeAssignments;
+    
+    final Logger logger = LoggerFactory.getLogger("");
+    
+    static boolean relevant(Evac_timeG ev)
+    {
+        return true;
+    }
+    
+    context()
+    {
+        true;
+    }
+    
+    #reasoning method
+    body()
+    {
+        logger.trace("Evac_timeP is initiated for area " + h_Evac_timeG.areaName);
+        @subtask(p_CheckplanG.post(h_Evac_timeG.areaName));
+        
+        Cursor c = planChecks.getAreaCheck(h_Evac_timeG.areaName, checkOK, timestamp);
+        c.next();
+        
+        Cursor c2 = routeAssignments.getRouteForArea(h_Evac_timeG.areaName, shelter, routeName, route, waypointNames);
+        c2.next();
+        
+        if((boolean)checkOK.getValue()){
+        	//publish region schedule
+        	enc.bdiConnector.publishRegionSchedule(h_Evac_timeG.areaName, (String)routeName.getValue(), (String)shelter.getValue(), h_Evac_timeG.executeTime);
+        
+            Agent[] residents = enc.bdiConnector.getAllResidents();
+            
+            for(int i = 0; i < residents.length ; i++){
+            	BasicResident resident = (BasicResident) residents[i];
+            	            	
+            	if(resident.homeRegion!=null && h_Evac_timeG.areaName.equals(resident.homeRegion)) {
+            		logger.debug("Sending evac message to the agent {} to waypoints {}", resident.getId(), waypointNames.toString());
+                	@send(resident.getName(),(MessageEvent)s_EvacMessage.post((List)route.getValue(), (List)waypointNames.getValue()));
+                }
+            }
+        } else {
+        	//enc.bdiConnector.publishEvacTime(h_Evac_timeG.areaName, (String)shelter.getValue(), (List)waypointNames.getValue(), h_Evac_timeG.executeTime);
+            @subtask(p_Replan_areaG.post(h_Evac_timeG.areaName, h_Evac_timeG.executeTime));
+        }
+    }
+    
+
+}
+

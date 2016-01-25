@@ -1,0 +1,59 @@
+/*******************************************************************
+ * Created by the JDE: Thu Jun 11 19:23:38 AEST 2015
+ * WARNING: If you are editing this file from outside the JDE, you
+ * should make sure to load the changes back into the JDE by setting
+ * the preference "Check for outside changes..." in the "Text Editor"
+ * preference tab or reload the component manually.
+ * Otherwise you will lose your changes next time the file is generated.
+ *******************************************************************/
+
+package io.github.agentsoz.bushfire.jack.plans;
+
+import io.github.agentsoz.bushfire.bdi.IBdiConnector;
+import io.github.agentsoz.bushfire.jack.agents.EvacController;
+import io.github.agentsoz.bushfire.jack.data.Plan_Checks;
+import io.github.agentsoz.bushfire.jack.events.CheckplanG;
+import java.util.Random;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * @author Sewwandi Perera
+ */
+public plan CheckPlanP extends Plan {
+
+    #handles event CheckplanG h_CheckplanG;
+    #uses interface EvacController enc;
+    #uses data Plan_Checks planChecks;
+    final Logger logger = LoggerFactory.getLogger("");
+    
+    static boolean relevant(CheckplanG ev)
+    {
+        return true;
+    }
+    
+    context()
+    {
+        true;
+    }
+    
+    #reasoning method
+    body()
+    {
+        logger.trace("CheckPlanP is initiated for area " + h_CheckplanG.areaName);
+        
+        if (enc.bdiConnector.isVisualiserActive()) {
+            //When the visualiser is active ask user 
+            logger.info("======================= USER SHOULD BE PROMTED AND ASKED TO CHANGE ROUTES AGAIN");
+            
+            Random random = new Random();
+            planChecks.insert(h_CheckplanG.areaName, random.nextBoolean(), enc.getCurrentTime());
+        } else {
+            //TODO: do some analysis before seting the check status
+            planChecks.insert(h_CheckplanG.areaName, true, enc.getCurrentTime());
+        }
+    }
+    
+
+}
+

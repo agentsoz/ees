@@ -1,0 +1,62 @@
+/*******************************************************************
+ * Created by the JDE: Thu Jun 11 19:23:38 AEST 2015
+ * WARNING: If you are editing this file from outside the JDE, you
+ * should make sure to load the changes back into the JDE by setting
+ * the preference "Check for outside changes..." in the "Text Editor"
+ * preference tab or reload the component manually.
+ * Otherwise you will lose your changes next time the file is generated.
+ *******************************************************************/
+
+package io.github.agentsoz.bushfire.jack.data;
+
+import com.vividsolutions.jts.geom.Coordinate;
+import java.awt.geom.Line2D;
+import java.awt.geom.Line2D.Float;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * @author Sewwandi Perera
+ */
+public beliefset Sheltor_Vectors extends OpenWorld {
+    #key field String area;
+    #key field String shelter;
+    #value field Line2D path;
+    #indexed query getAllData(logical String area, logical String shelter, logical Line2D path);
+    #indexed query getPath(String area, String shelter, logical Line2D path);
+    
+    final Logger logger = LoggerFactory.getLogger("");
+    
+    #function query Line2D getLinePath(String area, String shelter){
+        logical Line2D path;
+        Cursor c = getPath(area, shelter, path);
+        c.next();
+        return (Line2D)(path.getValue());
+    }
+
+
+
+    public void insert(String area, String shelter, Coordinate start, Coordinate end){
+        try {
+            Line2D path = new Line2D.Float((float)start.x, (float)start.y, (float)end.x, (float)end.y);
+            add(area, shelter, path);
+            logger.debug("Added new sheltor_vector [area:" + area + ", shelter:" + shelter + ", path:" + path.toString() + "]");
+        }
+        catch(BeliefSetException bse) {
+            logger.error("Error: " + bse.getMessage());
+        }
+    }
+
+    public Line2D getPathToShelter(String area, String shelter){
+        try {
+            return getLinePath(area, shelter);
+        }
+        catch(Exception e) {
+            logger.error("Error: " + e.getMessage());
+        }
+        
+        return null;
+    }
+
+}
+

@@ -1,0 +1,350 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+  <parent>
+    <groupId>io.github.agentsoz</groupId>
+    <artifactId>bdi-abm-integration</artifactId>
+    <version>1.0.0</version>
+    <relativePath>../../pom.xml</relativePath>
+  </parent>
+
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>bushfire</artifactId>
+  <version>1.0.0</version>
+  <packaging>jar</packaging>
+
+  <name>Bushfire Example</name>
+  <description>Application using JACK-MATsim integration</description>
+
+  <repositories>
+    <repository>
+      <!-- Geotools is not on Maven central -->
+      <id>osgeo</id>
+      <name>Geotools repository</name>
+      <url>http://download.osgeo.org/webdav/geotools</url>
+    </repository>
+    <repository>
+      <id>matsim</id>
+      <url>http://dl.bintray.com/matsim/matsim</url>
+    </repository>
+    <repository>
+      <id>ojo-snapshots</id>
+      <url>http://oss.jfrog.org/libs-snapshot</url>
+    </repository>
+  </repositories>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.matsim</groupId>
+      <artifactId>matsim</artifactId>
+      <version>0.7.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.aosgrp</groupId>
+      <artifactId>jack</artifactId>
+      <version>5.6</version>
+    </dependency>
+    <dependency>
+      <groupId>io.github.agentsoz</groupId>
+      <artifactId>bdi-abm</artifactId>
+      <version>1.0.0</version>
+    </dependency>
+    <dependency>
+      <groupId>io.github.agentsoz</groupId>
+      <artifactId>abm-jack</artifactId>
+      <version>1.0.0</version>
+    </dependency>
+    <dependency>
+      <groupId>io.github.agentsoz</groupId>
+      <artifactId>bdi-matsim</artifactId>
+      <version>1.0.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
+      <version>2.3.1</version>
+    </dependency>
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <version>1.2.17</version>
+    </dependency>
+
+    <!-- Below dependecncies are only need at runtime -->
+    <dependency>
+      <groupId>jfree</groupId>
+      <artifactId>jfreechart</artifactId>
+      <version>1.0.13</version>
+    </dependency>
+    <dependency>
+      <groupId>jfree</groupId>
+      <artifactId>jcommon</artifactId>
+      <version>1.0.15</version>
+    </dependency>
+    <dependency>
+      <groupId>io.github.agentsoz</groupId>
+      <artifactId>util</artifactId>
+      <version>1.0.0</version>    	
+    </dependency>
+    
+    <!-- Jill dependencies -->
+    <dependency>
+      <groupId>io.github.agentsoz</groupId>
+      <artifactId>jill</artifactId>
+      <version>0.3.1-SNAPSHOT</version>
+    </dependency>
+  </dependencies>
+
+
+  <build>
+	<plugins>
+     <!-- Ugly hack to to pre-compile JACK dependencies before the actual compile stage -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <dependencies>
+          <!-- Fix to make maven-antrun-plugin pick up the JDK instead of JRE -->
+          <dependency>
+            <groupId>com.sun</groupId>
+            <artifactId>tools</artifactId>
+            <version>1.5.0</version>
+            <scope>system</scope>
+            <systemPath>${java.home}/../lib/tools.jar</systemPath>
+          </dependency>
+        </dependencies>
+        <executions>
+          <!-- pre-compile JACK dependencies -->
+          <execution>
+            <id>precompile-jack-dependencies</id>
+            <phase>generate-sources</phase>
+            <configuration>
+              <tasks>
+                <mkdir dir="${project.build.directory}/classes"/>
+                <javac source="1.7" target="1.7" debug="true" includeantruntime="false" failonerror="true"
+                       destdir="${project.build.directory}/classes">
+                  <src path="${basedir}/src/main/java/"/>
+                  <include name="io/github/agentsoz/bushfire/bdi/**/*.java"/>
+                  <include name="io/github/agentsoz/bushfire/datamodels/**/*.java"/>
+                  <include name="io/github/agentsoz/bushfire/shared/ActionID.java"/>
+                  <classpath refid="maven.compile.classpath"/>
+                </javac>
+                <copy todir="${project.build.directory}/generated-sources/jack">
+                  <fileset dir="${basedir}/src/jack" includes="**/*.java"/>
+                </copy>
+              </tasks>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <executions>
+          <!-- Generate Java sources from JACK code -->
+          <execution>
+            <id>generate-java-from-jack</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <executable>java</executable>
+              <arguments>
+                <argument>-classpath</argument>
+                <!-- automatically creates the classpath using all project dependencies -->
+                <classpath/>
+                <argument>aos.main.JackBuild</argument>
+                <argument>-wd</argument>
+                <argument>src/jack</argument>
+                <argument>-d</argument>
+                <argument>${project.build.directory}/generated-sources/jack</argument>
+                <argument>-nc</argument>
+                <argument>-r</argument>
+                <argument>-cp</argument>
+                <argument>${project.build.directory}/classes</argument>
+              </arguments>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <executions>
+          <!-- Add the newly generated sources to the list of sources -->
+          <execution>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>add-source</goal>
+            </goals>
+            <configuration>
+              <sources>
+                <source>${project.build.directory}/generated-sources/jack</source>
+              </sources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>    
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>copy-dependencies</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>copy-dependencies</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.directory}/lib</outputDirectory>
+              <overWriteReleases>false</overWriteReleases>
+              <overWriteSnapshots>false</overWriteSnapshots>
+              <overWriteIfNewer>true</overWriteIfNewer>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>2.6</version>
+        <configuration>
+          <archive>
+            <manifest>
+              <addClasspath>true</addClasspath>
+              <classpathPrefix>lib/</classpathPrefix>
+              <mainClass>agentsoz.bushfire.BushfireMain</mainClass>
+            </manifest>
+          </archive>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>2.5.3</version>
+        <configuration>
+          <descriptor>src/assembly/dep.xml</descriptor>
+        </configuration>
+        <executions>
+          <execution>
+            <id>create-archive</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>license-maven-plugin</artifactId>
+        <version>1.8</version>
+        <configuration>
+          <!-- Ignore MATSim network files (take forever to process) -->
+          <!-- Can't seem to get excludes (below) to work so using 
+               <roots> to get around this by ignoring src/main/resources 
+               where the network files are.
+          -->
+          <!--
+          <excludes>
+           <exclude>*network*.xml</exclude>
+          </excludes>
+          -->
+          <roots>
+           <root>src/main/java</root>
+          </roots>
+        </configuration>
+      </plugin>
+    </plugins>
+
+    <pluginManagement>
+      <plugins>
+        <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+        <plugin>
+          <groupId>org.eclipse.m2e</groupId>
+          <artifactId>lifecycle-mapping</artifactId>
+          <version>1.0.0</version>
+          <configuration>
+            <lifecycleMappingMetadata>
+              <pluginExecutions>
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>
+                      org.codehaus.mojo
+                    </groupId>
+                    <artifactId>
+                      license-maven-plugin
+                    </artifactId>
+                    <versionRange>
+                      [1.8,)
+                    </versionRange>
+                    <goals>
+                      <goal>
+                        update-project-license
+                      </goal>
+                      <goal>
+                        update-file-header
+                      </goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <ignore></ignore>
+                  </action>
+                </pluginExecution>
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>exec-maven-plugin</artifactId>
+                    <versionRange>[1.2.1,)</versionRange>
+                    <goals>
+                      <goal>exec</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <execute>
+                      <runOnIncremental>true</runOnIncremental>
+                    </execute>
+                  </action>
+                </pluginExecution>
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>
+                      build-helper-maven-plugin
+                    </artifactId>
+                    <versionRange>[1.9.1,)</versionRange>
+                    <goals>
+                      <goal>add-source</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <execute>
+                      <runOnIncremental>true</runOnIncremental>
+                    </execute>
+                  </action>
+                </pluginExecution>
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-antrun-plugin</artifactId>
+                    <versionRange>[1.3,)</versionRange>
+                    <goals>
+                      <goal>run</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <execute>
+                      <runOnIncremental>true</runOnIncremental>
+                    </execute>
+                  </action>
+                </pluginExecution>
+              </pluginExecutions>
+            </lifecycleMappingMetadata>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+</project>

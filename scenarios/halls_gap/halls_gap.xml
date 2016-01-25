@@ -1,0 +1,86 @@
+<!--
+  #%L
+  BDI-ABM Integration Package
+  %%
+  Copyright (C) 2014 - 2015 by its authors. See AUTHORS file.
+  %%
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as
+  published by the Free Software Foundation, either version 3 of the
+  License, or (at your option) any later version.
+  
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Lesser Public License for more details.
+  
+  You should have received a copy of the GNU General Lesser Public
+  License along with this program.  If not, see
+  <http://www.gnu.org/licenses/lgpl-3.0.html>.
+  #L%
+  -->
+<!--
+	This is the top level config file for the scenario.
+	Its primary role is to point to all of the other config
+	and input files required by the scenario.
+-->
+
+<simulation>
+
+<!-- bushfile evacuation report file -->
+<reportfile name="./halls-gap-evacuation-report.txt" />
+
+<!-- define the matsim configuration file -->
+<matsimfile name="scenarios/halls_gap/halls_gap_config.xml"/>
+
+<!-- define the fire model file (specify the coordinate system as latlong or utm) -->
+<firefile name="scenarios/halls_gap/halls_gap_fire.txt" coordinates="latlong"/>
+
+<!-- define the bushfire evacuation controller agent config file-->
+<controllerfile name="scenarios/halls_gap/halls_gap_controller.xml"/>
+
+<!-- define a geography file -->
+<geographyfile name= "scenarios/halls_gap/halls_gap_geography.xml" coordinates="utm"/>
+
+<!-- Number of BDI agents (N) to initialise. The total number of 
+     agents (M) is determined by the MATSim population file. 
+     The final number of BDI agents will be the lesser of N,M.
+     Setting N really high (so that it is always greater than M), 
+     will ensure that the entire MATSim population has BDI conterparts 
+-->
+<bdiagents number="10000000" />
+
+<!-- define the port number for the unity GUI-->
+<port number="9876" die_on_disconnect="true"/>
+
+<!-- define data for the residents-->
+<!-- relatives is a value (0.0-1.0) that defines the probability that a resident 
+will have a relative in the town needing to be collected prior to evacuation-->
+<!-- kids is a value (0.0-1.0) that defines the probability that a resident 
+will have children in the town needing to be collected from school prior to evacuation-->
+<!-- max_distance_to_relatives provides the maximum distance in metres from agents 
+start location to relative's location-->
+<demographics relatives="0.1" kids="0.1" max_distance_to_relatives="1000"/>
+<evac_delay min="1.0" max="5.0" />
+
+<!-- define parameters for evacuation decisions -->
+<!-- ad_hoc_evac_dist defines the distance in meters from
+centre of any region to  an evacuation point which is selected when
+all defined shelters are not within the safe boundary -->
+<!-- safe_distance_to_fire defines the maximum allowable distance
+in meters in between the fire polygon and the vector which connects 
+centre of region and shelter-->
+<evac_info ad_hoc_evac_dist="50000" safe_distance_to_fire="100"/>
+
+<!-- define image parameters to send to visualiser -->
+<!-- name specifies an image filename to use as the scenario backdrop -->
+<!-- coordinates specify the latitudes and longitudes to map the image to -->
+<image file="hallsGap_051114.png"
+       north= "5890133.087951528"
+       south= "5886510.053555094"
+       east="638266.552967841"
+       west="631991.5652319365" />
+
+</simulation>
+
+

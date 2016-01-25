@@ -1,0 +1,76 @@
+/*******************************************************************
+ * Created by the JDE: Thu Jun 11 19:23:38 AEST 2015
+ * WARNING: If you are editing this file from outside the JDE, you
+ * should make sure to load the changes back into the JDE by setting
+ * the preference "Check for outside changes..." in the "Text Editor"
+ * preference tab or reload the component manually.
+ * Otherwise you will lose your changes next time the file is generated.
+ *******************************************************************/
+
+package io.github.agentsoz.bushfire.jack.plans;
+
+import io.github.agentsoz.bushfire.jack.agents.BasicResident;
+import io.github.agentsoz.bushfire.jack.events.EvacHouse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import io.github.agentsoz.abmjack.env.GenericActGoal;
+import io.github.agentsoz.bushfire.shared.ActionID;
+import java.util.Random;
+
+/**
+ * @author Sewwandi Perera
+ */
+public plan PickupRelatives extends Plan {
+    #handles event EvacHouse h_EvacHouse;
+    #uses interface BasicResident enc;
+    #posts event GenericActGoal genericactgoal_p;
+    final Logger logger = LoggerFactory.getLogger("");
+    
+    static boolean relevant(EvacHouse ev)
+    {
+        return true;
+    }
+    
+    context()
+    {
+        enc.relsNeedPickup;
+    }
+    
+    #reasoning method
+    body()
+    {
+        logger.trace(" Agent " + enc.getBasename() + " : PickupRelatives is initiated");  
+	  	logger.debug("Agent {} is driving to random location to pick up relatives",  enc.id);
+	  	double[] destinationCoordinates = getRandomCoordinate();
+      	enc.setDestination(destinationCoordinates);
+		enc.relsNeedPickup = false;
+      	Object[] params = new Object[] { ActionID.DRIVETO, destinationCoordinates, "pick up relatives", enc.evacDelay};
+      	enc.evacDelay = 0;
+      	GenericActGoal gag = genericactgoal_p.act(enc.getActionManager(), ActionID.DRIVETO, params );
+      	double startTime = enc.getCurrentTime();
+      	@subtask( gag );
+      	double tripTime = (enc.getCurrentTime() - startTime)/60;
+      	logger.debug("Agent {} arrived to pick up relatives in {} minutes",  
+      			enc.id, Double.toString(tripTime));
+      	enc.postEvent( h_EvacHouse.post() );
+    }
+    
+	private double[] getRandomCoordinate() {
+		Random random = new Random();
+		double[] coordinates = new double[2];
+
+		int distance = random.nextInt(enc.bdiConnector.getMaxDistanceToRelatives());
+		double angle = random.nextDouble() * 2 * Math.PI;
+
+		// Calculating destination's X coordinate
+		coordinates[0] = enc.startLocation[0] + distance * Math.cos(angle);
+
+		// Calculating destination's Y coordinate
+		coordinates[1] = enc.startLocation[1] + distance * Math.sin(angle);
+
+		return coordinates;
+	}
+}
+

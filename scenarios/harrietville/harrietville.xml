@@ -1,0 +1,70 @@
+<!--
+  #%L
+  BDI-ABM Integration Package
+  %%
+  Copyright (C) 2014 - 2015 by its authors. See AUTHORS file.
+  %%
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as
+  published by the Free Software Foundation, either version 3 of the
+  License, or (at your option) any later version.
+  
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Lesser Public License for more details.
+  
+  You should have received a copy of the GNU General Lesser Public
+  License along with this program.  If not, see
+  <http://www.gnu.org/licenses/lgpl-3.0.html>.
+  #L%
+  -->
+<!--
+	This is the top level config file for the scenario.
+	Its primary role is to point to all of the other config
+	and input files required by the scenario.
+-->
+
+<simulation>
+
+<!-- define where output data will be stored -->
+<output_directory name ="scenarios/harrietville/" />
+
+<!-- define the bushfile application log file -->
+<logfile name="scenarios/harrietville/bushfire" />
+
+<!-- define the matsim configuration file -->
+<matsimfile name="scenarios/harrietville/harrietville_config.xml"/>
+
+<!-- define the fire model file-->
+<firefile name="scenarios/harrietville/harrietville_fire.txt" />
+
+<!-- define the bushfire evacuation controller agent config file-->
+<controllerfile name="scenarios/harrietville/harrietville_controller.xml"/>
+
+<!-- define a geography file -->
+<geographyfile name= "scenarios/harrietville/harrietville_geography.xml"/>
+
+<!-- define the port number for the unity GUI-->
+<port number="9876" die_on_disconnect="true"/>
+
+<!-- define data for the residents-->
+<!-- relatives is a value (0.0-1.0) that defines the probability that a resident 
+will have a relative in the town needing to be collected prior to evacuation-->
+<!-- kids is a value (0.0-1.0) that defines the probability that a resident 
+will have children in the town needing to be collected from school prior to evacuation-->
+<demographics relatives="0.0" kids="0.0" />
+<evac_delay min="1.0" max="5.0" />
+
+<!-- define image parameters to send to visualiser -->
+<!-- name specifies an image filename to use as the scenario backdrop -->
+<!-- coordinates specify the latitudes and longitudes to map the image to -->
+<image file="harrietville-map2.png"
+       west="147.015409"
+       east="147.15909"
+       north="-36.819867"
+       south="-36.915725" />
+
+</simulation>
+
+

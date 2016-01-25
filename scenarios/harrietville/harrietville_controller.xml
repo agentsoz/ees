@@ -1,0 +1,64 @@
+<!--
+  #%L
+  BDI-ABM Integration Package
+  %%
+  Copyright (C) 2014 - 2015 by its authors. See AUTHORS file.
+  %%
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as
+  published by the Free Software Foundation, either version 3 of the
+  License, or (at your option) any later version.
+  
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Lesser Public License for more details.
+  
+  You should have received a copy of the GNU General Lesser Public
+  License along with this program.  If not, see
+  <http://www.gnu.org/licenses/lgpl-3.0.html>.
+  #L%
+  -->
+<!-- This file controls the behaviour of the controller agent -->
+
+<controller>
+
+   <!-- 
+	bypass can be used to turn on (false) or off (true)
+	the functioning of the controller agent
+
+	userControl can be used to enable (true) or disable (false) 
+	user interacton via the GUI. That is, if disabled, the controller
+	will make all decisions automatically and not allow the user to 
+	interupt them
+   -->
+
+   <bypassing
+      bypass="false"
+      userControl="true"
+   />
+
+   <!--
+	choicePoints defines where a user will be given the option
+	to interrupt the controller agent decision making
+	
+	name refers to a BDI goal for which a choice of plans can be made
+	
+	the manual option causes normal BDI plan selection to be overridden, allowing
+	user selection in the GUI or with the choice attribute here
+	
+	the choice option names a plan to use to fulfill the goal, if manual is set to true
+	and the visualiser GUI is inactive
+	- note that currently, choosing a manual settings option (which expects a further
+	    detailed response from the GUI) here will break the program
+
+	TODO need to describe all options
+   -->
+
+   <choicePoints>
+      <goal name="assign_relief_centres" manual="true" choice="AssignByProximity"/>
+      <goal name="establish_routes" manual="true" choice="SafestRoute"/>
+      <goal name="establish_schedule" manual="true" choice="ScheduleByProximity"/>
+   </choicePoints>
+
+</controller>

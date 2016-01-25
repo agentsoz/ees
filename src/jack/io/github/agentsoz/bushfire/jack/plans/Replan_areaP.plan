@@ -1,0 +1,65 @@
+/*******************************************************************
+ * Created by the JDE: Thu Jun 11 19:23:38 AEST 2015
+ * WARNING: If you are editing this file from outside the JDE, you
+ * should make sure to load the changes back into the JDE by setting
+ * the preference "Check for outside changes..." in the "Text Editor"
+ * preference tab or reload the component manually.
+ * Otherwise you will lose your changes next time the file is generated.
+ *******************************************************************/
+
+package io.github.agentsoz.bushfire.jack.plans;
+
+import io.github.agentsoz.bushfire.jack.agents.EvacController;
+import io.github.agentsoz.bushfire.jack.data.Evac_Times;
+import io.github.agentsoz.bushfire.jack.events.Calculate_fire_vectorG;
+import io.github.agentsoz.bushfire.jack.events.Calculate_sheltersG;
+import io.github.agentsoz.bushfire.jack.events.Decide_routeG;
+import io.github.agentsoz.bushfire.jack.events.Decide_shelterG;
+import io.github.agentsoz.bushfire.jack.events.Decide_timeG;
+import io.github.agentsoz.bushfire.jack.events.Replan_areaG;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * @author Sewwandi Perera
+ */
+public plan Replan_areaP extends Plan {
+    #handles event Replan_areaG h_Replan_areaG;
+    #posts event Decide_shelterG p_Decide_shelterG;
+    #posts event Decide_routeG p_Decide_routeG;
+    #posts event Calculate_fire_vectorG p_Calculate_fire_vectorG;
+    #posts event Calculate_sheltersG p_Calculate_sheltersG;
+    #posts event Decide_timeG p_Decide_timeG;
+    #uses interface EvacController enc;
+    #uses data Evac_Times evacTimes;
+    final Logger logger = LoggerFactory.getLogger("");
+    
+    static boolean relevant(Replan_areaG ev)
+    {
+        return true;
+    }
+    
+    context()
+    {
+        true;
+    }
+    
+    #reasoning method
+    body()
+    {
+        logger.trace("Replan_areaP is initiated for area " + h_Replan_areaG.areaName);
+        
+        evacTimes.remove(h_Replan_areaG.areaName, h_Replan_areaG.executeTime);
+        
+        @subtask(p_Calculate_fire_vectorG.post());
+        @subtask(p_Calculate_sheltersG.post(h_Replan_areaG.areaName));
+        @subtask(p_Decide_shelterG.post(h_Replan_areaG.areaName));
+        @subtask(p_Decide_routeG.post(h_Replan_areaG.areaName));
+        @subtask(p_Decide_timeG.post(h_Replan_areaG.areaName));
+        
+        logger.debug("Finished replaning the area " + h_Replan_areaG.areaName);
+    }
+    
+
+}
+
