@@ -14,4 +14,4 @@ if "%1"=="-non-gui" (
 )
 
 :sim
-start javaw -cp bushfire-1.0.0.jar io.github.agentsoz.bushfire.BushfireMain -c scenarios/halls_gap/halls_gap.xml -l halls-gap.log -level INFO %gui%
+start javaw -cp bushfire-1.0.1-SNAPSHOT.jar io.github.agentsoz.bushfire.BushfireMain -c scenarios/halls_gap/halls_gap.xml -l halls-gap.log -level INFO %gui%

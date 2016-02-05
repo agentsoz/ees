@@ -31,7 +31,7 @@ OUT_FILE='scenarios/harrietville/harrietville_network.xml'
 # the ESRI well known string based on the UTM zone of the network. For Australia, the ESRI WKT can be generated using menu in lower left of http://spatialreference.org/ref/epsg/28354/ page. Default value is set to MGA zone 54
 WKT='PROJCS["GDA94 / MGA zone 54",GEOGCS["GDA94",DATUM["D_GDA_1994",SPHEROID["GRS_1980",6378137,298.257222101]],PRIMEM["Greenwich",0],UNIT["Degree",0.017453292519943295]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",141],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",10000000],UNIT["Meter",1]]"'
 
-PROGRAM='java -cp bushfire-1.0.0.jar io.github.agentsoz.util.NetworkGenerator'
+PROGRAM='java -cp bushfire-1.0.1-SNAPSHOT.jar io.github.agentsoz.util.NetworkGenerator'
 
 # print full command
 printf "running:\n  "

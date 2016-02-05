@@ -23,7 +23,7 @@
 ###
 
 DIR=`dirname "$0"`
-PROGRAM='java -cp bushfire-1.0.0.jar io.github.agentsoz.bushfire.BushfireMain'
+PROGRAM='java -cp bushfire-1.0.1-SNAPSHOT.jar io.github.agentsoz.bushfire.BushfireMain'
 DEFAULT_ARGS='-c scenarios/halls_gap/halls_gap.xml -l halls-gap.log -level INFO'
 
 # Print usage

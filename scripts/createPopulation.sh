@@ -30,7 +30,7 @@ INPUT_FILE='input/harrietville.shp'
 OUT_FILE='scenarios/harrietville/harrietville_population.xml'
 ID_PREFIX=''
 
-PROGRAM='java -cp bushfire-1.0.0.jar io.github.agentsoz.util.PopulationGenerator'
+PROGRAM='java -cp bushfire-1.0.1-SNAPSHOT.jar io.github.agentsoz.util.PopulationGenerator'
 DEFAULT_ARGS="-n ${NUM_AGENTS} -a ${INPUT_FILE} -o ${OUT_FILE} -p ${ID_PREFIX}"
 
 # Print usage
