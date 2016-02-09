@@ -8,7 +8,7 @@ see the top level README.
 
 ## DEPENDENCIES
 
-- MATSim (http://matsim.org)
+- MATSim 0.7.0 (http://matsim.org)
 
 MATSim dependency is automatically resolved by Maven.
 
@@ -17,9 +17,11 @@ MATSim dependency is automatically resolved by Maven.
 GSON dependency is automatically resolved by Maven.
 
 
+
 ## How to Compile
 
-For instructions on how to build this library, see the top level README.
+To Build the BDI-MATSIM integration layer: In `/integrations/bdi-matsim/`, 
+do `mvn clean install`
 
 
 
