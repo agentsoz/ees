@@ -25,6 +25,8 @@ This program depends on the following libraries:
 *  BDI-ABM-Integration (`/integrations/bdi-abm`) 
 *  BDI-MATSIM-Integration (`/integrations/bdi-matsim`) 
 *  ABM-JACK-Integration (`/integrations/abm-jack`)
+*  ABM-JILL-Integration (`http://agentsoz.github.io/jill`)
+*  UTIL
 *  Visualiser (optional) <https://bitbucket.org/Kidney/fire-sim-unity/overview>
 
 See the respective README files for information on how to build these 
@@ -36,20 +38,30 @@ libraries.
 
 ### Command Line
   
-1.  Build the BDI-ABM library: See `/integrations/bdi-abm/README.md`
+1.  Build the bdi-abm-integration layer: In the source repository `/`, do 
+    `mvn clean install -N`
+2.  Build the BDI-ABM library: See `/integrations/bdi-abm/README.md`
     for instructions
-2.  Build the ABM-JACK library: See `/integrations/abm-jack/README.md`
+3.  Build the UTIL library: See `/util/README.md`
     for instructions
-3.  Build the Bushfire application: In `/examples/bushfire`, do
+4.  Build the ABM-JACK library: See `/integrations/abm-jack/README.md`
+    for instructions
+5.  Build the ABM-JILL library: See `/integrations/abm-jill/README.md`
+    for instructions
+6.  Build the Bushfire application: In `/examples/bushfire`, do
     `mvn clean install`
 
 ### Eclipse
 
-Ensure that you have the corrent version of Eclipse installed. See `/README.md` 
-for details. Then import and build the following Eclipse projects:
+Ensure that you have the corrent version of Eclipse installed. See 
+`../../README.md` for details. Then import and build the following 
+Eclipse projects:
+
 *  `/integrations/bdi-abm` 
+*  `/util` 
 *  `/integrations/bdi-matsim` 
 *  `/integrations/abm-jack` 
+*  `/integrations/abm-jill` 
 *  `/examples/bushfire` 
 
 
@@ -68,10 +80,10 @@ for details. Then import and build the following Eclipse projects:
 
 From the `/examples/bushfire` directory, and assuming you have already built the application, do:
 
-    > cd ./target 
-    > unzip bushfire-0.0.1-SNAPSHOT-bin.zip
-    > cd bushfire-0.0.1-SNAPSHOT
-    > sh ./run.sh
+        > cd target
+        > unzip bushfire-0.0.1-SNAPSHOT-bin.zip
+        > cd bushfire-0.0.1-SNAPSHOT
+        > sh ./run.sh
 
 ### Eclipse
 
