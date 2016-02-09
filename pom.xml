@@ -35,11 +35,6 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.matsim</groupId>
-      <artifactId>matsim</artifactId>
-      <version>0.7.0</version>
-    </dependency>
-    <dependency>
       <groupId>com.aosgrp</groupId>
       <artifactId>jack</artifactId>
       <version>5.6</version>
