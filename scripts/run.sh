@@ -26,6 +26,14 @@ DIR=`dirname "$0"`
 PROGRAM='java -cp bushfire-1.0.1-SNAPSHOT.jar io.github.agentsoz.bushfire.BushfireMain'
 DEFAULT_ARGS='-c scenarios/halls_gap/halls_gap.xml -l halls-gap.log -level INFO'
 
+# To generate input you can do something like
+# java -cp bushfire-1.0.1-SNAPSHOT.jar io.github.agentsoz.bushfire.GenerateInput \
+#    -outdir scenarios/maldon/ \
+#    -prefix maldon \
+#    -wkt WGS84 \
+#    -matsimpop "700/WSG84/RECT/-36.976809,144.042020&-37.014331,144.098723" \
+#    -verbose true
+
 # Print usage
 $PROGRAM -h
 

@@ -1,0 +1,164 @@
+<!--
+  #%L
+  BDI-ABM Integration Package
+  %%
+  Copyright (C) 2014 - 2015 by its authors. See AUTHORS file.
+  %%
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as
+  published by the Free Software Foundation, either version 3 of the
+  License, or (at your option) any later version.
+  
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Lesser Public License for more details.
+  
+  You should have received a copy of the GNU General Lesser Public
+  License along with this program.  If not, see
+  <http://www.gnu.org/licenses/lgpl-3.0.html>.
+  #L%
+  -->
+<!-- 
+	The following data relates to defining regions etc for the town
+
+	The geography file contains a list of locations. 
+	These can be of the types:
+		s = school
+		e = evacuation point
+		c = control point
+
+	Schools are used for residents who have children. They will travel to
+	one of the schools before evacuating.
+
+	TODO check that zero and 2+ schools work correctly
+
+	Evacuation points are where residents will evacuate too.
+
+	Control points are used to define evacuation routes.
+
+	Locations require a coordinate (easting, northing).
+
+	The town is divided into "regions".
+	If no regions are defined, the software assumes the whole area is one region.
+
+	Routes are defined by a sequence of control points.
+	If no routes are defined, a route with a single waypoint (the relief centre) is created for each region.
+
+-->
+<geography>
+<location 
+	name = "Harcourt"
+	easting="256222.51444707022"
+	northing = "5901687.72030469"
+	type = "e"
+/>
+<location 
+	name = "LockwoodSouth"
+	easting="246377.68082871533"
+	northing = "5919215.437931696"
+	type = "e"
+/>
+<route>
+   <data
+      name = "RouteToHarcourt"
+      region = "Maldon"
+      shelter = "ShelterAtHarcourt"
+      description = "FAST"
+   />
+   <path>
+	   <waypoint 
+	      name="Harcourt"
+	   />
+   </path>   
+</route>
+
+<route>
+   <data
+      name = "RouteToLockwoodSouth"
+      region = "Maldon"
+      shelter = "ShelterAtLockwoodSouth"
+      description = "FAST"
+   />
+   <path>
+	   <waypoint 
+	      name="LockwoodSouth"
+	   />
+   </path>   
+</route>
+
+<region>
+	<data
+			name = "Maldon"
+	      	easting="240325"
+	      	northing="5907431"
+	      	population="700"
+	      	evacTime="66600"
+	/>
+	<polygon>
+		<vertex 
+			easting="234274"
+			northing = "5895647"
+		/>
+		<vertex 
+			easting="234274"
+			northing = "5919215"
+		/>
+		<vertex 
+			easting="246377"
+			northing = "5919215"
+		/>
+		<vertex 
+			easting="246377"
+			northing = "5895647"
+		/>
+	</polygon>	
+</region>
+
+<region>
+	<data
+			name = "DummyRegion"
+	      	easting="240682"
+	      	northing="5899334"
+	      	population="1"
+	      	evacTime="64500"
+	/>
+	<polygon>
+		<vertex 
+			easting="240587"
+			northing = "5899123"
+		/>
+		<vertex 
+			easting="240587"
+			northing = "5899546"
+		/>
+		<vertex 
+			easting="240778"
+			northing = "5899546"
+		/>
+		<vertex 
+			easting="240778"
+			northing = "5899123"
+		/>
+	</polygon>	
+</region>
+
+<relief_centre>
+	<data
+		name = "ShelterAtLockwoodSouth"
+		location = "LockwoodSouth"
+		capacity = "700"
+	/>
+</relief_centre>
+
+<relief_centre>
+	<data
+		name = "ShelterAtHarcourt"
+		location = "Harcourt"
+		capacity = "700"
+	/>
+</relief_centre>
+
+</geography>
+
+
