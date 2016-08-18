@@ -30,6 +30,13 @@ randomly within the rectangular area specified by the two diagonal coordinates:
     >   -matsimpop "700/EPSG:28355/RECT/234274,5895647&246377,5919215"
 
 
+# How to extract list of addresses from VicMap shapefile
+
+    > shapefile2json.py -infile ADDRESS.shp | \
+    > egrep -o 'coordinates": \[ (.*), (.*) \]' | \
+    > cut -f3,4 -d' ' | sort | uniq > addresses.txt
+    
+
 # How to convert Phoenix shapefiles to Google Earth format
 
 The quickest way to generate the KML from SHP is this:

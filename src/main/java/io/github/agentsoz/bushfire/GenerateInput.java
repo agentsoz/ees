@@ -59,7 +59,7 @@ public class GenerateInput {
 	private static String matsimPopulationFile = "population.xml";
 	private static String matsimNetworkFile = "network.xml";
 	private static int matsimNumAgents = -1;
-	private static String matsimPopulationInputCoordinateSystem = "WSG84";
+	private static String matsimPopulationInputCoordinateSystem = "EPSG:28355 ";
 	private static String matsimOutputCoordinateSystem = "WSG84";
 	private static PopulationLocationType matsimPopulationLocationType = PopulationLocationType.UNKNOWN;
 	private static RectangularArea matsimPopulationLocationArea = null;
