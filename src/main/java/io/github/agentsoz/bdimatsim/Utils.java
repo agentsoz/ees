@@ -68,7 +68,7 @@ final class Utils {
 			agentIDs.add(id);
 			ii ++;
 
-			if(ii >= matSimParameterHandler.getNumberOfAgents()){
+			if(matSimParameterHandler != null && ii >= matSimParameterHandler.getNumberOfAgents()){
 				break;
 			}
 		}

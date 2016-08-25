@@ -158,10 +158,18 @@ public final class MATSimModel implements ABMServerInterface {
 
 		scenario = ScenarioUtils.loadScenario(config) ;
 
-		// this is some conversion of nice matsim objects into ugly conventional data structures :-):
-		final Collection<Id<Link>> allLinkIDs = this.getScenario().getNetwork().getLinks().keySet() ;
-		this.matSimParameterManager.setNETWORKIDS(Utils.createFlatLinkIDs(allLinkIDs)); //Link IDs in string[] format
-
+		// FIXME: Get rid of the matSimParameterManager altogether (dsingh, 25aug16)
+		// At the moment it is used in the default bushfire application, but has
+		// already been removed for the jill version (where it is initialised as null).
+		// Will need a way to get the #bdi agents from the config to here (needed to
+		// allow both BDI and MATSim agents to co exist).
+		// For now, if matSimParameterManager is null then all MATSim agents
+		// will have BDI counterparts
+		if (this.matSimParameterManager != null) {
+			// this is some conversion of nice matsim objects into ugly conventional data structures :-):
+			final Collection<Id<Link>> allLinkIDs = this.getScenario().getNetwork().getLinks().keySet() ;
+			this.matSimParameterManager.setNETWORKIDS(Utils.createFlatLinkIDs(allLinkIDs)); //Link IDs in string[] format
+		}
 		final Collection<? extends Link> links = this.getScenario().getNetwork().getLinks().values();
 		this.linkCoordsAsArray = Utils.generateLinkCoordsAsArray(links);
 		this.boundingBox = Utils.computeBoundingBox(links);
