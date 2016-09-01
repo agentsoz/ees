@@ -46,6 +46,7 @@ public class Main {
 	// Defaults
 	private static String logFile = Main.class.getSimpleName() + ".log";
 	private static Level logLevel = Level.INFO;
+	private static String[] jillInitArgs = null;
 
 	
 	public Main() {
@@ -82,13 +83,13 @@ public class Main {
 		
 		// Create fire module, load fire data, and register the fire module as
 		// an active data source
-		FireModule fireModule = new FireModule();
-		fireModule.loadData(SimpleConfig.getFireFile());
-		fireModule.setDataServer(dataServer);
-		fireModule.start();
+		fireModel = new FireModule();
+		fireModel.loadData(SimpleConfig.getFireFile());
+		fireModel.setDataServer(dataServer);
+		fireModel.start();
 		
 		// Create the Jill BDI model
-		jillmodel = new JillBDIModel();
+		jillmodel = new JillBDIModel(jillInitArgs);
 		jillmodel.registerDataServer(dataServer);
 
 		// Create the MATSim ABM model and register the data server
@@ -100,6 +101,7 @@ public class Main {
 		matsimModel.run(null, margs);
 		
 		// All done, so terminate now
+		jillmodel.finish();
 		System.exit(0);
 	}
 
@@ -117,6 +119,12 @@ public class Main {
 				break;
 			case "--help":
 				abort(null);
+			case "--jillconfig":
+				if (i + 1 < args.length) {
+					i++;
+					jillInitArgs = args[i].split("=");
+				}
+				break;
 			case "--logfile":
 				if (i + 1 < args.length) {
 					i++;
@@ -136,6 +144,10 @@ public class Main {
 				break;
 			}
 		}
+		
+		if (jillInitArgs == null) {
+			abort("Some required options were not given");
+		}
 	}
 
 	/**
@@ -144,7 +156,8 @@ public class Main {
 	public static String usage() {
 		return "usage:\n"
 				+ "  --config FILE     simulation configuration file" + "\n"
-				+ "  --help           print this help message and exit\n"
+				+ "  --help            print this help message and exit\n"
+				+ "  --jillconfig STR  The string '--config={...}' passed to JILL (required)\n"
 				+ "  --logfile FILE    logging output file name (default is '"+logFile+"')\n"
 				+ "  --loglevel LEVEL  log level; one of ERROR,WARN,INFO,DEBUG,TRACE (default is '"+logLevel+"')\n"
 				;

@@ -1,6 +1,7 @@
 package io.github.agentsoz.bushfire.matsimjill.agents;
 
 import io.github.agentsoz.abmjill.genact.EnvironmentAction;
+import io.github.agentsoz.bushfire.matsimjill.SimpleConfig;
 
 /*
  * #%L
@@ -28,8 +29,6 @@ import io.github.agentsoz.jill.lang.Agent;
 import io.github.agentsoz.jill.lang.Goal;
 import io.github.agentsoz.jill.lang.Plan;
 import io.github.agentsoz.jill.lang.PlanStep;
-import io.github.agentsoz.jill.util.Log;
-
 import java.io.PrintStream;
 import java.util.HashMap;
 
@@ -52,8 +51,9 @@ public class EvacuateNow extends Plan {
 			new PlanStep() {
 				public void step() {
 					String bdiAction = Resident.BDI_ACTION_DRIVETO;
-					// FIXME: Will always drive to Ararat!
-					double[] coords = {670391.7117, 5871742.627};
+					String randomShelter = SimpleConfig.getRandomEvacPoint();
+					String shelterLocation = SimpleConfig.getReliefCentre(randomShelter).getLocation();
+					double[] coords = SimpleConfig.getLocation(shelterLocation).getCoordinates();
 					Object[] params = {bdiAction, coords};
 					writer.println("Resident "+getAgent().getId()+": is about to start evacuating to Ararat");
 					post(new EnvironmentAction(

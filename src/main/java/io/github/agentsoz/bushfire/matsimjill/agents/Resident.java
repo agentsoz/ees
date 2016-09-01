@@ -44,25 +44,28 @@ public class Resident extends Agent implements io.github.agentsoz.bdiabm.Agent {
 		super(str);
 	}
 
+	/**
+	 * Called by the Jill model when starting a new agent.
+	 * There is no separate initialisation call prior to this, so all
+	 * agent initialisation should be done here (using params).
+	 */
 	@Override
 	public void start(PrintStream writer, String[] params) {
 		this.writer = writer;
 	}
 	
+	/**
+	 * Called by the Jill model when terminating
+	 */
 	@Override
 	public void finish() {
+		Log.trace("Resident"+getId()+" is terminating");
 	}
 
-	@Override
-	public void init(String[] args) {
-		Log.warn("Resident using a stub for io.github.agentsoz.bdiabm.Agent.init(...)");
-	}
-
-	@Override
-	public void start() {
-		Log.warn("Resident using a stub for io.github.agentsoz.bdiabm.Agent.start()");
-	}
-
+	/** 
+	 * Called by the Jill model with the status of a BDI percept
+	 * for this agent, coming from the ABM environment. 
+	 */
 	@Override
 	public void handlePercept(String perceptID, Object parameters) {
 		if (perceptID.equals(BDI_PERCEPT_FIRE_ALERT)) {
@@ -72,24 +75,57 @@ public class Resident extends Agent implements io.github.agentsoz.bdiabm.Agent {
 		}
 	}
 
+	/**
+	 * Called by the Jill model when this agent posts a new BDI action
+	 * to the ABM environment
+	 */
 	@Override
 	public void packageAction(String actionID, Object[] parameters) {
-		Log.warn("Resident using a stub for io.github.agentsoz.bdiabm.Agent.packageAction(...)");
 	}
 
+	/** 
+	 * Called by the Jill model with the status of a BDI action previously
+	 * posted by this agent to the ABM environment. 
+	 */
 	@Override
 	public void updateAction(String actionID, ActionContent content) {
 		Log.debug("Agent"+getId()+" received action update: "+content);
 		if (content.getAction_type().equals(BDI_ACTION_DRIVETO)) {
 			if (content.getState()==State.PASSED) {
 				// Wake up the agent that was waiting for external action to finish
+				// FIXME: BDI actions put agent in suspend, which won't work for multiple intention stacks 
 				suspend(false);
 			}
 		}
 	}
 
+	/**
+	 * BDI-ABM agent init function; Not used by Jill.
+	 * Use {@link #start(PrintStream, String[])} instead
+	 * to perform any agent specific initialisation.
+	 */
+	@Override
+	public void init(String[] args) {
+		Log.warn("Resident"+getId()+" using a stub for io.github.agentsoz.bdiabm.Agent.init(...)");
+	}
+
+	/**
+	 * BDI-ABM agent start function; Not used by Jill. 
+	 * Use {@link #start(PrintStream, String[])} instead
+	 * to perform agent startup.
+	 */
+	@Override
+	public void start() {
+		Log.warn("Resident"+getId()+" using a stub for io.github.agentsoz.bdiabm.Agent.start()");
+	}
+
+	/**
+	 * BDI-ABM agent kill function; Not used by Jill. 
+	 * Use {@link #finish()} instead
+	 * to perform agent termination.
+	 */
 	@Override
 	public void kill() {
-		// TODO Auto-generated method stub
+		Log.warn("Resident"+getId()+" using a stub for io.github.agentsoz.bdiabm.Agent.kill()");
 	}
 }

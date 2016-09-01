@@ -40,12 +40,16 @@ public class JillBDIModel extends JillModel implements DataClient {
 	// Records the simulation step at which the fire alert was received
 	private double fireAlertTime = -1;
 	private boolean fireAlertSent = false;
+
+	// Jill initialisation args
+	private String[] initArgs = null;
 	
 	// Map of bushfire agent names to jill agent names
 	private HashMap<String,String> agents;
 	
-	public JillBDIModel() {
+	public JillBDIModel(String[] initArgs) {
 		agents = new HashMap<String,String>();
+		this.initArgs = initArgs;
 	}
 	public void registerDataServer(DataServer dataServer) {
 		this.dataServer = dataServer;
@@ -61,15 +65,7 @@ public class JillBDIModel extends JillModel implements DataClient {
 
 		// Initialise the Jill model
 		// params[] contains the list of agent names to create
-		String[] args = {
-				"--config",
-				"{agents:[{classname:io.github.agentsoz.bushfire.matsimjill.agents.Resident, args:null, count:"+params.length+"}]," +
-				"logLevel: TRACE," +
-				"logFile: " + Main.class.getSimpleName() + ".log," +
-				"programOutputFile: " + Main.class.getSimpleName() + ".out" +
-				"}"
-				};
-		if (super.init(agentDataContainer, agentList, abmServer, args)) {
+		if (super.init(agentDataContainer, agentList, abmServer, initArgs)) {
 			// Now create the given map to jill agent names
 			// By default, jill agents are called a0, a1, ...
 			for (int i=0; i<params.length; i++) {
