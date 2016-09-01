@@ -27,22 +27,6 @@ PROGRAM='java -cp bushfire-1.0.1-SNAPSHOT.jar io.github.agentsoz.bushfire.Bushfi
 #DEFAULT_ARGS='-c scenarios/halls_gap/halls_gap.xml -l halls-gap.log -level INFO'
 DEFAULT_ARGS='-c scenarios/maldon/maldon.xml -l maldon.log -level INFO'
 
-# To generate input you can do something like
-# java -cp bushfire-1.0.1-SNAPSHOT.jar io.github.agentsoz.bushfire.GenerateInput \
-#    -outdir scenarios/maldon/ \
-#    -prefix maldon \
-#    -matsimpop "700/WSG84/RECT/-36.976809,144.042020&-37.014331,144.098723" \
-#
-# or to use the list of addresses from VicMap you can do something like
-# shapefile2json.py -infile ADDRESS.shp | \
-#    egrep -o 'coordinates": \[ (.*), (.*) \]' | \
-#    cut -f3,4 -d' ' | sort | uniq > addresses.txt
-# java -cp bushfire-1.0.1-SNAPSHOT.jar io.github.agentsoz.bushfire.GenerateInput \
-#    -outdir scenarios/maldon/ \
-#    -prefix maldon \
-#    -matsimpop "700/WSG84/LIST/address.txt" \
-
-
 # Print usage
 $PROGRAM -h
 
@@ -50,13 +34,12 @@ $PROGRAM -h
 printf "default args:\n  $DEFAULT_ARGS\n\n"
 
 # print user args
-UARGS="none"
 USER_ARGS=""
 if [ $# -ne 0 ]; then
-  UARGS=$@
-  USER_ARGS="$UARGS"
+  USER_ARGS="$@"
+  DEFAULT_ARGS=""
 fi
-printf "user args (will override defaults):\n  $UARGS\n\n"
+printf "user args (will override defaults):\n  $USER_ARGS\n\n"
 
 # print full command
 CMD="$PROGRAM $DEFAULT_ARGS $USER_ARGS"
