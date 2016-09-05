@@ -50,3 +50,17 @@ ogr2ogr -f KML \
 Some effort will be required to make it time variant. All the info is in the KML
 but need to post process it.
 
+# How to convert Pheonix shapefiles for use by the Fire Module
+
+```
+ogr2ogr -f GeoJSON \
+  20160420_MtAlexShire_FDI75_Iso.json \ 
+  20160420_MtAlexShire_FDI75_Iso.shp
+```  
+
+The above command will generate a output in GeoJSON format. The FireModule
+class should be modified to accept input in that format, as follows:
+
+```
+<firefile name="fire.json" format="GeoJSON" coordinates="utm"/>
+```
