@@ -16,7 +16,7 @@ function panMapTo(latlon, zoom) {
 			lat : -37.064558,
 			lng : 144.218764
 		},
-		zoom : 6
+		zoom : zoom
 	});
     var latLng = new google.maps.LatLng(latlon[0], latlon[1]);
 	global.map.setZoom(zoom);
@@ -26,15 +26,15 @@ function panMapTo(latlon, zoom) {
 function drawSimulationAreaOnMap(area) {
 	var rectangle = new google.maps.Rectangle({
         strokeColor: '#FF0000',
-        strokeOpacity: 0.8,
+        strokeOpacity: 0.5,
         strokeWeight: 2,
         fillColor: '#FF0000',
-        fillOpacity: 0.35,
-        map: map,
+        fillOpacity: 0.05,
+        map: global.map,
         bounds: {
           north: area[0],
-          south: area[1],
-          east: area[2],
+          east: area[1],
+          south: area[2],
           west: area[3]
         }
       });

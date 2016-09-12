@@ -4,11 +4,18 @@
 global = {};
 global.townships = [ {
 	name : "Maldon",
-	latlon : [ -36.997609, 144.068722 ]
-}, {
+	latlon : [ -36.997609, 144.068722 ],
+	osmArea : [-36.8093, 144.2759, -37.0853, 143.9257],
+	defaultMapZoom: 10
+}, 
+
+{
 	name : "Fryerstown",
-	latlon : [ -37.140291, 144.249982 ]
+	latlon : [ -37.140291, 144.249982 ],
+    osmArea : [-37.0615, 144.3840, -37.2019, 144.1547],
+    defaultMapZoom: 11
 } ];
+
 global.existing_scenarios = [ {
 	name : "Maldon-Bushfire-Jan-1944",
 	township : "Maldon"
@@ -44,8 +51,8 @@ $("#new-scenario-dropdown").on("change", function() {
 	$("#outer").show();
 	var township = getTownship(global.scenario_creation_arg);
 	setScenarioTitle(township.name + " Simulation")
-	panMapTo(township.latlon, 13);
-	drawSimulationAreaOnMap(township.simAreaRect);
+	panMapTo(township.latlon, township.defaultMapZoom);
+	drawSimulationAreaOnMap(township.osmArea);
 
 });
 
@@ -84,7 +91,7 @@ $("#nav-back").click(function(event) {
 // Save button
 $("#nav-save").click(function(event) {
 	save();
-	timedInfo("Simulation saved");
+	timedPrompt('info', "Simulation saved");
 });
 
 // Create simulation button
@@ -111,7 +118,7 @@ $("#nav-create-sim").click(function(event) {
 			// Disable all buttons
 			$('.btn').prop('disabled', false);
 			// Show success message
-			timedInfo("Simulation created");
+			timedPrompt('info', "Simulation created");
 		  }
 		}, 100);
 });
@@ -167,14 +174,15 @@ function save() {
 }
 
 // Shows the msg for a fixed amount of time in a standard info popup
-function timedInfo(msg) {
+// type: one of 'info', 'warn', or 'error'
+function timedPrompt(type, msg) {
 	var o = $("#info-overlay")
 	o.text(msg);
 	o.fadeIn("fast");
 	// fadeout after 1 sec
 	setTimeout(function() {
 		$("#info-overlay").fadeOut(1000);
-	}, 600);
+	}, 1000);
 	
 }
 
