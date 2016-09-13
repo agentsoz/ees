@@ -40,6 +40,17 @@ function drawSimulationAreaOnMap(area) {
 	});
 }
 
+function drawMarker(latlon, title) {
+	var pos = new google.maps.LatLng(latlon[0], latlon[1]);
+	var marker = new google.maps.Marker({
+	    position: pos,
+	    title:title
+	});
+
+	// To add the marker to the map, call setMap();
+	marker.setMap(global.map);	
+}
+
 function drawFire() {
 	global.map.data.forEach(function(feature) {
 		// If you want, check here for some constraints.

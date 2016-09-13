@@ -65,6 +65,7 @@ $("#new-scenario-dropdown").on(
 					.getElementsByClassName("dropdown-fires"), township.fires);
 
 			panMapTo(township.latlon, township.defaultMapZoom);
+			drawMarker(township.latlon, township.name);
 			drawSimulationAreaOnMap(township.osmArea);
 		});
 
