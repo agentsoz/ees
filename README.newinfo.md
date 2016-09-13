@@ -64,3 +64,14 @@ class should be modified to accept input in that format, as follows:
 ```
 <firefile name="fire.json" format="GeoJSON" coordinates="utm"/>
 ```
+
+To convert the same file for loading in Google Maps which uses a
+different coordinate system, do:
+
+```
+ogr2ogr -f GeoJSON \
+  -t_srs "EPSG:4326" 
+  -s_srs "EPSG:3111" \
+  20160420_MtAlexShire_FDI75_Iso.json \ 
+  20160420_MtAlexShire_FDI75_Iso.shp
+```
