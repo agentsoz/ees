@@ -83,16 +83,19 @@
     <div id="header" class="col-md-12 text-center">
      <h1 id="scenario-title">Bushfire Evacuation Simulation</h1>
      <div class="col-sm-12 nav-bar">
-      <button id="nav-back" type="button" class="btn btn-default ui-state-enabled">
+      <button id="nav-back" type="button"
+       class="btn btn-default ui-state-enabled">
        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
        Back
       </button>
-      <button id="nav-create-sim" type="button" class="btn btn-default ui-state-enabled">
+      <button id="nav-create-sim" type="button"
+       class="btn btn-default ui-state-enabled">
        <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
        Create Simulation
       </button>
 
-      <button id="nav-save" type="button" class="btn btn-default ui-state-enabled">
+      <button id="nav-save" type="button"
+       class="btn btn-default ui-state-enabled">
        <span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span>
        Save
       </button>
@@ -100,7 +103,28 @@
     </div>
     <div id="content" class="col-md-12">
 
-     <div class="col-sm-6">
+     <div class="col-sm-5">
+
+      <h3>Scenario Setup</h3>
+      <div class="well well-sm">
+       <div class="row">
+        <div class="col-md-8">
+         <h4>Fire model</h4>
+         <div >
+          <select id="existing-fires-dropdown" class="form-control dropdown-fires">
+           <option value="">Select</option>
+          </select>
+         </div>
+        </div>
+        <div class="col-md-4">
+        <h4>Show</h4>
+        <input type="checkbox" id="show-fire"
+         name="checkbox-show-fire" checked="checked">
+        </div>
+       </div>
+      </div>
+
+
       <div id="accordion">
        <h1>Traffic Behaviour</h1>
        <div>Lorem ipsum dolor sit amet. Lorem ipsum dolor sit
@@ -110,7 +134,7 @@
       </div>
      </div>
 
-     <div class="col-sm-6">
+     <div class="col-sm-7">
       <div id="map"></div>
      </div>
 
@@ -137,10 +161,10 @@
  <div id="info-overlay" class="ui-widget ui-front ui-corner-all">
  </div>
 
-<!-- Progress Bar -->
+ <!-- Progress Bar -->
  <div class="progress progress-striped active">
-  <div class="progress-bar ui-corner-all" role="progressbar" aria-valuenow="0"
-   aria-valuemin="0" aria-valuemax="100"></div>
+  <div class="progress-bar ui-corner-all" role="progressbar"
+   aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
  </div>
 
  <script src="lib/jquery/jquery-3.1.0.js" type="text/javascript"></script>

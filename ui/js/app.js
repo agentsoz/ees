@@ -5,15 +5,23 @@ global = {};
 global.townships = [ {
 	name : "Maldon",
 	latlon : [ -36.997609, 144.068722 ],
-	osmArea : [-36.8093, 144.2759, -37.0853, 143.9257],
-	defaultMapZoom: 10
-}, 
+	osmArea : [ -36.8093, 144.2759, -37.0853, 143.9257 ],
+	defaultMapZoom : 10,
+	fires : [ {
+		name : "20160420_MtAlexShire_FDI75_Iso",
+		url : "media/20160420_MtAlexShire_FDI75_Iso.json"
+	}, {
+		name : "20160420_MtAlexShire_FDI50_Iso",
+		url : "media/20160420_MtAlexShire_FDI50_Iso.json"
+	} ]
+},
 
 {
 	name : "Fryerstown",
 	latlon : [ -37.140291, 144.249982 ],
-    osmArea : [-37.0615, 144.3840, -37.2019, 144.1547],
-    defaultMapZoom: 11
+	osmArea : [ -37.0615, 144.3840, -37.2019, 144.1547 ],
+	defaultMapZoom : 11,
+	fires : []
 } ];
 
 global.existing_scenarios = [ {
@@ -34,27 +42,31 @@ window.onload = function(e) {
 	$("#outer").hide();
 
 	// Populate the scenario creation dropdowns
-	addNamesToNewScenarioDropdowns(document
-			.getElementsByClassName("dropdown-townships"), global.townships);
-	addNamesToNewScenarioDropdowns(document
-			.getElementsByClassName("dropdown-scenarios"),
+	addOptionsToDropdowns(
+			document.getElementsByClassName("dropdown-townships"),
+			global.townships);
+	addOptionsToDropdowns(
+			document.getElementsByClassName("dropdown-scenarios"),
 			global.existing_scenarios);
-
 }
 
 // Handles the user selection for brand new scenario creation
-$("#new-scenario-dropdown").on("change", function() {
-	$('#newsim').modal('hide');
-	global.scenario_creation_arg = $(this).find(':selected').text();
-	global.scenario_creation_new = true;
-	$("#outer-start").hide();
-	$("#outer").show();
-	var township = getTownship(global.scenario_creation_arg);
-	setScenarioTitle(township.name + " Simulation")
-	panMapTo(township.latlon, township.defaultMapZoom);
-	drawSimulationAreaOnMap(township.osmArea);
+$("#new-scenario-dropdown").on(
+		"change",
+		function() {
+			$('#newsim').modal('hide');
+			global.scenario_creation_arg = $(this).find(':selected').text();
+			global.scenario_creation_new = true;
+			$("#outer-start").hide();
+			$("#outer").show();
+			var township = getTownship(global.scenario_creation_arg);
+			setScenarioTitle(township.name + " Simulation");
+			addOptionsToDropdowns(document
+					.getElementsByClassName("dropdown-fires"), township.fires);
 
-});
+			panMapTo(township.latlon, township.defaultMapZoom);
+			drawSimulationAreaOnMap(township.osmArea);
+		});
 
 // Handles the user selection for new scenario creation based on existing
 $("#existing-scenario-dropdown").on("change", function() {
@@ -62,6 +74,21 @@ $("#existing-scenario-dropdown").on("change", function() {
 	var scenario = $(this).find(':selected').text();
 	global.scenario_creation_arg = scenario;
 	global.scenario_creation_new = false;
+});
+
+// Handles the user selection for the fire
+$("body").on("change", "select", function(e) {
+	if (e.target.id.localeCompare('existing-fires-dropdown') == 0) {
+		var township = getTownship(global.scenario_creation_arg);
+		var text = $(this).find(':selected').text();
+		if (text.localeCompare('Select') == 0) {
+			global.scenario_fire = null;
+		} else {
+			var fire = getFire(township, text);
+			global.scenario_fire = fire;
+		}
+		drawFire();
+	}
 });
 
 // Back confirmation dialog
@@ -94,6 +121,10 @@ $("#nav-save").click(function(event) {
 	timedPrompt('info', "Simulation saved");
 });
 
+$('#show-fire').change(function() {
+	drawFire();
+});
+
 // Create simulation button
 $("#nav-create-sim").click(function(event) {
 	// Disable all buttons
@@ -102,25 +133,25 @@ $("#nav-create-sim").click(function(event) {
 	createSimulation();
 	// Show the progress bar and update it every few ms
 	// TODO: This should happen based on progress feedback from server instead
-    $('.progress').show();
+	$('.progress').show();
 	var i = 0;
-	var counterBack = setInterval(function () {
-		  i++;
-		  if (i <= 100) {
-		    $('.progress-bar').css('width', i + '%').attr('aria-valuenow', i);
-		    $('.progress-bar').text(i+'%');
-		  } else {
+	var counterBack = setInterval(function() {
+		i++;
+		if (i <= 100) {
+			$('.progress-bar').css('width', i + '%').attr('aria-valuenow', i);
+			$('.progress-bar').text(i + '%');
+		} else {
 			// Clear the timer
-		    clearInterval(counterBack);
-		    // Hide and reset the progress bar
-		    $('.progress').hide();
-		    $('.progress-bar').css('width', '0%').attr('aria-valuenow', 0);
+			clearInterval(counterBack);
+			// Hide and reset the progress bar
+			$('.progress').hide();
+			$('.progress-bar').css('width', '0%').attr('aria-valuenow', 0);
 			// Disable all buttons
 			$('.btn').prop('disabled', false);
 			// Show success message
 			timedPrompt('info', "Simulation created");
-		  }
-		}, 100);
+		}
+	}, 100);
 });
 
 // Accordian
@@ -129,9 +160,12 @@ $("#accordion").accordion({
 	active : false
 });
 
+// Control group
+$(".controlgroup").controlgroup();
+
 // Appends the names to the array of dropdowns
 // names: an array of structures, each with key name
-function addNamesToNewScenarioDropdowns(dropdowns, names) {
+function addOptionsToDropdowns(dropdowns, names) {
 	for (var d = 0; d < dropdowns.length; d++) {
 		var dropdown = dropdowns[d];
 		for (var i = 0; i < names.length; i++) {
@@ -164,6 +198,16 @@ function getScenario(name) {
 	return null;
 }
 
+function getFire(township, firename) {
+	for (var i = 0; i < township.fires.length; i++) {
+		var fire = township.fires[i].name;
+		if (fire.localeCompare(firename) == 0) {
+			return township.fires[i];
+		}
+	}
+	return null;
+}
+
 function setScenarioTitle(title) {
 	$('#scenario-title').text(title);
 }
@@ -183,12 +227,9 @@ function timedPrompt(type, msg) {
 	setTimeout(function() {
 		$("#info-overlay").fadeOut(1000);
 	}, 1000);
-	
-}
 
+}
 
 // Create simulation
 function createSimulation() {
 }
-
-
