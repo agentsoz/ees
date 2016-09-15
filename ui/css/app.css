@@ -82,6 +82,9 @@ body {
  margin-top: 1em;
 }
 
+.panel-title {
+ margin-bottom: 0.5em;
+}
 .li-odd {
  background-color: rgba(119, 213, 247, 0.3);
 /*  background-color: rgb(0, 120, 174); */

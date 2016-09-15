@@ -75,6 +75,23 @@
   </div>
  </div>
 
+ <div id="infomodal" class="modal fade" tabindex='-1'>
+  <div class="modal-dialog modal-lg">
+   <div class="modal-content">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title">Help Information</h4>
+    </div>
+    <div class="modal-body">
+    ...
+    </div>
+    <div class="modal-footer" hidden="true"></div>
+   </div>
+  </div>
+ </div>
+
  <div id="outer" style="display: none;">
   <div class="container-fluid">
    <div class="row">
@@ -108,13 +125,16 @@
       <div class="well well-sm">
        <div class="row">
         <div class="col-md-8">
-         <h4>Fire model</h4>
+         <div class="panel-title">
+          Fire model <span id="info-fire-model"
+           class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+         </div>
          <select id="existing-fires-dropdown"
           class="form-control dropdown-fires">
          </select>
         </div>
         <div class="col-md-4">
-         <h4>Show</h4>
+         <div class="panel-title">Show</div>
          <input type="checkbox" id="show-fire" name="checkbox-show-fire"
           checked="checked">
         </div>
@@ -122,7 +142,10 @@
       </div>
 
       <div class="well well-sm">
-       <h4>Destinations and safe lines</h4>
+       <div class="panel-title">
+        Destinations and safe lines <span id="info-dest-safelines"
+         class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+       </div>
        <div class="row">
         <div class="col-md-7">
          <select id="existing-destinations"

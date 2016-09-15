@@ -54,3 +54,8 @@ global.existing_scenarios = [ {
 	township : "Fryerstown"
 } ];
 
+
+// Help info goes here
+info = [{
+	
+}];

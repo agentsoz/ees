@@ -80,7 +80,7 @@ $("body").on("change", "select", function(e) {
 	}
 });
 
-// Global handler for click events on dynamically generated elements
+// Global handler for remove sign on destinations/safelines
 $("body").on("click", ".glyphicon-remove-sign", function(e) {
 	// Get the destination town associated with the x
 	var dest = $(this).attr('name');
@@ -92,6 +92,16 @@ $("body").on("click", ".glyphicon-remove-sign", function(e) {
 	removeSafeLine(poly.line);
 	e.stopPropagation();
 });
+
+//Global handler for remove sign on destinations/safelines
+$("body").on("click", ".glyphicon-info-sign", function(e) {
+	var id = $(this).attr('id');
+	$('#infomodal').modal('show');
+	e.stopPropagation();
+});
+
+
+
 $("body").on("click", ".list-group-item", function(e) {
 	var dest = $(this).text();
 	var township = getTownship(global.scenario_creation_arg);
