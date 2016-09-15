@@ -104,21 +104,46 @@
      <div class="col-sm-5">
 
       <h3>Scenario Setup</h3>
+
       <div class="well well-sm">
        <div class="row">
         <div class="col-md-8">
          <h4>Fire model</h4>
-         <div >
-          <select id="existing-fires-dropdown" class="form-control dropdown-fires">
-          </select>
-         </div>
+         <select id="existing-fires-dropdown"
+          class="form-control dropdown-fires">
+         </select>
         </div>
         <div class="col-md-4">
-        <h4>Show</h4>
-        <input type="checkbox" id="show-fire"
-         name="checkbox-show-fire" checked="checked">
+         <h4>Show</h4>
+         <input type="checkbox" id="show-fire" name="checkbox-show-fire"
+          checked="checked">
         </div>
        </div>
+      </div>
+
+      <div class="well well-sm">
+       <h4>Destinations and safe lines</h4>
+       <div class="row">
+        <div class="col-md-7">
+         <select id="existing-destinations"
+          class="form-control dropdown-destinations">
+         </select>
+        </div>
+        <div class="col-md-5">
+         <button id="add-safeline" type="button" disabled
+          class="btn btn-default ui-state-enabled pull-right">
+          <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+          Draw safe line
+         </button>
+        </div>
+       </div>
+       <ul id="destinations-list" class="list-group">
+        <li class="list-group-item">Cras justo odio <span
+         class="glyphicon glyphicon-remove-sign pull-right"
+         aria-hidden="true"></span></li>
+        <li class="list-group-item">Dapibus ac facilisis in</li>
+        <li class="list-group-item">Morbi leo risus</li>
+       </ul>
       </div>
 
 
@@ -167,6 +192,7 @@
  <script src="lib/jquery/jquery-3.1.0.js" type="text/javascript"></script>
  <script src="lib/jquery-ui/jquery-ui.js" type="text/javascript"></script>
  <script src="lib/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+ <script src="js/init.js" type="text/javascript"></script>
  <script src="js/app.js" type="text/javascript"></script>
  <script async defer
   src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBGTqnElrEBCpqvEn88gwXeUDBe-ia1D1E&amp;callback=initMap"

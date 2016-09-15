@@ -78,6 +78,9 @@ body {
  display:none;
 }
 
+#destinations-list {
+ margin-top: 1em;
+}
 .maincolumn {
  padding:0px 15px 0 15px;
 }

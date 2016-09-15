@@ -1,40 +1,3 @@
-//
-// GLOBALS
-//
-global = {};
-global.townships = [ {
-	name : "Maldon",
-	latlon : [ -36.997609, 144.068722 ],
-	osmArea : [ -36.8093, 144.2759, -37.0853, 143.9257 ],
-	defaultMapZoom : 10,
-	fires : [ {
-		name : "20160420_MtAlexShire_FDI75_Iso",
-		url : "media/20160420_MtAlexShire_FDI75_Iso.json"
-	}, {
-		name : "20160420_MtAlexShire_FDI50_Iso",
-		url : "media/20160420_MtAlexShire_FDI50_Iso.json"
-	} ]
-},
-
-{
-	name : "Fryerstown",
-	latlon : [ -37.140291, 144.249982 ],
-	osmArea : [ -37.0615, 144.3840, -37.2019, 144.1547 ],
-	defaultMapZoom : 11,
-	fires : []
-} ];
-
-global.existing_scenarios = [ {
-	name : "Maldon-Bushfire-Jan-1944",
-	township : "Maldon"
-}, {
-	name : "Maldon-Bushfire-Mar-1803",
-	township : "Maldon"
-}, {
-	name : "Fryerstown-Bushfire-Jan-2017",
-	township : "Fryerstown"
-} ];
-
 // Executes when the page is fully loaded
 window.onload = function(e) {
 	// Setup the visibility of pages
@@ -42,11 +5,10 @@ window.onload = function(e) {
 	$("#outer").hide();
 
 	// Populate the scenario creation dropdowns
-	setOptionsForDropdowns(
-			document.getElementsByClassName("dropdown-townships"),
-			global.townships);
-	setOptionsForDropdowns(
-			document.getElementsByClassName("dropdown-scenarios"),
+	setOptionsForDropdowns(document
+			.getElementsByClassName("dropdown-townships"), global.townships);
+	setOptionsForDropdowns(document
+			.getElementsByClassName("dropdown-scenarios"),
 			global.existing_scenarios);
 }
 
@@ -54,16 +16,25 @@ window.onload = function(e) {
 $("#new-scenario-dropdown").on(
 		"change",
 		function() {
+			// Hide the popup modal
 			$('#newsim').modal('hide');
+			// Save the data for use throughout scenario creation
 			global.scenario_creation_arg = $(this).find(':selected').text();
 			global.scenario_creation_new = true;
+			// Hide the start panel and expose the main one
 			$("#outer-start").hide();
 			$("#outer").show();
+			// This is how we get the town name from the global data
 			var township = getTownship(global.scenario_creation_arg);
+			// Set the scenario title to include the town name
 			setScenarioTitle(township.name + " Simulation");
+			// Populate the fire dropdrop list for this town
 			setOptionsForDropdowns(document
 					.getElementsByClassName("dropdown-fires"), township.fires);
-
+			// Populate the relief destinations list for this town
+			setOptionsForDropdowns(document
+					.getElementsByClassName("dropdown-destinations"),
+					township.destinations);
 			panMapTo(township.latlon, township.defaultMapZoom);
 			drawMarker(township.latlon, township.name);
 			drawSimulationAreaOnMap(township.osmArea);
@@ -77,7 +48,7 @@ $("#existing-scenario-dropdown").on("change", function() {
 	global.scenario_creation_new = false;
 });
 
-// Handles the user selection for the fire
+// Global handler for select change events on dynamically generated dropdowns
 $("body").on("change", "select", function(e) {
 	if (e.target.id.localeCompare('existing-fires-dropdown') == 0) {
 		var township = getTownship(global.scenario_creation_arg);
@@ -89,6 +60,22 @@ $("body").on("change", "select", function(e) {
 			global.scenario_fire = fire;
 		}
 		drawFire();
+	} else if (e.target.id.localeCompare('existing-destinations') == 0) {
+		var text = $(this).find(':selected').text();
+		if (text.localeCompare('Select') == 0) {
+			$("#add-safeline").prop('disabled', true);
+			cancelDrawSafeLine(true);
+		} else {
+			$("#add-safeline").prop('disabled', false);
+		}
+	}
+});
+
+// Global handler for key up events
+$(document).keyup(function(e) {
+	// ESC
+	if (e.which == 27) {
+		cancelDrawSafeLine(true);
 	}
 });
 
@@ -124,6 +111,13 @@ $("#nav-save").click(function(event) {
 
 $('#show-fire').change(function() {
 	drawFire();
+});
+
+$("#add-safeline").click(function(event) {
+	var township = getTownship(global.scenario_creation_arg);
+	drawSafeLine(township.safeLines, function() {
+		var dest = $("#existing-destinations").find(':selected').text();
+	});
 });
 
 // Create simulation button
@@ -169,7 +163,7 @@ $(".controlgroup").controlgroup();
 function setOptionsForDropdowns(dropdowns, names) {
 	for (var d = 0; d < dropdowns.length; d++) {
 		var dropdown = dropdowns[d];
-		dropdown.options.length=0;
+		dropdown.options.length = 0;
 		var el = document.createElement("option");
 		el.value = 'Select';
 		el.innerHTML = 'Select';

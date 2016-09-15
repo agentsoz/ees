@@ -30,6 +30,8 @@ function drawSimulationAreaOnMap(area) {
 		strokeWeight : 2,
 		fillColor : '#FF0000',
 		fillOpacity : 0.03,
+		zIndex : -1,
+		clickable : false,
 		map : global.map,
 		bounds : {
 			north : area[0],
@@ -43,12 +45,12 @@ function drawSimulationAreaOnMap(area) {
 function drawMarker(latlon, title) {
 	var pos = new google.maps.LatLng(latlon[0], latlon[1]);
 	var marker = new google.maps.Marker({
-	    position: pos,
-	    title:title
+		position : pos,
+		title : title
 	});
 
 	// To add the marker to the map, call setMap();
-	marker.setMap(global.map);	
+	marker.setMap(global.map);
 }
 
 function drawFire() {
@@ -65,4 +67,52 @@ function drawFire() {
 			strokeColor : 'red'
 		});
 	}
+}
+
+function drawSafeLine(safeLines, callback) {
+	var firstClick = true;
+	global.map.setOptions({
+		draggableCursor : 'crosshair'
+	});
+	global.hClick = google.maps.event.addListener(global.map, 'click',
+			function(e) {
+				if (firstClick) {
+					firstClick = false;
+					global.poly = new google.maps.Polyline({
+						map : global.map,
+						clickable : false,
+						zindex : 1,
+						path : [],
+						strokeColor : "#0000FF",
+						strokeOpacity : 0.8,
+						strokeWeight : 2
+					});
+					global.poly.getPath().setAt(0, e.latLng);
+					global.map.setOptions({
+						draggableCursor : 'crosshair'
+					});
+
+					global.hMove = google.maps.event.addListener(global.map,
+							'mousemove', function(mouseMoveEvent) {
+								global.poly.getPath().setAt(1,
+										mouseMoveEvent.latLng);
+							});
+				} else {
+					cancelDrawSafeLine();
+					safeLines.push(global.poly);
+					callback();
+				}
+			});
+}
+
+function cancelDrawSafeLine(removeActivePoly) {
+	google.maps.event.removeListener(global.hMove);
+	google.maps.event.removeListener(global.hClick);
+	global.map.setOptions({
+		draggableCursor : ''
+	});
+	if (removeActivePoly && global.poly) {
+		global.poly.setMap(null);
+	}
+	global.poly = null;
 }
