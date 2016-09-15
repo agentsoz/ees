@@ -19,7 +19,7 @@ function drawSimulationAreaOnMap(area) {
 	var rectangle = new google.maps.Rectangle({
 		strokeColor : '#FF0000',
 		strokeOpacity : 0.5,
-		strokeWeight : safeLineStrokeWeight,
+		strokeWeight : 2,
 		fillColor : '#FF0000',
 		fillOpacity : 0.03,
 		zIndex : -1,

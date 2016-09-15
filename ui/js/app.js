@@ -12,6 +12,14 @@ window.onload = function(e) {
 			global.existing_scenarios);
 }
 
+function reset() {
+	for (var i = 0; i < global.townships.length; i++) {
+		var township = global.townships[i];
+		// Remove all safe lines
+		township.safeLines.length = 0;
+		$('.glyphicon-remove-sign').parent().remove();
+	}
+}
 // Handles the user selection for brand new scenario creation
 $("#new-scenario-dropdown").on(
 		"change",
@@ -133,6 +141,7 @@ $("#dialog-confirm").dialog({
 // Back button
 $("#nav-back").click(function(event) {
 	$("#dialog-confirm").dialog("open");
+	reset();
 	event.preventDefault();
 });
 
