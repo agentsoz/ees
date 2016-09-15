@@ -19,7 +19,7 @@ function drawSimulationAreaOnMap(area) {
 	var rectangle = new google.maps.Rectangle({
 		strokeColor : '#FF0000',
 		strokeOpacity : 0.5,
-		strokeWeight : 2,
+		strokeWeight : safeLineStrokeWeight,
 		fillColor : '#FF0000',
 		fillOpacity : 0.03,
 		zIndex : -1,
@@ -75,9 +75,9 @@ function drawSafeLine(township, dest, callback) {
 						clickable : false,
 						zindex : 1,
 						path : [],
-						strokeColor : "#0000FF",
+						strokeColor : defaults.safeLineStrokeColor,
 						strokeOpacity : 0.8,
-						strokeWeight : 2
+						strokeWeight : defaults.safeLineStrokeWeight
 					});
 					global.poly.getPath().setAt(0, e.latLng);
 					global.map.setOptions({

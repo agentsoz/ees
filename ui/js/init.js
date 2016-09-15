@@ -1,6 +1,13 @@
 //
 // GLOBALS
 //
+
+defaults = {};
+defaults.safeLineStrokeColor = '#0000FF';
+defaults.safeLineStrokeWeight = 3;
+defaults.safeLineHighlightColor = '#FF00FF';
+defaults.safeLineHighlightWeight = 4;
+
 global = {};
 global.townships = [ {
 	name : "Maldon",

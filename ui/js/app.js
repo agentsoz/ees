@@ -82,13 +82,26 @@ $("body").on("click", ".glyphicon-remove-sign", function(e) {
 	var township = getTownship(global.scenario_creation_arg);
 	var poly = getPolyLine(township, dest, true);
 	removeSafeLine(poly.line);
+	e.stopPropagation();
 });
 $("body").on("click", ".list-group-item", function(e) {
 	var dest = $(this).text();
 	var township = getTownship(global.scenario_creation_arg);
 	var poly = getPolyLine(township, dest, false);
 	var vertex = poly.line.getPath().getArray()[0];
-	panMapTo([vertex.lat(),vertex.lng()], poly.zoom);
+	panMapTo([ vertex.lat(), vertex.lng() ], poly.zoom);
+	var color = poly.line.strokeColor;
+	var size = poly.line.strokeWeight;
+	poly.line.setOptions({
+		strokeColor : defaults.safeLineHighlightColor,
+		strokeWeight : defaults.safeLineHighlightWeight
+	});
+	setTimeout(function() {
+		poly.line.setOptions({
+			strokeColor : color,
+			strokeWeight : size
+		});
+	}, 800);
 });
 
 // Global handler for key up events
