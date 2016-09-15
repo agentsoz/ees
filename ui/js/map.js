@@ -10,14 +10,6 @@ function initMap() {
 }
 
 function panMapTo(latlon, zoom) {
-	var mapDiv = document.getElementById('map');
-	global.map = new google.maps.Map(mapDiv, {
-		center : {
-			lat : -37.064558,
-			lng : 144.218764
-		},
-		zoom : zoom
-	});
 	var latLng = new google.maps.LatLng(latlon[0], latlon[1]);
 	global.map.setZoom(zoom);
 	global.map.panTo(latLng);
@@ -69,7 +61,7 @@ function drawFire() {
 	}
 }
 
-function drawSafeLine(safeLines, callback) {
+function drawSafeLine(township, dest, callback) {
 	var firstClick = true;
 	global.map.setOptions({
 		draggableCursor : 'crosshair'
@@ -98,8 +90,12 @@ function drawSafeLine(safeLines, callback) {
 										mouseMoveEvent.latLng);
 							});
 				} else {
+					township.safeLines.push({
+						'name' : dest,
+						'line' : global.poly,
+						'zoom' : global.map.getZoom()
+					});
 					cancelDrawSafeLine();
-					safeLines.push(global.poly);
 					callback();
 				}
 			});
@@ -115,4 +111,10 @@ function cancelDrawSafeLine(removeActivePoly) {
 		global.poly.setMap(null);
 	}
 	global.poly = null;
+}
+
+function removeSafeLine(poly) {
+	if (poly) {
+		poly.setMap(null);
+	}
 }

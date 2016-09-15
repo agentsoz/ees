@@ -35,6 +35,7 @@ $("#new-scenario-dropdown").on(
 			setOptionsForDropdowns(document
 					.getElementsByClassName("dropdown-destinations"),
 					township.destinations);
+			initMap();
 			panMapTo(township.latlon, township.defaultMapZoom);
 			drawMarker(township.latlon, township.name);
 			drawSimulationAreaOnMap(township.osmArea);
@@ -69,6 +70,25 @@ $("body").on("change", "select", function(e) {
 			$("#add-safeline").prop('disabled', false);
 		}
 	}
+});
+
+// Global handler for click events on dynamically generated elements
+$("body").on("click", ".glyphicon-remove-sign", function(e) {
+	// Get the destination town associated with the x
+	var dest = $(this).attr('name');
+	// Remove the destination from the list
+	$(this).parent().remove();
+	// Finally, remove the polyline associated with this destination
+	var township = getTownship(global.scenario_creation_arg);
+	var poly = getPolyLine(township, dest, true);
+	removeSafeLine(poly.line);
+});
+$("body").on("click", ".list-group-item", function(e) {
+	var dest = $(this).text();
+	var township = getTownship(global.scenario_creation_arg);
+	var poly = getPolyLine(township, dest, false);
+	var vertex = poly.line.getPath().getArray()[0];
+	panMapTo([vertex.lat(),vertex.lng()], poly.zoom);
 });
 
 // Global handler for key up events
@@ -115,10 +135,28 @@ $('#show-fire').change(function() {
 
 $("#add-safeline").click(function(event) {
 	var township = getTownship(global.scenario_creation_arg);
-	drawSafeLine(township.safeLines, function() {
-		var dest = $("#existing-destinations").find(':selected').text();
+	var dest = $("#existing-destinations").find(':selected').text();
+	drawSafeLine(township, dest, function() {
+		addDestinationSafeLine();
 	});
 });
+
+function addDestinationSafeLine() {
+	var dest = $("#existing-destinations").find(':selected').text();
+	var li = '';
+	li += '<li class="list-group-item">';
+	li += dest;
+	li += '<span class="glyphicon glyphicon-remove-sign pull-right"';
+	li += ' style="z-index: 1;"';
+	li += ' name="' + dest + '"';
+	li += ' aria-hidden="true"></span>';
+	li += '</li>';
+	$("#destinations-list").append(li);
+	$('#destinations-list li').removeClass('li-odd');
+	$('#destinations-list li').removeClass('li-even');
+	$('#destinations-list li:nth-child(odd)').addClass('li-odd');
+	$('#destinations-list li:nth-child(even)').addClass('li-even');
+}
 
 // Create simulation button
 $("#nav-create-sim").click(function(event) {
@@ -203,6 +241,20 @@ function getFire(township, firename) {
 		var fire = township.fires[i].name;
 		if (fire.localeCompare(firename) == 0) {
 			return township.fires[i];
+		}
+	}
+	return null;
+}
+
+function getPolyLine(township, dest, remove) {
+	for (var i = 0; i < township.safeLines.length; i++) {
+		var town = township.safeLines[i].name;
+		if (town.localeCompare(dest) == 0) {
+			var line = township.safeLines[i];
+			if (remove) {
+				township.safeLines.splice(i, 1);
+			}
+			return line;
 		}
 	}
 	return null;
