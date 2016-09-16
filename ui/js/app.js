@@ -77,7 +77,7 @@ $("body").on("change", "select", function(e) {
 		var text = $(this).find(':selected').text();
 		if (text.localeCompare('Select') == 0) {
 			$("#add-safeline").prop('disabled', true);
-			cancelDrawSafeLine(true);
+			cancelDraw(true);
 		} else {
 			$("#add-safeline").prop('disabled', false);
 		}
@@ -94,6 +94,12 @@ $("body").on("click", ".glyphicon-remove-sign", function(e) {
 	var township = getTownship(global.scenario_creation_arg);
 	var poly = getPolyLine(township, dest, true);
 	removeSafeLine(poly.line);
+	// Fix the row colours
+	$('#destinations-list li').removeClass('li-odd');
+	$('#destinations-list li').removeClass('li-even');
+	$('#destinations-list li:nth-child(odd)').addClass('li-odd');
+	$('#destinations-list li:nth-child(even)').addClass('li-even');
+    // Stop the event form propagating to parents
 	e.stopPropagation();
 	// Enable the destination again
 	$('#existing-destinations option[value="' + dest + '"]').prop('disabled',false);
@@ -131,7 +137,7 @@ $("body").on("click", ".list-group-item", function(e) {
 $(document).keyup(function(e) {
 	// ESC
 	if (e.which == 27) {
-		cancelDrawSafeLine(true);
+		cancelDraw(true);
 	}
 });
 
@@ -173,6 +179,8 @@ $('#show-fire').change(function() {
 $("#add-safeline").click(function(event) {
 	var township = getTownship(global.scenario_creation_arg);
 	var dest = $("#existing-destinations option:selected").text();
+	// cancel any active draws first to be safe
+	cancelDraw(true);
 	drawSafeLine(township, dest, function() {
 		// Add the destination to the list
 		addDestinationSafeLine();
@@ -406,3 +414,28 @@ function setEvacPeak(mins) {
 	}
 	$('#evac-timeslider').slider( 'value', index );
 }
+
+
+$("#num-vehicles").change(function(){
+	var val = $("#num-vehicles").val();
+	if (val > 0) {
+		$('#add-vehicles-area').prop('disabled', false);
+	} else {
+		$('#add-vehicles-area').prop('disabled', true);
+	}
+});
+
+$("#add-vehicles-area").click(function(event) {
+	var township = getTownship(global.scenario_creation_arg);
+	var label = $("#num-vehicles").val();
+	// cancel any active draws first to be safe
+	cancelDraw(true);
+	drawVehiclesArea(township, label, function() {
+		// Add the destination to the list
+		//addDestinationSafeLine();
+		// Disable the destination in the dropdown
+		//$("#existing-destinations option:selected").prop('disabled',true);
+		// Reset the dropdown
+		//$("#existing-destinations").val('Select');
+	});
+});

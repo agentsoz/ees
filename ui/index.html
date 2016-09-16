@@ -123,20 +123,20 @@
       <h3>Scenario Setup</h3>
 
       <div class="well well-sm">
-       <div class="row">
-        <div class="col-md-8">
          <div class="panel-title">
           Fire model <span id="info-fire-model"
            class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
          </div>
+       <div class="row">
+        <div class="col-xs-8">
          <select id="existing-fires-dropdown"
           class="form-control dropdown-fires">
          </select>
         </div>
-        <div class="col-md-4">
-         <div class="panel-title">Show</div>
+        <div class="col-xs-4 checkbox-inline">
+         <label>
          <input type="checkbox" id="show-fire" name="checkbox-show-fire"
-          checked="checked">
+          checked="checked"> Show</label>
         </div>
        </div>
       </div>
@@ -147,12 +147,12 @@
          class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
        </div>
        <div class="row">
-        <div class="col-md-7">
+        <div class="col-md-7 col-sm-6 col-xs-7">
          <select id="existing-destinations"
           class="form-control dropdown-destinations">
          </select>
         </div>
-        <div class="col-md-5">
+        <div class="col-md-5 col-sm-6 col-xs-5">
          <button id="add-safeline" type="button" disabled
           class="btn btn-default ui-state-enabled pull-right">
           <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
@@ -166,21 +166,43 @@
 
       <div class="well well-sm">
        <div class="panel-title">
-        Evacuation time <span id="info-dest-safelines"
+        Evacuation time <span id="info-evac-time"
          class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
        </div>
 
        <div class="row">
-        <div class="col-md-3 col-sm-11 col-xs-11">
-         <div class="panel-title">Start</div>
+        <div class="col-md-3 col-sm-4 col-xs-3">
+         <label>Start</label>
          <input id="evac-timepicker" type="text" class="form-control">
         </div>
-        <div class="col-md-8 col-sm-11 col-xs-11">
-         <div class="panel-title">Peak (mins)</div>
+        <div class="col-md-8 col-sm-7 col-xs-8">
+         <label>Peak (mins)</label>
          <div id="evac-timeslider"></div>
         </div>
        </div>
       </div>
+
+      <div class="well well-sm">
+       <div class="panel-title">
+        Vehicles in area <span id="info-vehicles"
+         class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+       </div>
+       <div class="row">
+        <div class="col-xs-7">
+         <input  id="num-vehicles" type="number" min="0" step="1" class="form-control">
+        </div>
+        <div class="col-xs-5">
+         <button id="add-vehicles-area" type="button" disabled
+          class="btn btn-default ui-state-enabled pull-right">
+          <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+          Draw area
+         </button>
+        </div>
+       </div>
+       <ul id="vehicles-list" class="list-group">
+       </ul>
+      </div>
+
 
 
       <div id="accordion">

@@ -22,6 +22,7 @@ global.townships = [ {
 		url : "media/20160420_MtAlexShire_FDI50_Iso.json"
 	} ],
 	safeLines : [],
+	vehiclesAreas : [],
 	destinations : [ {
 		name : "Castlemaine"
 	}, {
@@ -40,6 +41,7 @@ global.townships = [ {
 	defaultMapZoom : 11,
 	fires : [],
 	safeLines : [],
+	vehiclesAreas : [],
 	destinations : []
 } ];
 

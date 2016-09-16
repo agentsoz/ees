@@ -95,13 +95,13 @@ function drawSafeLine(township, dest, callback) {
 						'line' : global.poly,
 						'zoom' : global.map.getZoom()
 					});
-					cancelDrawSafeLine();
+					cancelDraw();
 					callback();
 				}
 			});
 }
 
-function cancelDrawSafeLine(removeActivePoly) {
+function cancelDraw(removeActivePoly) {
 	google.maps.event.removeListener(global.hMove);
 	google.maps.event.removeListener(global.hClick);
 	global.map.setOptions({
@@ -117,4 +117,92 @@ function removeSafeLine(poly) {
 	if (poly) {
 		poly.setMap(null);
 	}
+}
+
+function drawVehiclesArea(township, name, callback) {
+	var firstClick = true;
+	global.map.setOptions({
+		draggableCursor : 'crosshair'
+	});
+	global.hClick = google.maps.event.addListener(global.map, 'click',
+			function(e) {
+				if (firstClick) {
+					firstClick = false;
+					global.poly = new google.maps.Rectangle({
+						strokeColor : 'darkorchid',
+						strokeOpacity : 0.9,
+						strokeWeight : 2,
+						fillColor : 'darkorchid',
+						fillOpacity : 0.05,
+						zIndex : -1,
+						clickable : false,
+						map : global.map
+					});
+
+					var bounds = new google.maps.LatLngBounds();
+					bounds.extend(e.latLng);
+					global.poly.setBounds(bounds);
+
+					global.map.setOptions({
+						draggableCursor : 'crosshair'
+					});
+					// Anchor the point that was clicked
+					var anchor = e.latLng;
+					global.hMove = google.maps.event.addListener(global.map,
+							'mousemove', function(mouseMoveEvent) {
+								// Get the current bounds of the rectangle
+								var b = global.poly.getBounds();
+								var ne = b.getNorthEast();
+								var sw = b.getSouthWest();
+								// Get the lat/lon of the mouse
+								var p = mouseMoveEvent.latLng;
+								// Now the calculations are slightly different
+								// depending on which quadrant we are in
+								// with respect to the anchor
+								var newNE = ne;
+								var newSW = sw;
+								// If we are in the SW wrt the anchor
+								if (p.lat() < anchor.lat() && p.lng() < anchor.lng()) {
+									newNE = anchor;
+									newSW = p;
+								}
+								// else if we are in the NE wrt the anchor
+								else if (p.lat() > anchor.lat()
+										&& p.lng() > anchor.lng()) {
+									newNE = p;
+									newSW = anchor;
+								}
+								// else if we are in the NW wrt the anchor
+								else if (p.lat() > anchor.lat()
+										&& p.lng() < anchor.lng()) {
+									newNE = new google.maps.LatLng(p.lat(),
+											anchor.lng());
+									newSW = new google.maps.LatLng(anchor.lat(),
+											p.lng());
+								}
+								// else if we are in the SE wrt the anchor
+								else if (p.lat() < anchor.lat()
+										&& p.lng() > anchor.lng()) {
+									newNE = new google.maps.LatLng(anchor.lat(),
+											p.lng());
+									newSW = new google.maps.LatLng(p.lat(),
+											anchor.lng());
+								}
+								// Now reassign the new bounds
+								var bounds = new google.maps.LatLngBounds();
+								bounds.extend(newNE);
+								bounds.extend(newSW);
+								global.poly.setBounds(bounds);
+
+							});
+				} else {
+					township.vehiclesAreas.push({
+						'name' : name,
+						'area' : global.poly,
+						'zoom' : global.map.getZoom()
+					});
+					cancelDraw();
+					callback();
+				}
+			});
 }
