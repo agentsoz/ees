@@ -90,11 +90,14 @@ $("body").on("click", ".glyphicon-remove-sign", function(e) {
 	var dest = $(this).attr('name');
 	// Remove the destination from the list
 	$(this).parent().remove();
-	// Finally, remove the polyline associated with this destination
+	// Remove the polyline associated with this destination
 	var township = getTownship(global.scenario_creation_arg);
 	var poly = getPolyLine(township, dest, true);
 	removeSafeLine(poly.line);
 	e.stopPropagation();
+	// Enable the destination again
+	$('#existing-destinations option[value="' + dest + '"]').prop('disabled',false);
+
 });
 
 // Global handler for remove sign on destinations/safelines
@@ -169,9 +172,14 @@ $('#show-fire').change(function() {
 
 $("#add-safeline").click(function(event) {
 	var township = getTownship(global.scenario_creation_arg);
-	var dest = $("#existing-destinations").find(':selected').text();
+	var dest = $("#existing-destinations option:selected").text();
 	drawSafeLine(township, dest, function() {
+		// Add the destination to the list
 		addDestinationSafeLine();
+		// Disable the destination in the dropdown
+		$("#existing-destinations option:selected").prop('disabled',true);
+		// Reset the dropdown
+		$("#existing-destinations").val('Select');
 	});
 });
 
