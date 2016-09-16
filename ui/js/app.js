@@ -47,6 +47,10 @@ $("#new-scenario-dropdown").on(
 			panMapTo(township.latlon, township.defaultMapZoom);
 			drawMarker(township.latlon, township.name);
 			drawSimulationAreaOnMap(township.osmArea);
+			
+			// Set the evac time
+			setEvacTime(global.evacTime);
+			setEvacPeak(global.evacPeakMins);
 		});
 
 // Handles the user selection for new scenario creation based on existing
@@ -93,14 +97,12 @@ $("body").on("click", ".glyphicon-remove-sign", function(e) {
 	e.stopPropagation();
 });
 
-//Global handler for remove sign on destinations/safelines
+// Global handler for remove sign on destinations/safelines
 $("body").on("click", ".glyphicon-info-sign", function(e) {
 	var id = $(this).attr('id');
 	$('#infomodal').modal('show');
 	e.stopPropagation();
 });
-
-
 
 $("body").on("click", ".list-group-item", function(e) {
 	var dest = $(this).text();
@@ -228,6 +230,66 @@ $("#accordion").accordion({
 // Control group
 $(".controlgroup").controlgroup();
 
+// Timepicker
+$('#evac-timepicker').timepicker({
+	template : false,
+	showInputs : false,
+	showMeridian : false,
+	minuteStep : 15,
+	snapToStep : true,
+	defaultTime : false
+});
+$('#evac-timepicker').timepicker().on('changeTime.timepicker', function(e) {
+	global.evacTime = {hh: e.time.hours, mm: e.time.minutes};
+	//console.log('Evac time is ' + JSON.stringify(global.evac_time));
+});
+
+// Time slider
+$("#evac-timeslider").slider({
+	value : 0,
+	min : 0,
+	max : 6,
+	step : 1,
+    slide: function( e, ui ) {
+        $( "#amount" ).val( "$" + ui.value );
+        global.evacPeakMins = ui.value * 30;
+        //console.log('Peak time is ' + global.evacPeakMins);
+      }
+
+}).each(
+		function() {
+
+			// Add labels to slider whose values
+			// are specified by min, max
+
+			// Get the options for this slider (specified above)
+			var opt = $(this).data().uiSlider.options;
+
+			// Get the number of possible values
+			var vals = opt.max - opt.min;
+
+			// Position the labels
+			for (var i = 0; i <= vals; i++) {
+				var el;
+				// Create a new element and position it with percentages
+				if (i % 2 == 0) {
+					el = $('<label>' + ((i + opt.min) * 30) + '</label>').css(
+							'left', (i / vals * 100) + '%');
+				} else {
+					el = $('<label>|</label>').css('left',
+							(i / vals * 100) + '%');
+				}
+				// Add the element inside the slider
+				$("#evac-timeslider").append(el);
+
+			}
+
+		});
+$('#evac-timeslider').timepicker().on('changeTime.timepicker', function(e) {
+	// Store as date in (yy,mm,dd,hh,mm,ss) format
+	global.evacTime = new Date(00,00,00,e.time.hours,e.time.minutes,00);
+});
+
 // Appends the names to the array of dropdowns
 // names: an array of structures, each with key name
 function setOptionsForDropdowns(dropdowns, names) {
@@ -316,4 +378,23 @@ function timedPrompt(type, msg) {
 
 // Create simulation
 function createSimulation() {
+}
+
+function setEvacTime(evacTime) {
+	if (evacTime) {
+		$('#evac-timepicker').timepicker('setTime', evacTime.hh + ':' + evacTime.mm);
+	} else {
+		$('#evac-timepicker').timepicker('setTime', '');
+	}
+}
+
+function setEvacPeak(mins) {
+	var opt = $('#evac-timeslider').data().uiSlider.options;
+	var index = 0;
+	if (mins && mins > 0) {
+		var size = opt.max-opt.min;
+		var sizeMins = size*30;
+		index = (mins/sizeMins)*size;
+	}
+	$('#evac-timeslider').slider( 'value', index );
 }

@@ -54,6 +54,8 @@ global.existing_scenarios = [ {
 	township : "Fryerstown"
 } ];
 
+global.evacTime = {hh : 12, mm : 0};
+global.evacPeakMins = 60;
 
 // Help info goes here
 info = [{

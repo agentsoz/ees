@@ -100,3 +100,16 @@ body {
 .maincolumn {
  padding:0px 15px 0 15px;
 }
+
+#evac-timeslider {
+ margin-bottom: 15px;
+}
+#evac-timeslider label {
+  font-weight: normal;
+  font-size: small;
+  position: absolute;
+  width: 20px;
+  margin-top: 15px;
+  margin-left: -10px;
+  text-align: center;
+}
