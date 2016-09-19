@@ -201,8 +201,21 @@ function drawVehiclesArea(township, name, callback) {
 						'area' : global.poly,
 						'zoom' : global.map.getZoom()
 					});
+					
+					// Calculate the area
+					var bounds = global.poly.getBounds();
+					var ne = bounds.getNorthEast();
+					var sw = bounds.getSouthWest();
+					var vertices = [];
+					vertices.push(ne);
+					vertices.push(new google.maps.LatLng(ne.lat(),sw.lng()));
+					vertices.push(sw);
+					vertices.push(new google.maps.LatLng(sw.lat(),ne.lng()));
+					var area = google.maps.geometry.spherical.computeArea(vertices);
+					// Cancel the draw
 					cancelDraw();
-					callback();
+					// Call back
+					callback(area);
 				}
 			});
 }

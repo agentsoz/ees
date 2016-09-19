@@ -85,7 +85,7 @@ $("body").on("change", "select", function(e) {
 });
 
 // Global handler for remove sign on destinations/safelines
-$("body").on("click", ".glyphicon-remove-sign", function(e) {
+$("body").on("click", ".remove-safeline", function(e) {
 	// Get the destination town associated with the x
 	var dest = $(this).attr('name');
 	// Remove the destination from the list
@@ -113,7 +113,7 @@ $("body").on("click", ".glyphicon-info-sign", function(e) {
 	e.stopPropagation();
 });
 
-$("body").on("click", ".list-group-item", function(e) {
+$("body").on("click", ".item-safeline", function(e) {
 	var dest = $(this).text();
 	var township = getTownship(global.scenario_creation_arg);
 	var poly = getPolyLine(township, dest, false);
@@ -194,9 +194,9 @@ $("#add-safeline").click(function(event) {
 function addDestinationSafeLine() {
 	var dest = $("#existing-destinations").find(':selected').text();
 	var li = '';
-	li += '<li class="list-group-item">';
+	li += '<li class="list-group-item item-safeline">';
 	li += dest;
-	li += '<span class="glyphicon glyphicon-remove-sign pull-right"';
+	li += '<span class="glyphicon glyphicon-remove-sign pull-right remove-safeline"';
 	li += ' style="z-index: 1;"';
 	li += ' name="' + dest + '"';
 	li += ' aria-hidden="true"></span>';
@@ -370,6 +370,21 @@ function getPolyLine(township, dest, remove) {
 	return null;
 }
 
+function getPolyArea(township, dest, remove) {
+	for (var i = 0; i < township.vehiclesAreas.length; i++) {
+		var town = township.vehiclesAreas[i].name;
+		if (town.localeCompare(dest) == 0) {
+			var area = township.vehiclesAreas[i];
+			if (remove) {
+				township.vehiclesAreas.splice(i, 1);
+			}
+			return area;
+		}
+	}
+	return null;
+}
+
+
 function setScenarioTitle(title) {
 	$('#scenario-title').text(title);
 }
@@ -415,7 +430,7 @@ function setEvacPeak(mins) {
 	$('#evac-timeslider').slider( 'value', index );
 }
 
-
+// Vehicles: handle changes to input field with number of vehicles
 $("#num-vehicles").change(function(){
 	var val = $("#num-vehicles").val();
 	if (val > 0) {
@@ -424,18 +439,78 @@ $("#num-vehicles").change(function(){
 		$('#add-vehicles-area').prop('disabled', true);
 	}
 });
-
+// Vehicles: handle clicks on 'draw' button
 $("#add-vehicles-area").click(function(event) {
 	var township = getTownship(global.scenario_creation_arg);
 	var label = $("#num-vehicles").val();
 	// cancel any active draws first to be safe
 	cancelDraw(true);
-	drawVehiclesArea(township, label, function() {
+	drawVehiclesArea(township, label, function(area) {
 		// Add the destination to the list
-		//addDestinationSafeLine();
-		// Disable the destination in the dropdown
-		//$("#existing-destinations option:selected").prop('disabled',true);
-		// Reset the dropdown
-		//$("#existing-destinations").val('Select');
+		addVehiclesArea(area);
+		// Reset the count
+		$("#num-vehicles").val(0);
+		$('#add-vehicles-area').prop('disabled', true);
 	});
 });
+// Vehicles: add new entry (associated with a drawn rectangle on map) to list
+function addVehiclesArea(areakm2) {
+	var ncars = $("#num-vehicles").val();
+	var li = '';
+	var veh = 'vehicle';
+	if (ncars > 1) {
+		veh += 's';
+	}
+	li += '<li class="list-group-item item-vehicles-area"';
+	li += ' name="' + ncars + '">';
+	li += ncars + ' '+ veh +' in '+Number(areakm2/1000000).toFixed(2)+'km<sup>2</sup>';
+	li += '<span class="glyphicon glyphicon-remove-sign pull-right remove-vehicles-area"';
+	li += ' style="z-index: 1;"';
+	li += ' name="' + ncars + '"';
+	li += ' aria-hidden="true"></span>';
+	li += '</li>';
+	$("#vehicles-list").append(li);
+	$('#vehicles-list li').removeClass('li-odd');
+	$('#vehicles-list li').removeClass('li-even');
+	$('#vehicles-list li:nth-child(odd)').addClass('li-odd');
+	$('#vehicles-list li:nth-child(even)').addClass('li-even');
+}
+// Vehicles: handle clicks to list item and highlight area on map
+$("body").on("click", ".item-vehicles-area", function(e) {
+	var dest = $(this).attr('name');
+	var township = getTownship(global.scenario_creation_arg);
+	var poly = getPolyArea(township, dest, false);
+	var vertex = poly.area.getBounds().getCenter();
+	panMapTo([ vertex.lat(), vertex.lng() ], poly.zoom);
+	var color = poly.area.strokeColor;
+	var size = poly.area.strokeWeight;
+	poly.area.setOptions({
+		strokeColor : defaults.safeLineHighlightColor,
+		strokeWeight : defaults.safeLineHighlightWeight
+	});
+	setTimeout(function() {
+		poly.area.setOptions({
+			strokeColor : color,
+			strokeWeight : size
+		});
+	}, 800);
+});
+// Vechicles: remove item (and associated google map rectangle) from list
+$("body").on("click", ".remove-vehicles-area", function(e) {
+	// Get the destination town associated with the x
+	var dest = $(this).attr('name');
+	// Remove the destination from the list
+	$(this).parent().remove();
+	// Remove the polyline associated with this destination
+	var township = getTownship(global.scenario_creation_arg);
+	var poly = getPolyArea(township, dest, true);
+	removeSafeLine(poly.area);
+	// Fix the row colours
+	$('#vehicles-list li').removeClass('li-odd');
+	$('#vehicles-list li').removeClass('li-even');
+	$('#vehicles-list li:nth-child(odd)').addClass('li-odd');
+	$('#vehicles-list li:nth-child(even)').addClass('li-even');
+    // Stop the event from propagating to parents
+	e.stopPropagation();
+});
+

@@ -78,7 +78,7 @@ body {
  display:none;
 }
 
-#destinations-list {
+#destinations-list, #vehicles-list {
  margin-top: 1em;
 }
 
