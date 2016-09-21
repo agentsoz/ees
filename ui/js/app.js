@@ -12,6 +12,12 @@ window.onload = function(e) {
 			global.existing_scenarios);
 }
 
+//Remove focus from buttons after click
+$(".btn").mouseup(function(){
+    $(this).blur();
+})
+
+// FIXME: reset() is not complete
 function reset() {
 	for (var i = 0; i < global.townships.length; i++) {
 		var township = global.townships[i];
@@ -232,7 +238,11 @@ $("#nav-create-sim").click(function(event) {
 			// Disable all buttons
 			$('.btn').prop('disabled', false);
 			// Show success message
-			timedPrompt('info', "Simulation created");
+			timedPrompt('info', "Simulation created", function() {
+				var township = getTownship(global.scenario_creation_arg);
+				url = encodeURI("view.html?sim="+ township.name);
+				window.location.href=url;
+			});
 		}
 	}, 100);
 });
@@ -306,25 +316,6 @@ $('#evac-timeslider').timepicker().on('changeTime.timepicker', function(e) {
 	global.evacTime = new Date(00,00,00,e.time.hours,e.time.minutes,00);
 });
 
-// Appends the names to the array of dropdowns
-// names: an array of structures, each with key name
-function setOptionsForDropdowns(dropdowns, names) {
-	for (var d = 0; d < dropdowns.length; d++) {
-		var dropdown = dropdowns[d];
-		dropdown.options.length = 0;
-		var el = document.createElement("option");
-		el.value = 'Select';
-		el.innerHTML = 'Select';
-		dropdown.appendChild(el);
-		for (var i = 0; i < names.length; i++) {
-			var opt = names[i].name;
-			var el = document.createElement("option");
-			el.value = opt;
-			el.innerHTML = opt;
-			dropdown.appendChild(el);
-		}
-	}
-}
 
 function getTownship(name) {
 	for (var i = 0; i < global.townships.length; i++) {
@@ -396,15 +387,15 @@ function save() {
 
 // Shows the msg for a fixed amount of time in a standard info popup
 // type: one of 'info', 'warn', or 'error'
-function timedPrompt(type, msg) {
+function timedPrompt(type, msg, callback) {
 	var o = $("#info-overlay")
 	o.text(msg);
 	o.fadeIn("fast");
 	// fadeout after 1 sec
 	setTimeout(function() {
 		$("#info-overlay").fadeOut(1000);
+		if (callback) callback();
 	}, 1000);
-
 }
 
 // Create simulation
@@ -429,6 +420,10 @@ function setEvacPeak(mins) {
 	}
 	$('#evac-timeslider').slider( 'value', index );
 }
+
+//----------------------------------------------------------------------------
+// VEHICLES
+//----------------------------------------------------------------------------
 
 // Vehicles: handle changes to input field with number of vehicles
 $("#num-vehicles").change(function(){
