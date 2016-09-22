@@ -47,19 +47,31 @@ global.townships = [ {
 
 global.existing_scenarios = [ {
 	name : "Maldon-Bushfire-Jan-1944",
-	township : "Maldon"
+	township : "Maldon",
+	graphs : [ {
+		name : "Castlemaine Safe Line",
+		url : "./media/castlemaine-safe-line.svg"
+	}, {
+		name : "Harcourt Safe Line",
+		url : "./media/harcourt-safe-line.svg"
+	} ]
 }, {
 	name : "Maldon-Bushfire-Mar-1803",
-	township : "Maldon"
+	township : "Maldon",
+	graphs : []
 }, {
 	name : "Fryerstown-Bushfire-Jan-2017",
-	township : "Fryerstown"
+	township : "Maldon",
+	graphs : []
 } ];
 
-global.evacTime = {hh : 12, mm : 0};
+global.evacTime = {
+	hh : 12,
+	mm : 0
+};
 global.evacPeakMins = 60;
 
 // Help info goes here
-info = [{
-	
-}];
+info = [ {
+
+} ];

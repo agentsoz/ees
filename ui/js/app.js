@@ -12,10 +12,10 @@ window.onload = function(e) {
 			global.existing_scenarios);
 }
 
-//Remove focus from buttons after click
-$(".btn").mouseup(function(){
-    $(this).blur();
-})
+// Remove focus from buttons after click
+$(".btn").mouseup(function() {
+	$(this).blur();
+});
 
 // FIXME: reset() is not complete
 function reset() {
@@ -53,7 +53,7 @@ $("#new-scenario-dropdown").on(
 			panMapTo(township.latlon, township.defaultMapZoom);
 			drawMarker(township.latlon, township.name);
 			drawSimulationAreaOnMap(township.osmArea);
-			
+
 			// Set the evac time
 			setEvacTime(global.evacTime);
 			setEvacPeak(global.evacPeakMins);
@@ -91,26 +91,30 @@ $("body").on("change", "select", function(e) {
 });
 
 // Global handler for remove sign on destinations/safelines
-$("body").on("click", ".remove-safeline", function(e) {
-	// Get the destination town associated with the x
-	var dest = $(this).attr('name');
-	// Remove the destination from the list
-	$(this).parent().remove();
-	// Remove the polyline associated with this destination
-	var township = getTownship(global.scenario_creation_arg);
-	var poly = getPolyLine(township, dest, true);
-	removeSafeLine(poly.line);
-	// Fix the row colours
-	$('#destinations-list li').removeClass('li-odd');
-	$('#destinations-list li').removeClass('li-even');
-	$('#destinations-list li:nth-child(odd)').addClass('li-odd');
-	$('#destinations-list li:nth-child(even)').addClass('li-even');
-    // Stop the event form propagating to parents
-	e.stopPropagation();
-	// Enable the destination again
-	$('#existing-destinations option[value="' + dest + '"]').prop('disabled',false);
+$("body").on(
+		"click",
+		".remove-safeline",
+		function(e) {
+			// Get the destination town associated with the x
+			var dest = $(this).attr('name');
+			// Remove the destination from the list
+			$(this).parent().remove();
+			// Remove the polyline associated with this destination
+			var township = getTownship(global.scenario_creation_arg);
+			var poly = getPolyLine(township, dest, true);
+			removeSafeLine(poly.line);
+			// Fix the row colours
+			$('#destinations-list li').removeClass('li-odd');
+			$('#destinations-list li').removeClass('li-even');
+			$('#destinations-list li:nth-child(odd)').addClass('li-odd');
+			$('#destinations-list li:nth-child(even)').addClass('li-even');
+			// Stop the event form propagating to parents
+			e.stopPropagation();
+			// Enable the destination again
+			$('#existing-destinations option[value="' + dest + '"]').prop(
+					'disabled', false);
 
-});
+		});
 
 // Global handler for remove sign on destinations/safelines
 $("body").on("click", ".glyphicon-info-sign", function(e) {
@@ -191,7 +195,7 @@ $("#add-safeline").click(function(event) {
 		// Add the destination to the list
 		addDestinationSafeLine();
 		// Disable the destination in the dropdown
-		$("#existing-destinations option:selected").prop('disabled',true);
+		$("#existing-destinations option:selected").prop('disabled', true);
 		// Reset the dropdown
 		$("#existing-destinations").val('Select');
 	});
@@ -240,8 +244,8 @@ $("#nav-create-sim").click(function(event) {
 			// Show success message
 			timedPrompt('info', "Simulation created", function() {
 				var township = getTownship(global.scenario_creation_arg);
-				url = encodeURI("view.html?sim="+ township.name);
-				window.location.href=url;
+				url = encodeURI("view.html?sim=" + township.name);
+				window.location.href = url;
 			});
 		}
 	}, 100);
@@ -266,8 +270,11 @@ $('#evac-timepicker').timepicker({
 	defaultTime : false
 });
 $('#evac-timepicker').timepicker().on('changeTime.timepicker', function(e) {
-	global.evacTime = {hh: e.time.hours, mm: e.time.minutes};
-	//console.log('Evac time is ' + JSON.stringify(global.evac_time));
+	global.evacTime = {
+		hh : e.time.hours,
+		mm : e.time.minutes
+	};
+	// console.log('Evac time is ' + JSON.stringify(global.evac_time));
 });
 
 // Time slider
@@ -276,11 +283,11 @@ $("#evac-timeslider").slider({
 	min : 0,
 	max : 6,
 	step : 1,
-    slide: function( e, ui ) {
-        $( "#amount" ).val( "$" + ui.value );
-        global.evacPeakMins = ui.value * 30;
-        //console.log('Peak time is ' + global.evacPeakMins);
-      }
+	slide : function(e, ui) {
+		$("#amount").val("$" + ui.value);
+		global.evacPeakMins = ui.value * 30;
+		// console.log('Peak time is ' + global.evacPeakMins);
+	}
 
 }).each(
 		function() {
@@ -313,25 +320,14 @@ $("#evac-timeslider").slider({
 		});
 $('#evac-timeslider').timepicker().on('changeTime.timepicker', function(e) {
 	// Store as date in (yy,mm,dd,hh,mm,ss) format
-	global.evacTime = new Date(00,00,00,e.time.hours,e.time.minutes,00);
+	global.evacTime = new Date(00, 00, 00, e.time.hours, e.time.minutes, 00);
 });
-
 
 function getTownship(name) {
 	for (var i = 0; i < global.townships.length; i++) {
 		var township = global.townships[i].name;
 		if (township.localeCompare(name) == 0) {
 			return global.townships[i];
-		}
-	}
-	return null;
-}
-
-function getScenario(name) {
-	for (var i = 0; i < global.existing_scenarios.length; i++) {
-		var scenario = global.existing_scenarios[i].name;
-		if (scenario.localeCompare(name) == 0) {
-			return global.existing_scenarios[i];
 		}
 	}
 	return null;
@@ -375,7 +371,6 @@ function getPolyArea(township, dest, remove) {
 	return null;
 }
 
-
 function setScenarioTitle(title) {
 	$('#scenario-title').text(title);
 }
@@ -394,7 +389,8 @@ function timedPrompt(type, msg, callback) {
 	// fadeout after 1 sec
 	setTimeout(function() {
 		$("#info-overlay").fadeOut(1000);
-		if (callback) callback();
+		if (callback)
+			callback();
 	}, 1000);
 }
 
@@ -404,7 +400,8 @@ function createSimulation() {
 
 function setEvacTime(evacTime) {
 	if (evacTime) {
-		$('#evac-timepicker').timepicker('setTime', evacTime.hh + ':' + evacTime.mm);
+		$('#evac-timepicker').timepicker('setTime',
+				evacTime.hh + ':' + evacTime.mm);
 	} else {
 		$('#evac-timepicker').timepicker('setTime', '');
 	}
@@ -414,19 +411,19 @@ function setEvacPeak(mins) {
 	var opt = $('#evac-timeslider').data().uiSlider.options;
 	var index = 0;
 	if (mins && mins > 0) {
-		var size = opt.max-opt.min;
-		var sizeMins = size*30;
-		index = (mins/sizeMins)*size;
+		var size = opt.max - opt.min;
+		var sizeMins = size * 30;
+		index = (mins / sizeMins) * size;
 	}
-	$('#evac-timeslider').slider( 'value', index );
+	$('#evac-timeslider').slider('value', index);
 }
 
-//----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 // VEHICLES
-//----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 
 // Vehicles: handle changes to input field with number of vehicles
-$("#num-vehicles").change(function(){
+$("#num-vehicles").change(function() {
 	var val = $("#num-vehicles").val();
 	if (val > 0) {
 		$('#add-vehicles-area').prop('disabled', false);
@@ -458,7 +455,8 @@ function addVehiclesArea(areakm2) {
 	}
 	li += '<li class="list-group-item item-vehicles-area"';
 	li += ' name="' + ncars + '">';
-	li += ncars + ' '+ veh +' in '+Number(areakm2/1000000).toFixed(2)+'km<sup>2</sup>';
+	li += ncars + ' ' + veh + ' in ' + Number(areakm2 / 1000000).toFixed(2)
+			+ 'km<sup>2</sup>';
 	li += '<span class="glyphicon glyphicon-remove-sign pull-right remove-vehicles-area"';
 	li += ' style="z-index: 1;"';
 	li += ' name="' + ncars + '"';
@@ -505,7 +503,6 @@ $("body").on("click", ".remove-vehicles-area", function(e) {
 	$('#vehicles-list li').removeClass('li-even');
 	$('#vehicles-list li:nth-child(odd)').addClass('li-odd');
 	$('#vehicles-list li:nth-child(even)').addClass('li-even');
-    // Stop the event from propagating to parents
+	// Stop the event from propagating to parents
 	e.stopPropagation();
 });
-

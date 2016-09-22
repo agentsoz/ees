@@ -20,7 +20,7 @@
    </div>
    <div id="content" class="col-xs-12">
     <div class="col-sm-12">
-     <div id="control-bar" class="col-xs-12 well well-sm hidden-print">
+     <div class="control-bar col-xs-12 well well-sm hidden-print">
       <div class="row">
        <div class="col-xs-7">
         <select id="view-scenario-dropdown"
@@ -36,8 +36,24 @@
        </div>
       </div>
      </div>
+     <div
+      class="control-bar scenario-view col-sm-5 collapse hidden-print">
+      <a href="./media/maldon.kmz"
+       class="btn btn-large btn-primary main-button">View in Google
+       Earth</a>
+     </div>
+     <div
+      class="control-bar scenario-view col-sm-7 collapse hidden-print">
+      <span class="short-description">Launches the simulation for
+       viewing in <a href="https://www.google.com/earth/"
+       target="_blank">Google Earth</a>. Please ensure that Google Earth
+       is installed on your computer and that your web browser knows how
+       to open .kmz files.
+      </span>
+     </div>
      <div class="col-xs-12 panel-group">
-      <div id="scenario-params" class="panel panel-primary collapse">
+      <div id="scenario-params"
+       class="scenario-view panel panel-primary collapse">
        <div class="panel-heading" data-toggle="collapse"
         data-target="#collapse1">
         <h2 class="panel-title">
@@ -52,7 +68,8 @@
         <div class="panel-body">Panel Body</div>
        </div>
       </div>
-      <div id="scenario-graphs" class="panel panel-primary collapse">
+      <div id="scenario-graphs"
+       class="scenario-view panel panel-primary collapse">
        <div class="panel-heading" data-toggle="collapse"
         data-target="#collapse2">
         <h2 class="panel-title">
@@ -65,18 +82,18 @@
        </div>
        <div id="collapse2" class="panel-collapse collapse">
         <div class="panel-body">
-         <select id="select-graphs" class="selectpicker hidden-print"
-          data-none-selected-text="Select" multiple>
-         </select>
+         <div id="graphs" class="row">
+          <div class="col-xs-12">
+           <select class="dropdown-graphs form-control hidden-print"
+            multiple>
+           </select>
+          </div>
+         </div>
         </div>
        </div>
       </div>
      </div>
     </div>
-<!--     <div class="col-sm-7 hidden-print"> -->
-<!--      <div id="map"></div> -->
-<!--     </div> -->
-
    </div>
 
    <div id="footer" class="col-xs-12">
