@@ -61,7 +61,7 @@ global.existing_scenarios = [ {
 	graphs : []
 }, {
 	name : "Fryerstown-Bushfire-Jan-2017",
-	township : "Maldon",
+	township : "Fryerstown",
 	graphs : []
 } ];
 

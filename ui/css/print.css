@@ -1,6 +1,6 @@
 .panel-collapse {
-    display: block !important;
-    height: auto !important;
+ display: block !important;
+ height: auto !important;
 }
 
 h1, h2, h3, h4 {
@@ -9,15 +9,22 @@ h1, h2, h3, h4 {
 }
 
 .panel-primary, .panel-body, .panel-heading {
- padding-left : 0;
+ padding-left: 0;
  border: 0;
 }
 
 .panel-title {
-    margin-top: 1em;
-    margin-bottom: 0;
-    font-size: larger;
-    color: inherit;
+ margin-top: 1em;
+ margin-bottom: 0;
+ font-size: larger;
+ color: inherit;
 }
 
-h1 { font-size: x-large; }
+h1 {
+ font-size: x-large;
+}
+
+[class*="col-sm-6"] {
+ float: left;
+ width: 50%;
+}

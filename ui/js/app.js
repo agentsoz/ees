@@ -323,54 +323,6 @@ $('#evac-timeslider').timepicker().on('changeTime.timepicker', function(e) {
 	global.evacTime = new Date(00, 00, 00, e.time.hours, e.time.minutes, 00);
 });
 
-function getTownship(name) {
-	for (var i = 0; i < global.townships.length; i++) {
-		var township = global.townships[i].name;
-		if (township.localeCompare(name) == 0) {
-			return global.townships[i];
-		}
-	}
-	return null;
-}
-
-function getFire(township, firename) {
-	for (var i = 0; i < township.fires.length; i++) {
-		var fire = township.fires[i].name;
-		if (fire.localeCompare(firename) == 0) {
-			return township.fires[i];
-		}
-	}
-	return null;
-}
-
-function getPolyLine(township, dest, remove) {
-	for (var i = 0; i < township.safeLines.length; i++) {
-		var town = township.safeLines[i].name;
-		if (town.localeCompare(dest) == 0) {
-			var line = township.safeLines[i];
-			if (remove) {
-				township.safeLines.splice(i, 1);
-			}
-			return line;
-		}
-	}
-	return null;
-}
-
-function getPolyArea(township, dest, remove) {
-	for (var i = 0; i < township.vehiclesAreas.length; i++) {
-		var town = township.vehiclesAreas[i].name;
-		if (town.localeCompare(dest) == 0) {
-			var area = township.vehiclesAreas[i];
-			if (remove) {
-				township.vehiclesAreas.splice(i, 1);
-			}
-			return area;
-		}
-	}
-	return null;
-}
-
 function setScenarioTitle(title) {
 	$('#scenario-title').text(title);
 }

@@ -1,3 +1,7 @@
+// Google Maps Static API Key 
+GMAPS_STATIC_KEY='AIzaSyAEYAuIcELlK93kMgSCWOg3ppKONjHFQ6U';
+
+
 // Globals
 var urlParams;
 
@@ -91,30 +95,57 @@ function selectSimulation(scenario) {
 	$('.dropdown-graphs').selectpicker('destroy');
 	setOptionsForGraphsSelection($(".dropdown-graphs"), scenario.graphs);
 	$(".dropdown-graphs").selectpicker('refresh');
+	// Set the scenario details
+	setScenarioDetails();
 }
 
-$("body")
-		.on(
-				"change",
-				".dropdown-graphs",
-				function(e) {
-					var name = $("#view-scenario-dropdown option:selected")
-							.text();
-					var scenario = getScenario(name);
-					$(".graph-object").remove();
-					$('.dropdown-graphs :selected')
-							.each(
-									function(i, selected) {
-										var sel = $(selected).text();
-										var graph = getGraph(scenario, sel);
-										var o = '<div class="graph-object col-sm-6">';
-										o += '<object width="100%" type="image/svg+xml" data="';
-										o += graph.url;
-										o += '"> Your browser does not support SVG </object>';
-										o += '</div>';
-										$("#graphs").append(o);
-									});
-				});
+function setScenarioDetails() {
+	var name = $("#view-scenario-dropdown option:selected").text();
+	var scenario = getScenario(name);
+	var township = getTownship(scenario.township);
+
+	var url = 'https://maps.googleapis.com/maps/api/staticmap';
+	url += '?size=500x350&scale=2&maptype=roadmap';
+	url += '&zoom=' + township.defaultMapZoom;
+	url += '&markers=color:blue|'+township.latlon[0]+','+township.latlon[1];
+	url += '&key=' + GMAPS_STATIC_KEY;
+	
+	var a = township.osmArea;
+	var bounds = '&path=color:red|weight:2';
+	bounds += '|'+a[0]+','+a[1];
+	bounds += '|'+a[2]+','+a[1];
+	bounds += '|'+a[2]+','+a[3];
+	bounds += '|'+a[0]+','+a[3];
+	bounds += '|'+a[0]+','+a[1];
+	url += bounds;
+
+	url = encodeURI(url);
+	
+	var o = '<div id="scenario-data">';
+	o += '<h3>'+township.name+'</h3>';
+	o += '<div><label>Location: </label> '+township.latlon+'</div>';
+	o += '<div><label>Road Network (OSM) Bounds: </label> '+township.osmArea+'</div>';
+	o += '<img class="img-responsive" src="'+url+'"/>'
+	o += '</div>';
+	$('#scenario-details').find('#scenario-data').remove();
+	$('#scenario-details').append(o);
+}
+
+$("body").on("change", ".dropdown-graphs", function(e) {
+	var name = $("#view-scenario-dropdown option:selected").text();
+	var scenario = getScenario(name);
+	$(".graph-object").remove();
+	$('.dropdown-graphs :selected').each(function(i, selected) {
+		var sel = $(selected).text();
+		var graph = getGraph(scenario, sel);
+		var o = '<div class="graph-object col-sm-6 text-center">';
+		o += '<object width="100%" type="image/svg+xml" data="';
+		o += graph.url;
+		o += '"> Your browser does not support SVG </object>';
+		o += '</div>';
+		$("#graphs").append(o);
+	});
+});
 
 function jsonToHTMLTable(json) {
 	var table = $('<table border=1>');
