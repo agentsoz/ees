@@ -70,14 +70,6 @@ $("#view-scenario-dropdown").on("change", function() {
 	selectSimulation(scenario);
 });
 
-$(".collapse").on('show.bs.collapse', function(e) {
-	$(e.target).parent().find(".glyphicon-triangle-right").hide();
-	$(e.target).parent().find(".glyphicon-triangle-bottom").show();
-});
-$(".collapse").on('hide.bs.collapse', function(e) {
-	$(e.target).parent().find(".glyphicon-triangle-right").show();
-	$(e.target).parent().find(".glyphicon-triangle-bottom").hide();
-});
 
 function selectSimulation(scenario) {
 	// Set the title

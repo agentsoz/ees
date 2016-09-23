@@ -284,7 +284,6 @@ $("#evac-timeslider").slider({
 	max : 6,
 	step : 1,
 	slide : function(e, ui) {
-		$("#amount").val("$" + ui.value);
 		global.evacPeakMins = ui.value * 30;
 		// console.log('Peak time is ' + global.evacPeakMins);
 	}
@@ -458,3 +457,46 @@ $("body").on("click", ".remove-vehicles-area", function(e) {
 	// Stop the event from propagating to parents
 	e.stopPropagation();
 });
+
+
+//----------------------------------------------------------------------------
+// Effective speed on roads
+//----------------------------------------------------------------------------
+$("#max-speed-slider").slider({
+	value : 10,
+	min : 1,
+	max : 10,
+	step : 1,
+	slide : function(e, ui) {
+		global.maxSpeed = ui.value * 10;
+	}
+
+}).each(
+		function() {
+
+			// Add labels to slider whose values
+			// are specified by min, max
+
+			// Get the options for this slider (specified above)
+			var opt = $(this).data().uiSlider.options;
+
+			// Get the number of possible values
+			var vals = opt.max - opt.min;
+
+			// Position the labels
+			for (var i = 0; i <= vals; i++) {
+				var el;
+				// Create a new element and position it with percentages
+				if (i % 2 == 1) {
+					el = $('<label>' + ((i + opt.min) * 10) + '</label>').css(
+							'left', (i / vals * 100) + '%');
+				} else {
+					el = $('<label>|</label>').css('left',
+							(i / vals * 100) + '%');
+				}
+				// Add the element inside the slider
+				$("#max-speed-slider").append(el);
+
+			}
+
+		});
