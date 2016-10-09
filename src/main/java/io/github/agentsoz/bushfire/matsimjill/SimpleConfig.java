@@ -54,58 +54,34 @@ import com.vividsolutions.jts.geom.Coordinate;
  */
 public class SimpleConfig {
 
-	private static final Logger logger = LoggerFactory.getLogger("");
+	private static final Logger logger = LoggerFactory.getLogger("io.github.agentsoz.bushfire");
 
-	// all the config info is held statically so it can be accessed globally
 	private static String configFile = null;
 
-	private static String reportFile = "bushfire-evacuation-report.txt";
-	private static String bdiSimFile = null;
 	private static String matSimFile = null;
 	private static String geographyFile = null;
-	private static int numBDIAgents = 1;
 	private static String fireFile = null;
-	private static String controllerFile = null;
-	private static boolean useGUI = false;
-	private static boolean bypassController = false;
-	private static boolean dieOnDisconnect = false;
-	private static int port = -1;
+
+	private static int numBDIAgents = 1;
+
 	private static double proportionWithKids = 0.0;
 	private static double proportionWithRelatives = 0.0;
 	private static int maxDistanceToRelatives = 1000;
+	
 	private static double[] evacDelay = new double[] { 0.0, 0.0 };
 	private static HashMap<String, Location> locations = new HashMap<String, Location>();
 	private static HashMap<String, Region> regions = new HashMap<String, Region>();
 	private static HashMap<String, Route> routes = new HashMap<String, Route>();
 	public static HashMap<String, ReliefCentre> reliefCentres = new HashMap<String, ReliefCentre>();
-	private static Image image = new Image();
-	private static String fireFireCoordinateSystem = "longlat";
-	private static String coordinate_system = "longlat";
-	private static int distanceToNewShelters = 50000;
-	private static int safeDistance = 100;
-	private static HashMap<String, Boolean> choicePoints = new HashMap<String, Boolean>();
+	private static String fireCoordinateSystem = "longlat";
+	private static String fireFileFormat = "custom";
+	private static String geographyCoordinateSystem = "longlat";
 
-	public static class Image {
-		public String file;
-		public double west, east, north, south;
-
-		public Image() {
-		}
-		
-		@Override
-		public String toString() {
-			return "west[" + west + "] east[" + east + "] north[" + north + "] south[" + south + "]";
-		}
-	}
 	
 	public static HashMap<String, Location> getLocationMap(){
 		return locations;
 	}
 	
-	public static boolean getChoicePoint(String choice){
-		return choicePoints.get(choice);
-	}
-
 	public static HashMap<String, Route> getRouteMap(){
 		return routes;
 	}
@@ -118,15 +94,6 @@ public class SimpleConfig {
 		return reliefCentres;
 	}
 
-	public static Image getImage() {
-		return image;
-	}
-
-	// basic get/set for simple data
-	public static String getReportFile() {
-		return reportFile;
-	}
-
 	public static String getMatSimFile() {
 		return matSimFile;
 	}
@@ -135,20 +102,8 @@ public class SimpleConfig {
 		return fireFile;
 	}
 
-	public static int getPort() {
-		return port;
-	}
-
 	public static int getNumBDIAgents() {
 		return numBDIAgents;
-	}
-
-	public static boolean getBypassController() {
-		return bypassController;
-	}
-
-	public static boolean getDieOnDisconnect() {
-		return dieOnDisconnect;
 	}
 
 	public static double getProportionWithKids() {
@@ -168,11 +123,15 @@ public class SimpleConfig {
 	}
 
 	public static String getCoordinate_system() {
-		return coordinate_system;
+		return geographyCoordinateSystem;
 	}
 
 	public static String getFireFireCoordinateSystem() {
-		return fireFireCoordinateSystem;
+		return fireCoordinateSystem;
+	}
+
+	public static String getFireFireFormat() {
+		return fireFileFormat;
 	}
 
 	public static Location getLocation(String name) {
@@ -209,14 +168,6 @@ public class SimpleConfig {
 
 	public static Set<String> getReliefCentres() {
 		return reliefCentres.keySet();
-	}
-
-	public static boolean getUseGUI() {
-		return useGUI;
-	}
-
-	public static void setUseGUI(boolean b) {
-		useGUI = b;
 	}
 
 	public static String getConfigFile() {
@@ -258,14 +209,6 @@ public class SimpleConfig {
 				if (node instanceof Element) {
 					String nodeName = node.getNodeName();
 					logger.trace("found node " + nodeName);
-					if (nodeName.equals("reportfile")) {
-						reportFile = node.getAttributes().getNamedItem("name")
-								.getNodeValue();
-					}
-					if (nodeName.equals("bdisimfile")) {
-						bdiSimFile = node.getAttributes().getNamedItem("name")
-								.getNodeValue();
-					}
 					if (nodeName.equals("matsimfile")) {
 						matSimFile = node.getAttributes().getNamedItem("name")
 								.getNodeValue();
@@ -273,30 +216,16 @@ public class SimpleConfig {
 					if (nodeName.equals("firefile")) {
 						fireFile = node.getAttributes().getNamedItem("name")
 								.getNodeValue();
-						fireFireCoordinateSystem = node.getAttributes()
+						fireCoordinateSystem = node.getAttributes()
 								.getNamedItem("coordinates").getNodeValue();
-					}
-					if (nodeName.equals("controllerfile")) {
-						controllerFile = node.getAttributes()
-								.getNamedItem("name").getNodeValue();
+						fireFileFormat = node.getAttributes().getNamedItem("format")
+								.getNodeValue();
 					}
 					if (nodeName.equals("geographyfile")) {
 						geographyFile = node.getAttributes()
 								.getNamedItem("name").getNodeValue();
-						coordinate_system = node.getAttributes()
+						geographyCoordinateSystem = node.getAttributes()
 								.getNamedItem("coordinates").getNodeValue();
-					}
-					if (nodeName.equals("port") && useGUI) {
-						String p = node.getAttributes().getNamedItem("number")
-								.getNodeValue();
-						port = Integer.parseInt(p);
-						try {
-							String d = node.getAttributes()
-									.getNamedItem("die_on_disconnect")
-									.getNodeValue();
-							dieOnDisconnect = Boolean.parseBoolean(d);
-						} catch (Exception e) {
-						}
 					}
 					if (nodeName.equals("bdiagents")) {
 						String n = node.getAttributes().getNamedItem("number")
@@ -324,15 +253,6 @@ public class SimpleConfig {
 								.getNodeValue();
 						maxDistanceToRelatives = Integer.parseInt(d);
 					}
-					if (nodeName.equals("evac_info")) {
-
-						String shelterDistance = node.getAttributes().getNamedItem("ad_hoc_evac_dist")
-								.getNodeValue();
-						setDistanceToNewShelters(Integer.parseInt(shelterDistance));
-						String safeDistance = node.getAttributes().getNamedItem("safe_distance_to_fire")
-								.getNodeValue();
-						setSafeDistance(Integer.parseInt(safeDistance));						
-					}
 					if (nodeName.equals("evac_delay")) {
 
 						String k = node.getAttributes().getNamedItem("min")
@@ -342,80 +262,15 @@ public class SimpleConfig {
 								.getNodeValue();
 						evacDelay[1] = Double.parseDouble(r);
 					}
-					if (nodeName.equals("image")) {
-						try {
-							String w = node.getAttributes()
-									.getNamedItem("west").getNodeValue();
-							String e = node.getAttributes()
-									.getNamedItem("east").getNodeValue();
-							String n = node.getAttributes()
-									.getNamedItem("north").getNodeValue();
-							String s = node.getAttributes()
-									.getNamedItem("south").getNodeValue();
-							image.file = node.getAttributes()
-									.getNamedItem("file").getNodeValue();
-							image.west = Double.parseDouble(w);
-							image.east = Double.parseDouble(e);
-							image.north = Double.parseDouble(n);
-							image.south = Double.parseDouble(s);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
 				}
 			}
 		} catch (Exception e) {
 			throw new Exception("while reading config: " + e.getMessage());
 		}
-		if (controllerFile != null) {
-			try {
-				DocumentBuilderFactory dbf = DocumentBuilderFactory
-						.newInstance();
-				DocumentBuilder db = dbf.newDocumentBuilder();
-				Document doc = db.parse(new FileInputStream(controllerFile));
-
-				NodeList nl = doc.getDocumentElement().getChildNodes();
-				for (int i = 0; i < nl.getLength(); i++) {
-					Node node = nl.item(i);
-
-					if (node instanceof Element) {
-
-						String nodeName = node.getNodeName();
-						logger.trace("found node " + nodeName);
-
-						if (nodeName.equals("bypassing")) {
-
-							String s = node.getAttributes()
-									.getNamedItem("bypass").getNodeValue();
-							bypassController = Boolean.parseBoolean(s);
-							s = node.getAttributes()
-									.getNamedItem("userControl").getNodeValue();
-						}
-						if (nodeName.equals("choicePoints")) {
-							NodeList choicePointNodes = node.getChildNodes();
-							for (int j = 0; j < choicePointNodes.getLength(); j++) {
-								readChoicePoint(choicePointNodes.item(j));
-							}
-						}
-					}
-				}
-			} catch (Exception e) {
-				throw new Exception("unable to read controller file '"
-						+ controllerFile + "' :" + e.getMessage());
-			}
-		} else {
-			bypassController = true;
-		}
 
 		logger.debug("matSimFilefile = " + matSimFile);
-		logger.debug("bdiSimFile = " + bdiSimFile);
 		logger.debug("fireFile = " + fireFile);
 		logger.debug("geographyFile = " + geographyFile);
-
-		// TODO should check existence of all files and stop gracefully
-		// TODO should also allow some files to not exist and setup
-		// functionality accordingly
-		// eg if no controller file, do not initiate controller
 
 		if (geographyFile != null) {
 			if (readGeography()) {
@@ -431,25 +286,6 @@ public class SimpleConfig {
 		if (matSimFile == null) {
 			return false;
 		}
-		return true;
-	}
-
-	private static boolean readChoicePoint(Node node) {
-		if (node instanceof Element) {
-			String nodeName = node.getNodeName();
-			if (nodeName.equals("goal")) {
-				try {
-					String goal = node.getAttributes().getNamedItem("name").getNodeValue();
-					String m = node.getAttributes().getNamedItem("manual").getNodeValue();
-					boolean manual = Boolean.parseBoolean(m);
-					choicePoints.put(goal, manual);
-				} catch (Exception e) {
-					e.printStackTrace();
-					return false;
-				}
-			}
-		}
-		
 		return true;
 	}
 
@@ -785,19 +621,4 @@ public class SimpleConfig {
 		}
 	}
 
-	public static int getDistanceToNewShelters() {
-		return distanceToNewShelters;
-	}
-
-	public static void setDistanceToNewShelters(int distanceToNewShelters) {
-		SimpleConfig.distanceToNewShelters = distanceToNewShelters;
-	}
-
-	public static int getSafeDistance() {
-		return safeDistance;
-	}
-
-	public static void setSafeDistance(int safeDistance) {
-		SimpleConfig.safeDistance = safeDistance;
-	}
 }

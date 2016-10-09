@@ -50,5 +50,4 @@ $CMD >/dev/null 2>&1
 printf "finished on `date +"%B %d, %Y at %r"` \n\n"
 
 # To run the Maldon scenario with Jill agents, do:
-# java -cp bushfire-1.0.1-SNAPSHOT.jar io.github.agentsoz.bushfire.matsimjill.Main --config scenarios/maldon/maldon.xml --logfile halls_gap.log --loglevel INFO --jillconfig "--config={agents:[{classname:io.github.agentsoz.bushfire.matsimjill.agents.Resident, args:null, count:700}],logLevel: WARN,logFile: Main.log,programOutputFile: Main.out}"
-
+# java -cp target/bushfire-1.0.1-SNAPSHOT.jar io.github.agentsoz.bushfire.matsimjill.Main --config scenarios/maldon-simple/maldon.xml --logfile maldon.log --loglevel INFO --jillconfig "--config={agents:[{classname:io.github.agentsoz.bushfire.matsimjill.agents.Resident, args:null, count:700}],logLevel: WARN,logFile: Main.log,programOutputFile: Main.out}"

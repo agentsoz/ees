@@ -35,6 +35,7 @@ import java.util.HashMap;
 public class EvacuateNow extends Plan { 
 
 	private PrintStream writer = null;
+	private String shelterLocation = "";
 	
 	public EvacuateNow(Agent agent, Goal goal, String name) {
 		super(agent, goal, name);
@@ -52,10 +53,10 @@ public class EvacuateNow extends Plan {
 				public void step() {
 					String bdiAction = Resident.BDI_ACTION_DRIVETO;
 					String randomShelter = SimpleConfig.getRandomEvacPoint();
-					String shelterLocation = SimpleConfig.getReliefCentre(randomShelter).getLocation();
+					shelterLocation = SimpleConfig.getReliefCentre(randomShelter).getLocation();
 					double[] coords = SimpleConfig.getLocation(shelterLocation).getCoordinates();
 					Object[] params = {bdiAction, coords};
-					writer.println("Resident "+getAgent().getId()+": is about to start evacuating to Ararat");
+					writer.println("Resident "+getAgent().getId()+": is about to start evacuating to shelter in "+shelterLocation);
 					post(new EnvironmentAction(
 							Integer.toString(((Resident)getAgent()).getId()),
 							bdiAction, params));
@@ -65,14 +66,14 @@ public class EvacuateNow extends Plan {
 			new PlanStep() {
 				public void step() {
 					// Must suspend the agent when waiting for external stimuli
-					writer.println("Resident "+getAgent().getId()+": is driving to Ararat");
+					writer.println("Resident "+getAgent().getId()+": is driving to shelter in " + shelterLocation);
 					((Resident)getAgent()).suspend(true);
 				}
 			},
 			// All done
 			new PlanStep() {
 				public void step() {
-					writer.println("Resident "+getAgent().getId()+": has reached Ararat");
+					writer.println("Resident "+getAgent().getId()+": has reached shelter in "+ shelterLocation);
 				}
 			}
 	};

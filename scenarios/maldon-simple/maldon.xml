@@ -27,20 +27,14 @@
 
 <simulation>
 
-<!-- bushfile evacuation report file -->
-<reportfile name="./maldon-evacuation-report.txt" />
-
 <!-- define the matsim configuration file -->
-<matsimfile name="scenarios/maldon/maldon_config.xml"/>
+<matsimfile name="scenarios/maldon-simple/maldon_config.xml"/>
 
 <!-- define the fire model file (specify the coordinate system as latlong or utm) -->
-<firefile name="scenarios/maldon/maldon_fire.txt" coordinates="latlong"/>
-
-<!-- define the bushfire evacuation controller agent config file-->
-<controllerfile name="scenarios/maldon/maldon_controller.xml"/>
+<firefile name="scenarios/maldon-simple/maldon_fire.json" coordinates="latlong" format="geojson"/>
 
 <!-- define a geography file -->
-<geographyfile name= "scenarios/maldon/maldon_geography.xml" coordinates="utm"/>
+<geographyfile name= "scenarios/maldon-simple/maldon_geography.xml" coordinates="utm"/>
 
 <!-- Number of BDI agents (N) to initialise. The total number of 
      agents (M) is determined by the MATSim population file. 
@@ -49,9 +43,6 @@
      will ensure that the entire MATSim population has BDI conterparts 
 -->
 <bdiagents number="701" />
-
-<!-- define the port number for the unity GUI-->
-<port number="9876" die_on_disconnect="true"/>
 
 <!-- define data for the residents-->
 <!-- relatives is a value (0.0-1.0) that defines the probability that a resident 
@@ -65,23 +56,6 @@ start location to relative's location-->
 <!-- define maximum and minimum evacuation delays of agents -->
 <evac_delay min="600" Q1="1800" Q3="3600" max="6300" />
 
-<!-- define parameters for evacuation decisions -->
-<!-- ad_hoc_evac_dist defines the distance in meters from
-centre of any region to  an evacuation point which is selected when
-all defined shelters are not within the safe boundary -->
-<!-- safe_distance_to_fire defines the maximum allowable distance
-in meters in between the fire polygon and the vector which connects 
-centre of region and shelter-->
-<evac_info ad_hoc_evac_dist="50000" safe_distance_to_fire="100"/>
-
-<!-- define image parameters to send to visualiser -->
-<!-- name specifies an image filename to use as the scenario backdrop -->
-<!-- coordinates specify the latitudes and longitudes to map the image to -->
-<image file="maldon.png"
-       north= "5823501.3295842"
-       south= "5817023.847065028"
-       east="337798.2598191331"
-       west="348133.062947224" />
 
 </simulation>
 

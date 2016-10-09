@@ -63,7 +63,7 @@ public class FireModule implements DataSource {
 	private static List<double[]> latestFireData;
 	private static double latestFireProgressDirection;
 
-	private final Logger logger = LoggerFactory.getLogger("");
+	private final Logger logger = LoggerFactory.getLogger("io.github.agentsoz.bushfire");
 
 
 	public static double getLastUpdateTime(){

@@ -1,6 +1,17 @@
 package io.github.agentsoz.bushfire.matsimjill;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
+import org.json.simple.parser.ParseException;
+import org.slf4j.LoggerFactory;
+
 import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.FileAppender;
 
 /*
  * #%L
@@ -29,8 +40,11 @@ import io.github.agentsoz.bdiabm.data.AgentState;
 import io.github.agentsoz.bdiabm.data.AgentStateList;
 import io.github.agentsoz.bdimatsim.MATSimModel;
 import io.github.agentsoz.bushfire.Config;
+import io.github.agentsoz.bushfire.EvacuationReport;
 import io.github.agentsoz.bushfire.FireModule;
 import io.github.agentsoz.bushfire.MATSimBDIParameterHandler;
+import io.github.agentsoz.bushfire.PhoenixFireModule;
+import io.github.agentsoz.bushfire.PhoenixFireModule.TimestepUnit;
 import io.github.agentsoz.dataInterface.DataServer;
 import io.github.agentsoz.jill.util.Log;
 
@@ -38,7 +52,7 @@ public class Main {
 	
 	private JillBDIModel jillmodel; // BDI model
 	private MATSimModel matsimModel; // ABM model
-	private FireModule fireModel; // Fire model
+	private PhoenixFireModule fireModel; // Fire model
 	
 	private AgentDataContainer adc; // BDI-ABM data container
 	private AgentStateList asl; // BDI-ABM states container
@@ -47,16 +61,18 @@ public class Main {
 	private static String logFile = Main.class.getSimpleName() + ".log";
 	private static Level logLevel = Level.INFO;
 	private static String[] jillInitArgs = null;
-
 	
 	public Main() {
 		
 	}
 	
-	public void start(String[] cargs) {
+	public void start(String[] cargs) throws FileNotFoundException, IOException, ParseException, java.text.ParseException {
 		
 		// Parse the command line args
 		parse(cargs);
+
+		// Create the logger
+        createLogger("io.github.agentsoz.bushfire", logFile);
 		
 		// Read in the configuration
 		try { 
@@ -69,23 +85,22 @@ public class Main {
 		// several different types of data around the application 
 		// using a publish/subscribe or pull mechanism
 		DataServer dataServer = DataServer.getServer("Bushfire");
-		/*
-		 * FIXME this is a fudge to get matsim and the fire data file in synch
-		 * matsim appears to use seconds as a time increment, while the fire
-		 * data is in hours. This number is 1/3600 to convert hours to secs.
-		 * Ideally, we need to have both values in a config file. ie. how many
-		 * seconds per matsim increment (1) and how many seconds per fire file
-		 * time unit (3600) and let this code work it out as required. That way
-		 * other components (with other time ratios) can be added.
-		 */
-		dataServer.setTimeStep(0.000277778);
-
 		
 		// Create fire module, load fire data, and register the fire module as
 		// an active data source
-		fireModel = new FireModule();
-		fireModel.loadData(SimpleConfig.getFireFile());
+		boolean isGeoJson = SimpleConfig.getFireFireFormat().equals("geojson");
+		if (!isGeoJson) {
+			abort("Fire file must be in GeoJson format.");
+		} 
+		fireModel = new PhoenixFireModule();
 		fireModel.setDataServer(dataServer);
+		fireModel.loadGeoJson(SimpleConfig.getFireFile());
+		boolean isGlobalUTM = SimpleConfig.getCoordinate_system().toLowerCase().equals("utm");
+		boolean isFireUTM = SimpleConfig.getFireFireCoordinateSystem().toLowerCase().equals("utm");
+		if (isGlobalUTM && !isFireUTM) {
+			fireModel.convertLatLongToUtm();
+		}
+		fireModel.setTimestepUnit(TimestepUnit.SECONDS);
 		fireModel.start();
 		
 		// Create the Jill BDI model
@@ -173,7 +188,34 @@ public class Main {
 
 	public static void main(String[] args) {
 		Main sim = new Main();
-		sim.start(args);
+		try {
+			sim.start(args);
+		} catch(Exception e) {
+			System.err.println("\nERROR: somethig went wrong, see details below:\n");
+			e.printStackTrace();
+		}
 	}
 
+    private static Logger createLogger(String string, String file) {
+        LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
+        PatternLayoutEncoder ple = new PatternLayoutEncoder();
+
+        ple.setPattern("%date %level [%thread] %caller{1}%msg%n%n");
+        ple.setContext(lc);
+        ple.start();
+        FileAppender<ILoggingEvent> fileAppender = new FileAppender<ILoggingEvent>();
+        fileAppender.setFile(file);
+        fileAppender.setEncoder(ple);
+        fileAppender.setAppend(false);
+        fileAppender.setContext(lc);
+        fileAppender.start();
+        Logger logger = (Logger) LoggerFactory.getLogger(string);
+        logger.detachAndStopAllAppenders(); // detach console (doesn't seem to
+                                                                                // work)
+        logger.addAppender(fileAppender); // attach file appender
+        logger.setLevel(logLevel);
+        logger.setAdditive(true); /* set to true if root should log too */
+
+        return logger;
+}
 }
