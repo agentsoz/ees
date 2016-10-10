@@ -5,18 +5,6 @@
 
 <!-- ====================================================================== -->
 
-	<person id="Dummy" employed="no">
-		<plan selected="yes">
-			<act type="home" x="240682" y="5899334" end_time="06:00:00" />
-			<leg mode="car">
-			</leg>
-			<act type="home" x="240682" y="5899334" />
-		</plan>
-
-	</person>
-	
-<!-- ====================================================================== -->
-
 	<person id="1" employed="no">
 		<plan selected="yes">
 			<act type="home" x="239180.0" y="5901743.0" end_time="06:00:00" />
