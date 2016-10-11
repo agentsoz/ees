@@ -241,10 +241,12 @@ public class SimpleConfig {
 						}
 					}
 					if (nodeName.equals("demographics")) {
-
-						String k = node.getAttributes().getNamedItem("kids")
-								.getNodeValue();
-						proportionWithKids = Double.parseDouble(k);
+						// 'kids' field is optional
+						if (node.getAttributes().getNamedItem("kids") != null) {
+							String k = node.getAttributes().getNamedItem("kids")
+									.getNodeValue();
+							proportionWithKids = Double.parseDouble(k);
+						}
 						String r = node.getAttributes()
 								.getNamedItem("relatives").getNodeValue();
 						proportionWithRelatives = Double.parseDouble(r);

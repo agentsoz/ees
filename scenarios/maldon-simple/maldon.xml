@@ -51,10 +51,7 @@ will have a relative in the town needing to be collected prior to evacuation-->
 will have children in the town needing to be collected from school prior to evacuation-->
 <!-- max_distance_to_relatives provides the maximum distance in metres from agents 
 start location to relative's location-->
-<demographics relatives="0.3" kids="0.0" max_distance_to_relatives="1000"/>
-
-<!-- define maximum and minimum evacuation delays of agents -->
-<evac_delay min="600" Q1="1800" Q3="3600" max="6300" />
+<demographics relatives="0.3" max_distance_to_relatives="1000"/>
 
 
 </simulation>
