@@ -75,3 +75,20 @@ ogr2ogr -f GeoJSON \
   20160420_MtAlexShire_FDI75_Iso.json \ 
   20160420_MtAlexShire_FDI75_Iso.shp
 ```
+
+
+# How to build scenario config files from bushfire UI produced JSON
+
+The following command will create a new scenario called *test*, with files 
+placed in a new directory `../somedir/test` (must not pre-exist), using the
+input JSON file `./scenarios/template/sample_data/maldon_scenario.json` and the
+scenario templates files in directory `./scenarios/template/`.
+
+```
+./scripts/build_scenario.py \
+  -c ./scenarios/template/sample_data/maldon_scenario.json \
+  -t ./scenarios/template/ \
+  -o ../somedir \
+  -n test \
+  -v
+```

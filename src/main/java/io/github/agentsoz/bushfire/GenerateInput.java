@@ -19,6 +19,11 @@ import org.matsim.api.core.v01.population.PopulationWriter;
 import org.matsim.core.api.internal.MatsimWriter;
 import org.matsim.core.config.ConfigUtils;
 import org.matsim.core.scenario.ScenarioUtils;
+import org.matsim.core.utils.geometry.CoordImpl;
+import org.matsim.core.utils.geometry.CoordinateTransformation;
+import org.matsim.core.utils.geometry.geotools.MGC;
+import org.matsim.core.utils.geometry.transformations.GeotoolsTransformation;
+import org.matsim.core.utils.geometry.transformations.TransformationFactory;
 
 import io.github.agentsoz.util.Coordinates;
 
@@ -74,6 +79,14 @@ public class GenerateInput {
 		// Parse the command line arguments
 		parse(args);
 
+		// Transformation
+		//String from = MGC.getCRS(matsimPopulationInputCoordinateSystem).toWKT();
+		//String to = MGC.getCRS(matsimOutputCoordinateSystem).toWKT();
+		CoordinateTransformation ct = new  GeotoolsTransformation(
+				matsimPopulationInputCoordinateSystem, 
+				matsimOutputCoordinateSystem);
+		transform(matsimPopulationLocationArea, ct);
+		
 		// Get the list of addresses from the shape-file
 		ArrayList<Coordinates> locations = null;
 		if (matsimPopulationLocationArea != null) {
@@ -94,6 +107,16 @@ public class GenerateInput {
 		MatsimWriter popWriter = new PopulationWriter(scenario.getPopulation(), scenario.getNetwork());
 		Path outfile = Paths.get(outDir).toAbsolutePath().resolve(matsimScenarioPrefix + matsimPopulationFile);
 		popWriter.write(outfile.toString());
+	}
+
+	private static void transform(RectangularArea area, CoordinateTransformation ct) {
+		// NOTE: CoordinateTransformation expects LONG first then LAT!!!
+		Coord xy1 = ct.transform(new  CoordImpl(area.getX1(), area.getY1()));
+		Coord xy2 = ct.transform(new  CoordImpl(area.getX2(), area.getY2()));
+		area.setX1(xy1.getX());
+		area.setY1(xy1.getY());
+		area.setX2(xy2.getX());
+		area.setY2(xy2.getY());
 	}
 
 	private static ArrayList<Coordinates> getRandomLocationsFrom(RectangularArea area, int num, Random rand) {
@@ -260,6 +283,22 @@ public class GenerateInput {
 
 		public double getY2() {
 			return y2;
+		}
+
+		public void setX1(double x1) {
+			this.x1 = x1;
+		}
+
+		public void setY1(double y1) {
+			this.y1 = y1;
+		}
+
+		public void setX2(double x2) {
+			this.x2 = x2;
+		}
+
+		public void setY2(double y2) {
+			this.y2 = y2;
 		}
 
 		public String toString() {
