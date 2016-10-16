@@ -1,0 +1,50 @@
+{
+  "name" : "Maldon-Bushfire-Jan-1944",
+  "township" : "Maldon",
+  "osmArea" : {
+    "rectangle" : [ -36.8093, 144.2759, -37.0853, 143.9257 ],
+    "url" : "media/maldon_network.xml"
+  },
+  "fire" : {
+    "name" : "20160420_MtAlexShire_FDI75_Iso",
+    "url" : "media/20160420_MtAlexShire_FDI75_Iso.json",
+    "coordinate_system" : "latlong",
+    "format" : "geojson"
+  },
+  "safeLines" : [
+    {
+      "name" : "Castlemaine",
+      "coordinates" : [
+        { "lat": -37.056273061302335, "lng": 144.13753509521484 },
+        { "lat": -37.02996578145434, "lng": 144.16362762451172 }
+      ]
+    },
+    {
+      "name" : "Lockwood South",
+      "coordinates" : [
+        {"lat": -36.9301345612533, "lng": 144.1183090209961},
+        {"lat": -36.943306614153116, "lng": 144.1402816772461}        
+      ]
+    }
+  ],
+  
+  "vehiclesAreas" : [
+    {
+      "name" : "400",
+      "bounds" : {"south": -36.99350417605373, "west": 144.0585494041443, "north": -36.98363186142687, "east": 144.070565700531}
+    },
+    {
+      "name" : "200",
+      "bounds" : {"south": -36.99967372201328, "west": 144.06567335128784, "north": -36.99069343916709, "east": 144.07228231430054}
+    }
+  ],
+  
+  "evacTime" : {"hh":15,"mm":15},
+  "evacPeakMins" : 30,
+  
+  "maxSpeed" : 80
+}
+
+
+
+
