@@ -25,6 +25,17 @@ function reset() {
 		township.safeLines.length = 0;
 		$('.glyphicon-remove-sign').parent().remove();
 	}
+	// Reset the new scenario dropdown
+	$("#new-scenario-dropdown").val('Select');
+
+	global.evacTime = {
+		hh : 12,
+		mm : 0
+	};
+	global.evacPeakMins = 60;
+
+	$("#max-speed-slider").slider("option", "value", 10);
+
 }
 // Handles the user selection for brand new scenario creation
 $("#new-scenario-dropdown").on(
