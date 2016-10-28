@@ -1,8 +1,10 @@
-<!--
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--=========================================================================== 
   #%L
   BDI-ABM Integration Package
   %%
-  Copyright (C) 2014 - 2015 by its authors. See AUTHORS file.
+  Copyright (C) 2014 - 2016 by its authors. See AUTHORS file.
   %%
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU Lesser General Public License as
@@ -18,24 +20,31 @@
   License along with this program.  If not, see
   <http://www.gnu.org/licenses/lgpl-3.0.html>.
   #L%
-  -->
+============================================================================-->
+
+
 <!-- 
+	example data:
+	
+<location> 
+    <name>Harcourt</name>
+    <coordinates>256222.51444707022,5901687.72030469</coordinates>
+    <capacity>1000</capacity>
+</location>
+<location> 
+    <name>Lockwood South</name>
+    <coordinates>246377.68082871533,5919215.437931696</coordinates>
+    <capacity>1000</capacity>
+</location>
+
+	
+        !!! Update 27/Oct/16 DSINGH: Leaving the following information in for 
+            now, will need to be updated.
+            
+
 	The following data relates to defining regions etc for the town
 
-	The geography file contains a list of locations. 
-	These can be of the types:
-		s = school
-		e = evacuation point
-		c = control point
-
-	Schools are used for residents who have children. They will travel to
-	one of the schools before evacuating.
-
-	TODO check that zero and 2+ schools work correctly
-
 	Evacuation points are where residents will evacuate too.
-
-	Control points are used to define evacuation routes.
 
 	Locations require a coordinate (easting, northing).
 
@@ -46,36 +55,27 @@
 	If no routes are defined, a route with a single waypoint (the relief centre) is created for each region.
 
 -->
-<geography>
-<location 
-	name = "Harcourt"
-	easting="256222.51444707022"
-	northing = "5901687.72030469"
-	type = "e"
-/>
-<location 
-	name = "LockwoodSouth"
-	easting="246377.68082871533"
-	northing = "5919215.437931696"
-	type = "e"
-/>
+<geography
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="https://github.com/agentsoz/bdi-abm-integration"
+  xsi:schemaLocation="https://github.com/agentsoz/bdi-abm-integration geography.xsd">
 
-<relief_centre>
-	<data
-		name = "ShelterAtLockwoodSouth"
-		location = "LockwoodSouth"
-		capacity = "700"
-	/>
-</relief_centre>
+<coordinateSystem>utm</coordinateSystem>
 
-<relief_centre>
-	<data
-		name = "ShelterAtHarcourt"
-		location = "Harcourt"
-		capacity = "700"
-	/>
-</relief_centre>
+<destinations>
+<location>
+  <name>Harcourt</name>
+  <coordinates>256222.51444707022,5901687.72030469</coordinates>
+</location>
+<location>
+  <name>Lockwood South</name>
+  <coordinates>246377.68082871533,5919215.437931696</coordinates>
+</location>
+
+</destinations>
 
 </geography>
+
+
 
 
