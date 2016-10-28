@@ -544,7 +544,7 @@ public class Config {
 					.getNodeValue();
 			double easting = Double.parseDouble(eastStr);
 			double northing = Double.parseDouble(northStr);
-			Location l = new Location(name, type, easting, northing);
+			Location l = new Location(name, easting, northing);
 			locations.put(name, l);
 		} catch (Exception e) {
 			logger.error("Could not read location from config file: "
@@ -726,8 +726,8 @@ public class Config {
 						if (locations.containsKey(s)) {
 							Location l = getLocation(s);
 							routeNames.add(s);
-							routeCoords.add(new Coordinate(l.getEasting(), l
-									.getNorthing()));
+							routeCoords.add(new Coordinate(l.getX(), l
+									.getY()));
 						} else {
 							logger.warn("Waypoint '" + s
 									+ "' is not in the list of known locations");
@@ -759,7 +759,7 @@ public class Config {
 						
 						if(locations.containsKey(location)){
 							Location l = locations.get(location);
-							locationCoords = new Coordinate(l.getEasting(), l.getNorthing());
+							locationCoords = new Coordinate(l.getX(), l.getY());
 						} else{
 							logger.warn("Shelter location '" + location
 									+ "' is not in the list of known locations");

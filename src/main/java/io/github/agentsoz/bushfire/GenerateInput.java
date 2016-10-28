@@ -215,7 +215,7 @@ public class GenerateInput {
 			case "-prefix":
 				if (i + 1 < args.length) {
 					i++;
-					matsimScenarioPrefix = args[i] + "_";
+					matsimScenarioPrefix = args[i];
 				}
 				break;
 			case "-wkt":

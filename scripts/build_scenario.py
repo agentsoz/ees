@@ -14,6 +14,10 @@ from osgeo import osr
 #----------------------------------------------------------------------------
 APPJAR = os.path.join(os.path.dirname(os.path.realpath(__file__)), "../target/bushfire-1.0.1-SNAPSHOT.jar")
 
+nAgents = 300 # hardwired, fix me
+proportionRelatives = 0.3 # hardwired, fix me
+maxMtrsToRelatives = 1000 # hardwired, fix me
+
 #----------------------------------------------------------------------------
 # Util functions for argparse
 #----------------------------------------------------------------------------
@@ -37,7 +41,7 @@ def new_dir(arg):
 	os.makedirs(os.path.dirname(filename), exist_ok=True)
      	return arg    	
 def parse_args():
-	parser = argparse.ArgumentParser(description='Converting a Shape file to a JSON')
+	parser = argparse.ArgumentParser(description='Builds a bushfire simulation scenario using web UI produced JSON')
 	parser.add_argument('-c','--config',
                     help='path to JSON file (created by bushfire scenario builder UI)',
                     required=True,
@@ -84,9 +88,12 @@ prefix = args.name
 outdir = os.path.join(args.outdir, prefix)
 
 t_main = os.path.join(args.templatesdir, "t_main.xml")
+t_main_xsd = os.path.join(args.templatesdir, "main.xsd")
 t_matsim = os.path.join(args.templatesdir, "t_matsim.xml")
 t_matsim_network_change = os.path.join(args.templatesdir, "t_matsim_network_change_events.xml")
 t_matsim_plans = os.path.join(args.templatesdir, "t_matsim_plans.xml")
+t_geography = os.path.join(args.templatesdir, "t_geography.xml")
+t_geography_xsd = os.path.join(args.templatesdir, "geography.xsd")
 
 o_main = os.path.join(outdir, "%s_main.xml" % prefix)
 o_matsim = os.path.join(outdir, "%s_matsim_main.xml" % prefix)
@@ -95,6 +102,7 @@ o_matsim_network_change = os.path.join(outdir, "%s_matsim_network_change_events.
 o_matsim_plans = os.path.join(outdir, "%s_matsim_plans.xml" % prefix)
 o_matsim_outdir = os.path.join(outdir, "%s_matsim_output" % prefix)
 o_fire = os.path.join(outdir, "%s_fire.json" % prefix)
+o_geography = os.path.join(outdir, "%s_geography.xml" % prefix)
 
 # check before proceeding
 if os.path.exists(outdir):
@@ -113,25 +121,35 @@ with open(args.config) as data_file:
 pprint(data) if args.verbose else ''
 
 # replacements
-replacements = {
+main_replacements = {
     # main config template replacements 
     '${matsimfile_name}': o_matsim,
     '${firefile_name}' : o_fire,
     '${firefile_coordinates}' : data["fire"]["coordinate_system"],
     '${firefile_format}' : data["fire"]["format"],
+    '${geographyfile_name}' : o_geography,
     '${inputNetworkFile}' : o_matsim_network,
     '${inputChangeEventsFile}' : o_matsim_network_change,
     '${inputPlansFile}' : o_matsim_plans,
-    '${outputDirectory}' : o_matsim_outdir
+    '${outputDirectory}' : o_matsim_outdir,
+    '${bdiagents_number}' : "%s" % nAgents,
+    '${trafficBehaviour_preEvacDetour_proportion}' : "%s" % proportionRelatives,
+    '${trafficBehaviour_preEvacDetour_radiusInMtrs}' : "%s" % maxMtrsToRelatives
+}
+geography_replacements = {
+    '${geographyfile_coordinate_system}' : data["coordinate_system"],
 }
 
 # write the main config file
 log("writing %s" % o_main)
 with open(t_main) as infile, open(o_main, 'w') as outfile:
     for line in infile:
-        for src, target in replacements.iteritems():
+        for src, target in main_replacements.iteritems():
             line = line.replace(src, target)
         outfile.write(line)
+cmd = ["cp", t_main_xsd, outdir]
+log(cmd)
+subprocess.call(cmd)
         
 # write the fire file
 i_fire = os.path.join("/var/www/html", data["fire"]["url"])
@@ -142,7 +160,7 @@ copyfile(i_fire, o_fire)
 log("writing %s" % o_matsim)
 with open(t_matsim) as infile, open(o_matsim, 'w') as outfile:
     for line in infile:
-        for src, target in replacements.iteritems():
+        for src, target in main_replacements.iteritems():
             line = line.replace(src, target)
         outfile.write(line)
 
@@ -158,22 +176,58 @@ copyfile(t_matsim_network_change, o_matsim_network_change)
 # write the MATSim population plans file
 #copyfile(t_matsim_plans, o_matsim_plans)
 
-nAgents = 300
+# write the population file
+log("FIXME: hardwired %s agents" % nAgents)
 ### !!!NOTE: order should be LONGITUDE then LATITUDE!!!
 xy1 = "%s,%s" % (data["osmArea"]["rectangle"][1], data["osmArea"]["rectangle"][0])
 xy2 = "%s,%s" % (data["osmArea"]["rectangle"][3], data["osmArea"]["rectangle"][2])
-
+popnPrefix = '' # popn names should be 1,2,.. so as to match Jill names!!
 cmd = [
   "java", 
   "-cp", APPJAR,
   "io.github.agentsoz.bushfire.GenerateInput",
   "-outdir", outdir,
-  "-prefix", prefix,
+  "-prefix", popnPrefix, 
   "-matsimpop", "%s/WGS84/RECT/%s&%s" % (nAgents, xy1, xy2),
   "-wkt", "EPSG:28355",
   "-verbose", "true" if args.verbose else "false"
 ]
 log(cmd)
 subprocess.call(cmd)
+cmd = [
+  "mv", 
+  os.path.join(outdir, "%spopulation.xml" % popnPrefix), 
+  o_matsim_plans
+]
+log(cmd)
+subprocess.call(cmd)
+
+# write the geography file
+log("writing %s" % o_geography)
+with open(t_geography) as infile, open(o_geography, 'w') as outfile:
+    for line in infile:
+        for src, target in geography_replacements.iteritems():
+            line = line.replace(src, target)
+        outfile.write(line)
+cmd = ["cp", t_geography_xsd, outdir]
+log(cmd)
+subprocess.call(cmd)
+     
+# write destination locations
+src = '<!--${location}-->'
+target = ''
+for dest in data["destinations"]:
+    target = "%s<location>\n" % target
+    target = "%s  <name>%s</name>\n" % (target, dest["name"])
+    target = "%s  <coordinates>%s,%s</coordinates>\n" % (target, dest["coordinates"]["lat"], dest["coordinates"]["lng"])
+    target = "%s</location>\n" % target
+f = open(o_geography,'r')
+filedata = f.read()
+f.close()
+newdata = filedata.replace(src, target)
+f = open(o_geography,'w')
+f.write(newdata)
+f.close()
+   
 
 #java -cp APPJAR io.github.agentsoz.bushfire.GenerateInput    -outdir test    -prefix maldon    -matsimpop "700/EPSG:28355/RECT/234274,5895647&246377,5919215"

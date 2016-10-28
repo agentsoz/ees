@@ -27,6 +27,7 @@ import io.github.agentsoz.bushfire.datamodels.Region;
 import io.github.agentsoz.bushfire.datamodels.ReliefCentre;
 import io.github.agentsoz.bushfire.datamodels.Route;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -35,8 +36,13 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.Validator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,23 +83,23 @@ public class SimpleConfig {
 	private static String fireFileFormat = "custom";
 	private static String geographyCoordinateSystem = "longlat";
 
+	private static final String eSimulation = "simulation";
+	private static final String eMATSimFile = "matsimfile";
+	private static final String eFireFile = "firefile";
+	private static final String eGeographyFile = "geographyfile";
+	private static final String eNumBDI = "bdiagents";
+	private static final String eName = "name";
+	private static final String eCoordinates = "coordinates";
+	private static final String eFormat = "format";
+	private static final String eTrafficBehaviour = "trafficBehaviour";
+	private static final String ePreEvacDetour = "preEvacDetour";
+	private static final String eProportion = "proportion";
+	private static final String eRadiusInMtrs = "radiusInMtrs";
+	private static final String eGeography = "geography";
+	private static final String eCoordinateSystem = "coordinateSystem";
+	private static final String eDestinations = "destinations";
+	private static final String eLocation = "location";
 	
-	public static HashMap<String, Location> getLocationMap(){
-		return locations;
-	}
-	
-	public static HashMap<String, Route> getRouteMap(){
-		return routes;
-	}
-	
-	public static HashMap<String, Region> getRegionMap(){
-		return regions;
-	}
-	
-	public static HashMap<String, ReliefCentre> getReliefCentreMap(){
-		return reliefCentres;
-	}
-
 	public static String getMatSimFile() {
 		return matSimFile;
 	}
@@ -122,7 +128,7 @@ public class SimpleConfig {
 		return evacDelay;
 	}
 
-	public static String getCoordinate_system() {
+	public static String getGeographyCoordinateSystem() {
 		return geographyCoordinateSystem;
 	}
 
@@ -138,35 +144,31 @@ public class SimpleConfig {
 		return locations.get(name);
 	}
 
-	public static Set<String> getLocations() {
-		return locations.keySet();
-	}
-
-	public static Region getRegion(String name) {
+	private static Region getRegion(String name) {
 		return regions.get(name);
 	}
 
-	public static Set<String> getRegionsByName() {
+	private static Set<String> getRegionsByName() {
 		return regions.keySet();
 	}
 
-	public static Collection<Region> getRegions() {
+	private static Collection<Region> getRegions() {
 		return regions.values();
 	}
 
-	public static Route getRoute(String name) {
+	private static Route getRoute(String name) {
 		return routes.get(name);
 	}
 
-	public static Set<String> getRoutes() {
+	private static Set<String> getRoutes() {
 		return routes.keySet();
 	}
 
-	public static ReliefCentre getReliefCentre(String name) {
+	private static ReliefCentre getReliefCentre(String name) {
 		return reliefCentres.get(name);
 	}
 
-	public static Set<String> getReliefCentres() {
+	private static Set<String> getReliefCentres() {
 		return reliefCentres.keySet();
 	}
 
@@ -181,446 +183,104 @@ public class SimpleConfig {
 	/**
 	 * Pick one of the listed evac points
 	 */
-	public static String getRandomEvacPoint() {
-		int n = new Random().nextInt(reliefCentres.size());
-		ReliefCentre rc = (ReliefCentre) reliefCentres.values().toArray()[n];
-		return rc.getName();
+	public static Location getRandomEvacLocation() {
+		int n = new Random().nextInt(locations.size());
+		Location rc = (Location) locations.values().toArray()[n];
+		return rc;
 	}
 
-	/**
-	 * read the config file (xml) and save data
-	 * 
-	 * @return false if there was a problem
-	 * @throws Exception 
-	 */
-	public static boolean readConfig() throws Exception {
+	public static void readConfig() throws Exception {
 		if (configFile == null) {
 			throw new Exception("No configuration file given");
 		}
+		
 		logger.info("Loading configuration from '" + configFile + "'");
-		try {
-			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-			DocumentBuilder db = dbf.newDocumentBuilder();
-			Document doc = db.parse(new FileInputStream(configFile));
+		
+		// Validate the XML against the schema first
+		SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+		Schema schema = factory.newSchema(); // schema specified in file
+		Validator validator = schema.newValidator();
+		validator.validate(new StreamSource(new File(configFile)));
+		
+		// Now we can start reading; we don't need to add many checks since
+		// the XML is at this point already validated
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		DocumentBuilder db = dbf.newDocumentBuilder();
+		Document doc = db.parse(new FileInputStream(configFile));
+		
+	    // Normalisation is optional, but recommended
+	    // see http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
+	    doc.getDocumentElement().normalize();
+	    
+	    // Get the root element
+		Element root = (Element)doc.getElementsByTagName(eSimulation).item(0);
+		
+		// Get MATSim config file name
+		matSimFile = doc.getElementsByTagName(eMATSimFile).item(0).getTextContent().replaceAll("\n", "").trim();
+		
+		// Get the fire data
+		Element element = (Element)root.getElementsByTagName(eFireFile).item(0);
+		fireFile = element.getElementsByTagName(eName).item(0).getTextContent().replaceAll("\n", "").trim();
+		fireCoordinateSystem = element.getElementsByTagName(eCoordinates).item(0).getTextContent().replaceAll("\n", "").trim();
+		fireFileFormat = element.getElementsByTagName(eFormat).item(0).getTextContent();
+		
+		// Get the geography data
+		element = (Element)root.getElementsByTagName(eGeographyFile).item(0);
+		geographyFile = element.getElementsByTagName(eName).item(0).getTextContent().replaceAll("\n", "").trim();
+		
+		// Get the number of BDI agents
+		numBDIAgents = Integer.parseInt(root.getElementsByTagName(eNumBDI).item(0).getTextContent().replaceAll("\n", "").trim());
+		
+		// Get the traffic detour behaviour
+		element = (Element)root.getElementsByTagName(eTrafficBehaviour).item(0);
+		element = (Element)element.getElementsByTagName(ePreEvacDetour).item(0);
+		proportionWithRelatives = Double.parseDouble(root.getElementsByTagName(eProportion).item(0).getTextContent().replaceAll("\n", "").trim());
+		maxDistanceToRelatives = Integer.parseInt(root.getElementsByTagName(eRadiusInMtrs).item(0).getTextContent().replaceAll("\n", "").trim());
 
-			NodeList nl = doc.getDocumentElement().getChildNodes();
-			for (int i = 0; i < nl.getLength(); i++) {
-				Node node = nl.item(i);
-				if (node instanceof Element) {
-					String nodeName = node.getNodeName();
-					logger.trace("found node " + nodeName);
-					if (nodeName.equals("matsimfile")) {
-						matSimFile = node.getAttributes().getNamedItem("name")
-								.getNodeValue();
-					}
-					if (nodeName.equals("firefile")) {
-						fireFile = node.getAttributes().getNamedItem("name")
-								.getNodeValue();
-						fireCoordinateSystem = node.getAttributes()
-								.getNamedItem("coordinates").getNodeValue();
-						fireFileFormat = node.getAttributes().getNamedItem("format")
-								.getNodeValue();
-					}
-					if (nodeName.equals("geographyfile")) {
-						geographyFile = node.getAttributes()
-								.getNamedItem("name").getNodeValue();
-						geographyCoordinateSystem = node.getAttributes()
-								.getNamedItem("coordinates").getNodeValue();
-					}
-					if (nodeName.equals("bdiagents")) {
-						String n = node.getAttributes().getNamedItem("number")
-								.getNodeValue();
-						try {
-							numBDIAgents = Integer.parseInt(n);
-						} catch (Exception e) {
-							System.err
-									.println("WARNING: Could not read number of BDI agents from configuration file (will use default '"
-											+ numBDIAgents
-											+ "'): "
-											+ e.getMessage());
-						}
-					}
-					if (nodeName.equals("demographics")) {
-						// 'kids' field is optional
-						if (node.getAttributes().getNamedItem("kids") != null) {
-							String k = node.getAttributes().getNamedItem("kids")
-									.getNodeValue();
-							proportionWithKids = Double.parseDouble(k);
-						}
-						String r = node.getAttributes()
-								.getNamedItem("relatives").getNodeValue();
-						proportionWithRelatives = Double.parseDouble(r);
-						String d = node.getAttributes()
-								.getNamedItem("max_distance_to_relatives")
-								.getNodeValue();
-						maxDistanceToRelatives = Integer.parseInt(d);
-					}
-					if (nodeName.equals("evac_delay")) {
-
-						String k = node.getAttributes().getNamedItem("min")
-								.getNodeValue();
-						evacDelay[0] = Double.parseDouble(k);
-						String r = node.getAttributes().getNamedItem("max")
-								.getNodeValue();
-						evacDelay[1] = Double.parseDouble(r);
-					}
-				}
-			}
-		} catch (Exception e) {
-			throw new Exception("while reading config: " + e.getMessage());
-		}
-
-		logger.debug("matSimFilefile = " + matSimFile);
-		logger.debug("fireFile = " + fireFile);
-		logger.debug("geographyFile = " + geographyFile);
-
-		if (geographyFile != null) {
-			if (readGeography()) {
-				printLocations();
-				printRegions();
-				printRoutes();
-				printShelters();
-			} else {
-				return false;
-			}
-		}
-
-		if (matSimFile == null) {
-			return false;
-		}
-		return true;
+		// Now read the geography file
+		readGeography();
 	}
 
-	/**
-	 * read the config file (xml) and save data
-	 * 
-	 * @return false if there was a problem
-	 * @throws Exception 
-	 */
-	private static boolean readGeography() throws Exception {
-		boolean result = true;
-		logger.info("loading geography file " + geographyFile);
-		try {
-			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-			DocumentBuilder db = dbf.newDocumentBuilder();
-			Document doc = db.parse(new FileInputStream(geographyFile));
-
-			NodeList nl = doc.getDocumentElement().getChildNodes();
-			List<Node> locationNodes = new ArrayList<Node>();
-			List<Node> regionNodes = new ArrayList<Node>();
-			List<Node> routeNodes = new ArrayList<Node>();
-			List<Node> reliefCentreNodes = new ArrayList<Node>();
-			for (int i = 0; i < nl.getLength(); i++) {
-				Node node = nl.item(i);
-				if (node instanceof Element) {
-					String nodeName = node.getNodeName();
-					logger.trace("found node " + nodeName);
-					if (nodeName.equals("location")) {
-						locationNodes.add(node);
-					}
-					if (nodeName.equals("region")) {
-						regionNodes.add(node);
-					}
-					if (nodeName.equals("route")) {
-						routeNodes.add(node);
-					}
-					if (nodeName.equals("relief_centre")) {
-						reliefCentreNodes.add(node);
-					}
-				}
-			}
-			for (Node n : locationNodes)
-				if (!readLocation(n)) {
-					result = false;
-				}
-			for (Node n : routeNodes)
-				if (!readRoute(n)) {
-					result = false;
-				}
-			for (Node n : reliefCentreNodes)
-				if (!readReliefCentre(n)) {
-					result = false;
-				}
-			for (Node n : regionNodes)
-				if (!readRegion(n)) {
-					result = false;
-				}
-		} catch (Exception e) {
-			throw new Exception("Unable to read geography file " + geographyFile);
+	private static void readGeography() throws Exception {
+		if (geographyFile == null) {
+			throw new Exception("No geography file given");
 		}
-		if (locations.size() == 0) {
-			throw new Exception("No locations configured in " + geographyFile);
-		}
-		if (reliefCentres.size() == 0) {
-			throw new Exception("No relief centres configured in " + geographyFile);
-		}
+		
+		logger.info("Loading geography from '" + geographyFile + "'");
+		
+		// Validate the XML against the schema first
+		SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+		Schema schema = factory.newSchema(); // schema specified in file
+		Validator validator = schema.newValidator();
+		validator.validate(new StreamSource(new File(geographyFile)));
+		
+		// Now we can start reading; we don't need to add many checks since
+		// the XML is at this point already validated
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		DocumentBuilder db = dbf.newDocumentBuilder();
+		Document doc = db.parse(new FileInputStream(geographyFile));
+		
+	    // Normalisation is optional, but recommended
+	    // see http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
+	    doc.getDocumentElement().normalize();
 
-		return result;
+	    // Get the root element
+		Element root = (Element)doc.getElementsByTagName(eGeography).item(0);
+		
+		// Get the coordinate system
+		geographyCoordinateSystem = root.getElementsByTagName(eCoordinateSystem).item(0).getTextContent().replaceAll("\n", "").trim();
 
-	}
-
-	/**
-	 * read the list of locations and store them.
-	 * 
-	 * @param parent
-	 *            The node containing the list
-	 * @return false if there was a problem
-	 * @throws Exception 
-	 */
-	private static boolean readLocation(Node node) throws Exception {
-		boolean result = true;
-		try {
-			String name = node.getAttributes().getNamedItem("name")
-					.getNodeValue();
-			String type = node.getAttributes().getNamedItem("type")
-					.getNodeValue();
-			String eastStr = node.getAttributes().getNamedItem("easting")
-					.getNodeValue();
-			String northStr = node.getAttributes().getNamedItem("northing")
-					.getNodeValue();
-			double easting = Double.parseDouble(eastStr);
-			double northing = Double.parseDouble(northStr);
-			Location l = new Location(name, type, easting, northing);
-			locations.put(name, l);
-		} catch (Exception e) {
-			throw new Exception("Could not read location from config file: "
-					+ e.getMessage());
-		}
-		return result;
-	}
-
-	/**
-	 * read a region from the geography file and store it
-	 * 
-	 * @param parent
-	 * @return
-	 * @throws Exception 
-	 */
-	private static boolean readRegion(Node parent) throws Exception {
-		boolean result = true;
-		Region region = new Region();
-		NodeList nl = parent.getChildNodes();
+		// Get the locations
+		Element dests = (Element)root.getElementsByTagName(eDestinations).item(0);
+		NodeList nl = dests.getElementsByTagName(eLocation);
 		for (int i = 0; i < nl.getLength(); i++) {
-			Node node = nl.item(i);
-			if (node instanceof Element) {
-				String nodeName = node.getNodeName();
-				if (nodeName.equals("data")) {
-					try {
-						String name = node.getAttributes().getNamedItem("name")
-								.getNodeValue();
-						String eastStr = node.getAttributes()
-								.getNamedItem("easting").getNodeValue();
-						String northStr = node.getAttributes()
-								.getNamedItem("northing").getNodeValue();
-						String populationStr = node.getAttributes()
-								.getNamedItem("population").getNodeValue();
-						int population = Integer.parseInt(populationStr);
-						if(((Element) node).hasAttribute("regionid")){
-							String regionId = node.getAttributes()
-									.getNamedItem("regionid").getNodeValue();
-							region.setRegionId(regionId);
-						}
-						double easting = Double.parseDouble(eastStr);
-						double northing = Double.parseDouble(northStr);
-						region.setName(name);
-						region.setCentre(easting, northing);
-						region.setPopulation(population);
-						regions.put(name, region);
-					} catch (Exception e) {
-						throw new Exception("Could not parse <data> node in config file: "
-								+ e.getMessage());
-					}
-				}
-				if (nodeName.equals("polygon")) {
-					if (region != null) {
-						readPolygon(node, region);
-					}
-				}
-			}
-		}
-		return result;
-	}
-
-	// get region encompassing a particular location
-	public static Region getRegion(double easting, double northing) {
-		Region smallest = null;
-		for (Region r : regions.values()) {
-			// TODO this check assumes regions are rectangular - may want to
-			// improve this later
-			if (easting > r.getWestEdge() && easting < r.getEastEdge()
-					&& northing > r.getSouthEdge()
-					&& northing < r.getNorthEdge()) {
-				if (smallest == null || r.getArea() < smallest.getArea()) {
-					smallest = r;
-				}
-			}
-		}
-		return smallest;
-	}
-
-	private static void readPolygon(Node parent, Region r) throws Exception {
-		NodeList nl = parent.getChildNodes();
-		for (int i = 0; i < nl.getLength(); i++) {
-			Node node = nl.item(i);
-			if (node instanceof Element) {
-				String nodeName = node.getNodeName();
-				if (nodeName.equals("vertex")) {
-					try {
-						// double[] vertex = new double[2];
-						String eastStr = node.getAttributes()
-								.getNamedItem("easting").getNodeValue();
-						String northStr = node.getAttributes()
-								.getNamedItem("northing").getNodeValue();
-						double easting = Double.parseDouble(eastStr);
-						double northing = Double.parseDouble(northStr);
-						r.add(new double[] { easting, northing });
-					} catch (Exception e) {
-						throw new Exception("Could not parse <vertex> data: "
-								+ e.getMessage());
-					}
-				}
-			}
+			Element location = (Element)nl.item(i);
+			String name = location.getElementsByTagName(eName).item(0).getTextContent().replaceAll("\n", "").trim();
+			String s = location.getElementsByTagName(eCoordinates).item(0).getTextContent().replaceAll("\n", "").trim();
+			String[] sCoords = s.split(",");
+			double x = Double.parseDouble(sCoords[0]);
+			double y = Double.parseDouble(sCoords[1]);
+			locations.put(name, new Location(name, x, y));
 		}
 	}
-
-	private static void printRegions() {
-		for (String s : regions.keySet()) {
-			Region r = regions.get(s);
-			logger.debug("region " + r.toString() + ":" + r.getArea() + " shelters: " +r.getViableReliefCentres());
-		}
-	}
-	
-	private static void printLocations(){
-		for (String key : locations.keySet()) {
-			Location l = locations.get(key);
-			logger.debug("location " + l.getName() + ":" + l.getCoordinates());
-		}
-	}
-	
-	private static void printShelters(){
-		for (String key : reliefCentres.keySet()) {
-			ReliefCentre r = reliefCentres.get(key);
-			logger.debug("Shelter " + r.getName() + ":" + r.getCapacity());
-		}
-	}
-
-	private static boolean readRoute(Node parent) {
-		boolean result = true;
-		NodeList nl = parent.getChildNodes();
-		String name = "";
-		String shelter = "";
-		String region = "";
-		String desc = "";
-		List<String> routeNames = new ArrayList<String>();
-		List<Coordinate> routeCoords = new ArrayList<Coordinate>();
-
-		for (int i = 0; i < nl.getLength(); i++) {
-			Node node = nl.item(i);
-			if (node instanceof Element) {
-				String nodeName = node.getNodeName();
-				if (nodeName.equals("data")) {
-					try {
-						name = node.getAttributes().getNamedItem("name")
-								.getNodeValue();
-						shelter = node.getAttributes().getNamedItem("shelter")
-								.getNodeValue();
-						region = node.getAttributes().getNamedItem("region")
-								.getNodeValue();
-						desc = node.getAttributes().getNamedItem("description")
-								.getNodeValue();
-
-					} catch (Exception e) {
-						result = false;
-					}
-				}
-				if (nodeName.equals("path")) {
-					readPath(node, routeNames, routeCoords);
-				}
-			}
-		}
-
-		if (result) {
-			routes.put(name, new Route(name, region, shelter, desc, routeNames,
-					routeCoords));
-		}
-
-		return result;
-	}
-
-	private static void readPath(Node parent, List<String> routeNames,
-			List<Coordinate> routeCoords) {
-		NodeList nl = parent.getChildNodes();
-		for (int i = 0; i < nl.getLength(); i++) {
-			Node node = nl.item(i);
-			if (node instanceof Element) {
-				String nodeName = node.getNodeName();
-				if (nodeName.equals("waypoint")) {
-					try {
-						String s = node.getAttributes().getNamedItem("name")
-								.getNodeValue();
-						if (locations.containsKey(s)) {
-							Location l = getLocation(s);
-							routeNames.add(s);
-							routeCoords.add(new Coordinate(l.getEasting(), l
-									.getNorthing()));
-						} else {
-							logger.warn("Waypoint '" + s
-									+ "' is not in the list of known locations");
-						}
-					} catch (Exception e) {
-					}
-				}
-			}
-		}
-	}
-
-	private static boolean readReliefCentre(Node parent) throws Exception {
-		boolean result = true;
-		NodeList nl = parent.getChildNodes();
-		for (int i = 0; i < nl.getLength(); i++) {
-			Node node = nl.item(i);
-			if (node instanceof Element) {
-				String nodeName = node.getNodeName();
-				if (nodeName.equals("data")) {
-					/**
-					 * All the attributes are currently required
-					 */
-					try {
-						String name = node.getAttributes().getNamedItem("name")
-								.getNodeValue();
-						String location = node.getAttributes()
-								.getNamedItem("location").getNodeValue();
-						Coordinate locationCoords = new Coordinate();
-						
-						if(locations.containsKey(location)){
-							Location l = locations.get(location);
-							locationCoords = new Coordinate(l.getEasting(), l.getNorthing());
-						} else{
-							logger.warn("Shelter location '" + location
-									+ "' is not in the list of known locations");
-							result = false;
-						}
-						
-						String capacityString = node.getAttributes()
-								.getNamedItem("capacity").getNodeValue();
-						int capacity = Integer.parseInt(capacityString);
-
-						ReliefCentre r = new ReliefCentre(name, location, locationCoords,
-								capacity);
-						reliefCentres.put(name, r);
-					} catch (Exception e) {
-						throw new Exception("An error occured reading a relief_centre from the config file");
-					}
-				}
-			}
-		}
-		return result;
-	}
-
-	private static void printRoutes() {
-		for (String s : routes.keySet()) {
-			logger.debug("found route " + s);
-		}
-	}
-
 }

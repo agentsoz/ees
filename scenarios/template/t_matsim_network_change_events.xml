@@ -1,45 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <networkChangeEvents xmlns="http://www.matsim.org/files/dtd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.matsim.org/files/dtd http://www.matsim.org/files/dtd/networkChangeEvents.xsd">
 
-<!-- Add a blockage just before Lewis Rd, Maldon, reducing speed from 80 -->
-<!--
 <networkChangeEvent startTime= "19:00:00" >
 
-<link refId= "24307"/>
-<link refId= "24308"/>
-<link refId= "24309"/>
-<link refId= "24310"/>
-<link refId= "24311"/>
-<link refId= "24312"/>
-<link refId= "24313"/>
-<link refId= "24314"/>
-<link refId= "24315"/>
-<link refId= "24316"/>
-<link refId= "24317"/>
-<link refId= "24318"/>
-<link refId= "24319"/>
-<link refId= "24320"/>
-<link refId= "24321"/>
-<link refId= "24322"/>
-<link refId= "24323"/>
-<link refId= "24324"/>
-<link refId= "24325"/>
-<link refId= "24326"/>
-<link refId= "24327"/>
-<link refId= "24328"/>
-<link refId= "24329"/>
-<link refId= "24330"/>
-<link refId= "24331"/>
-<link refId= "24332"/>
-<link refId= "4019"/>
-<link refId= "4020"/>
--->
+<!--<link refId= "24307"/>-->
+<link refId= "dummy-linkid-that-should-never-match"/>
+<!--${matsim_network_change_events}-->
 <!--<freespeed type= "absolute" value= "5.5"/>--> <!-- In m/s: divide km/h by 3.6 -->
-
-<!--
 <flowCapacity type= "scaleFactor" value= "0.25"/>
 </networkChangeEvent>
--->
 </networkChangeEvents>
 
 

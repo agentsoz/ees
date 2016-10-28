@@ -1,3 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
 <!--=========================================================================== 
   #%L
   BDI-ABM Integration Package
@@ -27,7 +29,10 @@ Its primary role is to point to all of the other config
 and input files required by the scenario.
 ============================================================================-->
 
-<simulation>
+<simulation
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="https://github.com/agentsoz/bdi-abm-integration"
+  xsi:schemaLocation="https://github.com/agentsoz/bdi-abm-integration main.xsd">
 
 <!--=========================================================================== 
 Specifies the top level MATSim configuration file for this scenario
@@ -35,9 +40,9 @@ Specifies the top level MATSim configuration file for this scenario
     path to file; if using relative path, specify relative to the 
     bushfire root directory, e.g., ./sample_data/maldon.xml     
 ============================================================================-->
-<matsimfile 
-  name="${matsimfile_name}"
-/>
+<matsimfile> 
+${matsimfile_name}
+</matsimfile> 
 
 <!--=========================================================================== 
 Specifies the timestamped fire progression fire model file
@@ -54,37 +59,27 @@ Specifies the timestamped fire progression fire model file
 
 For an example of the fire input file see ./sample_data/maldon_fire.json
 ============================================================================-->
-<firefile 
-  name="${firefile_name}" 
-  coordinates="${firefile_coordinates}" 
-  format="${firefile_format}"
-/>
+<firefile> 
+  <name>${firefile_name}</name>
+  <coordinates>${firefile_coordinates}</coordinates> 
+  <format>${firefile_format}</format>
+</firefile>
 
 <!--=========================================================================== 
 Specifies the geography file for this scenario
+
   name: 
     path to file; if using relative path, specify relative to the 
     bushfire root directory, e.g., scenarios/maldon-simple/maldon_geography.xml    
+
+  coordinates: 
+    coordinate system used in the input file; should be one of {utm,latlong}
+
+For an example of the geography file see ./sample_data/maldon_geography.json
 ============================================================================-->
-<geographyfile 
-  name= "${geographyfile_name}" 
-  coordinates="${geographyfile_coordinates}"
-/>
-
-<!--=========================================================================== 
-Number of BDI agents (N) to initialise. 
-
-The total number of agents (M) is determined by the MATSim population file 
-(see ${matsimfile_name}).
-
-The final number of BDI agents will be the lesser of N,M. Setting N really high 
-(so that it is always greater than M), will ensure that the entire MATSim 
-population has BDI conterparts.
-============================================================================-->
-<bdiagents 
-  number="${bdiagents_number}" 
-/>
-
+<geographyfile> 
+  <name>${geographyfile_name}</name> 
+</geographyfile>
 
 <!--=========================================================================== 
 Specify attributes that impact the behaviour of vehicles during evacuation
@@ -102,10 +97,27 @@ Specify attributes that impact the behaviour of vehicles during evacuation
     prior to evacuating. 
 
 ============================================================================-->
-<demographics 
-  relatives="${demographics_relatives}" 
-  max_distance_to_relatives="${demographics_max_distance_to_relatives}"
-/>
+<trafficBehaviour> 
+  <preEvacDetour>
+    <proportion>${trafficBehaviour_preEvacDetour_proportion}</proportion>
+    <radiusInMtrs>${trafficBehaviour_preEvacDetour_radiusInMtrs}</radiusInMtrs>
+  </preEvacDetour>
+</trafficBehaviour>
+
+
+<!--=========================================================================== 
+Number of BDI agents (N) to initialise. 
+
+The total number of agents (M) is determined by the MATSim population file 
+(see ${matsimfile_name}).
+
+The final number of BDI agents will be the lesser of N,M. Setting N really high 
+(so that it is always greater than M), will ensure that the entire MATSim 
+population has BDI conterparts.
+============================================================================-->
+<bdiagents> 
+${bdiagents_number}
+</bdiagents>
 
 <!--=========================================================================-->
 </simulation>

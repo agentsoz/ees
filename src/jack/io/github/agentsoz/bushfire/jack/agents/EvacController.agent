@@ -187,7 +187,7 @@ public agent EvacController extends Agent {
 			for (int j = 0; j < route.getRouteNames().size(); j++) {
 				l = (Location) locations.get(route.getRouteNames().get(j));
 				routeCoords
-						.add(new Coordinate(l.getEasting(), l.getNorthing()));
+						.add(new Coordinate(l.getX(), l.getY()));
 			}
 
 			routes.insert(route.getRegion(), route.getReliefCentre(),

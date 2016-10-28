@@ -1,6 +1,7 @@
 package io.github.agentsoz.bushfire.matsimjill.agents;
 
 import io.github.agentsoz.abmjill.genact.EnvironmentAction;
+import io.github.agentsoz.bushfire.datamodels.Location;
 import io.github.agentsoz.bushfire.matsimjill.SimpleConfig;
 
 /*
@@ -35,7 +36,7 @@ import java.util.HashMap;
 public class EvacuateNow extends Plan { 
 
 	private PrintStream writer = null;
-	private String shelterLocation = "";
+	private Location shelterLocation = null;
 	
 	public EvacuateNow(Agent agent, Goal goal, String name) {
 		super(agent, goal, name);
@@ -52,9 +53,8 @@ public class EvacuateNow extends Plan {
 			new PlanStep() {
 				public void step() {
 					String bdiAction = Resident.BDI_ACTION_DRIVETO;
-					String randomShelter = SimpleConfig.getRandomEvacPoint();
-					shelterLocation = SimpleConfig.getReliefCentre(randomShelter).getLocation();
-					double[] coords = SimpleConfig.getLocation(shelterLocation).getCoordinates();
+					shelterLocation = SimpleConfig.getRandomEvacLocation();
+					double[] coords = shelterLocation.getCoordinates();
 					Object[] params = {bdiAction, coords};
 					writer.println("Resident "+getAgent().getId()+": is about to start evacuating to shelter in "+shelterLocation);
 					post(new EnvironmentAction(

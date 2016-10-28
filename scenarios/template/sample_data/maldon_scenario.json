@@ -1,6 +1,7 @@
 {
   "name" : "Maldon-Bushfire-Jan-1944",
   "township" : "Maldon",
+  "coordinate_system" : "latlong",
   "osmArea" : {
     "rectangle" : [ -36.8093, 144.2759, -37.0853, 143.9257 ],
     "url" : "media/maldon_network.xml"
@@ -27,7 +28,16 @@
       ]
     }
   ],
-  
+  "destinations" : [
+    {
+      "name" : "Castlemaine",
+      "coordinates" : { "lat": -37.064737, "lng": 144.212304 }
+    },
+    {
+      "name" : "Lockwood South",
+      "coordinates" : { "lat": -36.842702, "lng": 144.155577 }
+    }
+  ],
   "vehiclesAreas" : [
     {
       "name" : "400",
