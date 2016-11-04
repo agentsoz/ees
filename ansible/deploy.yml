@@ -1,0 +1,126 @@
+---
+- hosts: bushfire-ui-server
+  remote_user: e43361
+  become: yes
+  
+  vars:
+    web_root: /var/www/html
+    user: e43361
+    
+  environment:
+    http_proxy: http://proxy.rmit.edu.au:8080
+    https_proxy: http://proxy.rmit.edu.au:8080
+  
+  vars_prompt:
+    - name: "ansible_sudo_pass"
+      prompt: "Enter sudo password on remote host"
+
+  roles:
+    # ----------------------------------------------------------------------
+    # Extra Packages for Enterprise Linux (EPEL), needed for Node.js
+    # ----------------------------------------------------------------------
+    - role: geerlingguy.repo-epel
+      tags: install
+    
+    # ----------------------------------------------------------------------
+    # Node.js
+    # ----------------------------------------------------------------------
+    - role: geerlingguy.nodejs
+      nodejs_version: "6.x"
+      tags: install
+      
+    # ----------------------------------------------------------------------
+    # Java 1.8
+    # ----------------------------------------------------------------------
+    - role: geerlingguy.java
+      when: "ansible_os_family == 'RedHat'"
+      java_packages:
+        - java-1.8.0-openjdk
+      tags: install
+
+    # ----------------------------------------------------------------------
+    # Nginx web server
+    # ----------------------------------------------------------------------
+    - role: geerlingguy.nginx
+      nginx_vhosts:
+        - listen: "80 default_server"
+          server_name: "default_server"
+          root: "{{ web_root }}"
+          index: "index.php index.html index.htm"
+      tags: install
+          
+  tasks:
+
+    # ----------------------------------------------------------------------
+    - name : install Forever (to run our Node.js app)
+    # ----------------------------------------------------------------------
+      npm: name=forever global=yes state=latest
+      tags: install
+
+
+    # ----------------------------------------------------------------------
+    - name: install python, rsync, unzip
+    # ----------------------------------------------------------------------
+      yum: name={{ item }} update_cache=no state=latest
+      become: yes
+      with_items: 
+        - python
+        - rsync
+        - unzip
+      tags: install
+
+    # ----------------------------------------------------------------------
+    - name: sync local ../ui with remote {{ web_root }} ; folder must be writable by remote user
+    # ----------------------------------------------------------------------
+      synchronize: src=../ui dest={{ web_root }} delete=yes
+      become: no # <-- does not work with become:yes; see https://github.com/ansible/ansible/issues/4676
+      tags: upload
+        
+    # ----------------------------------------------------------------------
+    - name: stop all running Node.js services
+    # ----------------------------------------------------------------------
+      command: forever stopall
+      become: "{{ user }}"
+      tags: restart, restart-node
+
+    # ----------------------------------------------------------------------
+    - name: remove any existing Node.js services logs
+    # ----------------------------------------------------------------------
+      command: chdir=~ {{ item }}
+      with_items:
+        - rm -f ~/.forever/serve.js.log
+      become: "{{ user }}"
+      tags: restart, restart-node
+
+    # ----------------------------------------------------------------------
+    - name: start Node.js services
+    # ----------------------------------------------------------------------
+      command: chdir={{ web_root }}/ui/nodejs {{ item }}
+      with_items:
+        - forever start -l serve.js.log serve.js
+      become: "{{ user }}"
+      tags: restart, restart-node
+
+
+    # ----------------------------------------------------------------------
+    - name: configure Nginx web server for Node.js and restart
+    # ----------------------------------------------------------------------
+      copy: src=vhosts.conf dest=/etc/nginx/conf.d/vhosts.conf 
+            owner=root group=root mode=644 backup=yes
+      notify:
+        - restart web server
+      tags: restart, restart-nginx
+
+    # ----------------------------------------------------------------------
+    - name: restart Nginx
+    # ----------------------------------------------------------------------
+      service: name=nginx state=restarted
+      tags: restart, restart-nginx
+  # ----------------------------------------------------------------------
+  # ----------------------------------------------------------------------
+
+  handlers:
+
+    - name: restart web server
+      service: name=nginx state=restarted
+
