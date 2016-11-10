@@ -1,3 +1,7 @@
+// GLOBALS
+var TIMEOUT = 5000; // timeout (ms) for server side services
+
+
 // Executes when the page is fully loaded
 window.onload = function(e) {
 	// Setup the visibility of pages
@@ -189,8 +193,8 @@ $("#nav-back").click(function(event) {
 
 // Save button
 $("#nav-save").click(function(event) {
-	save();
-	timedPrompt('info', "Simulation saved");
+	save(function (str) { timedPrompt('info', "Simulation saved"); },
+			function (str) {timedPrompt('info', "The simulation could not be saved. " + str, null, 5000); });
 });
 
 $('#show-fire').change(function() {
@@ -338,22 +342,65 @@ function setScenarioTitle(title) {
 }
 
 // Saves the simulation config on the server
-function save() {
+function save(callback, errfn) {
+	
+	var township = getTownship(global.scenario_creation_arg);
+
+	var msg = {};
+	msg.name = "Maldon-Bushfire-Jan-1944"; // scenario name
+	msg.township = township.name;
+	msg.osmArea = { // FIXME: location of MATSim network file is hard-wired
+			"rectangle" : township.osmArea, 
+			"url" :  "media/maldon_network.xml"};
+	msg.fire = {// FIXME: fire selection is hard-wired 
+		    "name" : (typeof global.scenario_fire === 'undefined') ? "" : global.scenario_fire.name,
+		    "url" : (typeof global.scenario_fire === 'undefined') ? "" : global.scenario_fire.url,
+		    "coordinate_system" : "latlong",
+		    "format" : "geojson"
+		  };
+	var jmsg = JSON.stringify({'msg' : shared.MSG_SAVE, 'data' : msg});
+	console.log('Sending: ' + jmsg)
+	// Start the location-based assessment
+	$.ajax({
+		type : "POST",
+		dataType : 'json', // data type of response we get from server
+		contentType : 'application/json', // data type of request to server
+		data : jmsg,
+		timeout : TIMEOUT,
+		url : "/api/", // <-- NOTE THE TRAILING '/' IS NEEDED 
+		success : function(obj) {
+			var str = JSON.stringify(obj);
+			console.log('Received: ' + str);
+			var json = jQuery.parseJSON(str);
+			if (json.msg == shared.MSG_ERROR) {
+				if (errfn) {
+					errfn(json.data[0].msg);
+				}
+			} else {
+				if (callback)
+					callback(json);
+			}
+		},
+		error : function(req, error) {
+			console.log("Save call to /api failed with error: " + error);
+			if (errfn)
+				errfn(error);
+		}
+	});
 
 }
 
 // Shows the msg for a fixed amount of time in a standard info popup
 // type: one of 'info', 'warn', or 'error'
-function timedPrompt(type, msg, callback) {
+function timedPrompt(type, msg, callback, duration = 1000) {
 	var o = $("#info-overlay")
 	o.text(msg);
 	o.fadeIn("fast");
-	// fadeout after 1 sec
 	setTimeout(function() {
 		$("#info-overlay").fadeOut(1000);
 		if (callback)
 			callback();
-	}, 1000);
+	}, duration);
 }
 
 // Create simulation
@@ -511,3 +558,5 @@ $("#max-speed-slider").slider({
 			}
 
 		});
+
+
