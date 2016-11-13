@@ -13,6 +13,7 @@ var jsonfile = require('jsonfile');
 var mkdirp = require('mkdirp');
 var path = require('path');
 var fs   = require('fs');
+var shell = require('shelljs/global');
 
 
 /*
@@ -22,8 +23,10 @@ var fs   = require('fs');
  */
 var app = express()
 var validMessages = [shared.MSG_SAVE];
-var dataDir  = path.join(path.dirname(fs.realpathSync(__filename)), '../user-data');
-
+var dataDir  = path.join(path.dirname(fs.realpathSync(__filename)), '../../data/user-data');
+var distDir  = path.join(path.dirname(fs.realpathSync(__filename)), '../../data/bushfire-1.0.1-SNAPSHOT');
+var dist = path.join(distDir, 'bushfire-1.0.1-SNAPSHOT.jar');
+var templateDir  = path.join(path.dirname(fs.realpathSync(__filename)), '../../data/template');
 
 // Keeps track of the number of requests handled
 var requestNum = 0;
@@ -71,6 +74,14 @@ app.post('/', function(req, res) {
     			return;
     		}
 			global.log("Saved scenario '" + filename + "'");
+	    	create(req.body.data, function (err, data) {
+	    		if (err) {
+	    			global.log('ERROR: ' + err);
+	    			res.send({'msg' : shared.MSG_ERROR, 'data' : err});
+	    			return;
+	    		}
+	    		// use data
+	    	});
     	});
     }
     else if (req.body.msg == shared.MSG_CREATE) {
@@ -110,20 +121,41 @@ function save(data, callback) {
 }
 
 function create(data, callback) {
-	/*
+	var userDir = path.join(dataDir, data.name);
+	var config = path.join(userDir, data.name + '.json');
+	var scenario = 'scenario';
+	
+	// Remove the scenario directory if it exists
+	rm('-rf', path.join(userDir, scenario));
+	
 	var options = {
 	  mode: 'text',
 	  //pythonPath: 'path/to/python',
 	  //pythonOptions: ['-u'],
-	  scriptPath: 'path/to/my/scripts',
-	  args: ['value1', 'value2', 'value3']
+	  scriptPath: distDir,
+	  args: ['-c', config,
+	         '-o', userDir,
+	         '-t', templateDir,
+	         '-n', scenario,
+	         '-j', dist,
+	         '-v'
+	         ]
 	};
-
-	pythonShell.run('my_script.py', options, function (err, results) {
-	  if (err) throw err;
+	console.log('build_scenario.py ' + options.args);
+	pythonShell.run('build_scenario.py', options, function (err, results) {
+	  if (err && err.exitCode != 0) callback('Could not build simulation: ' + err);
 	  // results is an array consisting of messages collected during execution
 	  console.log('results: %j', results);
 	});
+	/*
+	
+	// cmds below work as of 11/11/16 @ 14:17
+	rm -rf data/user-data/Maldon-Bushfire-Jan-1944/scenario; data/bushfire-1.0.1-SNAPSHOT/build_scenario.py  -c data/user-data/Maldon-Bushfire-Jan-1944/Maldon-Bushfire-Jan-1944.json -o data/user-data/Maldon-Bushfire-Jan-1944 -t data/template/ -n scenario -j data/bushfire-1.0.1-SNAPSHOT/bushfire-1.0.1-SNAPSHOT.jar 
+
+	// Note num agents in cmd below must match what was produced by build-scenario!!
+	java -cp data/bushfire-1.0.1-SNAPSHOT/bushfire-1.0.1-SNAPSHOT.jar io.github.agentsoz.bushfire.matsimjill.Main --config datuser-data/Maldon-Bushfire-Jan-1944/scenario/scenario_main.xml --logfile data/user-data/Maldon-Bushfire-Jan-1944/scenario/scenario.log --loglevel INFO --jillconfig "--config={agents:[{classname:io.github.agentsoz.bushfire.matsimjill.agents.Resident, args:null, count:700}],logLevel: WARN,logFile: \"data/user-data/Maldon-Bushfire-Jan-1944/scenario/jill.log\",programOutputFile: \"data/user-data/Maldon-Bushfire-Jan-1944/scenario/jill.out\"}"
+
+
 	*/
 	
 }
