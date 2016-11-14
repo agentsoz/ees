@@ -12,7 +12,6 @@ from osgeo import osr
 #----------------------------------------------------------------------------
 # Globals and Defaults
 #----------------------------------------------------------------------------
-APPJAR = os.path.join(os.path.dirname(os.path.realpath(__file__)), "../target/bushfire-1.0.1-SNAPSHOT.jar")
 
 nAgents = 300 # hardwired, fix me
 proportionRelatives = 0.3 # hardwired, fix me
@@ -44,6 +43,10 @@ def parse_args():
 	parser = argparse.ArgumentParser(description='Builds a bushfire simulation scenario using web UI produced JSON')
 	parser.add_argument('-c','--config',
                     help='path to JSON file (created by bushfire scenario builder UI)',
+                    required=True,
+                    type=is_valid_file)
+	parser.add_argument('-j','--jar',
+                    help='path to Bushfire Simulation JAR file',
                     required=True,
                     type=is_valid_file)
 	parser.add_argument('-o', '--outdir',
@@ -184,7 +187,7 @@ xy2 = "%s,%s" % (data["osmArea"]["rectangle"][3], data["osmArea"]["rectangle"][2
 popnPrefix = '' # popn names should be 1,2,.. so as to match Jill names!!
 cmd = [
   "java", 
-  "-cp", APPJAR,
+  "-cp", args.jar,
   "io.github.agentsoz.bushfire.GenerateInput",
   "-outdir", outdir,
   "-prefix", popnPrefix, 

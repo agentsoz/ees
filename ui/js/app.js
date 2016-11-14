@@ -1,5 +1,5 @@
 // GLOBALS
-var TIMEOUT = 5000; // timeout (ms) for server side services
+var TIMEOUT = 30000; // timeout (ms) for server side services
 
 
 // Executes when the page is fully loaded
@@ -39,7 +39,8 @@ function reset() {
 	global.evacPeakMins = 60;
 
 	$("#max-speed-slider").slider("option", "value", 10);
-
+	global.maxSpeed = 100;
+	
 }
 // Handles the user selection for brand new scenario creation
 $("#new-scenario-dropdown").on(
@@ -238,32 +239,48 @@ $("#nav-create-sim").click(function(event) {
 	// Disable all buttons
 	$('.btn').prop('disabled', true);
 	// Start creating the simulation
-	createSimulation();
-	// Show the progress bar and update it every few ms
-	// TODO: This should happen based on progress feedback from server instead
-	$('.progress').show();
-	var i = 0;
-	var counterBack = setInterval(function() {
-		i++;
-		if (i <= 100) {
-			$('.progress-bar').css('width', i + '%').attr('aria-valuenow', i);
-			$('.progress-bar').text(i + '%');
-		} else {
-			// Clear the timer
-			clearInterval(counterBack);
-			// Hide and reset the progress bar
-			$('.progress').hide();
-			$('.progress-bar').css('width', '0%').attr('aria-valuenow', 0);
-			// Disable all buttons
-			$('.btn').prop('disabled', false);
-			// Show success message
-			timedPrompt('info', "Simulation created", function() {
-				var township = getTownship(global.scenario_creation_arg);
-				url = encodeURI("view.html?sim=" + township.name);
-				window.location.href = url;
-			});
+	send(shared.MSG_CREATE, {name: 'Maldon-Bushfire-Jan-1944'},
+		// Success function
+		function (data) {
+			var limit = 200; 
+			var progress = 0;
+			$('.progress').show();
+			var timeout = setInterval( function() {
+				// force checks to terminate when limit is reached (should have completed by now)
+				if (limit-- <= 0) return clearInterval(timeout);
+				send(shared.MSG_CREATE_PROGRESS, {name: 'Maldon-Bushfire-Jan-1944'},
+						// success
+						function (json) {
+							progress = Number(json.data);
+							$('.progress-bar').css('width', progress + '%').attr('aria-valuenow', progress);
+							$('.progress-bar').text(progress + '%');
+							if (progress >= 100) {
+								clearTimeout(timeout);
+								// Hide and reset the progress bar
+								$('.progress').hide();
+								$('.progress-bar').css('width', '0%').attr('aria-valuenow', 0);
+								// Show success message
+								timedPrompt('info', "Simulation created", function() {
+									// Enable all buttons
+									$('.btn').prop('disabled', false);
+									// FIXME: Redirect to results page
+									var township = getTownship(global.scenario_creation_arg);
+									url = encodeURI("view.html?sim=" + township.name);
+									window.location.href = url;
+								}, 3000);
+							}
+						},
+						function (err) {
+							clearInterval(timeout);
+							timedPrompt('info', "Create progress unknown. " + str, null, 5000); 
+						}
+					);
+			},	2000);
+		},
+		function (str) {
+			timedPrompt('info', "Could not create simulation. " + str, null, 5000); 
 		}
-	}, 100);
+	);
 });
 
 // Accordian
@@ -343,23 +360,64 @@ function setScenarioTitle(title) {
 
 // Saves the simulation config on the server
 function save(callback, errfn) {
-	
-	var township = getTownship(global.scenario_creation_arg);
-
 	var msg = {};
-	msg.name = "Maldon-Bushfire-Jan-1944"; // scenario name
+	// Get the township for this scenario
+	var township = getTownship(global.scenario_creation_arg);
+	// Scenario name (used for naming directories and files)
+	msg.name = "Maldon-Bushfire-Jan-1944"; // FIXME: scenario name is hard-wired
 	msg.township = township.name;
+	// Global coordinate system used
+	msg.coordinate_system = "latlong";
+	// Road network area and associated MATSim Network file
 	msg.osmArea = { // FIXME: location of MATSim network file is hard-wired
 			"rectangle" : township.osmArea, 
 			"url" :  "media/maldon_network.xml"};
+	// Fire shape file in Geo JSON format
 	msg.fire = {// FIXME: fire selection is hard-wired 
 		    "name" : (typeof global.scenario_fire === 'undefined') ? "" : global.scenario_fire.name,
 		    "url" : (typeof global.scenario_fire === 'undefined') ? "" : global.scenario_fire.url,
 		    "coordinate_system" : "latlong",
 		    "format" : "geojson"
 		  };
+	// Selected destinations and safe lines
+	msg.destinations = [];
+	msg.safeLines = [];
+	for (var i = 0; i < township.safeLines.length; i++) {
+		var line = township.safeLines[i].line.getPath().getArray();
+		msg.safeLines.push({
+			name: township.safeLines[i].name,
+			coordinates: 
+				[{lat: line[0].lat(), lng: line[0].lng()},
+				 {lat: line[0].lat(), lng: line[0].lng()}]
+		});
+		var dest = getDestination(township, township.safeLines[i].name);
+		if (dest != null) {
+			msg.destinations.push({
+				name: dest.name,
+				coordinates: dest.coordinates
+			});
+		}
+	}
+	// Add all the vehicles areas
+	msg.vehiclesAreas = [];
+	for (var i = 0; i < township.vehiclesAreas.length; i++) {
+		var sw = township.vehiclesAreas[0].area.getBounds().getSouthWest();
+		var ne = township.vehiclesAreas[0].area.getBounds().getNorthEast();
+		msg.vehiclesAreas.push({
+			name: township.vehiclesAreas[i].name,
+			bounds: {
+				south: sw.lat(), west: sw.lng(),
+				north: ne.lat(), east: ne.lng()}
+		});
+	}
+	// Evacuation start time and departure peak (offset from evac start)
+	msg.evacTime = global.evacTime;
+	msg.evacPeakMins = global.evacPeakMins;
+	// Max effective speed of cars as a percentage of speed limits
+	msg.maxSpeed = global.maxSpeed;
+
 	var jmsg = JSON.stringify({'msg' : shared.MSG_SAVE, 'data' : msg});
-	console.log('Sending: ' + jmsg)
+	console.log('Sending: ' + jmsg);
 	// Start the location-based assessment
 	$.ajax({
 		type : "POST",
@@ -373,21 +431,77 @@ function save(callback, errfn) {
 			console.log('Received: ' + str);
 			var json = jQuery.parseJSON(str);
 			if (json.msg == shared.MSG_ERROR) {
-				if (errfn) {
-					errfn(json.data[0].msg);
-				}
+				if (errfn) return errfn(json.data[0].msg);
 			} else {
-				if (callback)
-					callback(json);
+				if (callback) return callback(json);
 			}
 		},
 		error : function(req, error) {
 			console.log("Save call to /api failed with error: " + error);
-			if (errfn)
-				errfn(error);
+			if (errfn) return errfn(error);
 		}
 	});
 
+}
+
+//Saves the simulation config on the server
+function create(callback, errfn) {
+	var msg = {};
+	// Scenario name (used for naming directories and files)
+	msg.name = "Maldon-Bushfire-Jan-1944"; // FIXME: scenario name is hard-wired
+	var jmsg = JSON.stringify({'msg' : shared.MSG_CREATE, 'data' : msg});
+	console.log('Sending: ' + jmsg);
+	// Start the location-based assessment
+	$.ajax({
+		type : "POST",
+		dataType : 'json', // data type of response we get from server
+		contentType : 'application/json', // data type of request to server
+		data : jmsg,
+		timeout : TIMEOUT,
+		url : "/api/", // <-- NOTE THE TRAILING '/' IS NEEDED 
+		success : function(obj) {
+			var str = JSON.stringify(obj);
+			console.log('Received: ' + str);
+			var json = jQuery.parseJSON(str);
+			if (json.msg == shared.MSG_ERROR) {
+				if (errfn) return errfn(json.data[0].msg);
+			} else {
+				if (callback) return callback(json);
+			}
+		},
+		error : function(req, error) {
+			console.log("Save call to /api failed with error: " + error);
+			if (errfn) return errfn(error);
+		}
+	});
+}
+
+function send(msg, data, callback, errfn) {
+	var jmsg = JSON.stringify({'msg' : msg, 'data' : data});
+	console.log('Sending: ' + jmsg);
+	// Start the location-based assessment
+	$.ajax({
+		type : "POST",
+		dataType : 'json', // data type of response we get from server
+		contentType : 'application/json', // data type of request to server
+		data : jmsg,
+		timeout : TIMEOUT,
+		url : "/api/", // <-- NOTE THE TRAILING '/' IS NEEDED 
+		success : function(obj) {
+			var str = JSON.stringify(obj);
+			console.log('Received: ' + str);
+			var json = jQuery.parseJSON(str);
+			if (json.msg == shared.MSG_ERROR) {
+				if (errfn) return errfn(json.data[0].msg);
+			} else {
+				if (callback) return callback(json);
+			}
+		},
+		error : function(req, error) {
+			console.log("Save call to /api failed with error: " + error);
+			if (errfn) return errfn(error);
+		}
+	});
 }
 
 // Shows the msg for a fixed amount of time in a standard info popup
@@ -401,10 +515,6 @@ function timedPrompt(type, msg, callback, duration = 1000) {
 		if (callback)
 			callback();
 	}, duration);
-}
-
-// Create simulation
-function createSimulation() {
 }
 
 function setEvacTime(evacTime) {

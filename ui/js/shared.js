@@ -11,5 +11,6 @@
 	exports.MSG_ERROR = 'error';
 	exports.MSG_SAVE = 'save';
 	exports.MSG_CREATE = 'create';
+	exports.MSG_CREATE_PROGRESS = 'create_progress';
 
 })(typeof exports === 'undefined'? this['shared']={}: exports);

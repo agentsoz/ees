@@ -22,11 +22,13 @@ var shell = require('shelljs/global');
  * -----------------------------------------------------------------------
  */
 var app = express()
-var validMessages = [shared.MSG_SAVE];
+var validMessages = [shared.MSG_SAVE, shared.MSG_CREATE, shared.MSG_CREATE_PROGRESS];
 var dataDir  = path.join(path.dirname(fs.realpathSync(__filename)), '../../data/user-data');
 var distDir  = path.join(path.dirname(fs.realpathSync(__filename)), '../../data/bushfire-1.0.1-SNAPSHOT');
 var dist = path.join(distDir, 'bushfire-1.0.1-SNAPSHOT.jar');
 var templateDir  = path.join(path.dirname(fs.realpathSync(__filename)), '../../data/template');
+var logLevelMain = 'INFO';
+var logLevelJill = 'WARN';
 
 // Keeps track of the number of requests handled
 var requestNum = 0;
@@ -44,8 +46,6 @@ app.get('/', function (req, res) {
     res.send(JSON.stringify({'msg' : shared.MSG_OK, 'data' : {}}));
 })
 
-// POST http://localhost:8080/api/users
-// parameters sent with 
 app.post('/', function(req, res) {
     // Increment request counter
     requestNum++;
@@ -67,6 +67,7 @@ app.post('/', function(req, res) {
     }
 
     if (req.body.msg == shared.MSG_SAVE) {
+		global.log("Saving scenario");
     	save(req.body.data, function (err, filename) {
     		if (err) {
     			global.log('ERROR: ' + err);
@@ -74,27 +75,36 @@ app.post('/', function(req, res) {
     			return;
     		}
 			global.log("Saved scenario '" + filename + "'");
-	    	create(req.body.data, function (err, data) {
-	    		if (err) {
-	    			global.log('ERROR: ' + err);
-	    			res.send({'msg' : shared.MSG_ERROR, 'data' : err});
-	    			return;
-	    		}
-	    		// use data
-	    	});
+	    	res.send(JSON.stringify({'msg': shared.MSG_OK}));
     	});
     }
     else if (req.body.msg == shared.MSG_CREATE) {
+		global.log("Creating scenario");
     	create(req.body.data, function (err, data) {
     		if (err) {
     			global.log('ERROR: ' + err);
     			res.send({'msg' : shared.MSG_ERROR, 'data' : err});
     			return;
     		}
-    		// use data
+			global.log("Scenario creation completed. " + data);
+	    	res.send(JSON.stringify({'msg': shared.MSG_OK}));
     	});
     }
-    res.send(JSON.stringify({'msg':'OK'}));
+    else if (req.body.msg == shared.MSG_CREATE_PROGRESS) {
+		global.log("Checking scenario creation progress");
+		check_creation_progress(req.body.data, function (err, data) {
+    		if (err) {
+    			global.log('ERROR: ' + err);
+    			res.send({'msg' : shared.MSG_ERROR, 'data' : err});
+    			return;
+    		}
+			global.log("Scenario creation progress is: " + data);
+			res.send({'msg' : shared.MSG_CREATE_PROGRESS, 'data' : data});
+			return;
+    	});
+    } else {
+    	res.send(JSON.stringify({'msg': shared.MSG_OK}));
+    }
 });
 
 app.listen(global.SERVICE_ASSESS_PORT, function () {
@@ -124,14 +134,12 @@ function create(data, callback) {
 	var userDir = path.join(dataDir, data.name);
 	var config = path.join(userDir, data.name + '.json');
 	var scenario = 'scenario';
-	
+	var scenarioPath = path.join(userDir, scenario);
 	// Remove the scenario directory if it exists
-	rm('-rf', path.join(userDir, scenario));
-	
+	rm('-rf', scenarioPath);
+	// build the scenario files from user data
 	var options = {
 	  mode: 'text',
-	  //pythonPath: 'path/to/python',
-	  //pythonOptions: ['-u'],
 	  scriptPath: distDir,
 	  args: ['-c', config,
 	         '-o', userDir,
@@ -141,22 +149,58 @@ function create(data, callback) {
 	         '-v'
 	         ]
 	};
-	console.log('build_scenario.py ' + options.args);
-	pythonShell.run('build_scenario.py', options, function (err, results) {
-	  if (err && err.exitCode != 0) callback('Could not build simulation: ' + err);
-	  // results is an array consisting of messages collected during execution
-	  console.log('results: %j', results);
+	global.log('build_scenario.py ' + options.args);
+	// results is an array consisting of messages collected during execution
+	var results = [];
+	pythonShell.run('build_scenario.py', options, function (err, res1) {
+		if (err && err.exitCode != 0) return callback('Could not build simulation: ' + err);
+		if (res1) results.push(res1);
+		// Now run the simulation
+		var fileMain = path.join(scenarioPath, 'scenario_main.xml');
+		var fileLog = path.join(scenarioPath, 'scenario.log');
+		var fileJillLog = path.join(scenarioPath, 'jill.log');
+		var fileJillOut = path.join(scenarioPath, 'jill.out');
+		var cmd = 'java -cp ' + dist +
+			       ' io.github.agentsoz.bushfire.matsimjill.Main' +
+			       ' --config ' + fileMain +
+			       ' --logfile ' + fileLog +
+			       ' --loglevel ' + logLevelMain +
+			       ' --jillconfig "--config={' + 
+			       'agents:[{classname:io.github.agentsoz.bushfire.matsimjill.agents.Resident, args:null, count:300}],' +
+			       'logLevel: ' + logLevelJill + ',' +
+			       'logFile: \\"' + fileJillLog + '\\",' +
+			       'programOutputFile: \\"' + fileJillOut + '\\"' +
+			       '}"' +
+			       '&'
+			       ;
+		global.log(cmd);
+		exec(cmd, {async:true, silent:true});
+		return callback(null, results);
 	});
-	/*
-	
-	// cmds below work as of 11/11/16 @ 14:17
-	rm -rf data/user-data/Maldon-Bushfire-Jan-1944/scenario; data/bushfire-1.0.1-SNAPSHOT/build_scenario.py  -c data/user-data/Maldon-Bushfire-Jan-1944/Maldon-Bushfire-Jan-1944.json -o data/user-data/Maldon-Bushfire-Jan-1944 -t data/template/ -n scenario -j data/bushfire-1.0.1-SNAPSHOT/bushfire-1.0.1-SNAPSHOT.jar 
-
-	// Note num agents in cmd below must match what was produced by build-scenario!!
-	java -cp data/bushfire-1.0.1-SNAPSHOT/bushfire-1.0.1-SNAPSHOT.jar io.github.agentsoz.bushfire.matsimjill.Main --config datuser-data/Maldon-Bushfire-Jan-1944/scenario/scenario_main.xml --logfile data/user-data/Maldon-Bushfire-Jan-1944/scenario/scenario.log --loglevel INFO --jillconfig "--config={agents:[{classname:io.github.agentsoz.bushfire.matsimjill.agents.Resident, args:null, count:700}],logLevel: WARN,logFile: \"data/user-data/Maldon-Bushfire-Jan-1944/scenario/jill.log\",programOutputFile: \"data/user-data/Maldon-Bushfire-Jan-1944/scenario/jill.out\"}"
-
-
-	*/
-	
 }
 
+function check_creation_progress(data, callback) {
+	var logFile = path.join(dataDir, data.name, 'scenario', 'scenario_matsim_output','logfile.log');
+	if (!test('-f', logFile)) {
+		return callback(null, 0);
+	} 
+	var cmd = 'cat ' + logFile + ' | grep -i "New QSim\\|ITERATION 0\\|JVM\\|shutdown completed"';
+	global.log(cmd);
+	var stdout = exec(cmd, {silent:true}).stdout;
+
+	var progress = 0;
+	if(stdout.indexOf("ITERATION 0 BEGINS") > -1) {
+		progress += 1;
+	}
+	var count = (stdout.match(/NEW QSim\) AT /g) || []).length;
+	progress += count;
+	if(stdout.indexOf("ITERATION 0 fires iteration end event") > -1) {
+		progress += 1;
+	}
+	if(stdout.indexOf("shutdown completed") > -1) {
+		progress += 1;
+	}
+	progress = Math.round((progress/27.0)*100);
+	if (progress > 100) progress = 100;
+	return callback(null, progress);
+}

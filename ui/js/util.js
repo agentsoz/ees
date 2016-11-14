@@ -29,6 +29,16 @@ function getScenario(name) {
 	return null;
 }
 
+function getDestination(township, name) {
+	for (var i = 0; i < township.destinations.length; i++) {
+		var dest = township.destinations[i].name;
+		if (dest.localeCompare(name) == 0) {
+			return township.destinations[i];
+		}
+	}
+	return null;
+}
+
 function getGraph(scenario, name) {
 	for (var i = 0; i < scenario.graphs.length; i++) {
 		var graph = scenario.graphs[i].name;

@@ -5,17 +5,18 @@ BASEDIR=$(shell cd $(dir $(firstword $(MAKEFILE_LIST))) && pwd)/
 ### START USER CONFIG
 #############################################
 
-# Set this to the filesystem directory that is
-# accessible from the web server
-INSTALLDIR=/var/www/html
+# where to install the web app
+WEBDIR=/var/www/html
+# where bushfire simulation data will live
+DATADIR=/var/www/data
 
 #############################################
 ### END USER CONFIG
 #############################################
 
 MINIFY_CMD:=java -jar ./utils/yuicompressor-2.4.8.jar
-WEBDIR:=${INSTALLDIR}
-SRCDIR:=${BASEDIR}
+TEMPLATESDIR:=${BASEDIR}../scenarios/template
+SCRIPTSDIR:=${BASEDIR}../scripts
 
 all: install
 
@@ -24,7 +25,8 @@ config:
 	
 install: config
 	rsync -a -F --delete --delete-excluded ${BASEDIR} ${WEBDIR}
-
+	rsync -avz ${BASEDIR}../target/bushfire-1.0.1-SNAPSHOT ${DATADIR}
+	
 minify : config
 	#
 	# Minify our JS files

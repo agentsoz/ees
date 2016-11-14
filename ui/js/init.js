@@ -24,13 +24,17 @@ global.townships = [ {
 	safeLines : [],
 	vehiclesAreas : [],
 	destinations : [ {
-		name : "Castlemaine"
+		name : "Castlemaine",
+		coordinates : { lat: -37.064737, lng: 144.212304 }
 	}, {
-		name : "Harcourt"
+		name : "Harcourt",
+		coordinates : { lat: -37.004293, lng: 144.257085 }
 	}, {
-		name : "Lockwood South"
+		name : "Lockwood South",
+		coordinates : { lat: -36.842702, lng: 144.155577 }
 	}, {
-		name : "Newstead"
+		name : "Newstead",
+		coordinates : { lat: -37.117277, lng: 144.059986 }
 	} ]
 },
 
@@ -70,6 +74,8 @@ global.evacTime = {
 	mm : 0
 };
 global.evacPeakMins = 60;
+
+global.maxSpeed = 100;
 
 // Help info goes here
 info = [ {
