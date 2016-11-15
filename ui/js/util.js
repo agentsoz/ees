@@ -19,6 +19,7 @@ function setOptionsForDropdowns(dropdowns, names) {
 }
 
 
+
 function getScenario(name) {
 	for (var i = 0; i < global.existing_scenarios.length; i++) {
 		var scenario = global.existing_scenarios[i].name;
@@ -27,6 +28,22 @@ function getScenario(name) {
 		}
 	}
 	return null;
+}
+
+function getExistingScenariosNames() {
+	var val = [];
+	for (var i = 0; i < global.existing_scenarios.length; i++) {
+		val.push(global.existing_scenarios[i].name);
+	}	
+	return val;
+}
+
+function getDestinationsNames(township) {
+	var val = [];
+	for (var i = 0; i < township.destinations.length; i++) {
+		val.push(township.destinations[i].name);
+	}	
+	return val;
 }
 
 function getDestination(township, name) {
@@ -48,6 +65,15 @@ function getGraph(scenario, name) {
 	}
 	return null;
 }
+
+function getTownshipsNames() {
+	var townships = [];
+	for (var i = 0; i < global.townships.length; i++) {
+		townships.push(global.townships[i].name);
+	}	
+	return townships;
+}
+
 
 function getTownship(name) {
 	for (var i = 0; i < global.townships.length; i++) {

@@ -124,3 +124,7 @@ body {
 .ui-slider {
   margin-bottom: 25px;
 }
+
+ul.ui-autocomplete {
+    z-index: 1100;
+}

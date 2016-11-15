@@ -36,9 +36,25 @@ global.townships = [ {
 		name : "Newstead",
 		coordinates : { lat: -37.117277, lng: 144.059986 }
 	} ]
-},
-
-{
+}, {
+	name : "Castlemaine",
+	latlon : [ -37.064737, 144.212304 ],
+	osmArea : [ -37.0615, 144.3840, -37.2019, 144.1547 ], // FIXME: osm incorrect
+	defaultMapZoom : 11,
+	fires : [],
+	safeLines : [],
+	vehiclesAreas : [],
+	destinations : []
+}, {
+	name : "Campbells Creek",
+	latlon : [ -37.004293, 144.257085 ], // FIXME: coords incorrect
+	osmArea : [ -37.0615, 144.3840, -37.2019, 144.1547 ], // FIXME: osm incorrect
+	defaultMapZoom : 11,
+	fires : [],
+	safeLines : [],
+	vehiclesAreas : [],
+	destinations : []
+}, {
 	name : "Fryerstown",
 	latlon : [ -37.140291, 144.249982 ],
 	osmArea : [ -37.0615, 144.3840, -37.2019, 144.1547 ],
@@ -47,7 +63,44 @@ global.townships = [ {
 	safeLines : [],
 	vehiclesAreas : [],
 	destinations : []
-} ];
+}, {
+	name : "Harcourt",
+	latlon : [ -37.004293, 144.257085 ],
+	osmArea : [ -37.0615, 144.3840, -37.2019, 144.1547 ], // FIXME: osm incorrect
+	defaultMapZoom : 11,
+	fires : [],
+	safeLines : [],
+	vehiclesAreas : [],
+	destinations : []
+}, {
+	name : "Newstead",
+	latlon : [ -37.117277, 144.059986 ],
+	osmArea : [ -37.0615, 144.3840, -37.2019, 144.1547 ], // FIXME: osm incorrect
+	defaultMapZoom : 11,
+	fires : [],
+	safeLines : [],
+	vehiclesAreas : [],
+	destinations : []
+}, {
+	name : "Taradale",
+	latlon : [ -37.004293, 144.257085 ], // FIXME: coords incorrect
+	osmArea : [ -37.0615, 144.3840, -37.2019, 144.1547 ], // FIXME: osm incorrect
+	defaultMapZoom : 11,
+	fires : [],
+	safeLines : [],
+	vehiclesAreas : [],
+	destinations : []
+}, {
+	name : "Vaughan",
+	latlon : [ -37.004293, 144.257085 ], // FIXME: coords incorrect
+	osmArea : [ -37.0615, 144.3840, -37.2019, 144.1547 ], // FIXME: osm incorrect
+	defaultMapZoom : 11,
+	fires : [],
+	safeLines : [],
+	vehiclesAreas : [],
+	destinations : []
+}
+];
 
 global.existing_scenarios = [ {
 	name : "Maldon-Bushfire-Jan-1944",

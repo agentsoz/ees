@@ -8,12 +8,17 @@ window.onload = function(e) {
 	$("#outer-start").show();
 	$("#outer").hide();
 
-	// Populate the scenario creation dropdowns
-	setOptionsForDropdowns(document
-			.getElementsByClassName("dropdown-townships"), global.townships);
-	setOptionsForDropdowns(document
-			.getElementsByClassName("dropdown-scenarios"),
-			global.existing_scenarios);
+	// Auto complete setup
+	$( "#new-scenario-input" ).autocomplete({
+		source: getTownshipsNames(), // list of auto-complete options
+		select: handleNewScenarioInput // function to call on selection
+	});
+	$( "#new-scenario-input" ).attr('placeholder', 'Start typing ...');
+	$( "#existing-scenario-input" ).autocomplete({
+		source: getExistingScenariosNames(), // list of auto-complete options
+		select: handleExistingScenarioInput // function to call on selection
+	});
+	$( "#existing-scenario-input" ).attr('placeholder', 'Start typing ...');
 }
 
 // Remove focus from buttons after click
@@ -32,6 +37,13 @@ function reset() {
 	// Reset the new scenario dropdown
 	$("#new-scenario-dropdown").val('Select');
 
+	// Reset the new scenario input
+	$( "#new-scenario-input" ).val('');
+	$( "#new-scenario-input" ).attr('placeholder', 'Start typing ...');
+	$( "#existing-scenario-input" ).val('');
+	$( "#existing-scenario-input" ).attr('placeholder', 'Start typing ...');
+
+	
 	global.evacTime = {
 		hh : 12,
 		mm : 0
@@ -42,14 +54,18 @@ function reset() {
 	global.maxSpeed = 100;
 	
 }
+
+// FIXME: handle new scenario based on existing
+function handleExistingScenarioInput(event, ui) {
+}
+
 // Handles the user selection for brand new scenario creation
-$("#new-scenario-dropdown").on(
-		"change",
-		function() {
+function handleNewScenarioInput(event, ui) {
 			// Hide the popup modal
 			$('#newsim').modal('hide');
 			// Save the data for use throughout scenario creation
-			global.scenario_creation_arg = $(this).find(':selected').text();
+			//global.scenario_creation_arg = $(this).find(':selected').text();
+			global.scenario_creation_arg = ui.item.value;
 			global.scenario_creation_new = true;
 			// Hide the start panel and expose the main one
 			$("#outer-start").hide();
@@ -59,8 +75,8 @@ $("#new-scenario-dropdown").on(
 			// Set the scenario title to include the town name
 			setScenarioTitle(township.name + " Simulation");
 			// Populate the fire dropdrop list for this town
-			setOptionsForDropdowns(document
-					.getElementsByClassName("dropdown-fires"), township.fires);
+			setOptionsForIncidentDropdown();
+			//setOptionsForDropdowns($(".dropdown-fires"), township.fires, "Phoenix fire models");
 			// Populate the relief destinations list for this town
 			setOptionsForDropdowns(document
 					.getElementsByClassName("dropdown-destinations"),
@@ -73,7 +89,55 @@ $("#new-scenario-dropdown").on(
 			// Set the evac time
 			setEvacTime(global.evacTime);
 			setEvacPeak(global.evacPeakMins);
-		});
+			
+		    return false;
+
+}
+
+//Appends the names to the array of dropdowns
+//names: an array of structures, each with key name
+function setOptionsForIncidentDropdown() {
+	var township = getTownship(global.scenario_creation_arg);
+	dropdown = $(".dropdown-fires");
+	names = township.fires;
+	optgroup = "Phoenix fire models";
+	
+	//for (var d = 0; d < dropdowns.length; d++) {
+	//	var dropdown = $(dropdowns[d]);
+		dropdown.empty();
+		//var el = document.createElement("option");
+		//el.value = 'Select';
+		//el.innerHTML = 'Select';
+		//dropdown.appendChild(el);
+   var option = $("<option></option>");
+   option.val('Select');
+   option.text('Select');
+   dropdown.append(option);
+   var option = $("<option></option>");
+   option.val('No incident');
+   option.text('No incident');
+   dropdown.append(option);
+   
+		var group = dropdown;
+		if (optgroup!=null) {
+			group = $('<optgroup>');
+       group.attr('label', optgroup);			
+		}
+		for (var i = 0; i < names.length; i++) {
+			var opt = names[i].name;
+			var el = document.createElement("option");
+			el.value = opt;
+			el.innerHTML = opt;
+	        //var option = $("<option></option>");
+	        //option.val(opt);
+	        //option.text(opt);
+			group.append(el);
+		}
+		if (optgroup!=null) {
+			dropdown.append(group);
+		}
+	//}
+}
 
 // Handles the user selection for new scenario creation based on existing
 $("#existing-scenario-dropdown").on("change", function() {

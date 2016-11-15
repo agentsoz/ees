@@ -51,10 +51,8 @@
     <div class="modal-body">
      <div class="row text-center">
       <div class="col-md-5">
-       <h3>Start new scenario</h3>
-       <select id="new-scenario-dropdown"
-        class="form-control dropdown-townships">
-       </select>
+       <h3>Select location for scenario</h3>
+       <input id="new-scenario-input" type="text"  class="form-control">
       </div>
       <div class="col-md-2">
        <h2>
@@ -63,9 +61,7 @@
       </div>
       <div class="col-md-5">
        <h3>Base on existing scenario</h3>
-       <select id="existing-scenario-dropdown"
-        class="form-control dropdown-scenarios">
-       </select>
+       <input id="existing-scenario-input" type="text"  class="form-control">
       </div>
      </div>
     </div>
@@ -122,7 +118,7 @@
 
       <div class="well well-sm">
        <div class="panel-title">
-        Fire model <span id="info-fire-model"
+        Emergency incident <span id="info-emergency-incident"
          class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
        </div>
        <div class="row">
@@ -133,7 +129,7 @@
         </div>
         <div class="col-xs-4 checkbox-inline">
          <label> <input type="checkbox" id="show-fire"
-          name="checkbox-show-fire" checked="checked"> Show
+          name="checkbox-show-fire" checked="checked"> Show on map
          </label>
         </div>
        </div>
