@@ -5,8 +5,21 @@ function initMap() {
 			lat : -37.064558,
 			lng : 144.218764
 		},
+		scaleControl: true,
 		zoom : 6
 	});
+	google.maps.event.addListener(global.map, 'mousemove', function (event) {
+        displayCoordinates(event.latLng);               
+    });
+	$('#map').mouseleave(function (event) {
+		$('#mapcursor').text('');
+	});
+}
+
+function displayCoordinates(pnt) {
+    var lat = pnt.lat().toFixed(4)
+    var lng = pnt.lng().toFixed(4);
+    $('#mapcursor').text('Lat: ' + lat + ', Lng:' + lng)
 }
 
 function panMapTo(latlon, zoom) {

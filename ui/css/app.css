@@ -16,8 +16,8 @@ body {
 
 #map {
  width: 100%;
- height: 600px;
- background-color: grey;
+ height: 500px;
+/*  background-color: grey; */
  }
  
 .main-button {
@@ -121,10 +121,29 @@ body {
  font-style: italic;
 }
 
+#incident-description {
+ font-size: small;
+ background-color: rgb(110, 172, 44);
+ font-style: italic;
+ padding: 1em;
+ display: none;
+}
+
+#mapinfo {
+ min-height: 1.5em; 
+}
+
 .ui-slider {
   margin-bottom: 25px;
 }
 
 ul.ui-autocomplete {
     z-index: 1100;
+}
+
+.mt-1dot5 {
+ margin-top: 1.5em;
+}
+.mt-1 {
+ margin-top: 1em;
 }

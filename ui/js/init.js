@@ -16,10 +16,12 @@ global.townships = [ {
 	defaultMapZoom : 10,
 	fires : [ {
 		name : "20160420_MtAlexShire_FDI75_Iso",
-		url : "media/20160420_MtAlexShire_FDI75_Iso.json"
+		url : "media/20160420_MtAlexShire_FDI75_Iso.json",
+		description : "Forest Fire Danger Index (FFDI) 75 with south west wind change; based on 11:00 point fire ignition and running until 18:00"
 	}, {
 		name : "20160420_MtAlexShire_FDI50_Iso",
-		url : "media/20160420_MtAlexShire_FDI50_Iso.json"
+		url : "media/20160420_MtAlexShire_FDI50_Iso.json",
+		description : "Forest Fire Danger Index (FFDI) 50 with south west wind change; based on 11:00 point fire ignition and running until 18:00"
 	} ],
 	safeLines : [],
 	vehiclesAreas : [],

@@ -152,11 +152,15 @@ $("body").on("change", "select", function(e) {
 	if (e.target.id.localeCompare('existing-fires-dropdown') == 0) {
 		var township = getTownship(global.scenario_creation_arg);
 		var text = $(this).find(':selected').text();
+		$('#incident-description').text('').hide();
 		if (text.localeCompare('Select') == 0) {
+			global.scenario_fire = null;
+		} else if (text.localeCompare('No incident') == 0) {
 			global.scenario_fire = null;
 		} else {
 			var fire = getFire(township, text);
 			global.scenario_fire = fire;
+			$('#incident-description').text(fire.description).fadeIn('slow');
 		}
 		drawFire();
 	} else if (e.target.id.localeCompare('existing-destinations') == 0) {
@@ -629,7 +633,10 @@ $("#add-vehicles-area").click(function(event) {
 	});
 });
 // Vehicles: add new entry (associated with a drawn rectangle on map) to list
-function addVehiclesArea(areakm2) {
+function addVehiclesArea(aream2) {
+	var hectares = Number(aream2 / 10000).toFixed(2);
+	var km2 = Number(aream2 / 1000000).toFixed(2);
+	
 	var ncars = $("#num-vehicles").val();
 	var li = '';
 	var veh = 'vehicle';
@@ -638,8 +645,8 @@ function addVehiclesArea(areakm2) {
 	}
 	li += '<li class="list-group-item item-vehicles-area"';
 	li += ' name="' + ncars + '">';
-	li += ncars + ' ' + veh + ' in ' + Number(areakm2 / 1000000).toFixed(2)
-			+ 'km<sup>2</sup>';
+	//li += ncars + ' ' + veh + ' in ' + km2 + 'km<sup>2</sup>';
+	li += ncars + ' ' + veh + ' in ' + hectares + ' hectares';
 	li += '<span class="glyphicon glyphicon-remove-sign pull-right remove-vehicles-area"';
 	li += ' style="z-index: 1;"';
 	li += ' name="' + ncars + '"';
@@ -720,7 +727,7 @@ $("#max-speed-slider").slider({
 				var el;
 				// Create a new element and position it with percentages
 				if (i % 2 == 1) {
-					el = $('<label>' + ((i + opt.min) * 10) + '</label>').css(
+					el = $('<label>' + ((i + opt.min) * 10) + '%</label>').css(
 							'left', (i / vals * 100) + '%');
 				} else {
 					el = $('<label>|</label>').css('left',

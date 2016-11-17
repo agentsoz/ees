@@ -111,152 +111,154 @@
      </div>
     </div>
     <div id="content" class="col-md-12">
+     <div class="row">
+      <div class="col-sm-5">
 
-     <div class="col-sm-5">
+       <!--       <h3>Scenario Setup</h3> -->
 
-      <!--       <h3>Scenario Setup</h3> -->
-
-      <div class="well well-sm">
-       <div class="panel-title">
-        Emergency incident <span id="info-emergency-incident"
-         class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
-       </div>
-       <div class="row">
-        <div class="col-xs-8">
-         <select id="existing-fires-dropdown"
-          class="form-control dropdown-fires">
-         </select>
+       <div class="well well-sm">
+        <div class="panel-title">
+         Emergency incident <span id="info-emergency-incident"
+          class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
         </div>
-        <div class="col-xs-4 checkbox-inline">
-         <label> <input type="checkbox" id="show-fire"
-          name="checkbox-show-fire" checked="checked"> Show on map
-         </label>
+        <div class="row">
+         <div class="col-xs-8">
+          <select id="existing-fires-dropdown"
+           class="form-control dropdown-fires">
+          </select>
+         </div>
+         <div class="col-xs-4 checkbox-inline">
+          <label> <input type="checkbox" id="show-fire"
+           name="checkbox-show-fire" checked="checked"> Show on
+           map
+          </label>
+         </div>
+         <div class="col-xs-12">
+          <div id="incident-description" class="description mt-1 img-rounded"></div>
+         </div>
         </div>
-       </div>
-      </div>
 
-      <div class="well well-sm">
-       <div class="panel-title">
-        Destinations and safe lines <span id="info-dest-safelines"
-         class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
-       </div>
-       <div class="row">
-        <div class="col-md-7 col-sm-6 col-xs-7">
-         <select id="existing-destinations"
-          class="form-control dropdown-destinations">
-         </select>
+        <div class="panel-title mt-1">
+         Timing <span id="info-evac-time"
+          class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
         </div>
-        <div class="col-md-5 col-sm-6 col-xs-5">
-         <button id="add-safeline" type="button" disabled
-          class="btn btn-default ui-state-enabled pull-right">
-          <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
-          Draw safe line
-         </button>
-        </div>
-       </div>
-       <ul id="destinations-list" class="list-group">
-       </ul>
-      </div>
 
-      <div class="well well-sm">
-       <div class="panel-title">
-        Timing <span id="info-evac-time"
-         class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
-       </div>
-
-       <div class="row">
-        <div class="col-md-3 col-sm-4 col-xs-4">
-         <label>Evac start</label> <input id="evac-timepicker" type="text"
-          class="form-control">
-        </div>
-        <div class="col-md-8 col-sm-7 col-xs-7">
-         <label>Evac peak (mins)</label>
-         <div id="evac-timeslider"></div>
+        <div class="row">
+         <div class="col-md-3 col-sm-4 col-xs-4">
+          <label>Evac&nbsp;start (24hr&nbsp;format)</label> <input id="evac-timepicker"
+           type="text" class="form-control">
+         </div>
+         <div class="col-md-8 col-sm-7 col-xs-7">
+          <label>Evac peak (mins)</label>
+          <div id="evac-timeslider"></div>
+         </div>
         </div>
        </div>
-      </div>
 
-      <div class="well well-sm">
-       <div class="panel-title">
-        Vehicles in area <span id="info-vehicles"
-         class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
-       </div>
-       <div class="row">
-        <div class="col-md-3 col-sm-4 col-xs-4">
-         <input id="num-vehicles" type="number" min="0" step="1"
-          class="form-control">
+       <div class="well well-sm">
+        <div class="panel-title">
+         Vehicles in area <span id="info-vehicles"
+          class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
         </div>
-        <div class="col-md-9 col-sm-8 col-xs-8">
-         <button id="add-vehicles-area" type="button" disabled
-          class="btn btn-default ui-state-enabled pull-right">
-          <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
-          Draw area
-         </button>
+        <div class="row">
+         <div class="col-md-3 col-sm-4 col-xs-4">
+          <input id="num-vehicles" type="number" min="0" step="1"
+           class="form-control">
+         </div>
+         <div class="col-md-9 col-sm-8 col-xs-8">
+          <button id="add-vehicles-area" type="button" disabled
+           class="btn btn-default ui-state-enabled pull-right">
+           <span class="glyphicon glyphicon-plus-sign"
+            aria-hidden="true"></span> Draw area
+          </button>
+         </div>
         </div>
+        <ul id="vehicles-list" class="list-group">
+        </ul>
        </div>
-       <ul id="vehicles-list" class="list-group">
-       </ul>
-      </div>
 
-      <div class="panel panel-default">
-       <div class="panel-heading" data-toggle="collapse"
-        data-target="#collapse1">
-        <h2 class="panel-title">
-         <span class="glyphicon glyphicon-triangle-right hidden-print"
-          aria-hidden="true"></span><span
-          class="glyphicon glyphicon-triangle-bottom hidden-print collapse"
-          aria-hidden="true"></span> Traffic Behaviour Setup
-        </h2>
+       <div class="well well-sm">
+        <div class="panel-title">
+         Destinations and safe lines <span id="info-dest-safelines"
+          class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+        </div>
+        <div class="row">
+         <div class="col-md-7 col-sm-6 col-xs-7">
+          <select id="existing-destinations"
+           class="form-control dropdown-destinations">
+          </select>
+         </div>
+         <div class="col-md-5 col-sm-6 col-xs-5">
+          <button id="add-safeline" type="button" disabled
+           class="btn btn-default ui-state-enabled pull-right">
+           <span class="glyphicon glyphicon-plus-sign"
+            aria-hidden="true"></span> Draw safe line
+          </button>
+         </div>
+        </div>
+        <ul id="destinations-list" class="list-group">
+        </ul>
        </div>
-       <div id="collapse1" class="panel-collapse collapse">
-        <div class="panel-body">
 
-         <div class="well well-sm">
-          <div class="panel-title">
-           Maximum speed on roads <span id="info-max-speed"
-            class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
-           <div class="short-description"> As a percentage of speed
-            limits</div>
-          </div>
+       <div class="panel panel-default">
+        <div class="panel-heading" data-toggle="collapse"
+         data-target="#collapse1">
+         <h2 class="panel-title">
+          <span class="glyphicon glyphicon-triangle-right hidden-print"
+           aria-hidden="true"></span><span
+           class="glyphicon glyphicon-triangle-bottom hidden-print collapse"
+           aria-hidden="true"></span> Traffic Behaviour Setup
+         </h2>
+        </div>
+        <div id="collapse1" class="panel-collapse collapse">
+         <div class="panel-body">
 
-          <div class="row">
-           <div class="col-xs-11">
-
-            <div id="max-speed-slider"></div>
+          <div class="well well-sm">
+           <div class="panel-title">
+            Maximum speed on roads (as % of speed limits) <span id="info-max-speed"
+             class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+           </div>
+           <div class="row">
+            <div class="col-xs-11">
+             <div id="max-speed-slider"></div>
+            </div>
            </div>
           </div>
-         </div>
 
-
-        </div>
-       </div>
-      </div>
-      <div class="panel panel-default">
-       <div class="panel-heading" data-toggle="collapse"
-        data-target="#collapse2">
-        <h2 class="panel-title">
-         <span class="glyphicon glyphicon-triangle-right hidden-print"
-          aria-hidden="true"></span><span
-          class="glyphicon glyphicon-triangle-bottom hidden-print collapse"
-          aria-hidden="true"></span> Batch Analysis Setup
-        </h2>
-       </div>
-       <div id="collapse2" class="panel-collapse collapse">
-        <div class="panel-body">
-         <div id="graphs" class="row text-center">
-          <div class="col-xs-12"></div>
          </div>
         </div>
        </div>
+       <div class="panel panel-default">
+        <div class="panel-heading" data-toggle="collapse"
+         data-target="#collapse2">
+         <h2 class="panel-title">
+          <span class="glyphicon glyphicon-triangle-right hidden-print"
+           aria-hidden="true"></span><span
+           class="glyphicon glyphicon-triangle-bottom hidden-print collapse"
+           aria-hidden="true"></span> Batch Analysis Setup
+         </h2>
+        </div>
+        <div id="collapse2" class="panel-collapse collapse">
+         <div class="panel-body">
+          <div id="graphs" class="row text-center">
+           <div class="col-xs-12"></div>
+          </div>
+         </div>
+        </div>
+       </div>
+
+
       </div>
 
-
+      <div class="col-sm-7">
+       <div class="row">
+        <div id="mapinfo" class="col-xs-12">
+         <span id="mapscale"></span> <span id="mapcursor"></span>
+        </div>
+        <div id="map" class="col-xs-12"></div>
+       </div>
+      </div>
      </div>
-
-     <div class="col-sm-7">
-      <div id="map"></div>
-     </div>
-
     </div>
     <div id="footer" class="col-md-12">
      <div class="text-right">
