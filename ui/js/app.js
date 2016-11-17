@@ -232,6 +232,7 @@ $(document).keyup(function(e) {
 	// ESC
 	if (e.which == 27) {
 		cancelDraw(true);
+		$('#add-vehicles-area').text('Draw area');
 	}
 });
 
@@ -613,9 +614,9 @@ function setEvacPeak(mins) {
 $("#num-vehicles").change(function() {
 	var val = $("#num-vehicles").val();
 	if (val > 0) {
-		$('#add-vehicles-area').prop('disabled', false);
+		$('.draw-area-step-1').fadeIn('slow');
 	} else {
-		$('#add-vehicles-area').prop('disabled', true);
+		$('.draw-area-step-1').hide();
 	}
 });
 // Vehicles: handle clicks on 'draw' button
@@ -624,14 +625,28 @@ $("#add-vehicles-area").click(function(event) {
 	var label = $("#num-vehicles").val();
 	// cancel any active draws first to be safe
 	cancelDraw(true);
+	if($('#add-vehicles-area').text()=='Cancel draw') {
+		$('#add-vehicles-area').text('Draw area');
+		return;
+	}
+	$('#add-vehicles-area').text('Cancel draw');
 	drawVehiclesArea(township, label, function(area) {
 		// Add the destination to the list
 		addVehiclesArea(area);
 		// Reset the count
-		$("#num-vehicles").val(0);
-		$('#add-vehicles-area').prop('disabled', true);
+		$("#num-vehicles").val('');
+		$('#add-vehicles-area').text('Draw area');
+		$('#plus-vehicles').show();
+		$('.draw-area-step-1').hide();
+		$('#num-vehicles').hide();
 	});
 });
+
+$("#plus-vehicles").click(function(event) {
+	$('#num-vehicles').show();
+});
+
+
 // Vehicles: add new entry (associated with a drawn rectangle on map) to list
 function addVehiclesArea(aream2) {
 	var hectares = Number(aream2 / 10000).toFixed(2);
@@ -693,6 +708,10 @@ $("body").on("click", ".remove-vehicles-area", function(e) {
 	$('#vehicles-list li').removeClass('li-even');
 	$('#vehicles-list li:nth-child(odd)').addClass('li-odd');
 	$('#vehicles-list li:nth-child(even)').addClass('li-even');
+	if($('#vehicles-list li').length==0) {
+		$('#plus-vehicles').hide();
+		$('#num-vehicles').show();
+	}
 	// Stop the event from propagating to parents
 	e.stopPropagation();
 });

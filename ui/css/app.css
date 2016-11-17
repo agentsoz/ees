@@ -1,44 +1,45 @@
 body {
  font-family: "Trebuchet MS", sans-serif;
-/*  background-color: rgb(119, 213, 247); */
-/*  background-color: rgb(0, 120, 174); */
-/*  background-color: rgb(110, 172, 44); */
+ /*  background-color: rgb(119, 213, 247); */
+ /*  background-color: rgb(0, 120, 174); */
+ /*  background-color: rgb(110, 172, 44); */
  background-color: #555;
 }
 
 #outer, #outer-start {
- background-color: white; 
+ background-color: white;
  margin: 10px;
 }
 
 .container-fluid {
+ 
 }
 
 #map {
  width: 100%;
  height: 500px;
-/*  background-color: grey; */
- }
- 
+ /*  background-color: grey; */
+}
+
 .main-button {
- margin-top:50px;
- padding:50px;
+ margin-top: 50px;
+ padding: 50px;
  font-size: x-large;
- 
-/*  background-color: rgb(119, 213, 247); */
-/*  background-color: rgb(0, 120, 174); */
+ /*  background-color: rgb(119, 213, 247); */
+ /*  background-color: rgb(0, 120, 174); */
  background-color: rgb(110, 172, 44);
-} 
+}
 
 .nav-bar {
  background-color: rgb(110, 172, 44);
- margin-bottom : 5px;
- padding:5px;
+ margin-bottom: 5px;
+ padding: 5px;
 }
+
 .nav-button {
  margin-top: 5px;
  margin-bottom: 5px;
- padding: 5px; 
+ padding: 5px;
  min-width: 80px;
 }
 
@@ -47,36 +48,37 @@ body {
 }
 
 #footer {
- padding:50px 20px 20px 20px;
-/*  background-color: #ccc; */
+ padding: 50px 20px 20px 20px;
+ /*  background-color: #ccc; */
 }
 
 #info-overlay {
- position: absolute; 
- width: 30%; 
- left: 35%; 
- top: 250px; 
+ position: absolute;
+ width: 30%;
+ left: 35%;
+ top: 250px;
  padding: 0.5em;
- text-align: center;  
+ text-align: center;
  background-color: rgb(110, 172, 44);
- display:none;
+ display: none;
 }
 
 .progress-bar {
  line-height: 2em;
 }
+
 .progress {
- position: absolute; 
- width: 80%; 
+ position: absolute;
+ width: 80%;
  height: 2em;
- left: 10%; 
- top: 250px; 
- width:80%;
+ left: 10%;
+ top: 250px;
+ width: 80%;
  padding: 0;
  margin: 0;
- text-align: center;  
+ text-align: center;
  background-color: rgba(0, 0, 0, 0.1);
- display:none;
+ display: none;
 }
 
 #destinations-list, #vehicles-list {
@@ -86,33 +88,38 @@ body {
 .panel-title {
  margin-bottom: 0.5em;
 }
+
 .li-odd {
- background-color: rgba(119, 213, 247, 0.3);
-/*  background-color: rgb(0, 120, 174); */
-/*  background-color: rgb(110, 172, 44); */
+/*  background-color: rgba(119, 213, 247, 0.3); */
+ /*  background-color: rgb(0, 120, 174); */
+  background-color: rgba(110, 172, 44, 0.3);
 }
+
 .li-even {
- background-color: rgba(119, 213, 247, 0.1);
+/*  background-color: rgba(119, 213, 247, 0.1); */
+  background-color: rgba(110, 172, 44, 0.1);
 }
+
 .list-group-item:hover {
  background-color: rgba(110, 172, 44, 0.5);
 }
 
 .maincolumn {
- padding:0px 15px 0 15px;
+ padding: 0px 15px 0 15px;
 }
 
 #evac-timeslider {
  margin-bottom: 15px;
 }
+
 #evac-timeslider label, #max-speed-slider label {
-  font-weight: normal;
-  font-size: small;
-  position: absolute;
-  width: 20px;
-  margin-top: 15px;
-  margin-left: -10px;
-  text-align: center;
+ font-weight: normal;
+ font-size: small;
+ position: absolute;
+ width: 20px;
+ margin-top: 15px;
+ margin-left: -10px;
+ text-align: center;
 }
 
 .short-description {
@@ -123,27 +130,58 @@ body {
 
 #incident-description {
  font-size: small;
- background-color: rgb(110, 172, 44);
- font-style: italic;
+ background-color: rgba(110, 172, 44, 0.2);
+ /*  font-style: italic; */
  padding: 1em;
  display: none;
 }
 
 #mapinfo {
- min-height: 1.5em; 
+ min-height: 1.5em;
+}
+
+.btn-primary {
+ background-color: rgba(110, 172, 44, 1.0);
+ border-color: rgba(110, 172, 44, 1.0);
+ color: white;
+}
+
+.btn-primary:hover, .btn-primary:active, .btn-primary:focus {
+ background-color: rgba(110, 172, 44, 1.0);
+ border-color: rgba(110, 172, 44, 1.0);
+ color: black;
 }
 
 .ui-slider {
-  margin-bottom: 25px;
+ margin-bottom: 25px;
 }
 
 ul.ui-autocomplete {
-    z-index: 1100;
+ z-index: 1100;
 }
 
 .mt-1dot5 {
  margin-top: 1.5em;
 }
+
 .mt-1 {
  margin-top: 1em;
 }
+
+.draw-area-step-1 {
+ display: none;
+}
+
+.action-icon {
+ color: #999;
+ font-size: x-large;
+ text-align: center;
+}
+.action-icon:hover {
+ color: #555;
+}
+
+#plus-vehicles {
+ display: none;
+}
+
