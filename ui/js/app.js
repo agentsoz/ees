@@ -255,14 +255,14 @@ $("#dialog-confirm").dialog({
 });
 
 // Back button
-$("#nav-back").click(function(event) {
+$(".nav-back").click(function(event) {
 	$("#dialog-confirm").dialog("open");
 	reset();
 	event.preventDefault();
 });
 
 // Save button
-$("#nav-save").click(function(event) {
+$(".nav-save").click(function(event) {
 	save(function (str) { timedPrompt('info', "Simulation saved"); },
 			function (str) {timedPrompt('info', "The simulation could not be saved. " + str, null, 5000); });
 });
@@ -304,9 +304,7 @@ function addDestinationSafeLine() {
 }
 
 // Create simulation button
-$("#nav-create-sim").click(function(event) {
-	// Disable all buttons
-	$('.btn').prop('disabled', true);
+$(".nav-create-sim").click(function(event) {
 	// Start creating the simulation
 	send(shared.MSG_CREATE, {name: 'Maldon-Bushfire-Jan-1944'},
 		// Success function
@@ -328,10 +326,10 @@ $("#nav-create-sim").click(function(event) {
 								// Hide and reset the progress bar
 								$('.progress').hide();
 								$('.progress-bar').css('width', '0%').attr('aria-valuenow', 0);
+								// Close the modal
+								$('.progress-bar-modal').modal('hide');
 								// Show success message
 								timedPrompt('info', "Simulation created", function() {
-									// Enable all buttons
-									$('.btn').prop('disabled', false);
 									// FIXME: Redirect to results page
 									var township = getTownship(global.scenario_creation_arg);
 									url = encodeURI("view.html?sim=" + township.name);

@@ -18,7 +18,13 @@ body {
 #map {
  width: 100%;
  height: 500px;
+ padding: 0;
  /*  background-color: grey; */
+}
+
+#mapinfo {
+ min-height: 1.5em;
+ padding: 0;
 }
 
 .main-button {
@@ -68,8 +74,7 @@ body {
 }
 
 .progress {
- position: absolute;
- width: 80%;
+/*  position: absolute; */
  height: 2em;
  left: 10%;
  top: 250px;
@@ -90,14 +95,14 @@ body {
 }
 
 .li-odd {
-/*  background-color: rgba(119, 213, 247, 0.3); */
+ /*  background-color: rgba(119, 213, 247, 0.3); */
  /*  background-color: rgb(0, 120, 174); */
-  background-color: rgba(110, 172, 44, 0.3);
+ background-color: rgba(110, 172, 44, 0.3);
 }
 
 .li-even {
-/*  background-color: rgba(119, 213, 247, 0.1); */
-  background-color: rgba(110, 172, 44, 0.1);
+ /*  background-color: rgba(119, 213, 247, 0.1); */
+ background-color: rgba(110, 172, 44, 0.1);
 }
 
 .list-group-item:hover {
@@ -136,10 +141,6 @@ body {
  display: none;
 }
 
-#mapinfo {
- min-height: 1.5em;
-}
-
 .btn-primary {
  background-color: rgba(110, 172, 44, 1.0);
  border-color: rgba(110, 172, 44, 1.0);
@@ -173,10 +174,11 @@ ul.ui-autocomplete {
 }
 
 .action-icon {
- color: #999;
+ color: #aaa;
  font-size: x-large;
  text-align: center;
 }
+
 .action-icon:hover {
  color: #555;
 }
@@ -184,4 +186,3 @@ ul.ui-autocomplete {
 #plus-vehicles {
  display: none;
 }
-
