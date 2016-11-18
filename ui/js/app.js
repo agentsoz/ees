@@ -166,10 +166,10 @@ $("body").on("change", "select", function(e) {
 	} else if (e.target.id.localeCompare('existing-destinations') == 0) {
 		var text = $(this).find(':selected').text();
 		if (text.localeCompare('Select') == 0) {
-			$("#add-safeline").prop('disabled', true);
+			$('.draw-line-step-1').hide();
 			cancelDraw(true);
 		} else {
-			$("#add-safeline").prop('disabled', false);
+			$('.draw-line-step-1').fadeIn('slow');
 		}
 	}
 });
@@ -197,7 +197,10 @@ $("body").on(
 			// Enable the destination again
 			$('#existing-destinations option[value="' + dest + '"]').prop(
 					'disabled', false);
-
+			if($('#destinations-list li').length==0) {
+				$('#plus-safelines').hide();
+				$('#existing-destinations').show();
+			}
 		});
 
 // Global handler for remove sign on destinations/safelines
@@ -233,6 +236,7 @@ $(document).keyup(function(e) {
 	if (e.which == 27) {
 		cancelDraw(true);
 		$('#add-vehicles-area').text('Draw area');
+		$('#add-safeline').text('Draw safe line');
 	}
 });
 
@@ -276,6 +280,11 @@ $("#add-safeline").click(function(event) {
 	var dest = $("#existing-destinations option:selected").text();
 	// cancel any active draws first to be safe
 	cancelDraw(true);
+	if($('#add-safeline').text()=='Cancel draw') {
+		$('#add-safeline').text('Draw safe line');
+		return;
+	}
+	$('#add-safeline').text('Cancel draw');
 	drawSafeLine(township, dest, function() {
 		// Add the destination to the list
 		addDestinationSafeLine();
@@ -283,8 +292,18 @@ $("#add-safeline").click(function(event) {
 		$("#existing-destinations option:selected").prop('disabled', true);
 		// Reset the dropdown
 		$("#existing-destinations").val('Select');
+		$('#add-safeline').text('Draw safe line');
+		$('#plus-safelines').show();
+		$('.draw-line-step-1').hide();
+		$('#existing-destinations').hide();
+		
 	});
 });
+
+$("#plus-safelines").click(function(event) {
+	$('#existing-destinations').show();
+});
+
 
 function addDestinationSafeLine() {
 	var dest = $("#existing-destinations").find(':selected').text();

@@ -180,7 +180,7 @@ ul.ui-autocomplete {
  margin-top: 1em;
 }
 
-.draw-area-step-1 {
+.draw-area-step-1, .draw-line-step-1 {
  display: none;
 }
 
@@ -194,6 +194,6 @@ ul.ui-autocomplete {
  color: #555;
 }
 
-#plus-vehicles {
+#plus-vehicles, #plus-safelines {
  display: none;
 }
