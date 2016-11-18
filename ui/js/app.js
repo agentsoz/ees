@@ -19,6 +19,10 @@ window.onload = function(e) {
 		select: handleExistingScenarioInput // function to call on selection
 	});
 	$( "#existing-scenario-input" ).attr('placeholder', 'Start typing ...');
+	// FIXME: Implement "based on existing scenario"
+	$( "#existing-scenario-input" ).attr('placeholder', 'Feature not available yet');
+	$( "#existing-scenario-input" ).attr('disabled', true);
+	
 }
 
 // Remove focus from buttons after click
@@ -268,7 +272,7 @@ $(".nav-back").click(function(event) {
 // Save button
 $(".nav-save").click(function(event) {
 	save(function (str) { timedPrompt('info', "Simulation saved"); },
-			function (str) {timedPrompt('info', "The simulation could not be saved. " + str, null, 5000); });
+			function (str) {timedPrompt('info', "The simulation could not be saved. " + str, null, 5000, 'orange'); });
 });
 
 $('#show-fire').change(function() {
@@ -358,13 +362,14 @@ $(".nav-create-sim").click(function(event) {
 						},
 						function (err) {
 							clearInterval(timeout);
-							timedPrompt('info', "Create progress unknown. " + str, null, 5000); 
+							timedPrompt('info', "Create progress unknown. " + str, null, 5000, 'orange'); 
 						}
 					);
 			},	2000);
 		},
 		function (str) {
-			timedPrompt('info', "Could not create simulation. " + str, null, 5000); 
+			timedPrompt('info', "Could not create simulation. " + str, null, 5000, 'orange'); 
+			$('.progress-bar-modal').modal('hide');
 		}
 	);
 });
@@ -592,9 +597,10 @@ function send(msg, data, callback, errfn) {
 
 // Shows the msg for a fixed amount of time in a standard info popup
 // type: one of 'info', 'warn', or 'error'
-function timedPrompt(type, msg, callback, duration = 1000) {
+function timedPrompt(type, msg, callback, duration = 1000, color = 'rgb(110, 172, 44)') {
 	var o = $("#info-overlay")
 	o.text(msg);
+	o.css('background-color', color);
 	o.fadeIn("fast");
 	setTimeout(function() {
 		$("#info-overlay").fadeOut(1000);
