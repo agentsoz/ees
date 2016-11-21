@@ -4,6 +4,16 @@
  background-color: grey;
 }
 
+#banner {
+ background-repeat: repeat-y;
+ background-image: url("../media/banner.jpg");
+ height: 150px;
+}
+
+.img-responsive {
+    margin: 0 auto;
+}
+
 .control-bar {
  margin: 20px 0 20px 0;
 }
