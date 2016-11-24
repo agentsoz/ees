@@ -32,10 +32,15 @@ $(".btn").mouseup(function() {
 
 // FIXME: reset() is not complete
 function reset() {
+	// Reset global info about which scenario we are creating
+	global.scenario_creation_arg = null;
+	global.scenario_creation_new = null;
+
+	// Remove all safe lines
 	for (var i = 0; i < global.townships.length; i++) {
 		var township = global.townships[i];
-		// Remove all safe lines
 		township.safeLines.length = 0;
+		township.vehiclesAreas.length = 0;
 		$('.glyphicon-remove-sign').parent().remove();
 	}
 	// Reset the new scenario dropdown
@@ -47,6 +52,9 @@ function reset() {
 	$( "#existing-scenario-input" ).val('');
 	$( "#existing-scenario-input" ).attr('placeholder', 'Start typing ...');
 
+	// Reset the fire description
+	$('#incident-description').hide();
+	$('#incident-description').text('');
 	
 	global.evacTime = {
 		hh : 12,
@@ -244,29 +252,25 @@ $(document).keyup(function(e) {
 	}
 });
 
-// Back confirmation dialog
-$("#dialog-confirm").dialog({
-	resizable : false,
-	height : "auto",
-	width : "auto",
-	autoOpen : false,
-	buttons : {
-		"Continue" : function() {
-			$(this).dialog("close");
-			$("#outer").hide();
-			$("#outer-start").show();
-		},
-		Cancel : function() {
-			$(this).dialog("close");
-		}
-	}
-});
-
 // Back button
 $(".nav-back").click(function(event) {
-	$("#dialog-confirm").dialog("open");
-	reset();
-	event.preventDefault();
+	//$("#dialog-confirm").dialog("open");
+	//reset();
+	//event.preventDefault();
+	BootstrapDialog.confirm({
+        title: 'WARNING',
+        message: 'Any unsaved changes will be permanently lost. Are you sure?',
+        type: BootstrapDialog.TYPE_WARNING, // <-- Default value is BootstrapDialog.TYPE_PRIMARY
+        btnOKClass: 'btn-warning', // <-- If you didn't specify it, dialog type will be used,
+        callback: function(result) {
+            // result will be true if button was click, while it will be false if users close the dialog directly.
+            if(result) {
+    			$("#outer").hide();
+            	reset();
+    			$("#outer-start").show();
+            }
+        }
+    });
 });
 
 // Save button
