@@ -123,6 +123,22 @@ function getPolyArea(township, dest, remove) {
 	return null;
 }
 
+function pad(n, width, z) {
+	  z = z || '0';
+	  n = n + '';
+	  return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+}
+
+function convertToSlug(text)
+{
+  return text
+      .toLowerCase()
+      .replace(/ /g,'-')
+      .replace(/[^\w-]+/g,'')
+      ;
+}
+
+
 $(".collapse").on('show.bs.collapse', function(e) {
 	$(e.target).parent().find(".glyphicon-triangle-right").hide();
 	$(e.target).parent().find(".glyphicon-triangle-bottom").show();

@@ -9,6 +9,7 @@ defaults.safeLineHighlightColor = '#FF00FF';
 defaults.safeLineHighlightWeight = 4;
 
 global = {};
+global.save_as = null;
 global.townships = [ {
 	name : "Maldon",
 	latlon : [ -36.997609, 144.068722 ],

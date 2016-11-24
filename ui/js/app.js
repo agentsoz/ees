@@ -35,6 +35,7 @@ function reset() {
 	// Reset global info about which scenario we are creating
 	global.scenario_creation_arg = null;
 	global.scenario_creation_new = null;
+	global.save_as = null;
 
 	// Remove all safe lines
 	for (var i = 0; i < global.townships.length; i++) {
@@ -275,8 +276,77 @@ $(".nav-back").click(function(event) {
 
 // Save button
 $(".nav-save").click(function(event) {
-	save(function (str) { timedPrompt('info', "Simulation saved"); },
-			function (str) {timedPrompt('info', "The simulation could not be saved. " + str, null, 5000, 'orange'); });
+	var val = '';
+	if (global.save_as != null) {
+		val = global.save_as;
+	}
+	BootstrapDialog.show({
+		title: 'Save working copy',
+        message: 'Enter your initials and a short description, '+
+        'e.g., <i>DS Maldon evacuation in low visibility</i> : '+
+        '<input type="text" value="'+val+'" class="form-control">'+
+        '<div style="color:rgb(110, 172, 44);" id="msg"></div>',
+        onhide: function(dialogRef){
+        	var action = dialogRef.getData('action');
+        	// If Cancel was pressed then close
+        	if (action == 'cancel') {
+        		return true;
+        	}
+        	// If no value was entered then don't close
+        	var input = dialogRef.getModalBody().find('input')
+            var name = input.val().trim();
+            if (name == '') {
+                return false;
+            }
+            // If Save-as name was confirmed then save
+        	if (action == 'save') {
+        		var save_as = dialogRef.getData('save_as');
+            	global.save_as = save_as;
+            	save(function (str) { timedPrompt('info', 'Saved ' + save_as); },
+            			function (str) {timedPrompt('info', "The simulation could not be saved. " + str, null, 5000, 'orange'); });
+            	return true;
+        	} 
+            // If the name has not changed then save without confirming
+            if (global.save_as != null && name == global.save_as) {
+            	save(function (str) { timedPrompt('info', 'Saved ' + name); },
+            			function (str) {timedPrompt('info', "The simulation could not be saved. " + str, null, 5000, 'orange'); });
+            	return true;
+            }
+            var saveas = convertToSlug(name);
+            if (global.save_as == null) {
+            	// Name prefix
+                var date = new Date();
+                var d = date.getDate();
+                var m =  date.getMonth() + 1;  // JS months are 0-11
+                var y = date.getFullYear();
+                var prefix = y + '-' + pad(m,2) + '-' + pad(d,2) + '-';
+                // Create a slug name with date prefix
+                var saveas = prefix + saveas;
+            }
+            //var msg = dialogRef.getModalBody().find('#msg');
+            //msg.text('Please enter a valid name in the format ' + prefix);
+            input.prop('disabled', true);
+            input.val(saveas);
+        	dialogRef.setData('action', 'save');
+        	dialogRef.setData('save_as', saveas);
+            var msg = dialogRef.getModalBody().find('#msg');
+            msg.html('Working copy will be saved as <i>'+saveas+'</i>. Please confirm.');
+            return false;
+        },
+        buttons: [{
+            label: 'Cancel',
+            action: function(dialogRef) {
+            	dialogRef.setData('action', 'cancel');
+                dialogRef.close();
+            }
+        },
+        {
+            label: 'Save',
+            action: function(dialogRef) {
+                dialogRef.close();
+            }
+        }]
+    });
 });
 
 $('#show-fire').change(function() {
@@ -332,8 +402,14 @@ function addDestinationSafeLine() {
 
 // Create simulation button
 $(".nav-create-sim").click(function(event) {
+	if (global.save_as == null) {
+		$('.progress-bar-modal.in').modal('hide');
+		timedPrompt('info', 'Please save the scenario first', null, 1000, 'orange'); 
+		return;
+	}
+	$('.progress-bar-modal').modal('show');
 	// Start creating the simulation
-	send(shared.MSG_CREATE, {name: 'Maldon-Bushfire-Jan-1944'},
+	send(shared.MSG_CREATE, {name: global.save_as},
 		// Success function
 		function (data) {
 			var limit = 200; 
@@ -342,7 +418,7 @@ $(".nav-create-sim").click(function(event) {
 			var timeout = setInterval( function() {
 				// force checks to terminate when limit is reached (should have completed by now)
 				if (limit-- <= 0) return clearInterval(timeout);
-				send(shared.MSG_CREATE_PROGRESS, {name: 'Maldon-Bushfire-Jan-1944'},
+				send(shared.MSG_CREATE_PROGRESS, {name: global.save_as},
 						// success
 						function (json) {
 							progress = Number(json.data);
@@ -373,7 +449,7 @@ $(".nav-create-sim").click(function(event) {
 		},
 		function (str) {
 			timedPrompt('info', "Could not create simulation. " + str, null, 5000, 'orange'); 
-			$('.progress-bar-modal').modal('hide');
+			$('.progress-bar-modal.in').modal('hide');
 		}
 	);
 });
@@ -459,7 +535,7 @@ function save(callback, errfn) {
 	// Get the township for this scenario
 	var township = getTownship(global.scenario_creation_arg);
 	// Scenario name (used for naming directories and files)
-	msg.name = "Maldon-Bushfire-Jan-1944"; // FIXME: scenario name is hard-wired
+	msg.name = global.save_as;
 	msg.township = township.name;
 	// Global coordinate system used
 	msg.coordinate_system = "latlong";
@@ -543,7 +619,7 @@ function save(callback, errfn) {
 function create(callback, errfn) {
 	var msg = {};
 	// Scenario name (used for naming directories and files)
-	msg.name = "Maldon-Bushfire-Jan-1944"; // FIXME: scenario name is hard-wired
+	msg.name = global.save_as;
 	var jmsg = JSON.stringify({'msg' : shared.MSG_CREATE, 'data' : msg});
 	console.log('Sending: ' + jmsg);
 	// Start the location-based assessment
