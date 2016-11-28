@@ -22,7 +22,11 @@ var shell = require('shelljs/global');
  * -----------------------------------------------------------------------
  */
 var app = express()
-var validMessages = [shared.MSG_SAVE, shared.MSG_CREATE, shared.MSG_CREATE_PROGRESS];
+var validMessages = 
+	[shared.MSG_CHECK_EXISTS,
+	 shared.MSG_SAVE, 
+	 shared.MSG_CREATE, 
+	 shared.MSG_CREATE_PROGRESS];
 var dataDir  = path.join(path.dirname(fs.realpathSync(__filename)), '../../data/user-data');
 var distDir  = path.join(path.dirname(fs.realpathSync(__filename)), '../../data/bushfire-1.0.1-SNAPSHOT');
 var dist = path.join(distDir, 'bushfire-1.0.1-SNAPSHOT.jar');
@@ -43,7 +47,7 @@ app.get('/', function (req, res) {
     requestNum++;
     global.log("\n--------------------------------------------------");
     global.log('#' + requestNum + ' GET ' + req.originalUrl)
-    res.send(JSON.stringify({'msg' : shared.MSG_OK, 'data' : {}}));
+    send({'msg' : shared.MSG_OK, 'data' : {}});
 })
 
 app.post('/', function(req, res) {
@@ -62,55 +66,78 @@ app.post('/', function(req, res) {
     var errors = req.validationErrors();
     if (errors) {
     	global.log('ERROR in input: ' + JSON.stringify(errors));
-    	res.send({'msg' : shared.MSG_ERROR, 'data' : errors});
+    	send(res, {'msg' : shared.MSG_ERROR, 'data' : errors});
     	return;
     }
-
+    if (req.body.msg == shared.MSG_CHECK_EXISTS) {
+		var dir = path.join(dataDir, req.body.data.name);
+		global.log("Checking if scenario '"+dir+"' exists");
+		fs.stat(dir, function (err, stats){
+			if (err) {
+				// Does not exist
+				global.log("Scenario '"+dir+"' does not exist");
+				send(res, {'msg': shared.MSG_CHECK_EXISTS,
+					'data' : shared.MSG_NO});
+			} else {
+				// Exists; could be a file or dir but we don't really care
+				global.log("Scenario '"+dir+"' exists");
+				send(res, {'msg': shared.MSG_CHECK_EXISTS,
+					'data' : shared.MSG_YES});
+			}
+		});
+		return;
+    } 
     if (req.body.msg == shared.MSG_SAVE) {
 		global.log("Saving scenario");
     	save(req.body.data, function (err, filename) {
     		if (err) {
     			global.log('ERROR: ' + err);
-    			res.send({'msg' : shared.MSG_ERROR, 'data' : err});
+    			send(res, {'msg' : shared.MSG_ERROR, 'data' : err});
     			return;
     		}
 			global.log("Saved scenario '" + filename + "'");
-	    	res.send(JSON.stringify({'msg': shared.MSG_OK}));
+	    	send(res, {'msg': shared.MSG_OK});
     	});
+    	return;
     }
-    else if (req.body.msg == shared.MSG_CREATE) {
+    if (req.body.msg == shared.MSG_CREATE) {
 		global.log("Creating scenario");
     	create(req.body.data, function (err, data) {
     		if (err) {
     			global.log('ERROR: ' + err);
-    			res.send({'msg' : shared.MSG_ERROR, 'data' : err});
+    			send(res, {'msg' : shared.MSG_ERROR, 'data' : err});
     			return;
     		}
 			global.log("Scenario creation completed. " + data);
-	    	res.send(JSON.stringify({'msg': shared.MSG_OK}));
+	    	send(res, {'msg': shared.MSG_OK});
     	});
+		return;
     }
-    else if (req.body.msg == shared.MSG_CREATE_PROGRESS) {
+    if (req.body.msg == shared.MSG_CREATE_PROGRESS) {
 		global.log("Checking scenario creation progress");
 		check_creation_progress(req.body.data, function (err, data) {
     		if (err) {
     			global.log('ERROR: ' + err);
-    			res.send({'msg' : shared.MSG_ERROR, 'data' : err});
+    			send(res, {'msg' : shared.MSG_ERROR, 'data' : err});
     			return;
     		}
 			global.log("Scenario creation progress is: " + data);
-			res.send({'msg' : shared.MSG_CREATE_PROGRESS, 'data' : data});
+			send(res, {'msg' : shared.MSG_CREATE_PROGRESS, 'data' : data});
 			return;
     	});
-    } else {
-    	res.send(JSON.stringify({'msg': shared.MSG_OK}));
-    }
+		return;
+    } 
+    send(res, {'msg': shared.MSG_ERROR, 'data' : 'Nothing to do'});
 });
 
 app.listen(global.SERVICE_ASSESS_PORT, function () {
   global.log('Bushfire UI server is listening on port ' + global.SERVICE_ASSESS_PORT)
 })
 
+function send(res, data) {
+	global.log('Sending reply ' + JSON.stringify(data));
+	res.send(data);
+}
 
 function save(data, callback) {
 	// Create the top level user data directory if it does not already exist

@@ -9,8 +9,11 @@
 
 	exports.MSG_OK = 'ok';
 	exports.MSG_ERROR = 'error';
+	exports.MSG_YES = 'yes';
+	exports.MSG_NO = 'no';
 	exports.MSG_SAVE = 'save';
 	exports.MSG_CREATE = 'create';
 	exports.MSG_CREATE_PROGRESS = 'create_progress';
+	exports.MSG_CHECK_EXISTS = 'exists?'
 
 })(typeof exports === 'undefined'? this['shared']={}: exports);

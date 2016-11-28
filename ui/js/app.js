@@ -1,5 +1,4 @@
 // GLOBALS
-var TIMEOUT = 30000; // timeout (ms) for server side services
 
 
 // Executes when the page is fully loaded
@@ -288,61 +287,100 @@ $(".nav-save").click(function(event) {
         '<div style="color:rgb(110, 172, 44);" id="msg"></div>',
         onhide: function(dialogRef){
         	var action = dialogRef.getData('action');
-        	// If Cancel was pressed then close
-        	if (action == 'cancel') {
-        		return true;
-        	}
-        	// If no value was entered then don't close
+        	// If not saving then continue closing
+            if (action != 'save') {
+            	return true;
+            }
+        	// User pressed save; if no value was entered then don't close
         	var input = dialogRef.getModalBody().find('input')
             var name = input.val().trim();
             if (name == '') {
                 return false;
             }
-            // If Save-as name was confirmed then save
-        	if (action == 'save') {
-        		var save_as = dialogRef.getData('save_as');
-            	global.save_as = save_as;
-            	save(function (str) { timedPrompt('info', 'Saved ' + save_as); },
-            			function (str) {timedPrompt('info', "The simulation could not be saved. " + str, null, 5000, 'orange'); });
-            	return true;
-        	} 
-            // If the name has not changed then save without confirming
-            if (global.save_as != null && name == global.save_as) {
-            	save(function (str) { timedPrompt('info', 'Saved ' + name); },
-            			function (str) {timedPrompt('info', "The simulation could not be saved. " + str, null, 5000, 'orange'); });
+            // If re-saving, then don't need to do any processing
+            if (global.save_as) {
             	return true;
             }
-            var saveas = convertToSlug(name);
-            if (global.save_as == null) {
-            	// Name prefix
+            // Otherwise, rename to suitable slug name and check with user
+        	var save_as = dialogRef.getData('save_as');
+            if (!save_as) {
+                var saveas = convertToSlug(name);
                 var date = new Date();
                 var d = date.getDate();
                 var m =  date.getMonth() + 1;  // JS months are 0-11
                 var y = date.getFullYear();
                 var prefix = y + '-' + pad(m,2) + '-' + pad(d,2) + '-';
-                // Create a slug name with date prefix
                 var saveas = prefix + saveas;
+                // Disable the input, and set the proposed name as its value
+                input.prop('disabled', true);
+                input.val(saveas);
+            	dialogRef.setData('save_as', saveas);
+                var msg = dialogRef.getModalBody().find('#msg');
+                msg.html('Working copy will be saved as <i>'+saveas+'</i>. Please confirm.');
+                return false;
             }
-            //var msg = dialogRef.getModalBody().find('#msg');
-            //msg.text('Please enter a valid name in the format ' + prefix);
-            input.prop('disabled', true);
-            input.val(saveas);
-        	dialogRef.setData('action', 'save');
-        	dialogRef.setData('save_as', saveas);
-            var msg = dialogRef.getModalBody().find('#msg');
-            msg.html('Working copy will be saved as <i>'+saveas+'</i>. Please confirm.');
-            return false;
+        },
+        onhidden: function(dialogRef){
+        	var action = dialogRef.getData('action');
+        	var save_as = dialogRef.getData('save_as');
+        	// Nothing to do here if not saving
+            if (action != 'save' || !save_as) {
+            	return;
+            }
+            // Just save if re-saving
+            if (global.save_as) {
+    			save(function (str) { timedPrompt('info', 'Saved ' + global.save_as); },
+        				function (str) {timedPrompt('error', "The simulation could not be saved. " + str); });
+            }
+            
+            // Check that the scenario does not already exist
+            console.log("Checking if scenario '"+save_as+"' exists");
+            send(shared.MSG_CHECK_EXISTS, {name: save_as},
+            	function (json) {
+            		if (json.data == shared.MSG_YES) {
+                		// Scenario exists so confirm overwrite
+            			console.log("Scenario '"+save_as+"' exists; will confirm with user now");
+            			BootstrapDialog.confirm({
+            				title: 'WARNING',
+            				message: "Scenario '"+save_as+"' already exists and will be overwritten. Continue?",
+            				type: BootstrapDialog.TYPE_WARNING,
+            				btnOKClass: 'btn-warning',
+            				callback: function(result) {
+            					if(result) {
+            						// Over-write accepted so continue saving
+            						console.log("User accepted scenario overwrite");
+            						global.save_as = save_as;
+            						save(function (str) { timedPrompt('info', 'Saved ' + save_as); },
+            							function (str) {timedPrompt('error', "The simulation could not be saved. " + str); });
+            					} else {	
+            						console.log("User cancelled scenario save");
+            			        }
+            				}
+            			});
+            		} else {
+            			// Scenario does not exist so continue saving
+            			console.log("Scenario '"+save_as+"' does not exist; calling save now");
+            			save(function (str) { timedPrompt('info', 'Saved ' + save_as); },
+            				function (str) {timedPrompt('error', "The simulation could not be saved. " + str); });
+            		}
+            	},
+            	function (str) {
+            		timedPrompt('error', "Could not check if scenario already exists. " + str); 
+            	}
+            );
         },
         buttons: [{
             label: 'Cancel',
             action: function(dialogRef) {
-            	dialogRef.setData('action', 'cancel');
+            	dialogRef.setData('action', 'close');
                 dialogRef.close();
             }
         },
         {
             label: 'Save',
+            hotkey: 13, // Enter key
             action: function(dialogRef) {
+            	dialogRef.setData('action', 'save');
                 dialogRef.close();
             }
         }]
@@ -404,7 +442,7 @@ function addDestinationSafeLine() {
 $(".nav-create-sim").click(function(event) {
 	if (global.save_as == null) {
 		$('.progress-bar-modal.in').modal('hide');
-		timedPrompt('info', 'Please save the scenario first', null, 1000, 'orange'); 
+		timedPrompt('warn', 'Please save the scenario first'); 
 		return;
 	}
 	$('.progress-bar-modal').modal('show');
@@ -442,13 +480,13 @@ $(".nav-create-sim").click(function(event) {
 						},
 						function (err) {
 							clearInterval(timeout);
-							timedPrompt('info', "Create progress unknown. " + str, null, 5000, 'orange'); 
+							timedPrompt('error', "Create progress unknown. " + str); 
 						}
 					);
 			},	2000);
 		},
 		function (str) {
-			timedPrompt('info', "Could not create simulation. " + str, null, 5000, 'orange'); 
+			timedPrompt('error', "Could not create simulation. " + str); 
 			$('.progress-bar-modal.in').modal('hide');
 		}
 	);
@@ -587,19 +625,9 @@ function save(callback, errfn) {
 	// Max effective speed of cars as a percentage of speed limits
 	msg.maxSpeed = global.maxSpeed;
 
-	var jmsg = JSON.stringify({'msg' : shared.MSG_SAVE, 'data' : msg});
-	console.log('Sending: ' + jmsg);
-	// Start the location-based assessment
-	$.ajax({
-		type : "POST",
-		dataType : 'json', // data type of response we get from server
-		contentType : 'application/json', // data type of request to server
-		data : jmsg,
-		timeout : TIMEOUT,
-		url : "/api/", // <-- NOTE THE TRAILING '/' IS NEEDED 
-		success : function(obj) {
+	send(shared.MSG_SAVE, msg,
+		function(obj) {
 			var str = JSON.stringify(obj);
-			console.log('Received: ' + str);
 			var json = jQuery.parseJSON(str);
 			if (json.msg == shared.MSG_ERROR) {
 				if (errfn) return errfn(json.data[0].msg);
@@ -607,44 +635,12 @@ function save(callback, errfn) {
 				if (callback) return callback(json);
 			}
 		},
-		error : function(req, error) {
-			console.log("Save call to /api failed with error: " + error);
-			if (errfn) return errfn(error);
+		function (str) {
+			timedPrompt('error', "Could not create simulation. " + str); 
+			$('.progress-bar-modal.in').modal('hide');
 		}
-	});
+	);
 
-}
-
-//Saves the simulation config on the server
-function create(callback, errfn) {
-	var msg = {};
-	// Scenario name (used for naming directories and files)
-	msg.name = global.save_as;
-	var jmsg = JSON.stringify({'msg' : shared.MSG_CREATE, 'data' : msg});
-	console.log('Sending: ' + jmsg);
-	// Start the location-based assessment
-	$.ajax({
-		type : "POST",
-		dataType : 'json', // data type of response we get from server
-		contentType : 'application/json', // data type of request to server
-		data : jmsg,
-		timeout : TIMEOUT,
-		url : "/api/", // <-- NOTE THE TRAILING '/' IS NEEDED 
-		success : function(obj) {
-			var str = JSON.stringify(obj);
-			console.log('Received: ' + str);
-			var json = jQuery.parseJSON(str);
-			if (json.msg == shared.MSG_ERROR) {
-				if (errfn) return errfn(json.data[0].msg);
-			} else {
-				if (callback) return callback(json);
-			}
-		},
-		error : function(req, error) {
-			console.log("Save call to /api failed with error: " + error);
-			if (errfn) return errfn(error);
-		}
-	});
 }
 
 function send(msg, data, callback, errfn) {
@@ -677,16 +673,25 @@ function send(msg, data, callback, errfn) {
 
 // Shows the msg for a fixed amount of time in a standard info popup
 // type: one of 'info', 'warn', or 'error'
-function timedPrompt(type, msg, callback, duration = 1000, color = 'rgb(110, 172, 44)') {
-	var o = $("#info-overlay")
-	o.text(msg);
-	o.css('background-color', color);
-	o.fadeIn("fast");
-	setTimeout(function() {
-		$("#info-overlay").fadeOut(1000);
-		if (callback)
-			callback();
-	}, duration);
+function timedPrompt(type, msg, cb) {
+	var t = BootstrapDialog.TYPE_DEFAULT;
+	var title = '';
+	if (type == 'info') {
+		t = BootstrapDialog.TYPE_INFO;
+		title = 'Information';
+	} else if (type == 'warn') {
+		t = BootstrapDialog.TYPE_WARNING;
+		title = 'WARNING';
+	} else if (type == 'error') {
+		t = BootstrapDialog.TYPE_DANGER;		
+		title = 'ERROR';
+	}
+	BootstrapDialog.show({
+		title: title,
+        message: msg,
+        type: t,
+        callback: cb
+    });
 }
 
 function setEvacTime(evacTime) {

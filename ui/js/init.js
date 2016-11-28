@@ -1,6 +1,7 @@
 //
 // GLOBALS
 //
+var TIMEOUT = 30000; // timeout (ms) for server side services
 
 defaults = {};
 defaults.safeLineStrokeColor = '#0000FF';
