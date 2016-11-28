@@ -57,6 +57,10 @@ def parse_args():
                     help='path to the scenario templates directory',
                     required=True,
                     type=is_valid_dir)
+	parser.add_argument('-d', '--datadir',
+                    help='path to the application data directory (i.e., townships data)',
+                    required=True,
+                    type=is_valid_dir)
 	parser.add_argument('-n', '--name',
                     help='scenario name used for naming files and directories',
                     required=True)
@@ -155,7 +159,7 @@ log(cmd)
 subprocess.call(cmd)
         
 # write the fire file
-i_fire = os.path.join("/var/www/html", data["fire"]["url"])
+i_fire = os.path.join(args.datadir, data["fire"]["url"])
 log("FIXME: writing fire file '%s' from '%s'" % (o_fire, i_fire))
 copyfile(i_fire, o_fire)
 
@@ -168,7 +172,7 @@ with open(t_matsim) as infile, open(o_matsim, 'w') as outfile:
         outfile.write(line)
 
 # write the MATSim network file
-i_network = os.path.join("/var/www/html", data["osmArea"]["url"])
+i_network = os.path.join(args.datadir, data["osmArea"]["url"])
 log("FIXME: writing MATSim network file '%s' from '%s'" % (o_matsim_network, i_network))
 copyfile(i_network, o_matsim_network)
 

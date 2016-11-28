@@ -31,6 +31,7 @@ var dataDir  = path.join(path.dirname(fs.realpathSync(__filename)), '../../data/
 var distDir  = path.join(path.dirname(fs.realpathSync(__filename)), '../../data/bushfire-1.0.1-SNAPSHOT');
 var dist = path.join(distDir, 'bushfire-1.0.1-SNAPSHOT.jar');
 var templateDir  = path.join(path.dirname(fs.realpathSync(__filename)), '../../data/template');
+var appDataDir  = path.join(path.dirname(fs.realpathSync(__filename)), '../../html');
 var logLevelMain = 'INFO';
 var logLevelJill = 'WARN';
 
@@ -171,6 +172,7 @@ function create(data, callback) {
 	  args: ['-c', config,
 	         '-o', userDir,
 	         '-t', templateDir,
+	         '-d', appDataDir,
 	         '-n', scenario,
 	         '-j', dist,
 	         '-v'

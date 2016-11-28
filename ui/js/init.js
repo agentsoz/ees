@@ -18,11 +18,11 @@ global.townships = [ {
 	defaultMapZoom : 10,
 	fires : [ {
 		name : "20160420_MtAlexShire_FDI75_Iso",
-		url : "media/20160420_MtAlexShire_FDI75_Iso.json",
+		url : "app-data/maldon/20160420_MtAlexShire_FDI75_Iso.json",
 		description : "Forest Fire Danger Index (FFDI) 75 with south west wind change; based on 11:00 point fire ignition and running until 18:00"
 	}, {
 		name : "20160420_MtAlexShire_FDI50_Iso",
-		url : "media/20160420_MtAlexShire_FDI50_Iso.json",
+		url : "app-data/maldon/20160420_MtAlexShire_FDI50_Iso.json",
 		description : "Forest Fire Danger Index (FFDI) 50 with south west wind change; based on 11:00 point fire ignition and running until 18:00"
 	} ],
 	safeLines : [],
@@ -43,7 +43,7 @@ global.townships = [ {
 }, {
 	name : "Castlemaine",
 	latlon : [ -37.064737, 144.212304 ],
-	osmArea : [ -37.0615, 144.3840, -37.2019, 144.1547 ], // FIXME: osm incorrect
+	osmArea : [  ], // FIXME: osm incorrect
 	defaultMapZoom : 11,
 	fires : [],
 	safeLines : [],

@@ -578,11 +578,11 @@ function save(callback, errfn) {
 	// Global coordinate system used
 	msg.coordinate_system = "latlong";
 	// Road network area and associated MATSim Network file
-	msg.osmArea = { // FIXME: location of MATSim network file is hard-wired
+	msg.osmArea = { // FIXME: network file hard-wired to maldon
 			"rectangle" : township.osmArea, 
-			"url" :  "media/maldon_network.xml"};
+			"url" :  "app-data/maldon/network.xml"};
 	// Fire shape file in Geo JSON format
-	msg.fire = {// FIXME: fire selection is hard-wired 
+	msg.fire = {
 		    "name" : (typeof global.scenario_fire === 'undefined') ? "" : global.scenario_fire.name,
 		    "url" : (typeof global.scenario_fire === 'undefined') ? "" : global.scenario_fire.url,
 		    "coordinate_system" : "latlong",
