@@ -599,7 +599,7 @@ function save(callback, errfn) {
 			name: township.safeLines[i].name,
 			coordinates: 
 				[{lat: line[0].lat(), lng: line[0].lng()},
-				 {lat: line[0].lat(), lng: line[0].lng()}]
+				 {lat: line[1].lat(), lng: line[1].lng()}]
 		});
 		var dest = getDestination(township, township.safeLines[i].name);
 		if (dest != null) {
@@ -612,8 +612,8 @@ function save(callback, errfn) {
 	// Add all the vehicles areas
 	msg.vehiclesAreas = [];
 	for (var i = 0; i < township.vehiclesAreas.length; i++) {
-		var sw = township.vehiclesAreas[0].area.getBounds().getSouthWest();
-		var ne = township.vehiclesAreas[0].area.getBounds().getNorthEast();
+		var sw = township.vehiclesAreas[i].area.getBounds().getSouthWest();
+		var ne = township.vehiclesAreas[i].area.getBounds().getNorthEast();
 		msg.vehiclesAreas.push({
 			name: township.vehiclesAreas[i].name,
 			bounds: {
