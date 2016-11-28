@@ -324,13 +324,14 @@ $(".nav-save").click(function(event) {
         	var action = dialogRef.getData('action');
         	var save_as = dialogRef.getData('save_as');
         	// Nothing to do here if not saving
-            if (action != 'save' || !save_as) {
+            if (action != 'save') {
             	return;
             }
             // Just save if re-saving
             if (global.save_as) {
     			save(function (str) { timedPrompt('info', 'Saved ' + global.save_as); },
         				function (str) {timedPrompt('error', "The simulation could not be saved. " + str); });
+    			return;
             }
             
             // Check that the scenario does not already exist
@@ -360,6 +361,7 @@ $(".nav-save").click(function(event) {
             		} else {
             			// Scenario does not exist so continue saving
             			console.log("Scenario '"+save_as+"' does not exist; calling save now");
+						global.save_as = save_as;
             			save(function (str) { timedPrompt('info', 'Saved ' + save_as); },
             				function (str) {timedPrompt('error', "The simulation could not be saved. " + str); });
             		}
