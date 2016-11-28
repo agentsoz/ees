@@ -62,14 +62,11 @@ public class GenerateInput {
 	private static String outDir = Paths.get(".").toAbsolutePath().normalize().toString();
 	private static String matsimScenarioPrefix = "";
 	private static String matsimPopulationFile = "population.xml";
-	private static String matsimNetworkFile = "network.xml";
-	private static int matsimNumAgents = -1;
-	private static String matsimPopulationInputCoordinateSystem = "EPSG:28355 ";
 	private static String matsimOutputCoordinateSystem = "WSG84";
-	private static PopulationLocationType matsimPopulationLocationType = PopulationLocationType.UNKNOWN;
 	private static RectangularArea matsimPopulationLocationArea = null;
 	private static boolean verbose = false;
 	private static Random rand = new Random(12345);
+	private static ArrayList<PopulationArea> populationAreas = new ArrayList<PopulationArea>();
 
 	// Keeps the next unique person ID
 	private static int nextUniquePersonId = 1;
@@ -79,30 +76,31 @@ public class GenerateInput {
 		// Parse the command line arguments
 		parse(args);
 
-		// Transformation
-		//String from = MGC.getCRS(matsimPopulationInputCoordinateSystem).toWKT();
-		//String to = MGC.getCRS(matsimOutputCoordinateSystem).toWKT();
-		CoordinateTransformation ct = new  GeotoolsTransformation(
-				matsimPopulationInputCoordinateSystem, 
-				matsimOutputCoordinateSystem);
-		transform(matsimPopulationLocationArea, ct);
-		
-		// Get the list of addresses from the shape-file
-		ArrayList<Coordinates> locations = null;
-		if (matsimPopulationLocationArea != null) {
-			locations = getRandomLocationsFrom(matsimPopulationLocationArea, matsimNumAgents, rand);
-		}
-
 		// Create the scenario with empty population
 		Scenario scenario = ScenarioUtils.createScenario(ConfigUtils.createConfig());
 
-		// Now place the specified number of agents at work locations
-		for (int i = 0; i < locations.size(); i++) {
-			//System.out.println("X:" + addresses.get(i).getLongitude() + " | Y:"
-			//+ addresses.get(i).getLatitude());
-			addPersonWithActivity("home", locations.get(i), 21600, scenario);
-		}
+		for (PopulationArea parea : populationAreas) {
 
+			// Transformation
+			// String from =
+			// MGC.getCRS(matsimPopulationInputCoordinateSystem).toWKT();
+			// String to = MGC.getCRS(matsimOutputCoordinateSystem).toWKT();
+			CoordinateTransformation ct = new GeotoolsTransformation(
+					parea.getCoordinateSystem(),
+					matsimOutputCoordinateSystem);
+			transform(parea.getArea(), ct);
+
+			// Get the list of addresses from area
+			ArrayList<Coordinates> locations = getRandomLocationsFrom(parea.getArea(), parea.getPersons(), rand);
+
+			// Now place the specified number of agents at work locations
+			for (int i = 0; i < locations.size(); i++) {
+				// System.out.println("X:" + addresses.get(i).getLongitude() + "
+				// | Y:"
+				// + addresses.get(i).getLatitude());
+				addPersonWithActivity("home", locations.get(i), 21600, scenario);
+			}
+		}
 		// Finally, write this population to file
 		MatsimWriter popWriter = new PopulationWriter(scenario.getPopulation(), scenario.getNetwork());
 		Path outfile = Paths.get(outDir).toAbsolutePath().resolve(matsimScenarioPrefix + matsimPopulationFile);
@@ -192,14 +190,20 @@ public class GenerateInput {
 						Pattern p = Pattern.compile("(\\d+)/(.*)/(RECT|FILE)/(.*),(.*)&(.*),(.*)");
 						Matcher m = p.matcher(args[i].toUpperCase());
 						m.find();
-						matsimNumAgents = Integer.parseInt(m.group(1));
-						matsimPopulationInputCoordinateSystem = m.group(2);
-						matsimPopulationLocationType = PopulationLocationType.valueOf(m.group(3));
-						double x1 = Double.parseDouble(m.group(4));
-						double y1 = Double.parseDouble(m.group(5));
-						double x2 = Double.parseDouble(m.group(6));
-						double y2 = Double.parseDouble(m.group(7));
-						matsimPopulationLocationArea = new RectangularArea(x1, y1, x2, y2);
+						int numAgents = Integer.parseInt(m.group(1));
+						String coordinateSystem = m.group(2);
+						PopulationLocationType locationType = PopulationLocationType.valueOf(m.group(3));
+						if (locationType == PopulationLocationType.RECT) {
+							double x1 = Double.parseDouble(m.group(4));
+							double y1 = Double.parseDouble(m.group(5));
+							double x2 = Double.parseDouble(m.group(6));
+							double y2 = Double.parseDouble(m.group(7));
+							RectangularArea area = new RectangularArea(x1, y1, x2, y2);
+							PopulationArea parea = new PopulationArea(area, numAgents, coordinateSystem);
+							populationAreas.add(parea);
+						} else {
+							abort("Population generation from FILE locations not implemented yet.");
+						}
 
 					} catch (Exception e) {
 						abort(err+"; " + e.getMessage());
@@ -232,10 +236,6 @@ public class GenerateInput {
 				break;
 			}
 		}
-		// Abort if required arguments were not given
-		if (matsimNumAgents == -1) {
-			abort("Some required options were not given");
-		}
 	}
 
 	private static void abort(String err) {
@@ -243,67 +243,96 @@ public class GenerateInput {
 		System.out.println(usage());
 		System.exit(0);
 	}
-	
-	private static void log(Object... args) {
-		System.out.println(args);
-	}
-	
-	
-	public static class RectangularArea {
-		private double x1;
-		private double y1;
-		private double x2;
-		private double y2;
-
-		/**
-		 * Captures a rectangular area between two points x1,y1 and x2,y2
-		 * @param x1
-		 * @param y1
-		 * @param x2
-		 * @param y2
-		 */
-		public RectangularArea(double x1, double y1, double x2, double y2) {
-			this.x1 = x1;
-			this.y1 = y1;
-			this.x2 = x2; 
-			this.y2 = y2;
-		}
-		
-		public double getX1() {
-			return x1;
-		}
-
-		public double getY1() {
-			return y1;
-		}
-
-		public double getX2() {
-			return x2;
-		}
-
-		public double getY2() {
-			return y2;
-		}
-
-		public void setX1(double x1) {
-			this.x1 = x1;
-		}
-
-		public void setY1(double y1) {
-			this.y1 = y1;
-		}
-
-		public void setX2(double x2) {
-			this.x2 = x2;
-		}
-
-		public void setY2(double y2) {
-			this.y2 = y2;
-		}
-
-		public String toString() {
-			return x1 + "," + y1 + " " + x2 + "," + y2;
-		}
-	}
-
 }
+
+class PopulationArea {
+	private RectangularArea area;
+	private int persons;
+	private String coordinateSystem;
+	
+	public PopulationArea(RectangularArea area, int persons, String coordinateSystem) {
+		super();
+		this.area = area;
+		this.persons = persons;
+		this.coordinateSystem = coordinateSystem;
+	}
+
+	public RectangularArea getArea() {
+		return area;
+	}
+	public void setArea(RectangularArea area) {
+		this.area = area;
+	}
+	public int getPersons() {
+		return persons;
+	}
+	public void setPersons(int persons) {
+		this.persons = persons;
+	}
+	public String getCoordinateSystem() {
+		return coordinateSystem;
+	}
+	public void setCoordinateSystem(String coordinateSystem) {
+		this.coordinateSystem = coordinateSystem;
+	}
+
+	
+}
+
+class RectangularArea {
+	private double x1;
+	private double y1;
+	private double x2;
+	private double y2;
+
+	/**
+	 * Captures a rectangular area between two points x1,y1 and x2,y2
+	 * @param x1
+	 * @param y1
+	 * @param x2
+	 * @param y2
+	 */
+	public RectangularArea(double x1, double y1, double x2, double y2) {
+		this.x1 = x1;
+		this.y1 = y1;
+		this.x2 = x2; 
+		this.y2 = y2;
+	}
+	
+	public double getX1() {
+		return x1;
+	}
+
+	public double getY1() {
+		return y1;
+	}
+
+	public double getX2() {
+		return x2;
+	}
+
+	public double getY2() {
+		return y2;
+	}
+
+	public void setX1(double x1) {
+		this.x1 = x1;
+	}
+
+	public void setY1(double y1) {
+		this.y1 = y1;
+	}
+
+	public void setX2(double x2) {
+		this.x2 = x2;
+	}
+
+	public void setY2(double y2) {
+		this.y2 = y2;
+	}
+
+	public String toString() {
+		return x1 + "," + y1 + " " + x2 + "," + y2;
+	}
+}
+
