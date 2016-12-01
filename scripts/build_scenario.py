@@ -13,7 +13,6 @@ from osgeo import osr
 # Globals and Defaults
 #----------------------------------------------------------------------------
 
-nAgents = 300 # hardwired, fix me
 proportionRelatives = 0.3 # hardwired, fix me
 maxMtrsToRelatives = 1000 # hardwired, fix me
 
@@ -127,6 +126,11 @@ with open(args.config) as data_file:
     data = json.load(data_file)
 pprint(data) if args.verbose else ''
 
+nAgents = 0
+for area in data["vehiclesAreas"]:
+  nAgents += int(area['name'])
+log("Number of agents is %s" % nAgents)
+  
 # replacements
 main_replacements = {
     # main config template replacements 
@@ -176,18 +180,17 @@ i_network = os.path.join(args.datadir, data["osmArea"]["url"])
 log("FIXME: writing MATSim network file '%s' from '%s'" % (o_matsim_network, i_network))
 copyfile(i_network, o_matsim_network)
 
-# write the MATSim network file
+# write the MATSim network change events file
 log("FIXME: writing MATSim network change events file '%s' from '%s'" % (o_matsim_network_change, t_matsim_network_change))
 copyfile(t_matsim_network_change, o_matsim_network_change)
 
-# write the MATSim population plans file
-#copyfile(t_matsim_plans, o_matsim_plans)
+
 
 # write the population file
-log("FIXME: hardwired %s agents" % nAgents)
+#log("FIXME: hardwired %s agents" % nAgents)
 ### !!!NOTE: order should be LONGITUDE then LATITUDE!!!
-xy1 = "%s,%s" % (data["osmArea"]["rectangle"][1], data["osmArea"]["rectangle"][0])
-xy2 = "%s,%s" % (data["osmArea"]["rectangle"][3], data["osmArea"]["rectangle"][2])
+#xy1 = "%s,%s" % (data["osmArea"]["rectangle"][1], data["osmArea"]["rectangle"][0])
+#xy2 = "%s,%s" % (data["osmArea"]["rectangle"][3], data["osmArea"]["rectangle"][2])
 popnPrefix = '' # popn names should be 1,2,.. so as to match Jill names!!
 cmd = [
   "java", 
@@ -195,10 +198,15 @@ cmd = [
   "io.github.agentsoz.bushfire.GenerateInput",
   "-outdir", outdir,
   "-prefix", popnPrefix, 
-  "-matsimpop", "%s/WGS84/RECT/%s&%s" % (nAgents, xy1, xy2),
+#  "-matsimpop", "%s/WGS84/RECT/%s&%s" % (nAgents, xy1, xy2),
   "-wkt", "EPSG:28355",
   "-verbose", "true" if args.verbose else "false"
 ]
+for area in data["vehiclesAreas"]:
+  xy1 = "%s,%s" % (area['bounds']['east'], area['bounds']['north'])
+  xy2 = "%s,%s" % (area['bounds']['west'], area['bounds']['south'])
+  cmd.append("-matsimpop")
+  cmd.append("%s/WGS84/RECT/%s&%s" % (area['name'], xy1, xy2))
 log(cmd)
 subprocess.call(cmd)
 cmd = [
