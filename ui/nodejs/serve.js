@@ -14,7 +14,7 @@ var mkdirp = require('mkdirp');
 var path = require('path');
 var fs   = require('fs');
 var shell = require('shelljs/global');
-
+var xml2js = require('xml2js');
 
 /*
  * -----------------------------------------------------------------------
@@ -184,27 +184,39 @@ function create(data, callback) {
 	pythonShell.run('build_scenario.py', options, function (err, res1) {
 		if (err && err.exitCode != 0) return callback('Could not build simulation: ' + err);
 		if (res1) results.push(res1);
-		// Now run the simulation
+		
 		var fileMain = path.join(scenarioPath, 'scenario_main.xml');
 		var fileLog = path.join(scenarioPath, 'scenario.log');
 		var fileJillLog = path.join(scenarioPath, 'jill.log');
 		var fileJillOut = path.join(scenarioPath, 'jill.out');
-		var cmd = 'java -cp ' + dist +
+		
+    	// Read number of agents from config xml
+		var parser = new xml2js.Parser();
+		fs.readFile(fileMain, function(err, data) {
+		    parser.parseString(data, function (err, res2) {
+				if (err && err.exitCode != 0) return callback('Could not build simulation: ' + err);
+				global.log(JSON.stringify(res2));
+				console.log(require('util').inspect(res2, false, null));
+		    	var nAgents = res2.simulation.bdiagents[0].trim();
+				// Now run the simulation
+				var cmd = 'java -cp ' + dist +
 			       ' io.github.agentsoz.bushfire.matsimjill.Main' +
 			       ' --config ' + fileMain +
 			       ' --logfile ' + fileLog +
 			       ' --loglevel ' + logLevelMain +
 			       ' --jillconfig "--config={' + 
-			       'agents:[{classname:io.github.agentsoz.bushfire.matsimjill.agents.Resident, args:null, count:300}],' +
+			       'agents:[{classname:io.github.agentsoz.bushfire.matsimjill.agents.Resident, args:null, count:'+nAgents+'}],' +
 			       'logLevel: ' + logLevelJill + ',' +
 			       'logFile: \\"' + fileJillLog + '\\",' +
 			       'programOutputFile: \\"' + fileJillOut + '\\"' +
 			       '}"' +
 			       '&'
 			       ;
-		global.log(cmd);
-		exec(cmd, {async:true, silent:true});
-		return callback(null, results);
+				global.log(cmd);
+				exec(cmd, {async:true, silent:true});
+				return callback(null, results);
+		    });
+		});
 	});
 }
 
