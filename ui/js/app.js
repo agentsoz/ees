@@ -400,9 +400,11 @@ $("#add-safeline").click(function(event) {
 	cancelDraw(true);
 	if($('#add-safeline').text()=='Cancel draw') {
 		$('#add-safeline').text('Draw safe line');
+		$('#add-vehicles-area').attr('disabled', false);
 		return;
 	}
 	$('#add-safeline').text('Cancel draw');
+	$('#add-vehicles-area').attr('disabled', true);
 	drawSafeLine(township, dest, function() {
 		// Add the destination to the list
 		addDestinationSafeLine();
@@ -411,6 +413,7 @@ $("#add-safeline").click(function(event) {
 		// Reset the dropdown
 		$("#existing-destinations").val('Select');
 		$('#add-safeline').text('Draw safe line');
+		$('#add-vehicles-area').attr('disabled', false);
 		$('#plus-safelines').show();
 		$('.draw-line-step-1').hide();
 		$('#existing-destinations').hide();
@@ -645,56 +648,6 @@ function save(callback, errfn) {
 
 }
 
-function send(msg, data, callback, errfn) {
-	var jmsg = JSON.stringify({'msg' : msg, 'data' : data});
-	console.log('Sending: ' + jmsg);
-	// Start the location-based assessment
-	$.ajax({
-		type : "POST",
-		dataType : 'json', // data type of response we get from server
-		contentType : 'application/json', // data type of request to server
-		data : jmsg,
-		timeout : TIMEOUT,
-		url : "/api/", // <-- NOTE THE TRAILING '/' IS NEEDED 
-		success : function(obj) {
-			var str = JSON.stringify(obj);
-			console.log('Received: ' + str);
-			var json = jQuery.parseJSON(str);
-			if (json.msg == shared.MSG_ERROR) {
-				if (errfn) return errfn(json.data[0].msg);
-			} else {
-				if (callback) return callback(json);
-			}
-		},
-		error : function(req, error) {
-			console.log("Save call to /api failed with error: " + error);
-			if (errfn) return errfn(error);
-		}
-	});
-}
-
-// Shows the msg for a fixed amount of time in a standard info popup
-// type: one of 'info', 'warn', or 'error'
-function timedPrompt(type, msg, cb) {
-	var t = BootstrapDialog.TYPE_DEFAULT;
-	var title = '';
-	if (type == 'info') {
-		t = BootstrapDialog.TYPE_INFO;
-		title = 'Information';
-	} else if (type == 'warn') {
-		t = BootstrapDialog.TYPE_WARNING;
-		title = 'WARNING';
-	} else if (type == 'error') {
-		t = BootstrapDialog.TYPE_DANGER;		
-		title = 'ERROR';
-	}
-	BootstrapDialog.show({
-		title: title,
-        message: msg,
-        type: t,
-        callback: cb
-    });
-}
 
 function setEvacTime(evacTime) {
 	if (evacTime) {
@@ -737,15 +690,18 @@ $("#add-vehicles-area").click(function(event) {
 	cancelDraw(true);
 	if($('#add-vehicles-area').text()=='Cancel draw') {
 		$('#add-vehicles-area').text('Draw area');
+		$('#add-safeline').attr('disabled', false);
 		return;
 	}
 	$('#add-vehicles-area').text('Cancel draw');
+	$('#add-safeline').attr('disabled', true);
 	drawVehiclesArea(township, label, function(area) {
 		// Add the destination to the list
 		addVehiclesArea(area);
 		// Reset the count
 		$("#num-vehicles").val('');
 		$('#add-vehicles-area').text('Draw area');
+		$('#add-safeline').attr('disabled', false);
 		$('#plus-vehicles').show();
 		$('.draw-area-step-1').hide();
 		$('#num-vehicles').hide();

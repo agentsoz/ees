@@ -26,7 +26,9 @@ var validMessages =
 	[shared.MSG_CHECK_EXISTS,
 	 shared.MSG_SAVE, 
 	 shared.MSG_CREATE, 
-	 shared.MSG_CREATE_PROGRESS];
+	 shared.MSG_CREATE_PROGRESS,
+	 shared.MSG_LIST_SCENARIOS];
+
 var dataDir  = path.join(path.dirname(fs.realpathSync(__filename)), '../../data/user-data');
 var distDir  = path.join(path.dirname(fs.realpathSync(__filename)), '../../data/bushfire-1.0.1-SNAPSHOT');
 var dist = path.join(distDir, 'bushfire-1.0.1-SNAPSHOT.jar');
@@ -69,6 +71,23 @@ app.post('/', function(req, res) {
     	global.log('ERROR in input: ' + JSON.stringify(errors));
     	send(res, {'msg' : shared.MSG_ERROR, 'data' : errors});
     	return;
+    }
+    if (req.body.msg == shared.MSG_LIST_SCENARIOS) {
+    	var list = [];
+		global.log("Getting list of existing scenarios");
+		fs.readdir(dataDir, function (err, files) {
+			if (err) {
+				global.log("ERROR while gettting scenario listing: " + err);
+		    	send(res, {'msg' : shared.MSG_ERROR, 'data' : err});
+		    	return;
+			}
+			files.forEach(function(file) {
+			    list.push({name: file});
+			});
+			send(res, {'msg': shared.MSG_LIST_SCENARIOS,
+				'data' : list});
+		});		
+		return;
     }
     if (req.body.msg == shared.MSG_CHECK_EXISTS) {
 		var dir = path.join(dataDir, req.body.data.name);

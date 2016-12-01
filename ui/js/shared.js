@@ -14,6 +14,7 @@
 	exports.MSG_SAVE = 'save';
 	exports.MSG_CREATE = 'create';
 	exports.MSG_CREATE_PROGRESS = 'create_progress';
-	exports.MSG_CHECK_EXISTS = 'exists?'
+	exports.MSG_CHECK_EXISTS = 'exists?';
+	exports.MSG_LIST_SCENARIOS = 'list_scenarios'
 
 })(typeof exports === 'undefined'? this['shared']={}: exports);

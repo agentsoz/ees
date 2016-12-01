@@ -10,20 +10,28 @@ window.onload = function(e) {
 	// Get the URL parameters
 	getParams();
 
-	// Set the selection
-	setOptionsForDropdowns(document
-			.getElementsByClassName("dropdown-scenarios"),
-			global.existing_scenarios);
-
-	// Reset the page
-	reset();
-
-	// Select the simulation if specified in the URL
-	if (urlParams.name) {
-		$("#view-scenario-dropdown").val(urlParams.name);
-		selectSimulation(urlParams.name);
-	}
-
+	send(shared.MSG_LIST_SCENARIOS, null,
+		function(json) {
+			if (json.msg == shared.MSG_ERROR) {
+				timedPrompt('error', "Could not retrieve scenarios list. " + json.data[0].msg); 
+			} else {
+				// Set the selection
+				setOptionsForDropdowns(
+					document.getElementsByClassName("dropdown-scenarios"),
+					json.data);
+				// Reset the page
+				reset();
+				// Select the simulation if specified in the URL
+				if (urlParams.name) {
+					$("#view-scenario-dropdown").val(urlParams.name);
+					selectSimulation(urlParams.name);
+				}
+			}
+		},
+		function (str) {
+			timedPrompt('error', "Could not retrieve scenarios list. " + str); 
+		}
+	);
 }
 
 function getParams() {

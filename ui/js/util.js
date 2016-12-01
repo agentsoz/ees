@@ -18,8 +18,6 @@ function setOptionsForDropdowns(dropdowns, names) {
 	}
 }
 
-
-
 function getScenario(name) {
 	for (var i = 0; i < global.existing_scenarios.length; i++) {
 		var scenario = global.existing_scenarios[i].name;
@@ -148,4 +146,53 @@ $(".collapse").on('hide.bs.collapse', function(e) {
 	$(e.target).parent().find(".glyphicon-triangle-bottom").hide();
 });
 
+function send(msg, data, callback, errfn) {
+	var jmsg = JSON.stringify({'msg' : msg, 'data' : data});
+	console.log('Sending: ' + jmsg);
+	// Start the location-based assessment
+	$.ajax({
+		type : "POST",
+		dataType : 'json', // data type of response we get from server
+		contentType : 'application/json', // data type of request to server
+		data : jmsg,
+		timeout : TIMEOUT,
+		url : "/api/", // <-- NOTE THE TRAILING '/' IS NEEDED 
+		success : function(obj) {
+			var str = JSON.stringify(obj);
+			console.log('Received: ' + str);
+			var json = jQuery.parseJSON(str);
+			if (json.msg == shared.MSG_ERROR) {
+				if (errfn) return errfn(json.data[0].msg);
+			} else {
+				if (callback) return callback(json);
+			}
+		},
+		error : function(req, error) {
+			console.log("Save call to /api failed with error: " + error);
+			if (errfn) return errfn(error);
+		}
+	});
+}
 
+//Shows the msg for a fixed amount of time in a standard info popup
+//type: one of 'info', 'warn', or 'error'
+function timedPrompt(type, msg, cb) {
+	var t = BootstrapDialog.TYPE_DEFAULT;
+	var title = '';
+	if (type == 'info') {
+		t = BootstrapDialog.TYPE_INFO;
+		title = 'Information';
+	} else if (type == 'warn') {
+		t = BootstrapDialog.TYPE_WARNING;
+		title = 'WARNING';
+	} else if (type == 'error') {
+		t = BootstrapDialog.TYPE_DANGER;		
+		title = 'ERROR';
+	}
+	BootstrapDialog.show({
+		title: title,
+     message: msg,
+     type: t,
+     callback: cb
+ });
+}
