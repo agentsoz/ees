@@ -28,6 +28,23 @@ function getScenario(name) {
 	return null;
 }
 
+function getScenarioFromServer(scenarioName, callback, errfn) {
+	send(shared.MSG_GET_SCENARIO, {name: scenarioName},
+			function(json) {
+				if (json.msg == shared.MSG_ERROR) {
+					if (errfn) return errfn(json.data[0].msg);
+				} else {
+					if (callback) return callback(json);
+				}
+			},
+			function (str) {
+				console.log("Could not retrieve scenarios list: " + str);
+				if (errfn) return errfn(str);
+			}
+		);
+	return null;
+}
+
 function getExistingScenariosNames() {
 	var val = [];
 	for (var i = 0; i < global.existing_scenarios.length; i++) {

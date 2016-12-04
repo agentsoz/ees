@@ -79,9 +79,9 @@ $("#view-scenario-dropdown").on("change", function() {
 });
 
 
-function selectSimulation(scenario) {
+function selectSimulation(scenarioName) {
 	// Set the title
-	$('#scenario-title').text(scenario);
+	$('#scenario-title').text(scenarioName);
 	// Show scenario view elements
 	$(".scenario-view").hide();
 	$(".glyphicon-triangle-right").show();
@@ -92,25 +92,33 @@ function selectSimulation(scenario) {
 	// Set the graphs menu
 	var name = $("#view-scenario-dropdown option:selected").text();
 	var scenario = getScenario(name);
-	$('.dropdown-graphs').selectpicker('destroy');
-	setOptionsForGraphsSelection($(".dropdown-graphs"), scenario.graphs);
-	$(".dropdown-graphs").selectpicker('refresh');
-	// Set the scenario details
-	setScenarioDetails();
+	getScenarioFromServer(name, 
+		function(scenario) {
+			$('.dropdown-graphs').selectpicker('destroy');
+			//setOptionsForGraphsSelection($(".dropdown-graphs"), scenario.graphs);
+			$(".dropdown-graphs").selectpicker('refresh');
+			// Set the scenario details
+			setScenarioDetails(scenario);
+			// Set the google earth link
+			$('#playback-link').attr('href',scenario.data.playbackURL);
+		},
+		function(err) {
+			timedPrompt('error', "Could not retrieve scenario '"+name+"'. " + err); 
+		}
+	);
 }
 
-function setScenarioDetails() {
+function setScenarioDetails(scenario) {
 	var name = $("#view-scenario-dropdown option:selected").text();
-	var scenario = getScenario(name);
-	var township = getTownship(scenario.township);
+	var township = getTownship(scenario.data.township);
 
 	var url = 'https://maps.googleapis.com/maps/api/staticmap';
 	url += '?size=500x350&scale=2&maptype=roadmap';
-	url += '&zoom=' + township.defaultMapZoom;
-	url += '&markers=color:blue|'+township.latlon[0]+','+township.latlon[1];
+	url += '&zoom=' + scenario.data.defaultMapZoom;
+	//url += '&markers=color:blue|'+township.latlon[0]+','+township.latlon[1];
 	url += '&key=' + GMAPS_STATIC_KEY;
 	
-	var a = township.osmArea;
+	var a = scenario.data.osmArea.rectangle;
 	var bounds = '&path=color:red|weight:2';
 	bounds += '|'+a[0]+','+a[1];
 	bounds += '|'+a[2]+','+a[1];

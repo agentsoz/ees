@@ -27,14 +27,17 @@ var validMessages =
 	 shared.MSG_SAVE, 
 	 shared.MSG_CREATE, 
 	 shared.MSG_CREATE_PROGRESS,
-	 shared.MSG_LIST_SCENARIOS];
+	 shared.MSG_LIST_SCENARIOS,
+	 shared.MSG_GET_SCENARIO
+	 ];
 
-var dataDir  = path.join(path.dirname(fs.realpathSync(__filename)), '../../data/user-data');
-var distDir  = path.join(path.dirname(fs.realpathSync(__filename)), '../../data/bushfire-1.0.1-SNAPSHOT');
+var dataDirURL = 'user-data';
+var dataDir  = path.join(path.dirname(fs.realpathSync(__filename)), '..','..','data',dataDirURL);
+var distDir  = path.join(path.dirname(fs.realpathSync(__filename)), '..','..','data','bushfire-1.0.1-SNAPSHOT');
 var dist = path.join(distDir, 'bushfire-1.0.1-SNAPSHOT.jar');
-var templateDir  = path.join(path.dirname(fs.realpathSync(__filename)), '../../data/template');
-var appDataDir  = path.join(path.dirname(fs.realpathSync(__filename)), '../../html');
-var logLevelMain = 'INFO';
+var templateDir  = path.join(path.dirname(fs.realpathSync(__filename)), '..','..','data','template');
+var appDataDir  = path.join(path.dirname(fs.realpathSync(__filename)), '..','..','html');
+var logLevelMain = 'TRACE';
 var logLevelJill = 'WARN';
 
 // Keeps track of the number of requests handled
@@ -70,6 +73,35 @@ app.post('/', function(req, res) {
     if (errors) {
     	global.log('ERROR in input: ' + JSON.stringify(errors));
     	send(res, {'msg' : shared.MSG_ERROR, 'data' : errors});
+    	return;
+    }
+    if (req.body.msg == shared.MSG_GET_SCENARIO) {
+		var dir = path.join(dataDir, req.body.data.name);
+		global.log("Getting scenario '"+dir+"'");
+		fs.stat(dir, function (err, stats){
+			if (err) {
+				// Does not exist
+				global.log("Scenario '"+dir+"' does not exist");
+				send(res, {'msg': shared.MSG_GET_SCENARIO,
+					'data' : shared.MSG_NO});
+			} else {
+				var userDir = path.join(dataDir, req.body.data.name);
+				var userFile = path.join(userDir, req.body.data.name + '.json');
+				global.log("Loading '"+userFile+"'");
+				// Exists; read in and send the scenario json file
+				jsonfile.readFile(userFile, function (err, json) {
+					if (err) {
+						global.log("Could not read scenario '" + userFile + "' : " + err);
+				    	send(res, {'msg' : shared.MSG_ERROR, 'data' : err});
+				    	return;
+					}
+					var playbackURL = path.join(dataDirURL, req.body.data.name, 'scenario','scenario_matsim_output','ITERS','it.0','0.googleearth.kmz');
+					json.playbackURL = playbackURL;
+					send(res, {'msg': shared.MSG_GET_SCENARIO,
+						'data' : json});
+				});
+			}
+		});
     	return;
     }
     if (req.body.msg == shared.MSG_LIST_SCENARIOS) {
@@ -214,8 +246,7 @@ function create(data, callback) {
 		fs.readFile(fileMain, function(err, data) {
 		    parser.parseString(data, function (err, res2) {
 				if (err && err.exitCode != 0) return callback('Could not build simulation: ' + err);
-				global.log(JSON.stringify(res2));
-				console.log(require('util').inspect(res2, false, null));
+				//global.log(JSON.stringify(res2));
 		    	var nAgents = res2.simulation.bdiagents[0].trim();
 				// Now run the simulation
 				var cmd = 'java -cp ' + dist +

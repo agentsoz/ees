@@ -15,6 +15,7 @@
 	exports.MSG_CREATE = 'create';
 	exports.MSG_CREATE_PROGRESS = 'create_progress';
 	exports.MSG_CHECK_EXISTS = 'exists?';
-	exports.MSG_LIST_SCENARIOS = 'list_scenarios'
+	exports.MSG_LIST_SCENARIOS = 'list_scenarios';
+	exports.MSG_GET_SCENARIO = 'fetch_scenario';
 
 })(typeof exports === 'undefined'? this['shared']={}: exports);

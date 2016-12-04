@@ -472,6 +472,7 @@ $(".nav-create-sim").click(function(event) {
 								// Hide and reset the progress bar
 								$('.progress').hide();
 								$('.progress-bar').css('width', '0%').attr('aria-valuenow', 0);
+								$('.progress-bar').text('0%');
 								// Close the modal
 								$('.progress-bar-modal').modal('hide');
 								// Show success message
@@ -580,6 +581,7 @@ function save(callback, errfn) {
 	// Scenario name (used for naming directories and files)
 	msg.name = global.save_as;
 	msg.township = township.name;
+	msg.defaultMapZoom = township.defaultMapZoom;
 	// Global coordinate system used
 	msg.coordinate_system = "latlong";
 	// Road network area and associated MATSim Network file

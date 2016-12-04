@@ -25,6 +25,7 @@ config:
 	
 install: config
 	rsync -a -F --delete --delete-excluded ${BASEDIR} ${WEBDIR}
+	ln -s ${DATADIR}/user-data ${WEBDIR}/user-data
 	rsync -avz ${BASEDIR}../target/bushfire-1.0.1-SNAPSHOT ${DATADIR}
 	
 minify : config
