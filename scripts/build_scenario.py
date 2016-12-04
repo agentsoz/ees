@@ -5,6 +5,7 @@ import argparse
 import fileinput
 import json
 import subprocess
+import utm
 from pprint import pprint
 from shutil import copyfile
 from osgeo import ogr
@@ -232,9 +233,11 @@ subprocess.call(cmd)
 src = '<!--${location}-->'
 target = ''
 for dest in data["destinations"]:
+    x,y,znum,zletter = utm.from_latlon(dest["coordinates"]["lat"], dest["coordinates"]["lng"])
+    #log("Converting %s,%s to utm: %s,%s %s %s" % (dest["coordinates"]["lat"], dest["coordinates"]["lng"],x,y,znum,zletter))
     target = "%s<location>\n" % target
     target = "%s  <name>%s</name>\n" % (target, dest["name"])
-    target = "%s  <coordinates>%s,%s</coordinates>\n" % (target, dest["coordinates"]["lat"], dest["coordinates"]["lng"])
+    target = "%s  <coordinates>%s,%s</coordinates>\n" % (target, x,y)
     target = "%s</location>\n" % target
 f = open(o_geography,'r')
 filedata = f.read()
