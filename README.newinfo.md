@@ -11,25 +11,25 @@ this means that the network and population files should both express coordinates
 in that system. 
 
 1. You can tell MATSim to use EPSG:28355 using a global
-setting in the main config XML as follows:
-```
-<module name="global">
-   ...
-   <param name="coordinateSystem" value="EPSG:28355" />
-   ...
-</module>
-```
-Then make sure that the network.xml and population.xml provided is
-using that same coordinate system. 
+   setting in the main config XML as follows:
+   ```
+   <module name="global">
+      ...
+      <param name="coordinateSystem" value="EPSG:28355" />
+      ...
+   </module>
+   ```
+   Then make sure that the network.xml and population.xml provided is
+   using that same coordinate system. 
 
 2. The following command will generate a population of 700 agents placed
-randomly within the rectangular area specified by the two diagonal coordinates:
-```
-java -cp bushfire-1.0.1-SNAPSHOT.jar io.github.agentsoz.bushfire.GenerateInput \
-   -outdir scenarios/maldon/ \
-   -prefix maldon \
-   -matsimpop "700/EPSG:28355/RECT/234274,5895647&246377,5919215"
-```
+   randomly within the rectangular area specified by the two diagonal coordinates:
+   ```
+   java -cp bushfire-1.0.1-SNAPSHOT.jar io.github.agentsoz.bushfire.GenerateInput \
+      -outdir scenarios/maldon/ \
+      -prefix maldon \
+      -matsimpop "700/EPSG:28355/RECT/234274,5895647&246377,5919215"
+   ```
 
 # How to extract list of addresses from VicMap shapefile
 ```
@@ -92,3 +92,64 @@ scenario templates files in directory `./scenarios/template/`.
   -n test \
   -v
 ```
+
+# Notes on how to get vehicles count over time for safelines
+
+1. Convert the safeline coords to UTM. 
+
+2. From output_network.xml.gz, find the `NODES` with coords closest to 
+   safeline; need a sensible way to pick multiple nodes when the safeline crosses
+   multiple roads; output of this step is a list of nodes with coords and IDs.
+   Here's the formula to find the distance of a point from a line (given by 
+   two points): 
+   https://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line#Line_defined_by_two_points
+   
+   To get started, the following command will put the node ids and coords
+   in a CSV that could be loaded in R to do the calculation:
+
+   ```   
+   zcat output_network.xml.gz | \
+     grep "node id" | \
+     cut -f2,4,6 -d '"' --output-delimiter="," \
+     > nodes.csv
+   ```
+   
+   Then for each node in the list, find the LINK that has that node as the 
+   starting node, i.e., where `from=` contains that node id; the outout of this
+   step is a list of link IDs; these are the links that we need to monitor for 
+   vehicles counts.
+   
+3. For each link in our list, get a time-ordered list of vehicles going it, as: 
+   ```
+   zcat 0.events.xml.gz | \
+     grep "entered link" | \
+     grep 'link="477"' | \
+     cut -f2 -d'"' | \
+     cat - -n  | \
+     awk '{print $2","$1}' \
+     > link-NNN-traffic-count.csv
+   ```
+   where NNN is the link id; the first column in the file is the time of day 
+   in secs, and the second column is the cumulative vehicle count at that time; 
+   this can then be fed into R for plotting. 
+
+4. Write an R script to take the CSV file and prodice a traffic count graph.
+   
+5. Repeat the above steps for each safe line. 
+
+# Notes on useful files for results and analysis
+
+* file `./scenario/scenario_matsim_output/ITERS/it.0/0.tripdurations.txt`
+  has the following useful info that could be added to report:  
+  average trip duration: 2695.73719376392 seconds = 00:44:55
+
+* file `./scenario/scenario_matsim_output/ITERS/it.0/0.legHistogram.txt`
+  has all the info to verify departure peak
+  
+* file `./scenario/scenario_matsim_output/ITERS/it.0/0.experienced_plans.xml.gz`
+  has the saved route (list of links) taken by each vehicle; no timing though
+  
+* to get timing as well for the links, you can do:
+  `zcat 0.events.xml.gz | grep "entered link" | grep 'person="99"'`
+  which will give you the times at which person 99 entered each link on its route
+
