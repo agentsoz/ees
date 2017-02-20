@@ -27,6 +27,9 @@ PROGRAM='java -cp bushfire-1.0.1-SNAPSHOT.jar io.github.agentsoz.bushfire.Bushfi
 #DEFAULT_ARGS='-c scenarios/halls_gap/halls_gap.xml -l halls-gap.log -level INFO'
 DEFAULT_ARGS='-c scenarios/maldon/maldon.xml -l maldon.log -level INFO'
 
+# java -cp bushfire-1.0.1-SNAPSHOT.jar io.github.agentsoz.bushfire.matsimjill.Main --config scenarios/maldon-simple/maldon.xml --logfile maldon.log --loglevel INFO --jillconfig "--config={agents:[{classname:io.github.agentsoz.bushfire.matsimjill.agents.Resident, args:null, count:700}],logLevel: WARN,logFile: Main.log,programOutputFile: Main.out}" 
+
+
 # Print usage
 $PROGRAM -h
 

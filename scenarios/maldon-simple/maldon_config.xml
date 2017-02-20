@@ -30,13 +30,13 @@
 	</module>
 
 	<module name="network">
-		<param name="inputNetworkFile" value="./scenarios/maldon/maldon_network.xml" />
+		<param name="inputNetworkFile" value="./scenarios/maldon-simple/maldon_network.xml" />
 		<!--<param name= "timeVariantNetwork" value= "true" />
-		<param name= "inputChangeEventsFile" value= "./scenarios/maldon/maldon_network_change_events.xml" />-->
+		<param name= "inputChangeEventsFile" value= "./scenarios/maldon-simple/maldon_network_change_events.xml" />-->
 	</module>
 
 	<module name="plans">
-		<param name="inputPlansFile" value="./scenarios/maldon/maldon_population.xml" />
+		<param name="inputPlansFile" value="./scenarios/maldon-simple/maldon_population.xml" />
 	</module>
 
 	<module name="controler">
