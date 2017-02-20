@@ -22,11 +22,15 @@ package io.github.agentsoz.bdimatsim;
  * #L%
  */
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.network.Link;
 import org.matsim.core.mobsim.framework.MobsimAgent;
+
+import io.github.agentsoz.bdimatsim.app.BDIActionHandler;
+import io.github.agentsoz.bdimatsim.app.BDIPerceptHandler;
 
 /**
  * @author Edmund Kemsley Processes percept/s from TaxiPerceptList by getting
@@ -36,15 +40,67 @@ import org.matsim.core.mobsim.framework.MobsimAgent;
 final class MatsimPerceptHandler {
 	private final MATSimModel matSimModel;
 
+	private final HashMap<String, BDIPerceptHandler> registeredPercepts;
+
 	/**
 	 * Constructor
 	 * 
 	 * @param matSimModel
 	 */
-	MatsimPerceptHandler(MATSimModel matSimModel) {
+	protected MatsimPerceptHandler(MATSimModel matSimModel) {
 		this.matSimModel = matSimModel;
+		this.registeredPercepts = new HashMap<String, BDIPerceptHandler>();
+		
+		// Process ARRIVED; returns an array of passed DRIVETO actions
+		registeredPercepts.put(MatsimPerceptList.ARRIVED, new BDIPerceptHandler() {
+			@Override
+			public Object[] process(String agentID, String perceptID, MATSimModel model) {
+				// Returns all passed actions held in the MatsimAgent object as
+				// an array Designed to handle multiple arrivals in one percept
+				MATSimAgent agent = model.getBDIAgent(Id.createPersonId(agentID));
+				ArrayList<Id<Link>> passedActions = agent.getpassedDriveToActions();
+				if (passedActions.isEmpty()) {
+					return null;
+				}
+				String[] array = new String[passedActions.size()];
+				Iterator<Id<Link>> it = passedActions.iterator();
+				int i = 0;
+				while (it.hasNext()) {
+					Id<Link> action = it.next();
+					array[i++] = action.toString();
+				}
+				agent.clearPassedDriveToActions();
+				return array;
+			}
+		});
+		
+		// Process REQUESTLOCATION; returns the coordinates of the agent
+		registerBDIPercepts(MatsimPerceptList.REQUESTLOCATION, new BDIPerceptHandler() {
+			@Override
+			public Object[] process(String agentID, String perceptID, MATSimModel model) {
+				// At times BDI will need the current position of agent 
+				// Returns the current link coordinates
+				MobsimAgent agent = model.getMobsimAgentMap().get(
+						Id.createPersonId(agentID));
+				Link currentLink = model.getScenario().getNetwork().getLinks()
+						.get(agent.getCurrentLinkId());
+
+				return new Object[] { currentLink.getCoord().getX(),
+						currentLink.getCoord().getY() };
+			}
+		});
 	}
 
+	/** 
+	 * Registers a new BDI percept
+	 * @param actionID
+	 * @param actionHandler
+	 */
+	public final void registerBDIPercepts(String perceptID, BDIPerceptHandler perceptHandler) {
+		registeredPercepts.put(perceptID, perceptHandler);
+	}
+
+	
 	/**
 	 * Process percepts
 	 * 
@@ -56,68 +112,12 @@ final class MatsimPerceptHandler {
 	 * @return The response
 	 */
 	final Object[] processPercept(String agentID, String perceptID) {
-		if (perceptID == MatsimPerceptList.ARRIVED) {
-			return processArrived(this.matSimModel, agentID);
+		for (String percept : registeredPercepts.keySet()) {
+			if (perceptID.equals(percept)) {
+				return registeredPercepts.get(perceptID).process(agentID, perceptID, matSimModel);
+			}
 		}
-		if (perceptID == MatsimPerceptList.REQUESTLOCATION) {
-			return processRequestLocation(this.matSimModel, agentID);
-		} else {
-			return null;
-		}
+		return null;
 	}
-
-	/**
-	 * Process ARRIVED percept
-	 * 
-	 * @param matSimModel
-	 *            {@link MATSimModel} instance
-	 * @param agentID
-	 *            ID of the agent
-	 * @return An array of passed DRIVETO actions as the response
-	 */
-	public static Object[] processArrived(MATSimModel matSimModel,
-			String agentID) {
-		/*
-		 * Returns all passed actions held in the MatsimAgent object as an array
-		 * Designed to handle multiple arrivals in one percept
-		 */
-		MATSimAgent agent = matSimModel.getBDIAgent(Id.createPersonId(agentID));
-		ArrayList<Id<Link>> passedActions = agent.getpassedDriveToActions();
-		if (passedActions.isEmpty()) {
-			return null;
-		}
-		String[] array = new String[passedActions.size()];
-		Iterator<Id<Link>> it = passedActions.iterator();
-		int i = 0;
-		while (it.hasNext()) {
-			Id<Link> action = it.next();
-			array[i++] = action.toString();
-		}
-		agent.clearPassedDriveToActions();
-		return array;
-	}
-
-	/**
-	 * Process REQUESTLOCATION percept
-	 * 
-	 * @param matSimModel
-	 *            {@link MATSimModel} instance
-	 * @param agentID
-	 *            ID of the agent
-	 * @return Coordinates of the agent
-	 */
-	public static Object[] processRequestLocation(MATSimModel matSimModel,
-			String agentID) {
-		/*
-		 * At times BDI will need the current position of agent Returns the
-		 * current link coordinates
-		 */
-		MobsimAgent agent = matSimModel.getMobsimAgentMap().get(
-				Id.createPersonId(agentID));
-		Link currentLink = matSimModel.getScenario().getNetwork().getLinks()
-				.get(agent.getCurrentLinkId());
-
-		return new Object[] { currentLink.getCoord().getX(),
-				currentLink.getCoord().getY() };
-	}
+	
 }

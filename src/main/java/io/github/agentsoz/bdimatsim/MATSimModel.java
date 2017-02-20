@@ -301,16 +301,7 @@ public final class MATSimModel implements ABMServerInterface {
 
 	@Override
 	public final Object[] queryPercept(String agentID, String perceptID) {
-
-		if (perceptID == MatsimPerceptList.REQUESTLOCATION){
-			return agentManager.getLocation(agentID, perceptID);
-		}
-		else if (perceptID == MatsimPerceptList.SETUPPARAMETERS){
-			return new Object[] {matSimParameterManager.getNETWORKIDS(), linkCoordsAsArray, boundingBox };
-		}
-		else{
-			return null;
-		}
+		return this.getBDIAgent(agentID).getPerceptHandler().processPercept(agentID, perceptID);
 	}
 
 	public final void registerDataServer( DataServer server ) {

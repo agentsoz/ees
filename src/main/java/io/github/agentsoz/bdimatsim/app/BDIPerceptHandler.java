@@ -1,10 +1,10 @@
-package io.github.agentsoz.bdimatsim;
+package io.github.agentsoz.bdimatsim.app;
 
 /*
  * #%L
  * BDI-ABM Integration Package
  * %%
- * Copyright (C) 2014 - 2015 by its authors. See AUTHORS file.
+ * Copyright (C) 2014 - 2017 by its authors. See AUTHORS file.
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -22,12 +22,10 @@ package io.github.agentsoz.bdimatsim;
  * #L%
  */
 
-/**
- * The list of percepts that can be processed on Matsim level
- */
+import io.github.agentsoz.bdimatsim.MATSimModel;
 
-public final class MatsimPerceptList {
-	public static final String ARRIVED = "Arrived";
-	public static final String REQUESTLOCATION = "Request Location";
+public interface BDIPerceptHandler {
+
+	public Object[] process(String agentID, String perceptID, MATSimModel model); 
+
 }
-
