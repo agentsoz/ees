@@ -63,6 +63,7 @@ public class BushfireApplication extends JACKModel implements DataClient,
 	private BdiConnector bdiConnector;
 	protected EvacController controller;
 	protected HashMap<String, Object[]> agentsDriveToActions = new HashMap<String, Object[]>();
+	protected DataServer dataServer;
 
 	/**
 	 * Used only when byPassController is enabled
