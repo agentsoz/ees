@@ -99,7 +99,7 @@ public class MATSimAgent {
 		driveToActions = new ArrayList<Id<Link>>();
 	}
 
-	final void newDriveTo(Id<Link> newAction) {
+	public final void newDriveTo(Id<Link> newAction) {
 		driveToActions.add(newAction);
 	}
 

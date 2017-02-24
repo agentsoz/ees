@@ -48,7 +48,7 @@ import org.matsim.core.router.util.TravelTime;
 import org.matsim.core.router.util.TravelTimeUtils;
 import org.matsim.withinday.utils.EditRoutes;
 
-final class Replanner {
+public final class Replanner {
 
 	private MATSimModel model;
 	private TripRouter tripRouter;

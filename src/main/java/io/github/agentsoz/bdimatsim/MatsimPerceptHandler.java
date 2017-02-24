@@ -33,11 +33,10 @@ import io.github.agentsoz.bdimatsim.app.BDIActionHandler;
 import io.github.agentsoz.bdimatsim.app.BDIPerceptHandler;
 
 /**
- * @author Edmund Kemsley Processes percept/s from TaxiPerceptList by getting
- *         information from MATSim and then returning as an Object array
+ * @author Edmund Kemsley, Dhirendra Singh
  */
 
-final class MatsimPerceptHandler {
+public final class MatsimPerceptHandler {
 	private final MATSimModel matSimModel;
 
 	private final HashMap<String, BDIPerceptHandler> registeredPercepts;
@@ -52,7 +51,7 @@ final class MatsimPerceptHandler {
 		this.registeredPercepts = new HashMap<String, BDIPerceptHandler>();
 		
 		// Process ARRIVED; returns an array of passed DRIVETO actions
-		registeredPercepts.put(MatsimPerceptList.ARRIVED, new BDIPerceptHandler() {
+		this.registerBDIPercepts(MatsimPerceptList.ARRIVED, new BDIPerceptHandler() {
 			@Override
 			public Object[] process(String agentID, String perceptID, MATSimModel model) {
 				// Returns all passed actions held in the MatsimAgent object as
@@ -92,9 +91,18 @@ final class MatsimPerceptHandler {
 	}
 
 	/** 
-	 * Registers a new BDI percept
-	 * @param actionID
-	 * @param actionHandler
+	 * Registers a new BDI percept. Typical usage example:<pre><code>
+	 * registerBDIPercepts("MyNewPercept", new BDIPerceptHandler() {
+	 *    {@literal @}Override
+	 *    public Object[] process(String agentID, String perceptID, MATSimModel model) {
+	 *       MATSimAgent agent = model.getBDIAgent(agentID);
+	 *       // Code to process MyNewPercept goes here ...
+	 *       return true;
+	 *    }
+	 * });
+	 * </pre></code>
+	 * @param perceptID
+	 * @param perceptHandler
 	 */
 	public final void registerBDIPercepts(String perceptID, BDIPerceptHandler perceptHandler) {
 		registeredPercepts.put(perceptID, perceptHandler);

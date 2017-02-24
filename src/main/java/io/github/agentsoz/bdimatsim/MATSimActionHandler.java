@@ -36,7 +36,7 @@ import io.github.agentsoz.bdimatsim.app.BDIActionHandler;
  *         MatsimAgents and Matsim system
  */
 
-final class MATSimActionHandler {
+public final class MATSimActionHandler {
 	private final MATSimModel matSimModel;
 	
 	private final HashMap<String, BDIActionHandler> registeredActions;
@@ -83,7 +83,16 @@ final class MATSimActionHandler {
 	}
 
 	/** 
-	 * Registers a new BDI action
+	 * Registers a new BDI action. Typical usage example:<pre><code>
+	 * registerBDIAction("MyNewAction", new BDIActionHandler() {
+	 *    {@literal @}Override
+	 *    public boolean handle(String agentID, String actionID, Object[] args, MATSimModel model) {
+	 *       MATSimAgent agent = model.getBDIAgent(agentID);
+	 *       // Code to handle MyNewAction goes here ...
+	 *       return true;
+	 *    }
+	 * });
+	 * </pre></code>
 	 * @param actionID
 	 * @param actionHandler
 	 */
@@ -102,7 +111,7 @@ final class MATSimActionHandler {
 	 *            Parameters associated with the action
 	 * @return
 	 */
-	public final boolean processAction(String agentID, String actionID, Object[] parameters) {
+	final boolean processAction(String agentID, String actionID, Object[] parameters) {
 		String actionType = (String) parameters[0];
 
 		if (!actionType.equals(actionID)) {

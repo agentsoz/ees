@@ -28,7 +28,7 @@ import io.github.agentsoz.bdiabm.data.ActionPerceptContainer;
 import io.github.agentsoz.bdiabm.data.AgentDataContainer;
 import io.github.agentsoz.bdiabm.data.AgentState;
 import io.github.agentsoz.bdiabm.data.AgentStateList;
-
+import io.github.agentsoz.bdimatsim.app.BDIApplicationInterface;
 import java.util.HashMap;
 
 import org.matsim.api.core.v01.Id;
@@ -100,6 +100,18 @@ final class MatsimAgentManager {
 		return true;
 	}
 
+	/**
+	 * Register any new BDI actions and percepts provided by the application
+	 * @param app
+	 */
+	final void registerApplicationActionsPercepts(BDIApplicationInterface app) {
+		for(Id<Person> agentId: matSimModel.getBDIAgentIDs()) {
+			MATSimAgent agent = matSimModel.getBDIAgent(agentId);
+			app.registerNewBDIActions(agent.getActionHandler());
+			app.registerNewBDIPercepts(agent.getPerceptHandler());
+		}
+	}
+
 	final boolean removeAgent(Id<Person> agentID) {
 		matSimAgents.remove(agentID);
 		agentStateList.remove(agentStateList.remove(new AgentState(agentID
@@ -112,8 +124,7 @@ final class MatsimAgentManager {
 	 * Called by MatsimModel to signal news actions from BDI side Handles two
 	 * types of changes, new actions (INITIATED) and dropped actions
 	 */
-	final void updateActions(
-			@SuppressWarnings("hiding") AgentDataContainer agentDataContainer) {
+	final void updateActions(AgentDataContainer agentDataContainer) {
 		if (agentDataContainer.isEmpty()) {
 			return;
 		}
@@ -140,8 +151,7 @@ final class MatsimAgentManager {
 	/*
 	 * Arrived at a node
 	 */
-	final void arrivedAtNode(Id<Person> agentID,
-			@SuppressWarnings("unused") Id<Link> location) {
+	final void arrivedAtNode(Id<Person> agentID, Id<Link> location) {
 		if (matSimAgents.containsKey(agentID)) {
 
 		}
@@ -183,8 +193,7 @@ final class MatsimAgentManager {
 	/*
 	 * Departed a node
 	 */
-	final void departedNode(Id<Person> agentID,
-			@SuppressWarnings("unused") Id<Link> location) {
+	final void departedNode(Id<Person> agentID, Id<Link> location) {
 		if (matSimAgents.containsKey(agentID)) {
 
 		}
@@ -217,8 +226,7 @@ final class MatsimAgentManager {
 	/*
 	 * BDI side wants to drop an action
 	 */
-	private final void dropAction(String agentID,
-			@SuppressWarnings("unused") String actionID) {
+	private final void dropAction(String agentID, String actionID) {
 		// if (matSimAgents.containsKey(new IdImpl(agentID))){
 		if (matSimAgents.containsKey(Id.createPersonId(agentID))) {
 
