@@ -25,7 +25,7 @@ package io.github.agentsoz.bdimatsim;
 import io.github.agentsoz.bdiabm.ABMServerInterface;
 import io.github.agentsoz.bdiabm.BDIServerInterface;
 import io.github.agentsoz.bdiabm.data.AgentDataContainer;
-import io.github.agentsoz.bdimatsim.app.BDIApplicationInterface;
+import io.github.agentsoz.bdimatsim.app.MATSimApplicationInterface;
 import io.github.agentsoz.bdimatsim.app.StubBDIApplication;
 import io.github.agentsoz.bdimatsim.moduleInterface.data.SimpleMessage;
 import io.github.agentsoz.dataInterface.DataServer;
@@ -87,7 +87,7 @@ public final class MATSimModel implements ABMServerInterface {
 
 	final BDIServerInterface bdiServer;
 
-	private BDIApplicationInterface bdiMATSimApplication;
+	private MATSimApplicationInterface bdiMATSimApplication;
 	
 	public final Replanner getReplanner() {
 		return agentManager.getReplanner() ;
@@ -134,7 +134,7 @@ public final class MATSimModel implements ABMServerInterface {
 		this.bdiMATSimApplication = new StubBDIApplication();
 	}
 
-	public final void registerBDIApplication(BDIApplicationInterface bdiApp) {
+	public final void registerBDIApplication(MATSimApplicationInterface bdiApp) {
 		this.bdiMATSimApplication = bdiApp;
 	}
 	

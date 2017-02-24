@@ -28,7 +28,7 @@ import io.github.agentsoz.bdiabm.data.ActionPerceptContainer;
 import io.github.agentsoz.bdiabm.data.AgentDataContainer;
 import io.github.agentsoz.bdiabm.data.AgentState;
 import io.github.agentsoz.bdiabm.data.AgentStateList;
-import io.github.agentsoz.bdimatsim.app.BDIApplicationInterface;
+import io.github.agentsoz.bdimatsim.app.MATSimApplicationInterface;
 import java.util.HashMap;
 
 import org.matsim.api.core.v01.Id;
@@ -104,7 +104,7 @@ final class MatsimAgentManager {
 	 * Register any new BDI actions and percepts provided by the application
 	 * @param app
 	 */
-	final void registerApplicationActionsPercepts(BDIApplicationInterface app) {
+	final void registerApplicationActionsPercepts(MATSimApplicationInterface app) {
 		for(Id<Person> agentId: matSimModel.getBDIAgentIDs()) {
 			MATSimAgent agent = matSimModel.getBDIAgent(agentId);
 			app.registerNewBDIActions(agent.getActionHandler());

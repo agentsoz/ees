@@ -38,7 +38,7 @@ import io.github.agentsoz.bdimatsim.MatsimPerceptHandler;
  * @author dsingh
  *
  */
-public interface BDIApplicationInterface {
+public interface MATSimApplicationInterface {
 
 	/**
 	 * Called by MATSim to allow the application to register any custom
