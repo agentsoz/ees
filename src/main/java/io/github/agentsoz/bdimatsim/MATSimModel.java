@@ -88,7 +88,7 @@ public final class MATSimModel implements ABMServerInterface {
 	final BDIServerInterface bdiServer;
 
 	private MATSimApplicationInterface plugin;
-	
+
 	public final Replanner getReplanner() {
 		return agentManager.getReplanner() ;
 	}
@@ -257,7 +257,7 @@ public final class MATSimModel implements ABMServerInterface {
 						// ===
 						
 						// passes important matsim qsim functionality to the agent manager:
-						agentManager.setUpReplanner(qSim);
+						agentManager.setUpReplanner(plugin.getReplanner(qSim), qSim);
 						// yy "qSim" is too powerful an object here. kai, mar'15
 
 						// add stub agent to keep simulation alive:
@@ -344,7 +344,7 @@ public final class MATSimModel implements ABMServerInterface {
 		return this.mobsimDataProvider.getAgents() ;
 	}
 
-	double getTime() {
+	public double getTime() {
 		return time ;
 	}
 

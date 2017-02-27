@@ -57,8 +57,12 @@ final class MatsimAgentManager {
 		this.agentDataContainer = new AgentDataContainer();
 	}
 
-	final void setUpReplanner(ActivityEndRescheduler activityEndRescheduler) {
-		this.agentReplanner = new Replanner(matSimModel, activityEndRescheduler);
+	final void setUpReplanner(Replanner replanner, ActivityEndRescheduler activityEndRescheduler) {
+		// Use default replanner if none provided
+		if (replanner == null) {
+			replanner = new Replanner(matSimModel, activityEndRescheduler);
+		}
+		this.agentReplanner = replanner;
 	}
 
 	final Replanner getReplanner() {

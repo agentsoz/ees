@@ -28,9 +28,12 @@ import java.util.Map;
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.population.Person;
 import org.matsim.core.mobsim.framework.MobsimAgent;
+import org.matsim.core.mobsim.qsim.ActivityEndRescheduler;
+import org.matsim.core.mobsim.qsim.QSim;
 
 import io.github.agentsoz.bdimatsim.MATSimActionHandler;
 import io.github.agentsoz.bdimatsim.MatsimPerceptHandler;
+import io.github.agentsoz.bdimatsim.Replanner;
 
 /**
  * Convinience interface for use by applications; provides initialisaiton hooks,
@@ -70,6 +73,14 @@ public interface MATSimApplicationInterface {
 	 * @param bdiAgents map of all BDI agents in MATSim
 	 */
 	public void notifyAfterCreatingBDICounterparts(List<Id<Person>> bdiAgentsIDs);
+
+	
+	/** 
+	 * Allows the app to use a custom {@link Replanner}
+	 * @param qSim 
+	 * @return
+	 */
+	public Replanner getReplanner(ActivityEndRescheduler activityEndRescheduler);
 
 	
 	

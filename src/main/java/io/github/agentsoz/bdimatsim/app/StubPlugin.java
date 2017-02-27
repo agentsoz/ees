@@ -28,34 +28,33 @@ import java.util.Map;
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.population.Person;
 import org.matsim.core.mobsim.framework.MobsimAgent;
+import org.matsim.core.mobsim.qsim.ActivityEndRescheduler;
 
 import io.github.agentsoz.bdimatsim.MATSimActionHandler;
 import io.github.agentsoz.bdimatsim.MatsimPerceptHandler;
+import io.github.agentsoz.bdimatsim.Replanner;
 
 public class StubPlugin implements MATSimApplicationInterface {
 
 	@Override
 	public void registerNewBDIActions(MATSimActionHandler withHandler) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void registerNewBDIPercepts(MatsimPerceptHandler withHandler) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void notifyBeforeCreatingBDICounterparts(List<Id<Person>> bdiAgentsIds) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void notifyAfterCreatingBDICounterparts(List<Id<Person>> bdiAgentsIDs) {
-		// TODO Auto-generated method stub
+	}
 
+	@Override
+	public Replanner getReplanner(ActivityEndRescheduler activityEndRescheduler) {
+		return null;
 	}
 
 }

@@ -48,14 +48,14 @@ import org.matsim.core.router.util.TravelTime;
 import org.matsim.core.router.util.TravelTimeUtils;
 import org.matsim.withinday.utils.EditRoutes;
 
-public final class Replanner {
+public class Replanner {
 
-	private MATSimModel model;
-	private TripRouter tripRouter;
+	protected MATSimModel model;
+	protected TripRouter tripRouter;
 	
-	private ActivityEndRescheduler internalInterface ;
+	protected ActivityEndRescheduler internalInterface ;
 	
-	Replanner(MATSimModel model, ActivityEndRescheduler activityEndRescheduler)
+	protected Replanner(MATSimModel model, ActivityEndRescheduler activityEndRescheduler)
 	{
 		this.model = model;
 		this.internalInterface = activityEndRescheduler ;
