@@ -32,7 +32,7 @@ import org.matsim.core.mobsim.framework.MobsimAgent;
 import io.github.agentsoz.bdimatsim.MATSimActionHandler;
 import io.github.agentsoz.bdimatsim.MatsimPerceptHandler;
 
-public class StubBDIApplication implements MATSimApplicationInterface {
+public class StubPlugin implements MATSimApplicationInterface {
 
 	@Override
 	public void registerNewBDIActions(MATSimActionHandler withHandler) {

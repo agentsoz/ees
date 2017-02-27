@@ -26,7 +26,7 @@ import io.github.agentsoz.bdiabm.ABMServerInterface;
 import io.github.agentsoz.bdiabm.BDIServerInterface;
 import io.github.agentsoz.bdiabm.data.AgentDataContainer;
 import io.github.agentsoz.bdimatsim.app.MATSimApplicationInterface;
-import io.github.agentsoz.bdimatsim.app.StubBDIApplication;
+import io.github.agentsoz.bdimatsim.app.StubPlugin;
 import io.github.agentsoz.bdimatsim.moduleInterface.data.SimpleMessage;
 import io.github.agentsoz.dataInterface.DataServer;
 
@@ -87,7 +87,7 @@ public final class MATSimModel implements ABMServerInterface {
 
 	final BDIServerInterface bdiServer;
 
-	private MATSimApplicationInterface bdiMATSimApplication;
+	private MATSimApplicationInterface plugin;
 	
 	public final Replanner getReplanner() {
 		return agentManager.getReplanner() ;
@@ -131,11 +131,11 @@ public final class MATSimModel implements ABMServerInterface {
 		this.matSimParameterManager = matsimParams ;
 		this.agentsUpdateMessages = new ArrayList<SimpleMessage>();
 		this.agentManager = new MatsimAgentManager( this ) ;
-		this.bdiMATSimApplication = new StubBDIApplication();
+		this.registerPlugin(new StubPlugin());
 	}
 
-	public final void registerBDIApplication(MATSimApplicationInterface bdiApp) {
-		this.bdiMATSimApplication = bdiApp;
+	public final void registerPlugin(MATSimApplicationInterface app) {
+		this.plugin = app;
 	}
 	
 	public final void run(String parameterFile,String[] args) {
@@ -212,7 +212,7 @@ public final class MATSimModel implements ABMServerInterface {
 									//Utils.initialiseVisualisedAgents(MATSimModel.this) ;
 
 									// Allow the application to adjust the BDI agents list prior to creating agents
-									bdiMATSimApplication.notifyBeforeCreatingBDICounterparts(MATSimModel.this.getBDIAgentIDs());
+									plugin.notifyBeforeCreatingBDICounterparts(MATSimModel.this.getBDIAgentIDs());
 									
 									for(Id<Person> agentId: MATSimModel.this.getBDIAgentIDs()) {
 										/*Important - add agent to agentManager */
@@ -221,12 +221,12 @@ public final class MATSimModel implements ABMServerInterface {
 									}
 									
 									// Allow the application to configure the freshly baked agents
-									bdiMATSimApplication.notifyAfterCreatingBDICounterparts(MATSimModel.this.getBDIAgentIDs());
+									plugin.notifyAfterCreatingBDICounterparts(MATSimModel.this.getBDIAgentIDs());
 									
 									// Register new BDI actions and percepts from the application
 									// Must be done after the agents have been created since new 
 									// actions/percepts are registered with each BDI agent
-									MATSimModel.this.getAgentManager().registerApplicationActionsPercepts(bdiMATSimApplication);
+									MATSimModel.this.getAgentManager().registerApplicationActionsPercepts(plugin);
 									
 									// Flag that setup is done
 									setupFlag = false;
