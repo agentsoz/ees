@@ -112,7 +112,7 @@ public class MATSimAgent {
 		driveToActions.clear();
 	}
 
-	final void clearPassedDriveToActions() {
+	public final void clearPassedDriveToActions() {
 		passedDriveToActions.clear();
 	}
 

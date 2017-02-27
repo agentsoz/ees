@@ -340,7 +340,7 @@ public final class MATSimModel implements ABMServerInterface {
 		return this.agentManager.getAgent( agentID ) ;
 	}
 
-	final Map<Id<Person>, MobsimAgent> getMobsimAgentMap() {
+	public final Map<Id<Person>, MobsimAgent> getMobsimAgentMap() {
 		return this.mobsimDataProvider.getAgents() ;
 	}
 
