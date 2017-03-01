@@ -89,6 +89,8 @@ public final class MATSimModel implements ABMServerInterface {
 
 	private MATSimApplicationInterface plugin;
 
+	private AgentActivityEventHandler eventsHandler;
+
 	public final Replanner getReplanner() {
 		return agentManager.getReplanner() ;
 	}
@@ -186,7 +188,8 @@ public final class MATSimModel implements ABMServerInterface {
 		final Controler controller = new Controler( scenario );
 
 		final EventsManager eventsManager = controller.getEvents();
-		eventsManager.addHandler(new AgentActivityEventHandler(MATSimModel.this));
+		eventsHandler = new AgentActivityEventHandler(MATSimModel.this);
+		eventsManager.addHandler(eventsHandler);
 
 		// having anonymous classes stuck into each other is not very pleasing to read, but it makes for short code and
 		// avoids going overboard with passing object references around. kai, mar'15  & may'15
@@ -346,6 +349,10 @@ public final class MATSimModel implements ABMServerInterface {
 
 	public double getTime() {
 		return time ;
+	}
+
+	AgentActivityEventHandler getEventHandler() {
+		return eventsHandler;
 	}
 
 }

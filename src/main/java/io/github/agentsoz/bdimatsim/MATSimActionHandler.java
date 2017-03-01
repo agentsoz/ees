@@ -26,10 +26,14 @@ import java.util.HashMap;
 
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.network.Link;
+import org.matsim.api.core.v01.population.Person;
 import org.matsim.core.network.NetworkImpl;
 import org.matsim.core.utils.geometry.CoordImpl;
 
+import io.github.agentsoz.bdiabm.data.ActionContent;
+import io.github.agentsoz.bdimatsim.AgentActivityEventHandler.MonitoredEventType;
 import io.github.agentsoz.bdimatsim.app.BDIActionHandler;
+import io.github.agentsoz.bdimatsim.app.BDIPerceptHandler;
 
 /**
  * @author Edmund Kemsley Processes action/s from MatsimActionList by updating
@@ -71,12 +75,22 @@ public final class MATSimActionHandler {
 				model.getReplanner().attachNewActivityAtEndOfPlan(newLinkId,
 						Id.createPersonId(agentID));
 
-				// Saving actionValue (which for DRIVETO actions is the link id)
-				// We use this again in the AgentActivityEventHandler, to check
-				// if the agent has arrived at this link, at which point we can
-				// mark this BDI-action as PASSED
+				// Now register a event handler for when the agent arrives at the destination
 				MATSimAgent agent = model.getBDIAgent(agentID);
-				agent.newDriveTo(newLinkId);
+				agent.getPerceptHandler().registerBDIPerceptHandler(
+						agent.getAgentID(), 
+						MonitoredEventType.ArrivedAtDestination, 
+						newLinkId,
+						new BDIPerceptHandler() {
+							@Override
+							public void handle(Id<Person> agentId, Id<Link> linkId, MonitoredEventType monitoredEvent, MATSimModel model) {
+								MATSimAgent agent = model.getBDIAgent(agentId);
+								Object[] params = { linkId.toString() };
+								agent.getActionContainer().register(MATSimActionList.DRIVETO, params);
+								agent.getActionContainer().get(MATSimActionList.DRIVETO).setState(ActionContent.State.PASSED);
+								agent.getPerceptContainer().put(MatsimPerceptList.ARRIVED, params);
+							}
+						});
 				return true;
 			}
 		});
@@ -101,7 +115,8 @@ public final class MATSimActionHandler {
 	}
 
 	/**
-	 * Process BDI actions
+	 * Process incoming BDI actions by for this MATSim agent, by calling its
+	 * registered {@link BDIActionHandler}.
 	 * 
 	 * @param agentID
 	 *            ID of the agent
@@ -112,13 +127,6 @@ public final class MATSimActionHandler {
 	 * @return
 	 */
 	final boolean processAction(String agentID, String actionID, Object[] parameters) {
-		String actionType = (String) parameters[0];
-
-		if (!actionType.equals(actionID)) {
-			throw new RuntimeException(
-					"actionType and actionID are not identical; not clear what that means; aborting");
-		}
-
 		for (String action : registeredActions.keySet()) {
 			if (actionID.equals(action)) {
 				return registeredActions.get(actionID).handle(agentID, actionID, parameters, matSimModel);

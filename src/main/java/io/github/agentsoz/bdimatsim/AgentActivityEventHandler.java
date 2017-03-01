@@ -1,5 +1,7 @@
 package io.github.agentsoz.bdimatsim;
 
+import io.github.agentsoz.bdimatsim.app.BDIPerceptHandler;
+
 /*
  * #%L
  * BDI-ABM Integration Package
@@ -22,31 +24,46 @@ package io.github.agentsoz.bdimatsim;
  * #L%
  */
 
-import io.github.agentsoz.bdimatsim.moduleInterface.data.SimpleMessage;
+import java.util.ArrayList;
 
+import org.matsim.api.core.v01.Id;
+import org.matsim.api.core.v01.events.Event;
 import org.matsim.api.core.v01.events.LinkEnterEvent;
+import org.matsim.api.core.v01.events.LinkLeaveEvent;
 import org.matsim.api.core.v01.events.PersonArrivalEvent;
 import org.matsim.api.core.v01.events.PersonDepartureEvent;
 import org.matsim.api.core.v01.events.handler.LinkEnterEventHandler;
+import org.matsim.api.core.v01.events.handler.LinkLeaveEventHandler;
 import org.matsim.api.core.v01.events.handler.PersonArrivalEventHandler;
 import org.matsim.api.core.v01.events.handler.PersonDepartureEventHandler;
 import org.matsim.api.core.v01.network.Link;
-import org.matsim.api.core.v01.network.Network;
-import org.matsim.core.mobsim.framework.MobsimAgent;
+import org.matsim.api.core.v01.population.Person;
 
 /**
  * @author Edmund Kemsley Acts as a simple listener for Matsim agent events then
  *         passes to MatsimAgentManager
  */
 
-final class AgentActivityEventHandler implements LinkEnterEventHandler,
-		PersonArrivalEventHandler, PersonDepartureEventHandler {
+public final class AgentActivityEventHandler implements 
+LinkEnterEventHandler,
+LinkLeaveEventHandler,
+PersonArrivalEventHandler, 
+PersonDepartureEventHandler {
 
 	private MATSimModel model;
-	private Network network;
+
+	public enum MonitoredEventType {
+		EnteredNode,
+		ExitedNode,
+		ArrivedAtDestination,
+		DepartedDestination;
+	};
+	
+	private ArrayList<Monitor> monitors;
 
 	AgentActivityEventHandler(MATSimModel model) {
 		this.model = model;
+		monitors = new ArrayList<Monitor>();
 	}
 
 	@Override
@@ -56,51 +73,112 @@ final class AgentActivityEventHandler implements LinkEnterEventHandler,
 
 	@Override
 	public final void handleEvent(LinkEnterEvent event) {
-		if (network == null) {
-			network = model.getScenario().getNetwork();
-		}
+		callRegisteredHandlers(event);
+	}
 
-		// Update Visualiser
-		SimpleMessage message = new SimpleMessage();
-		message.name = "updateAgent";
-		MobsimAgent agent = model.getMobsimAgentMap().get(event.getPersonId());
-		// Sends message to visualiser containing agent ID and what lat and long
-		// to head to next
-		message.params = new String[] {
-				agent.getId().toString(),
-				String.valueOf(((Link) network.getLinks()
-						.get(event.getLinkId())).getToNode().getCoord().getX()),
-				String.valueOf(((Link) network.getLinks()
-						.get(event.getLinkId())).getToNode().getCoord().getY()),
-				String.valueOf(network.getLinks().get(event.getLinkId())
-						.getFreespeed()) };
-		model.addExternalEvent("moveAgent", message);
+	@Override
+	public void handleEvent(LinkLeaveEvent event) {
+		callRegisteredHandlers(event);
 	}
 
 	@Override
 	public final void handleEvent(PersonDepartureEvent event) {
-		model.getAgentManager().departedNode(event.getPersonId(),
-				event.getLinkId());
+		callRegisteredHandlers(event);
 	}
 
 	@Override
 	public final void handleEvent(PersonArrivalEvent event) {
-		model.getAgentManager().arrivedAtDest(event.getPersonId(),
-				event.getLinkId());
-
-		// Previously commented out code.
-		/*
-		 * Map<Id, PlanBasedWithinDayAgent> mapping= ((BDIMATSimWithinDayEngine)
-		 * withinDayEngine
-		 * ).getControlerListener().getActivityReplanningMap().getPersonAgentMapping
-		 * (); Map<Id, MobsimAgent> mapping= model.getAgentMap(); MobsimAgent a
-		 * = mapping.get(event.getPersonId()); if(a instanceof
-		 * MATSimReplannableAgent){ MATSimReplannableAgent agent =
-		 * (MATSimReplannableAgent) a; if(agent.getState()==State.LEG) {
-		 * //log.info("reset its links");
-		 * 
-		 * BDIMATSimWithinDayEngine.allCachedLinkedIds.put(event.getPersonId(),
-		 * null); } }
-		 */
+		callRegisteredHandlers(event);
 	}
+	
+	private void callRegisteredHandlers(Event ev) {
+		for (Monitor monitor : monitors) {
+			switch (monitor.getEvent()) {
+			case EnteredNode:
+				if (ev instanceof LinkEnterEvent) {
+					LinkEnterEvent event = (LinkEnterEvent)ev;
+					if (monitor.getAgentId() == event.getPersonId() && monitor.getLinkId() == event.getLinkId()) {
+						monitor.getHandler().handle(monitor.getAgentId(), monitor.getLinkId(), monitor.getEvent(), model);
+					}
+				}
+				break;
+			case ExitedNode:
+				if (ev instanceof LinkLeaveEvent) {
+					LinkLeaveEvent event = (LinkLeaveEvent)ev;
+					if (monitor.getAgentId() == event.getPersonId() && monitor.getLinkId() == event.getLinkId()) {
+						monitor.getHandler().handle(monitor.getAgentId(), monitor.getLinkId(), monitor.getEvent(), model);
+					}
+				}
+				break;
+			case ArrivedAtDestination:
+				if (ev instanceof PersonArrivalEvent) {
+					PersonArrivalEvent event = (PersonArrivalEvent)ev;
+					if (monitor.getAgentId() == event.getPersonId() && monitor.getLinkId() == event.getLinkId()) {
+						monitor.getHandler().handle(monitor.getAgentId(), monitor.getLinkId(), monitor.getEvent(), model);
+					}
+				} 
+				break;
+			case DepartedDestination:
+				if (ev instanceof PersonDepartureEvent) {
+					PersonDepartureEvent event = (PersonDepartureEvent)ev;
+					if (monitor.getAgentId() == event.getPersonId() && monitor.getLinkId() == event.getLinkId()) {
+						monitor.getHandler().handle(monitor.getAgentId(), monitor.getLinkId(), monitor.getEvent(), model);
+					}
+				}
+				break;
+			}
+		}
+	}
+	
+	/**
+	 * For a given agent, registers a {@link BDIPerceptHandler} to be called 
+	 * whenever an event of type {@link MonitoredEventType} is triggered
+	 * for {@code linkId}. 
+	 * @param agentId
+	 * @param linkId
+	 * @param event
+	 * @param handler
+	 * @return
+	 */
+	int registerMonitor(Id<Person> agentId, MonitoredEventType event,Id<Link> linkId, BDIPerceptHandler handler) {
+		synchronized (monitors) {
+			monitors.add(new Monitor(agentId, linkId, event, handler));
+			return monitors.size();
+		}
+	}
+
+	/**
+	 * Internal structure used to store information about MATSim events to monitor
+	 * @author dsingh
+	 *
+	 */
+	private class Monitor {
+
+		private Id<Person> agentId;
+		private Id<Link> linkId;
+		private MonitoredEventType event;
+		private BDIPerceptHandler handler;
+		
+		public Monitor(Id<Person> agentId, Id<Link> linkId, MonitoredEventType event, BDIPerceptHandler handler) {
+			super();
+			this.agentId = agentId;
+			this.linkId = linkId;
+			this.event = event;
+			this.handler = handler;
+		}
+		
+		public Id<Person> getAgentId() {
+			return agentId;
+		}
+		public Id<Link> getLinkId() {
+			return linkId;
+		}
+		public MonitoredEventType getEvent() {
+			return event;
+		}
+		public BDIPerceptHandler getHandler() {
+			return handler;
+		}
+	}
+
 }

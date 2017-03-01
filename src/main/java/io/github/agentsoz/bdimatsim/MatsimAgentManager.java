@@ -32,7 +32,6 @@ import io.github.agentsoz.bdimatsim.app.MATSimApplicationInterface;
 import java.util.HashMap;
 
 import org.matsim.api.core.v01.Id;
-import org.matsim.api.core.v01.network.Link;
 import org.matsim.api.core.v01.population.Person;
 import org.matsim.core.mobsim.qsim.ActivityEndRescheduler;
 
@@ -95,8 +94,9 @@ final class MatsimAgentManager {
 		ActionPerceptContainer agentContainer = agentDataContainer
 				.getOrCreate(agentID.toString());
 		MATSimAgent agent = new MATSimAgent(
-				new MATSimActionHandler(matSimModel), new MatsimPerceptHandler(
-						matSimModel), agentID,
+				new MATSimActionHandler(matSimModel), 
+				new MatsimPerceptHandler(matSimModel), 
+				agentID,
 				agentContainer.getActionContainer(),
 				agentContainer.getPerceptContainer());
 		matSimAgents.put(agentID, agent);
@@ -153,57 +153,6 @@ final class MatsimAgentManager {
 	}
 
 	/*
-	 * Arrived at a node
-	 */
-	final void arrivedAtNode(Id<Person> agentID, Id<Link> location) {
-		if (matSimAgents.containsKey(agentID)) {
-
-		}
-	}
-
-	/*
-	 * Arrived at destination in Matsim Check location with MatsimAgent, update
-	 * ActionContent (agentDataContainer) then add to PerceptContainer
-	 */
-	final void arrivedAtDest(Id<Person> agentID, Id<Link> location) {
-		if (matSimAgents.containsKey(agentID)) {
-			MATSimAgent agent = matSimAgents.get(agentID);
-			Id<Link> action = agent.arrivedAtDriveTo(location);
-
-			// If you want to process the arriveAtDest event in different
-			// manners for different agent types, use the agent.agentType field
-			// provided by MatsimAgent class.
-			// eg:
-			// if(agent.agentType == "Taxi"){
-			// 		process ArrivedAtDest event for Taxi agents
-			// }
-
-			if (!action.equals(Id.createLinkId(0))) {
-				Object[] params = { action.toString() };
-				agent.getActionContainer().register(MATSimActionList.DRIVETO,
-						params);
-				agent.getActionContainer().get(MATSimActionList.DRIVETO)
-						.setState(ActionContent.State.PASSED);
-				agent.getPerceptContainer().put(
-						MatsimPerceptList.ARRIVED,
-						agent.getPerceptHandler().processPercept(
-								agentID.toString(), MatsimPerceptList.ARRIVED));
-			} else {
-				// didn't find the action
-			}
-		}
-	}
-
-	/*
-	 * Departed a node
-	 */
-	final void departedNode(Id<Person> agentID, Id<Link> location) {
-		if (matSimAgents.containsKey(agentID)) {
-
-		}
-	}
-
-	/*
 	 * BDI side passed an action with state INITIATED Pass action parameters to
 	 * ActionHandler then update action to RUNNING
 	 */
@@ -240,7 +189,7 @@ final class MatsimAgentManager {
 	/*
 	 * BDI side requesting location of agent
 	 */
-	final Object[] getLocation(String agentID, String perceptID) {
+	private final Object[] getLocation(String agentID, String perceptID) {
 		// if (matSimAgents.containsKey(new IdImpl(agentID))){
 		if (matSimAgents.containsKey(Id.createPersonId(agentID))) {
 			MATSimAgent agent = getAgent(agentID);

@@ -1,5 +1,12 @@
 package io.github.agentsoz.bdimatsim.app;
 
+import org.matsim.api.core.v01.Id;
+import org.matsim.api.core.v01.events.LinkEnterEvent;
+import org.matsim.api.core.v01.network.Link;
+import org.matsim.api.core.v01.population.Person;
+
+import io.github.agentsoz.bdimatsim.AgentActivityEventHandler.MonitoredEventType;
+
 /*
  * #%L
  * BDI-ABM Integration Package
@@ -26,6 +33,6 @@ import io.github.agentsoz.bdimatsim.MATSimModel;
 
 public interface BDIPerceptHandler {
 
-	public Object[] process(String agentID, String perceptID, MATSimModel model); 
+	public void handle(Id<Person> agentId, Id<Link> linkId, MonitoredEventType monitoredEvent, MATSimModel model); 
 
 }
