@@ -50,11 +50,11 @@ public class MATSimAgent {
 	private ActionContainer actionContainer;
 	private PerceptContainer perceptContainer;
 
-	final Id<Person> getAgentID() {
+	public final Id<Person> getAgentID() {
 		return agentID;
 	}
 
-	final MatsimPerceptHandler getPerceptHandler() {
+	public final MatsimPerceptHandler getPerceptHandler() {
 		return perceptHandler;
 	}
 
@@ -66,11 +66,11 @@ public class MATSimAgent {
 		return passedDriveToActions;
 	}
 
-	final ActionContainer getActionContainer() {
+	public final ActionContainer getActionContainer() {
 		return this.actionContainer;
 	}
 
-	final PerceptContainer getPerceptContainer() {
+	public final PerceptContainer getPerceptContainer() {
 		return this.perceptContainer;
 	}
 

@@ -33,6 +33,18 @@ import io.github.agentsoz.bdimatsim.MATSimModel;
 
 public interface BDIPerceptHandler {
 
-	public void handle(Id<Person> agentId, Id<Link> linkId, MonitoredEventType monitoredEvent, MATSimModel model); 
+	/**
+	 * Handles the given {@link MonitoredEventType}.
+	 * <p>
+	 * Returning true will cause this handler to be removed (seful for handling
+	 * some event once). Returning false will keep this handler registered such
+	 * that it gets called again on subsequent events that match. 
+	 * @param agentId
+	 * @param linkId
+	 * @param monitoredEvent
+	 * @param model
+	 * @return
+	 */
+	public boolean handle(Id<Person> agentId, Id<Link> linkId, MonitoredEventType monitoredEvent, MATSimModel model); 
 
 }

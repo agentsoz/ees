@@ -83,12 +83,13 @@ public final class MATSimActionHandler {
 						newLinkId,
 						new BDIPerceptHandler() {
 							@Override
-							public void handle(Id<Person> agentId, Id<Link> linkId, MonitoredEventType monitoredEvent, MATSimModel model) {
+							public boolean handle(Id<Person> agentId, Id<Link> linkId, MonitoredEventType monitoredEvent, MATSimModel model) {
 								MATSimAgent agent = model.getBDIAgent(agentId);
 								Object[] params = { linkId.toString() };
 								agent.getActionContainer().register(MATSimActionList.DRIVETO, params);
 								agent.getActionContainer().get(MATSimActionList.DRIVETO).setState(ActionContent.State.PASSED);
 								agent.getPerceptContainer().put(MatsimPerceptList.ARRIVED, params);
+								return true;
 							}
 						});
 				return true;

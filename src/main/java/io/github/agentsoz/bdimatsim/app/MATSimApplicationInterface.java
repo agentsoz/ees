@@ -77,6 +77,10 @@ public interface MATSimApplicationInterface {
 	
 	/** 
 	 * Allows the app to use a custom {@link Replanner}
+	 * <p>
+	 * <i>TODO: This is not ideal. Here we just allow the default Replanner 
+	 * to be extended by the application. Instead it should be an interface
+	 * (Dhi Mar17) </i>
 	 * @param qSim 
 	 * @return
 	 */

@@ -27,11 +27,13 @@ import io.github.agentsoz.bdimatsim.app.BDIPerceptHandler;
 import java.util.ArrayList;
 
 import org.matsim.api.core.v01.Id;
+import org.matsim.api.core.v01.events.ActivityEndEvent;
 import org.matsim.api.core.v01.events.Event;
 import org.matsim.api.core.v01.events.LinkEnterEvent;
 import org.matsim.api.core.v01.events.LinkLeaveEvent;
 import org.matsim.api.core.v01.events.PersonArrivalEvent;
 import org.matsim.api.core.v01.events.PersonDepartureEvent;
+import org.matsim.api.core.v01.events.handler.ActivityEndEventHandler;
 import org.matsim.api.core.v01.events.handler.LinkEnterEventHandler;
 import org.matsim.api.core.v01.events.handler.LinkLeaveEventHandler;
 import org.matsim.api.core.v01.events.handler.PersonArrivalEventHandler;
@@ -48,7 +50,8 @@ public final class AgentActivityEventHandler implements
 LinkEnterEventHandler,
 LinkLeaveEventHandler,
 PersonArrivalEventHandler, 
-PersonDepartureEventHandler {
+PersonDepartureEventHandler,
+ActivityEndEventHandler{
 
 	private MATSimModel model;
 
@@ -56,7 +59,8 @@ PersonDepartureEventHandler {
 		EnteredNode,
 		ExitedNode,
 		ArrivedAtDestination,
-		DepartedDestination;
+		DepartedDestination,
+		EndedActivity;
 	};
 	
 	private ArrayList<Monitor> monitors;
@@ -91,14 +95,24 @@ PersonDepartureEventHandler {
 		callRegisteredHandlers(event);
 	}
 	
+	@Override
+	public void handleEvent(ActivityEndEvent event) {
+		callRegisteredHandlers(event);
+	}
+
+
+	
 	private void callRegisteredHandlers(Event ev) {
+		ArrayList<Monitor> toRemove = new ArrayList<Monitor>();
 		for (Monitor monitor : monitors) {
 			switch (monitor.getEvent()) {
 			case EnteredNode:
 				if (ev instanceof LinkEnterEvent) {
 					LinkEnterEvent event = (LinkEnterEvent)ev;
 					if (monitor.getAgentId() == event.getPersonId() && monitor.getLinkId() == event.getLinkId()) {
-						monitor.getHandler().handle(monitor.getAgentId(), monitor.getLinkId(), monitor.getEvent(), model);
+						if(monitor.getHandler().handle(monitor.getAgentId(), monitor.getLinkId(), monitor.getEvent(), model)) {
+							toRemove.add(monitor);
+						}
 					}
 				}
 				break;
@@ -106,7 +120,9 @@ PersonDepartureEventHandler {
 				if (ev instanceof LinkLeaveEvent) {
 					LinkLeaveEvent event = (LinkLeaveEvent)ev;
 					if (monitor.getAgentId() == event.getPersonId() && monitor.getLinkId() == event.getLinkId()) {
-						monitor.getHandler().handle(monitor.getAgentId(), monitor.getLinkId(), monitor.getEvent(), model);
+						if(monitor.getHandler().handle(monitor.getAgentId(), monitor.getLinkId(), monitor.getEvent(), model)) {
+							toRemove.add(monitor);
+						}
 					}
 				}
 				break;
@@ -114,7 +130,9 @@ PersonDepartureEventHandler {
 				if (ev instanceof PersonArrivalEvent) {
 					PersonArrivalEvent event = (PersonArrivalEvent)ev;
 					if (monitor.getAgentId() == event.getPersonId() && monitor.getLinkId() == event.getLinkId()) {
-						monitor.getHandler().handle(monitor.getAgentId(), monitor.getLinkId(), monitor.getEvent(), model);
+						if(monitor.getHandler().handle(monitor.getAgentId(), monitor.getLinkId(), monitor.getEvent(), model)) {
+							toRemove.add(monitor);
+						}
 					}
 				} 
 				break;
@@ -122,11 +140,26 @@ PersonDepartureEventHandler {
 				if (ev instanceof PersonDepartureEvent) {
 					PersonDepartureEvent event = (PersonDepartureEvent)ev;
 					if (monitor.getAgentId() == event.getPersonId() && monitor.getLinkId() == event.getLinkId()) {
-						monitor.getHandler().handle(monitor.getAgentId(), monitor.getLinkId(), monitor.getEvent(), model);
+						if (monitor.getHandler().handle(monitor.getAgentId(), monitor.getLinkId(), monitor.getEvent(), model)) {
+							toRemove.add(monitor);
+						}
+					}
+				}
+				break;
+			case EndedActivity:
+				if (ev instanceof ActivityEndEvent) {
+					ActivityEndEvent event = (ActivityEndEvent)ev;
+					if (monitor.getAgentId() == event.getPersonId() && monitor.getLinkId() == event.getLinkId()) {
+						if (monitor.getHandler().handle(monitor.getAgentId(), monitor.getLinkId(), monitor.getEvent(), model)) {
+							toRemove.add(monitor);
+						}
 					}
 				}
 				break;
 			}
+		}
+		for (Monitor monitor : toRemove) {
+			monitors.remove(monitor);
 		}
 	}
 	
@@ -180,5 +213,4 @@ PersonDepartureEventHandler {
 			return handler;
 		}
 	}
-
 }
