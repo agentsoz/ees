@@ -1,2 +1,5 @@
 /target
-src/main/resources/scenarios/**/*.log
+/output
+/*.log
+/*.out
+/*.txt
