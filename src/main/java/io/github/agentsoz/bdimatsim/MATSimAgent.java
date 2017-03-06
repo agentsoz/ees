@@ -39,7 +39,7 @@ import org.matsim.api.core.v01.population.Person;
  */
 
 public class MATSimAgent {
-	private MatsimPerceptHandler perceptHandler;
+	private MATSimPerceptHandler perceptHandler;
 	private MATSimActionHandler actionHandler;
 	private Id<Person> agentID;
 	private String agentType;
@@ -54,7 +54,7 @@ public class MATSimAgent {
 		return agentID;
 	}
 
-	public final MatsimPerceptHandler getPerceptHandler() {
+	public final MATSimPerceptHandler getPerceptHandler() {
 		return perceptHandler;
 	}
 
@@ -78,7 +78,7 @@ public class MATSimAgent {
 		this.perceptContainer = perceptContainer;
 	}
 
-	final void setPerceptHandler(MatsimPerceptHandler perceptHandler) {
+	final void setPerceptHandler(MATSimPerceptHandler perceptHandler) {
 		this.perceptHandler = perceptHandler;
 	}
 
@@ -88,7 +88,7 @@ public class MATSimAgent {
 	}
 
 	MATSimAgent(MATSimActionHandler actionHandler,
-			MatsimPerceptHandler perceptHandler, Id<Person> agentID,
+			MATSimPerceptHandler perceptHandler, Id<Person> agentID,
 			ActionContainer actionContainer, PerceptContainer perceptContainer) {
 		this.perceptHandler = perceptHandler;
 		this.actionHandler = actionHandler;

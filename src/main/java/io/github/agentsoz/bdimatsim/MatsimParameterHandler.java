@@ -31,7 +31,7 @@ import java.util.StringTokenizer;
  * This class handles the config file that is passed as the first argument
  * and saves the information to be accessed by matSimModel and the AgentManager
  */
-
+@Deprecated
 public class MatsimParameterHandler{
 	private static String [] NETWORKIDS;
 	public static double DISTANCE_THREDSHOLD;

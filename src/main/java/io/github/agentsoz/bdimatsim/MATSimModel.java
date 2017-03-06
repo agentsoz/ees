@@ -82,7 +82,7 @@ public final class MATSimModel implements ABMServerInterface {
 	private double time;
 
 	private final MatsimParameterHandler matSimParameterManager;
-	private MatsimAgentManager agentManager ;
+	private MATSimAgentManager agentManager ;
 	private MobsimDataProvider mobsimDataProvider = new MobsimDataProvider() ;
 
 	final BDIServerInterface bdiServer;
@@ -95,7 +95,7 @@ public final class MATSimModel implements ABMServerInterface {
 		return agentManager.getReplanner() ;
 	}
 
-	final MatsimAgentManager getAgentManager() {
+	final MATSimAgentManager getAgentManager() {
 		return agentManager;
 	}
 	@Override
@@ -132,7 +132,7 @@ public final class MATSimModel implements ABMServerInterface {
 		this.bdiServer = bidServer ;
 		this.matSimParameterManager = matsimParams ;
 		this.agentsUpdateMessages = new ArrayList<SimpleMessage>();
-		this.agentManager = new MatsimAgentManager( this ) ;
+		this.agentManager = new MATSimAgentManager( this ) ;
 		this.registerPlugin(new StubPlugin());
 	}
 

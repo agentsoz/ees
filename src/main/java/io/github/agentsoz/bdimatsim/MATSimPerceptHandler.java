@@ -32,7 +32,7 @@ import io.github.agentsoz.bdimatsim.app.BDIPerceptHandler;
  * @author Edmund Kemsley, Dhirendra Singh
  */
 
-public final class MatsimPerceptHandler {
+public final class MATSimPerceptHandler {
 
 	private final AgentActivityEventHandler eventHandler;
 
@@ -41,7 +41,7 @@ public final class MatsimPerceptHandler {
 	 * 
 	 * @param matSimModel
 	 */
-	protected MatsimPerceptHandler(final MATSimModel matSimModel) {
+	protected MATSimPerceptHandler(final MATSimModel matSimModel) {
 		this.eventHandler = matSimModel.getEventHandler();
 	}
 
@@ -65,7 +65,7 @@ public final class MatsimPerceptHandler {
 	 * @param agentIDg
 	 *            ID of the agent
 	 * @param perceptID
-	 *            Percept IDs are defined in {@link MatsimPerceptList}. eg:
+	 *            Percept IDs are defined in {@link MATSimPerceptList}. eg:
 	 *            ARRIVED, REQUESTLOCATION.
 	 * @return The response
 	 */

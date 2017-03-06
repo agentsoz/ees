@@ -88,7 +88,7 @@ public final class MATSimActionHandler {
 								Object[] params = { linkId.toString() };
 								agent.getActionContainer().register(MATSimActionList.DRIVETO, params);
 								agent.getActionContainer().get(MATSimActionList.DRIVETO).setState(ActionContent.State.PASSED);
-								agent.getPerceptContainer().put(MatsimPerceptList.ARRIVED, params);
+								agent.getPerceptContainer().put(MATSimPerceptList.ARRIVED, params);
 								return true;
 							}
 						});

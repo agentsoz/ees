@@ -26,7 +26,7 @@ package io.github.agentsoz.bdimatsim;
  * The list of percepts that can be processed on Matsim level
  */
 
-public final class MatsimPerceptList {
+public final class MATSimPerceptList {
 	public static final String ARRIVED = "Arrived";
 	public static final String REQUESTLOCATION = "Request Location";
 }

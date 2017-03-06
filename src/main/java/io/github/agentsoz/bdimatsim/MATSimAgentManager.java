@@ -41,14 +41,14 @@ import org.matsim.core.mobsim.qsim.ActivityEndRescheduler;
  *         MatsimAgents and extension of Matsim Agents are stored in
  *         matSimAgents Hashmap
  */
-final class MatsimAgentManager {
+final class MATSimAgentManager {
 	private AgentStateList agentStateList;
 	private HashMap<Id<Person>, MATSimAgent> matSimAgents;
 	private MATSimModel matSimModel;
 	private AgentDataContainer agentDataContainer;
 	private Replanner agentReplanner;
 
-	MatsimAgentManager(MATSimModel model) {
+	MATSimAgentManager(MATSimModel model) {
 		this.matSimModel = model;
 
 		matSimAgents = new HashMap<Id<Person>, MATSimAgent>();
@@ -95,7 +95,7 @@ final class MatsimAgentManager {
 				.getOrCreate(agentID.toString());
 		MATSimAgent agent = new MATSimAgent(
 				new MATSimActionHandler(matSimModel), 
-				new MatsimPerceptHandler(matSimModel), 
+				new MATSimPerceptHandler(matSimModel), 
 				agentID,
 				agentContainer.getActionContainer(),
 				agentContainer.getPerceptContainer());

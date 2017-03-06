@@ -27,7 +27,7 @@ import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.population.Person;
 import org.matsim.core.mobsim.qsim.ActivityEndRescheduler;
 import io.github.agentsoz.bdimatsim.MATSimActionHandler;
-import io.github.agentsoz.bdimatsim.MatsimPerceptHandler;
+import io.github.agentsoz.bdimatsim.MATSimPerceptHandler;
 import io.github.agentsoz.bdimatsim.Replanner;
 
 /**
@@ -49,10 +49,10 @@ public interface MATSimApplicationInterface {
 	/**
 	 * Called by MATSim to allow the application to register any custom
 	 * BDI percepts, using 
-	 * {@link MatsimPerceptHandler#registerBDIPercepts(String, BDIPerceptHandler)}.
+	 * {@link MATSimPerceptHandler#registerBDIPercepts(String, BDIPerceptHandler)}.
 	 * @param withHandler
 	 */
-	public void registerNewBDIPercepts(MatsimPerceptHandler withHandler);
+	public void registerNewBDIPercepts(MATSimPerceptHandler withHandler);
 	
 	/**
 	 * Called by MATSim prior to BDI agents being created and registered;

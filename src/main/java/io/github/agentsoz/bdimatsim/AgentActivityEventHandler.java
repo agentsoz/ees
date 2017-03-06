@@ -43,7 +43,7 @@ import org.matsim.api.core.v01.population.Person;
 
 /**
  * @author Edmund Kemsley Acts as a simple listener for Matsim agent events then
- *         passes to MatsimAgentManager
+ *         passes to MATSimAgentManager
  */
 
 public final class AgentActivityEventHandler implements 
