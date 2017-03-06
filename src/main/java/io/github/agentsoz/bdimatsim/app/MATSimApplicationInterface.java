@@ -23,14 +23,9 @@ package io.github.agentsoz.bdimatsim.app;
  */
 
 import java.util.List;
-import java.util.Map;
-
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.population.Person;
-import org.matsim.core.mobsim.framework.MobsimAgent;
 import org.matsim.core.mobsim.qsim.ActivityEndRescheduler;
-import org.matsim.core.mobsim.qsim.QSim;
-
 import io.github.agentsoz.bdimatsim.MATSimActionHandler;
 import io.github.agentsoz.bdimatsim.MatsimPerceptHandler;
 import io.github.agentsoz.bdimatsim.Replanner;

@@ -207,7 +207,7 @@ public final class MATSimModel implements ABMServerInterface {
 							 * The most important method - called each time step during the iteration
 							 */		
 							@Override
-							public void notifyMobsimBeforeSimStep(MobsimBeforeSimStepEvent e) {
+							public void notifyMobsimBeforeSimStep(@SuppressWarnings("rawtypes") MobsimBeforeSimStepEvent e) {
 								MATSimModel.this.setTime(e.getSimulationTime());
 								if(setupFlag) {
 									// should be possible to do the initialization in some other way ...

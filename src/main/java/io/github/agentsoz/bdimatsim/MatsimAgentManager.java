@@ -185,17 +185,4 @@ final class MatsimAgentManager {
 
 		}
 	}
-
-	/*
-	 * BDI side requesting location of agent
-	 */
-	private final Object[] getLocation(String agentID, String perceptID) {
-		// if (matSimAgents.containsKey(new IdImpl(agentID))){
-		if (matSimAgents.containsKey(Id.createPersonId(agentID))) {
-			MATSimAgent agent = getAgent(agentID);
-			return agent.getPerceptHandler().processPercept(agentID, perceptID);
-		} else {
-			return null;
-		}
-	}
 }

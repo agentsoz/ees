@@ -71,7 +71,7 @@ public class Replanner {
 		tripRouter = factory.instantiateAndConfigureTripRouter(routingContext);
 	}
 	
-	final void reRouteCurrentLeg( MobsimAgent agent, double time ) {
+	protected void reRouteCurrentLeg( MobsimAgent agent, double time ) {
 		Plan plan = WithinDayAgentUtils.getModifiablePlan(agent) ;
 		PlanElement pe = plan.getPlanElements().get( WithinDayAgentUtils.getCurrentPlanElementIndex(agent)) ;
 		if ( !(pe instanceof Leg) ) {
@@ -84,7 +84,7 @@ public class Replanner {
 		WithinDayAgentUtils.resetCaches(agent);
 	}
 
-	final void attachNewActivityAtEndOfPlan(Id<Link> newActivityLinkId, Id<Person> agentId )
+	protected void attachNewActivityAtEndOfPlan(Id<Link> newActivityLinkId, Id<Person> agentId )
 	{
 		// yyyy if the current activity is not already the last activity of the agent, this method may not behave as expected. kai, feb'14
 		
@@ -135,7 +135,7 @@ public class Replanner {
 		
 	}
 	
-	final boolean removeActivities(Id<Person> agentId)
+	protected boolean removeActivities(Id<Person> agentId)
 	{
 		Map<Id<Person>, MobsimAgent> mapping = model.getMobsimAgentMap();
 		MobsimAgent agent = mapping.get(agentId);
