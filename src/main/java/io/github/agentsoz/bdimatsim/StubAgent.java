@@ -42,107 +42,83 @@ final class StubAgent implements MobsimDriverAgent{
 	}
 	@Override
 	public State getState() {
-		// TODO Auto-generated method stub
 		return State.ACTIVITY;
 	}
 
 	@Override
 	public double getActivityEndTime() {
-		// TODO Auto-generated method stub
 		return 3600*24;
 	}
 
 	@Override
 	public void endActivityAndComputeNextState(double now) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void endLegAndComputeNextState(double now) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void setStateToAbort(double now) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public Double getExpectedTravelTime() {
-		// TODO Auto-generated method stub
 		return 0.0;
 	}
 
 	@Override
 	public String getMode() {
-		// TODO Auto-generated method stub
 		return TransportMode.car;
 	}
 
 	@Override
 	public void notifyArrivalOnLinkByNonNetworkMode(Id<Link> linkId) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public Id<Link> getCurrentLinkId() {
-		// TODO Auto-generated method stub
 		return currentLinkId;
 	}
 
 	@Override
 	public Id<Link> getDestinationLinkId() {
-		// TODO Auto-generated method stub
 		return currentLinkId;
 	}
 
 	@Override
 	public Id<Person> getId() {
-		// TODO Auto-generated method stub
 		return agentId;
 	}
 
 	@Override
 	public Id<Link> chooseNextLinkId() {
-		// TODO Auto-generated method stub
 		return currentLinkId;
 	}
 
 	@Override
 	public void notifyMoveOverNode(Id<Link> newLinkId) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void setVehicle(MobsimVehicle veh) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public MobsimVehicle getVehicle() {
-		// TODO Auto-generated method stub
 		return vehicle;
 	}
 
 	@Override
 	public Id<Vehicle> getPlannedVehicleId() {
-		// TODO Auto-generated method stub
 		return vehicle.getId();
 	}
 	@Override
 	public Double getExpectedTravelDistance() {
-		// TODO Auto-generated method stub
 		throw new RuntimeException("not implemented") ;
 	}
 	@Override
 	public boolean isWantingToArriveOnCurrentLink() {
-		// TODO Auto-generated method stub
 		throw new RuntimeException("not implemented") ;
 	}
 
