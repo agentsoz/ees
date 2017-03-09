@@ -49,7 +49,7 @@ function getExistingScenariosNames() {
 	var val = [];
 	for (var i = 0; i < global.existing_scenarios.length; i++) {
 		val.push(global.existing_scenarios[i].name);
-	}	
+	}
 	return val;
 }
 
@@ -57,7 +57,7 @@ function getDestinationsNames(township) {
 	var val = [];
 	for (var i = 0; i < township.destinations.length; i++) {
 		val.push(township.destinations[i].name);
-	}	
+	}
 	return val;
 }
 
@@ -85,7 +85,7 @@ function getTownshipsNames() {
 	var townships = [];
 	for (var i = 0; i < global.townships.length; i++) {
 		townships.push(global.townships[i].name);
-	}	
+	}
 	return townships;
 }
 
@@ -173,7 +173,7 @@ function send(msg, data, callback, errfn) {
 		contentType : 'application/json', // data type of request to server
 		data : jmsg,
 		timeout : TIMEOUT,
-		url : "/api/", // <-- NOTE THE TRAILING '/' IS NEEDED 
+		url : "/api/", // <-- NOTE THE TRAILING '/' IS NEEDED
 		success : function(obj) {
 			var str = JSON.stringify(obj);
 			console.log('Received: ' + str);
@@ -203,13 +203,13 @@ function timedPrompt(type, msg, cb) {
 		t = BootstrapDialog.TYPE_WARNING;
 		title = 'WARNING';
 	} else if (type == 'error') {
-		t = BootstrapDialog.TYPE_DANGER;		
+		t = BootstrapDialog.TYPE_DANGER;
 		title = 'ERROR';
 	}
 	BootstrapDialog.show({
 		title: title,
      message: msg,
      type: t,
-     callback: cb
+     onhide: cb
  });
 }

@@ -21,7 +21,7 @@ window.onload = function(e) {
 	// FIXME: Implement "based on existing scenario"
 	$( "#existing-scenario-input" ).attr('placeholder', 'Feature not available yet');
 	$( "#existing-scenario-input" ).attr('disabled', true);
-	
+
 }
 
 // Remove focus from buttons after click
@@ -55,7 +55,7 @@ function reset() {
 	// Reset the fire description
 	$('#incident-description').hide();
 	$('#incident-description').text('');
-	
+
 	global.evacTime = {
 		hh : 12,
 		mm : 0
@@ -64,7 +64,7 @@ function reset() {
 
 	$("#max-speed-slider").slider("option", "value", 10);
 	global.maxSpeed = 100;
-	
+
 }
 
 // FIXME: handle new scenario based on existing
@@ -101,7 +101,7 @@ function handleNewScenarioInput(event, ui) {
 			// Set the evac time
 			setEvacTime(global.evacTime);
 			setEvacPeak(global.evacPeakMins);
-			
+
 		    return false;
 
 }
@@ -113,7 +113,7 @@ function setOptionsForIncidentDropdown() {
 	dropdown = $(".dropdown-fires");
 	names = township.fires;
 	optgroup = "Phoenix fire models";
-	
+
 	//for (var d = 0; d < dropdowns.length; d++) {
 	//	var dropdown = $(dropdowns[d]);
 		dropdown.empty();
@@ -129,11 +129,11 @@ function setOptionsForIncidentDropdown() {
    option.val('No incident');
    option.text('No incident');
    dropdown.append(option);
-   
+
 		var group = dropdown;
 		if (optgroup!=null) {
 			group = $('<optgroup>');
-       group.attr('label', optgroup);			
+       group.attr('label', optgroup);
 		}
 		for (var i = 0; i < names.length; i++) {
 			var opt = names[i].name;
@@ -333,7 +333,7 @@ $(".nav-save").click(function(event) {
         				function (str) {timedPrompt('error', "The simulation could not be saved. " + str); });
     			return;
             }
-            
+
             // Check that the scenario does not already exist
             console.log("Checking if scenario '"+save_as+"' exists");
             send(shared.MSG_CHECK_EXISTS, {name: save_as},
@@ -353,7 +353,7 @@ $(".nav-save").click(function(event) {
             						global.save_as = save_as;
             						save(function (str) { timedPrompt('info', 'Saved ' + save_as); },
             							function (str) {timedPrompt('error', "The simulation could not be saved. " + str); });
-            					} else {	
+            					} else {
             						console.log("User cancelled scenario save");
             			        }
             				}
@@ -367,7 +367,7 @@ $(".nav-save").click(function(event) {
             		}
             	},
             	function (str) {
-            		timedPrompt('error', "Could not check if scenario already exists. " + str); 
+            		timedPrompt('error', "Could not check if scenario already exists. " + str);
             	}
             );
         },
@@ -417,7 +417,7 @@ $("#add-safeline").click(function(event) {
 		$('#plus-safelines').show();
 		$('.draw-line-step-1').hide();
 		$('#existing-destinations').hide();
-		
+
 	});
 });
 
@@ -447,7 +447,7 @@ function addDestinationSafeLine() {
 $(".nav-create-sim").click(function(event) {
 	if (global.save_as == null) {
 		$('.progress-bar-modal.in').modal('hide');
-		timedPrompt('warn', 'Please save the scenario first'); 
+		timedPrompt('warn', 'Please save the scenario first');
 		return;
 	}
 	$('.progress-bar-modal').modal('show');
@@ -455,7 +455,7 @@ $(".nav-create-sim").click(function(event) {
 	send(shared.MSG_CREATE, {name: global.save_as},
 		// Success function
 		function (data) {
-			var limit = 200; 
+			var limit = 200;
 			var progress = 0;
 			$('.progress').show();
 			var timeout = setInterval( function() {
@@ -479,20 +479,20 @@ $(".nav-create-sim").click(function(event) {
 								timedPrompt('info', "Simulation created", function() {
 									// FIXME: Redirect to results page
 									var township = getTownship(global.scenario_creation_arg);
-									url = encodeURI("view.html?sim=" + township.name);
+									url = encodeURI("view.html?name=" + global.save_as);
 									window.location.href = url;
 								}, 3000);
 							}
 						},
 						function (err) {
 							clearInterval(timeout);
-							timedPrompt('error', "Create progress unknown. " + str); 
+							timedPrompt('error', "Create progress unknown. " + str);
 						}
 					);
 			},	2000);
 		},
 		function (str) {
-			timedPrompt('error', "Could not create simulation. " + str); 
+			timedPrompt('error', "Could not create simulation. " + str);
 			$('.progress-bar-modal.in').modal('hide');
 		}
 	);
@@ -586,7 +586,7 @@ function save(callback, errfn) {
 	msg.coordinate_system = "latlong";
 	// Road network area and associated MATSim Network file
 	msg.osmArea = { // FIXME: network file hard-wired to maldon
-			"rectangle" : township.osmArea, 
+			"rectangle" : township.osmArea,
 			"url" :  "app-data/maldon/network.xml"};
 	// Fire shape file in Geo JSON format
 	msg.fire = {
@@ -602,7 +602,7 @@ function save(callback, errfn) {
 		var line = township.safeLines[i].line.getPath().getArray();
 		msg.safeLines.push({
 			name: township.safeLines[i].name,
-			coordinates: 
+			coordinates:
 				[{lat: line[0].lat(), lng: line[0].lng()},
 				 {lat: line[1].lat(), lng: line[1].lng()}]
 		});
@@ -643,7 +643,7 @@ function save(callback, errfn) {
 			}
 		},
 		function (str) {
-			timedPrompt('error', "Could not create simulation. " + str); 
+			timedPrompt('error', "Could not create simulation. " + str);
 			$('.progress-bar-modal.in').modal('hide');
 		}
 	);
@@ -719,7 +719,7 @@ $("#plus-vehicles").click(function(event) {
 function addVehiclesArea(aream2) {
 	var hectares = Number(aream2 / 10000).toFixed(2);
 	var km2 = Number(aream2 / 1000000).toFixed(2);
-	
+
 	var ncars = $("#num-vehicles").val();
 	var li = '';
 	var veh = 'vehicle';
