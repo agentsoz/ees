@@ -13,7 +13,7 @@ SERVER=e43361@rschnpeap65.eres.rmit.edu.au
 SERVERDIR=/var/www/html/
 
 rsync -avz ${BASEDIR} ${SERVER}:${SERVERDIR}
-rsync -avz ${BASEDIR}/../data/bushfire-1.0.1-SNAPSHOT ${SERVER}:${SERVERDIR}/../data
+rsync -avz ${BASEDIR}/../data/bushfire-2.0.0 ${SERVER}:${SERVERDIR}/../data
 
 # cd ${WEBDIR}/nodejs && forever stop serve.js  ; rm -f ~/.forever/serve.js.log  ; forever start -l serve.js.log serve.js
 ssh ${SERVER} "cd ${SERVERDIR}/nodejs && forever stopall && forever cleanlogs && forever start -l serve.js.log serve.js"
