@@ -1,5 +1,6 @@
 SHELL:=/bin/bash
 BASEDIR=$(shell cd $(dir $(firstword $(MAKEFILE_LIST))) && pwd)/
+JAR=${BASEDIR}../target/bushfire-2.0.2-SNAPSHOT
 
 #############################################
 ### START USER CONFIG
@@ -22,12 +23,12 @@ all: install
 
 config:
 	mkdir -p ${WEBDIR}
-	
+
 install: config
 	rsync -a -F --delete --delete-excluded ${BASEDIR} ${WEBDIR}
 	ln -s ${DATADIR}/user-data ${WEBDIR}/user-data
-	rsync -avz ${BASEDIR}../target/bushfire-1.0.1-SNAPSHOT ${DATADIR}
-	
+	rsync -avz ${JAR} ${DATADIR}
+
 minify : config
 	#
 	# Minify our JS files
