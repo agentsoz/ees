@@ -18,7 +18,7 @@ window.onload = function(e) {
 		select: handleExistingScenarioInput // function to call on selection
 	});
 	$( "#existing-scenario-input" ).attr('placeholder', 'Start typing ...');
-	// FIXME: Implement "based on existing scenario"
+	// FIXME: Remove following code when implementing "based on existing scenario"
 	$( "#existing-scenario-input" ).attr('placeholder', 'Feature not available yet');
 	$( "#existing-scenario-input" ).attr('disabled', true);
 
@@ -29,7 +29,6 @@ $(".btn").mouseup(function() {
 	$(this).blur();
 });
 
-// FIXME: reset() is not complete
 function reset() {
 	// Reset global info about which scenario we are creating
 	global.scenario_creation_arg = null;
@@ -484,7 +483,6 @@ $(".nav-create-sim").click(function(event) {
 								$('.progress-bar-modal').modal('hide');
 								// Show success message
 								timedPrompt('info', "Simulation created", function() {
-									// FIXME: Redirect to results page
 									var township = getTownship(global.scenario_creation_arg);
 									url = encodeURI("view.html?name=" + global.save_as);
 									window.location.href = url;
@@ -592,7 +590,7 @@ function save(callback, errfn) {
 	// Global coordinate system used
 	msg.coordinate_system = "latlong";
 	// Road network area and associated MATSim Network file
-	msg.osmArea = { // FIXME: network file hard-wired to maldon
+	msg.osmArea = { // FIXME: hard-wired network file; osmArea.url should be specified per-township in init.js
 			"rectangle" : township.osmArea,
 			"url" :  "app-data/maldon/network.xml"};
 	// Fire shape file in Geo JSON format

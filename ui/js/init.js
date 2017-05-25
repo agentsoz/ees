@@ -53,8 +53,8 @@ global.townships = [ {
 	destinations : []
 }, {
 	name : "Campbells Creek",
-	latlon : [ -37.004293, 144.257085 ], // FIXME: coords incorrect
-	osmArea : [ -37.0615, 144.3840, -37.2019, 144.1547 ], // FIXME: osm incorrect
+	latlon : [ -37.093009, 144.201293 ],
+	osmArea : [ -36.9515, 144.4084, -37.2030, 144.0452 ],
 	census_data : "According to the 2011 census, Campbells Creek had 526 occupied private dwellings, with on average 2 motor vehicles per dwelling",
 	defaultMapZoom : 11,
 	fires : [],
@@ -74,7 +74,7 @@ global.townships = [ {
 }, {
 	name : "Harcourt",
 	latlon : [ -37.004293, 144.257085 ],
-	osmArea : [ -37.0615, 144.3840, -37.2019, 144.1547 ], // FIXME: osm incorrect
+	osmArea : [ -36.8988, 144.3452, -37.1108, 144.1564 ],
 	census_data : "According to the 2011 census, Harcourt had 330 occupied private dwellings, with on average 2.3 motor vehicles per dwelling",
 	defaultMapZoom : 11,
 	fires : [],
@@ -84,7 +84,7 @@ global.townships = [ {
 }, {
 	name : "Newstead",
 	latlon : [ -37.117277, 144.059986 ],
-	osmArea : [ -37.0615, 144.3840, -37.2019, 144.1547 ], // FIXME: osm incorrect
+	osmArea : [ -36.9696, 144.3425, -37.1860, 143.9463 ],
 	census_data : "According to the 2011 census, Newstead had 344 occupied private dwellings, with on average 1.9 motor vehicles per dwelling",
 	defaultMapZoom : 11,
 	fires : [],
@@ -93,8 +93,8 @@ global.townships = [ {
 	destinations : []
 }, {
 	name : "Taradale",
-	latlon : [ -37.004293, 144.257085 ], // FIXME: coords incorrect
-	osmArea : [ -37.0615, 144.3840, -37.2019, 144.1547 ], // FIXME: osm incorrect
+	latlon : [ -37.139258, 144.350221 ],
+	osmArea : [ -36.9919, 144.4771, -37.2571, 144.1530 ],
 	census_data : "According to the 2011 census, Taradale had 188 occupied private dwellings, with on average 1.9 motor vehicles per dwelling",
 	defaultMapZoom : 11,
 	fires : [],
@@ -103,8 +103,8 @@ global.townships = [ {
 	destinations : []
 }, {
 	name : "Vaughan",
-	latlon : [ -37.004293, 144.257085 ], // FIXME: coords incorrect
-	osmArea : [ -37.0615, 144.3840, -37.2019, 144.1547 ], // FIXME: osm incorrect
+	latlon : [ -37.158624, 144.214457 ],
+	osmArea : [ -37.0615, 144.3840, -37.2019, 144.1547 ],
 	census_data : "According to the 2011 census, Vaughan had 120 occupied private dwellings, with on average 1.9 motor vehicles per dwelling",
 	defaultMapZoom : 11,
 	fires : [],
