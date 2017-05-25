@@ -52,9 +52,11 @@ function reset() {
 	$( "#existing-scenario-input" ).val('');
 	$( "#existing-scenario-input" ).attr('placeholder', 'Start typing ...');
 
-	// Reset the fire description
+	// Reset the descriptions
 	$('#incident-description').hide();
 	$('#incident-description').text('');
+	$('#census-description').hide();
+	$('#census-description').text('');
 
 	global.evacTime = {
 		hh : 12,
@@ -101,6 +103,11 @@ function handleNewScenarioInput(event, ui) {
 			// Set the evac time
 			setEvacTime(global.evacTime);
 			setEvacPeak(global.evacPeakMins);
+
+            // Set the census data
+            $('#census-description').text('').hide();
+            $('#census-description').text(township.census_data).fadeIn('slow');
+
 
 		    return false;
 

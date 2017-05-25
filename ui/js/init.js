@@ -15,6 +15,7 @@ global.townships = [ {
 	name : "Maldon",
 	latlon : [ -36.997609, 144.068722 ],
 	osmArea : [ -36.8093, 144.2759, -37.0853, 143.9257 ],
+	census_data : "According to the 2011 census, Maldon had 635 occupied private dwellings, with on average 1.7 motor vehicles per dwelling",
 	defaultMapZoom : 10,
 	fires : [ {
 		name : "20160420_MtAlexShire_FDI75_Iso",
@@ -43,7 +44,8 @@ global.townships = [ {
 }, {
 	name : "Castlemaine",
 	latlon : [ -37.064737, 144.212304 ],
-	osmArea : [  ], // FIXME: osm incorrect
+	osmArea : [ -36.9754, 144.3614, -37.1579, 144.0452 ],
+	census_data : "According to the 2011 census, Castlemaine had 2918 occupied private dwellings, with on average 1.5 motor vehicles per dwelling",
 	defaultMapZoom : 11,
 	fires : [],
 	safeLines : [],
@@ -53,6 +55,7 @@ global.townships = [ {
 	name : "Campbells Creek",
 	latlon : [ -37.004293, 144.257085 ], // FIXME: coords incorrect
 	osmArea : [ -37.0615, 144.3840, -37.2019, 144.1547 ], // FIXME: osm incorrect
+	census_data : "According to the 2011 census, Campbells Creek had 526 occupied private dwellings, with on average 2 motor vehicles per dwelling",
 	defaultMapZoom : 11,
 	fires : [],
 	safeLines : [],
@@ -62,6 +65,7 @@ global.townships = [ {
 	name : "Fryerstown",
 	latlon : [ -37.140291, 144.249982 ],
 	osmArea : [ -37.0615, 144.3840, -37.2019, 144.1547 ],
+	census_data : "According to the 2011 census, Fryerstown had 120 occupied private dwellings, with on average 1.9 motor vehicles per dwelling",
 	defaultMapZoom : 11,
 	fires : [],
 	safeLines : [],
@@ -71,6 +75,7 @@ global.townships = [ {
 	name : "Harcourt",
 	latlon : [ -37.004293, 144.257085 ],
 	osmArea : [ -37.0615, 144.3840, -37.2019, 144.1547 ], // FIXME: osm incorrect
+	census_data : "According to the 2011 census, Harcourt had 330 occupied private dwellings, with on average 2.3 motor vehicles per dwelling",
 	defaultMapZoom : 11,
 	fires : [],
 	safeLines : [],
@@ -80,6 +85,7 @@ global.townships = [ {
 	name : "Newstead",
 	latlon : [ -37.117277, 144.059986 ],
 	osmArea : [ -37.0615, 144.3840, -37.2019, 144.1547 ], // FIXME: osm incorrect
+	census_data : "According to the 2011 census, Newstead had 344 occupied private dwellings, with on average 1.9 motor vehicles per dwelling",
 	defaultMapZoom : 11,
 	fires : [],
 	safeLines : [],
@@ -89,6 +95,7 @@ global.townships = [ {
 	name : "Taradale",
 	latlon : [ -37.004293, 144.257085 ], // FIXME: coords incorrect
 	osmArea : [ -37.0615, 144.3840, -37.2019, 144.1547 ], // FIXME: osm incorrect
+	census_data : "According to the 2011 census, Taradale had 188 occupied private dwellings, with on average 1.9 motor vehicles per dwelling",
 	defaultMapZoom : 11,
 	fires : [],
 	safeLines : [],
@@ -98,6 +105,7 @@ global.townships = [ {
 	name : "Vaughan",
 	latlon : [ -37.004293, 144.257085 ], // FIXME: coords incorrect
 	osmArea : [ -37.0615, 144.3840, -37.2019, 144.1547 ], // FIXME: osm incorrect
+	census_data : "According to the 2011 census, Vaughan had 120 occupied private dwellings, with on average 1.9 motor vehicles per dwelling",
 	defaultMapZoom : 11,
 	fires : [],
 	safeLines : [],
