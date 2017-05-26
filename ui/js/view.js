@@ -114,10 +114,13 @@ function setScenarioDetails(scenario) {
 
 	var url = 'https://maps.googleapis.com/maps/api/staticmap';
 	url += '?size=640x350&scale=2&maptype=roadmap';
-	url += '&zoom=' + scenario.data.defaultMapZoom;
+	//url += '&zoom=' + scenario.data.defaultMapZoom;
+	url += '&zoom=' + (scenario.data.defaultMapZoom+2);
 	//url += '&markers=color:blue|'+township.latlon[0]+','+township.latlon[1];
+	url += '&center='+township.latlon[0]+','+township.latlon[1];
 	url += '&key=' + GMAPS_STATIC_KEY;
 	
+	// draw OSM area
 	var a = scenario.data.osmArea.rectangle;
 	var bounds = '&path=color:red|weight:2';
 	bounds += '|'+a[0]+','+a[1];
@@ -126,6 +129,27 @@ function setScenarioDetails(scenario) {
 	bounds += '|'+a[0]+','+a[3];
 	bounds += '|'+a[0]+','+a[1];
 	url += bounds;
+
+	// draw safe lines
+	for (var i = 0; i < scenario.data.safeLines.length; i++) {
+		a = scenario.data.safeLines[i].coordinates;
+		bounds = '&path=color:blue|weight:2';
+		bounds += '|'+a[0].lat+','+a[0].lng;
+		bounds += '|'+a[1].lat+','+a[1].lng;
+		url += bounds;
+	}
+	
+	// draw vehicles areas 
+	for (var i = 0; i < scenario.data.vehiclesAreas.length; i++) {
+		a = scenario.data.vehiclesAreas[i].bounds;
+		bounds = '&path=color:purple|weight:2';
+		bounds += '|'+a.north+','+a.west;
+		bounds += '|'+a.north+','+a.east;
+		bounds += '|'+a.south+','+a.east;
+		bounds += '|'+a.south+','+a.west;
+		bounds += '|'+a.north+','+a.west;
+		url += bounds;
+	}
 
 	url = encodeURI(url);
 	
