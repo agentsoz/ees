@@ -168,6 +168,7 @@ $("#existing-scenario-dropdown").on("change", function() {
 // Global handler for select change events on dynamically generated dropdowns
 $("body").on("change", "select", function(e) {
 	if (e.target.id.localeCompare('existing-fires-dropdown') == 0) {
+		existing_fires_dropdown_validate();
 		var township = getTownship(global.scenario_creation_arg);
 		var text = $(this).find(':selected').text();
 		$('#incident-description').text('').hide();
@@ -281,6 +282,16 @@ $(".nav-back").click(function(event) {
 
 // Save button
 $(".nav-save").click(function(event) {
+	// Validate the form
+	if (!existing_fires_dropdown_validate()) {
+		BootstrapDialog.show({
+			title: 'Invalid scenario',
+			message: 'The scenario configuration is incomplete or invalid. Please fix the highlighted inputs and try again.',
+			type: BootstrapDialog.TYPE_WARNING,
+		});
+		return;
+	}
+	
 	var val = '';
 	if (global.save_as != null) {
 		val = global.save_as;
@@ -832,4 +843,18 @@ $("#max-speed-slider").slider({
 
 		});
 
+
+function existing_fires_dropdown_validate() {
+	var text = $('#existing-fires-dropdown').find(':selected').text();
+	var parent = $('#existing-fires-dropdown').parent();
+	if (text.localeCompare('Select') == 0) {
+		parent.addClass('has-error');
+		parent.find('.validation-msg').text('Error').show();
+		return false;
+	} else {
+		$('#existing-fires-dropdown').parent().removeClass('has-error');
+		parent.find('.validation-msg').text('').hide();
+	}
+	return true;
+}
 

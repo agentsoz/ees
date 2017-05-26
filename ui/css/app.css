@@ -196,3 +196,10 @@ ul.ui-autocomplete {
 #plus-vehicles, #plus-safelines {
  display: none;
 }
+
+.validation-msg {
+ color: #ff0000;
+ fint-size: small;
+ font-style: italic;
+ padding-left: 1em;
+}
