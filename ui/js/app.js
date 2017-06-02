@@ -283,9 +283,12 @@ $(".nav-back").click(function(event) {
 // Save button
 $(".nav-save").click(function(event) {
 	// Validate the form
-	if (!existing_fires_dropdown_validate()) {
+	var valid = existing_fires_dropdown_validate() 
+		& vehicles_area_validate() 
+		& safe_lines_validate();
+	if (valid == 0) {
 		BootstrapDialog.show({
-			title: 'Invalid scenario',
+			title: 'Cannot save scenario',
 			message: 'The scenario configuration is incomplete or invalid. Please fix the highlighted inputs and try again.',
 			type: BootstrapDialog.TYPE_WARNING,
 		});
@@ -434,6 +437,8 @@ $("#add-safeline").click(function(event) {
 		$('#plus-safelines').show();
 		$('.draw-line-step-1').hide();
 		$('#existing-destinations').hide();
+		// Check that it is valid
+		safe_lines_validate();
 
 	});
 });
@@ -723,6 +728,8 @@ $("#add-vehicles-area").click(function(event) {
 		$('#plus-vehicles').show();
 		$('.draw-area-step-1').hide();
 		$('#num-vehicles').hide();
+		// Check that it is valid
+		vehicles_area_validate();
 	});
 });
 
@@ -845,16 +852,47 @@ $("#max-speed-slider").slider({
 
 
 function existing_fires_dropdown_validate() {
-	var text = $('#existing-fires-dropdown').find(':selected').text();
 	var parent = $('#existing-fires-dropdown').parent();
+	var text = $('#existing-fires-dropdown').find(':selected').text();
 	if (text.localeCompare('Select') == 0) {
 		parent.addClass('has-error');
-		parent.find('.validation-msg').text('Error').show();
+		parent.find('.validation-msg').text('Please select a suitable emergency setting for the scenario').show();
 		return false;
 	} else {
-		$('#existing-fires-dropdown').parent().removeClass('has-error');
+		parent.removeClass('has-error');
 		parent.find('.validation-msg').text('').hide();
 	}
 	return true;
 }
+
+function vehicles_area_validate() {
+	var parent = $('#num-vehicles').parent();
+	var township = getTownship(global.scenario_creation_arg);
+	if (township.vehiclesAreas.length == 0) {
+		parent.addClass('has-error');
+		parent.find('.validation-msg').text('Please add vehicles to evacuate').show();
+		return false;
+	} else {
+		parent.removeClass('has-error');
+		parent.find('.validation-msg').text('').hide();
+	}
+	return true;
+}
+
+
+function safe_lines_validate() {
+	var parent = $('#existing-destinations').parent();
+	var township = getTownship(global.scenario_creation_arg);
+	if (township.safeLines.length == 0) {
+		parent.addClass('has-error');
+		parent.find('.validation-msg').text('Please configure at least one destination for vehicles').show();
+		return false;
+	} else {
+		parent.removeClass('has-error');
+		parent.find('.validation-msg').text('').hide();
+	}
+	return true;
+}
+
+
 

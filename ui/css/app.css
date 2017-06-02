@@ -145,7 +145,8 @@ body {
 
 #incident-description, #census-description {
  font-size: small;
- background-color: rgba(110, 172, 44, 0.2);
+ /* background-color: rgba(110, 172, 44, 0.2); */
+ background-color: rgba(119, 213, 247, 0.25);
  /*  font-style: italic; */
  padding: 1em;
  display: none;
