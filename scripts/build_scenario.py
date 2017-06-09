@@ -38,7 +38,7 @@ def new_dir(arg):
         raise argparse.ArgumentTypeError(msg)
     else:
 	os.makedirs(os.path.dirname(filename), exist_ok=True)
-     	return arg    	
+     	return arg
 def parse_args():
 	parser = argparse.ArgumentParser(description='Builds a bushfire simulation scenario using web UI produced JSON')
 	parser.add_argument('-c','--config',
@@ -86,7 +86,7 @@ if args.verbose is not None:
         for arg in args:
            print arg,
         print
-else:   
+else:
     log = lambda *a: None      # do-nothing function
 
 
@@ -123,7 +123,7 @@ os.makedirs(outdir)
 
 # load the json input
 log("loading input JSON config file '%s'" % args.config)
-with open(args.config) as data_file:    
+with open(args.config) as data_file:
     data = json.load(data_file)
 pprint(data) if args.verbose else ''
 
@@ -131,14 +131,16 @@ nAgents = 0
 for area in data["vehiclesAreas"]:
   nAgents += int(area['name'])
 log("Number of agents is %s" % nAgents)
-  
+
 # replacements
 main_replacements = {
-    # main config template replacements 
+    # main config template replacements
     '${matsimfile_name}': o_matsim,
     '${firefile_name}' : o_fire,
     '${firefile_coordinates}' : data["fire"]["coordinate_system"],
     '${firefile_format}' : data["fire"]["format"],
+    '${evac_start}' : "%02d:%02d" % (data["evacTime"]["hh"], data["evacTime"]["mm"]),
+    '${evac_peak}' : "%d" % data["evacPeakMins"],
     '${geographyfile_name}' : o_geography,
     '${inputNetworkFile}' : o_matsim_network,
     '${inputChangeEventsFile}' : o_matsim_network_change,
@@ -162,7 +164,7 @@ with open(t_main) as infile, open(o_main, 'w') as outfile:
 cmd = ["cp", t_main_xsd, outdir]
 log(cmd)
 subprocess.call(cmd)
-        
+
 # write the fire file
 i_fire = os.path.join(args.datadir, data["fire"]["url"])
 log("FIXME: writing fire file '%s' from '%s'" % (o_fire, i_fire))
@@ -194,11 +196,11 @@ copyfile(t_matsim_network_change, o_matsim_network_change)
 #xy2 = "%s,%s" % (data["osmArea"]["rectangle"][3], data["osmArea"]["rectangle"][2])
 popnPrefix = '' # popn names should be 1,2,.. so as to match Jill names!!
 cmd = [
-  "java", 
+  "java",
   "-cp", args.jar,
   "io.github.agentsoz.bushfire.GenerateInput",
   "-outdir", outdir,
-  "-prefix", popnPrefix, 
+  "-prefix", popnPrefix,
 #  "-matsimpop", "%s/WGS84/RECT/%s&%s" % (nAgents, xy1, xy2),
   "-wkt", "EPSG:28355",
   "-verbose", "true" if args.verbose else "false"
@@ -211,8 +213,8 @@ for area in data["vehiclesAreas"]:
 log(cmd)
 subprocess.call(cmd)
 cmd = [
-  "mv", 
-  os.path.join(outdir, "%spopulation.xml" % popnPrefix), 
+  "mv",
+  os.path.join(outdir, "%spopulation.xml" % popnPrefix),
   o_matsim_plans
 ]
 log(cmd)
@@ -228,7 +230,7 @@ with open(t_geography) as infile, open(o_geography, 'w') as outfile:
 cmd = ["cp", t_geography_xsd, outdir]
 log(cmd)
 subprocess.call(cmd)
-     
+
 # write destination locations
 src = '<!--${location}-->'
 target = ''
@@ -246,6 +248,6 @@ newdata = filedata.replace(src, target)
 f = open(o_geography,'w')
 f.write(newdata)
 f.close()
-   
+
 
 #java -cp APPJAR io.github.agentsoz.bushfire.GenerateInput    -outdir test    -prefix maldon    -matsimpop "700/EPSG:28355/RECT/234274,5895647&246377,5919215"

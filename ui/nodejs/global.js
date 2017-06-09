@@ -1,5 +1,12 @@
-module.exports = {	
-		
+module.exports = {
+
+	/*
+	 * -----------------------------------------------------------------------
+	 * Emergency Evacuation Simulator (EES) release JAR
+	 * -----------------------------------------------------------------------
+	 */
+	 RELEASE_VERSION : 'bushfire-2.0.2-SNAPSHOT',
+
 	/*
 	 * -----------------------------------------------------------------------
 	 * SERVICE PORTS
@@ -29,7 +36,7 @@ module.exports = {
 		response.end();
 		console.log(new Date().toString() + ": Sent response: "+jsonp);
 	},
-	
+
 	/*
 	 * -----------------------------------------------------------------------
 	 * Returns a random number between min (inclusive) and max (exclusive)
@@ -48,5 +55,5 @@ module.exports = {
 	getRandomInt : function(min, max) {
 	    return Math.floor(Math.random() * (max - min + 1)) + min;
 	},
-	
+
 };

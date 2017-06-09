@@ -74,7 +74,8 @@ public class SimpleConfig {
 	private static double proportionWithRelatives = 0.0;
 	private static int maxDistanceToRelatives = 1000;
 	
-	private static double[] evacDelay = new double[] { 0.0, 0.0 };
+	private static int[] evacStartHHMM = new int[] {0, 0};
+	private static int evacPeakMins = 0;
 	private static HashMap<String, Location> locations = new HashMap<String, Location>();
 	private static HashMap<String, Region> regions = new HashMap<String, Region>();
 	private static HashMap<String, Route> routes = new HashMap<String, Route>();
@@ -99,6 +100,9 @@ public class SimpleConfig {
 	private static final String eCoordinateSystem = "coordinateSystem";
 	private static final String eDestinations = "destinations";
 	private static final String eLocation = "location";
+	private static final String eEvacuationTiming = "evacuationTiming";
+	private static final String eStart = "start";
+	private static final String ePeak = "peak";
 	
 	public static String getMatSimFile() {
 		return matSimFile;
@@ -124,8 +128,8 @@ public class SimpleConfig {
 		return maxDistanceToRelatives;
 	}
 
-	public static double[] getEvacDelay() {
-		return evacDelay;
+	public static int[] getEvacStartHHMM() {
+		return evacStartHHMM;
 	}
 
 	public static String getGeographyCoordinateSystem() {
@@ -237,6 +241,13 @@ public class SimpleConfig {
 		proportionWithRelatives = Double.parseDouble(root.getElementsByTagName(eProportion).item(0).getTextContent().replaceAll("\n", "").trim());
 		maxDistanceToRelatives = Integer.parseInt(root.getElementsByTagName(eRadiusInMtrs).item(0).getTextContent().replaceAll("\n", "").trim());
 
+		// Get the evacuation timing data
+		element = (Element)root.getElementsByTagName(eEvacuationTiming).item(0);
+		String[] tokens = element.getElementsByTagName(eStart).item(0).getTextContent().replaceAll("\n", "").trim().split(":");
+		evacStartHHMM[0] = Integer.parseInt(tokens[0]);
+		evacStartHHMM[1] = Integer.parseInt(tokens[1]);
+		evacPeakMins= Integer.parseInt(element.getElementsByTagName(ePeak).item(0).getTextContent().replaceAll("\n", "").trim());
+		
 		// Now read the geography file
 		readGeography();
 	}

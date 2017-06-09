@@ -41,6 +41,7 @@
 			<outputDirectory></outputDirectory>
 			<includes>
 				<include>run.sh</include>
+				<include>build_scenario.py</include>
 			</includes>
 		</fileSet>
 		<fileSet>
@@ -48,7 +49,7 @@
 			<outputDirectory></outputDirectory>
 			<includes>
 				<include>scenarios/maldon-simple/*.*</include>
-				<include>scenarios/template/*.*</include> 
+				<include>scenarios/template/*.*</include>
 				<include>LICENSE.txt</include>
 			</includes>
 		</fileSet>
