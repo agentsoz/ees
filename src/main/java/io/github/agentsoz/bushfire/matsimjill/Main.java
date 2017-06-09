@@ -95,6 +95,7 @@ public class Main {
 		fireModel = new PhoenixFireModule();
 		fireModel.setDataServer(dataServer);
 		fireModel.loadGeoJson(SimpleConfig.getFireFile());
+		fireModel.setEvacStartHHMM(SimpleConfig.getEvacStartHHMM());
 		boolean isGlobalUTM = SimpleConfig.getGeographyCoordinateSystem().toLowerCase().equals("utm");
 		boolean isFireUTM = SimpleConfig.getFireFireCoordinateSystem().toLowerCase().equals("utm");
 		if (isGlobalUTM && !isFireUTM) {

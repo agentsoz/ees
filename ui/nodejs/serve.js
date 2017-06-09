@@ -22,10 +22,10 @@ var xml2js = require('xml2js');
  * -----------------------------------------------------------------------
  */
 var app = express()
-var validMessages = 
+var validMessages =
 	[shared.MSG_CHECK_EXISTS,
-	 shared.MSG_SAVE, 
-	 shared.MSG_CREATE, 
+	 shared.MSG_SAVE,
+	 shared.MSG_CREATE,
 	 shared.MSG_CREATE_PROGRESS,
 	 shared.MSG_LIST_SCENARIOS,
 	 shared.MSG_GET_SCENARIO
@@ -33,8 +33,8 @@ var validMessages =
 
 var dataDirURL = 'user-data';
 var dataDir  = path.join(path.dirname(fs.realpathSync(__filename)), '..','..','data',dataDirURL);
-var distDir  = path.join(path.dirname(fs.realpathSync(__filename)), '..','..','data','bushfire-1.0.1-SNAPSHOT');
-var dist = path.join(distDir, 'bushfire-1.0.1-SNAPSHOT.jar');
+var distDir  = path.join(path.dirname(fs.realpathSync(__filename)), '..','..','data', global.RELEASE_VERSION);
+var dist = path.join(distDir, global.RELEASE_VERSION + '.jar');
 var templateDir  = path.join(distDir, 'scenarios','template');
 var appDataDir  = path.join(path.dirname(fs.realpathSync(__filename)), '..','..','html');
 var logLevelMain = 'TRACE';
@@ -62,9 +62,9 @@ app.post('/', function(req, res) {
     global.log("\n--------------------------------------------------");
     global.log('#' + requestNum + ' POST ' + req.originalUrl)
     global.log('POST BODY ' + JSON.stringify(req.body));
-    
+
     req.checkBody(
-    		"msg", 
+    		"msg",
     		"Message should be one of ["+validMessages.toString()+"]"
     ).isIn(validMessages);
 
@@ -118,7 +118,7 @@ app.post('/', function(req, res) {
 			});
 			send(res, {'msg': shared.MSG_LIST_SCENARIOS,
 				'data' : list});
-		});		
+		});
 		return;
     }
     if (req.body.msg == shared.MSG_CHECK_EXISTS) {
@@ -138,7 +138,7 @@ app.post('/', function(req, res) {
 			}
 		});
 		return;
-    } 
+    }
     if (req.body.msg == shared.MSG_SAVE) {
 		global.log("Saving scenario");
     	save(req.body.data, function (err, filename) {
@@ -178,7 +178,7 @@ app.post('/', function(req, res) {
 			return;
     	});
 		return;
-    } 
+    }
     send(res, {'msg': shared.MSG_ERROR, 'data' : 'Nothing to do'});
 });
 
@@ -193,11 +193,11 @@ function send(res, data) {
 
 function save(data, callback) {
 	// Create the top level user data directory if it does not already exist
-	mkdirp(dataDir, function(err) { 
+	mkdirp(dataDir, function(err) {
 		if (err) return callback("Could not create data directory '" + dataDir + "' : " + err);
 		// Check if user dir already exists, else create it
 		var userDir = path.join(dataDir, data.name);
-		mkdirp(userDir, function(err) { 
+		mkdirp(userDir, function(err) {
 			if (err) return callback("Could not create scenario directory '" + userDir + "' : " + err);
 			// Finally write the JSON to file
 			var userFile = path.join(userDir, data.name + '.json');
@@ -235,12 +235,12 @@ function create(data, callback) {
 	pythonShell.run('build_scenario.py', options, function (err, res1) {
 		if (err && err.exitCode != 0) return callback('Could not build simulation: ' + err);
 		if (res1) results.push(res1);
-		
+
 		var fileMain = path.join(scenarioPath, 'scenario_main.xml');
 		var fileLog = path.join(scenarioPath, 'scenario.log');
 		var fileJillLog = path.join(scenarioPath, 'jill.log');
 		var fileJillOut = path.join(scenarioPath, 'jill.out');
-		
+
     	// Read number of agents from config xml
 		var parser = new xml2js.Parser();
 		fs.readFile(fileMain, function(err, data) {
@@ -254,7 +254,7 @@ function create(data, callback) {
 			       ' --config ' + fileMain +
 			       ' --logfile ' + fileLog +
 			       ' --loglevel ' + logLevelMain +
-			       ' --jillconfig "--config={' + 
+			       ' --jillconfig "--config={' +
 			       'agents:[{classname:io.github.agentsoz.bushfire.matsimjill.agents.Resident, args:null, count:'+nAgents+'}],' +
 			       'logLevel: ' + logLevelJill + ',' +
 			       'logFile: \\"' + fileJillLog + '\\",' +
@@ -274,7 +274,7 @@ function check_creation_progress(data, callback) {
 	var logFile = path.join(dataDir, data.name, 'scenario', 'scenario_matsim_output','logfile.log');
 	if (!test('-f', logFile)) {
 		return callback(null, 0);
-	} 
+	}
 	var cmd = 'cat ' + logFile + ' | grep -i "New QSim\\|ITERATION 0\\|JVM\\|shutdown completed"';
 	global.log(cmd);
 	var stdout = exec(cmd, {silent:true}).stdout;

@@ -1,8 +1,8 @@
-<xs:schema 
+<xs:schema
   xmlns:xs="http://www.w3.org/2001/XMLSchema"
   targetNamespace="https://github.com/agentsoz/bdi-abm-integration"
   xmlns="https://github.com/agentsoz/bdi-abm-integration"
-  attributeFormDefault="unqualified" 
+  attributeFormDefault="unqualified"
   elementFormDefault="qualified">
 
   <!-- simple elements -->
@@ -11,6 +11,8 @@
   <xs:element name="format" type="xs:string"/>
   <xs:element name="proportion" type="xs:string"/>
   <xs:element name="radiusInMtrs" type="xs:string"/>
+  <xs:element name="start" type="xs:string"/>
+  <xs:element name="peak" type="xs:string"/>
 
   <!-- complex elements -->
 
@@ -51,8 +53,17 @@
     </xs:complexType>
   </xs:element>
 
+  <xs:element name="evacuationTiming">
+    <xs:complexType>
+      <xs:all>
+        <xs:element ref="start"/>
+        <xs:element ref="peak"/>
+      </xs:all>
+    </xs:complexType>
+  </xs:element>
+
   <xs:element name="bdiagents" type="xs:string"/>
-  
+
   <!-- main structure -->
   <xs:element name="simulation">
     <xs:complexType>
@@ -64,6 +75,8 @@
         <xs:element ref="geographyfile">
         </xs:element>
         <xs:element ref="trafficBehaviour">
+        </xs:element>
+        <xs:element ref="evacuationTiming">
         </xs:element>
         <xs:element ref="bdiagents">
         </xs:element>

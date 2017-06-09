@@ -57,6 +57,8 @@ public class PhoenixFireModule implements DataSource {
 	private double lastUpdateTimeInMinutes = -1;
 	private TreeMap<Double, Double[][]> fire;
 	private TimestepUnit timestepUnit = TimestepUnit.SECONDS;
+	private double evacStartInSeconds = 0.0;
+	private boolean fireAlertSent = false;
 
 	public PhoenixFireModule() {
 		fire = new TreeMap<Double, Double[][]>();
@@ -98,14 +100,21 @@ public class PhoenixFireModule implements DataSource {
 	public Object getNewData(double timestep, Object parameters) {
 		double time = convertTime(timestep, timestepUnit, TimestepUnit.MINUTES);
 		SortedMap<Double, Double[][]> shapes = fire.subMap(lastUpdateTimeInMinutes, time);
+		// if evac start time was explicitly set, then send alert at that time
+		// irrespective of when the fire actually starts
+		if (!fireAlertSent && evacStartInSeconds > 0.0 && timestep >= evacStartInSeconds) { 
+			logger.info("step {} ({} mins): sending fire alert!!", String.format("%.0f", timestep), String.format("%.0f", time));
+			dataServer.publish(DataTypes.FIRE_ALERT, null);
+			fireAlertSent = true;
+		}
 		if (!shapes.isEmpty()) {
-			// TODO: Improve reasoning about when to send fire alert
-			if (lastUpdateTimeInMinutes == -1) {
+			// If evac start not explicitly set, then send alert at fire start
+			if (!fireAlertSent && evacStartInSeconds == 0.0) {
 				logger.info("step {} ({} mins): sending fire alert!!", String.format("%.0f", timestep), String.format("%.0f", time));
 				dataServer.publish(DataTypes.FIRE_ALERT, null);
 			}
-			lastUpdateTimeInMinutes = time;
 		}
+		lastUpdateTimeInMinutes = time;
 		Double nextTime = fire.higherKey(time);
 		if (nextTime != null) {
 			dataServer.registerTimedUpdate(DataTypes.FIRE, this, convertTime(nextTime, TimestepUnit.MINUTES, timestepUnit));
@@ -121,12 +130,12 @@ public class PhoenixFireModule implements DataSource {
 	 * Start publishing fire data
 	 */
 	public void start() {
-		if (fire.isEmpty()) {
-			logger.warn("Fire module started, but has no data to publish, so will do nothing");
-			return;
-		}
-		dataServer.registerTimedUpdate(DataTypes.FIRE, this,
-				convertTime(fire.firstKey(), TimestepUnit.MINUTES, timestepUnit));
+		//if (fire.isEmpty()) {
+		//	logger.warn("Fire module started, but has no data to publish, so will do nothing");
+		//	return;
+		//}
+		dataServer.registerTimedUpdate(DataTypes.FIRE, this, evacStartInSeconds);
+				//convertTime(fire.firstKey(), TimestepUnit.MINUTES, timestepUnit));
 	}
 
 	public void convertLatLongToUtm() {
@@ -141,9 +150,9 @@ public class PhoenixFireModule implements DataSource {
 		double convertedTime = time;
 		switch (from) {
 		case DAYS:
-			convertedTime *= 1;
-		case HOURS:
 			convertedTime *= 24;
+		case HOURS:
+			convertedTime *= 60;
 		case MINUTES:
 			convertedTime *= 60;
 		case SECONDS:
@@ -160,5 +169,10 @@ public class PhoenixFireModule implements DataSource {
 			convertedTime /= 1;
 		}
 		return convertedTime;
+	}
+
+	public void setEvacStartHHMM(int[] evacStartHHMM) {
+		evacStartInSeconds = convertTime(evacStartHHMM[0], TimestepUnit.HOURS, timestepUnit) 
+				+ convertTime(evacStartHHMM[1], TimestepUnit.MINUTES, timestepUnit);
 	}
 }
