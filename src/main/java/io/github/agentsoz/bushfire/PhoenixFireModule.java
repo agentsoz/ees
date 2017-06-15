@@ -46,17 +46,13 @@ import io.github.agentsoz.dataInterface.DataSource;
 
 public class PhoenixFireModule implements DataSource {
 
-	public enum TimestepUnit {
-		SECONDS, MINUTES, HOURS, DAYS
-	}
-
 	private final Logger logger = LoggerFactory.getLogger("io.github.agentsoz.bushfire");
 
 	private DataServer dataServer = null;
 	private JSONObject json = null;
 	private double lastUpdateTimeInMinutes = -1;
 	private TreeMap<Double, Double[][]> fire;
-	private TimestepUnit timestepUnit = TimestepUnit.SECONDS;
+	private Time.TimestepUnit timestepUnit = Time.TimestepUnit.SECONDS;
 	private double evacStartInSeconds = 0.0;
 	private boolean fireAlertSent = false;
 
@@ -98,7 +94,7 @@ public class PhoenixFireModule implements DataSource {
 
 	@Override
 	public Object getNewData(double timestep, Object parameters) {
-		double time = convertTime(timestep, timestepUnit, TimestepUnit.MINUTES);
+		double time = Time.convertTime(timestep, timestepUnit, Time.TimestepUnit.MINUTES);
 		SortedMap<Double, Double[][]> shapes = fire.subMap(lastUpdateTimeInMinutes, time);
 		// if evac start time was explicitly set, then send alert at that time
 		// irrespective of when the fire actually starts
@@ -117,7 +113,7 @@ public class PhoenixFireModule implements DataSource {
 		lastUpdateTimeInMinutes = time;
 		Double nextTime = fire.higherKey(time);
 		if (nextTime != null) {
-			dataServer.registerTimedUpdate(DataTypes.FIRE, this, convertTime(nextTime, TimestepUnit.MINUTES, timestepUnit));
+			dataServer.registerTimedUpdate(DataTypes.FIRE, this, Time.convertTime(nextTime, Time.TimestepUnit.MINUTES, timestepUnit));
 		}
 		return shapes;
 	}
@@ -142,37 +138,12 @@ public class PhoenixFireModule implements DataSource {
 		logger.warn("Function not implemented yet!");
 	}
 
-	public void setTimestepUnit(TimestepUnit unit) {
+	public void setTimestepUnit(Time.TimestepUnit unit) {
 		timestepUnit = unit;
 	}
 
-	private double convertTime(double time, TimestepUnit from, TimestepUnit to) {
-		double convertedTime = time;
-		switch (from) {
-		case DAYS:
-			convertedTime *= 24;
-		case HOURS:
-			convertedTime *= 60;
-		case MINUTES:
-			convertedTime *= 60;
-		case SECONDS:
-			convertedTime *= 1;
-		}
-		switch (to) {
-		case DAYS:
-			convertedTime /= 24;
-		case HOURS:
-			convertedTime /= 60;
-		case MINUTES:
-			convertedTime /= 60;
-		case SECONDS:
-			convertedTime /= 1;
-		}
-		return convertedTime;
-	}
-
 	public void setEvacStartHHMM(int[] evacStartHHMM) {
-		evacStartInSeconds = convertTime(evacStartHHMM[0], TimestepUnit.HOURS, timestepUnit) 
-				+ convertTime(evacStartHHMM[1], TimestepUnit.MINUTES, timestepUnit);
+		evacStartInSeconds = Time.convertTime(evacStartHHMM[0], Time.TimestepUnit.HOURS, timestepUnit) 
+				+ Time.convertTime(evacStartHHMM[1], Time.TimestepUnit.MINUTES, timestepUnit);
 	}
 }

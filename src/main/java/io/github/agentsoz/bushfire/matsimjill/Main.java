@@ -44,7 +44,8 @@ import io.github.agentsoz.bushfire.EvacuationReport;
 import io.github.agentsoz.bushfire.FireModule;
 import io.github.agentsoz.bushfire.MATSimBDIParameterHandler;
 import io.github.agentsoz.bushfire.PhoenixFireModule;
-import io.github.agentsoz.bushfire.PhoenixFireModule.TimestepUnit;
+import io.github.agentsoz.bushfire.Time;
+import io.github.agentsoz.bushfire.Time.TimestepUnit;
 import io.github.agentsoz.dataInterface.DataServer;
 import io.github.agentsoz.jill.util.Log;
 
@@ -101,7 +102,7 @@ public class Main {
 		if (isGlobalUTM && !isFireUTM) {
 			fireModel.convertLatLongToUtm();
 		}
-		fireModel.setTimestepUnit(TimestepUnit.SECONDS);
+		fireModel.setTimestepUnit(Time.TimestepUnit.SECONDS);
 		fireModel.start();
 		
 		// Create the Jill BDI model
