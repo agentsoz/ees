@@ -131,6 +131,10 @@ public class SimpleConfig {
 	public static int[] getEvacStartHHMM() {
 		return evacStartHHMM;
 	}
+	
+	public static int getEvacPeakMins() {
+		return evacPeakMins;
+	}
 
 	public static String getGeographyCoordinateSystem() {
 		return geographyCoordinateSystem;

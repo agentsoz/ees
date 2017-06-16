@@ -74,7 +74,7 @@ public class Resident extends Agent implements io.github.agentsoz.bdiabm.Agent {
 	public void handlePercept(String perceptID, Object parameters) {
 		if (perceptID.equals(BDI_PERCEPT_FIRE_ALERT)) {
 			// Received a fire alert so act now
-			writer.println("Resident"+getId()+" received fire alert");
+			writer.println("Resident"+getId()+" received fire alert at time "+parameters);
 			post(new RespondToFireAlert("RespondToFireAlert"));
 		}
 	}
