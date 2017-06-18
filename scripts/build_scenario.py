@@ -6,6 +6,7 @@ import fileinput
 import json
 import subprocess
 import utm
+import math
 from pprint import pprint
 from shutil import copyfile
 from osgeo import ogr
@@ -148,7 +149,9 @@ main_replacements = {
     '${outputDirectory}' : o_matsim_outdir,
     '${bdiagents_number}' : "%s" % nAgents,
     '${trafficBehaviour_preEvacDetour_proportion}' : "%s" % proportionRelatives,
-    '${trafficBehaviour_preEvacDetour_radiusInMtrs}' : "%s" % maxMtrsToRelatives
+    '${trafficBehaviour_preEvacDetour_radiusInMtrs}' : "%s" % maxMtrsToRelatives,
+    '${flowCapacityFactor}' : "%s" % (data["maxSpeed"]/100.0), 
+    '${storageCapacityFactor}' : "%s" % math.pow(data["maxSpeed"]/100.0, 0.75) # see https://matsim.atlassian.net/wiki/questions/44040198/answers/44040200/comments/46956546
 }
 geography_replacements = {
     '${geographyfile_coordinate_system}' : data["coordinate_system"],
