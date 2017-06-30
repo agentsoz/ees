@@ -146,9 +146,9 @@ public class JillBDIModel extends JillModel implements DataClient {
 	 * Here we are forcing a pattern of vehicles leaving, by spreading the
 	 * alerts over a normal distribution.
 	 */
-	public void scheduleFireAlertsToResidents(int[] hhmm, int mins6Sigma) {
-		double minsSigma = mins6Sigma/6.0;
-		double minsMean = mins6Sigma/2.0;
+	public void scheduleFireAlertsToResidents(int[] hhmm, int mins3Sigma) {
+		double minsSigma = mins3Sigma/3.0;
+		double minsMean = mins3Sigma;
 		double evacStartInSeconds = Time.convertTime(hhmm[0], Time.TimestepUnit.HOURS, Time.TimestepUnit.SECONDS) 
 				+ Time.convertTime(hhmm[1], Time.TimestepUnit.MINUTES, Time.TimestepUnit.SECONDS);
 		Random r = new Random();
