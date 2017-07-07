@@ -40,8 +40,8 @@
 			<directory>${basedir}/scripts/</directory>
 			<outputDirectory></outputDirectory>
 			<includes>
-				<include>run.sh</include>
 				<include>build_scenario.py</include>
+				<include>create-analysis-graphs.sh</include>
 			</includes>
 		</fileSet>
 		<fileSet>

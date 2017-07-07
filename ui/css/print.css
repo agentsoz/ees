@@ -1,3 +1,7 @@
+body, pre {
+ font-size: 10px; 
+}
+
 .panel-collapse {
  display: block !important;
  height: auto !important;

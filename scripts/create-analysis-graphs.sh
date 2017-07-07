@@ -1,7 +1,7 @@
 #!/bin/bash
 ###
 # Example command to run the script: 
-# > ./plot-departures.sh --matsim-output-dir 
+# > ./create-analysis-graphs.sh --matsim-output-dir 
 ###
 
 DIR=`dirname "$0"`

@@ -97,8 +97,23 @@ app.post('/', function(req, res) {
 					}
 					var playbackURL = path.join(dataDirURL, req.body.data.name, 'scenario','scenario_matsim_output','ITERS','it.0','0.googleearth.kmz');
 					json.playbackURL = playbackURL;
-					send(res, {'msg': shared.MSG_GET_SCENARIO,
-						'data' : json});
+					// Read list of analysis graphs
+					var list = [];
+					global.log("Getting list of analysis graphs");
+					var analysisDir = path.join(userDir, 'analysis');
+					fs.readdir(analysisDir, function (err, files) {
+						if (!err) {
+							files.forEach(function(file) {
+								if (file.match(/.(jpg|jpeg|png|gif)$/i)) {
+									var fileURL = path.join(dataDirURL, req.body.data.name, 'analysis', file);
+									list.push({name: file, url:fileURL});
+								}
+							});
+							json.graphs = list;
+						}
+						send(res, {'msg': shared.MSG_GET_SCENARIO,
+							'data' : json});
+					});
 				});
 			}
 		});
@@ -249,6 +264,7 @@ function create(data, callback) {
 				//global.log(JSON.stringify(res2));
 		    	var nAgents = res2.simulation.bdiagents[0].trim();
 				// Now run the simulation
+				var plotScript = path.join(distDir,'create-analysis-graphs.sh');
 				var cmd = 'java -cp ' + dist +
 			       ' io.github.agentsoz.bushfire.matsimjill.Main' +
 			       ' --config ' + fileMain +
@@ -260,6 +276,8 @@ function create(data, callback) {
 			       'logFile: \\"' + fileJillLog + '\\",' +
 			       'programOutputFile: \\"' + fileJillOut + '\\"' +
 			       '}"' +
+			       ' && ' +
+			       plotScript + ' --scenario-output-dir "'+userDir+'"' +
 			       '&'
 			       ;
 				global.log(cmd);

@@ -94,8 +94,10 @@ function selectSimulation(scenarioName) {
 	var scenario = getScenario(name);
 	getScenarioFromServer(name, 
 		function(scenario) {
+			// save the retrieved scenario
+			global.existing_scenario_selected = scenario;
 			$('.dropdown-graphs').selectpicker('destroy');
-			//setOptionsForGraphsSelection($(".dropdown-graphs"), scenario.graphs);
+			setOptionsForGraphsSelection($(".dropdown-graphs"), scenario.data.graphs);
 			$(".dropdown-graphs").selectpicker('refresh');
 			// Set the scenario details
 			setScenarioDetails(scenario);
@@ -207,16 +209,16 @@ function setScenarioDetails(scenario) {
 }
 
 $("body").on("change", ".dropdown-graphs", function(e) {
-	var name = $("#view-scenario-dropdown option:selected").text();
-	var scenario = getScenario(name);
+	var scenario = global.existing_scenario_selected;
 	$(".graph-object").remove();
 	$('.dropdown-graphs :selected').each(function(i, selected) {
 		var sel = $(selected).text();
-		var graph = getGraph(scenario, sel);
+		var graph = getGraph(scenario.data, sel);
 		var o = '<div class="graph-object col-sm-6 text-center">';
-		o += '<object width="100%" type="image/svg+xml" data="';
-		o += graph.url;
-		o += '"> Your browser does not support SVG </object>';
+		//o += '<object width="100%" type="image/svg+xml" data="';
+		//o += graph.url;
+		//o += '"> Your browser does not support SVG </object>';
+		o += '<img src="' + graph.url + '"/>' 
 		o += '</div>';
 		$("#graphs").append(o);
 	});

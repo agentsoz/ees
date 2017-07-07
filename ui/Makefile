@@ -27,7 +27,7 @@ config:
 install: config
 	rsync -a -F --delete --delete-excluded ${BASEDIR} ${WEBDIR}
 	ln -s ${DATADIR}/user-data ${WEBDIR}/user-data
-	rsync -avz ${JAR} ${DATADIR}
+	rsync -avz --delete --delete-excluded ${JAR} ${DATADIR}
 
 minify : config
 	#
