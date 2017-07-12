@@ -10,7 +10,11 @@ window.onload = function(e) {
 	// Auto complete setup
 	$( "#new-scenario-input" ).autocomplete({
 		source: getTownshipsNames(), // list of auto-complete options
-		select: handleNewScenarioInput // function to call on selection
+		select: handleNewScenarioInput, // function to call on selection
+	    minLength: 0 // show all options on focus
+	})
+	.focus(function() {
+		$(this).autocomplete('search', $(this).val())
 	});
 	$( "#new-scenario-input" ).attr('placeholder', 'Start typing ...');
 	$( "#existing-scenario-input" ).autocomplete({
