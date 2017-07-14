@@ -179,7 +179,7 @@ $("body").on("change", "select", function(e) {
 		if (text.localeCompare('Select') == 0) {
 			global.scenario_fire = null;
 		} else if (text.localeCompare('No incident') == 0) {
-			global.scenario_fire = null;
+			global.scenario_fire = {name : "NO_INCIDENT", url : "", description : ""};
 		} else {
 			var fire = getFire(township, text);
 			global.scenario_fire = fire;
@@ -612,7 +612,7 @@ function save(callback, errfn) {
 	// Road network area and associated MATSim Network file
 	msg.osmArea = { // FIXME: hard-wired network file; osmArea.url should be specified per-township in init.js
 			"rectangle" : township.osmArea,
-			"url" :  "app-data/maldon/network.xml"};
+			"url" :  township.roadNetwork};
 	// Fire shape file in Geo JSON format
 	msg.fire = {
 		    "name" : (typeof global.scenario_fire === 'undefined') ? "" : global.scenario_fire.name,

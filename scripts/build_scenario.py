@@ -105,7 +105,7 @@ t_geography_xsd = os.path.join(args.templatesdir, "geography.xsd")
 
 o_main = os.path.join(outdir, "%s_main.xml" % prefix)
 o_matsim = os.path.join(outdir, "%s_matsim_main.xml" % prefix)
-o_matsim_network = os.path.join(outdir, "%s_matsim_network.xml" % prefix)
+o_matsim_network = os.path.join(outdir, "%s_matsim_network.xml.gz" % prefix)
 o_matsim_network_change = os.path.join(outdir, "%s_matsim_network_change_events.xml" % prefix)
 o_matsim_plans = os.path.join(outdir, "%s_matsim_plans.xml" % prefix)
 o_matsim_outdir = os.path.join(outdir, "%s_matsim_output" % prefix)
@@ -169,9 +169,15 @@ log(cmd)
 subprocess.call(cmd)
 
 # write the fire file
-i_fire = os.path.join(args.datadir, data["fire"]["url"])
-log("FIXME: writing fire file '%s' from '%s'" % (o_fire, i_fire))
-copyfile(i_fire, o_fire)
+if data["fire"]["name"] == "NO_INCIDENT":
+	log("writing empty fire file '%s'" % (o_fire))
+	f = open(o_fire, 'w')
+	f.write('{"features": []}\n')
+	f.close()
+else:
+	i_fire = os.path.join(args.datadir, data["fire"]["url"])
+	log("writing fire file '%s' from '%s'" % (o_fire, i_fire))
+	copyfile(i_fire, o_fire)
 
 # write the MATSim config file
 log("writing %s" % o_matsim)

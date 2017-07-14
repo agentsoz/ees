@@ -22,10 +22,16 @@ in that system.
    Then make sure that the network.xml and population.xml provided is
    using that same coordinate system. 
 
-2. The following command will generate a population of 700 agents placed
+2. The follosing will generate the MATSim network file in the correct
+   coordinate system from a given OpenStreetMap (.osm) file:
+   ```
+   java -cp bushfire-2.0.2-SNAPSHOT.jar io.github.agentsoz.util.NetworkGenerator \
+      -i ./input.osm -o ./output.xml -wkt "EPSG:28355"
+   ```
+3. The following command will generate a population of 700 agents placed
    randomly within the rectangular area specified by the two diagonal coordinates:
    ```
-   java -cp bushfire-1.0.1-SNAPSHOT.jar io.github.agentsoz.bushfire.GenerateInput \
+   java -cp bushfire-2.0.2-SNAPSHOT.jar io.github.agentsoz.bushfire.GenerateInput \
       -outdir scenarios/maldon/ \
       -prefix maldon \
       -matsimpop "700/EPSG:28355/RECT/234274,5895647&246377,5919215"
