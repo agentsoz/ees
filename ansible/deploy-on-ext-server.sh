@@ -7,13 +7,16 @@
 # sudo pip install --upgrade pip --proxy https://bproxy.rmit.edu.au:8080
 # sudo pip install utm --proxy https://bproxy.rmit.edu.au:8080
 # sudo yum install gdal gdal-devel gdal-python
+# sudo yum install R
+# Then within 'sudo R'
+#   install.packages("ggplot2")
 
 BASEDIR=/var/www/html/
 SERVER=e43361@rschnpeap65.eres.rmit.edu.au
 SERVERDIR=/var/www/html/
 
 rsync -avz ${BASEDIR} ${SERVER}:${SERVERDIR}
-rsync -avz ${BASEDIR}/../data/bushfire-2.0.0 ${SERVER}:${SERVERDIR}/../data
+rsync -avz ${BASEDIR}/../data/bushfire-2.0.2-SNAPSHOT ${SERVER}:${SERVERDIR}/../data
 
 # cd ${WEBDIR}/nodejs && forever stop serve.js  ; rm -f ~/.forever/serve.js.log  ; forever start -l serve.js.log serve.js
 ssh ${SERVER} "cd ${SERVERDIR}/nodejs && forever stopall && forever cleanlogs && forever start -l serve.js.log serve.js"
