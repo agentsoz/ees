@@ -123,8 +123,7 @@ Specify the timing of the evacuation
 <!--===========================================================================
 Number of BDI agents (N) to initialise.
 
-The total number of agents (M) is determined by the MATSim population file
-(see ${matsimfile_name}).
+The total number of agents (M) is determined by the MATSim population file.
 
 The final number of BDI agents will be the lesser of N,M. Setting N really high
 (so that it is always greater than M), will ensure that the entire MATSim
