@@ -73,6 +73,28 @@ def parse_args():
 
 
 #----------------------------------------------------------------------------
+# MATSim util functions
+#----------------------------------------------------------------------------
+def getMaxSpeedLinks(gz_network):
+	# get the list of all links
+    # zcat gz_network | grep -o "link id=\".*\" from" | cut -f2 -d'"' | sort -n | uniq
+	cmd1 = subprocess.Popen(('zcat', gz_network), stdout=subprocess.PIPE)
+	cmd2 = subprocess.Popen(('grep', '-o', 'link id=.* from'), stdin=cmd1.stdout, stdout=subprocess.PIPE)
+	cmd1.stdout.close()
+	cmd3 = subprocess.Popen(('cut', '-f2', '-d', "\""), stdin=cmd2.stdout, stdout=subprocess.PIPE)
+	cmd2.stdout.close()
+	cmd4 = subprocess.Popen(('sort', '-n'), stdin=cmd3.stdout, stdout=subprocess.PIPE)
+	cmd3.stdout.close()
+	cmd5 = subprocess.Popen(('uniq'), stdin=cmd4.stdout, stdout=subprocess.PIPE)
+	cmd4.stdout.close()
+
+	links = '';
+	for line in iter(cmd5.stdout.readline,''):
+		links += '  <link refId="' + line.rstrip() + '"/>\n'
+
+	return links
+
+#----------------------------------------------------------------------------
 # START
 #----------------------------------------------------------------------------
 
@@ -150,8 +172,8 @@ main_replacements = {
     '${bdiagents_number}' : "%s" % nAgents,
     '${trafficBehaviour_preEvacDetour_proportion}' : "%s" % proportionRelatives,
     '${trafficBehaviour_preEvacDetour_radiusInMtrs}' : "%s" % maxMtrsToRelatives,
-    '${flowCapacityFactor}' : "%s" % (data["maxSpeed"]/100.0), 
-    '${storageCapacityFactor}' : "%s" % math.pow(data["maxSpeed"]/100.0, 0.75) # see https://matsim.atlassian.net/wiki/questions/44040198/answers/44040200/comments/46956546
+    '${flowCapacityFactor}' : "1.0", # "%s" % (data["maxSpeed"]/100.0), 
+    '${storageCapacityFactor}' : "1.0", # "%s" % math.pow(data["maxSpeed"]/100.0, 0.75) # see https://matsim.atlassian.net/wiki/questions/44040198/answers/44040200/comments/46956546
 }
 geography_replacements = {
     '${geographyfile_coordinate_system}' : data["coordinate_system"],
@@ -192,11 +214,20 @@ i_network = os.path.join(args.datadir, data["osmArea"]["url"])
 log("FIXME: writing MATSim network file '%s' from '%s'" % (o_matsim_network, i_network))
 copyfile(i_network, o_matsim_network)
 
+network_change_replacements = {
+    '${maxSpeed}' : "%s" % (data["maxSpeed"]/100.0),
+    '${maxSpeedLinks}' : getMaxSpeedLinks(o_matsim_network),
+}
+
 # write the MATSim network change events file
-log("FIXME: writing MATSim network change events file '%s' from '%s'" % (o_matsim_network_change, t_matsim_network_change))
-copyfile(t_matsim_network_change, o_matsim_network_change)
-
-
+log("writing MATSim network change events file '%s' from '%s'" % (o_matsim_network_change, t_matsim_network_change))
+#copyfile(t_matsim_network_change, o_matsim_network_change)
+log("writing %s" % o_matsim_network_change)
+with open(t_matsim_network_change) as infile, open(o_matsim_network_change, 'w') as outfile:
+    for line in infile:
+        for src, target in network_change_replacements.iteritems():
+            line = line.replace(src, target)
+        outfile.write(line)
 
 # write the population file
 #log("FIXME: hardwired %s agents" % nAgents)
