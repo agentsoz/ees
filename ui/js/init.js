@@ -38,9 +38,11 @@ global.townships = [ {
 	vehiclesAreas : [],
 	destinations : [ {
 		name : "Guildford",
+		marker: null,
 		coordinates : { lat: LATLNG_Guildford[0], lng: LATLNG_Guildford[1] }
 	}, {
 		name : "Harcourt",
+		marker: null,
 		coordinates : { lat: LATLNG_Harcourt[0], lng: LATLNG_Harcourt[1] }
 	} ]
 }, {
@@ -55,9 +57,11 @@ global.townships = [ {
 	vehiclesAreas : [],
 	destinations : [{
 		name : "Castlemaine",
+		marker: null,
 		coordinates : { lat: LATLNG_Castlemaine[0], lng: LATLNG_Castlemaine[1] }
 	}, {
 		name : "Guildford",
+		marker: null,
 		coordinates : { lat: LATLNG_Guildford[0], lng: LATLNG_Guildford[1] }
 	} ]
 }, {
@@ -72,9 +76,11 @@ global.townships = [ {
 	vehiclesAreas : [],
 	destinations : [ {
 		name : "Chewton",
+		marker: null,
 		coordinates : { lat: LATLNG_Chewton[0], lng: LATLNG_Chewton[1] }
 	}, {
 		name : "Guildford",
+		marker: null,
 		coordinates : { lat: LATLNG_Guildford[0], lng: LATLNG_Guildford[1] }
 	} ]
 }, {
@@ -89,9 +95,11 @@ global.townships = [ {
 	vehiclesAreas : [],
 	destinations : [ {
 		name : "Castlemaine",
+		marker: null,
 		coordinates : { lat: LATLNG_Castlemaine[0], lng: LATLNG_Castlemaine[1] }
 	}, {
 		name : "Elphinstone",
+		marker: null,
 		coordinates : { lat: LATLNG_Elphingstone[0], lng: LATLNG_Elphingstone[1] }
 	} ]
 }, {
@@ -114,15 +122,19 @@ global.townships = [ {
 	vehiclesAreas : [],
 	destinations : [ {
 		name : "Castlemaine",
+		marker: null,
 		coordinates : { lat: LATLNG_Castlemaine[0], lng: LATLNG_Castlemaine[1] }
 	}, {
 		name : "Harcourt",
+		marker: null,
 		coordinates : { lat: LATLNG_Harcourt[0], lng: LATLNG_Harcourt[1] }
 	}, {
 		name : "Lockwood South",
+		marker: null,
 		coordinates : { lat: LATLNG_Lockwood_South[0], lng: LATLNG_Lockwood_South[1] }
 	}, {
 		name : "Newstead",
+		marker: null,
 		coordinates : { lat: LATLNG_Newstead[0], lng: LATLNG_Newstead[1] }
 	} ]
 }, {
@@ -137,12 +149,15 @@ global.townships = [ {
 	vehiclesAreas : [],
 	destinations : [ {
 		name : "Castlemaine",
+		marker: null,
 		coordinates : { lat: LATLNG_Castlemaine[0], lng: LATLNG_Castlemaine[1] }
 	}, {
 		name : "Guildford",
+		marker: null,
 		coordinates : { lat: LATLNG_Guildford[0], lng: LATLNG_Guildford[1] }
 	}, {
 		name : "Maldon",
+		marker: null,
 		coordinates : { lat: LATLNG_Maldon[0], lng: LATLNG_Maldon[1] }
 	}]
 }, {
@@ -157,9 +172,11 @@ global.townships = [ {
 	vehiclesAreas : [],
 	destinations : [ {
 		name : "Malmsbury",
+		marker: null,
 		coordinates : { lat: LATLNG_Malmsbury[0], lng: LATLNG_Malmsbury[1] }
 	}, {
 		name : "Elphinstone",
+		marker: null,
 		coordinates : { lat: LATLNG_Elphingstone[0], lng: LATLNG_Elphingstone[1] }
 	} ]
 }, {
@@ -174,15 +191,19 @@ global.townships = [ {
 	vehiclesAreas : [],
 	destinations : [ {
 		name : "Chewton",
+		marker: null,
 		coordinates : { lat: LATLNG_Chewton[0], lng: LATLNG_Chewton[1] }
 	}, {
 		name : "Guildford",
+		marker: null,
 		coordinates : { lat: LATLNG_Guildford[0], lng: LATLNG_Guildford[1] }
 	} ]
 }
 ];
 
 global.existing_scenarios = [];
+
+global.selected_destination = null;
 
 global.evacTime = {
 	hh : 12,
