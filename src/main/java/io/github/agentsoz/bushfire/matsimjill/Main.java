@@ -36,18 +36,11 @@ import ch.qos.logback.core.FileAppender;
  */
 
 import io.github.agentsoz.bdiabm.data.AgentDataContainer;
-import io.github.agentsoz.bdiabm.data.AgentState;
 import io.github.agentsoz.bdiabm.data.AgentStateList;
 import io.github.agentsoz.bdimatsim.MATSimModel;
-import io.github.agentsoz.bushfire.Config;
-import io.github.agentsoz.bushfire.EvacuationReport;
-import io.github.agentsoz.bushfire.FireModule;
-import io.github.agentsoz.bushfire.MATSimBDIParameterHandler;
 import io.github.agentsoz.bushfire.PhoenixFireModule;
 import io.github.agentsoz.bushfire.Time;
-import io.github.agentsoz.bushfire.Time.TimestepUnit;
 import io.github.agentsoz.dataInterface.DataServer;
-import io.github.agentsoz.jill.util.Log;
 
 public class Main {
 	
@@ -110,12 +103,12 @@ public class Main {
 		jillmodel.registerDataServer(dataServer);
 
 		// Create the MATSim ABM model and register the data server
-		matsimModel = new MATSimModel(jillmodel, null);
+		matsimModel = new MATSimModel(jillmodel);
 		matsimModel.registerDataServer(dataServer);
 
 		// Start the MATSim controller
 		String[] margs = { SimpleConfig.getMatSimFile() };
-		matsimModel.run(null, margs);
+		matsimModel.run(margs);
 		
 		// All done, so terminate now
 		jillmodel.finish();

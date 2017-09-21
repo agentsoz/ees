@@ -89,8 +89,7 @@ public class BushfireMain {
 		BushfireApplication bushfireApp = new BushfireApplication();
 
 		// Initialise the MATSim model
-		MATSimModel matsimManager = new MATSimModel(bushfireApp,
-				new MATSimBDIParameterHandler());
+		MATSimModel matsimManager = new MATSimModel(bushfireApp);
 		matsimManager.registerDataServer(dataServer);
 
 		// Initialise and register the visualiser for percepts and other data
@@ -114,7 +113,7 @@ public class BushfireMain {
 			s += margs[i];
 		}
 		logger.info(s);
-		matsimManager.run(null, margs);
+		matsimManager.run(margs);
 
 		// Close the report
 		logger.info("simulation ended");
