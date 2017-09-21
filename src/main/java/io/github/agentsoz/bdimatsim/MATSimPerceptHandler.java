@@ -59,20 +59,4 @@ public final class MATSimPerceptHandler {
 		return eventHandler.registerMonitor(agentId, event, linkId, handler);
 	}
 
-	/**
-	 * Process percepts
-	 * 
-	 * @param agentIDg
-	 *            ID of the agent
-	 * @param perceptID
-	 *            Percept IDs are defined in {@link MATSimPerceptList}. eg:
-	 *            ARRIVED, REQUESTLOCATION.
-	 * @return The response
-	 */
-	@Deprecated
-	final Object[] processPercept(String agentID, String perceptID) {
-		System.err.println("processPercept(String agentID, String perceptID) should never be called (deprecated)!");
-		return null;
-	}
-	
 }

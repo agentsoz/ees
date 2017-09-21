@@ -1,35 +1,5 @@
 package io.github.agentsoz.bdimatsim;
 
-/*
- * #%L
- * BDI-ABM Integration Package
- * %%
- * Copyright (C) 2014 - 2015 by its authors. See AUTHORS file.
- * %%
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Lesser Public License for more details.
- * 
- * You should have received a copy of the GNU General Lesser Public
- * License along with this program.  If not, see
- * <http://www.gnu.org/licenses/lgpl-3.0.html>.
- * #L%
- */
-
-import io.github.agentsoz.bdiabm.ABMServerInterface;
-import io.github.agentsoz.bdiabm.BDIServerInterface;
-import io.github.agentsoz.bdiabm.data.AgentDataContainer;
-import io.github.agentsoz.bdimatsim.app.MATSimApplicationInterface;
-import io.github.agentsoz.bdimatsim.app.StubPlugin;
-import io.github.agentsoz.bdimatsim.moduleInterface.data.SimpleMessage;
-import io.github.agentsoz.dataInterface.DataServer;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -66,6 +36,36 @@ import org.slf4j.LoggerFactory;
 
 import com.google.inject.Provider;
 
+/*
+ * #%L
+ * BDI-ABM Integration Package
+ * %%
+ * Copyright (C) 2014 - 2015 by its authors. See AUTHORS file.
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Lesser Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Lesser Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/lgpl-3.0.html>.
+ * #L%
+ */
+
+import io.github.agentsoz.bdiabm.ABMServerInterface;
+import io.github.agentsoz.bdiabm.BDIServerInterface;
+import io.github.agentsoz.bdiabm.data.AgentDataContainer;
+import io.github.agentsoz.bdimatsim.app.MATSimApplicationInterface;
+import io.github.agentsoz.bdimatsim.app.StubPlugin;
+import io.github.agentsoz.bdimatsim.moduleInterface.data.SimpleMessage;
+import io.github.agentsoz.dataInterface.DataServer;
+
 /**
  * @author QingyuChen, KaiNagel, Dhi Singh
  */
@@ -81,7 +81,7 @@ public final class MATSimModel implements ABMServerInterface {
 
 	private double time;
 
-	private final MatsimParameterHandler matSimParameterManager;
+//	private final MatsimParameterHandler matSimParameterManager;
 	private MATSimAgentManager agentManager ;
 	private MobsimDataProvider mobsimDataProvider = new MobsimDataProvider() ;
 
@@ -128,9 +128,8 @@ public final class MATSimModel implements ABMServerInterface {
 		return this.mobsimDataProvider ;
 	}
 
-	public MATSimModel( BDIServerInterface bidServer, MatsimParameterHandler matsimParams) {
+	public MATSimModel( BDIServerInterface bidServer) {
 		this.bdiServer = bidServer ;
-		this.matSimParameterManager = matsimParams ;
 		this.agentsUpdateMessages = new ArrayList<SimpleMessage>();
 		this.agentManager = new MATSimAgentManager( this ) ;
 		this.registerPlugin(new StubPlugin());
@@ -140,12 +139,9 @@ public final class MATSimModel implements ABMServerInterface {
 		this.plugin = app;
 	}
 	
-	public final void run(String parameterFile,String[] args) {
+	public final void run(String[] args) {
 		// (this needs to be public)
 
-		if (parameterFile != null) {
-			matSimParameterManager.readParameters(parameterFile);
-		}
 		Config config = ConfigUtils.loadConfig( args[0] ) ;
 
 		config.network().setTimeVariantNetwork(true);
@@ -165,23 +161,7 @@ public final class MATSimModel implements ABMServerInterface {
 
 		scenario = ScenarioUtils.loadScenario(config) ;
 
-		// FIXME: Get rid of the matSimParameterManager altogether (dsingh, 25aug16)
-		// At the moment it is used in the default bushfire application, but has
-		// already been removed for the jill version (where it is initialised as null).
-		// Will need a way to get the #bdi agents from the config to here (needed to
-		// allow both BDI and MATSim agents to co exist).
-		// For now, if matSimParameterManager is null then all MATSim agents
-		// will have BDI counterparts
-		if (this.matSimParameterManager != null) {
-			// this is some conversion of nice matsim objects into ugly conventional data structures :-):
-			final Collection<Id<Link>> allLinkIDs = this.getScenario().getNetwork().getLinks().keySet() ;
-			this.matSimParameterManager.setNETWORKIDS(Utils.createFlatLinkIDs(allLinkIDs)); //Link IDs in string[] format
-		}
-		final Collection<? extends Link> links = this.getScenario().getNetwork().getLinks().values();
-		Utils.generateLinkCoordsAsArray(links);
-		Utils.computeBoundingBox(links);
-
-		this.bdiAgentIDs = Utils.getBDIAgentIDs( scenario, matSimParameterManager );
+		this.bdiAgentIDs = Utils.getBDIAgentIDs( scenario );
 
 		// ---
 
@@ -235,7 +215,6 @@ public final class MATSimModel implements ABMServerInterface {
 									setupFlag = false;
 								}
 								// the real work is done here:
-								//MATSimModel.this.runBDIModule();
 								
 								// On 25 Aug 2016 dsingh said:
 								// The notifyMobsimBeforeSimStep(e) function essentially provides
@@ -249,7 +228,7 @@ public final class MATSimModel implements ABMServerInterface {
 								publishDataToExternalListeners();
 								// 2. Next, call the BDI model that will populate the 
 								//    agent data container with any action/percepts per agent
-								MATSimModel.this.bdiServer.takeControl(agentManager.getAgentDataContainer());
+								bdiServer.takeControl(agentManager.getAgentDataContainer());
 								// 3. Finally, call the MATSim model and process 
 								//    the BDI actions/percepts, and re-populate the 
 								//    agent data container, ready to pass to the BDI system in the 
@@ -283,9 +262,9 @@ public final class MATSimModel implements ABMServerInterface {
 		this.bdiServer.init(this.agentManager.getAgentDataContainer(),
 				this.agentManager.getAgentStateList(), this,
 				Utils.getPersonIDsAsArray(this.bdiAgentIDs));
+		// (yy "this" is too powerful an object here, but it saves many lines of code. kai, mar'15)
 		
 		this.bdiServer.start();
-		// (yy "this" is too powerful an object here, but it saves many lines of code. kai, mar'15)
 
 		controller.run();
 	}
@@ -319,11 +298,6 @@ public final class MATSimModel implements ABMServerInterface {
 				}
 			}
 		}
-	}
-
-	@Override
-	public final Object[] queryPercept(String agentID, String perceptID) {
-		return this.getBDIAgent(agentID).getPerceptHandler().processPercept(agentID, perceptID);
 	}
 
 	public final void registerDataServer( DataServer server ) {

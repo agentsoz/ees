@@ -116,10 +116,6 @@ public class MATSimAgent {
 		passedDriveToActions.clear();
 	}
 
-	final Object[] getPerceptValue(String perceptID) {
-		return perceptHandler.processPercept(agentID.toString(), perceptID);
-	}
-
 	/*
 	 * Checks the location and returns which driveToAction has been
 	 * PASSED/ARRIVED

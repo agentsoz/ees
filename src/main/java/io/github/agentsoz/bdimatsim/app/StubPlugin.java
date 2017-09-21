@@ -54,4 +54,10 @@ public class StubPlugin implements MATSimApplicationInterface {
 		return null;
 	}
 
+	@Override
+	public void run(String[] args) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

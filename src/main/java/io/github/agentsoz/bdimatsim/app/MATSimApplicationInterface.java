@@ -81,6 +81,8 @@ public interface MATSimApplicationInterface {
 	 */
 	public Replanner getReplanner(ActivityEndRescheduler activityEndRescheduler);
 
+	public void run(String[] args);
+
 	
 	
 }

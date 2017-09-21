@@ -50,14 +50,13 @@ final class Utils {
 	@SuppressWarnings("unused")
 	private static final Logger log = Logger.getLogger(Utils.class);
 	
-	static List<Id<Person>> getBDIAgentIDs( Scenario scenario, MatsimParameterHandler matSimParameterHandler ) {
+	static List<Id<Person>> getBDIAgentIDs( Scenario scenario ) {
 		// this goes through all matsim agents, ignores the stub agents, and returns as many of those agent ids as the
 		// bdi module wants as bdi agents (the remaining agents will, I guess, remain normal matsim agents).  kai, mar'15
 		
-		ArrayList<Id<Person>> agentIDs = new ArrayList<Id<Person>>();
+		ArrayList<Id<Person>> agentIDs = new ArrayList<>();
 
-		int ii =0;
-		ArrayList<Id<Person>> agents = new ArrayList<Id<Person>>(scenario.getPopulation().getPersons().keySet());
+		ArrayList<Id<Person>> agents = new ArrayList<>(scenario.getPopulation().getPersons().keySet());
 		Collections.sort(agents);
 		Id<Person> stubId = Id.createPersonId("StubAgent");
 		for(Id<Person> id:agents)
@@ -66,11 +65,6 @@ final class Utils {
 				continue;
 			}
 			agentIDs.add(id);
-			ii ++;
-
-			if(matSimParameterHandler != null && ii >= matSimParameterHandler.getNumberOfAgents()){
-				break;
-			}
 		}
 		return agentIDs;
 	}
