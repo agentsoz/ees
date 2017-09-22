@@ -9,6 +9,7 @@
   <xs:element name="name" type="xs:string"/>
   <xs:element name="coordinates" type="xs:string"/>
   <xs:element name="capacity" type="xs:short"/>
+  <xs:element name="split" type="xs:decimal"/>
   
   <!-- complex elements -->
 
@@ -19,6 +20,7 @@
       <xs:sequence>
         <xs:element ref="bdi:name" xmlns:bdi="https://github.com/agentsoz/bdi-abm-integration"/>
         <xs:element ref="bdi:coordinates" xmlns:bdi="https://github.com/agentsoz/bdi-abm-integration"/>
+        <xs:element ref="bdi:split" xmlns:bdi="https://github.com/agentsoz/bdi-abm-integration"/>
         <xs:element 
           ref="bdi:capacity" 
            minOccurs="0" maxOccurs="1"

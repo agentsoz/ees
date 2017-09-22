@@ -692,6 +692,8 @@ function save(callback, errfn) {
 	// Selected destinations and safe lines
 	msg.destinations = [];
 	msg.safeLines = [];
+	var split_evenly = $('#destinations-list li').length < 2 || $('#split-vehicles-evenly').is(":checked");
+	var splits = $(".split-vehicles-dropdown option:selected");
 	for (var i = 0; i < township.safeLines.length; i++) {
 		var line = township.safeLines[i].line.getPath().getArray();
 		msg.safeLines.push({
@@ -702,9 +704,23 @@ function save(callback, errfn) {
 		});
 		var dest = getDestination(township, township.safeLines[i].name);
 		if (dest != null) {
+			// calculate the split of vehicles
+			var split = 100.0;
+			if (split_evenly) {
+				split = (100.0/township.safeLines.length).toFixed(2);
+			} else {
+				for (var i = 0; i < splits.length; i++) {
+					if(dest.name.localeCompare(splits[i].parentElement.id ) == 0) {
+						split = splits[i].value;
+						break;
+					}
+				}
+			}
+			// now add this destination
 			msg.destinations.push({
-				name: dest.name,
-				coordinates: dest.coordinates
+				"name": dest.name,
+				"coordinates": dest.coordinates,
+				"split": split
 			});
 		}
 	}

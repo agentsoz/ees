@@ -39,6 +39,7 @@ public class Location {
 	private String name;
 	private double x;
 	private double y;
+	private Object attributes;
 
 	/**
 	 * Create a new location
@@ -57,6 +58,13 @@ public class Location {
 		this.y = y;
 	}
 
+	   public Location(String n, double x, double y, Object attributes) {
+	        name = n;
+	        this.x = x;
+	        this.y = y;
+	        this.attributes = attributes;
+	    }
+
 	
 	public String getName() {
 		return name;
@@ -72,6 +80,10 @@ public class Location {
 
 	public double[] getCoordinates() {
 		return new double[] { x, y };
+	}
+	
+	public Object getAttributes() {
+	  return attributes;
 	}
 
 	public String toString() {
