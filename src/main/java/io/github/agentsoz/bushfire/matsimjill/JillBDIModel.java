@@ -35,7 +35,7 @@ import io.github.agentsoz.bdiabm.ABMServerInterface;
 import io.github.agentsoz.bdiabm.data.AgentDataContainer;
 import io.github.agentsoz.bdiabm.data.AgentStateList;
 import io.github.agentsoz.bushfire.DataTypes;
-import io.github.agentsoz.bushfire.FireModule;
+import io.github.agentsoz.bushfire.PhoenixFireModule;
 import io.github.agentsoz.bushfire.Time;
 import io.github.agentsoz.dataInterface.DataClient;
 import io.github.agentsoz.dataInterface.DataServer;
@@ -130,7 +130,7 @@ public class JillBDIModel extends JillModel implements DataClient {
 		while (!alerts.isEmpty() && alerts.peek().getTime() <= timeInSecs) {
 			TimedAlert alert = alerts.poll();
 			String jillId = agents.get(alert.getAgent());
-			adc.getOrCreate(jillId).getPerceptContainer().put(FireModule.FIREALERT, new Double(timeInSecs));
+			adc.getOrCreate(jillId).getPerceptContainer().put(PhoenixFireModule.FIREALERT, new Double(timeInSecs));
 		}
 		super.takeControl(adc);
 	}

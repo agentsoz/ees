@@ -23,9 +23,6 @@ package io.github.agentsoz.bushfire.matsimjill;
  */
 
 import io.github.agentsoz.bushfire.datamodels.Location;
-import io.github.agentsoz.bushfire.datamodels.Region;
-import io.github.agentsoz.bushfire.datamodels.ReliefCentre;
-import io.github.agentsoz.bushfire.datamodels.Route;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -75,9 +72,6 @@ public class SimpleConfig {
 	private static int[] evacStartHHMM = new int[] {0, 0};
 	private static int evacPeakMins = 0;
 	private static HashMap<String, Location> locations = new HashMap<String, Location>();
-	private static HashMap<String, Region> regions = new HashMap<String, Region>();
-	private static HashMap<String, Route> routes = new HashMap<String, Route>();
-	public static HashMap<String, ReliefCentre> reliefCentres = new HashMap<String, ReliefCentre>();
 	private static String fireCoordinateSystem = "longlat";
 	private static String fireFileFormat = "custom";
 	private static String geographyCoordinateSystem = "longlat";
@@ -156,34 +150,6 @@ public class SimpleConfig {
 
 	public static Location getLocation(String name) {
 		return locations.get(name);
-	}
-
-	private static Region getRegion(String name) {
-		return regions.get(name);
-	}
-
-	private static Set<String> getRegionsByName() {
-		return regions.keySet();
-	}
-
-	private static Collection<Region> getRegions() {
-		return regions.values();
-	}
-
-	private static Route getRoute(String name) {
-		return routes.get(name);
-	}
-
-	private static Set<String> getRoutes() {
-		return routes.keySet();
-	}
-
-	private static ReliefCentre getReliefCentre(String name) {
-		return reliefCentres.get(name);
-	}
-
-	private static Set<String> getReliefCentres() {
-		return reliefCentres.keySet();
 	}
 
 	public static String getConfigFile() {
