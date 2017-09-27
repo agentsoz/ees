@@ -2,7 +2,7 @@
 
 DIR=$(dirname "$0")
 
-java -cp /var/www/data/bushfire-2.0.2-SNAPSHOT/bushfire-2.0.2-SNAPSHOT.jar io.github.agentsoz.bushfire.matsimjill.Main --config $DIR/scenario/scenario_main.xml --logfile $DIR/scenario/scenario.log --loglevel TRACE --jillconfig "--config={agents:[{classname:io.github.agentsoz.bushfire.matsimjill.agents.Resident, args:null, count:300}],logLevel: WARN,logFile: \"$DIR/scenario/jill.log\",programOutputFile: \"$DIR/scenario/jill.out\"}"
+java -cp $DIR/../../target/bushfire-2.0.2-SNAPSHOT/bushfire-2.0.2-SNAPSHOT.jar io.github.agentsoz.bushfire.matsimjill.Main --config $DIR/scenario/scenario_main.xml --logfile $DIR/scenario/scenario.log --loglevel TRACE --jillconfig "--config={agents:[{classname:io.github.agentsoz.bushfire.matsimjill.agents.Resident, args:null, count:300}],logLevel: WARN,logFile: \"$DIR/scenario/jill.log\",programOutputFile: \"$DIR/scenario/jill.out\"}"
 
 dest1="Harcourt"
 dest2="Lockwood South"
