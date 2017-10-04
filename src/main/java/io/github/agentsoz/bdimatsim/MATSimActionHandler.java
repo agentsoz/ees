@@ -1,6 +1,6 @@
 package io.github.agentsoz.bdimatsim;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 /*
  * #%L
@@ -43,7 +43,7 @@ import io.github.agentsoz.bdimatsim.app.BDIPerceptHandler;
 public final class MATSimActionHandler {
 	private final MATSimModel matSimModel;
 	
-	private final HashMap<String, BDIActionHandler> registeredActions;
+	private final LinkedHashMap<String, BDIActionHandler> registeredActions;
 
 	/**
 	 * Constructor
@@ -53,7 +53,7 @@ public final class MATSimActionHandler {
 	protected MATSimActionHandler(MATSimModel matSimModel) {
 		this.matSimModel = matSimModel;
 		
-		this.registeredActions = new HashMap<String, BDIActionHandler>();
+		this.registeredActions = new LinkedHashMap<String, BDIActionHandler>();
 		
 		// Register all the actions that we handle by default
 		// The application can later add custom actions in a similar way

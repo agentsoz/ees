@@ -29,7 +29,7 @@ import io.github.agentsoz.bdiabm.data.AgentDataContainer;
 import io.github.agentsoz.bdiabm.data.AgentState;
 import io.github.agentsoz.bdiabm.data.AgentStateList;
 import io.github.agentsoz.bdimatsim.app.MATSimApplicationInterface;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.population.Person;
@@ -39,11 +39,11 @@ import org.matsim.core.mobsim.qsim.ActivityEndRescheduler;
  * @author Edmund Kemsley This class holds MatsimAgent objects and information
  *         related to the agents in the Matsim system such the replanner
  *         MatsimAgents and extension of Matsim Agents are stored in
- *         matSimAgents Hashmap
+ *         matSimAgents LinkedHashMap
  */
 final class MATSimAgentManager {
 	private AgentStateList agentStateList;
-	private HashMap<Id<Person>, MATSimAgent> matSimAgents;
+	private LinkedHashMap<Id<Person>, MATSimAgent> matSimAgents;
 	private MATSimModel matSimModel;
 	private AgentDataContainer agentDataContainer;
 	private Replanner agentReplanner;
@@ -51,7 +51,7 @@ final class MATSimAgentManager {
 	MATSimAgentManager(MATSimModel model) {
 		this.matSimModel = model;
 
-		matSimAgents = new HashMap<Id<Person>, MATSimAgent>();
+		matSimAgents = new LinkedHashMap<Id<Person>, MATSimAgent>();
 		agentStateList = new AgentStateList();
 		this.agentDataContainer = new AgentDataContainer();
 	}
