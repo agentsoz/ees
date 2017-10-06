@@ -38,13 +38,13 @@ import org.matsim.api.core.v01.population.Person;
  *         PerceptHandler and ActionHandler, and lists of driveToActions
  */
 
-public class MATSimAgent {
+public final class MATSimAgent {
 	private MATSimPerceptHandler perceptHandler;
 	private MATSimActionHandler actionHandler;
 	private Id<Person> agentID;
 	private String agentType;
 
-	private ArrayList<Id<Link>> passedDriveToActions;
+//	private ArrayList<Id<Link>> passedDriveToActions;
 	private ArrayList<Id<Link>> driveToActions;
 
 	private ActionContainer actionContainer;
@@ -62,9 +62,9 @@ public class MATSimAgent {
 		return actionHandler;
 	}
 
-	final ArrayList<Id<Link>> getpassedDriveToActions() {
-		return passedDriveToActions;
-	}
+//	final ArrayList<Id<Link>> getpassedDriveToActions() {
+//		return passedDriveToActions;
+//	}
 
 	public final ActionContainer getActionContainer() {
 		return this.actionContainer;
@@ -74,18 +74,18 @@ public class MATSimAgent {
 		return this.perceptContainer;
 	}
 
-	final void setPerceptContainer(PerceptContainer perceptContainer) {
-		this.perceptContainer = perceptContainer;
-	}
-
-	final void setPerceptHandler(MATSimPerceptHandler perceptHandler) {
-		this.perceptHandler = perceptHandler;
-	}
-
-	final void setActionContainer(ActionContainer actionContainer) {
-		this.actionContainer = actionContainer;
-
-	}
+//	final void setPerceptContainer(PerceptContainer perceptContainer) {
+//		this.perceptContainer = perceptContainer;
+//	}
+//
+//	final void setPerceptHandler(MATSimPerceptHandler perceptHandler) {
+//		this.perceptHandler = perceptHandler;
+//	}
+//
+//	final void setActionContainer(ActionContainer actionContainer) {
+//		this.actionContainer = actionContainer;
+//
+//	}
 
 	MATSimAgent(MATSimActionHandler actionHandler,
 			MATSimPerceptHandler perceptHandler, Id<Person> agentID,
@@ -95,8 +95,8 @@ public class MATSimAgent {
 		this.agentID = agentID;
 		this.actionContainer = actionContainer;
 		this.perceptContainer = perceptContainer;
-		passedDriveToActions = new ArrayList<Id<Link>>();
-		driveToActions = new ArrayList<Id<Link>>();
+//		passedDriveToActions = new ArrayList<>();
+		driveToActions = new ArrayList<>();
 	}
 
 	public final void newDriveTo(Id<Link> newAction) {
@@ -108,13 +108,13 @@ public class MATSimAgent {
 	}
 
 	final void clearAllActions() {
-		passedDriveToActions.clear();
+//		passedDriveToActions.clear();
 		driveToActions.clear();
 	}
 
-	public final void clearPassedDriveToActions() {
-		passedDriveToActions.clear();
-	}
+//	public final void clearPassedDriveToActions() {
+//		passedDriveToActions.clear();
+//	}
 
 	/*
 	 * Checks the location and returns which driveToAction has been
@@ -131,7 +131,7 @@ public class MATSimAgent {
 
 			if (dest.equals(location)) {
 				driveToActions.remove(dest);
-				passedDriveToActions.add(dest);
+//				passedDriveToActions.add(dest);
 				return dest;
 			}
 		}

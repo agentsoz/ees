@@ -91,8 +91,7 @@ final class MATSimAgentManager {
 	 * functionality
 	 */
 	final boolean createAndAddBDIAgent(Id<Person> agentID) {
-		ActionPerceptContainer agentContainer = agentDataContainer
-				.getOrCreate(agentID.toString());
+		ActionPerceptContainer agentContainer = agentDataContainer.getOrCreate(agentID.toString());
 		MATSimAgent agent = new MATSimAgent(
 				new MATSimActionHandler(matSimModel), 
 				new MATSimPerceptHandler(matSimModel), 
