@@ -85,7 +85,7 @@ public final class MATSimModel implements ABMServerInterface {
 
 	private double time;
 
-//	private final MatsimParameterHandler matSimParameterManager;
+	//	private final MatsimParameterHandler matSimParameterManager;
 	private MATSimAgentManager agentManager ;
 	private MobsimDataProvider mobsimDataProvider = new MobsimDataProvider() ;
 
@@ -142,7 +142,7 @@ public final class MATSimModel implements ABMServerInterface {
 	public final void registerPlugin(MATSimApplicationInterface app) {
 		this.abmmodel = app;
 	}
-	
+
 	public final void run(String[] args) {
 		// (this needs to be public)
 
@@ -158,7 +158,7 @@ public final class MATSimModel implements ABMServerInterface {
 
 		config.controler().setWritePlansInterval(1);
 		config.planCalcScore().setWriteExperiencedPlans(true);
-		
+
 		config.controler().setOverwriteFileSetting( OverwriteFileSetting.overwriteExistingFiles );
 
 		// ---
@@ -171,85 +171,37 @@ public final class MATSimModel implements ABMServerInterface {
 
 		final Controler controller = new Controler( scenario );
 
-		final EventsManager eventsManager = controller.getEvents();
 		eventsHandler = new AgentActivityEventHandler(MATSimModel.this);
-		eventsManager.addHandler(eventsHandler);
+		controller.getEvents().addHandler(eventsHandler);
 
-		// having anonymous classes stuck into each other is not very pleasing to read, but it makes for short code and
-		// avoids going overboard with passing object references around. kai, mar'15  & may'15
 		controller.addOverridingModule(new AbstractModule(){
 			@Override public void install() {
 				this.addMobsimListenerBinding().toInstance( new MobsimInitializedListener() {
 					@Override public void notifyMobsimInitialized(MobsimInitializedEvent e) {
 						// for the time being doing this here since from a matsim perspective we would like to
 						// re-create them in every iteration. kai, oct;17
-						
+
+						QSim qSim = (QSim) e.getQueueSimulation() ;
+
 						//Utils.initialiseVisualisedAgents(MATSimModel.this) ;
 
 						// Allow the application to adjust the BDI agents list prior to creating agents
 						abmmodel.notifyBeforeCreatingBDICounterparts(MATSimModel.this.getBDIAgentIDs());
-						
+
 						for(Id<Person> agentId: MATSimModel.this.getBDIAgentIDs()) {
 							/*Important - add agent to agentManager */
 							MATSimModel.this.getAgentManager().createAndAddBDIAgent(agentId);
 							//MATSimModel.this.getAgentManager().getReplanner().removeActivities(agentId);
 						}
-						
+
 						// Allow the application to configure the freshly baked agents
 						abmmodel.notifyAfterCreatingBDICounterparts(MATSimModel.this.getBDIAgentIDs());
-						
+
 						// Register new BDI actions and percepts from the application
 						// Must be done after the agents have been created since new 
 						// actions/percepts are registered with each BDI agent
 						MATSimModel.this.getAgentManager().registerApplicationActionsPercepts(abmmodel);
-					}
-				}) ;
-				
-				this.bindMobsim().toProvider(new Provider<Mobsim>(){
-					@Override
-					public Mobsim get() {
-						QSim qSim = QSimUtils.createDefaultQSim(scenario, eventsManager) ;
 
-						// ===
-						qSim.addQueueSimulationListeners( new MobsimBeforeSimStepListener() {
-							boolean setupFlag = true ;
-							/**
-							 * The most important method - called each time step during the iteration
-							 */		
-							@Override
-							public void notifyMobsimBeforeSimStep(@SuppressWarnings("rawtypes") MobsimBeforeSimStepEvent e) {
-								MATSimModel.this.setTime(e.getSimulationTime());
-								if(setupFlag) {
-									// should be possible to do the initialization in some other way ...
-									
-									
-									// Flag that setup is done
-									setupFlag = false;
-								}
-								// the real work is done here:
-								
-								// On 25 Aug 2016 dsingh said:
-								// The notifyMobsimBeforeSimStep(e) function essentially provides
-								// the simulation clock in any MATSim-BDI integration, since there
-								// is no external controller (MATSim acts as the controller).
-								// So this is where we control and synchronise all models
-								// (ABM, BDI, Fire, other) with respect to data transfer
-								//
-								// 1. First step the data server so that it can conduct
-								//    the data transfer between all connected models
-								publishDataToExternalListeners();
-								// 2. Next, call the BDI model that will populate the 
-								//    agent data container with any action/percepts per agent
-								bdiServer.takeControl(agentManager.getAgentDataContainer());
-								// 3. Finally, call the MATSim model and process 
-								//    the BDI actions/percepts, and re-populate the 
-								//    agent data container, ready to pass to the BDI system in the 
-								//    next cycle.
-								MATSimModel.this.takeControl(agentManager.getAgentDataContainer());
-							}
-						} ) ; // end anonymous class MobsimListener
-						// ===
-						
 						// passes important matsim qsim functionality to the agent manager:
 						agentManager.setUpReplanner(abmmodel.getReplanner(qSim), qSim);
 						// yy "qSim" is too powerful an object here. kai, mar'15
@@ -259,14 +211,41 @@ public final class MATSimModel implements ABMServerInterface {
 						MobsimVehicle veh = null ;
 						StubAgent stubAgent = new StubAgent(dummyLinkId,Id.createPersonId("StubAgent"),veh);
 						qSim.insertAgentIntoMobsim(stubAgent);
-
-						// return qsim (this is a factory)
-						return qSim ;
 					}
 				}) ;
+
+				this.addMobsimListenerBinding().toInstance( new MobsimBeforeSimStepListener() {
+					/**
+					 * The most important method - called each time step during the iteration
+					 */		
+					@Override
+					public void notifyMobsimBeforeSimStep(MobsimBeforeSimStepEvent e) {
+						MATSimModel.this.setTime(e.getSimulationTime());
+
+						// the real work is done here:
+
+						// On 25 Aug 2016 dsingh said:
+						// The notifyMobsimBeforeSimStep(e) function essentially provides
+						// the simulation clock in any MATSim-BDI integration, since there
+						// is no external controller (MATSim acts as the controller).
+						// So this is where we control and synchronise all models
+						// (ABM, BDI, Fire, other) with respect to data transfer
+						//
+						// 1. First step the data server so that it can conduct
+						//    the data transfer between all connected models
+						publishDataToExternalListeners();
+						// 2. Next, call the BDI model that will populate the 
+						//    agent data container with any action/percepts per agent
+						bdiServer.takeControl(agentManager.getAgentDataContainer());
+						// 3. Finally, call the MATSim model and process 
+						//    the BDI actions/percepts, and re-populate the 
+						//    agent data container, ready to pass to the BDI system in the 
+						//    next cycle.
+						MATSimModel.this.takeControl(agentManager.getAgentDataContainer());
+					}
+				} ) ; // end anonymous class MobsimListener
 			}
-		});
-		
+		}) ;
 
 		controller.getMobsimListeners().add(mobsimDataProvider);
 
@@ -275,12 +254,12 @@ public final class MATSimModel implements ABMServerInterface {
 				this.agentManager.getAgentStateList(), this,
 				Utils.getPersonIDsAsArray(this.bdiAgentIDs));
 		// (yy "this" is too powerful an object here, but it saves many lines of code. kai, mar'15)
-		
+
 		this.bdiServer.start();
 
 		controller.run();
 	}
-	
+
 	/**
 	 * Publish updates from this model to any connected listeners, such
 	 * as visualisers. Updates buffer is then flushed. 
