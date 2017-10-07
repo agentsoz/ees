@@ -54,19 +54,16 @@ final class Utils {
 		// this goes through all matsim agents, ignores the stub agents, and returns as many of those agent ids as the
 		// bdi module wants as bdi agents (the remaining agents will, I guess, remain normal matsim agents).  kai, mar'15
 		
-		ArrayList<Id<Person>> agentIDs = new ArrayList<>();
+		ArrayList<Id<Person>> bDIagentIDs = new ArrayList<>();
 
-		ArrayList<Id<Person>> agents = new ArrayList<>(scenario.getPopulation().getPersons().keySet());
-		Collections.sort(agents);
 		Id<Person> stubId = Id.createPersonId("StubAgent");
-		for(Id<Person> id:agents)
-		{
+		for ( Id<Person> id : scenario.getPopulation().getPersons().keySet() ) {
 			if(id.compareTo(stubId) == 0){
 				continue;
 			}
-			agentIDs.add(id);
+			bDIagentIDs.add(id);
 		}
-		return agentIDs;
+		return bDIagentIDs;
 	}
 
 	static void initialiseVisualisedAgents(MATSimModel matSimModel){

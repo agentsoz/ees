@@ -16,10 +16,14 @@ import org.matsim.core.config.groups.QSimConfigGroup;
 import org.matsim.core.controler.AbstractModule;
 import org.matsim.core.controler.Controler;
 import org.matsim.core.controler.OutputDirectoryHierarchy.OverwriteFileSetting;
+import org.matsim.core.controler.events.BeforeMobsimEvent;
+import org.matsim.core.controler.listener.BeforeMobsimListener;
 import org.matsim.core.mobsim.framework.Mobsim;
 import org.matsim.core.mobsim.framework.MobsimAgent;
 import org.matsim.core.mobsim.framework.events.MobsimBeforeSimStepEvent;
+import org.matsim.core.mobsim.framework.events.MobsimInitializedEvent;
 import org.matsim.core.mobsim.framework.listeners.MobsimBeforeSimStepListener;
+import org.matsim.core.mobsim.framework.listeners.MobsimInitializedListener;
 import org.matsim.core.mobsim.qsim.QSim;
 import org.matsim.core.mobsim.qsim.QSimUtils;
 import org.matsim.core.mobsim.qsim.interfaces.MobsimVehicle;
@@ -87,7 +91,7 @@ public final class MATSimModel implements ABMServerInterface {
 
 	final BDIServerInterface bdiServer;
 
-	private MATSimApplicationInterface plugin;
+	private MATSimApplicationInterface abmmodel;
 
 	private AgentActivityEventHandler eventsHandler;
 
@@ -136,7 +140,7 @@ public final class MATSimModel implements ABMServerInterface {
 	}
 
 	public final void registerPlugin(MATSimApplicationInterface app) {
-		this.plugin = app;
+		this.abmmodel = app;
 	}
 	
 	public final void run(String[] args) {
@@ -175,6 +179,32 @@ public final class MATSimModel implements ABMServerInterface {
 		// avoids going overboard with passing object references around. kai, mar'15  & may'15
 		controller.addOverridingModule(new AbstractModule(){
 			@Override public void install() {
+				this.addMobsimListenerBinding().toInstance( new MobsimInitializedListener() {
+					@Override public void notifyMobsimInitialized(MobsimInitializedEvent e) {
+						// for the time being doing this here since from a matsim perspective we would like to
+						// re-create them in every iteration. kai, oct;17
+						
+						//Utils.initialiseVisualisedAgents(MATSimModel.this) ;
+
+						// Allow the application to adjust the BDI agents list prior to creating agents
+						abmmodel.notifyBeforeCreatingBDICounterparts(MATSimModel.this.getBDIAgentIDs());
+						
+						for(Id<Person> agentId: MATSimModel.this.getBDIAgentIDs()) {
+							/*Important - add agent to agentManager */
+							MATSimModel.this.getAgentManager().createAndAddBDIAgent(agentId);
+							//MATSimModel.this.getAgentManager().getReplanner().removeActivities(agentId);
+						}
+						
+						// Allow the application to configure the freshly baked agents
+						abmmodel.notifyAfterCreatingBDICounterparts(MATSimModel.this.getBDIAgentIDs());
+						
+						// Register new BDI actions and percepts from the application
+						// Must be done after the agents have been created since new 
+						// actions/percepts are registered with each BDI agent
+						MATSimModel.this.getAgentManager().registerApplicationActionsPercepts(abmmodel);
+					}
+				}) ;
+				
 				this.bindMobsim().toProvider(new Provider<Mobsim>(){
 					@Override
 					public Mobsim get() {
@@ -192,24 +222,6 @@ public final class MATSimModel implements ABMServerInterface {
 								if(setupFlag) {
 									// should be possible to do the initialization in some other way ...
 									
-									//Utils.initialiseVisualisedAgents(MATSimModel.this) ;
-
-									// Allow the application to adjust the BDI agents list prior to creating agents
-									plugin.notifyBeforeCreatingBDICounterparts(MATSimModel.this.getBDIAgentIDs());
-									
-									for(Id<Person> agentId: MATSimModel.this.getBDIAgentIDs()) {
-										/*Important - add agent to agentManager */
-										MATSimModel.this.getAgentManager().createAndAddBDIAgent(agentId);
-										//MATSimModel.this.getAgentManager().getReplanner().removeActivities(agentId);
-									}
-									
-									// Allow the application to configure the freshly baked agents
-									plugin.notifyAfterCreatingBDICounterparts(MATSimModel.this.getBDIAgentIDs());
-									
-									// Register new BDI actions and percepts from the application
-									// Must be done after the agents have been created since new 
-									// actions/percepts are registered with each BDI agent
-									MATSimModel.this.getAgentManager().registerApplicationActionsPercepts(plugin);
 									
 									// Flag that setup is done
 									setupFlag = false;
@@ -239,7 +251,7 @@ public final class MATSimModel implements ABMServerInterface {
 						// ===
 						
 						// passes important matsim qsim functionality to the agent manager:
-						agentManager.setUpReplanner(plugin.getReplanner(qSim), qSim);
+						agentManager.setUpReplanner(abmmodel.getReplanner(qSim), qSim);
 						// yy "qSim" is too powerful an object here. kai, mar'15
 
 						// add stub agent to keep simulation alive:
@@ -321,7 +333,7 @@ public final class MATSimModel implements ABMServerInterface {
 		return this.mobsimDataProvider.getAgents() ;
 	}
 
-	public double getTime() {
+	public final double getTime() {
 		return time ;
 	}
 
