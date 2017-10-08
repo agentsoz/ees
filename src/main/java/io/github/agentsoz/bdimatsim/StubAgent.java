@@ -28,6 +28,7 @@ import org.matsim.api.core.v01.network.Link;
 import org.matsim.api.core.v01.population.Person;
 import org.matsim.core.mobsim.framework.MobsimDriverAgent;
 import org.matsim.core.mobsim.qsim.interfaces.MobsimVehicle;
+import org.matsim.facilities.Facility;
 import org.matsim.vehicles.Vehicle;
 final class StubAgent implements MobsimDriverAgent{
 
@@ -120,6 +121,16 @@ final class StubAgent implements MobsimDriverAgent{
 	@Override
 	public boolean isWantingToArriveOnCurrentLink() {
 		throw new RuntimeException("not implemented") ;
+	}
+	@Override
+	public Facility<? extends Facility<?>> getCurrentFacility() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public Facility<? extends Facility<?>> getDestinationFacility() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

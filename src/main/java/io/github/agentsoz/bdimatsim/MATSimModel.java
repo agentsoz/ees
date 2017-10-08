@@ -13,6 +13,8 @@ import org.matsim.core.api.experimental.events.EventsManager;
 import org.matsim.core.config.Config;
 import org.matsim.core.config.ConfigUtils;
 import org.matsim.core.config.groups.QSimConfigGroup;
+import org.matsim.core.config.groups.QSimConfigGroup.StarttimeInterpretation;
+import org.matsim.core.config.groups.StrategyConfigGroup.StrategySettings;
 import org.matsim.core.controler.AbstractModule;
 import org.matsim.core.controler.Controler;
 import org.matsim.core.controler.OutputDirectoryHierarchy.OverwriteFileSetting;
@@ -33,6 +35,7 @@ import org.matsim.core.network.NetworkChangeEvent.ChangeValue;
 import org.matsim.core.network.NetworkChangeEventFactory;
 import org.matsim.core.network.NetworkChangeEventFactoryImpl;
 import org.matsim.core.network.NetworkImpl;
+import org.matsim.core.replanning.strategies.DefaultPlanStrategiesModule.DefaultSelector;
 import org.matsim.core.scenario.ScenarioUtils;
 import org.matsim.withinday.mobsim.MobsimDataProvider;
 import org.slf4j.Logger;
@@ -91,7 +94,7 @@ public final class MATSimModel implements ABMServerInterface {
 
 	final BDIServerInterface bdiServer;
 
-	private MATSimApplicationInterface abmmodel;
+	private MATSimApplicationInterface application;
 
 	private AgentActivityEventHandler eventsHandler;
 
@@ -140,7 +143,7 @@ public final class MATSimModel implements ABMServerInterface {
 	}
 
 	public final void registerPlugin(MATSimApplicationInterface app) {
-		this.abmmodel = app;
+		this.application = app;
 	}
 
 	public final void run(String[] args) {
@@ -153,19 +156,19 @@ public final class MATSimModel implements ABMServerInterface {
 		// Normally, the qsim starts at the earliest activity end time.  The following tells the mobsim to start
 		// at 2 seconds before 6:00, no matter what is in the initial plans file:
 		config.qsim().setStartTime( 1.00 );
-		config.qsim().setSimStarttimeInterpretation( QSimConfigGroup.ONLY_USE_STARTTIME );
+		config.qsim().setSimStarttimeInterpretation( StarttimeInterpretation.onlyUseStarttime );
 		//config.qsim().setEndTime( 8.*3600 + 1800. );
 
 		config.controler().setWritePlansInterval(1);
 		config.planCalcScore().setWriteExperiencedPlans(true);
 
 		config.controler().setOverwriteFileSetting( OverwriteFileSetting.overwriteExistingFiles );
-
+		
 		// ---
 
 		scenario = ScenarioUtils.loadScenario(config) ;
 
-		this.bdiAgentIDs = Utils.getBDIAgentIDs( scenario );
+		bdiAgentIDs = Utils.getBDIAgentIDs( scenario );
 
 		// ---
 
@@ -186,31 +189,30 @@ public final class MATSimModel implements ABMServerInterface {
 						//Utils.initialiseVisualisedAgents(MATSimModel.this) ;
 
 						// Allow the application to adjust the BDI agents list prior to creating agents
-						abmmodel.notifyBeforeCreatingBDICounterparts(MATSimModel.this.getBDIAgentIDs());
+						application.notifyBeforeCreatingBDICounterparts(bdiAgentIDs);
 
-						for(Id<Person> agentId: MATSimModel.this.getBDIAgentIDs()) {
+						for(Id<Person> agentId: bdiAgentIDs) {
 							/*Important - add agent to agentManager */
-							MATSimModel.this.getAgentManager().createAndAddBDIAgent(agentId);
+							agentManager.createAndAddBDIAgent(agentId);
 							//MATSimModel.this.getAgentManager().getReplanner().removeActivities(agentId);
 						}
 
 						// Allow the application to configure the freshly baked agents
-						abmmodel.notifyAfterCreatingBDICounterparts(MATSimModel.this.getBDIAgentIDs());
+						application.notifyAfterCreatingBDICounterparts(MATSimModel.this.getBDIAgentIDs());
 
 						// Register new BDI actions and percepts from the application
 						// Must be done after the agents have been created since new 
 						// actions/percepts are registered with each BDI agent
-						MATSimModel.this.getAgentManager().registerApplicationActionsPercepts(abmmodel);
+						agentManager.registerApplicationActionsPercepts(application);
 
 						// passes important matsim qsim functionality to the agent manager:
-						agentManager.setUpReplanner(abmmodel.getReplanner(qSim), qSim);
+						agentManager.setUpReplanner(application.getReplanner(qSim), qSim);
 						// yy "qSim" is too powerful an object here. kai, mar'15
 
-						// add stub agent to keep simulation alive:
+						// add stub agent to keep simulation alive.  yyyy find nicer way to do this.
 						Id<Link> dummyLinkId = qSim.getNetsimNetwork().getNetsimLinks().keySet().iterator().next() ;
-						MobsimVehicle veh = null ;
-						StubAgent stubAgent = new StubAgent(dummyLinkId,Id.createPersonId("StubAgent"),veh);
-						qSim.insertAgentIntoMobsim(stubAgent);
+						MobsimVehicle dummyVeh = null ;
+						qSim.insertAgentIntoMobsim(new StubAgent(dummyLinkId,Id.createPersonId("StubAgent"),dummyVeh));
 					}
 				}) ;
 
@@ -244,10 +246,10 @@ public final class MATSimModel implements ABMServerInterface {
 						MATSimModel.this.takeControl(agentManager.getAgentDataContainer());
 					}
 				} ) ; // end anonymous class MobsimListener
+				
+				this.addMobsimListenerBinding().toInstance( mobsimDataProvider );
 			}
 		}) ;
-
-		controller.getMobsimListeners().add(mobsimDataProvider);
 
 		// FIXME: dsingh, 25aug16: BDI init and start should be done outside of MATSim model 
 		this.bdiServer.init(this.agentManager.getAgentDataContainer(),

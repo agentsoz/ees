@@ -25,6 +25,8 @@ package io.github.agentsoz.bdimatsim;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Provider;
+
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.TransportMode;
 import org.matsim.api.core.v01.network.Link;
@@ -37,9 +39,6 @@ import org.matsim.core.mobsim.framework.HasPerson;
 import org.matsim.core.mobsim.framework.MobsimAgent;
 import org.matsim.core.mobsim.qsim.ActivityEndRescheduler;
 import org.matsim.core.mobsim.qsim.agents.WithinDayAgentUtils;
-import org.matsim.core.router.DefaultTripRouterFactoryImpl;
-import org.matsim.core.router.RoutingContext;
-import org.matsim.core.router.RoutingContextImpl;
 import org.matsim.core.router.TripRouter;
 import org.matsim.core.router.TripRouterFactoryBuilderWithDefaults;
 import org.matsim.core.router.util.TravelDisutility;
@@ -65,22 +64,24 @@ public class Replanner {
 		// be available then.  It would have to be passed to here from there (or the router constructed there and passed to here). kai, mar'15
 		TravelTime travelTime = TravelTimeUtils.createFreeSpeedTravelTime() ;
 		TravelDisutility travelDisutility = TravelDisutilityUtils.createFreespeedTravelTimeAndDisutility( model.getScenario().getConfig().planCalcScore() ) ;
-		RoutingContext routingContext = new RoutingContextImpl(travelDisutility, travelTime);
 		TripRouterFactoryBuilderWithDefaults builder = new TripRouterFactoryBuilderWithDefaults() ;
-		DefaultTripRouterFactoryImpl factory = builder.build( model.getScenario() ) ;
-		tripRouter = factory.instantiateAndConfigureTripRouter(routingContext);
+		builder.setTravelTime(travelTime);
+		builder.setTravelDisutility(travelDisutility);
+		Provider<TripRouter> provider = builder.build( model.getScenario() ) ;
+		tripRouter = provider.get() ;
 	}
 	
-	protected final void reRouteCurrentLeg( MobsimAgent agent, double time ) {
+	protected final void reRouteCurrentLeg( MobsimAgent agent, double now ) {
 		Plan plan = WithinDayAgentUtils.getModifiablePlan(agent) ;
 		PlanElement pe = plan.getPlanElements().get( WithinDayAgentUtils.getCurrentPlanElementIndex(agent)) ;
 		if ( !(pe instanceof Leg) ) {
 			return ;
 		}
 		
-		int currentLinkIndex = WithinDayAgentUtils.getCurrentRouteLinkIdIndex(agent) ;
+//		int currentLinkIndex = WithinDayAgentUtils.getCurrentRouteLinkIdIndex(agent) ;
 		
-		EditRoutes.replanCurrentLegRoute((Leg)pe, ((HasPerson)agent).getPerson(), currentLinkIndex, time, model.getScenario().getNetwork(), tripRouter) ;
+//		EditRoutes.replanCurrentRoute((Leg)pe, ((HasPerson)agent).getPerson(), currentLinkIndex, time, model.getScenario().getNetwork(), tripRouter) ;
+		EditRoutes.replanCurrentRoute(agent, now, model.getScenario().getNetwork(), tripRouter) ;
 		WithinDayAgentUtils.resetCaches(agent);
 	}
 

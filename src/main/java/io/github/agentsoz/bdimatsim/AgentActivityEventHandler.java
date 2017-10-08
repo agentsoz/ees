@@ -109,7 +109,7 @@ ActivityEndEventHandler{
 			case EnteredNode:
 				if (ev instanceof LinkEnterEvent) {
 					LinkEnterEvent event = (LinkEnterEvent)ev;
-					if (monitor.getAgentId() == event.getPersonId() && monitor.getLinkId() == event.getLinkId()) {
+					if (monitor.getAgentId() == event.getDriverId() && monitor.getLinkId() == event.getLinkId()) {
 						if(monitor.getHandler().handle(monitor.getAgentId(), monitor.getLinkId(), monitor.getEvent(), model)) {
 							toRemove.add(monitor);
 						}
@@ -119,7 +119,7 @@ ActivityEndEventHandler{
 			case ExitedNode:
 				if (ev instanceof LinkLeaveEvent) {
 					LinkLeaveEvent event = (LinkLeaveEvent)ev;
-					if (monitor.getAgentId() == event.getPersonId() && monitor.getLinkId() == event.getLinkId()) {
+					if (monitor.getAgentId() == event.getDriverId() && monitor.getLinkId() == event.getLinkId()) {
 						if(monitor.getHandler().handle(monitor.getAgentId(), monitor.getLinkId(), monitor.getEvent(), model)) {
 							toRemove.add(monitor);
 						}
@@ -156,6 +156,8 @@ ActivityEndEventHandler{
 					}
 				}
 				break;
+			default:
+				throw new RuntimeException("missing case statement") ;
 			}
 		}
 		for (Monitor monitor : toRemove) {

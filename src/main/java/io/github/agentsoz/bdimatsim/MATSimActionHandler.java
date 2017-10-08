@@ -2,6 +2,8 @@ package io.github.agentsoz.bdimatsim;
 
 import java.util.LinkedHashMap;
 
+import org.matsim.api.core.v01.Coord;
+
 /*
  * #%L
  * BDI-ABM Integration Package
@@ -28,7 +30,6 @@ import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.network.Link;
 import org.matsim.api.core.v01.population.Person;
 import org.matsim.core.network.NetworkImpl;
-import org.matsim.core.utils.geometry.CoordImpl;
 
 import io.github.agentsoz.bdiabm.data.ActionContent;
 import io.github.agentsoz.bdimatsim.AgentActivityEventHandler.MonitoredEventType;
@@ -67,7 +68,7 @@ public final class MATSimActionHandler {
 					double[] coords = (double[]) args[1];
 					newLinkId = ((NetworkImpl) model.getScenario()
 							.getNetwork()).getNearestLinkExactly(
-							new CoordImpl(coords[0], coords[1])).getId();
+							new Coord(coords[0], coords[1])).getId();
 				} else {
 					throw new RuntimeException("Destination coordinates are not given");
 				}
