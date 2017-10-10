@@ -1,7 +1,6 @@
 package io.github.agentsoz.bdimatsim;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -9,39 +8,27 @@ import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.network.Link;
 import org.matsim.api.core.v01.population.Person;
-import org.matsim.core.api.experimental.events.EventsManager;
 import org.matsim.core.config.Config;
 import org.matsim.core.config.ConfigUtils;
-import org.matsim.core.config.groups.QSimConfigGroup;
 import org.matsim.core.config.groups.QSimConfigGroup.StarttimeInterpretation;
-import org.matsim.core.config.groups.StrategyConfigGroup.StrategySettings;
 import org.matsim.core.controler.AbstractModule;
 import org.matsim.core.controler.Controler;
 import org.matsim.core.controler.OutputDirectoryHierarchy.OverwriteFileSetting;
-import org.matsim.core.controler.events.BeforeMobsimEvent;
-import org.matsim.core.controler.listener.BeforeMobsimListener;
-import org.matsim.core.mobsim.framework.Mobsim;
 import org.matsim.core.mobsim.framework.MobsimAgent;
 import org.matsim.core.mobsim.framework.events.MobsimBeforeSimStepEvent;
 import org.matsim.core.mobsim.framework.events.MobsimInitializedEvent;
 import org.matsim.core.mobsim.framework.listeners.MobsimBeforeSimStepListener;
 import org.matsim.core.mobsim.framework.listeners.MobsimInitializedListener;
 import org.matsim.core.mobsim.qsim.QSim;
-import org.matsim.core.mobsim.qsim.QSimUtils;
 import org.matsim.core.mobsim.qsim.interfaces.MobsimVehicle;
 import org.matsim.core.network.NetworkChangeEvent;
 import org.matsim.core.network.NetworkChangeEvent.ChangeType;
 import org.matsim.core.network.NetworkChangeEvent.ChangeValue;
-import org.matsim.core.network.NetworkChangeEventFactory;
-import org.matsim.core.network.NetworkChangeEventFactoryImpl;
-import org.matsim.core.network.NetworkImpl;
-import org.matsim.core.replanning.strategies.DefaultPlanStrategiesModule.DefaultSelector;
+import org.matsim.core.network.NetworkUtils;
 import org.matsim.core.scenario.ScenarioUtils;
 import org.matsim.withinday.mobsim.MobsimDataProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.google.inject.Provider;
 
 /*
  * #%L
@@ -167,6 +154,13 @@ public final class MATSimModel implements ABMServerInterface {
 		// ---
 
 		scenario = ScenarioUtils.loadScenario(config) ;
+		
+		for ( Link link : scenario.getNetwork().getLinks().values() ) {
+			final double veryLargeSpeed = 9999999999.;
+			if ( link.getFreespeed() > veryLargeSpeed ) {
+				link.setFreespeed(veryLargeSpeed);
+			}
+		}
 
 		bdiAgentIDs = Utils.getBDIAgentIDs( scenario );
 
@@ -279,11 +273,10 @@ public final class MATSimModel implements ABMServerInterface {
 	final void setFreeSpeedExample(){
 		// example how to set the freespeed of some link to zero:
 		if ( this.time == 6.*3600. + 10.*60. ) {
-			NetworkChangeEventFactory cef = new NetworkChangeEventFactoryImpl() ;
-			NetworkChangeEvent event = cef.createNetworkChangeEvent( this.time ) ;
-			event.setFreespeedChange(new ChangeValue( ChangeType.ABSOLUTE,  0. ));
+			NetworkChangeEvent event = new NetworkChangeEvent( this.time ) ;
+			event.setFreespeedChange(new ChangeValue( ChangeType.ABSOLUTE_IN_SI_UNITS,  0. ));
 			event.addLink( scenario.getNetwork().getLinks().get( Id.createLinkId( 6876 )));
-			((NetworkImpl)scenario.getNetwork()).addNetworkChangeEvent(event);
+			NetworkUtils.addNetworkChangeEvent( scenario.getNetwork(),event);
 
 			for ( MobsimAgent agent : this.getAgentMap().values() ) {
 				if ( !(agent instanceof StubAgent) ) {

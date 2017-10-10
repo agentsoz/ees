@@ -29,7 +29,7 @@ import org.matsim.api.core.v01.Coord;
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.network.Link;
 import org.matsim.api.core.v01.population.Person;
-import org.matsim.core.network.NetworkImpl;
+import org.matsim.core.network.SearchableNetwork;
 
 import io.github.agentsoz.bdiabm.data.ActionContent;
 import io.github.agentsoz.bdimatsim.AgentActivityEventHandler.MonitoredEventType;
@@ -66,7 +66,7 @@ public final class MATSimActionHandler {
 				Id<Link> newLinkId;
 				if (args[1] instanceof double[]) {
 					double[] coords = (double[]) args[1];
-					newLinkId = ((NetworkImpl) model.getScenario()
+					newLinkId = ((SearchableNetwork) model.getScenario()
 							.getNetwork()).getNearestLinkExactly(
 							new Coord(coords[0], coords[1])).getId();
 				} else {

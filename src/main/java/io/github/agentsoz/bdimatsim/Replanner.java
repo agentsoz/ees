@@ -39,36 +39,45 @@ import org.matsim.core.mobsim.framework.HasPerson;
 import org.matsim.core.mobsim.framework.MobsimAgent;
 import org.matsim.core.mobsim.qsim.ActivityEndRescheduler;
 import org.matsim.core.mobsim.qsim.agents.WithinDayAgentUtils;
+import org.matsim.core.router.DijkstraFactory;
 import org.matsim.core.router.TripRouter;
 import org.matsim.core.router.TripRouterFactoryBuilderWithDefaults;
+import org.matsim.core.router.util.LeastCostPathCalculator;
 import org.matsim.core.router.util.TravelDisutility;
 import org.matsim.core.router.util.TravelDisutilityUtils;
 import org.matsim.core.router.util.TravelTime;
 import org.matsim.core.router.util.TravelTimeUtils;
 import org.matsim.withinday.utils.EditRoutes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Replanner {
+	protected static final Logger logger = LoggerFactory.getLogger("");
 
 	protected MATSimModel model;
-	protected TripRouter tripRouter;
 	
 	protected ActivityEndRescheduler internalInterface ;
+	protected EditRoutes editRoutes;
 	
 	protected Replanner(MATSimModel model, ActivityEndRescheduler activityEndRescheduler)
 	{
 		this.model = model;
 		this.internalInterface = activityEndRescheduler ;
 		
-		// the following is where the router is set up.  Something that uses, e.g., congested travel time either needs more infrastructure.
+		// the following is where the router is set up.  Something that uses, e.g., congested travel time, needs more infrastructure.
 		// Currently, this constructor is ultimately called from within createMobsim.  This is a good place since all necessary infrastructure should
 		// be available then.  It would have to be passed to here from there (or the router constructed there and passed to here). kai, mar'15
 		TravelTime travelTime = TravelTimeUtils.createFreeSpeedTravelTime() ;
 		TravelDisutility travelDisutility = TravelDisutilityUtils.createFreespeedTravelTimeAndDisutility( model.getScenario().getConfig().planCalcScore() ) ;
-		TripRouterFactoryBuilderWithDefaults builder = new TripRouterFactoryBuilderWithDefaults() ;
-		builder.setTravelTime(travelTime);
-		builder.setTravelDisutility(travelDisutility);
-		Provider<TripRouter> provider = builder.build( model.getScenario() ) ;
-		tripRouter = provider.get() ;
+
+//		TripRouterFactoryBuilderWithDefaults builder = new TripRouterFactoryBuilderWithDefaults() ;
+//		builder.setTravelTime(travelTime);
+//		builder.setTravelDisutility(travelDisutility);
+//		Provider<TripRouter> provider = builder.build( model.getScenario() ) ;
+//		tripRouter = provider.get() ;
+
+		LeastCostPathCalculator pathCalculator = new DijkstraFactory().createPathCalculator( model.getScenario().getNetwork(), travelDisutility, travelTime) ;
+		this.editRoutes = new EditRoutes(model.getScenario().getNetwork(), pathCalculator, model.getScenario().getPopulation().getFactory() ) ;
 	}
 	
 	protected final void reRouteCurrentLeg( MobsimAgent agent, double now ) {
@@ -78,10 +87,11 @@ public class Replanner {
 			return ;
 		}
 		
-//		int currentLinkIndex = WithinDayAgentUtils.getCurrentRouteLinkIdIndex(agent) ;
+		int currentLinkIndex = WithinDayAgentUtils.getCurrentRouteLinkIdIndex(agent) ;
 		
 //		EditRoutes.replanCurrentRoute((Leg)pe, ((HasPerson)agent).getPerson(), currentLinkIndex, time, model.getScenario().getNetwork(), tripRouter) ;
-		EditRoutes.replanCurrentRoute(agent, now, model.getScenario().getNetwork(), tripRouter) ;
+//		EditRoutes.replanCurrentRoute(agent, now, model.getScenario().getNetwork(), tripRouter) ;
+		this.editRoutes.replanCurrentLegRoute((Leg)pe, ((HasPerson)agent).getPerson(), currentLinkIndex, now ) ;
 		WithinDayAgentUtils.resetCaches(agent);
 	}
 
@@ -118,8 +128,7 @@ public class Replanner {
 		Leg newLeg = this.model.getScenario().getPopulation().getFactory().createLeg(TransportMode.car);
 		// new Route for current Leg.
 		newLeg.setDepartureTime(endTime);
-		EditRoutes.relocateFutureLegRoute(newLeg, lastAct.getLinkId(), newActivityLinkId,((HasPerson)agent).getPerson(), 
-				this.model.getScenario().getNetwork(), tripRouter );
+		editRoutes.relocateFutureLegRoute(newLeg, lastAct.getLinkId(), newActivityLinkId,((HasPerson)agent).getPerson());
 
 		newAct.setEndTime( Double.POSITIVE_INFINITY ) ;
 		
