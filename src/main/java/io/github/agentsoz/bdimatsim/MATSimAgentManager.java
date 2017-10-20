@@ -34,6 +34,7 @@ import java.util.LinkedHashMap;
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.population.Person;
 import org.matsim.core.mobsim.qsim.ActivityEndRescheduler;
+import org.matsim.core.mobsim.qsim.QSim;
 
 /**
  * @author Edmund Kemsley This class holds MatsimAgent objects and information
@@ -51,12 +52,12 @@ final class MATSimAgentManager {
 	MATSimAgentManager(MATSimModel model) {
 		this.matSimModel = model;
 
-		matSimAgents = new LinkedHashMap<Id<Person>, MATSimAgent>();
+		matSimAgents = new LinkedHashMap<>();
 		agentStateList = new AgentStateList();
 		this.agentDataContainer = new AgentDataContainer();
 	}
 
-	final void setUpReplanner(Replanner replanner, ActivityEndRescheduler activityEndRescheduler) {
+	final void setUpReplanner(Replanner replanner, QSim activityEndRescheduler) {
 		// Use default replanner if none provided
 		if (replanner == null) {
 			replanner = new Replanner(matSimModel, activityEndRescheduler);

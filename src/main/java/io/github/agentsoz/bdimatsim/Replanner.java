@@ -25,8 +25,6 @@ package io.github.agentsoz.bdimatsim;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Provider;
-
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.TransportMode;
 import org.matsim.api.core.v01.network.Link;
@@ -38,10 +36,9 @@ import org.matsim.api.core.v01.population.PlanElement;
 import org.matsim.core.mobsim.framework.HasPerson;
 import org.matsim.core.mobsim.framework.MobsimAgent;
 import org.matsim.core.mobsim.qsim.ActivityEndRescheduler;
+import org.matsim.core.mobsim.qsim.QSim;
 import org.matsim.core.mobsim.qsim.agents.WithinDayAgentUtils;
-import org.matsim.core.router.DijkstraFactory;
-import org.matsim.core.router.TripRouter;
-import org.matsim.core.router.TripRouterFactoryBuilderWithDefaults;
+import org.matsim.core.router.FastAStarLandmarksFactory;
 import org.matsim.core.router.util.LeastCostPathCalculator;
 import org.matsim.core.router.util.TravelDisutility;
 import org.matsim.core.router.util.TravelDisutilityUtils;
@@ -52,17 +49,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Replanner {
-	protected static final Logger logger = LoggerFactory.getLogger("");
+	protected static final Logger logger = LoggerFactory.getLogger("io.github.agentsoz.bushfiretute.BushfireMain");
 
 	protected MATSimModel model;
 	
-	protected ActivityEndRescheduler internalInterface ;
+	protected QSim qsim ;
 	protected EditRoutes editRoutes;
 	
-	protected Replanner(MATSimModel model, ActivityEndRescheduler activityEndRescheduler)
+	protected Replanner(MATSimModel model, QSim qsim)
 	{
 		this.model = model;
-		this.internalInterface = activityEndRescheduler ;
+		this.qsim = qsim ;
 		
 		// the following is where the router is set up.  Something that uses, e.g., congested travel time, needs more infrastructure.
 		// Currently, this constructor is ultimately called from within createMobsim.  This is a good place since all necessary infrastructure should
@@ -76,7 +73,8 @@ public class Replanner {
 //		Provider<TripRouter> provider = builder.build( model.getScenario() ) ;
 //		tripRouter = provider.get() ;
 
-		LeastCostPathCalculator pathCalculator = new DijkstraFactory().createPathCalculator( model.getScenario().getNetwork(), travelDisutility, travelTime) ;
+//		LeastCostPathCalculator pathCalculator = new DijkstraFactory().createPathCalculator( model.getScenario().getNetwork(), travelDisutility, travelTime) ;
+		LeastCostPathCalculator pathCalculator = new FastAStarLandmarksFactory().createPathCalculator( model.getScenario().getNetwork(), travelDisutility, travelTime) ;
 		this.editRoutes = new EditRoutes(model.getScenario().getNetwork(), pathCalculator, model.getScenario().getPopulation().getFactory() ) ;
 	}
 	
@@ -89,8 +87,6 @@ public class Replanner {
 		
 		int currentLinkIndex = WithinDayAgentUtils.getCurrentRouteLinkIdIndex(agent) ;
 		
-//		EditRoutes.replanCurrentRoute((Leg)pe, ((HasPerson)agent).getPerson(), currentLinkIndex, time, model.getScenario().getNetwork(), tripRouter) ;
-//		EditRoutes.replanCurrentRoute(agent, now, model.getScenario().getNetwork(), tripRouter) ;
 		this.editRoutes.replanCurrentLegRoute((Leg)pe, ((HasPerson)agent).getPerson(), currentLinkIndex, now ) ;
 		WithinDayAgentUtils.resetCaches(agent);
 	}
@@ -139,7 +135,7 @@ public class Replanner {
 		// this is necessary since the simulation may have cached some info from the plan at other places.
 		// (May note be necessary in this particular situation since there is nothing to cache when an agent is at an activity.) kai, feb'14
 
-		this.internalInterface.rescheduleActivityEnd(agent);
+		this.qsim.rescheduleActivityEnd(agent);
 		// this is the only place where the internal interface is truly needed, since it is the only place where the agent needs to be "woken up".
 		// This is necessary since otherwise the simulation will not touch the agent until its previously scheduled activity end. kai, feb/14
 		
@@ -163,11 +159,11 @@ public class Replanner {
 		act.setMaximumDuration(3600*24);
 		
 		WithinDayAgentUtils.resetCaches(agent);
-		this.internalInterface.rescheduleActivityEnd(agent);
+		this.qsim.rescheduleActivityEnd(agent);
 		return true;
 	}
 	
-	final boolean forceEndActivity(Id<Person> agentId, int planElementIndex, double newEndTime)
+	final boolean changeEndActivity(Id<Person> agentId, int planElementIndex, double newEndTime)
 	{
 		Map<Id<Person>, MobsimAgent> mapping = model.getMobsimAgentMap();
 		MobsimAgent agent = mapping.get(agentId);
@@ -182,7 +178,7 @@ public class Replanner {
 		act.setMaximumDuration(3600*24);
 		
 		WithinDayAgentUtils.resetCaches(agent);
-		this.internalInterface.rescheduleActivityEnd(agent);
+		this.qsim.rescheduleActivityEnd(agent);
 		return true;
 	}
 }

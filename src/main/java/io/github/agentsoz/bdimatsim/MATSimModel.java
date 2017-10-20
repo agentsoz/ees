@@ -151,6 +151,8 @@ public final class MATSimModel implements ABMServerInterface {
 
 		config.controler().setOverwriteFileSetting( OverwriteFileSetting.overwriteExistingFiles );
 		
+		config.planCalcScore().setWriteExperiencedPlans(true);
+		
 		// ---
 
 		scenario = ScenarioUtils.loadScenario(config) ;
