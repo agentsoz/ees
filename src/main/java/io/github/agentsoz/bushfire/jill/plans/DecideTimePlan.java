@@ -29,6 +29,7 @@ import io.github.agentsoz.jill.lang.Agent;
 import io.github.agentsoz.jill.lang.Goal;
 import io.github.agentsoz.jill.lang.Plan;
 import io.github.agentsoz.jill.lang.PlanStep;
+import io.github.agentsoz.util.Global;
 
 import java.util.HashMap;
 import java.util.Random;
@@ -78,8 +79,7 @@ public class DecideTimePlan extends Plan {
 
 			if (evacDelayInSeconds == null) {
 				// this means, no time record can be found
-				Random random = new Random();
-				int randomIndex = random.nextInt(evacDelays.length);
+				int randomIndex = Global.getRandom().nextInt(evacDelays.length);
 				evacDelayInSeconds = evacController.getCurrentTime()
 						+ evacDelays[randomIndex] * 60;
 				evacController

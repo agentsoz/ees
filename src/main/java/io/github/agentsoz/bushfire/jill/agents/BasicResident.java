@@ -38,6 +38,7 @@ import io.github.agentsoz.bushfire.bdi.IBdiConnector;
 import io.github.agentsoz.bushfire.jill.goals.EvacHouse;
 import io.github.agentsoz.jill.lang.Agent;
 import io.github.agentsoz.jill.lang.AgentInfo;
+import io.github.agentsoz.util.Global;
 
 /**
  * 
@@ -79,8 +80,7 @@ public class BasicResident extends Agent implements
 				(getKids ? "has kids; " : "no kids; ")
 						+ (getRels ? "has relatives" : "no relatives"));
 		currentDestination = new double[2];
-		Random r = new Random();
-		evacDelay = r.nextInt(1800);
+		evacDelay = Global.getRandom().nextInt(1800);
 	}
 
 	public void setDestination(double[] dest) {

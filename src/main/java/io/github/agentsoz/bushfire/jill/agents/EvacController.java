@@ -1,5 +1,14 @@
 package io.github.agentsoz.bushfire.jill.agents;
 
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /*
  * #%L
  * BDI-ABM Integration Package
@@ -34,14 +43,6 @@ import io.github.agentsoz.bushfire.datamodels.Route;
 import io.github.agentsoz.bushfire.datamodels.RouteAssignment;
 import io.github.agentsoz.jill.lang.Agent;
 import io.github.agentsoz.jill.lang.AgentInfo;
-
-import java.util.HashMap;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * 
@@ -118,15 +119,15 @@ public class EvacController extends Agent implements
 
 	public EvacController(String name, IBdiConnector bdiConnector) {
 		super(name);
-		this.routes = new HashMap<String, Route>();
-		this.regions = new HashMap<String, Region>();
-		this.reliefCentres = new HashMap<String, ReliefCentre>();
-		this.fire = new HashMap<String, FireInfo>();
-		this.reliefCentreAssignments = new HashMap<String, String>();
-		this.reliefCentreVectors = new HashMap<String, ReliefCentreVector>();
-		this.routeAssignments = new HashMap<String, RouteAssignment>();
-		this.evacTimes = new HashMap<String, Double>();
-		this.setPlanChecks(new HashMap<String, PlanCheck>());
+		this.routes = new LinkedHashMap<String, Route>();
+		this.regions = new LinkedHashMap<String, Region>();
+		this.reliefCentres = new LinkedHashMap<String, ReliefCentre>();
+		this.fire = new LinkedHashMap<String, FireInfo>();
+		this.reliefCentreAssignments = new LinkedHashMap<String, String>();
+		this.reliefCentreVectors = new LinkedHashMap<String, ReliefCentreVector>();
+		this.routeAssignments = new LinkedHashMap<String, RouteAssignment>();
+		this.evacTimes = new LinkedHashMap<String, Double>();
+		this.setPlanChecks(new LinkedHashMap<String, PlanCheck>());
 		this.bdiConnector = bdiConnector;
 		updateBeliefs();
 	}
@@ -311,7 +312,7 @@ public class EvacController extends Agent implements
 
 	public void addRegion(Region region) {
 		if (regions == null) {
-			regions = new HashMap<String, Region>();
+			regions = new LinkedHashMap<String, Region>();
 		}
 
 		regions.put(region.getName(), region);

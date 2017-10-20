@@ -1,5 +1,26 @@
 package io.github.agentsoz.bushfire.matsimjill;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Set;
+
+import javax.xml.XMLConstants;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.Validator;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+
 /*
  * #%L
  * BDI-ABM Integration Package
@@ -26,32 +47,7 @@ import io.github.agentsoz.bushfire.datamodels.Location;
 import io.github.agentsoz.bushfire.datamodels.Region;
 import io.github.agentsoz.bushfire.datamodels.ReliefCentre;
 import io.github.agentsoz.bushfire.datamodels.Route;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
-
-import javax.xml.XMLConstants;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-import javax.xml.validation.Validator;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
-import com.vividsolutions.jts.geom.Coordinate;
+import io.github.agentsoz.util.Global;
 
 /**
  * 
@@ -76,10 +72,10 @@ public class SimpleConfig {
 	
 	private static int[] evacStartHHMM = new int[] {0, 0};
 	private static int evacPeakMins = 0;
-	private static HashMap<String, Location> locations = new HashMap<String, Location>();
-	private static HashMap<String, Region> regions = new HashMap<String, Region>();
-	private static HashMap<String, Route> routes = new HashMap<String, Route>();
-	public static HashMap<String, ReliefCentre> reliefCentres = new HashMap<String, ReliefCentre>();
+	private static HashMap<String, Location> locations = new LinkedHashMap<String, Location>();
+	private static HashMap<String, Region> regions = new LinkedHashMap<String, Region>();
+	private static HashMap<String, Route> routes = new LinkedHashMap<String, Route>();
+	public static HashMap<String, ReliefCentre> reliefCentres = new LinkedHashMap<String, ReliefCentre>();
 	private static String fireCoordinateSystem = "longlat";
 	private static String fireFileFormat = "custom";
 	private static String geographyCoordinateSystem = "longlat";
@@ -192,7 +188,7 @@ public class SimpleConfig {
 	 * Pick one of the listed evac points
 	 */
 	public static Location getRandomEvacLocation() {
-		int n = new Random().nextInt(locations.size());
+		int n = Global.getRandom().nextInt(locations.size());
 		Location rc = (Location) locations.values().toArray()[n];
 		return rc;
 	}

@@ -22,6 +22,7 @@ import org.matsim.core.utils.geometry.CoordinateTransformation;
 import org.matsim.core.utils.geometry.transformations.GeotoolsTransformation;
 
 import io.github.agentsoz.util.Coordinates;
+import io.github.agentsoz.util.Global;
 
 /*
  * #%L
@@ -61,7 +62,6 @@ public class GenerateInput {
 	private static String matsimOutputCoordinateSystem = "WSG84";
 	private static RectangularArea matsimPopulationLocationArea = null;
 	private static boolean verbose = false;
-	private static Random rand = new Random(12345);
 	private static ArrayList<PopulationArea> populationAreas = new ArrayList<PopulationArea>();
 
 	// Keeps the next unique person ID
@@ -87,7 +87,7 @@ public class GenerateInput {
 			transform(parea.getArea(), ct);
 
 			// Get the list of addresses from area
-			ArrayList<Coordinates> locations = getRandomLocationsFrom(parea.getArea(), parea.getPersons(), rand);
+			ArrayList<Coordinates> locations = getRandomLocationsFrom(parea.getArea(), parea.getPersons(), Global.getRandom());
 
 			// Now place the specified number of agents at work locations
 			for (int i = 0; i < locations.size(); i++) {

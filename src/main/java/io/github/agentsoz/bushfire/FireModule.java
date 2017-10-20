@@ -1,5 +1,22 @@
 package io.github.agentsoz.bushfire;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.SortedMap;
+import java.util.StringTokenizer;
+import java.util.concurrent.ConcurrentSkipListMap;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /*
  * #%L
  * BDI-ABM Integration Package
@@ -24,22 +41,6 @@ package io.github.agentsoz.bushfire;
 
 import io.github.agentsoz.dataInterface.DataServer;
 import io.github.agentsoz.dataInterface.DataSource;
-
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.SortedMap;
-import java.util.StringTokenizer;
-import java.util.concurrent.ConcurrentSkipListMap;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /* The FireModule class provides fire model data to the rest of the application.
  * The fire coordinates are read from a data text file and stored in a data structure for
@@ -76,7 +77,7 @@ public class FireModule implements DataSource {
 	
 	public FireModule() {
 		fire = new ConcurrentSkipListMap<Double, List<double[]>>();
-		fireDirections =  new HashMap<Double, Double>();
+		fireDirections =  new LinkedHashMap<Double, Double>();
 		latestFireData = new ArrayList<double[]>();
 	}
 
@@ -170,7 +171,7 @@ public class FireModule implements DataSource {
 		logger.info("loading fire data from {}", file);
 		CoordinateConversion coordConvertor = new CoordinateConversion();
 		try {
-			HashMap<Double, double[]> fireCentres = new HashMap<Double, double[]>();
+			HashMap<Double, double[]> fireCentres = new LinkedHashMap<Double, double[]>();
 			String string;
 			BufferedReader br = new BufferedReader(new FileReader(file));
 			int count = 0;

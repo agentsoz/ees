@@ -1,5 +1,25 @@
 package io.github.agentsoz.bushfire;
 
+import java.io.FileInputStream;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Set;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import com.vividsolutions.jts.geom.Coordinate;
+
 /*
  * #%L
  * BDI-ABM Integration Package
@@ -26,26 +46,7 @@ import io.github.agentsoz.bushfire.datamodels.Location;
 import io.github.agentsoz.bushfire.datamodels.Region;
 import io.github.agentsoz.bushfire.datamodels.ReliefCentre;
 import io.github.agentsoz.bushfire.datamodels.Route;
-
-import java.io.FileInputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
-import com.vividsolutions.jts.geom.Coordinate;
+import io.github.agentsoz.util.Global;
 
 /**
  * 
@@ -74,16 +75,16 @@ public class Config {
 	private static double proportionWithRelatives = 0.0;
 	private static int maxDistanceToRelatives = 1000;
 	private static double[] evacDelay = new double[] { 0.0, 0.0 };
-	private static HashMap<String, Location> locations = new HashMap<String, Location>();
-	private static HashMap<String, Region> regions = new HashMap<String, Region>();
-	private static HashMap<String, Route> routes = new HashMap<String, Route>();
-	public static HashMap<String, ReliefCentre> reliefCentres = new HashMap<String, ReliefCentre>();
+	private static HashMap<String, Location> locations = new LinkedHashMap<String, Location>();
+	private static HashMap<String, Region> regions = new LinkedHashMap<String, Region>();
+	private static HashMap<String, Route> routes = new LinkedHashMap<String, Route>();
+	public static HashMap<String, ReliefCentre> reliefCentres = new LinkedHashMap<String, ReliefCentre>();
 	private static Image image = new Image();
 	private static String fireFireCoordinateSystem = "longlat";
 	private static String coordinate_system = "longlat";
 	private static int distanceToNewShelters = 50000;
 	private static int safeDistance = 100;
-	private static HashMap<String, Boolean> choicePoints = new HashMap<String, Boolean>();
+	private static HashMap<String, Boolean> choicePoints = new LinkedHashMap<String, Boolean>();
 
 	public static class Image {
 		public String file;
@@ -231,7 +232,7 @@ public class Config {
 	 * Pick one of the listed evac points
 	 */
 	public static String getRandomEvacPoint() {
-		int n = new Random().nextInt(reliefCentres.size());
+		int n = Global.getRandom().nextInt(reliefCentres.size());
 		ReliefCentre rc = (ReliefCentre) reliefCentres.values().toArray()[n];
 		return rc.getName();
 	}

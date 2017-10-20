@@ -2,8 +2,8 @@ package io.github.agentsoz.bushfire.matsimjill;
 
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.PriorityQueue;
-import java.util.Random;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +40,7 @@ import io.github.agentsoz.bushfire.Time;
 import io.github.agentsoz.dataInterface.DataClient;
 import io.github.agentsoz.dataInterface.DataServer;
 import io.github.agentsoz.jill.lang.Agent;
+import io.github.agentsoz.util.Global;
 
 public class JillBDIModel extends JillModel implements DataClient {
 
@@ -61,7 +62,7 @@ public class JillBDIModel extends JillModel implements DataClient {
 	private PriorityQueue<TimedAlert> alerts;
 	
 	public JillBDIModel(String[] initArgs) {
-		agents = new HashMap<String,String>();
+		agents = new LinkedHashMap<String,String>();
 		alerts = new PriorityQueue<TimedAlert>(SimpleConfig.getNumBDIAgents(), new Comparator<TimedAlert>() {
 			@Override
 			public int compare(TimedAlert o1, TimedAlert o2) {
@@ -151,9 +152,8 @@ public class JillBDIModel extends JillModel implements DataClient {
 		double minsMean = mins3Sigma;
 		double evacStartInSeconds = Time.convertTime(hhmm[0], Time.TimestepUnit.HOURS, Time.TimestepUnit.SECONDS) 
 				+ Time.convertTime(hhmm[1], Time.TimestepUnit.MINUTES, Time.TimestepUnit.SECONDS);
-		Random r = new Random();
 		for (String agent: agents.keySet()) {
-			double minsOffset = r.nextGaussian() * minsSigma + minsMean;
+			double minsOffset = Global.getRandom().nextGaussian() * minsSigma + minsMean;
 			double secsOffset = Math.round(Time.convertTime(minsOffset, Time.TimestepUnit.MINUTES, Time.TimestepUnit.SECONDS));
 			double evacTimeInSeconds = evacStartInSeconds + secsOffset;
 			alerts.add(new TimedAlert(evacTimeInSeconds, agent));

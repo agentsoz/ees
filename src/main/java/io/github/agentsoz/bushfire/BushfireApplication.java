@@ -1,5 +1,20 @@
 package io.github.agentsoz.bushfire;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.vividsolutions.jts.geom.Coordinate;
+
+import aos.jack.jak.agent.Agent;
+import io.github.agentsoz.abmjack.JACKModel;
+import io.github.agentsoz.abmjack.shared.ActionManager;
+import io.github.agentsoz.abmjack.shared.GlobalTime;
+
 /*
  * #%L
  * BDI-ABM Integration Package
@@ -23,32 +38,18 @@ package io.github.agentsoz.bushfire;
  */
 
 import io.github.agentsoz.bdiabm.ABMServerInterface;
-import io.github.agentsoz.bdiabm.data.AgentDataContainer;
 import io.github.agentsoz.bdiabm.data.ActionContent.State;
+import io.github.agentsoz.bdiabm.data.AgentDataContainer;
+import io.github.agentsoz.bdimatsim.moduleInterface.data.SimpleMessage;
 import io.github.agentsoz.bushfire.datamodels.Region;
 import io.github.agentsoz.bushfire.datamodels.RegionSchedule;
+import io.github.agentsoz.bushfire.jack.agents.BasicResident;
+import io.github.agentsoz.bushfire.jack.agents.EvacController;
 import io.github.agentsoz.bushfire.shared.ActionID;
 import io.github.agentsoz.dataInterface.DataClient;
 import io.github.agentsoz.dataInterface.DataServer;
 import io.github.agentsoz.dataInterface.DataSource;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.vividsolutions.jts.geom.Coordinate;
-
-import io.github.agentsoz.abmjack.JACKModel;
-import io.github.agentsoz.abmjack.shared.ActionManager;
-import io.github.agentsoz.abmjack.shared.GlobalTime;
-import io.github.agentsoz.bdimatsim.moduleInterface.data.SimpleMessage;
-import io.github.agentsoz.bushfire.jack.agents.BasicResident;
-import io.github.agentsoz.bushfire.jack.agents.EvacController;
-import aos.jack.jak.agent.Agent;
+import io.github.agentsoz.util.Global;
 
 /**
  * The BushfireApplication class handles passing percepts and actions to and
@@ -62,7 +63,7 @@ public class BushfireApplication extends JACKModel implements DataClient,
 	final Logger logger = LoggerFactory.getLogger("");
 	private BdiConnector bdiConnector;
 	protected EvacController controller;
-	protected HashMap<String, Object[]> agentsDriveToActions = new HashMap<String, Object[]>();
+	protected HashMap<String, Object[]> agentsDriveToActions = new LinkedHashMap<String, Object[]>();
 	protected DataServer dataServer;
 
 	/**
@@ -338,11 +339,11 @@ public class BushfireApplication extends JACKModel implements DataClient,
 	}
 
 	public boolean getKids(String name) {
-		return new Random().nextDouble() < Config.getProportionWithKids();
+		return Global.getRandom().nextDouble() < Config.getProportionWithKids();
 	}
 
 	public boolean getRels(String name) {
-		return new Random().nextDouble() < Config.getProportionWithRelatives();
+		return Global.getRandom().nextDouble() < Config.getProportionWithRelatives();
 	}
 
 	@Override
