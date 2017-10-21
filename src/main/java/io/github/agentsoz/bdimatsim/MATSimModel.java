@@ -10,7 +10,10 @@ import org.matsim.api.core.v01.network.Link;
 import org.matsim.api.core.v01.population.Person;
 import org.matsim.core.config.Config;
 import org.matsim.core.config.ConfigUtils;
+import org.matsim.core.config.groups.PlanCalcScoreConfigGroup.ActivityParams;
+import org.matsim.core.config.groups.PlansConfigGroup.ActivityDurationInterpretation;
 import org.matsim.core.config.groups.QSimConfigGroup.StarttimeInterpretation;
+import org.matsim.core.config.groups.VspExperimentalConfigGroup.VspDefaultsCheckingLevel;
 import org.matsim.core.controler.AbstractModule;
 import org.matsim.core.controler.Controler;
 import org.matsim.core.controler.OutputDirectoryHierarchy.OverwriteFileSetting;
@@ -139,6 +142,8 @@ public final class MATSimModel implements ABMServerInterface {
 		Config config = ConfigUtils.loadConfig( args[0] ) ;
 
 		config.network().setTimeVariantNetwork(true);
+		
+		config.plans().setActivityDurationInterpretation(ActivityDurationInterpretation.tryEndTimeThenDuration);
 
 		// Normally, the qsim starts at the earliest activity end time.  The following tells the mobsim to start
 		// at 2 seconds before 6:00, no matter what is in the initial plans file:
@@ -147,12 +152,14 @@ public final class MATSimModel implements ABMServerInterface {
 		//config.qsim().setEndTime( 8.*3600 + 1800. );
 
 		config.controler().setWritePlansInterval(1);
-		config.planCalcScore().setWriteExperiencedPlans(true);
+		config.controler().setOverwriteFileSetting( OverwriteFileSetting.deleteDirectoryIfExists );
 
-		config.controler().setOverwriteFileSetting( OverwriteFileSetting.overwriteExistingFiles );
-		
 		config.planCalcScore().setWriteExperiencedPlans(true);
+		config.planCalcScore().setMarginalUtlOfWaiting_utils_hr(0.);
+		config.planCalcScore().setPathSizeLogitBeta(0.);
 		
+		config.vspExperimental().setVspDefaultsCheckingLevel(VspDefaultsCheckingLevel.warn);
+
 		// ---
 
 		scenario = ScenarioUtils.loadScenario(config) ;
