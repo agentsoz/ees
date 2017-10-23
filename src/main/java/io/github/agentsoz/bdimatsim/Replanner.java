@@ -163,7 +163,7 @@ public class Replanner {
 		return true;
 	}
 	
-	final boolean changeEndActivity(Id<Person> agentId, int planElementIndex, double newEndTime)
+	final boolean changeActivityEndTimeByPlanElementIndex(Id<Person> agentId, int planElementIndex, double newEndTime)
 	{
 		Map<Id<Person>, MobsimAgent> mapping = model.getMobsimAgentMap();
 		MobsimAgent agent = mapping.get(agentId);
