@@ -88,7 +88,7 @@ public plan Deside_route_metaplan extends Plan {
             logger.debug("User selected plan <plan name>");
         } else {
             //When the visualiser is not active randomly pick a plan.
-            Random random = new Random();
+            Random random = io.github.agentsoz.util.Global.getRandom();
             int index = random.nextInt(totalPlans);
             event.chosen = signatures[index];
             logger.debug("Event description:" + eventDescription);

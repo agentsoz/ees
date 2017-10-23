@@ -58,7 +58,7 @@ public plan PickupRelatives extends Plan {
     }
     
 	private double[] getRandomCoordinate() {
-		Random random = new Random();
+		Random random = io.github.agentsoz.util.Global.getRandom();
 		double[] coordinates = new double[2];
 
 		int distance = random.nextInt(enc.bdiConnector.getMaxDistanceToRelatives());

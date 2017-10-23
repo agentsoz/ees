@@ -55,7 +55,7 @@ public plan Decide_timeP extends Plan {
         } 
         else{
             // this means, no time record can be found
-            Random random = new Random();
+            Random random = io.github.agentsoz.util.Global.getRandom();
             int randomIndex = random.nextInt(evacDelays.length);
             evacDelayInSeconds = enc.getCurrentTime() + evacDelays[randomIndex] * 60;
             evacTimes.insert(h_Decide_timeG.areaName, evacDelayInSeconds);

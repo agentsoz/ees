@@ -46,7 +46,7 @@ public plan CheckPlanP extends Plan {
             //When the visualiser is active ask user 
             logger.info("======================= USER SHOULD BE PROMTED AND ASKED TO CHANGE ROUTES AGAIN");
             
-            Random random = new Random();
+            Random random = io.github.agentsoz.util.Global.getRandom();
             planChecks.insert(h_CheckplanG.areaName, random.nextBoolean(), enc.getCurrentTime());
         } else {
             //TODO: do some analysis before seting the check status
