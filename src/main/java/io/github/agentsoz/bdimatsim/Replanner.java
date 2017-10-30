@@ -128,6 +128,7 @@ public class Replanner {
 		Plan plan = WithinDayAgentUtils.getModifiablePlan(agent) ;
 
 		List<PlanElement> planElements = plan.getPlanElements() ;
+
 		int planElementsIndex = planElements.size()-1;
 		// seems that under normal circumstances in this pgm, size returns 1 und idx is thus 0.
 
@@ -138,22 +139,28 @@ public class Replanner {
 		if(endTime <= lastAct.getStartTime() +10){
 			endTime = lastAct.getStartTime() +10;
 		}
-		//		lastAct.setMaximumDuration(endTime -lastAct.getStartTime());
 		lastAct.setEndTime(endTime);
 
-		// now the real work begins. This, as an example, changes the activity (i.e. the destination of the current leg) and then
+		// now the real work begins. This changes the activity (i.e. the destination of the current leg) and then
 		// re-splices the plan
 
 		Activity newAct = this.model.getScenario().getPopulation().getFactory().createActivityFromLinkId("work", newActivityLinkId ) ;
-		Leg newLeg = this.model.getScenario().getPopulation().getFactory().createLeg(TransportMode.car);
-		// new Route for current Leg.
-		newLeg.setDepartureTime(endTime);
-		editRoutes.relocateFutureLegRoute(newLeg, lastAct.getLinkId(), newActivityLinkId,((HasPerson)agent).getPerson());
+
+//		Leg newLeg = this.model.getScenario().getPopulation().getFactory().createLeg(TransportMode.car);
+//		// new Route for current Leg.
+//		newLeg.setDepartureTime(endTime);
+//		editRoutes.relocateFutureLegRoute(newLeg, lastAct.getLinkId(), newActivityLinkId,((HasPerson)agent).getPerson());
 
 		newAct.setEndTime( Double.POSITIVE_INFINITY ) ;
 
-		planElements.add(newLeg);
+//		planElements.add(newLeg);
 		planElements.add(newAct);
+		
+		List<PlanElement> sublist = planElements.subList(planElements.size()-2, planElements.size()-1 ) ;
+		// (does it work without the leg in between?)
+		
+		Trip trip = TripStructureUtils.getTrips(sublist, stageActivities).get(0) ;
+		editTrips.replanFutureTrip(trip, plan, TransportMode.car) ;
 
 		WithinDayAgentUtils.resetCaches(agent);
 		// this is necessary since the simulation may have cached some info from the plan at other places.

@@ -129,7 +129,7 @@ public final class MATSimModel implements ABMServerInterface {
 
 	public MATSimModel( BDIServerInterface bidServer) {
 		this.bdiServer = bidServer ;
-		this.agentsUpdateMessages = new ArrayList<SimpleMessage>();
+		this.agentsUpdateMessages = new ArrayList<>();
 		this.agentManager = new MATSimAgentManager( this ) ;
 		this.registerPlugin(new StubPlugin());
 	}
@@ -223,7 +223,6 @@ public final class MATSimModel implements ABMServerInterface {
 
 						// passes important matsim qsim functionality to the agent manager:
 						agentManager.setUpReplanner(application.getReplanner(qSim), qSim);
-						// yy "qSim" is too powerful an object here. kai, mar'15
 
 						// add stub agent to keep simulation alive.  yyyy find nicer way to do this.
 						Id<Link> dummyLinkId = qSim.getNetsimNetwork().getNetsimLinks().keySet().iterator().next() ;
