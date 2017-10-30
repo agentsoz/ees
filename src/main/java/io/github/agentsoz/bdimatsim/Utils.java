@@ -31,11 +31,18 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.matsim.api.core.v01.Coord;
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.network.Link;
+import org.matsim.api.core.v01.network.Network;
+import org.matsim.api.core.v01.network.Node;
 import org.matsim.api.core.v01.population.Person;
 import org.matsim.core.mobsim.framework.MobsimAgent;
+import org.matsim.core.network.NetworkUtils;
+import org.matsim.core.utils.geometry.GeometryUtils;
+
+import com.vividsolutions.jts.geom.LineString;
 
 
 /**
@@ -131,5 +138,27 @@ final class Utils {
 		}
 		return agentIDArray;
 	}
-
+	 
+	 public static List<Link> findIntersectingLinks(Link link, Network network) {
+		 return GeometryUtils.findIntersectingLinks(link, network) ;
+	 }
+	 public static List<Link> findIntersectingLinks(LineString lineString, Network network) {
+		 return GeometryUtils.findIntersectingLinks(lineString, network) ;
+	 }
+	 public static Link getNearestLink(Network network, Coord coord) {
+		 return NetworkUtils.getNearestLink(network, coord) ;
+	 }
+	 public static Link getNearestLinkExactly( Network network, Coord coord ) {
+		 return NetworkUtils.getNearestLinkExactly(network, coord) ;
+	 }
+	 public static Node getNearestNode(Network network, Coord coord) {
+		 return NetworkUtils.getNearestNode(network, coord) ;
+	 }
+	 public static Collection<Node> getNearestNodes(Network network, Coord coord, double distance) {
+		 return NetworkUtils.getNearestNodes(network, coord, distance) ;
+	 }
+	 
+	 
+	 
+	 
 }

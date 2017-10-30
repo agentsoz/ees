@@ -1,6 +1,7 @@
 package io.github.agentsoz.bdimatsim;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -12,6 +13,7 @@ import org.matsim.core.config.Config;
 import org.matsim.core.config.ConfigUtils;
 import org.matsim.core.config.groups.PlanCalcScoreConfigGroup.ActivityParams;
 import org.matsim.core.config.groups.PlansConfigGroup.ActivityDurationInterpretation;
+import org.matsim.core.config.groups.QSimConfigGroup.SnapshotStyle;
 import org.matsim.core.config.groups.QSimConfigGroup.StarttimeInterpretation;
 import org.matsim.core.config.groups.VspExperimentalConfigGroup.VspDefaultsCheckingLevel;
 import org.matsim.core.controler.AbstractModule;
@@ -142,28 +144,39 @@ public final class MATSimModel implements ABMServerInterface {
 		Config config = ConfigUtils.loadConfig( args[0] ) ;
 
 		config.network().setTimeVariantNetwork(true);
-		
+
 		config.plans().setActivityDurationInterpretation(ActivityDurationInterpretation.tryEndTimeThenDuration);
+		
+		config.global().setCoordinateSystem("EPSG:32756") ;
 
 		// Normally, the qsim starts at the earliest activity end time.  The following tells the mobsim to start
 		// at 2 seconds before 6:00, no matter what is in the initial plans file:
 		config.qsim().setStartTime( 1.00 );
 		config.qsim().setSimStarttimeInterpretation( StarttimeInterpretation.onlyUseStarttime );
-		//config.qsim().setEndTime( 8.*3600 + 1800. );
+		config.qsim().setEndTime( 8.*3600 + 1800. );
 
 		config.controler().setWritePlansInterval(1);
 		config.controler().setOverwriteFileSetting( OverwriteFileSetting.deleteDirectoryIfExists );
 
-		config.planCalcScore().setWriteExperiencedPlans(true);
-		config.planCalcScore().setMarginalUtlOfWaiting_utils_hr(0.);
-		config.planCalcScore().setPathSizeLogitBeta(0.);
+		// --- snapshots begin 
+		config.qsim().setSnapshotStyle(SnapshotStyle.withHoles);
+		config.qsim().setSnapshotPeriod(10);
+		{
+			Collection<String> snapshotFormat = new ArrayList<>() ;
+			snapshotFormat.add("transims") ;
+			snapshotFormat.add("googleearth") ;
+//			snapshotFormat.add("otfvis") ;
+			config.controler().setSnapshotFormat(snapshotFormat);
+		}
+		config.controler().setWriteSnapshotsInterval(10);
+		// --- snapshots end
 		
-		config.vspExperimental().setVspDefaultsCheckingLevel(VspDefaultsCheckingLevel.warn);
+		ConfigUtils.setVspDefaults(config);
 
 		// ---
 
 		scenario = ScenarioUtils.loadScenario(config) ;
-		
+
 		for ( Link link : scenario.getNetwork().getLinks().values() ) {
 			final double veryLargeSpeed = 9999999999.;
 			if ( link.getFreespeed() > veryLargeSpeed ) {
@@ -249,7 +262,7 @@ public final class MATSimModel implements ABMServerInterface {
 						MATSimModel.this.takeControl(agentManager.getAgentDataContainer());
 					}
 				} ) ; // end anonymous class MobsimListener
-				
+
 				this.addMobsimListenerBinding().toInstance( mobsimDataProvider );
 			}
 		}) ;
