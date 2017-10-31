@@ -324,4 +324,10 @@ public final class MATSimModel implements ABMServerInterface {
 		return eventsHandler;
 	}
 
+    @Override
+    public Object queryPercept(String agentID, String perceptID) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 }
