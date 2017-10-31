@@ -98,12 +98,12 @@ public class Main {
 		jillmodel.registerDataServer(dataServer);
 
 		// Create the MATSim ABM model and register the data server
-		matsimModel = new MATSimModel(jillmodel, null);
+		matsimModel = new MATSimModel(jillmodel);
 		matsimModel.registerDataServer(dataServer);
 
 		// Start the MATSim controller
 		String[] margs = { SimpleConfig.getMatSimFile() };
-		matsimModel.run(null, margs);
+		matsimModel.run(margs);
 		
 		// All done, so terminate now
 		jillmodel.finish();

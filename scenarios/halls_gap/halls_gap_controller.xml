@@ -49,9 +49,9 @@
    -->
 
    <choicePoints>
-      <goal name="Decide_routeG" manual="true"/>
-      <goal name="Decide_shelterG" manual="true"/>
-      <goal name="Decide_timeG" manual="true"/>
+      <goal name="Decide_routeG" manual="false"/>
+      <goal name="Decide_shelterG" manual="false"/>
+      <goal name="Decide_timeG" manual="false"/>
    </choicePoints>
 
 </controller>

@@ -4,7 +4,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -19,13 +18,11 @@ import org.matsim.api.core.v01.population.PopulationWriter;
 import org.matsim.core.api.internal.MatsimWriter;
 import org.matsim.core.config.ConfigUtils;
 import org.matsim.core.scenario.ScenarioUtils;
-import org.matsim.core.utils.geometry.CoordImpl;
 import org.matsim.core.utils.geometry.CoordinateTransformation;
-import org.matsim.core.utils.geometry.geotools.MGC;
 import org.matsim.core.utils.geometry.transformations.GeotoolsTransformation;
-import org.matsim.core.utils.geometry.transformations.TransformationFactory;
 
 import io.github.agentsoz.util.Coordinates;
+import io.github.agentsoz.util.Global;
 
 /*
  * #%L
@@ -65,7 +62,6 @@ public class GenerateInput {
 	private static String matsimOutputCoordinateSystem = "WSG84";
 	private static RectangularArea matsimPopulationLocationArea = null;
 	private static boolean verbose = false;
-	private static Random rand = new Random(12345);
 	private static ArrayList<PopulationArea> populationAreas = new ArrayList<PopulationArea>();
 
 	// Keeps the next unique person ID
@@ -91,7 +87,7 @@ public class GenerateInput {
 			transform(parea.getArea(), ct);
 
 			// Get the list of addresses from area
-			ArrayList<Coordinates> locations = getRandomLocationsFrom(parea.getArea(), parea.getPersons(), rand);
+			ArrayList<Coordinates> locations = getRandomLocationsFrom(parea.getArea(), parea.getPersons(), Global.getRandom());
 
 			// Now place the specified number of agents at work locations
 			for (int i = 0; i < locations.size(); i++) {
@@ -109,8 +105,8 @@ public class GenerateInput {
 
 	private static void transform(RectangularArea area, CoordinateTransformation ct) {
 		// NOTE: CoordinateTransformation expects LONG first then LAT!!!
-		Coord xy1 = ct.transform(new  CoordImpl(area.getX1(), area.getY1()));
-		Coord xy2 = ct.transform(new  CoordImpl(area.getX2(), area.getY2()));
+		Coord xy1 = ct.transform(new  Coord(area.getX1(), area.getY1()));
+		Coord xy2 = ct.transform(new  Coord(area.getX2(), area.getY2()));
 		area.setX1(xy1.getX());
 		area.setY1(xy1.getY());
 		area.setX2(xy2.getX());
@@ -140,7 +136,7 @@ public class GenerateInput {
 			Scenario scenario) 
 	{
 		PopulationFactory populationFactory = scenario.getPopulation().getFactory();
-		Coord matSimCoord = scenario.createCoord(coordsOfAct.getLongitude(), coordsOfAct.getLatitude());
+		Coord matSimCoord = new Coord(coordsOfAct.getLongitude(), coordsOfAct.getLatitude());
 
 		// Create a new plan
 		Plan plan = populationFactory.createPlan();
