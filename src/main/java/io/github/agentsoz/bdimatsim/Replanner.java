@@ -146,25 +146,30 @@ public class Replanner {
 
 		Activity newAct = this.model.getScenario().getPopulation().getFactory().createActivityFromLinkId("work", newActivityLinkId ) ;
 
-//		Leg newLeg = this.model.getScenario().getPopulation().getFactory().createLeg(TransportMode.car);
+		Leg newLeg = this.model.getScenario().getPopulation().getFactory().createLeg(TransportMode.car);
+
+		// --- old version start
 //		// new Route for current Leg.
 //		newLeg.setDepartureTime(endTime);
 //		editRoutes.relocateFutureLegRoute(newLeg, lastAct.getLinkId(), newActivityLinkId,((HasPerson)agent).getPerson());
+		// --- old version end
 
 		newAct.setEndTime( Double.POSITIVE_INFINITY ) ;
 
-//		planElements.add(newLeg);
-		planElements.add(newAct);
+		planElements.add(newLeg);
+		planElements.add(newAct); 
 		
-		List<PlanElement> sublist = planElements.subList(planElements.size()-2, planElements.size()-1 ) ;
-		// (does it work without the leg in between?)
+		final List<Trip> trips = TripStructureUtils.getTrips(planElements, stageActivities);
 		
-		Trip trip = TripStructureUtils.getTrips(sublist, stageActivities).get(0) ;
+		Gbl.assertIf( trips.size()>=1 );
+		
+		Trip trip = trips.get(trips.size()-1) ;
+		
 		editTrips.replanFutureTrip(trip, plan, TransportMode.car) ;
-
+		
 		WithinDayAgentUtils.resetCaches(agent);
 		// this is necessary since the simulation may have cached some info from the plan at other places.
-		// (May note be necessary in this particular situation since there is nothing to cache when an agent is at an activity.) kai, feb'14
+		// (May not be necessary in this particular situation since there is nothing to cache when an agent is at an activity.) kai, feb'14
 
 		this.qsim.rescheduleActivityEnd(agent);
 		// this is the only place where the internal interface is truly needed, since it is the only place where the agent needs to be "woken up".
