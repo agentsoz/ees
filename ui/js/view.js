@@ -57,11 +57,10 @@ $('#print-button').click(function() {
 
 function reset() {
 	// Set the title
-	$('#scenario-title').text('Emergency Evacuation Simulator Results');
+	$('#scenario-title').text('Bushfire Evacuation Simulation Results');
 	// Hide parameters panel
 	$("#scenario-params").hide();
 	$("#scenario-graphs").hide();
-	$(".scenario-view").hide();
 	// Disable printing until a simulation is selected
 	$('#print-button').prop('disabled', true);
 	// Reset simulation selection

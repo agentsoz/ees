@@ -1,0 +1,74 @@
+/*******************************************************************
+ * Created by the JDE: Thu Jun 11 19:23:36 AEST 2015
+ * WARNING: If you are editing this file from outside the JDE, you
+ * should make sure to load the changes back into the JDE by setting
+ * the preference "Check for outside changes..." in the "Text Editor"
+ * preference tab or reload the component manually.
+ * Otherwise you will lose your changes next time the file is generated.
+ *******************************************************************/
+
+package io.github.agentsoz.bushfire.jack.plans;
+
+import io.github.agentsoz.bushfire.jack.agents.BasicResident;
+import io.github.agentsoz.bushfire.jack.events.EvacHouse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import io.github.agentsoz.abmjack.env.GenericActGoal;
+import io.github.agentsoz.bushfire.shared.ActionID;
+import com.vividsolutions.jts.geom.Coordinate;
+
+/**
+ * @author Sewwandi Perera
+ */
+public plan ImmediateEvac extends Plan {
+    #handles event EvacHouse ev;
+    #uses interface BasicResident enc;
+   	#posts event GenericActGoal genericactgoal_p;
+    final Logger logger = LoggerFactory.getLogger("");
+    
+    static boolean relevant(EvacHouse ev)
+    {
+        return true;
+    }
+    
+    context()
+    {
+        !enc.kidsNeedPickup && !enc.relsNeedPickup;
+    }
+    
+    #reasoning method
+    body()
+    {
+        logger.trace(" Agent " + enc.getBasename() + " : ImmediateEvac is initiated");    
+  		logger.debug("agent {} is starting on evacuation route {}", enc.id, enc.waypointNames.toString());
+
+		while (enc.evacRoute.size() > 0) {
+			Coordinate nextDest = (Coordinate)enc.evacRoute.get( 0 );
+			double[] nextDestCoordination = new double[]{nextDest.x, nextDest.y};
+			String waypointName = (String)enc.waypointNames.get(0);
+			enc.setDestination(nextDestCoordination);
+		 	enc.evacRoute.remove( 0 );
+		 	enc.waypointNames.remove(0);
+		 	Object[] params = new Object[] { ActionID.DRIVETO, nextDestCoordination, waypointName, enc.evacDelay};
+		 	enc.evacDelay = 0;
+		 	GenericActGoal gag = genericactgoal_p.act(enc.getActionManager(), 
+		 		ActionID.DRIVETO, params );
+	 		
+		 	double startTime = enc.getCurrentTime();
+      		@subtask( gag );
+      		double tripTime = (enc.getCurrentTime() - startTime)/60;
+      		logger.debug("Agent " + enc.id + " arrived at {} in {} minutes",  
+      			waypointName, Double.toString(tripTime));
+	  	}
+      
+      logger.debug("agent {} has finished evacuating at {}", enc.id, 
+      		String.valueOf(enc.getCurrentTime()));
+      String[] params = new String[] { "done", "" };
+      GenericActGoal gag = genericactgoal_p.act(enc.getActionManager(), 
+      		ActionID.DRIVETO, params );
+      @subtask( gag );      
+    }
+    
+
+}
+

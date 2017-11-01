@@ -14,45 +14,6 @@ function initMap() {
 	$('#map').mouseleave(function (event) {
 		$('#mapcursor').text('');
 	});
-	initDestinationsMarkersOnMap();
-}
-
-function initDestinationsMarkersOnMap() {
-	if (typeof global.map === 'undefined') {
-		return;
-	}
-	var township = getTownship(global.scenario_creation_arg);
-	for (var i = 0; i < township.destinations.length; i++) {
-		var dest = township.destinations[i];
-		dest.marker = drawMarker([dest.coordinates.lat, dest.coordinates.lng], dest.name, true, 1);
-		
-		//var pos = new google.maps.LatLng(dest.coordinates.lat, dest.coordinates.lng);
-		//var marker = new google.maps.Marker({
-		//	position: pos,
-		//	map: null
-		//});
-		//dest.marker = marker;
-	}
-}
-
-function showDestinationMarkerOnMap(township, destname) {
-	if (typeof global.map === 'undefined') {
-		return;
-	}
-	var dest = getDestination(township, destname);
-	if (dest.marker != null) {
-		dest.marker.setMap(global.map);
-	}
-}
-
-function hideDestinationMarkerOnMap(township, destname) {
-	if (typeof global.map === 'undefined') {
-		return;
-	}
-	var dest = getDestination(township, destname);
-	if (dest.marker != null) {
-		dest.marker.setMap(null);
-	}
 }
 
 function displayCoordinates(pnt) {
@@ -63,9 +24,7 @@ function displayCoordinates(pnt) {
 
 function panMapTo(latlon, zoom) {
 	var latLng = new google.maps.LatLng(latlon[0], latlon[1]);
-	if(typeof zoom !== 'undefined') {
-		global.map.setZoom(zoom);
-	}
+	global.map.setZoom(zoom);
 	global.map.panTo(latLng);
 }
 
@@ -88,30 +47,18 @@ function drawSimulationAreaOnMap(area) {
 	});
 }
 
-function drawMarker(latlon, title, hide = false, color = 0) {
-	var icon = "http://maps.google.com/mapfiles/ms/icons/red-dot.png";
-	if (color === 1) {
-		icon = "http://maps.google.com/mapfiles/ms/icons/blue-dot.png";
-	}
+function drawMarker(latlon, title) {
 	var pos = new google.maps.LatLng(latlon[0], latlon[1]);
 	var marker = new google.maps.Marker({
 		position : pos,
-		icon: icon,
 		title : title
 	});
 
 	// To add the marker to the map, call setMap();
-	if (!hide) { 
-		marker.setMap(global.map);
-	}
-	return marker;
+	marker.setMap(global.map);
 }
 
 function drawFire() {
-	if (typeof global.map === 'undefined') {
-		return;
-	}
-
 	global.map.data.forEach(function(feature) {
 		// If you want, check here for some constraints.
 		global.map.data.remove(feature);
@@ -128,9 +75,6 @@ function drawFire() {
 }
 
 function drawSafeLine(township, dest, callback) {
-	if (typeof google === 'undefined') {
-		return;
-	}
 	var firstClick = true;
 	global.map.setOptions({
 		draggableCursor : 'crosshair'
@@ -171,9 +115,6 @@ function drawSafeLine(township, dest, callback) {
 }
 
 function cancelDraw(removeActivePoly) {
-	if (typeof google === 'undefined') {
-		return;
-	}
 	google.maps.event.removeListener(global.hMove);
 	google.maps.event.removeListener(global.hClick);
 	global.map.setOptions({
@@ -192,9 +133,6 @@ function removeSafeLine(poly) {
 }
 
 function drawVehiclesArea(township, name, callback) {
-	if (typeof google === 'undefined') {
-		return;
-	}
 	var firstClick = true;
 	global.map.setOptions({
 		draggableCursor : 'crosshair'

@@ -110,16 +110,6 @@ function getFire(township, firename) {
 	return null;
 }
 
-function getDestination(township, destname) {
-	for (var i = 0; i < township.destinations.length; i++) {
-		var dest = township.destinations[i].name;
-		if (dest.localeCompare(destname) == 0) {
-			return township.destinations[i];
-		}
-	}
-	return null;
-}
-
 function getPolyLine(township, dest, remove) {
 	for (var i = 0; i < township.safeLines.length; i++) {
 		var town = township.safeLines[i].name;

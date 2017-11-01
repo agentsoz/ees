@@ -14,6 +14,13 @@ ${maxSpeedLinks}
 
 </networkChangeEvent>
 
+<!-- Dummy event. DO NOT REMOVE. File must have at least one valid event. -->
+<networkChangeEvent startTime= "00:00:00" >
+  <link refId= "dummy-linkid-that-should-never-match"/>
+  <freespeed type= "absolute" value= "5.5"/><!-- In m/s: divide km/h by 3.6 -->
+  <!--<flowCapacity type= "scaleFactor" value= "0.25"/>-->
+  </networkChangeEvent>
+
 </networkChangeEvents>
 
 

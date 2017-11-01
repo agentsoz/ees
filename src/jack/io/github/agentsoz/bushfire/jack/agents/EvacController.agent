@@ -1,0 +1,254 @@
+/*******************************************************************
+ * Created by the JDE: Thu Jun 11 19:23:38 AEST 2015
+ * WARNING: If you are editing this file from outside the JDE, you
+ * should make sure to load the changes back into the JDE by setting
+ * the preference "Check for outside changes..." in the "Text Editor"
+ * preference tab or reload the component manually.
+ * Otherwise you will lose your changes next time the file is generated.
+ *******************************************************************/
+
+package io.github.agentsoz.bushfire.jack.agents;
+
+import io.github.agentsoz.bushfire.datamodels.Location;
+import io.github.agentsoz.bushfire.bdi.IBdiConnector;
+import com.vividsolutions.jts.geom.Coordinate;
+import io.github.agentsoz.bushfire.jack.data.*;
+import io.github.agentsoz.bushfire.jack.events.Calc_viable_sheltersG;
+import io.github.agentsoz.bushfire.jack.events.Calculate_fire_vectorG;
+import io.github.agentsoz.bushfire.jack.events.Calculate_sheltersG;
+import io.github.agentsoz.bushfire.jack.events.CheckplanG;
+import io.github.agentsoz.bushfire.jack.events.Decide_routeG;
+import io.github.agentsoz.bushfire.jack.events.Decide_shelterG;
+import io.github.agentsoz.bushfire.jack.events.Decide_timeG;
+import io.github.agentsoz.bushfire.jack.events.DoScheduleG;
+import io.github.agentsoz.bushfire.jack.events.EvacMessage;
+import io.github.agentsoz.bushfire.jack.events.Evac_timeG;
+import io.github.agentsoz.bushfire.jack.events.PlanAllAreasG;
+import io.github.agentsoz.bushfire.jack.events.Replan_areaG;
+import io.github.agentsoz.bushfire.jack.events.Respond_fireG;
+import io.github.agentsoz.bushfire.jack.plans.Calc_fire_vectorP;
+import io.github.agentsoz.bushfire.jack.plans.Calc_sheltersP;
+import io.github.agentsoz.bushfire.jack.plans.Calc_viable_sheltersP;
+import io.github.agentsoz.bushfire.jack.plans.CheckPlanP;
+import io.github.agentsoz.bushfire.jack.plans.Choose_by_capacityP;
+import io.github.agentsoz.bushfire.jack.plans.Choose_onlyP;
+import io.github.agentsoz.bushfire.jack.plans.Choose_safestP;
+import io.github.agentsoz.bushfire.jack.plans.Custom_routeP;
+import io.github.agentsoz.bushfire.jack.plans.Decide_timeP;
+import io.github.agentsoz.bushfire.jack.plans.Deside_shelter_metaplan;
+import io.github.agentsoz.bushfire.jack.plans.DoScheduleP;
+import io.github.agentsoz.bushfire.jack.plans.Evac_timeP;
+import io.github.agentsoz.bushfire.jack.plans.Fast_routeP;
+import io.github.agentsoz.bushfire.jack.plans.Free_choiceP;
+import io.github.agentsoz.bushfire.jack.plans.No_sheltersP;
+import io.github.agentsoz.bushfire.jack.plans.PlanAreasP;
+import io.github.agentsoz.bushfire.jack.plans.Replan_areaP;
+import io.github.agentsoz.bushfire.jack.plans.Respond_FireP;
+import io.github.agentsoz.bushfire.jack.plans.Safe_routeP;
+import aos.jack.jak.cursor.TimeCursor;
+import aos.jack.jak.util.timer.SimClock;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import io.github.agentsoz.abmjack.shared.GlobalTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import io.github.agentsoz.bushfire.datamodels.Route;
+import io.github.agentsoz.bushfire.datamodels.Region;
+import io.github.agentsoz.bushfire.datamodels.ReliefCentre;
+
+/**
+ * @author Sewwandi Perera
+ */
+public agent EvacController extends Agent {
+    #posts event Respond_fireG ev;
+    #posts event DoScheduleG ev2;
+    #posts event Respond_fireG ev3;
+    #posts event Calc_viable_sheltersG ev4;
+    #posts event Calculate_fire_vectorG ev5;
+    #posts event Calculate_sheltersG ev6;
+    #posts event Decide_shelterG ev7;
+    #posts event Decide_routeG ev8;
+    #posts event Decide_timeG ev9;
+    #posts event Evac_timeG p_Evac_timeG;
+    #posts event CheckplanG ev11;
+    #handles event Respond_fireG;
+    #handles event PlanAllAreasG;
+    #handles event Calc_viable_sheltersG;
+    #handles event Decide_shelterG;
+    #handles event Decide_routeG;
+    #handles event DoScheduleG;
+    #handles event Calculate_sheltersG;
+    #handles event Calculate_fire_vectorG;
+    #handles event Decide_timeG;
+    #handles event Evac_timeG;
+    #handles event CheckplanG;
+    #handles event PlanChoice;
+    #handles event Replan_areaG;
+    #posts event PlanAllAreasG ev1;
+    #posts event CheckplanG ev12;
+    #posts event Replan_areaG ev13;
+    #sends event EvacMessage ev14;
+    #uses plan Calc_fire_vectorP;
+    #uses plan Calc_sheltersP;
+    #uses plan Choose_by_capacityP;
+    #uses plan Choose_safestP;
+    #uses plan Choose_onlyP;
+    #uses plan No_sheltersP;
+    #uses plan Fast_routeP;
+    #uses plan Safe_routeP;
+    #uses plan Custom_routeP;
+    #uses plan Free_choiceP;
+    #uses plan Decide_timeP;
+    #uses plan DoScheduleP;
+    #uses plan Evac_timeP;
+    #uses plan Respond_FireP;
+    #uses plan PlanAreasP;
+    #uses plan Calc_viable_sheltersP;
+    #uses plan Deside_shelter_metaplan;
+    #uses plan CheckPlanP;
+    #uses plan Replan_areaP;
+    #private data Sheltor_Vectors sheltorVectors();
+    #private data Shelters shelters();
+    #private data Routes routes();
+    #private data Areas areas();
+    #private data Fire fire();
+    #private data Shelter_Assignments shelterAssignments();
+    #private data Route_Assignments routeAssignments();
+    #private data Evac_Times evacTimes();
+    #private data Plan_Checks planChecks();
+
+	final Logger logger = LoggerFactory.getLogger("");
+
+    public EvacController(String name, IBdiConnector bdiConnector)
+    {
+        super(name);
+        this.bdiConnector = bdiConnector;
+        updateBeliefs();
+    }
+
+    public IBdiConnector bdiConnector;
+
+    public void startFireResponse(){
+        postEvent(ev.post());
+    }
+
+    public void startNewSchedule(final String areaName, final long executeTime){
+        logger.debug("EvacController creating a schedule for area " + areaName + " at "+ executeTime);
+        final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+        
+        Runnable newTask = new Runnable() {
+        	
+            public void run() {
+                try {
+                    TimeCursor c = new TimeCursor(executeTime, GlobalTime.time);
+                    if(c.next()) {
+                    	executor.shutdown();
+                        logger.debug("Excecuting the Evac-Time for area " + areaName + ", Now time: "+ GlobalTime.time.getTime());
+                        postEvent(p_Evac_timeG.post(areaName, executeTime));                        
+                    }   
+                } 
+                catch(Exception e) {
+                    logger.error("Error: An error occurred while publishing Agent's statistics");
+                }
+            }
+        };
+        
+        
+        executor.scheduleAtFixedRate(newTask, 0, 3, TimeUnit.MILLISECONDS);
+    }
+
+    /**
+     * This is used only for testing purposes. Will be removed when the system is finalized.
+     */
+    private void updateBeliefs(){
+        updateRoutes();
+        updateRegions();
+        updateShelters();
+        updateShelterVectors();
+        updateFire();  
+    }
+
+    private void updateRoutes() {
+		HashMap locations = bdiConnector.getLocations();
+		HashMap routesMap = bdiConnector.getRoutes();
+		Object[] routeNames = routesMap.keySet().toArray();
+		Location l;
+		for (int i = 0; i < routeNames.length; i++) {
+			Route route = (Route) routesMap.get((String) routeNames[i]);
+			ArrayList routeCoords = new ArrayList();
+
+			for (int j = 0; j < route.getRouteNames().size(); j++) {
+				l = (Location) locations.get(route.getRouteNames().get(j));
+				routeCoords
+						.add(new Coordinate(l.getX(), l.getY()));
+			}
+
+			routes.insert(route.getRegion(), route.getReliefCentre(),
+					(String) routeNames[i], routeCoords, route.getRouteNames(),
+					route.getDescription(), getCurrentTime());
+		}
+	}
+
+    private void updateRegions(){      
+    	HashMap regionMap = bdiConnector.getRegions();
+		Object[] regionNames = regionMap.keySet().toArray();
+		for(int i = 0; i < regionNames.length ; i++){
+			Region region = (Region) regionMap.get((String)regionNames[i]);
+			
+			areas.insert(region.getName(), region.getCentre(), 
+				region.getPopulation(), new ArrayList(), getCurrentTime());
+		} 
+    }
+
+    private void updateFire(){
+        fire.insertLatestFireInfo(bdiConnector.getFirePolygon(), bdiConnector.getFireDirectionFromNorth(), getCurrentTime());
+    }
+
+    private void updateShelters(){
+    	HashMap reliefCentreMap = bdiConnector.getReliefCentres();
+		Object[] reliefCentreNames = reliefCentreMap.keySet().toArray();
+		for(int i = 0; i < reliefCentreNames.length ; i++){
+			ReliefCentre rs = (ReliefCentre) reliefCentreMap.get((String)reliefCentreNames[i]);
+			
+			shelters.insert((String)reliefCentreNames[i], rs.getLocationCoords(), rs.getCapacity(), 0);
+		}
+    }
+
+    private void updateShelterVectors(){
+        //read all areas
+        Map areaInfo = areas.getAllAreaLocations();
+        logger.debug(areaInfo.toString());
+        
+        //read all shelters
+        Map shelterInfo = shelters.getAllShelterLocations();
+        logger.debug(shelterInfo.toString());
+        
+        //generate vectors
+        Iterator areaIterator = areaInfo.entrySet().iterator();
+        while (areaIterator.hasNext()) {
+            Map.Entry area = (Map.Entry)areaIterator.next();
+            
+            Iterator shelterIterator = shelterInfo.entrySet().iterator();
+            while (shelterIterator.hasNext()) {
+                Map.Entry shelter = (Map.Entry)shelterIterator.next();                
+                sheltorVectors.insert((String)area.getKey(), (String)shelter.getKey(), (Coordinate)area.getValue(), (Coordinate)shelter.getValue());   
+            }
+            
+            areaIterator.remove(); // avoids a ConcurrentModificationException
+        }
+                
+    }
+
+    public long getCurrentTime(){
+        return GlobalTime.time.getTime();
+    }
+
+}
+

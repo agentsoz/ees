@@ -48,8 +48,6 @@ public class PhoenixFireModule implements DataSource {
 
 	private final Logger logger = LoggerFactory.getLogger("io.github.agentsoz.bushfire");
 
-	public static final String FIREALERT = "FireAlert";
-
 	private DataServer dataServer = null;
 	private JSONObject json = null;
 	private double lastUpdateTimeInMinutes = -1;

@@ -1,0 +1,83 @@
+/*******************************************************************
+ * Created by the JDE: Thu Jun 11 19:23:36 AEST 2015
+ * WARNING: If you are editing this file from outside the JDE, you
+ * should make sure to load the changes back into the JDE by setting
+ * the preference "Check for outside changes..." in the "Text Editor"
+ * preference tab or reload the component manually.
+ * Otherwise you will lose your changes next time the file is generated.
+ *******************************************************************/
+
+package io.github.agentsoz.bushfire.jack.plans;
+
+import com.vividsolutions.jts.geom.Coordinate;
+import io.github.agentsoz.bushfire.jack.agents.EvacController;
+import io.github.agentsoz.bushfire.jack.data.Areas;
+import io.github.agentsoz.bushfire.jack.events.Calc_viable_sheltersG;
+import io.github.agentsoz.bushfire.jack.events.Calculate_fire_vectorG;
+import io.github.agentsoz.bushfire.jack.events.Calculate_sheltersG;
+import java.util.ArrayList;
+import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * @author Sewwandi Perera
+ */
+public plan Calc_viable_sheltersP extends Plan {
+
+    logical String name;
+    logical Coordinate location;
+    logical int population;
+    logical List viableShelters;
+    logical long timeViable;
+    #handles event Calc_viable_sheltersG ev;
+    #posts event Calculate_fire_vectorG p_Calculate_fire_vectorG;
+    #posts event Calculate_sheltersG p_Calculate_sheltersG;
+    #posts event Calculate_fire_vectorG ev3;
+    #posts event Calculate_sheltersG ev4;
+    #uses interface EvacController enc;
+    #uses data Areas areas;
+    final Logger logger = LoggerFactory.getLogger("");
+    
+    static boolean relevant(Calc_viable_sheltersG ev)
+    {
+        return true;
+    }
+    
+    context()
+    {
+        true;
+    }
+    
+    #reasoning method
+    body()
+    {
+        logger.trace("Calc_viable_sheltersP is initiated"); 
+        
+        @subtask(p_Calculate_fire_vectorG.post());
+        
+        //Query and get all areas configured in the application
+        Cursor c = areas.getAllData(name, location, population, viableShelters, timeViable);
+        List areaNamesList = new ArrayList();
+        List viableSheltersList = new ArrayList();
+        List timestampsList = new ArrayList();
+        
+        for( ; c.next() ; ) {
+            areaNamesList.add(name.getValue());
+            viableSheltersList.add(viableShelters.getValue());
+            timestampsList.add((Object)timeViable.getValue());
+        }
+            
+        for( int i = 0 ; i <  areaNamesList.size() ; i++) {
+            logger.debug("Area " + (String)areaNamesList.get(i) + "'s viable shelters:" + (List)viableSheltersList.get(i));
+            logger.debug("Viable shelters info updated at:" + (long)timestampsList.get(i) + ". Current time:" + enc.getCurrentTime());
+            if( null == viableSheltersList.get(i) || ((List)viableSheltersList.get(i)).isEmpty() || (enc.getCurrentTime() - (long)timestampsList.get(i)) > 1800 ){
+                    logger.debug("Started calculating vible shelters for the area " + (String)areaNamesList.get(i));
+                    @subtask(p_Calculate_sheltersG.post((String)areaNamesList.get(i)));
+            }
+        }
+    }
+    
+
+}
+

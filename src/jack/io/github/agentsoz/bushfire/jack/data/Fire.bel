@@ -1,0 +1,80 @@
+/*******************************************************************
+ * Created by the JDE: Thu Jun 11 19:23:37 AEST 2015
+ * WARNING: If you are editing this file from outside the JDE, you
+ * should make sure to load the changes back into the JDE by setting
+ * the preference "Check for outside changes..." in the "Text Editor"
+ * preference tab or reload the component manually.
+ * Otherwise you will lose your changes next time the file is generated.
+ *******************************************************************/
+
+package io.github.agentsoz.bushfire.jack.data;
+
+import io.github.agentsoz.bushfire.bdi.BDIConstants;
+import java.awt.Polygon;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * @author Sewwandi Perera
+ */
+public beliefset Fire extends OpenWorld {
+    #key field String id;
+    #value field Polygon fire;
+    #value field double direction;
+    #value field long time;
+    #indexed query getEntry(String id, logical Polygon fire, logical double direction, logical long time);
+    
+    final Logger logger = LoggerFactory.getLogger("");
+    
+    #function query long getTime(String id){
+        logical Polygon fire;
+        logical double direction;
+        logical long time;
+        Cursor c = getEntry(id, fire, direction, time);
+        c.next();
+        return (long)(time.getValue());
+    }
+    
+    #function query Polygon getFirePolygon(String id){
+        logical double direction;
+        logical long time;
+        logical Polygon fire;
+        Cursor c = getEntry(id, fire, direction, time);
+        c.next();
+        return (Polygon)(fire.getValue());
+    }
+
+
+
+    public void insertLatestFireInfo(Polygon fire, double direction, long time){
+        try {
+            add(BDIConstants.FIRE_BELIEF_KEY, fire, direction, time);
+            logger.debug("Updated fire data [fire:" + fire.toString() + ", direction:" + direction + "]");
+        }
+        catch(BeliefSetException bse) {
+            logger.error("Error: " + bse.getMessage());
+        }
+    }
+
+    public long getLatestTimestamp(){
+        try {
+            return getTime(BDIConstants.FIRE_BELIEF_KEY);
+        }
+        catch(BeliefSetException bse) {
+            logger.error("Error: " + bse.getMessage());
+        }
+        return 0;
+    }
+
+    public Polygon getLatestFirePolygon(){
+        try {
+            return getFirePolygon(BDIConstants.FIRE_BELIEF_KEY);
+        }
+        catch(BeliefSetException bse) {
+            logger.error("Error: " + bse.getMessage());
+        }
+        return null;
+    }
+
+}
+

@@ -1,0 +1,33 @@
+/*******************************************************************
+ * Created by the JDE: Thu Jun 11 19:23:36 AEST 2015
+ * WARNING: If you are editing this file from outside the JDE, you
+ * should make sure to load the changes back into the JDE by setting
+ * the preference "Check for outside changes..." in the "Text Editor"
+ * preference tab or reload the component manually.
+ * Otherwise you will lose your changes next time the file is generated.
+ *******************************************************************/
+
+package io.github.agentsoz.bushfire.jack.events;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import java.util.List;
+
+/**
+ * @author Sewwandi Perera
+ */
+public event EvacMessage extends MessageEvent {
+    Logger logger = LoggerFactory.getLogger("");
+    public List route;
+    public List waypointNames;
+
+    #posted as
+    post(List route, List waypointNames){
+        logger.trace(" Agent " + getAgent().getBasename() + " : EvacMessage is initiated");         
+        this.route = route;
+        this.waypointNames = waypointNames;
+    }
+
+
+}
+

@@ -180,19 +180,6 @@ ul.ui-autocomplete {
  margin-top: 1em;
 }
 
-.mr-1 {
- margin-right: 1em;
-}
-
-.mt-m1dot5 {
- margin-top: -1.5em;
-}
- 
-.mb-1dot5 {
- margin-bottom: 1.5em;
- 
-}
-
 .draw-area-step-1, .draw-line-step-1 {
  display: none;
 }
@@ -213,21 +200,7 @@ ul.ui-autocomplete {
 
 .validation-msg {
  color: #ff0000;
- font-size: small;
+ fint-size: small;
  font-style: italic;
  padding-left: 1em;
- display: none;
-}
-
-.split-vehicles-dropdown {
- display: none;
- width:5em; 
- padding:1pt; 
- height:inherit;  
-}
-
-#split-vehicles-view {
- display: none;
- margin-right:1em; 
- font-size: 14px;
 }
