@@ -172,7 +172,7 @@ public final class MATSimModel implements ABMServerInterface {
 		config.controler().setWriteSnapshotsInterval(10);
 		// --- snapshots end
 	    */	
-		ConfigUtils.setVspDefaults(config);
+//		ConfigUtils.setVspDefaults(config);
 
 		// ---
 
