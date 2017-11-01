@@ -48,7 +48,7 @@ public class MainTest {
       Assert.assertEquals (expectedCRC, actualCRC);
 
       expectedCRC = CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/jill.out" ) ;
-      actualCRC = CRCChecksum.getCRCFromFile( "output/jill.out" ) ;
+      actualCRC = CRCChecksum.getCRCFromFile( "scenarios/maldon-2017-11-01/jill.out" ) ;
       Assert.assertEquals (expectedCRC, actualCRC); 
 
 	}
