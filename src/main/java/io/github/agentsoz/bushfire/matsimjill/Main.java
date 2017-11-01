@@ -107,7 +107,10 @@ public class Main {
 		
 		// All done, so terminate now
 		jillmodel.finish();
-		System.exit(0);
+
+//		System.exit(0);
+		// cannot have System.exit in code that is under a junit test, since it exits the whole test and so you can't, say,
+		// test for simulation output afterwards. kai, nov'17
 	}
 
 	/**
