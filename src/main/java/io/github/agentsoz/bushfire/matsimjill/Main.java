@@ -39,6 +39,7 @@ import io.github.agentsoz.bdimatsim.MATSimModel;
 import io.github.agentsoz.bushfire.PhoenixFireModule;
 import io.github.agentsoz.bushfire.Time;
 import io.github.agentsoz.dataInterface.DataServer;
+import io.github.agentsoz.util.Global;
 
 public class Main {
 	
@@ -150,6 +151,17 @@ public class Main {
 					}
 				}
 				break;
+			case "--seed":
+              if (i + 1 < args.length) {
+                i++;
+                try {
+                    Global.setRandomSeed(Long.parseLong(args[i]));
+                } catch (Exception e) {
+                    System.err.println("Could not parse random seed '"
+                            + args[i] + "' : " + e.getMessage());
+                }
+              }
+              break;
 			}
 		}
 		
@@ -168,6 +180,7 @@ public class Main {
 				+ "  --jillconfig STR  The string '--config={...}' passed to JILL (required)\n"
 				+ "  --logfile FILE    logging output file name (default is '"+logFile+"')\n"
 				+ "  --loglevel LEVEL  log level; one of ERROR,WARN,INFO,DEBUG,TRACE (default is '"+logLevel+"')\n"
+                + "  --seed SEED       seed to use for the random number generator (optional)\n"
 				;
 	}
 

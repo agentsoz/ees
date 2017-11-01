@@ -23,6 +23,7 @@ package io.github.agentsoz.bushfire.matsimjill;
  */
 
 import io.github.agentsoz.bushfire.datamodels.Location;
+import io.github.agentsoz.util.Global;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -96,14 +97,7 @@ public class SimpleConfig {
 	private static final String eEvacuationTiming = "evacuationTiming";
 	private static final String eStart = "start";
 	private static final String ePeak = "peak";
-	
-	private static Random getRandom() {
-	  if (rand == null) {
-	    rand = new Random();
-	  }
-	  return rand;
-	}
-	
+		
 	public static String getMatSimFile() {
 		return matSimFile;
 	}
@@ -335,7 +329,7 @@ public class SimpleConfig {
      */
     static int selectIndexFromCumulativeProbabilities(double[] values) {
             int index = -1;
-            double roll = getRandom().nextDouble();
+            double roll = Global.getRandom().nextDouble();
             if (values != null && values.length > 0) {
                     for (int i = 0; i < values.length; i++) {
                             if (roll <= values[i]) {
