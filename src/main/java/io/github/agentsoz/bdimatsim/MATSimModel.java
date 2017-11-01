@@ -153,11 +153,12 @@ public final class MATSimModel implements ABMServerInterface {
 		// at 2 seconds before 6:00, no matter what is in the initial plans file:
 		config.qsim().setStartTime( 1.00 );
 		config.qsim().setSimStarttimeInterpretation( StarttimeInterpretation.onlyUseStarttime );
-		config.qsim().setEndTime( 8.*3600 + 1800. );
+		//config.qsim().setEndTime( 8.*3600 + 1800. );
 
 		config.controler().setWritePlansInterval(1);
 		config.controler().setOverwriteFileSetting( OverwriteFileSetting.deleteDirectoryIfExists );
 
+		/*
 		// --- snapshots begin 
 		config.qsim().setSnapshotStyle(SnapshotStyle.withHoles);
 		config.qsim().setSnapshotPeriod(10);
@@ -170,7 +171,7 @@ public final class MATSimModel implements ABMServerInterface {
 		}
 		config.controler().setWriteSnapshotsInterval(10);
 		// --- snapshots end
-		
+	    */	
 		ConfigUtils.setVspDefaults(config);
 
 		// ---
