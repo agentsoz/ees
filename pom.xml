@@ -127,6 +127,7 @@
             <manifest>
               <addClasspath>true</addClasspath>
               <classpathPrefix>lib/</classpathPrefix>
+              <useUniqueVersions>false</useUniqueVersions>
               <mainClass>io.github.agentsoz.bushfire.matsimjill.Main</mainClass>
             </manifest>
           </archive>
