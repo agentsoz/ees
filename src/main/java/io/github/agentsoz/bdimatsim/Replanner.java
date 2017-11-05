@@ -57,6 +57,7 @@ import org.matsim.core.router.util.TravelDisutility;
 import org.matsim.core.router.util.TravelDisutilityUtils;
 import org.matsim.core.router.util.TravelTime;
 import org.matsim.core.router.util.TravelTimeUtils;
+import org.matsim.withinday.utils.EditPlans;
 import org.matsim.withinday.utils.EditRoutes;
 import org.matsim.withinday.utils.EditTrips;
 import org.slf4j.Logger;
@@ -67,8 +68,10 @@ public class Replanner {
 
 	protected final MATSimModel model;
 	protected final QSim qsim ;
-	protected final EditRoutes editRoutes;
-	protected final EditTrips editTrips ;
+	
+	private final EditRoutes editRoutes;
+	private final EditTrips editTrips ;
+	private final EditPlans editPlans ;
 
 	final TripRouter tripRouter;
 	final StageActivityTypes stageActivities ;
@@ -95,6 +98,7 @@ public class Replanner {
 		LeastCostPathCalculator pathCalculator = new FastAStarLandmarksFactory().createPathCalculator( model.getScenario().getNetwork(), travelDisutility, travelTime) ;
 		this.editRoutes = new EditRoutes(model.getScenario().getNetwork(), pathCalculator, model.getScenario().getPopulation().getFactory() ) ;
 		this.editTrips = new EditTrips(tripRouter, qsim.getScenario() ) ;
+		this.editPlans = new EditPlans(qsim, tripRouter, editTrips, model.getScenario().getPopulation().getFactory() ) ;
 	}
 
 	protected final void reRouteCurrentLeg( MobsimAgent agent, double now ) {
@@ -210,6 +214,18 @@ public class Replanner {
 		return true;
 	}
 	 */
+
+	public EditRoutes getEditRoutes() {
+		return editRoutes;
+	}
+
+	public EditTrips getEditTrips() {
+		return editTrips;
+	}
+
+	public EditPlans getEditPlans() {
+		return editPlans;
+	}
 
 	static enum Congestion { freespeed, currentCongestion } 
 	static enum AllowedLinks { forCivilians, forEmergencyServices, all }
