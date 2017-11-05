@@ -32,6 +32,7 @@ import org.matsim.core.mobsim.framework.HasPerson;
 import org.matsim.core.mobsim.framework.MobsimDriverAgent;
 import org.matsim.core.mobsim.framework.PlanAgent;
 import org.matsim.core.mobsim.qsim.agents.BasicPlanAgentImpl;
+import org.matsim.core.mobsim.qsim.agents.HasModifiablePlan;
 import org.matsim.core.mobsim.qsim.agents.PlanBasedDriverAgentImpl;
 import org.matsim.core.mobsim.qsim.agents.WithinDayAgentUtils;
 import org.matsim.core.mobsim.qsim.interfaces.MobsimVehicle;
@@ -43,7 +44,7 @@ import org.matsim.facilities.Facility;
 import org.matsim.vehicles.Vehicle;
 import org.matsim.withinday.utils.EditTrips;
 
-class EvacAgent implements MobsimDriverAgent, HasPerson, PlanAgent {
+class EvacAgent implements MobsimDriverAgent, HasPerson, PlanAgent, HasModifiablePlan {
 
 	@SuppressWarnings("unused")
 	private static final Logger log = Logger.getLogger(EvacAgent.class);
@@ -204,7 +205,7 @@ class EvacAgent implements MobsimDriverAgent, HasPerson, PlanAgent {
 //	final int getCurrentPlanElementIndex() {
 //		return basicAgentDelegate.getCurrentPlanElementIndex() ;
 //	}
-	final Plan getModifiablePlan() {
+	@Override public final Plan getModifiablePlan() {
 		return basicAgentDelegate.getModifiablePlan() ;
 	}
 //	final void resetCaches() {
@@ -225,6 +226,11 @@ class EvacAgent implements MobsimDriverAgent, HasPerson, PlanAgent {
 	@Override
 	public final PlanElement getPreviousPlanElement() {
 		return this.basicAgentDelegate.getPreviousPlanElement();
+	}
+
+	@Override
+	public void resetCaches() {
+		this.basicAgentDelegate.resetCaches(); 
 	}
 
 }
