@@ -158,19 +158,20 @@ public final class MATSimModel implements ABMServerInterface {
 		config.controler().setWritePlansInterval(1);
 		config.controler().setOverwriteFileSetting( OverwriteFileSetting.deleteDirectoryIfExists );
 
-//		// --- snapshots begin 
-//		config.qsim().setSnapshotStyle(SnapshotStyle.withHoles);
-//		config.qsim().setSnapshotPeriod(10);
-//		{
-//			Collection<String> snapshotFormat = new ArrayList<>() ;
-//			snapshotFormat.add("transims") ;
-//			snapshotFormat.add("googleearth") ;
-////			snapshotFormat.add("otfvis") ;
-//			config.controler().setSnapshotFormat(snapshotFormat);
-//		}
-//		config.controler().setWriteSnapshotsInterval(10);
-//		// --- snapshots end
-//		
+		/*
+		// --- snapshots begin 
+		config.qsim().setSnapshotStyle(SnapshotStyle.withHoles);
+		config.qsim().setSnapshotPeriod(10);
+		{
+			Collection<String> snapshotFormat = new ArrayList<>() ;
+			snapshotFormat.add("transims") ;
+			snapshotFormat.add("googleearth") ;
+//			snapshotFormat.add("otfvis") ;
+			config.controler().setSnapshotFormat(snapshotFormat);
+		}
+		config.controler().setWriteSnapshotsInterval(10);
+		// --- snapshots end
+	    */	
 //		ConfigUtils.setVspDefaults(config);
 
 		// ---
