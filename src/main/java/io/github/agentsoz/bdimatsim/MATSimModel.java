@@ -195,6 +195,9 @@ public final class MATSimModel implements ABMServerInterface {
 
 		controller.addOverridingModule(new AbstractModule(){
 			@Override public void install() {
+				
+				install( new EvacQSimModule() ) ;
+				
 				this.addMobsimListenerBinding().toInstance( new MobsimInitializedListener() {
 					@Override public void notifyMobsimInitialized(MobsimInitializedEvent e) {
 						// for the time being doing this here since from a matsim perspective we would like to

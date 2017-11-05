@@ -39,14 +39,11 @@ import org.matsim.api.core.v01.population.Person;
 import org.matsim.api.core.v01.population.Plan;
 import org.matsim.api.core.v01.population.PlanElement;
 import org.matsim.api.core.v01.population.Route;
-import org.matsim.core.gbl.Gbl;
 import org.matsim.core.mobsim.framework.HasPerson;
 import org.matsim.core.mobsim.framework.MobsimAgent;
-import org.matsim.core.mobsim.framework.PlanAgent;
 import org.matsim.core.mobsim.qsim.QSim;
 import org.matsim.core.mobsim.qsim.agents.WithinDayAgentUtils;
 import org.matsim.core.population.routes.NetworkRoute;
-import org.matsim.core.router.ActivityWrapperFacility;
 import org.matsim.core.router.FastAStarLandmarksFactory;
 import org.matsim.core.router.LinkWrapperFacility;
 import org.matsim.core.router.PlanRouter;
@@ -60,11 +57,8 @@ import org.matsim.core.router.util.TravelDisutility;
 import org.matsim.core.router.util.TravelDisutilityUtils;
 import org.matsim.core.router.util.TravelTime;
 import org.matsim.core.router.util.TravelTimeUtils;
-import org.matsim.facilities.ActivityFacility;
-import org.matsim.facilities.Facility;
 import org.matsim.withinday.utils.EditRoutes;
 import org.matsim.withinday.utils.EditTrips;
-import org.matsim.withinday.utils.ReplanningException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -76,8 +70,8 @@ public class Replanner {
 	protected final EditRoutes editRoutes;
 	protected final EditTrips editTrips ;
 
-	private final TripRouter tripRouter;
-	private final StageActivityTypes stageActivities ;
+	final TripRouter tripRouter;
+	final StageActivityTypes stageActivities ;
 
 	protected Replanner(MATSimModel model, QSim qsim)
 	{
@@ -100,7 +94,7 @@ public class Replanner {
 		//		LeastCostPathCalculator pathCalculator = new DijkstraFactory().createPathCalculator( model.getScenario().getNetwork(), travelDisutility, travelTime) ;
 		LeastCostPathCalculator pathCalculator = new FastAStarLandmarksFactory().createPathCalculator( model.getScenario().getNetwork(), travelDisutility, travelTime) ;
 		this.editRoutes = new EditRoutes(model.getScenario().getNetwork(), pathCalculator, model.getScenario().getPopulation().getFactory() ) ;
-		this.editTrips = new EditTrips(tripRouter) ;
+		this.editTrips = new EditTrips(tripRouter, qsim.getScenario() ) ;
 	}
 
 	protected final void reRouteCurrentLeg( MobsimAgent agent, double now ) {
@@ -219,207 +213,5 @@ public class Replanner {
 
 	static enum Congestion { freespeed, currentCongestion } 
 	static enum AllowedLinks { forCivilians, forEmergencyServices, all }
-	public final class IntelligentPlan {
-		private MobsimAgent agent;
-		private final Person person ;
-		private List<PlanElement> planElements;
-		private Plan plan;
-		IntelligentPlan( MobsimAgent agent ) {
-			this.agent = agent ;
-			this.plan = WithinDayAgentUtils.getModifiablePlan(agent);
-			this.planElements = plan.getPlanElements();
-			if ( agent instanceof HasPerson ) {
-				this.person = ((HasPerson) agent).getPerson() ;
-			} else {
-				this.person = null ;
-			}
-		}
-		public void setRouting(Congestion routing) {
-		}
-		public void setAllowedLinks(AllowedLinks allowedLinks) {
-		}
-		// ---
-		public boolean addActivityAtEnd(Activity e) {
-			return planElements.add(e) ;
-		}
-		public boolean removeActivity(Activity o) {
-			return planElements.remove(o) ;
-		}
-		public Activity setActivity(int index, Activity newAct) {
-			return setActivity( index, newAct, null, null ) ;
-		}
-		public Activity setActivity(int index, Activity newAct, String requestedUpstreamMode, String downstreamMode ) {
-			// make sure we have indeed an activity position:
-			if ( planElements.get(index) instanceof Activity ) {
-				throw new ReplanningException("trying to replace a non-activity in the plan by an activity; this is not possible") ;
-			}
-
-			Activity origAct = (Activity) planElements.get(index) ;
-
-			// make sure that this was not a stage activity:
-			if( stageActivities.isStageActivity(origAct.getType()) ){
-				throw new ReplanningException("trying to replace a helper activity (stage activity) by a real activity; this is not possible") ;
-			}
-
-			final Integer currentIndex = WithinDayAgentUtils.getCurrentPlanElementIndex(agent);
-
-			// make sure we are not yet beyond the to-be-replanned activity:
-			if ( index < currentIndex ) {
-				throw new ReplanningException("trying to replace an activity that lies in the past; this is not possible") ;
-			}
-
-			// set the new activity:
-			planElements.set(index, newAct) ;
-
-			if ( locationsAreSame( origAct, newAct ) ) {
-				return origAct ;  // signature of method, from Java Collections
-				// yyyy if newAct has a different duration/endTime, we should still replan the following trip
-			}
-			// else:
-			logger.trace("location has changed; need to replan both trips") ;
-			
-			// trip before (if any):
-			if ( index > 0 ) {
-				Trip tripBeforeAct = findTripBeforeAct(origAct);
-				Gbl.assertNotNull( tripBeforeAct );  // there could also just be a sequence of activities?!
-
-				final PlanElement currentPlanElement = ((PlanAgent)agent).getCurrentPlanElement();
-				final List<PlanElement> currentTripElements = tripBeforeAct.getTripElements();
-				final String currentMode = tripRouter.getMainModeIdentifier().identifyMainMode( currentTripElements ) ;
-
-				// find out if trip before has already been started:
-				int tripElementsIndex = currentTripElements.indexOf( currentPlanElement ) ;
-				if ( tripElementsIndex==-1) {
-					// trip has not yet started; this is the easy case
-					if ( requestedUpstreamMode != null ) {
-						editTrips.replanFutureTrip(tripBeforeAct, plan, requestedUpstreamMode);
-					} else {
-						editTrips.replanFutureTrip(tripBeforeAct, plan, currentMode);
-					}
-				} else {
-					// trip has already started
-					checkIfSameMode(requestedUpstreamMode, currentMode);
-					editTrips.replanCurrentTrip(agent, qsim.getSimTimer().getTimeOfDay(), qsim.getScenario() );
-				}
-			}
-			// trip after (if any):
-			if ( index < planElements.size()-1 ) {
-				Trip tripAfterAct = findTripAfterAct(origAct);
-				Gbl.assertIf( tripAfterAct!=null ); // there could also just be a sequence of activities?!
-				if ( downstreamMode==null ) {
-					editTrips.replanFutureTrip(tripAfterAct, plan, tripRouter.getMainModeIdentifier().identifyMainMode( tripAfterAct.getTripElements() ));
-				} else {
-					editTrips.replanFutureTrip(tripAfterAct, plan, downstreamMode);
-				}
-			}
-			WithinDayAgentUtils.resetCaches(agent);
-			qsim.rescheduleActivityEnd(agent);
-			return origAct ;
-		}
-		private void checkIfSameMode(String upstreamMode, final String currentMode) {
-			if ( upstreamMode!=null && !upstreamMode.equals(currentMode) ) {
-				throw new ReplanningException( "cannot change mode in trip that has already started.  Don't set the mode in the request, "
-						+ "or somehow make the agent to abort the current trip first." ) ;
-			}
-		}
-		private Trip findTripAfterAct(Activity act) {
-			List<Trip> trips = TripStructureUtils.getTrips(planElements, tripRouter.getStageActivityTypes() ) ;
-			Trip tripAfterAct = null ; 
-			for ( Trip trip : trips ) {
-				if ( act.equals( trip.getOriginActivity() ) ) {
-					tripAfterAct = trip ;
-				}
-			}
-			return tripAfterAct;
-		}
-		private Trip findTripBeforeAct(Activity act) {
-			List<Trip> trips = TripStructureUtils.getTrips(planElements, tripRouter.getStageActivityTypes() ) ;
-			Trip tripBeforeAct = null ;
-			for ( Trip trip : trips ) {
-				if ( act.equals( trip.getDestinationActivity() ) ) {
-					tripBeforeAct = trip ;
-				}
-			}
-			return tripBeforeAct;
-		}
-		private boolean locationsAreSame(Activity origAct, Activity newAct) {
-			if ( origAct.getFacilityId() != null && newAct.getFacilityId() != null ) {
-				return origAct.getFacilityId().equals( newAct.getFacilityId() ) ;
-			}
-			if ( origAct.getCoord() != null && newAct.getCoord() != null ) {
-				return origAct.getCoord().equals( newAct.getCoord() ) ;
-			}
-			return false ;
-		}
-		public void insertActivity(int index, Activity activity, String upstreamMode, String downstreamMode ) {
-			planElements.add( index, activity ) ;
-			int currentPlanElementsIndex = WithinDayAgentUtils.getCurrentPlanElementIndex(agent) ;
-			Facility<?> hereFacility = asFacility(activity);
-			{
-				// find activity before:
-				Activity prevAct = null ;
-				for ( int ii=0 ; ii<currentPlanElementsIndex ; ii++ ) {
-					if ( planElements.get(ii) instanceof Activity ) {
-						Activity act = (Activity) planElements.get(ii) ;
-						if ( !stageActivities.isStageActivity( act.getType() ) ) {
-							prevAct = act ;
-						}
-					}
-				}
-				if ( prevAct != null ) {
-					// yyyyyy trip may already have started !!!!
-					double departureTime = qsim.getSimTimer().getTimeOfDay() ;  // yyyyyy it might be earlier or later!
-					tripRouter.calcRoute(upstreamMode, asFacility(prevAct), hereFacility, departureTime, person) ;
-				}
-			}
-			{
-				// find activity after:
-				Activity nextAct = null ;
-				for ( int ii=planElements.size()-1 ; ii>currentPlanElementsIndex; ii-- ) {
-					if ( planElements.get(ii) instanceof Activity ) {
-						Activity act = (Activity) planElements.get(ii) ;
-						if ( !stageActivities.isStageActivity( act.getType() ) ) {
-							nextAct = act ;
-						}
-					}
-				}
-				if ( nextAct != null ) {
-					double departureTime = qsim.getSimTimer().getTimeOfDay() ;  // yyyyyy it might be earlier or later!
-					tripRouter.calcRoute(downstreamMode, hereFacility, asFacility(nextAct), departureTime, person) ;
-				}
-			}			
-		}
-		private Facility<?> asFacility(Activity activity) {
-			Facility<?> hereFacility = new ActivityWrapperFacility( activity ) ;
-			if ( activity.getFacilityId()!=null ) {
-				ActivityFacility facility = qsim.getScenario().getActivityFacilities().getFacilities().get( activity.getFacilityId() ) ;
-				if ( facility != null ) {
-					hereFacility = facility ;
-				}
-			}
-			return hereFacility;
-		}
-		public PlanElement removeActivity(int index) {
-			return planElements.remove(index) ;
-		}
-		public int indexOf(Object o) {
-			return planElements.indexOf(o) ;
-		}
-		public int indexOfNextActivityWithType( String type ) {
-			for ( int index = WithinDayAgentUtils.getCurrentPlanElementIndex(agent) ; index < planElements.size() ; index++ ) {
-				PlanElement pe = planElements.get(index) ;
-				if ( pe instanceof Activity ) {
-					if ( ((Activity)pe).getType().equals(type) ) {
-						return index ;
-					}
-				}
-			}
-			return -1 ;
-		}
-		public List<PlanElement> subList(int fromIndex, int toIndex) {
-			return WithinDayAgentUtils.getModifiablePlan(agent).getPlanElements().subList( fromIndex, toIndex ) ;
-		}
-
-	}
 
 }

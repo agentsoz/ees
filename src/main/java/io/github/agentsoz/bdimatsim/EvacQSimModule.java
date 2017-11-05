@@ -71,6 +71,7 @@ public class EvacQSimModule extends AbstractModule {
 		final Collection<AbstractQSimPlugin> plugins = new ArrayList<>();
 		plugins.add(new MessageQueuePlugin(config1));
 		plugins.add(new ActivityEnginePlugin(config1));
+//		plugins.add(new EvacActivityEnginePlugin(config1));
 		plugins.add(new QNetsimEnginePlugin(config1));
 		if (config1.network().isTimeVariantNetwork()) {
 			plugins.add(new NetworkChangeEventsPlugin(config1));
@@ -79,7 +80,8 @@ public class EvacQSimModule extends AbstractModule {
 			plugins.add(new TransitEnginePlugin(config1));
 		}
 		plugins.add(new TeleportationPlugin(config1));
-		plugins.add(new PopulationPlugin(config1));
+//		plugins.add(new PopulationPlugin(config1));
+		plugins.add(new EvacPopulationPlugin(config1));
 		return plugins;
 	}
 }
