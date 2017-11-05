@@ -1,0 +1,2 @@
+Iteration	car	pt	walk	bike	ride	other
+0	1.0	0.0	0.0	0.0	0.0	0.0

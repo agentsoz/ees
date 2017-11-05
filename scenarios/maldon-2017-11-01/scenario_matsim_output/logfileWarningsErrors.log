@@ -1,0 +1,19 @@
+2017-10-31 11:13:19,363  WARN VspConfigConsistencyCheckerImpl:120 You are using a brainExpBeta != 1; vsp default is 1.  (Different values may cause conceptual problems during paper writing.) This means you have to add the following lines to your config file: 
+2017-10-31 11:13:19,364  WARN VspConfigConsistencyCheckerImpl:122 <module name="planCalcScore">
+2017-10-31 11:13:19,364  WARN VspConfigConsistencyCheckerImpl:123 	<param name="BrainExpBeta" value="1.0" />
+2017-10-31 11:13:19,364  WARN VspConfigConsistencyCheckerImpl:124 </module>
+2017-10-31 11:13:19,364  WARN VspConfigConsistencyCheckerImpl:181 You are not setting fractionOfIterationsToStartScoreMSA; vsp default is to set this to something like 0.8.  This means you have to add the following lines to your config file: 
+2017-10-31 11:13:19,364  WARN VspConfigConsistencyCheckerImpl:183 <module name="planCalcScore">
+2017-10-31 11:13:19,364  WARN VspConfigConsistencyCheckerImpl:184 	<param name="fractionOfIterationsToStartScoreMSA" value="0.8" />
+2017-10-31 11:13:19,364  WARN VspConfigConsistencyCheckerImpl:185 </module>
+2017-10-31 11:13:19,364  WARN VspConfigConsistencyCheckerImpl:227 found `plansCalcRoute.insertingAccessEgressWalk==false'; vsp should try out `true' and report. 
+2017-10-31 11:13:19,364  WARN VspConfigConsistencyCheckerImpl:234 found qsim.usePersonIdForMissingVehicleId==true; this is only for backwards compatibility and should rather be set to false
+2017-10-31 11:13:19,364  WARN VspConfigConsistencyCheckerImpl:239 found `qsim.usingTravelTimeCheckInTeleporation==false'; vsp should try out `true' and report.
+2017-10-31 11:13:19,365  WARN VspConfigConsistencyCheckerImpl:252  found 'qsim.trafficDynamics==queue'; vsp standard is`kinematicWaves'.
+2017-10-31 11:13:19,365  WARN VspConfigConsistencyCheckerImpl:275 You have no strategy configured that uses ChangeExpBeta. vsp default is to use ChangeExpBeta at least in one strategy.
+2017-10-31 11:13:19,365  WARN VspConfigConsistencyCheckerImpl:282 You have not set fractionOfIterationsToDisableInnovation; vsp default is to set this to 0.8 or similar.  Add the following config lines:
+2017-10-31 11:13:19,365  WARN VspConfigConsistencyCheckerImpl:283 <module name="strategy">
+2017-10-31 11:13:19,365  WARN VspConfigConsistencyCheckerImpl:284 	<param name="fractionOfIterationsToDisableInnovation" value="0.8" />
+2017-10-31 11:13:19,365  WARN VspConfigConsistencyCheckerImpl:285 </module>
+2017-10-31 11:13:20,050  WARN MGC:175 Assuming that coordinates are in longitude first notation, i.e. (longitude, latitude).
+2017-10-31 11:13:20,777  WARN MGC:175 Assuming that coordinates are in longitude first notation, i.e. (longitude, latitude).
