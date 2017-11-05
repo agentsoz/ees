@@ -1,26 +1,5 @@
 package io.github.agentsoz.bushfire.matsimjill;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Set;
-
-import javax.xml.XMLConstants;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-import javax.xml.validation.Validator;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-
 /*
  * #%L
  * BDI-ABM Integration Package
@@ -44,10 +23,29 @@ import org.w3c.dom.NodeList;
  */
 
 import io.github.agentsoz.bushfire.datamodels.Location;
-import io.github.agentsoz.bushfire.datamodels.Region;
-import io.github.agentsoz.bushfire.datamodels.ReliefCentre;
-import io.github.agentsoz.bushfire.datamodels.Route;
 import io.github.agentsoz.util.Global;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Random;
+import java.util.Set;
+
+import javax.xml.XMLConstants;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.Validator;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+
 
 /**
  * 
@@ -58,6 +56,8 @@ public class SimpleConfig {
 
 	private static final Logger logger = LoggerFactory.getLogger("io.github.agentsoz.bushfire");
 
+	private static Random rand;
+	
 	private static String configFile = null;
 
 	private static String matSimFile = null;
@@ -72,10 +72,7 @@ public class SimpleConfig {
 	
 	private static int[] evacStartHHMM = new int[] {0, 0};
 	private static int evacPeakMins = 0;
-	private static HashMap<String, Location> locations = new LinkedHashMap<String, Location>();
-	private static HashMap<String, Region> regions = new LinkedHashMap<String, Region>();
-	private static HashMap<String, Route> routes = new LinkedHashMap<String, Route>();
-	public static HashMap<String, ReliefCentre> reliefCentres = new LinkedHashMap<String, ReliefCentre>();
+	private static HashMap<String, Location> locations = new HashMap<String, Location>();
 	private static String fireCoordinateSystem = "longlat";
 	private static String fireFileFormat = "custom";
 	private static String geographyCoordinateSystem = "longlat";
@@ -86,6 +83,7 @@ public class SimpleConfig {
 	private static final String eGeographyFile = "geographyfile";
 	private static final String eNumBDI = "bdiagents";
 	private static final String eName = "name";
+    private static final String eSplit = "split";
 	private static final String eCoordinates = "coordinates";
 	private static final String eFormat = "format";
 	private static final String eTrafficBehaviour = "trafficBehaviour";
@@ -99,7 +97,7 @@ public class SimpleConfig {
 	private static final String eEvacuationTiming = "evacuationTiming";
 	private static final String eStart = "start";
 	private static final String ePeak = "peak";
-	
+		
 	public static String getMatSimFile() {
 		return matSimFile;
 	}
@@ -148,34 +146,6 @@ public class SimpleConfig {
 		return locations.get(name);
 	}
 
-	private static Region getRegion(String name) {
-		return regions.get(name);
-	}
-
-	private static Set<String> getRegionsByName() {
-		return regions.keySet();
-	}
-
-	private static Collection<Region> getRegions() {
-		return regions.values();
-	}
-
-	private static Route getRoute(String name) {
-		return routes.get(name);
-	}
-
-	private static Set<String> getRoutes() {
-		return routes.keySet();
-	}
-
-	private static ReliefCentre getReliefCentre(String name) {
-		return reliefCentres.get(name);
-	}
-
-	private static Set<String> getReliefCentres() {
-		return reliefCentres.keySet();
-	}
-
 	public static String getConfigFile() {
 		return configFile;
 	}
@@ -188,9 +158,13 @@ public class SimpleConfig {
 	 * Pick one of the listed evac points
 	 */
 	public static Location getRandomEvacLocation() {
-		int n = Global.getRandom().nextInt(locations.size());
-		Location rc = (Location) locations.values().toArray()[n];
-		return rc;
+	  Location[] locs = locations.values().toArray(new Location[0]);
+	  double[] splits = new double[locs.length];
+	  for (int i = 0; i < locs.length; i++) {
+	    splits[i] = (Double)(locs[i].getAttributes());
+	  }
+	  int choice = selectIndexFromCumulativeProbabilities(cumulate(normalise(splits)));
+	  return locs[choice];
 	}
 
 	public static void readConfig() throws Exception {
@@ -287,11 +261,84 @@ public class SimpleConfig {
 		for (int i = 0; i < nl.getLength(); i++) {
 			Element location = (Element)nl.item(i);
 			String name = location.getElementsByTagName(eName).item(0).getTextContent().replaceAll("\n", "").trim();
+            Double split = new Double(location.getElementsByTagName(eSplit).item(0).getTextContent().replaceAll("\n", "").trim());
 			String s = location.getElementsByTagName(eCoordinates).item(0).getTextContent().replaceAll("\n", "").trim();
 			String[] sCoords = s.split(",");
 			double x = Double.parseDouble(sCoords[0]);
 			double y = Double.parseDouble(sCoords[1]);
-			locations.put(name, new Location(name, x, y));
+			locations.put(name, new Location(name, x, y, split));
 		}
 	}
+	
+    /**
+     * Normalises the values of the given array, such that each value is divided
+     * by the sum of all values.
+     * 
+     * @param values
+     * @return
+     */
+    private static double[] normalise(double[] values) {
+            double sum = 0;
+            if (values == null || values.length <= 1) {
+                    return values;
+            }
+            for (double d : values) {
+                    sum += Math.abs(d);
+            }
+            if (sum == 0) {
+                    return values;
+            }
+            double[] norm = new double[values.length];
+            for (int i = 0; i < values.length; i++) {
+                    norm[i] = values[i] / sum;
+            }
+            return norm;
+    }
+
+    /**
+     * Cumulates the values of the given array, such that in the returned array,
+     * the value at position i is the sum of all values from index 0..i in the
+     * input array.
+     * 
+     * @param values
+     * @return
+     */
+    private static double[] cumulate(double[] values) {
+            if (values == null || values.length <= 1) {
+                    return values;
+            }
+            double[] out = new double[values.length];
+            out[0] = values[0];
+            for (int i = 1; i < values.length; i++) {
+                    out[i] = out[i - 1] + values[i];
+            }
+            return out;
+    }
+
+    /**
+     * Probabilistically selects an index from the provided array, where each
+     * element of the array gives the cumulative probability associated with
+     * that index. To ensure that at least one index is selected, make sure the
+     * array is normalised, such that the cumulative probability for element
+     * values[length-1] is 1.0.
+     * 
+     * @param values
+     *            cumulative probabilities associated with the indexes
+     * @return the selected index in the range [0:values.length-1], or -1 if
+     *         none was selected
+     */
+    static int selectIndexFromCumulativeProbabilities(double[] values) {
+            int index = -1;
+            double roll = Global.getRandom().nextDouble();
+            if (values != null && values.length > 0) {
+                    for (int i = 0; i < values.length; i++) {
+                            if (roll <= values[i]) {
+                                    index = i;
+                                    break;
+                            }
+                    }
+            }
+            return index;
+    }
+
 }
