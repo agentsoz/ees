@@ -38,7 +38,9 @@ public class MainTest {
               "agents:[{classname:io.github.agentsoz.bushfire.matsimjill.agents.Resident, args:null, count:600}],"+
               "logLevel: WARN,"+
               "logFile: \"scenarios/maldon-2017-11-01/jill.log\","+
-              "programOutputFile: \"scenarios/maldon-2017-11-01/jill.out\""+
+              "programOutputFile: \"scenarios/maldon-2017-11-01/jill.out\","+
+              "randomSeed: 12345,"+ // jill random seed
+              "numThreads: 1"+ // run jill in single-threaded mode so logs are deterministic
               "}"};
 
       Main.main(args);
@@ -48,8 +50,9 @@ public class MainTest {
       long actualCRC = CRCChecksum.getCRCFromFile( "output/output_plans.xml.gz" ) ;
       Assert.assertEquals (expectedCRC, actualCRC);
 
-      // FIXME: still differences due to the timing of logging from different jill agents
-      // that exist in different intention selector threads. dsingh, 02nov/17
+      
+      
+      // FIXME: still small differences in jill log. dsingh, 06/Nov/17
       // expectedCRC = CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/jill.out" ) ;
       // actualCRC = CRCChecksum.getCRCFromFile( "scenarios/maldon-2017-11-01/jill.out" ) ;
       // Assert.assertEquals (expectedCRC, actualCRC); 
