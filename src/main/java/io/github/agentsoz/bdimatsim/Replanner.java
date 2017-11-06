@@ -144,18 +144,18 @@ public class Replanner {
 
 		Activity newAct = this.model.getScenario().getPopulation().getFactory().createActivityFromLinkId("work", newActivityLinkId ) ;
 
-//		Leg newLeg = this.model.getScenario().getPopulation().getFactory().createLeg(TransportMode.car);
+		Leg newLeg = this.model.getScenario().getPopulation().getFactory().createLeg(TransportMode.car);
 //		// new Route for current Leg.
-//		newLeg.setDepartureTime(endTime);
+		newLeg.setDepartureTime(endTime);
 //		editRoutes.relocateFutureLegRoute(newLeg, lastAct.getLinkId(), newActivityLinkId,((HasPerson)agent).getPerson());
 
 		newAct.setEndTime( Double.POSITIVE_INFINITY ) ;
 
-//		planElements.add(newLeg);
+		planElements.add(newLeg);
 		planElements.add(newAct);
 		
-		List<PlanElement> sublist = planElements.subList(planElements.size()-2, planElements.size()-1 ) ;
-		// (does it work without the leg in between?)
+		List<PlanElement> sublist = planElements.subList(planElements.size()-3, planElements.size() ) ;
+		// (the sub-list is "exclusive" the right index)
 		
 		Trip trip = TripStructureUtils.getTrips(sublist, stageActivities).get(0) ;
 		editTrips.replanFutureTrip(trip, plan, TransportMode.car) ;
