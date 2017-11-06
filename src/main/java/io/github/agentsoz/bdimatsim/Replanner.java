@@ -76,7 +76,7 @@ public class Replanner {
 	final TripRouter tripRouter;
 	final StageActivityTypes stageActivities ;
 
-	protected Replanner(MATSimModel model, QSim qsim)
+	public Replanner(MATSimModel model, QSim qsim)
 	{
 		this.model = model;
 		this.qsim = qsim ;
@@ -112,7 +112,7 @@ public class Replanner {
 		WithinDayAgentUtils.resetCaches(agent);
 	}
 
-	protected final void attachNewActivityAtEndOfPlan(Id<Link> newActivityLinkId, Id<Person> agentId ) {
+	protected static final void attachNewActivityAtEndOfPlan(Id<Link> newActivityLinkId, Id<Person> agentId, MATSimModel model ) {
 		// called at least once
 
 		// yyyy if the current activity is not already the last activity of the agent, this method may not behave as expected. kai, feb'14
@@ -142,9 +142,9 @@ public class Replanner {
 		// now the real work begins. This changes the activity (i.e. the destination of the current leg) and then
 		// re-splices the plan
 
-		Activity newAct = this.model.getScenario().getPopulation().getFactory().createActivityFromLinkId("work", newActivityLinkId ) ;
+		Activity newAct = model.getScenario().getPopulation().getFactory().createActivityFromLinkId("work", newActivityLinkId ) ;
 
-		Leg newLeg = this.model.getScenario().getPopulation().getFactory().createLeg(TransportMode.car);
+		Leg newLeg = model.getScenario().getPopulation().getFactory().createLeg(TransportMode.car);
 //		// new Route for current Leg.
 		newLeg.setDepartureTime(endTime);
 //		editRoutes.relocateFutureLegRoute(newLeg, lastAct.getLinkId(), newActivityLinkId,((HasPerson)agent).getPerson());
@@ -157,14 +157,14 @@ public class Replanner {
 		List<PlanElement> sublist = planElements.subList(planElements.size()-3, planElements.size() ) ;
 		// (the sub-list is "exclusive" the right index)
 		
-		Trip trip = TripStructureUtils.getTrips(sublist, stageActivities).get(0) ;
-		editTrips.replanFutureTrip(trip, plan, TransportMode.car) ;
+		Trip trip = TripStructureUtils.getTrips(sublist, model.getReplanner().getEditTrips().getStageActivities()).get(0) ;
+		model.getReplanner().getEditTrips().replanFutureTrip(trip, plan, TransportMode.car) ;
 
 		WithinDayAgentUtils.resetCaches(agent);
 		// this is necessary since the simulation may have cached some info from the plan at other places.
 		// (May note be necessary in this particular situation since there is nothing to cache when an agent is at an activity.) kai, feb'14
 
-		this.qsim.rescheduleActivityEnd(agent);
+		model.getReplanner().getEditPlans().rescheduleActivityEnd(agent);
 		// this is the only place where the internal interface is truly needed, since it is the only place where the agent needs to be "woken up".
 		// This is necessary since otherwise the simulation will not touch the agent until its previously scheduled activity end. kai, feb/14
 
