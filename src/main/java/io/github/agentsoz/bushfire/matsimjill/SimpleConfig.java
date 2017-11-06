@@ -28,7 +28,7 @@ import io.github.agentsoz.util.Global;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.TreeMap;
 import java.util.Random;
 import java.util.Set;
 
@@ -72,7 +72,7 @@ public class SimpleConfig {
 	
 	private static int[] evacStartHHMM = new int[] {0, 0};
 	private static int evacPeakMins = 0;
-	private static HashMap<String, Location> locations = new HashMap<String, Location>();
+	private static TreeMap<String, Location> locations = new TreeMap<String, Location>();
 	private static String fireCoordinateSystem = "longlat";
 	private static String fireFileFormat = "custom";
 	private static String geographyCoordinateSystem = "longlat";

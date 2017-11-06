@@ -53,7 +53,7 @@ public class EvacuateNow extends Plan {
 			new PlanStep() {
 				public void step() {
 					String bdiAction = Resident.BDI_ACTION_DRIVETO;
-					shelterLocation = SimpleConfig.getRandomEvacLocation();
+					shelterLocation = ((Resident)getAgent()).getShelterLocation();
 					double[] coords = shelterLocation.getCoordinates();
 					Object[] params = {bdiAction, coords};
 					writer.println("Resident "+getAgent().getId()+": is about to start evacuating to shelter in "+shelterLocation);
