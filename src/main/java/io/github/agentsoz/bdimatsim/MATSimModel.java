@@ -284,6 +284,8 @@ public final class MATSimModel implements ABMServerInterface {
 		this.bdiServer.start();
 
 		controller.run();
+		
+		this.bdiServer.finish();
 	}
 
 	/**
