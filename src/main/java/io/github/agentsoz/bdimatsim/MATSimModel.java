@@ -157,6 +157,11 @@ public final class MATSimModel implements ABMServerInterface {
 
 		config.controler().setWritePlansInterval(1);
 		config.controler().setOverwriteFileSetting( OverwriteFileSetting.deleteDirectoryIfExists );
+		
+		// set number of threads to one everywhere:
+		config.qsim().setNumberOfThreads(1);
+		config.global().setNumberOfThreads(1);
+		config.parallelEventHandling().setNumberOfThreads(1);
 
 		/*
 		// --- snapshots begin 
