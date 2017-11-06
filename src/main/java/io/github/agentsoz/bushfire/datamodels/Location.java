@@ -39,6 +39,7 @@ public class Location {
 	private String name;
 	private double x;
 	private double y;
+	private double attrib;
 
 	/**
 	 * Create a new location
@@ -51,7 +52,11 @@ public class Location {
 	 *            y part of the coordinate
 	 */
 	public Location(String n, double x, double y) {
-
+		this( n, x, y, Double.NaN ) ;
+	}
+	
+	public Location( String n, double x, double y, double attrib ) {
+		this.attrib = attrib ;
 		name = n;
 		this.x = x;
 		this.y = y;
@@ -76,6 +81,10 @@ public class Location {
 
 	public String toString() {
 		return "(" + name + ", coords=" + x + "," + y + ")";
+	}
+
+	public double getAttributes() {
+		return attrib ;
 	}
 
 }
