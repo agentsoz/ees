@@ -255,4 +255,9 @@ class EvacAgent implements MobsimDriverAgent, HasPerson, PlanAgent, HasModifiabl
 		this.basicAgentDelegate.resetCaches(); 
 	}
 
+	@Override
+	public int getCurrentLinkIndex() {
+		return this.basicAgentDelegate.getCurrentLinkIndex() ;
+	}
+
 }
