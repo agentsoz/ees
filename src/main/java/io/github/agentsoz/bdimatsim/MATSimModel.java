@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Level;
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.network.Link;
@@ -193,7 +194,7 @@ public final class MATSimModel implements ABMServerInterface {
 		bdiAgentIDs = Utils.getBDIAgentIDs( scenario );
 
 		// ---
-
+		
 		final Controler controller = new Controler( scenario );
 
 		eventsHandler = new AgentActivityEventHandler(MATSimModel.this);
@@ -282,6 +283,8 @@ public final class MATSimModel implements ABMServerInterface {
 		// (yy "this" is too powerful an object here, but it saves many lines of code. kai, mar'15)
 
 		this.bdiServer.start();
+
+		org.apache.log4j.Logger.getRootLogger().setLevel(Level.INFO);
 
 		controller.run();
 		
