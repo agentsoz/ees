@@ -2,6 +2,8 @@ package io.github.agentsoz.bushfire.matsimjill.agents;
 
 import io.github.agentsoz.bdiabm.data.ActionContent;
 import io.github.agentsoz.bdiabm.data.ActionContent.State;
+import io.github.agentsoz.bushfire.datamodels.Location;
+import io.github.agentsoz.bushfire.matsimjill.SimpleConfig;
 
 /*
  * #%L
@@ -43,9 +45,15 @@ public class Resident extends Agent implements io.github.agentsoz.bdiabm.Agent {
 	
 	public PrintStream writer = null;
 	
+	private Location shelterLocation = null;
+
 
 	public Resident(String str) {
 		super(str);
+	}
+	
+	public Location getShelterLocation() {
+	  return shelterLocation;
 	}
 
 	/**
@@ -56,6 +64,7 @@ public class Resident extends Agent implements io.github.agentsoz.bdiabm.Agent {
 	@Override
 	public void start(PrintStream writer, String[] params) {
 		this.writer = writer;
+        shelterLocation = SimpleConfig.getRandomEvacLocation();
 	}
 	
 	/**
@@ -74,7 +83,7 @@ public class Resident extends Agent implements io.github.agentsoz.bdiabm.Agent {
 	public void handlePercept(String perceptID, Object parameters) {
 		if (perceptID.equals(BDI_PERCEPT_FIRE_ALERT)) {
 			// Received a fire alert so act now
-			writer.println("Resident"+getId()+" received fire alert at time "+parameters);
+			writer.println("Resident "+getId()+" received fire alert at time "+parameters);
 			post(new RespondToFireAlert("RespondToFireAlert"));
 		}
 	}
