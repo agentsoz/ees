@@ -113,7 +113,8 @@ public class Main {
 		
 		// All done, so terminate now
 		jillmodel.finish();
-		System.exit(0);
+//		System.exit(0);
+		// get rid of System.exit(...) so that tests run through ...
 	}
 
 	/**
