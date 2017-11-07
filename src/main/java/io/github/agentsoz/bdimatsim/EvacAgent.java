@@ -50,7 +50,9 @@ import org.matsim.api.core.v01.population.Leg;
 import org.matsim.api.core.v01.population.Person;
 import org.matsim.api.core.v01.population.Plan;
 import org.matsim.api.core.v01.population.PlanElement;
+import org.matsim.core.gbl.Gbl;
 import org.matsim.core.mobsim.framework.HasPerson;
+import org.matsim.core.mobsim.framework.MobsimAgent;
 import org.matsim.core.mobsim.framework.MobsimDriverAgent;
 import org.matsim.core.mobsim.framework.PlanAgent;
 import org.matsim.core.mobsim.qsim.agents.BasicPlanAgentImpl;
@@ -70,12 +72,14 @@ class EvacAgent implements MobsimDriverAgent, HasPerson, PlanAgent, HasModifiabl
 
 	@SuppressWarnings("unused")
 	private static final Logger log = Logger.getLogger(EvacAgent.class);
-	
-	private BasicPlanAgentImpl basicAgentDelegate ;
-	private PlanBasedDriverAgentImpl driverAgentDelegate ;
-	
-	private TripRouter tripRouter  ;
-	private EditTrips editTrips ;
+
+	private final BasicPlanAgentImpl basicAgentDelegate ;
+	private final PlanBasedDriverAgentImpl driverAgentDelegate ;
+
+	private final TripRouter tripRouter  ;
+	private final EditTrips editTrips ;
+
+	private boolean planWasModified = false ;
 
 	EvacAgent(final Plan selectedPlan, final Netsim simulation, TripRouter tripRouter) {
 		this.tripRouter = tripRouter;
@@ -83,6 +87,8 @@ class EvacAgent implements MobsimDriverAgent, HasPerson, PlanAgent, HasModifiabl
 				simulation.getSimTimer() ) ;
 		driverAgentDelegate = new PlanBasedDriverAgentImpl(basicAgentDelegate) ;
 		
+		editTrips = new EditTrips(tripRouter, simulation.getScenario() ) ;
+
 		// deliberately does NOT keep a back pointer to the whole Netsim; this should also be removed in the constructor call.
 	}
 
@@ -103,20 +109,33 @@ class EvacAgent implements MobsimDriverAgent, HasPerson, PlanAgent, HasModifiabl
 
 	@Override
 	public final void endActivityAndComputeNextState(double now) {
-		if ( this.getModifiablePlan() != this.getCurrentPlan() ) {
-			// (= agent has been replanned)
+		// yyyyyy planWasModified does not work all the way through; possibly confusion between static method calls and polymorphic
+		// programming???
+
+		//		final PlanElement nextPlanElement = basicAgentDelegate.getNextPlanElement();
+		// yyyyyy this seems to be getting the unmodified plan but I don't know why. kai, nov'17
+		
+		Plan plan = WithinDayAgentUtils.getModifiablePlan(this) ;
+		Integer index = WithinDayAgentUtils.getCurrentPlanElementIndex(this) ;
+		if ( index+1 < plan.getPlanElements().size() ) {
+			// (otherwise it will fail, but we leave this to the delegate)
 			
-			Activity act = (Activity) basicAgentDelegate.getCurrentPlanElement() ;
-			if ( !tripRouter.getStageActivityTypes().isStageActivity(act.getType()) ) {
-				// (= we just ended a "real" activity)
-				
-				if ( basicAgentDelegate.getNextPlanElement() instanceof Leg ) {
-					// (= the activity is really followed by a leg)
-					
-					Trip trip = TripStructureUtils.findTripStartingAtActivity(act, this.getModifiablePlan(), 
-							tripRouter.getStageActivityTypes() ) ;
-					String mainMode = tripRouter.getMainModeIdentifier().identifyMainMode(trip.getTripElements()) ;
-					editTrips.replanFutureTrip(trip, WithinDayAgentUtils.getModifiablePlan(this), mainMode, now ) ;
+			PlanElement nextPlanElement = plan.getPlanElements().get(index+1) ;
+//			log.warn( "next plan element=" + nextPlanElement );
+			if ( nextPlanElement instanceof Leg ) {
+				if ( planWasModified || ((Leg)nextPlanElement).getRoute()==null ) {
+//					log.warn("plan was modified; recomputing next trip") ;
+					Activity act = (Activity) basicAgentDelegate.getCurrentPlanElement() ;
+					if ( !tripRouter.getStageActivityTypes().isStageActivity(act.getType()) ) {
+						// (= we just ended a "real" activity)
+
+						Trip trip = TripStructureUtils.findTripStartingAtActivity(act, this.getModifiablePlan(), 
+								tripRouter.getStageActivityTypes() ) ;
+//						log.warn( "trip before=" + trip );
+						String mainMode = tripRouter.getMainModeIdentifier().identifyMainMode(trip.getTripElements()) ;
+						editTrips.replanFutureTrip(trip, WithinDayAgentUtils.getModifiablePlan(this), mainMode, now ) ;
+//						log.warn( "trip after=" + trip );
+					}
 				}
 			}
 		}
@@ -138,12 +157,12 @@ class EvacAgent implements MobsimDriverAgent, HasPerson, PlanAgent, HasModifiabl
 		return basicAgentDelegate.getExpectedTravelTime();
 	}
 
-    @Override
-    public final Double getExpectedTravelDistance() {
-        return basicAgentDelegate.getExpectedTravelDistance();
-    }
+	@Override
+	public final Double getExpectedTravelDistance() {
+		return basicAgentDelegate.getExpectedTravelDistance();
+	}
 
-    @Override
+	@Override
 	public String toString() {
 		return basicAgentDelegate.toString();
 	}
@@ -217,23 +236,24 @@ class EvacAgent implements MobsimDriverAgent, HasPerson, PlanAgent, HasModifiabl
 	public final boolean isWantingToArriveOnCurrentLink() {
 		return driverAgentDelegate.isWantingToArriveOnCurrentLink();
 	}
-	
-//	final Leg getCurrentLeg() {
-//		return basicAgentDelegate.getCurrentLeg() ;
-//	}
-//	final int getCurrentLinkIndex() {
-//		return basicAgentDelegate.getCurrentLinkIndex() ;
-//	}
-//	final int getCurrentPlanElementIndex() {
-//		return basicAgentDelegate.getCurrentPlanElementIndex() ;
-//	}
+
+	//	final Leg getCurrentLeg() {
+	//		return basicAgentDelegate.getCurrentLeg() ;
+	//	}
+	//	final int getCurrentLinkIndex() {
+	//		return basicAgentDelegate.getCurrentLinkIndex() ;
+	//	}
+	//	final int getCurrentPlanElementIndex() {
+	//		return basicAgentDelegate.getCurrentPlanElementIndex() ;
+	//	}
 	@Override public final Plan getModifiablePlan() {
+		this.planWasModified=true ;
 		return basicAgentDelegate.getModifiablePlan() ;
 	}
-//	final void resetCaches() {
-//		basicAgentDelegate.resetCaches();
-//		driverAgentDelegate.resetCaches(); 
-//	}
+	//	final void resetCaches() {
+	//		basicAgentDelegate.resetCaches();
+	//		driverAgentDelegate.resetCaches(); 
+	//	}
 
 	@Override
 	public Facility<? extends Facility<?>> getCurrentFacility() {
