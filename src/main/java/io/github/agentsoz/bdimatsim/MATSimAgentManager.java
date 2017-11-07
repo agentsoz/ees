@@ -47,6 +47,7 @@ final class MATSimAgentManager {
 	private LinkedHashMap<Id<Person>, MATSimAgent> matSimAgents;
 	private MATSimModel matSimModel;
 	private AgentDataContainer agentDataContainer;
+	private Replanner agentReplanner;
 
 	MATSimAgentManager(MATSimModel model) {
 		this.matSimModel = model;
@@ -54,6 +55,18 @@ final class MATSimAgentManager {
 		matSimAgents = new LinkedHashMap<>();
 		agentStateList = new AgentStateList();
 		this.agentDataContainer = new AgentDataContainer();
+	}
+
+	final void setUpReplanner(Replanner replanner, QSim activityEndRescheduler) {
+		// Use default replanner if none provided
+		if (replanner == null) {
+			replanner = new Replanner(matSimModel, activityEndRescheduler);
+		}
+		this.agentReplanner = replanner;
+	}
+
+	final Replanner getReplanner() {
+		return agentReplanner;
 	}
 
 	final AgentDataContainer getAgentDataContainer() {

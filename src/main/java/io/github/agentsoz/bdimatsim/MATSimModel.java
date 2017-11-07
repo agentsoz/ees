@@ -91,10 +91,8 @@ public final class MATSimModel implements ABMServerInterface {
 
 	private AgentActivityEventHandler eventsHandler;
 
-	private Replanner replanner;
-
 	public final Replanner getReplanner() {
-		return replanner ;
+		return agentManager.getReplanner() ;
 	}
 
 	final MATSimAgentManager getAgentManager() {
@@ -233,8 +231,8 @@ public final class MATSimModel implements ABMServerInterface {
 						// actions/percepts are registered with each BDI agent
 						agentManager.registerApplicationActionsPercepts(application);
 
-						replanner = new Replanner( MATSimModel.this, qSim ) ;
-						// yyyy find better place for this
+						// passes important matsim qsim functionality to the agent manager:
+						agentManager.setUpReplanner(application.getReplanner(qSim), qSim);
 
 						// add stub agent to keep simulation alive.  yyyy find nicer way to do this.
 						Id<Link> dummyLinkId = qSim.getNetsimNetwork().getNetsimLinks().keySet().iterator().next() ;
@@ -317,7 +315,7 @@ public final class MATSimModel implements ABMServerInterface {
 
 			for ( MobsimAgent agent : this.getAgentMap().values() ) {
 				if ( !(agent instanceof StubAgent) ) {
-					this.getReplanner().getEditRoutes().rePlanCurrentLeg(agent, time);
+					this.getReplanner().reRouteCurrentLeg(agent, time);
 				}
 			}
 		}
