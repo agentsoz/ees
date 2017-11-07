@@ -16,7 +16,6 @@ import org.matsim.core.mobsim.qsim.agents.WithinDayAgentUtils;
 import org.matsim.core.network.SearchableNetwork;
 import org.matsim.core.router.TripStructureUtils;
 import org.matsim.core.router.TripStructureUtils.Trip;
-import org.matsim.withinday.utils.EditPlans;
 
 import io.github.agentsoz.bdiabm.data.ActionContent;
 import io.github.agentsoz.bdimatsim.AgentActivityEventHandler.MonitoredEventType;
@@ -97,25 +96,23 @@ final class DRIVETODefaultActionHandler implements BDIActionHandler {
 	//		editRoutes.relocateFutureLegRoute(newLeg, lastAct.getLinkId(), newActivityLinkId,((HasPerson)agent).getPerson());
 	
 			newAct.setEndTime( Double.POSITIVE_INFINITY ) ;
-			
-			model.getReplanner().getEditPlans().addActivityAtEnd(agent, newAct, TransportMode.car ) ;
 	
-//			planElements.add(newLeg);
-//			planElements.add(newAct);
-//			
-//			List<PlanElement> sublist = planElements.subList(planElements.size()-3, planElements.size() ) ;
-//			// (the sub-list is "exclusive" the right index)
-//			
-//			Trip trip = TripStructureUtils.getTrips(sublist, model.getReplanner().getEditTrips().getStageActivities()).get(0) ;
-//			model.getReplanner().getEditTrips().replanFutureTrip(trip, plan, TransportMode.car) ;
-//	
-//			WithinDayAgentUtils.resetCaches(agent);
-//			// this is necessary since the simulation may have cached some info from the plan at other places.
-//			// (May note be necessary in this particular situation since there is nothing to cache when an agent is at an activity.) kai, feb'14
-//	
-//			model.getReplanner().getEditPlans().rescheduleActivityEnd(agent);
-//			// this is the only place where the internal interface is truly needed, since it is the only place where the agent needs to be "woken up".
-//			// This is necessary since otherwise the simulation will not touch the agent until its previously scheduled activity end. kai, feb/14
+			planElements.add(newLeg);
+			planElements.add(newAct);
+			
+			List<PlanElement> sublist = planElements.subList(planElements.size()-3, planElements.size() ) ;
+			// (the sub-list is "exclusive" the right index)
+			
+			Trip trip = TripStructureUtils.getTrips(sublist, model.getReplanner().getEditTrips().getStageActivities()).get(0) ;
+			model.getReplanner().getEditTrips().replanFutureTrip(trip, plan, TransportMode.car) ;
+	
+			WithinDayAgentUtils.resetCaches(agent);
+			// this is necessary since the simulation may have cached some info from the plan at other places.
+			// (May note be necessary in this particular situation since there is nothing to cache when an agent is at an activity.) kai, feb'14
+	
+			model.getReplanner().getEditPlans().rescheduleActivityEnd(agent);
+			// this is the only place where the internal interface is truly needed, since it is the only place where the agent needs to be "woken up".
+			// This is necessary since otherwise the simulation will not touch the agent until its previously scheduled activity end. kai, feb/14
 	
 		}
 		/*
