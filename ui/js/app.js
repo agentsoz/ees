@@ -25,7 +25,6 @@ window.onload = function(e) {
 	// FIXME: Remove following code when implementing "based on existing scenario"
 	$( "#existing-scenario-input" ).attr('placeholder', 'Feature not available yet');
 	$( "#existing-scenario-input" ).attr('disabled', true);
-
 }
 
 // Remove focus from buttons after click
@@ -209,7 +208,11 @@ $("body").on(
 			// Remove the polyline associated with this destination
 			var township = getTownship(global.scenario_creation_arg);
 			var poly = getPolyLine(township, dest, true);
-			removeSafeLine(poly.line);
+			if (poly != null) {
+				removeSafeLine(poly.line);
+				// Hide the destination marker
+				hideDestinationMarkerOnMap(township, dest);
+			}
 			// Fix the row colours
 			$('#destinations-list li').removeClass('li-odd');
 			$('#destinations-list li').removeClass('li-even');
@@ -223,6 +226,14 @@ $("body").on(
 			if($('#destinations-list li').length==0) {
 				$('#plus-safelines').hide();
 				$('#existing-destinations').show();
+			} 
+			if($('#destinations-list li').length < 2) {
+			    $('#split-vehicles-view').fadeOut('slow');	
+				if($('#destinations-list li').length < 2 || $('#split-vehicles-evenly').is(":checked")) {
+					$('.split-vehicles-dropdown').fadeOut('slow');
+				} else {
+					$('.split-vehicles-dropdown').fadeIn('slow');
+				}
 			}
 		});
 
@@ -233,8 +244,20 @@ $("body").on("click", ".glyphicon-info-sign", function(e) {
 	e.stopPropagation();
 });
 
+$("body").on("click", ".split-vehicles-dropdown", function(e) {
+	e.stopPropagation();
+});
+
+$('#split-vehicles-evenly').change(function() {
+	if($('#destinations-list li').length < 2 || $('#split-vehicles-evenly').is(":checked")) {
+		$('.split-vehicles-dropdown').fadeOut('slow');
+	} else {
+		$('.split-vehicles-dropdown').fadeIn('slow');
+	}
+});
+
 $("body").on("click", ".item-safeline", function(e) {
-	var dest = $(this).text();
+	var dest = $(this).attr('name');
 	var township = getTownship(global.scenario_creation_arg);
 	var poly = getPolyLine(township, dest, false);
 	var vertex = poly.line.getPath().getArray()[0];
@@ -250,7 +273,7 @@ $("body").on("click", ".item-safeline", function(e) {
 			strokeColor : color,
 			strokeWeight : size
 		});
-	}, 800);
+	}, 2000);
 });
 
 // Global handler for key up events
@@ -289,7 +312,8 @@ $(".nav-save").click(function(event) {
 	// Validate the form
 	var valid = existing_fires_dropdown_validate() 
 		& vehicles_area_validate() 
-		& safe_lines_validate();
+		& safe_lines_validate()
+		& split_vehicles_validate();
 	if (valid == 0) {
 		BootstrapDialog.show({
 			title: 'Cannot save scenario',
@@ -432,6 +456,8 @@ $("#add-safeline").click(function(event) {
 	drawSafeLine(township, dest, function() {
 		// Add the destination to the list
 		addDestinationSafeLine();
+		// Forget the selected destination, as the marker should be permanent now (until deleted)
+		global.selected_destination = null;
 		// Disable the destination in the dropdown
 		$("#existing-destinations option:selected").prop('disabled', true);
 		// Reset the dropdown
@@ -441,11 +467,36 @@ $("#add-safeline").click(function(event) {
 		$('#plus-safelines').show();
 		$('.draw-line-step-1').hide();
 		$('#existing-destinations').hide();
+		if($('#destinations-list li').length>1) {
+			$('#split-vehicles-view').fadeIn('slow');	
+			if($('#destinations-list li').length < 2 || $('#split-vehicles-evenly').is(":checked")) {
+				$('.split-vehicles-dropdown').fadeOut('slow');
+			} else {
+				$('.split-vehicles-dropdown').fadeIn('slow');
+			}
+		}
 		// Check that it is valid
 		safe_lines_validate();
 
 	});
 });
+
+$("#existing-destinations").change(function(event) {
+	var township = getTownship(global.scenario_creation_arg);
+	var destname = $("#existing-destinations option:selected").text();
+	// Hide the old marker
+	if (global.selected_destination != null) {
+		hideDestinationMarkerOnMap(township, global.selected_destination);
+		global.selected_destination = null;
+	}
+	// Show the new marker
+	showDestinationMarkerOnMap(township, destname);
+	var dest = getDestination(township, destname);
+	var latlng = [dest.coordinates.lat, dest.coordinates.lng];
+	panMapTo(latlng); // don't change the zoom, instead will use the user's current zoom
+	global.selected_destination = destname;
+});
+
 
 $("#plus-safelines").click(function(event) {
 	$('#existing-destinations').show();
@@ -455,12 +506,30 @@ $("#plus-safelines").click(function(event) {
 function addDestinationSafeLine() {
 	var dest = $("#existing-destinations").find(':selected').text();
 	var li = '';
-	li += '<li class="list-group-item item-safeline">';
+	li += '<li class="list-group-item item-safeline" name="' + dest + '">';
 	li += dest;
 	li += '<span class="glyphicon glyphicon-remove-sign pull-right remove-safeline"';
 	li += ' style="z-index: 1;"';
 	li += ' name="' + dest + '"';
 	li += ' aria-hidden="true"></span>';
+	var hidden = '';
+	if($('#destinations-list li').length < 2 || $('#split-vehicles-evenly').is(":checked")) {
+		hidden='hidden="true"';
+	}
+	li += '<span '+hidden+' class="split-vehicles-dropdown pull-right mr-1"> of vehicles</span>';
+	li += '<select '+hidden+'  id="'+dest+'" class="split-vehicles-dropdown mr-1 pull-right form-control">';
+	li += ' <option value="0">0%</option>';
+	li += ' <option value="10">10%</option>';
+	li += ' <option value="20">20%</option>';
+	li += ' <option value="30">30%</option>';
+	li += ' <option value="40">40%</option>';
+	li += ' <option value="50">50%</option>';
+	li += ' <option value="60">60%</option>';
+	li += ' <option value="70">70%</option>';
+	li += ' <option value="80">80%</option>';
+	li += ' <option value="90">90%</option>';
+	li += ' <option value="100">100%</option>';
+	li += '</select>';
 	li += '</li>';
 	$("#destinations-list").append(li);
 	$('#destinations-list li').removeClass('li-odd');
@@ -623,6 +692,8 @@ function save(callback, errfn) {
 	// Selected destinations and safe lines
 	msg.destinations = [];
 	msg.safeLines = [];
+	var split_evenly = $('#destinations-list li').length < 2 || $('#split-vehicles-evenly').is(":checked");
+	var splits = $(".split-vehicles-dropdown option:selected");
 	for (var i = 0; i < township.safeLines.length; i++) {
 		var line = township.safeLines[i].line.getPath().getArray();
 		msg.safeLines.push({
@@ -633,9 +704,23 @@ function save(callback, errfn) {
 		});
 		var dest = getDestination(township, township.safeLines[i].name);
 		if (dest != null) {
+			// calculate the split of vehicles
+			var split = 100.0;
+			if (split_evenly) {
+				split = (100.0/township.safeLines.length).toFixed(2);
+			} else {
+				for (var i = 0; i < splits.length; i++) {
+					if(dest.name.localeCompare(splits[i].parentElement.id ) == 0) {
+						split = splits[i].value;
+						break;
+					}
+				}
+			}
+			// now add this destination
 			msg.destinations.push({
-				name: dest.name,
-				coordinates: dest.coordinates
+				"name": dest.name,
+				"coordinates": dest.coordinates,
+				"split": split
 			});
 		}
 	}
@@ -702,7 +787,8 @@ function setEvacPeak(mins) {
 
 // Vehicles: handle changes to input field with number of vehicles
 $("#num-vehicles").change(function() {
-	var val = $("#num-vehicles").val();
+	var val = $("#num-vehicles").val().replace(/^0+/, '');
+	$("#num-vehicles").val(val);
 	if (val > 0) {
 		$('.draw-area-step-1').fadeIn('slow');
 	} else {
@@ -786,7 +872,7 @@ $("body").on("click", ".item-vehicles-area", function(e) {
 			strokeColor : color,
 			strokeWeight : size
 		});
-	}, 800);
+	}, 2000);
 });
 // Vechicles: remove item (and associated google map rectangle) from list
 $("body").on("click", ".remove-vehicles-area", function(e) {
@@ -898,5 +984,31 @@ function safe_lines_validate() {
 	return true;
 }
 
-
-
+function split_vehicles_validate() {
+	var parent = $('#destinations-list').parent();
+	var isValid = false;
+	// nothing to do if no destinations
+	var township = getTownship(global.scenario_creation_arg);
+	if($('#destinations-list li').length < 2 || $('#split-vehicles-evenly').is(":checked")) {
+		isValid = true;
+	} else {
+		// else check that the split adds up to 100%
+		var splits = $(".split-vehicles-dropdown option:selected");
+		var sum = 0;
+		for (var i = 0; i < splits.length; i++) {
+			sum += parseInt(splits[i].value);
+		}
+		if (sum == 100) {
+			isValid = true;
+		}
+	}
+	if (!isValid) {
+		parent.addClass('has-error');
+		parent.find('.validation-msg').text('Split of vehicles between destinations must add up to 100%').show();
+		return false;
+	} else {
+		parent.removeClass('has-error');
+		parent.find('.validation-msg').text('').hide();
+	}
+	return true;
+}

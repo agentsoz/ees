@@ -23,7 +23,28 @@ package io.github.agentsoz.bushfire.matsimjill;
  */
 
 import io.github.agentsoz.bushfire.datamodels.Location;
-import io.github.agentsoz.util.Global;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Random;
+import java.util.Set;
+
+import javax.xml.XMLConstants;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.Validator;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+
 
 import java.io.File;
 import java.io.FileInputStream;

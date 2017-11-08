@@ -280,6 +280,7 @@ for dest in data["destinations"]:
     target = "%s<location>\n" % target
     target = "%s  <name>%s</name>\n" % (target, dest["name"])
     target = "%s  <coordinates>%s,%s</coordinates>\n" % (target, x,y)
+    target = "%s  <split>%s</split>\n" % (target, dest["split"])
     target = "%s</location>\n" % target
 f = open(o_geography,'r')
 filedata = f.read()

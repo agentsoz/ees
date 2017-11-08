@@ -35,8 +35,6 @@ import ch.qos.logback.core.FileAppender;
  * #L%
  */
 
-import io.github.agentsoz.bdiabm.data.AgentDataContainer;
-import io.github.agentsoz.bdiabm.data.AgentStateList;
 import io.github.agentsoz.bdimatsim.MATSimModel;
 import io.github.agentsoz.bushfire.PhoenixFireModule;
 import io.github.agentsoz.bushfire.Time;
@@ -49,9 +47,6 @@ public class Main {
 	private MATSimModel matsimModel; // ABM model
 	private PhoenixFireModule fireModel; // Fire model
 	
-	private AgentDataContainer adc; // BDI-ABM data container
-	private AgentStateList asl; // BDI-ABM states container
-
 	// Defaults
 	private static String logFile = Main.class.getSimpleName() + ".log";
 	private static Level logLevel = Level.INFO;

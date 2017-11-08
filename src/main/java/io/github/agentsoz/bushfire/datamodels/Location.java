@@ -39,7 +39,7 @@ public class Location {
 	private String name;
 	private double x;
 	private double y;
-	private double attrib;
+	private Object attributes;
 
 	/**
 	 * Create a new location
@@ -52,15 +52,18 @@ public class Location {
 	 *            y part of the coordinate
 	 */
 	public Location(String n, double x, double y) {
-		this( n, x, y, Double.NaN ) ;
-	}
-	
-	public Location( String n, double x, double y, double attrib ) {
-		this.attrib = attrib ;
+
 		name = n;
 		this.x = x;
 		this.y = y;
 	}
+
+	   public Location(String n, double x, double y, Object attributes) {
+	        name = n;
+	        this.x = x;
+	        this.y = y;
+	        this.attributes = attributes;
+	    }
 
 	
 	public String getName() {
@@ -78,13 +81,13 @@ public class Location {
 	public double[] getCoordinates() {
 		return new double[] { x, y };
 	}
+	
+	public Object getAttributes() {
+	  return attributes;
+	}
 
 	public String toString() {
 		return "(" + name + ", coords=" + x + "," + y + ")";
-	}
-
-	public double getAttributes() {
-		return attrib ;
 	}
 
 }
