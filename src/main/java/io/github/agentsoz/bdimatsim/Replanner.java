@@ -39,6 +39,7 @@ import org.matsim.api.core.v01.population.Person;
 import org.matsim.api.core.v01.population.Plan;
 import org.matsim.api.core.v01.population.PlanElement;
 import org.matsim.api.core.v01.population.Route;
+import org.matsim.core.gbl.Gbl;
 import org.matsim.core.mobsim.framework.HasPerson;
 import org.matsim.core.mobsim.framework.MobsimAgent;
 import org.matsim.core.mobsim.qsim.QSim;
@@ -155,9 +156,9 @@ public class Replanner {
 		planElements.add(newLeg);
 		planElements.add(newAct); 
 		
-		final List<Trip> trips = TripStructureUtils.getTrips(planElements, stageActivities);
+//		final List<Trip> trips = TripStructureUtils.getTrips(planElements, stageActivities);
 		
-		Gbl.assertIf( trips.size()>=1 );
+//		Gbl.assertIf( trips.size()>=1 );
 		
 		List<PlanElement> sublist = planElements.subList(planElements.size()-3, planElements.size() ) ;
 		// (the sub-list is "exclusive" the right index)
