@@ -148,11 +148,16 @@ public class Replanner {
 //		// new Route for current Leg.
 		newLeg.setDepartureTime(endTime);
 //		editRoutes.relocateFutureLegRoute(newLeg, lastAct.getLinkId(), newActivityLinkId,((HasPerson)agent).getPerson());
+		// --- old version end
 
 		newAct.setEndTime( Double.POSITIVE_INFINITY ) ;
 
 		planElements.add(newLeg);
-		planElements.add(newAct);
+		planElements.add(newAct); 
+		
+		final List<Trip> trips = TripStructureUtils.getTrips(planElements, stageActivities);
+		
+		Gbl.assertIf( trips.size()>=1 );
 		
 		List<PlanElement> sublist = planElements.subList(planElements.size()-3, planElements.size() ) ;
 		// (the sub-list is "exclusive" the right index)
@@ -162,7 +167,7 @@ public class Replanner {
 
 		WithinDayAgentUtils.resetCaches(agent);
 		// this is necessary since the simulation may have cached some info from the plan at other places.
-		// (May note be necessary in this particular situation since there is nothing to cache when an agent is at an activity.) kai, feb'14
+		// (May not be necessary in this particular situation since there is nothing to cache when an agent is at an activity.) kai, feb'14
 
 		model.getReplanner().getEditPlans().rescheduleActivityEnd(agent);
 		// this is the only place where the internal interface is truly needed, since it is the only place where the agent needs to be "woken up".
