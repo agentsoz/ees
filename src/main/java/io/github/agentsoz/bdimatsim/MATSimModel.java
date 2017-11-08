@@ -148,7 +148,7 @@ public final class MATSimModel implements ABMServerInterface {
 
 		config.plans().setActivityDurationInterpretation(ActivityDurationInterpretation.tryEndTimeThenDuration);
 		
-		config.global().setCoordinateSystem("EPSG:32756") ;
+		//config.global().setCoordinateSystem("EPSG:32756") ;
 
 		// Normally, the qsim starts at the earliest activity end time.  The following tells the mobsim to start
 		// at 2 seconds before 6:00, no matter what is in the initial plans file:
