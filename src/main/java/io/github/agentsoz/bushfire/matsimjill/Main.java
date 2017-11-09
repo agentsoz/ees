@@ -112,7 +112,7 @@ public class Main {
 			config.add( MATSimModel.MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR ) ;
 			config.add( matsimOutputDirectory ) ;
 		}
-		matsimModel.run( (String[]) config.toArray() ) ;
+		matsimModel.run( config.toArray(new String[config.size()] ) ) ;
 
 		// All done, so terminate now
 		jillmodel.finish();
