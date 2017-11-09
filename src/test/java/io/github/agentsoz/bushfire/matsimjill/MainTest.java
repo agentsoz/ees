@@ -25,7 +25,7 @@ public class MainTest {
 	                "--config",  "scenarios/campbells-creek/scenario_main.xml", 
 	                "--logfile", "scenarios/campbells-creek/scenario.log",
 	                "--loglevel", "INFO",
-	                "--plan-selection-policy", "FIRST", // ensures it is deterministic, as default is RANDOM
+//	                "--plan-selection-policy", "FIRST", // ensures it is deterministic, as default is RANDOM
 	                "--seed", "12345",
 	                "--jillconfig", "--config={"+
 	                        "agents:[{classname:io.github.agentsoz.bushfire.matsimjill.agents.Resident, args:null, count:50}],"+
@@ -72,7 +72,7 @@ public class MainTest {
 				"--config",  "scenarios/maldon-2017-11-01/scenario_main.xml", 
 				"--logfile", "scenarios/maldon-2017-11-01/scenario.log",
 				"--loglevel", "INFO",
-				"--plan-selection-policy", "FIRST", // ensures it is deterministic, as default is RANDOM
+//				"--plan-selection-policy", "FIRST", // ensures it is deterministic, as default is RANDOM
 				"--seed", "12345",
 				"--jillconfig", "--config={"+
 						"agents:[{classname:io.github.agentsoz.bushfire.matsimjill.agents.Resident, args:null, count:600}],"+
