@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import javax.measure.unit.Dimension.Model;
+
 import org.apache.log4j.Level;
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.Scenario;
@@ -232,7 +234,9 @@ public final class MATSimModel implements ABMServerInterface {
 						agentManager.registerApplicationActionsPercepts(application);
 
 						// passes important matsim qsim functionality to the agent manager:
-						agentManager.setUpReplanner(application.getReplanner(qSim), qSim);
+						application.getReplanner(qSim);
+						final Replanner replanner = MATSimModel.this.getReplanner() ;
+						agentManager.setUpReplanner(replanner, qSim);
 
 						// add stub agent to keep simulation alive.  yyyy find nicer way to do this.
 						Id<Link> dummyLinkId = qSim.getNetsimNetwork().getNetsimLinks().keySet().iterator().next() ;
