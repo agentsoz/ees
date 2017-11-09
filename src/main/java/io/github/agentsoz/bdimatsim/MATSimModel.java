@@ -1,11 +1,8 @@
 package io.github.agentsoz.bdimatsim;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-
-import javax.measure.unit.Dimension.Model;
 
 import org.apache.log4j.Level;
 import org.matsim.api.core.v01.Id;
@@ -14,11 +11,8 @@ import org.matsim.api.core.v01.network.Link;
 import org.matsim.api.core.v01.population.Person;
 import org.matsim.core.config.Config;
 import org.matsim.core.config.ConfigUtils;
-import org.matsim.core.config.groups.PlanCalcScoreConfigGroup.ActivityParams;
 import org.matsim.core.config.groups.PlansConfigGroup.ActivityDurationInterpretation;
-import org.matsim.core.config.groups.QSimConfigGroup.SnapshotStyle;
 import org.matsim.core.config.groups.QSimConfigGroup.StarttimeInterpretation;
-import org.matsim.core.config.groups.VspExperimentalConfigGroup.VspDefaultsCheckingLevel;
 import org.matsim.core.controler.AbstractModule;
 import org.matsim.core.controler.Controler;
 import org.matsim.core.controler.OutputDirectoryHierarchy.OverwriteFileSetting;
@@ -95,6 +89,8 @@ public final class MATSimModel implements ABMServerInterface {
 
 	private Replanner replanner;
 
+	public static final String MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR = "--matsim-output-directory";
+
 	public final Replanner getReplanner() {
 		return this.replanner ;
 	}
@@ -147,6 +143,20 @@ public final class MATSimModel implements ABMServerInterface {
 		// (this needs to be public)
 
 		Config config = ConfigUtils.loadConfig( args[0] ) ;
+
+		for (int i = 1; i < args.length; i++) {
+			switch (args[i]) {
+			case MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR:
+				if (i + 1 < args.length) {
+					i++;
+					logger.info("setting matsim output directory to " + args[i] );
+					config.controler().setOutputDirectory( args[i] );
+				}
+				break;
+			default:
+				throw new RuntimeException("unknown config option") ;
+			}
+		}
 
 		config.network().setTimeVariantNetwork(true);
 
