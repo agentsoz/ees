@@ -176,7 +176,7 @@ public class Main {
 				}
 				break;
 			default:
-				throw new RuntimeException("unknown config option") ;
+				throw new RuntimeException("unknown config option: " + args[i]) ;
 			}
 		}
 
