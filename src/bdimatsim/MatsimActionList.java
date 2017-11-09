@@ -28,7 +28,7 @@ package bdimatsim;
 
 class MatsimActionList {
 		//An action that any Matsim Agent can carry out
-		public static final String DRIVETO = "drive to";	
+		public static final String DRIVETO = MATSimActionList.DRIVETO;	
 		//An action that any Matsim Agent can carry out
 		public static final String REQUESTLOCATION = "Request Location";
 }
