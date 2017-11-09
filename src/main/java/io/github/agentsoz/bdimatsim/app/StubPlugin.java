@@ -51,11 +51,6 @@ public class StubPlugin implements MATSimApplicationInterface {
 	}
 
 	@Override
-	public Replanner getReplanner(QSim activityEndRescheduler) {
-		return null;
-	}
-
-	@Override
 	public void run(String[] args) {
 		// TODO Auto-generated method stub
 		

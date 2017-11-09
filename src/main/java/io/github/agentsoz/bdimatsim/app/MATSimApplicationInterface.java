@@ -72,17 +72,6 @@ public interface MATSimApplicationInterface {
 	public void notifyAfterCreatingBDICounterparts(List<Id<Person>> bdiAgentsIDs);
 
 	
-	/** 
-	 * Allows the app to use a custom {@link Replanner}
-	 * <p>
-	 * <i>TODO: This is not ideal. Here we just allow the default Replanner 
-	 * to be extended by the application. Instead it should be an interface
-	 * (Dhi Mar17) </i>
-	 * @param qSim 
-	 * @return
-	 */
-	public Replanner getReplanner(QSim activityEndRescheduler);
-
 	public void run(String[] args);
 
 	

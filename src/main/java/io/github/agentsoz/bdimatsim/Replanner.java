@@ -1,8 +1,5 @@
 package io.github.agentsoz.bdimatsim;
 
-import java.util.Collection;
-import java.util.Iterator;
-
 /*
  * #%L
  * BDI-ABM Integration Package
@@ -26,7 +23,6 @@ import java.util.Iterator;
  */
 
 import java.util.List;
-import java.util.ListIterator;
 
 import javax.inject.Provider;
 
@@ -38,16 +34,11 @@ import org.matsim.api.core.v01.population.Leg;
 import org.matsim.api.core.v01.population.Person;
 import org.matsim.api.core.v01.population.Plan;
 import org.matsim.api.core.v01.population.PlanElement;
-import org.matsim.api.core.v01.population.Route;
-import org.matsim.core.gbl.Gbl;
 import org.matsim.core.mobsim.framework.HasPerson;
 import org.matsim.core.mobsim.framework.MobsimAgent;
 import org.matsim.core.mobsim.qsim.QSim;
 import org.matsim.core.mobsim.qsim.agents.WithinDayAgentUtils;
-import org.matsim.core.population.routes.NetworkRoute;
 import org.matsim.core.router.FastAStarLandmarksFactory;
-import org.matsim.core.router.LinkWrapperFacility;
-import org.matsim.core.router.PlanRouter;
 import org.matsim.core.router.StageActivityTypes;
 import org.matsim.core.router.TripRouter;
 import org.matsim.core.router.TripRouterFactoryBuilderWithDefaults;
@@ -64,7 +55,10 @@ import org.matsim.withinday.utils.EditTrips;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Replanner {
+public final class Replanner {
+	// note that this is no longer meant to be extended for customization.  The "action recipes" now go directly into the classes
+	// that implement BDIActionHandler.  kai, nov'17
+	
 	protected static final Logger logger = LoggerFactory.getLogger("io.github.agentsoz.bushfiretute.BushfireMain");
 
 	protected final MATSimModel model;

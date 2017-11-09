@@ -93,8 +93,10 @@ public final class MATSimModel implements ABMServerInterface {
 
 	private AgentActivityEventHandler eventsHandler;
 
+	private Replanner replanner;
+
 	public final Replanner getReplanner() {
-		return agentManager.getReplanner() ;
+		return this.replanner ;
 	}
 
 	final MATSimAgentManager getAgentManager() {
@@ -233,10 +235,7 @@ public final class MATSimModel implements ABMServerInterface {
 						// actions/percepts are registered with each BDI agent
 						agentManager.registerApplicationActionsPercepts(application);
 
-						// passes important matsim qsim functionality to the agent manager:
-						application.getReplanner(qSim);
-						final Replanner replanner = MATSimModel.this.getReplanner() ;
-						agentManager.setUpReplanner(replanner, qSim);
+						MATSimModel.this.replanner = new Replanner(MATSimModel.this, qSim) ;
 
 						// add stub agent to keep simulation alive.  yyyy find nicer way to do this.
 						Id<Link> dummyLinkId = qSim.getNetsimNetwork().getNetsimLinks().keySet().iterator().next() ;
