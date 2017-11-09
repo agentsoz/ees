@@ -1,6 +1,7 @@
 package io.github.agentsoz.bushfire.matsimjill.agents;
 
 import io.github.agentsoz.abmjill.genact.EnvironmentAction;
+import io.github.agentsoz.bdimatsim.MATSimActionList;
 import io.github.agentsoz.bushfire.datamodels.Location;
 import io.github.agentsoz.bushfire.matsimjill.SimpleConfig;
 
@@ -52,7 +53,7 @@ public class EvacuateNow extends Plan {
 			// Post the test action
 			new PlanStep() {
 				public void step() {
-					String bdiAction = Resident.BDI_ACTION_DRIVETO;
+					String bdiAction = MATSimActionList.DRIVETO;
 					shelterLocation = ((Resident)getAgent()).getShelterLocation();
 					double[] coords = shelterLocation.getCoordinates();
 					Object[] params = {bdiAction, coords};

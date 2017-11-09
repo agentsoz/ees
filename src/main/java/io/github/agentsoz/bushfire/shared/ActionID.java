@@ -1,5 +1,7 @@
 package io.github.agentsoz.bushfire.shared;
 
+import io.github.agentsoz.bdimatsim.MATSimActionList;
+
 /*
  * #%L
  * BDI-ABM Integration Package
@@ -27,7 +29,7 @@ package io.github.agentsoz.bushfire.shared;
  */
  public class ActionID {
     //An action that taxis may give to request their MATSim counterpart to drive to a given coordinate
-    public static final String DRIVETO = "drive to";
+    public static final String DRIVETO = MATSimActionList.DRIVETO;
     //An action that taxis may give to ask for a given goal
     public static final String REQUESTJOB = "request job";
     //An action that operators may give to ask to be notified with a list of any new job requests

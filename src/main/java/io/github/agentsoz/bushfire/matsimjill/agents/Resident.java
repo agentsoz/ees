@@ -1,7 +1,13 @@
 package io.github.agentsoz.bushfire.matsimjill.agents;
 
+import java.io.PrintStream;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.github.agentsoz.bdiabm.data.ActionContent;
 import io.github.agentsoz.bdiabm.data.ActionContent.State;
+import io.github.agentsoz.bdimatsim.MATSimActionList;
 import io.github.agentsoz.bushfire.datamodels.Location;
 import io.github.agentsoz.bushfire.matsimjill.SimpleConfig;
 
@@ -30,19 +36,12 @@ import io.github.agentsoz.bushfire.matsimjill.SimpleConfig;
 import io.github.agentsoz.jill.lang.Agent;
 import io.github.agentsoz.jill.lang.AgentInfo;
 
-import java.io.PrintStream;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 @AgentInfo(hasGoals={"io.github.agentsoz.bushfire.matsimjill.agents.RespondToFireAlert", "io.github.agentsoz.abmjill.genact.EnvironmentAction"})
 public class Resident extends Agent implements io.github.agentsoz.bdiabm.Agent {
 
 	private final Logger logger = LoggerFactory.getLogger("io.github.agentsoz.bushfire");
 
 	public static final String BDI_PERCEPT_FIRE_ALERT = "FireAlert";
-	public static final String BDI_ACTION_DRIVETO = "drive to";
-	
 	public PrintStream writer = null;
 	
 	private Location shelterLocation = null;
@@ -103,7 +102,7 @@ public class Resident extends Agent implements io.github.agentsoz.bdiabm.Agent {
 	@Override
 	public void updateAction(String actionID, ActionContent content) {
 		logger.debug("Agent"+getId()+" received action update: "+content);
-		if (content.getAction_type().equals(BDI_ACTION_DRIVETO)) {
+		if (content.getAction_type().equals(MATSimActionList.DRIVETO)) {
 			if (content.getState()==State.PASSED) {
 				// Wake up the agent that was waiting for external action to finish
 				// FIXME: BDI actions put agent in suspend, which won't work for multiple intention stacks 
