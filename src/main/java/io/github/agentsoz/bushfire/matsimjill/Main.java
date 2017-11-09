@@ -42,28 +42,28 @@ import io.github.agentsoz.dataInterface.DataServer;
 import io.github.agentsoz.util.Global;
 
 public class Main {
-	
+
 	private JillBDIModel jillmodel; // BDI model
 	private MATSimModel matsimModel; // ABM model
 	private PhoenixFireModule fireModel; // Fire model
-	
+
 	// Defaults
 	private static String logFile = Main.class.getSimpleName() + ".log";
 	private static Level logLevel = Level.INFO;
 	private static String[] jillInitArgs = null;
-	
+
 	public Main() {
-		
+
 	}
-	
+
 	public void start(String[] cargs) throws FileNotFoundException, IOException, ParseException, java.text.ParseException {
-		
+
 		// Parse the command line args
 		parse(cargs);
 
 		// Create the logger
-        createLogger("io.github.agentsoz.bushfire", logFile);
-		
+		createLogger("io.github.agentsoz.bushfire", logFile);
+
 		// Read in the configuration
 		try { 
 			SimpleConfig.readConfig();
@@ -75,7 +75,7 @@ public class Main {
 		// several different types of data around the application 
 		// using a publish/subscribe or pull mechanism
 		DataServer dataServer = DataServer.getServer("Bushfire");
-		
+
 		// Create fire module, load fire data, and register the fire module as
 		// an active data source
 		boolean isGeoJson = SimpleConfig.getFireFireFormat().equals("geojson");
@@ -93,7 +93,7 @@ public class Main {
 		}
 		fireModel.setTimestepUnit(Time.TimestepUnit.SECONDS);
 		fireModel.start();
-		
+
 		// Create the Jill BDI model
 		jillmodel = new JillBDIModel(jillInitArgs);
 		jillmodel.registerDataServer(dataServer);
@@ -105,10 +105,10 @@ public class Main {
 		// Start the MATSim controller
 		String[] margs = { SimpleConfig.getMatSimFile() };
 		matsimModel.run(margs);
-		
+
 		// All done, so terminate now
 		jillmodel.finish();
-//		System.exit(0);
+		//		System.exit(0);
 		// get rid of System.exit(...) so that tests run through ...
 	}
 
@@ -126,6 +126,7 @@ public class Main {
 				break;
 			case "--help":
 				abort(null);
+				break;
 			case "--jillconfig":
 				if (i + 1 < args.length) {
 					i++;
@@ -150,19 +151,21 @@ public class Main {
 				}
 				break;
 			case "--seed":
-              if (i + 1 < args.length) {
-                i++;
-                try {
-                    Global.setRandomSeed(Long.parseLong(args[i]));
-                } catch (Exception e) {
-                    System.err.println("Could not parse random seed '"
-                            + args[i] + "' : " + e.getMessage());
-                }
-              }
-              break;
+				if (i + 1 < args.length) {
+					i++;
+					try {
+						Global.setRandomSeed(Long.parseLong(args[i]));
+					} catch (Exception e) {
+						System.err.println("Could not parse random seed '"
+								+ args[i] + "' : " + e.getMessage());
+					}
+				}
+				break;
+			default:
+				throw new RuntimeException("unknown config option") ;
 			}
 		}
-		
+
 		if (jillInitArgs == null) {
 			abort("Some required options were not given");
 		}
@@ -178,7 +181,7 @@ public class Main {
 				+ "  --jillconfig STR  The string '--config={...}' passed to JILL (required)\n"
 				+ "  --logfile FILE    logging output file name (default is '"+logFile+"')\n"
 				+ "  --loglevel LEVEL  log level; one of ERROR,WARN,INFO,DEBUG,TRACE (default is '"+logLevel+"')\n"
-                + "  --seed SEED       seed to use for the random number generator (optional)\n"
+				+ "  --seed SEED       seed to use for the random number generator (optional)\n"
 				;
 	}
 
@@ -200,26 +203,26 @@ public class Main {
 		}
 	}
 
-    private static Logger createLogger(String string, String file) {
-        LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
-        PatternLayoutEncoder ple = new PatternLayoutEncoder();
+	private static Logger createLogger(String string, String file) {
+		LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
+		PatternLayoutEncoder ple = new PatternLayoutEncoder();
 
-        ple.setPattern("%date %level [%thread] %caller{1}%msg%n%n");
-        ple.setContext(lc);
-        ple.start();
-        FileAppender<ILoggingEvent> fileAppender = new FileAppender<ILoggingEvent>();
-        fileAppender.setFile(file);
-        fileAppender.setEncoder(ple);
-        fileAppender.setAppend(false);
-        fileAppender.setContext(lc);
-        fileAppender.start();
-        Logger logger = (Logger) LoggerFactory.getLogger(string);
-        logger.detachAndStopAllAppenders(); // detach console (doesn't seem to
-                                                                                // work)
-        logger.addAppender(fileAppender); // attach file appender
-        logger.setLevel(logLevel);
-        logger.setAdditive(true); /* set to true if root should log too */
+		ple.setPattern("%date %level [%thread] %caller{1}%msg%n%n");
+		ple.setContext(lc);
+		ple.start();
+		FileAppender<ILoggingEvent> fileAppender = new FileAppender<ILoggingEvent>();
+		fileAppender.setFile(file);
+		fileAppender.setEncoder(ple);
+		fileAppender.setAppend(false);
+		fileAppender.setContext(lc);
+		fileAppender.start();
+		Logger logger = (Logger) LoggerFactory.getLogger(string);
+		logger.detachAndStopAllAppenders(); // detach console (doesn't seem to
+		// work)
+		logger.addAppender(fileAppender); // attach file appender
+		logger.setLevel(logLevel);
+		logger.setAdditive(true); /* set to true if root should log too */
 
-        return logger;
-}
+		return logger;
+	}
 }
