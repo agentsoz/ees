@@ -2,6 +2,8 @@ package io.github.agentsoz.bushfire.matsimjill;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.json.simple.parser.ParseException;
 import org.slf4j.LoggerFactory;
@@ -51,6 +53,7 @@ public class Main {
 	private static String logFile = Main.class.getSimpleName() + ".log";
 	private static Level logLevel = Level.INFO;
 	private static String[] jillInitArgs = null;
+	private static String matsimOutputDirectory;
 
 	public Main() {
 
@@ -103,8 +106,13 @@ public class Main {
 		matsimModel.registerDataServer(dataServer);
 
 		// Start the MATSim controller
-		String[] margs = { SimpleConfig.getMatSimFile() };
-		matsimModel.run(margs);
+		List<String> config = new ArrayList<>() ;
+		config.add( SimpleConfig.getMatSimFile() ) ;
+		if ( matsimOutputDirectory != null ) { 
+			config.add( MATSimModel.MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR ) ;
+			config.add( matsimOutputDirectory ) ;
+		}
+		matsimModel.run( (String[]) config.toArray() ) ;
 
 		// All done, so terminate now
 		jillmodel.finish();
@@ -159,6 +167,12 @@ public class Main {
 						System.err.println("Could not parse random seed '"
 								+ args[i] + "' : " + e.getMessage());
 					}
+				}
+				break;
+			case MATSimModel.MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR:
+				if (i + 1 < args.length) {
+					i++;
+					matsimOutputDirectory = args[i];
 				}
 				break;
 			default:
