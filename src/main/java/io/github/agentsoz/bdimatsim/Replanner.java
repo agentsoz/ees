@@ -62,38 +62,19 @@ public final class Replanner {
 	protected static final Logger logger = LoggerFactory.getLogger("io.github.agentsoz.bushfiretute.BushfireMain");
 
 	protected final MATSimModel model;
-	protected final QSim qsim ;
+	protected QSim qsim ;
 	
-	private final EditRoutes editRoutes;
-	private final EditTrips editTrips ;
-	private final EditPlans editPlans ;
+	private EditRoutes editRoutes;
+	private EditTrips editTrips ;
+	private EditPlans editPlans ;
 
-	final TripRouter tripRouter;
-	final StageActivityTypes stageActivities ;
+	private TripRouter tripRouter;
+	private StageActivityTypes stageActivities ;
 
-	public Replanner(MATSimModel model, QSim qsim)
+	public Replanner(MATSimModel model)
 	{
 		this.model = model;
-		this.qsim = qsim ;
 
-		// the following is where the router is set up.  Something that uses, e.g., congested travel time, needs more infrastructure.
-		// Currently, this constructor is ultimately called from within createMobsim.  This is a good place since all necessary infrastructure should
-		// be available then.  It would have to be passed to here from there (or the router constructed there and passed to here). kai, mar'15
-		TravelTime travelTime = TravelTimeUtils.createFreeSpeedTravelTime() ;
-		TravelDisutility travelDisutility = TravelDisutilityUtils.createFreespeedTravelTimeAndDisutility( model.getScenario().getConfig().planCalcScore() ) ;
-
-		TripRouterFactoryBuilderWithDefaults builder = new TripRouterFactoryBuilderWithDefaults() ;
-		builder.setTravelTime(travelTime);
-		builder.setTravelDisutility(travelDisutility);
-		Provider<TripRouter> provider = builder.build( model.getScenario() ) ;
-		tripRouter = provider.get() ;
-		stageActivities = tripRouter.getStageActivityTypes() ;
-
-		//		LeastCostPathCalculator pathCalculator = new DijkstraFactory().createPathCalculator( model.getScenario().getNetwork(), travelDisutility, travelTime) ;
-		LeastCostPathCalculator pathCalculator = new FastAStarLandmarksFactory().createPathCalculator( model.getScenario().getNetwork(), travelDisutility, travelTime) ;
-		this.editRoutes = new EditRoutes(model.getScenario().getNetwork(), pathCalculator, model.getScenario().getPopulation().getFactory() ) ;
-		this.editTrips = new EditTrips(tripRouter, qsim.getScenario() ) ;
-		this.editPlans = new EditPlans(qsim, tripRouter, editTrips, model.getScenario().getPopulation().getFactory() ) ;
 	}
 
 	protected final void reRouteCurrentLeg( MobsimAgent agent, double now ) {
@@ -229,5 +210,26 @@ public final class Replanner {
 
 	static enum Congestion { freespeed, currentCongestion } 
 	static enum AllowedLinks { forCivilians, forEmergencyServices, all }
+	public void setQSim(QSim qSim2) {
+		this.qsim = qSim2 ;
+		// the following is where the router is set up.  Something that uses, e.g., congested travel time, needs more infrastructure.
+		// Currently, this constructor is ultimately called from within createMobsim.  This is a good place since all necessary infrastructure should
+		// be available then.  It would have to be passed to here from there (or the router constructed there and passed to here). kai, mar'15
+		TravelTime travelTime = TravelTimeUtils.createFreeSpeedTravelTime() ;
+		TravelDisutility travelDisutility = TravelDisutilityUtils.createFreespeedTravelTimeAndDisutility( model.getScenario().getConfig().planCalcScore() ) ;
+
+		TripRouterFactoryBuilderWithDefaults builder = new TripRouterFactoryBuilderWithDefaults() ;
+		builder.setTravelTime(travelTime);
+		builder.setTravelDisutility(travelDisutility);
+		Provider<TripRouter> provider = builder.build( model.getScenario() ) ;
+		tripRouter = provider.get() ;
+		stageActivities = tripRouter.getStageActivityTypes() ;
+
+		//		LeastCostPathCalculator pathCalculator = new DijkstraFactory().createPathCalculator( model.getScenario().getNetwork(), travelDisutility, travelTime) ;
+		LeastCostPathCalculator pathCalculator = new FastAStarLandmarksFactory().createPathCalculator( model.getScenario().getNetwork(), travelDisutility, travelTime) ;
+		this.editRoutes = new EditRoutes(model.getScenario().getNetwork(), pathCalculator, model.getScenario().getPopulation().getFactory() ) ;
+		this.editTrips = new EditTrips(tripRouter, qsim.getScenario() ) ;
+		this.editPlans = new EditPlans(qsim, tripRouter, editTrips, model.getScenario().getPopulation().getFactory() ) ;
+	}
 
 }

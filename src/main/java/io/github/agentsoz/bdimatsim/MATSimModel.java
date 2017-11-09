@@ -133,6 +133,7 @@ public final class MATSimModel implements ABMServerInterface {
 		this.agentsUpdateMessages = new ArrayList<>();
 		this.agentManager = new MATSimAgentManager( this ) ;
 		this.registerPlugin(new StubPlugin());
+		this.replanner = new Replanner(MATSimModel.this) ;
 	}
 
 	public final void registerPlugin(MATSimApplicationInterface app) {
@@ -162,7 +163,6 @@ public final class MATSimModel implements ABMServerInterface {
 
 		config.plans().setActivityDurationInterpretation(ActivityDurationInterpretation.tryEndTimeThenDuration);
 		
-		//config.global().setCoordinateSystem("EPSG:32756") ;
 
 		// Normally, the qsim starts at the earliest activity end time.  The following tells the mobsim to start
 		// at 2 seconds before 6:00, no matter what is in the initial plans file:
@@ -234,7 +234,6 @@ public final class MATSimModel implements ABMServerInterface {
 						for(Id<Person> agentId: bdiAgentIDs) {
 							/*Important - add agent to agentManager */
 							agentManager.createAndAddBDIAgent(agentId);
-							//MATSimModel.this.getAgentManager().getReplanner().removeActivities(agentId);
 						}
 
 						// Allow the application to configure the freshly baked agents
@@ -244,8 +243,8 @@ public final class MATSimModel implements ABMServerInterface {
 						// Must be done after the agents have been created since new 
 						// actions/percepts are registered with each BDI agent
 						agentManager.registerApplicationActionsPercepts(application);
-
-						MATSimModel.this.replanner = new Replanner(MATSimModel.this, qSim) ;
+						
+						MATSimModel.this.replanner.setQSim( qSim ) ;
 
 						// add stub agent to keep simulation alive.  yyyy find nicer way to do this.
 						Id<Link> dummyLinkId = qSim.getNetsimNetwork().getNetsimLinks().keySet().iterator().next() ;
