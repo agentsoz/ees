@@ -4,7 +4,7 @@ package io.github.agentsoz.bdimatsim;
  * #%L
  * BDI-ABM Integration Package
  * %%
- * Copyright (C) 2014 - 2015 by its authors. See AUTHORS file.
+ * Copyright (C) 2014 - 2017 by its authors. See AUTHORS file.
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -22,16 +22,10 @@ package io.github.agentsoz.bdimatsim;
  * #L%
  */
 
-import java.util.List;
-
 import javax.inject.Provider;
 
-import org.matsim.api.core.v01.Id;
-import org.matsim.api.core.v01.TransportMode;
-import org.matsim.api.core.v01.network.Link;
-import org.matsim.api.core.v01.population.Activity;
+import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.population.Leg;
-import org.matsim.api.core.v01.population.Person;
 import org.matsim.api.core.v01.population.Plan;
 import org.matsim.api.core.v01.population.PlanElement;
 import org.matsim.core.mobsim.framework.HasPerson;
@@ -39,11 +33,8 @@ import org.matsim.core.mobsim.framework.MobsimAgent;
 import org.matsim.core.mobsim.qsim.QSim;
 import org.matsim.core.mobsim.qsim.agents.WithinDayAgentUtils;
 import org.matsim.core.router.FastAStarLandmarksFactory;
-import org.matsim.core.router.StageActivityTypes;
 import org.matsim.core.router.TripRouter;
 import org.matsim.core.router.TripRouterFactoryBuilderWithDefaults;
-import org.matsim.core.router.TripStructureUtils;
-import org.matsim.core.router.TripStructureUtils.Trip;
 import org.matsim.core.router.util.LeastCostPathCalculator;
 import org.matsim.core.router.util.TravelDisutility;
 import org.matsim.core.router.util.TravelDisutilityUtils;
@@ -59,24 +50,23 @@ public final class Replanner {
 	// note that this is no longer meant to be extended for customization.  The "action recipes" now go directly into the classes
 	// that implement BDIActionHandler.  kai, nov'17
 	
-	protected static final Logger logger = LoggerFactory.getLogger("io.github.agentsoz.bushfiretute.BushfireMain");
+	private static final Logger logger = LoggerFactory.getLogger("io.github.agentsoz.bushfiretute.BushfireMain");
 
-	protected final MATSimModel model;
-	protected QSim qsim ;
+	private QSim qsim ;
 	
 	private EditRoutes editRoutes;
 	private EditTrips editTrips ;
 	private EditPlans editPlans ;
 
 	private TripRouter tripRouter;
-	private StageActivityTypes stageActivities ;
 
-	public Replanner(MATSimModel model)
-	{
-		this.model = model;
+	private Scenario scenario;
 
+	public Replanner(QSim qSim2) {
+		setQSim( qSim2 ) ;
 	}
 
+	@Deprecated // yyyy but I don't have an easy replacement yet
 	protected final void reRouteCurrentLeg( MobsimAgent agent, double now ) {
 		Plan plan = WithinDayAgentUtils.getModifiablePlan(agent) ;
 		PlanElement pe = plan.getPlanElements().get( WithinDayAgentUtils.getCurrentPlanElementIndex(agent)) ;
@@ -87,114 +77,6 @@ public final class Replanner {
 		this.editRoutes.replanCurrentLegRoute((Leg)pe, ((HasPerson)agent).getPerson(), currentLinkIndex, now ) ;
 		WithinDayAgentUtils.resetCaches(agent);
 	}
-
-	protected static final void attachNewActivityAtEndOfPlan(Id<Link> newActivityLinkId, Id<Person> agentId, MATSimModel model ) {
-		// called at least once
-
-		// yyyy if the current activity is not already the last activity of the agent, this method may not behave as expected. kai, feb'14
-
-		//changing the end time of the activity can be replaced by the forceEndActivity method
-
-		double now = model.getTime() ; 
-
-		MobsimAgent agent = model.getMobsimAgentMap().get(agentId);
-
-		Plan plan = WithinDayAgentUtils.getModifiablePlan(agent) ;
-
-		List<PlanElement> planElements = plan.getPlanElements() ;
-
-		int planElementsIndex = planElements.size()-1;
-		// seems that under normal circumstances in this pgm, size returns 1 und idx is thus 0.
-
-		Activity lastAct = (Activity)planElements.get(planElementsIndex);
-		// i.e. this would be the first activity
-
-		double endTime = now;
-		if(endTime <= lastAct.getStartTime() +10){
-			endTime = lastAct.getStartTime() +10;
-		}
-		lastAct.setEndTime(endTime);
-
-		// now the real work begins. This changes the activity (i.e. the destination of the current leg) and then
-		// re-splices the plan
-
-		Activity newAct = model.getScenario().getPopulation().getFactory().createActivityFromLinkId("work", newActivityLinkId ) ;
-
-		Leg newLeg = model.getScenario().getPopulation().getFactory().createLeg(TransportMode.car);
-//		// new Route for current Leg.
-		newLeg.setDepartureTime(endTime);
-//		editRoutes.relocateFutureLegRoute(newLeg, lastAct.getLinkId(), newActivityLinkId,((HasPerson)agent).getPerson());
-		// --- old version end
-
-		newAct.setEndTime( Double.POSITIVE_INFINITY ) ;
-
-		planElements.add(newLeg);
-		planElements.add(newAct); 
-		
-//		final List<Trip> trips = TripStructureUtils.getTrips(planElements, stageActivities);
-		
-//		Gbl.assertIf( trips.size()>=1 );
-		
-		List<PlanElement> sublist = planElements.subList(planElements.size()-3, planElements.size() ) ;
-		// (the sub-list is "exclusive" the right index)
-		
-		Trip trip = TripStructureUtils.getTrips(sublist, model.getReplanner().getEditTrips().getStageActivities()).get(0) ;
-		model.getReplanner().getEditTrips().replanFutureTrip(trip, plan, TransportMode.car) ;
-
-		WithinDayAgentUtils.resetCaches(agent);
-		// this is necessary since the simulation may have cached some info from the plan at other places.
-		// (May not be necessary in this particular situation since there is nothing to cache when an agent is at an activity.) kai, feb'14
-
-		model.getReplanner().getEditPlans().rescheduleActivityEnd(agent);
-		// this is the only place where the internal interface is truly needed, since it is the only place where the agent needs to be "woken up".
-		// This is necessary since otherwise the simulation will not touch the agent until its previously scheduled activity end. kai, feb/14
-
-	}
-	/*
-	protected final boolean removeActivities(Id<Person> agentId) {
-		// possibly never called
-
-		Map<Id<Person>, MobsimAgent> mapping = model.getMobsimAgentMap();
-		MobsimAgent agent = mapping.get(agentId);
-
-		Plan plan = WithinDayAgentUtils.getModifiablePlan(agent) ;
-
-		List<PlanElement> planElements = plan.getPlanElements() ;
-
-		while(planElements.size() > 1){
-			planElements.remove(planElements.size()-1);
-		}
-
-		Activity act = (Activity) planElements.get(0);
-		act.setEndTime(3600*24);
-		act.setMaximumDuration(3600*24);
-
-		WithinDayAgentUtils.resetCaches(agent);
-		this.qsim.rescheduleActivityEnd(agent);
-		return true;
-	}
-	 */
-	/*
-	protected final boolean changeActivityEndTimeByPlanElementIndex(Id<Person> agentId, int planElementIndex, double newEndTime) {
-		// probably never called
-
-		Map<Id<Person>, MobsimAgent> mapping = model.getMobsimAgentMap();
-		MobsimAgent agent = mapping.get(agentId);
-
-		Plan plan = WithinDayAgentUtils.getModifiablePlan(agent) ;
-
-		List<PlanElement> planElements = plan.getPlanElements() ;
-
-
-		Activity act = (Activity) planElements.get(planElementIndex);
-		act.setEndTime(newEndTime);
-		act.setMaximumDuration(3600*24);
-
-		WithinDayAgentUtils.resetCaches(agent);
-		this.qsim.rescheduleActivityEnd(agent);
-		return true;
-	}
-	 */
 
 	public EditRoutes getEditRoutes() {
 		return editRoutes;
@@ -210,26 +92,26 @@ public final class Replanner {
 
 	static enum Congestion { freespeed, currentCongestion } 
 	static enum AllowedLinks { forCivilians, forEmergencyServices, all }
-	public void setQSim(QSim qSim2) {
+	private void setQSim(QSim qSim2) {
 		this.qsim = qSim2 ;
+		this.scenario = qSim2.getScenario() ;
 		// the following is where the router is set up.  Something that uses, e.g., congested travel time, needs more infrastructure.
 		// Currently, this constructor is ultimately called from within createMobsim.  This is a good place since all necessary infrastructure should
 		// be available then.  It would have to be passed to here from there (or the router constructed there and passed to here). kai, mar'15
 		TravelTime travelTime = TravelTimeUtils.createFreeSpeedTravelTime() ;
-		TravelDisutility travelDisutility = TravelDisutilityUtils.createFreespeedTravelTimeAndDisutility( model.getScenario().getConfig().planCalcScore() ) ;
+		TravelDisutility travelDisutility = TravelDisutilityUtils.createFreespeedTravelTimeAndDisutility( scenario.getConfig().planCalcScore() ) ;
 
 		TripRouterFactoryBuilderWithDefaults builder = new TripRouterFactoryBuilderWithDefaults() ;
 		builder.setTravelTime(travelTime);
 		builder.setTravelDisutility(travelDisutility);
-		Provider<TripRouter> provider = builder.build( model.getScenario() ) ;
+		Provider<TripRouter> provider = builder.build( scenario ) ;
 		tripRouter = provider.get() ;
-		stageActivities = tripRouter.getStageActivityTypes() ;
 
-		//		LeastCostPathCalculator pathCalculator = new DijkstraFactory().createPathCalculator( model.getScenario().getNetwork(), travelDisutility, travelTime) ;
-		LeastCostPathCalculator pathCalculator = new FastAStarLandmarksFactory().createPathCalculator( model.getScenario().getNetwork(), travelDisutility, travelTime) ;
-		this.editRoutes = new EditRoutes(model.getScenario().getNetwork(), pathCalculator, model.getScenario().getPopulation().getFactory() ) ;
+		//		LeastCostPathCalculator pathCalculator = new DijkstraFactory().createPathCalculator( scenario.getNetwork(), travelDisutility, travelTime) ;
+		LeastCostPathCalculator pathCalculator = new FastAStarLandmarksFactory().createPathCalculator( scenario.getNetwork(), travelDisutility, travelTime) ;
+		this.editRoutes = new EditRoutes(scenario.getNetwork(), pathCalculator, scenario.getPopulation().getFactory() ) ;
 		this.editTrips = new EditTrips(tripRouter, qsim.getScenario() ) ;
-		this.editPlans = new EditPlans(qsim, tripRouter, editTrips, model.getScenario().getPopulation().getFactory() ) ;
+		this.editPlans = new EditPlans(qsim, tripRouter, editTrips, scenario.getPopulation().getFactory() ) ;
 	}
 
 }

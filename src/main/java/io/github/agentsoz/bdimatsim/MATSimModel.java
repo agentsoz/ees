@@ -89,9 +89,15 @@ public final class MATSimModel implements ABMServerInterface {
 
 	private Replanner replanner;
 
+	protected QSim qSim;
+
 	public static final String MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR = "--matsim-output-directory";
 
 	public final Replanner getReplanner() {
+		if ( replanner==null ) {
+			replanner = new Replanner( qSim ) ;
+		}
+		// (self-programmed singleton pattern)
 		return this.replanner ;
 	}
 
@@ -133,10 +139,10 @@ public final class MATSimModel implements ABMServerInterface {
 		this.agentsUpdateMessages = new ArrayList<>();
 		this.agentManager = new MATSimAgentManager( this ) ;
 		this.registerPlugin(new StubPlugin());
-		this.replanner = new Replanner(MATSimModel.this) ;
 	}
 
 	public final void registerPlugin(MATSimApplicationInterface app) {
+		// this could be extended to accepting more than one plugin if need be. kai, nov'17
 		this.application = app;
 	}
 
@@ -174,9 +180,9 @@ public final class MATSimModel implements ABMServerInterface {
 		config.controler().setOverwriteFileSetting( OverwriteFileSetting.deleteDirectoryIfExists );
 		
 		// set number of threads to one everywhere:
-		config.qsim().setNumberOfThreads(1);
-		config.global().setNumberOfThreads(1);
-		config.parallelEventHandling().setNumberOfThreads(1);
+//		config.qsim().setNumberOfThreads(1);
+//		config.global().setNumberOfThreads(1);
+//		config.parallelEventHandling().setNumberOfThreads(1);
 
 		/*
 		// --- snapshots begin 
@@ -224,7 +230,7 @@ public final class MATSimModel implements ABMServerInterface {
 						// for the time being doing this here since from a matsim perspective we would like to
 						// re-create them in every iteration. kai, oct;17
 
-						QSim qSim = (QSim) e.getQueueSimulation() ;
+						qSim = (QSim) e.getQueueSimulation() ;
 
 						//Utils.initialiseVisualisedAgents(MATSimModel.this) ;
 
@@ -244,8 +250,6 @@ public final class MATSimModel implements ABMServerInterface {
 						// actions/percepts are registered with each BDI agent
 						agentManager.registerApplicationActionsPercepts(application);
 						
-						MATSimModel.this.replanner.setQSim( qSim ) ;
-
 						// add stub agent to keep simulation alive.  yyyy find nicer way to do this.
 						Id<Link> dummyLinkId = qSim.getNetsimNetwork().getNetsimLinks().keySet().iterator().next() ;
 						MobsimVehicle dummyVeh = null ;
@@ -299,6 +303,8 @@ public final class MATSimModel implements ABMServerInterface {
 		org.apache.log4j.Logger.getRootLogger().setLevel(Level.INFO);
 
 		controller.run();
+		
+//		Thread matsimThread = new Thread( controller ) ;
 		
 		this.bdiServer.finish();
 	}
