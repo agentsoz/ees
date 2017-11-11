@@ -66,22 +66,21 @@ import io.github.agentsoz.dataInterface.DataServer;
  * @author QingyuChen, KaiNagel, Dhi Singh
  */
 public final class MATSimModel implements ABMServerInterface {
-	final Logger logger = LoggerFactory.getLogger("");
+	private static final Logger logger = LoggerFactory.getLogger("");
 
 	private Scenario scenario ;
 
 	private DataServer dataServer;
+
 	private List<SimpleMessage> agentsUpdateMessages;
 
 	private List<Id<Person>> bdiAgentIDs;
 
-	private double time;
-
-	//	private final MatsimParameterHandler matSimParameterManager;
 	private MATSimAgentManager agentManager ;
+
 	private MobsimDataProvider mobsimDataProvider = new MobsimDataProvider() ;
 
-	final BDIServerInterface bdiServer;
+	private final BDIServerInterface bdiServer;
 
 	private MATSimApplicationInterface application;
 
@@ -89,7 +88,7 @@ public final class MATSimModel implements ABMServerInterface {
 
 	private Replanner replanner;
 
-	protected QSim qSim;
+	private QSim qSim;
 
 	public static final String MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR = "--matsim-output-directory";
 
@@ -108,9 +107,6 @@ public final class MATSimModel implements ABMServerInterface {
 	public final void takeControl(AgentDataContainer agentDataContainer){
 		logger.trace("Received {}", agentManager.getAgentDataContainer());
 		agentManager.updateActions(agentManager.getAgentDataContainer());
-	}
-	final void setTime(double time) {
-		this.time = time;
 	}
 
 	final synchronized void addExternalEvent(String type,SimpleMessage newEvent){
@@ -179,25 +175,6 @@ public final class MATSimModel implements ABMServerInterface {
 		config.controler().setWritePlansInterval(1);
 		config.controler().setOverwriteFileSetting( OverwriteFileSetting.deleteDirectoryIfExists );
 		
-		// set number of threads to one everywhere:
-//		config.qsim().setNumberOfThreads(1);
-//		config.global().setNumberOfThreads(1);
-//		config.parallelEventHandling().setNumberOfThreads(1);
-
-		/*
-		// --- snapshots begin 
-		config.qsim().setSnapshotStyle(SnapshotStyle.withHoles);
-		config.qsim().setSnapshotPeriod(10);
-		{
-			Collection<String> snapshotFormat = new ArrayList<>() ;
-			snapshotFormat.add("transims") ;
-			snapshotFormat.add("googleearth") ;
-//			snapshotFormat.add("otfvis") ;
-			config.controler().setSnapshotFormat(snapshotFormat);
-		}
-		config.controler().setWriteSnapshotsInterval(10);
-		// --- snapshots end
-	    */	
 //		ConfigUtils.setVspDefaults(config);
 
 		// ---
@@ -253,8 +230,6 @@ public final class MATSimModel implements ABMServerInterface {
 						// actions/percepts are registered with each BDI agent
 						agentManager.registerApplicationActionsPercepts(application);
 						
-						MATSimModel.this.getReplanner() ; // trigger initialization !
-						
 						// add stub agent to keep simulation alive.  yyyy find nicer way to do this.
 						Id<Link> dummyLinkId = qSim.getNetsimNetwork().getNetsimLinks().keySet().iterator().next() ;
 						MobsimVehicle dummyVeh = null ;
@@ -268,7 +243,6 @@ public final class MATSimModel implements ABMServerInterface {
 					 */		
 					@Override
 					public void notifyMobsimBeforeSimStep(MobsimBeforeSimStepEvent e) {
-						MATSimModel.this.setTime(e.getSimulationTime());
 
 						// the real work is done here:
 
@@ -330,15 +304,16 @@ public final class MATSimModel implements ABMServerInterface {
 
 	final void setFreeSpeedExample(){
 		// example how to set the freespeed of some link to zero:
-		if ( this.time == 6.*3600. + 10.*60. ) {
-			NetworkChangeEvent event = new NetworkChangeEvent( this.time ) ;
+		final double now = this.qSim.getSimTimer().getTimeOfDay();
+		if ( now == 6.*3600. + 10.*60. ) {
+			NetworkChangeEvent event = new NetworkChangeEvent( now ) ;
 			event.setFreespeedChange(new ChangeValue( ChangeType.ABSOLUTE_IN_SI_UNITS,  0. ));
 			event.addLink( scenario.getNetwork().getLinks().get( Id.createLinkId( 6876 )));
 			NetworkUtils.addNetworkChangeEvent( scenario.getNetwork(),event);
 
 			for ( MobsimAgent agent : this.getAgentMap().values() ) {
 				if ( !(agent instanceof StubAgent) ) {
-					this.getReplanner().reRouteCurrentLeg(agent, time);
+					this.getReplanner().reRouteCurrentLeg(agent, now);
 				}
 			}
 		}
@@ -366,7 +341,7 @@ public final class MATSimModel implements ABMServerInterface {
 	}
 
 	public final double getTime() {
-		return time ;
+		return this.qSim.getSimTimer().getTimeOfDay() ;
 	}
 
 	AgentActivityEventHandler getEventHandler() {

@@ -49,14 +49,14 @@ public final class MATSimActionHandler {
 		// Register all the actions that we handle by default
 		// The application can later add custom actions in a similar way
 		// and indeed overwrite the default action handlers if needed
-		this.registerBDIAction(MATSimActionList.DRIVETO, new DRIVETODefaultActionHandler());
+		this.registerBDIAction(MATSimActionList.DRIVETO, new DRIVETODefaultActionHandler(matSimModel));
 	}
 
 	/** 
 	 * Registers a new BDI action. Typical usage example:<pre><code>
 	 * registerBDIAction("MyNewAction", new BDIActionHandler() {
 	 *    {@literal @}Override
-	 *    public boolean handle(String agentID, String actionID, Object[] args, MATSimModel model) {
+	 *    public boolean handle(String agentID, String actionID, Object[] args ) {
 	 *       MATSimAgent agent = model.getBDIAgent(agentID);
 	 *       // Code to handle MyNewAction goes here ...
 	 *       return true;
@@ -85,7 +85,7 @@ public final class MATSimActionHandler {
 	final boolean processAction(String agentID, String actionID, Object[] parameters) {
 		for (String action : registeredActions.keySet()) {
 			if (actionID.equals(action)) {
-				return registeredActions.get(actionID).handle(agentID, actionID, parameters, matSimModel);
+				return registeredActions.get(actionID).handle(agentID, actionID, parameters);
 			}
 		}
 		return false;

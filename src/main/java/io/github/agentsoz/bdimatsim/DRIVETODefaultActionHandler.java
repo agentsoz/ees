@@ -45,8 +45,12 @@ import io.github.agentsoz.bdimatsim.app.BDIActionHandler;
 import io.github.agentsoz.bdimatsim.app.BDIPerceptHandler;
 
 final class DRIVETODefaultActionHandler implements BDIActionHandler {
+	private final MATSimModel model;
+	public DRIVETODefaultActionHandler(MATSimModel model ) {
+		this.model = model;
+	}
 	@Override
-	public boolean handle(String agentID, String actionID, Object[] args, MATSimModel model) {
+	public boolean handle(String agentID, String actionID, Object[] args) {
 		// Get nearest link ID and calls the Replanner to map to MATSim.
 		Id<Link> newLinkId;
 		if (args[1] instanceof double[]) {

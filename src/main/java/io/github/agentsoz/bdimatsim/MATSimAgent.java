@@ -27,6 +27,7 @@ import io.github.agentsoz.bdiabm.data.PerceptContainer;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.network.Link;
@@ -44,8 +45,7 @@ public final class MATSimAgent {
 	private Id<Person> agentID;
 	private String agentType;
 
-//	private ArrayList<Id<Link>> passedDriveToActions;
-	private ArrayList<Id<Link>> driveToActions;
+	private final List<Id<Link>> driveToActions = new ArrayList<>() ;
 
 	private ActionContainer actionContainer;
 	private PerceptContainer perceptContainer;
@@ -62,10 +62,6 @@ public final class MATSimAgent {
 		return actionHandler;
 	}
 
-//	final ArrayList<Id<Link>> getpassedDriveToActions() {
-//		return passedDriveToActions;
-//	}
-
 	public final ActionContainer getActionContainer() {
 		return this.actionContainer;
 	}
@@ -73,19 +69,6 @@ public final class MATSimAgent {
 	public final PerceptContainer getPerceptContainer() {
 		return this.perceptContainer;
 	}
-
-//	final void setPerceptContainer(PerceptContainer perceptContainer) {
-//		this.perceptContainer = perceptContainer;
-//	}
-//
-//	final void setPerceptHandler(MATSimPerceptHandler perceptHandler) {
-//		this.perceptHandler = perceptHandler;
-//	}
-//
-//	final void setActionContainer(ActionContainer actionContainer) {
-//		this.actionContainer = actionContainer;
-//
-//	}
 
 	MATSimAgent(MATSimActionHandler actionHandler,
 			MATSimPerceptHandler perceptHandler, Id<Person> agentID,
@@ -95,8 +78,6 @@ public final class MATSimAgent {
 		this.agentID = agentID;
 		this.actionContainer = actionContainer;
 		this.perceptContainer = perceptContainer;
-//		passedDriveToActions = new ArrayList<>();
-		driveToActions = new ArrayList<>();
 	}
 
 	public final void newDriveTo(Id<Link> newAction) {
@@ -108,13 +89,8 @@ public final class MATSimAgent {
 	}
 
 	final void clearAllActions() {
-//		passedDriveToActions.clear();
 		driveToActions.clear();
 	}
-
-//	public final void clearPassedDriveToActions() {
-//		passedDriveToActions.clear();
-//	}
 
 	/*
 	 * Checks the location and returns which driveToAction has been
@@ -124,18 +100,12 @@ public final class MATSimAgent {
 		Iterator<Id<Link>> actions = driveToActions.iterator();
 		while (actions.hasNext()) {
 			Id<Link> dest = actions.next();
-			// Id value = new IdImpl
-			// ((String)actionContainer.get(action.toString()).getParameters()[1]);
-			// Id<Link> value =
-			// Id.createLinkId((String)actionContainer.get(action.toString()).getParameters()[1]);
 
 			if (dest.equals(location)) {
 				driveToActions.remove(dest);
-//				passedDriveToActions.add(dest);
 				return dest;
 			}
 		}
-		// return new IdImpl(0);
 		return Id.createLinkId(0);
 	}
 
