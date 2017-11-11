@@ -27,6 +27,7 @@
 	<module name="global">
 		<param name="randomSeed" value="482564" />
 		<param name="coordinateSystem" value="EPSG:28355" />
+		<param name="numberOfThreads" value="1" />
 	</module>
 
 	<module name="network">
@@ -61,6 +62,7 @@
 		<param name= "flowCapacityFactor" value= "1.0" />
 		<param name= "storageCapacityFactor" value= "1.0" />
 		
+		<param name="numberOfThreads" value="1" />
 	</module>
 
 	<module name="planCalcScore">
@@ -103,6 +105,10 @@
 	
 		<param name="ModuleProbability_3" value="0.1" />
 		<param name="Module_3" value="TimeAllocationMutator" />
+	</module>
+
+	<module name="parallelEventHandling" >
+		<param name="numberOfThreads" value="1" />
 	</module>
 
 </config>
