@@ -1,7 +1,5 @@
 package io.github.agentsoz.bdimatsim;
 
-import io.github.agentsoz.bdimatsim.app.BDIPerceptHandler;
-
 /*
  * #%L
  * BDI-ABM Integration Package
@@ -25,6 +23,7 @@ import io.github.agentsoz.bdimatsim.app.BDIPerceptHandler;
  */
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.events.ActivityEndEvent;
@@ -41,9 +40,13 @@ import org.matsim.api.core.v01.events.handler.PersonDepartureEventHandler;
 import org.matsim.api.core.v01.network.Link;
 import org.matsim.api.core.v01.population.Person;
 
+import io.github.agentsoz.bdimatsim.app.BDIPerceptHandler;
+
 /**
- * @author Edmund Kemsley Acts as a simple listener for Matsim agent events then
+ * Acts as a simple listener for Matsim agent events then
  *         passes to MATSimAgentManager
+ * 
+ * @author Edmund Kemsley 
  */
 
 public final class AgentActivityEventHandler implements 
@@ -53,22 +56,19 @@ PersonArrivalEventHandler,
 PersonDepartureEventHandler,
 ActivityEndEventHandler{
 
-	private MATSimModel model;
-
+	/**
+	 * if these event types were sitting in bdi-abm, I would understand this.  But given that they are sitting here,
+	 * why not use the matsim events directly?  kai, nov'17
+	 */
 	public enum MonitoredEventType {
 		EnteredNode,
 		ExitedNode,
 		ArrivedAtDestination,
 		DepartedDestination,
 		EndedActivity;
-	};
-	
-	private ArrayList<Monitor> monitors;
-
-	AgentActivityEventHandler(MATSimModel model) {
-		this.model = model;
-		monitors = new ArrayList<Monitor>();
 	}
+	
+	private List<Monitor> monitors = new ArrayList<>() ;
 
 	@Override
 	public final void reset(int iteration) {
@@ -110,7 +110,7 @@ ActivityEndEventHandler{
 				if (ev instanceof LinkEnterEvent) {
 					LinkEnterEvent event = (LinkEnterEvent)ev;
 					if (monitor.getAgentId() == event.getDriverId() && monitor.getLinkId() == event.getLinkId()) {
-						if(monitor.getHandler().handle(monitor.getAgentId(), monitor.getLinkId(), monitor.getEvent(), model)) {
+						if(monitor.getHandler().handle(monitor.getAgentId(), monitor.getLinkId(), monitor.getEvent())) {
 							toRemove.add(monitor);
 						}
 					}
@@ -120,7 +120,7 @@ ActivityEndEventHandler{
 				if (ev instanceof LinkLeaveEvent) {
 					LinkLeaveEvent event = (LinkLeaveEvent)ev;
 					if (monitor.getAgentId() == event.getDriverId() && monitor.getLinkId() == event.getLinkId()) {
-						if(monitor.getHandler().handle(monitor.getAgentId(), monitor.getLinkId(), monitor.getEvent(), model)) {
+						if(monitor.getHandler().handle(monitor.getAgentId(), monitor.getLinkId(), monitor.getEvent())) {
 							toRemove.add(monitor);
 						}
 					}
@@ -130,7 +130,7 @@ ActivityEndEventHandler{
 				if (ev instanceof PersonArrivalEvent) {
 					PersonArrivalEvent event = (PersonArrivalEvent)ev;
 					if (monitor.getAgentId() == event.getPersonId() && monitor.getLinkId() == event.getLinkId()) {
-						if(monitor.getHandler().handle(monitor.getAgentId(), monitor.getLinkId(), monitor.getEvent(), model)) {
+						if(monitor.getHandler().handle(monitor.getAgentId(), monitor.getLinkId(), monitor.getEvent())) {
 							toRemove.add(monitor);
 						}
 					}
@@ -140,7 +140,7 @@ ActivityEndEventHandler{
 				if (ev instanceof PersonDepartureEvent) {
 					PersonDepartureEvent event = (PersonDepartureEvent)ev;
 					if (monitor.getAgentId() == event.getPersonId() && monitor.getLinkId() == event.getLinkId()) {
-						if (monitor.getHandler().handle(monitor.getAgentId(), monitor.getLinkId(), monitor.getEvent(), model)) {
+						if (monitor.getHandler().handle(monitor.getAgentId(), monitor.getLinkId(), monitor.getEvent())) {
 							toRemove.add(monitor);
 						}
 					}
@@ -150,7 +150,7 @@ ActivityEndEventHandler{
 				if (ev instanceof ActivityEndEvent) {
 					ActivityEndEvent event = (ActivityEndEvent)ev;
 					if (monitor.getAgentId() == event.getPersonId() && monitor.getLinkId() == event.getLinkId()) {
-						if (monitor.getHandler().handle(monitor.getAgentId(), monitor.getLinkId(), monitor.getEvent(), model)) {
+						if (monitor.getHandler().handle(monitor.getAgentId(), monitor.getLinkId(), monitor.getEvent())) {
 							toRemove.add(monitor);
 						}
 					}

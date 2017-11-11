@@ -70,20 +70,41 @@ public final class MATSimModel implements ABMServerInterface {
 
 	private Scenario scenario ;
 
+	/**
+	 * some blackboardy thing that sits betwen ABM and BDI
+	 */
 	private DataServer dataServer;
 
-	private List<SimpleMessage> agentsUpdateMessages;
+	/**
+	 * some message buffer for the data server
+	 */
+	private List<SimpleMessage> agentsUpdateMessages = new ArrayList<>(); 
 
-	private List<Id<Person>> bdiAgentIDs;
-
+	/**
+	 * A view onto MATSim agents by the BDI system.
+	 */
 	private MATSimAgentManager agentManager ;
 
+	/**
+	 * BDI agents and MATSim agents need not be the same; at the moment, BDI agents seem to be a subset of the MATSim agents.
+	 */
+	private List<Id<Person>> bdiAgentIDs;
+
+	/**
+	 * This is in fact a MATSim class that provides a view onto the QSim.
+	 */
 	private MobsimDataProvider mobsimDataProvider = new MobsimDataProvider() ;
 
 	private final BDIServerInterface bdiServer;
 
+	/**
+	 * some callback interface for during agent creation
+	 */
 	private MATSimApplicationInterface application;
 
+	/**
+	 * essentially something that passes matsim events through
+	 */
 	private AgentActivityEventHandler eventsHandler;
 
 	private Replanner replanner;
@@ -132,7 +153,6 @@ public final class MATSimModel implements ABMServerInterface {
 
 	public MATSimModel( BDIServerInterface bidServer) {
 		this.bdiServer = bidServer ;
-		this.agentsUpdateMessages = new ArrayList<>();
 		this.agentManager = new MATSimAgentManager( this ) ;
 		this.registerPlugin(new StubPlugin());
 	}
@@ -194,7 +214,7 @@ public final class MATSimModel implements ABMServerInterface {
 		
 		final Controler controller = new Controler( scenario );
 
-		eventsHandler = new AgentActivityEventHandler(MATSimModel.this);
+		eventsHandler = new AgentActivityEventHandler();
 		controller.getEvents().addHandler(eventsHandler);
 
 		controller.addOverridingModule(new AbstractModule(){

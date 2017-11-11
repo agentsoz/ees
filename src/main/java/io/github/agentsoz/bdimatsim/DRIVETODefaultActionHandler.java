@@ -72,7 +72,7 @@ final class DRIVETODefaultActionHandler implements BDIActionHandler {
 				newLinkId,
 				new BDIPerceptHandler() {
 					@Override
-					public boolean handle(Id<Person> agentId, Id<Link> linkId, MonitoredEventType monitoredEvent, MATSimModel model) {
+					public boolean handle(Id<Person> agentId, Id<Link> linkId, MonitoredEventType monitoredEvent) {
 						MATSimAgent agent = model.getBDIAgent(agentId);
 						Object[] params = { linkId.toString() };
 						agent.getActionContainer().register(MATSimActionList.DRIVETO, params);

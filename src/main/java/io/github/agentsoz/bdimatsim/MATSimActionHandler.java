@@ -32,7 +32,6 @@ import io.github.agentsoz.bdimatsim.app.BDIActionHandler;
  */
 
 public final class MATSimActionHandler {
-	private final MATSimModel matSimModel;
 	
 	private final LinkedHashMap<String, BDIActionHandler> registeredActions;
 
@@ -42,7 +41,6 @@ public final class MATSimActionHandler {
 	 * @param matSimModel
 	 */
 	protected MATSimActionHandler(MATSimModel matSimModel) {
-		this.matSimModel = matSimModel;
 		
 		this.registeredActions = new LinkedHashMap<>();
 		

@@ -37,10 +37,12 @@ import org.matsim.core.mobsim.qsim.ActivityEndRescheduler;
 import org.matsim.core.mobsim.qsim.QSim;
 
 /**
- * @author Edmund Kemsley This class holds MatsimAgent objects and information
+ * This class holds MatsimAgent objects and information
  *         related to the agents in the Matsim system such the replanner
  *         MatsimAgents and extension of Matsim Agents are stored in
  *         matSimAgents LinkedHashMap
+ *         
+ * @author Edmund Kemsley 
  */
 final class MATSimAgentManager {
 	private AgentStateList agentStateList;
