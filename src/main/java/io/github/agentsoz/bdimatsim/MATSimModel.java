@@ -223,7 +223,8 @@ public final class MATSimModel implements ABMServerInterface {
 		controller.addOverridingModule(new AbstractModule(){
 			@Override public void install() {
 				
-				install( new EvacQSimModule() ) ;
+//				install( new EvacQSimModule() ) ;
+				// something in the above does not work; index shifts; agents confusing legs and activities; ... ???
 				
 				this.addMobsimListenerBinding().toInstance( new MobsimInitializedListener() {
 					@Override public void notifyMobsimInitialized(MobsimInitializedEvent e) {
@@ -251,6 +252,8 @@ public final class MATSimModel implements ABMServerInterface {
 						// Must be done after the agents have been created since new 
 						// actions/percepts are registered with each BDI agent
 						agentManager.registerApplicationActionsPercepts(application);
+						
+						MATSimModel.this.getReplanner() ; // trigger initialization !
 						
 						// add stub agent to keep simulation alive.  yyyy find nicer way to do this.
 						Id<Link> dummyLinkId = qSim.getNetsimNetwork().getNetsimLinks().keySet().iterator().next() ;
