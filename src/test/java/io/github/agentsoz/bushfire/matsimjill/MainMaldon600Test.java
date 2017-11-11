@@ -48,16 +48,54 @@ public class MainMaldon600Test {
 		Main.main(args);
 
 		{
-			long expectedCRC = CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/output_plans.xml.gz" ) ;
-			long actualCRC = CRCChecksum.getCRCFromFile( "output/output_plans.xml.gz" ) ; // 2704415442
-			System.err.println( "plans: expected=" + expectedCRC + "; actual=" + actualCRC ) ;
-			Assert.assertEquals (expectedCRC, actualCRC);
+			long [] expected = new long [] {
+					CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/1/output_events.xml.gz" ), 
+					// 1380811447 eclipse single
+					CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/2/output_events.xml.gz" ),  
+					CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/3/output_events.xml.gz" ) 
+					// 721059509 mvn console 
+					} ;
+
+			long actual = CRCChecksum.getCRCFromFile( "output/output_events.xml.gz" ) ;
+			System.err.println("actual(events)="+actual) ;
+
+			boolean found = false ;
+			for ( int ii=0 ; ii<expected.length ; ii++ ) {
+				final boolean b = actual==expected[ii];
+				System.err.println(b);
+				if ( b ) {
+					found = true ;
+					break ;
+				}
+			}
+			if ( !found ) {
+				Assert.fail(); 
+			}
 		}
 		{
-			long expectedCRC = CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/output_events.xml.gz" ) ;
-			long actualCRC = CRCChecksum.getCRCFromFile( "output/output_events.xml.gz" ) ; // 1380811447
-			System.err.println( "plans: expected=" + expectedCRC + "; actual=" + actualCRC ) ;
-			Assert.assertEquals (expectedCRC, actualCRC);
+			long [] expected = new long [] {
+					CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/1/output_plans.xml.gz" ), 
+					// 2704415442 eclipse single
+					CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/2/output_plans.xml.gz" ),  
+					CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/3/output_plans.xml.gz" ) 
+					// 2575830431 mvn console  
+					} ;
+
+			long actual = CRCChecksum.getCRCFromFile( "output/output_plans.xml.gz" ) ;
+			System.err.println("actual(plans)="+actual) ;
+
+			boolean found = false ;
+			for ( int ii=0 ; ii<expected.length ; ii++ ) {
+				final boolean b = actual==expected[ii];
+				System.err.println(b);
+				if ( b ) {
+					found = true ;
+					break ;
+				}
+			}
+			if ( !found ) {
+				Assert.fail(); 
+			}
 		}
 
 
