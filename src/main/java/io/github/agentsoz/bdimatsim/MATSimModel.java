@@ -231,6 +231,8 @@ public final class MATSimModel implements ABMServerInterface {
 						// re-create them in every iteration. kai, oct;17
 
 						qSim = (QSim) e.getQueueSimulation() ;
+						
+//						new PlayPauseSimulationControl( qSim ) ;
 
 						//Utils.initialiseVisualisedAgents(MATSimModel.this) ;
 
