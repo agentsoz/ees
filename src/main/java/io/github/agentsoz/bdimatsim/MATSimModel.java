@@ -16,6 +16,7 @@ import org.matsim.core.config.groups.QSimConfigGroup.StarttimeInterpretation;
 import org.matsim.core.controler.AbstractModule;
 import org.matsim.core.controler.Controler;
 import org.matsim.core.controler.OutputDirectoryHierarchy.OverwriteFileSetting;
+import org.matsim.core.events.handler.EventHandler;
 import org.matsim.core.mobsim.framework.MobsimAgent;
 import org.matsim.core.mobsim.framework.events.MobsimBeforeSimStepEvent;
 import org.matsim.core.mobsim.framework.events.MobsimInitializedEvent;
@@ -107,7 +108,9 @@ public final class MATSimModel implements ABMServerInterface {
 	 */
 	private AgentActivityEventHandler eventsHandler;
 
-	private Replanner replanner;
+	private List<EventHandler> eventHandlers; 
+	
+    private Replanner replanner;
 
 	private QSim qSim;
 
@@ -161,6 +164,15 @@ public final class MATSimModel implements ABMServerInterface {
 		// this could be extended to accepting more than one plugin if need be. kai, nov'17
 		this.application = app;
 	}
+
+	public List<EventHandler> getEventHandlers() {
+	  return eventHandlers;
+	}
+
+	public void setEventHandlers(List<EventHandler> eventHandlers) {
+	  this.eventHandlers = eventHandlers;
+	}
+
 
 	public final void run(String[] args) {
 		// (this needs to be public)
@@ -216,7 +228,15 @@ public final class MATSimModel implements ABMServerInterface {
 
 		eventsHandler = new AgentActivityEventHandler();
 		controller.getEvents().addHandler(eventsHandler);
+		
+		// Register any supplied event handlers
+		if (eventHandlers != null) {
+		  for (EventHandler handler : eventHandlers) {
+	          controller.getEvents().addHandler(handler);
+		  }
+		}
 
+		
 		controller.addOverridingModule(new AbstractModule(){
 			@Override public void install() {
 				

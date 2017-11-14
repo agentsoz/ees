@@ -51,7 +51,7 @@ import com.vividsolutions.jts.geom.LineString;
  * @author QingyuChen
  *
  */
-final class Utils {
+public final class Utils {
 	private Utils(){} // do not instantiate. kai, mar'15
 
 	@SuppressWarnings("unused")
