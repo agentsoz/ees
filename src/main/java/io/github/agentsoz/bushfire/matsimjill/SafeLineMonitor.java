@@ -54,12 +54,14 @@ import io.github.agentsoz.bushfire.datamodels.Location;
 public class SafeLineMonitor implements LinkEnterEventHandler, LinkLeaveEventHandler,
     PersonArrivalEventHandler, PersonDepartureEventHandler {
 
+  private String name;
   private Location from;
   private Location to;
   private MATSimModel model; // actually only need access to network but dunno how, dsingh 14/nov/17
   private Map<Id<Link>,List<Double>> exitTimes;
 
-  public SafeLineMonitor(Location from, Location to, MATSimModel model) {
+  public SafeLineMonitor(String name, Location from, Location to, MATSimModel model) {
+    this.name = name;
     this.from = from;
     this.to= to;
     this.model = model;
@@ -91,6 +93,10 @@ public class SafeLineMonitor implements LinkEnterEventHandler, LinkLeaveEventHan
   public void handleEvent(LinkEnterEvent event) {
   }
 
+  public String getName() {
+    return name;
+  }
+  
   public Collection<List<Double>> getExitTimes() {
     return (exitTimes != null) ? exitTimes.values() : null;
   }

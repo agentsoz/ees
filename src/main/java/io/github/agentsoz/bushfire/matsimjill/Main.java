@@ -150,8 +150,9 @@ public class Main {
 
     List<SafeLineMonitor> slMonitors = new ArrayList<SafeLineMonitor>();
     List<EventHandler> monitors = new ArrayList<EventHandler>();
-    for (Location[] safeline : safeLines.values()) {
-      SafeLineMonitor monitor = new SafeLineMonitor(safeline[0], safeline[1], matsimModel);
+    for (String name : safeLines.keySet()) {
+      Location[] safeline = safeLines.get(name);
+      SafeLineMonitor monitor = new SafeLineMonitor(name, safeline[0], safeline[1], matsimModel);
       monitors.add(monitor);
       slMonitors.add(monitor);
     }
@@ -170,7 +171,7 @@ public class Main {
   private void writeSafeLineMonitors(List<SafeLineMonitor> monitors, String pattern)
       throws FileNotFoundException {
     for (int i = 0; i < monitors.size(); i++) {
-      String filepath = pattern.replace("%d%", String.valueOf(i));
+      String filepath = pattern.replace("%d%", monitors.get(i).getName().replace(' ', '-'));
       logger.info("Writing safe line statistics to file: " + filepath);
       PrintWriter writer = new PrintWriter(filepath);
       Collection<List<Double>> exitTimes = monitors.get(i).getExitTimes();

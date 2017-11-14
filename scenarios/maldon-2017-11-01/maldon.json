@@ -1,0 +1,93 @@
+{
+  "name": "2017-10-23-ds-maldon",
+  "township": "Maldon",
+  "defaultMapZoom": 10,
+  "coordinate_system": "latlong",
+  "osmArea": {
+    "rectangle": [
+      -36.8093,
+      144.2759,
+      -37.0853,
+      143.9257
+    ],
+    "url": "app-data/mount-alexander-shire/network.xml.gz"
+  },
+  "fire": {
+    "name": "20160420_MtAlexShire_FDI75_Iso",
+    "url": "app-data/mount-alexander-shire/maldon/20160420_MtAlexShire_FDI75_Iso.json",
+    "coordinate_system": "latlong",
+    "format": "geojson"
+  },
+  "destinations": [
+    {
+      "name": "Harcourt",
+      "coordinates": {
+        "lat": -37.004293,
+        "lng": 144.257085
+      },
+      "split": "80"
+    },
+    {
+      "name": "Lockwood South",
+      "coordinates": {
+        "lat": -36.842702,
+        "lng": 144.155577
+      },
+      "split": "20"
+    }
+  ],
+  "safeLines": [
+    {
+      "name": "Harcourt",
+      "coordinates": [
+        {
+          "lat": -36.95466567936442,
+          "lng": 144.13933753967285
+        },
+        {
+          "lat": -37.008419907562015,
+          "lng": 144.13281440734863
+        }
+      ]
+    },
+    {
+      "name": "Lockwood South",
+      "coordinates": [
+        {
+          "lat": -36.884673512215294,
+          "lng": 144.12182807922363
+        },
+        {
+          "lat": -36.926402072401686,
+          "lng": 144.15478706359863
+        }
+      ]
+    }
+  ],
+  "vehiclesAreas": [
+    {
+      "name": "400",
+      "bounds": {
+        "south": -36.997027733186165,
+        "west": 144.05567407608032,
+        "north": -36.98516763854811,
+        "east": 144.07464265823364
+      }
+    },
+    {
+      "name": "200",
+      "bounds": {
+        "south": -37.007309555233135,
+        "west": 144.06460046768188,
+        "north": -36.99209196472013,
+        "east": 144.07198190689087
+      }
+    }
+  ],
+  "evacTime": {
+    "hh": 13,
+    "mm": 0
+  },
+  "evacPeakMins": 120,
+  "maxSpeed": 70
+}

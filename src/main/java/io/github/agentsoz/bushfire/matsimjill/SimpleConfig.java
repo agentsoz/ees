@@ -280,6 +280,7 @@ public class SimpleConfig {
         for (int i = 0; i < nl.getLength(); i++) {
           Location[] safeline = new Location[2];
           Element location = (Element)nl.item(i);
+          String name = location.getElementsByTagName(eName).item(0).getTextContent().replaceAll("\n", "").trim();
           String s = location.getElementsByTagName(eCoordinates).item(0).getTextContent().replaceAll("\n", "").trim();
           String[] sCoords = s.split(",");
           double x = Double.parseDouble(sCoords[0]);
@@ -290,7 +291,7 @@ public class SimpleConfig {
           x = Double.parseDouble(sCoords[0]);
           y = Double.parseDouble(sCoords[1]);
           safeline[1] = new Location("to", x, y);
-          safelines.put(String.valueOf(i), safeline);
+          safelines.put(name, safeline);
         }
 		
 	}
