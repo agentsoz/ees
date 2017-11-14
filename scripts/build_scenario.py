@@ -172,11 +172,11 @@ main_replacements = {
     '${bdiagents_number}' : "%s" % nAgents,
     '${trafficBehaviour_preEvacDetour_proportion}' : "%s" % proportionRelatives,
     '${trafficBehaviour_preEvacDetour_radiusInMtrs}' : "%s" % maxMtrsToRelatives,
-    '${flowCapacityFactor}' : "1.0", # "%s" % (data["maxSpeed"]/100.0), 
+    '${flowCapacityFactor}' : "1.0", # "%s" % (data["maxSpeed"]/100.0),
     '${storageCapacityFactor}' : "1.0", # "%s" % math.pow(data["maxSpeed"]/100.0, 0.75) # see https://matsim.atlassian.net/wiki/questions/44040198/answers/44040200/comments/46956546
 }
 geography_replacements = {
-    '${geographyfile_coordinate_system}' : data["coordinate_system"],
+    '${geographyfile_coordinate_system}' : "utm", # always use utm for geography
 }
 
 # write the main config file
@@ -290,5 +290,23 @@ f = open(o_geography,'w')
 f.write(newdata)
 f.close()
 
+# write safelines locations
+src = '<!--${safeline}-->'
+target = ''
+for dest in data["safeLines"]:
+    x1,y1,znum,zletter = utm.from_latlon(dest["coordinates"][0]["lat"], dest["coordinates"][0]["lng"])
+    x2,y2,znum,zletter = utm.from_latlon(dest["coordinates"][1]["lat"], dest["coordinates"][1]["lng"])
+    #log("Converting %s,%s to utm: %s,%s %s %s" % (dest["coordinates"]["lat"], dest["coordinates"]["lng"],x,y,znum,zletter))
+    target = "%s<safeline>\n" % target
+    target = "%s  <coordinates>%s,%s</coordinates>\n" % (target, x1,y1)
+    target = "%s  <coordinates>%s,%s</coordinates>\n" % (target, x2,y2)
+    target = "%s</safeline>\n" % target
+f = open(o_geography,'r')
+filedata = f.read()
+f.close()
+newdata = filedata.replace(src, target)
+f = open(o_geography,'w')
+f.write(newdata)
+f.close()
 
 #java -cp APPJAR io.github.agentsoz.bushfire.GenerateInput    -outdir test    -prefix maldon    -matsimpop "700/EPSG:28355/RECT/234274,5895647&246377,5919215"

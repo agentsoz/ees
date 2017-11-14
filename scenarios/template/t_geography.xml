@@ -66,6 +66,10 @@
 <!--${location}-->
 </destinations>
 
+<safelines>
+<!--${safeline}-->
+</safelines>
+
 </geography>
 
 

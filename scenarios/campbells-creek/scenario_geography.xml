@@ -60,7 +60,7 @@
   xmlns="https://github.com/agentsoz/bdi-abm-integration"
   xsi:schemaLocation="https://github.com/agentsoz/bdi-abm-integration geography.xsd">
 
-<coordinateSystem>latlong</coordinateSystem>
+<coordinateSystem>utm</coordinateSystem>
 
 <destinations>
 <location>
@@ -70,6 +70,14 @@
 </location>
 
 </destinations>
+
+<safelines>
+<safeline>
+  <coordinates>251518.398021,5893416.18185</coordinates>
+  <coordinates>251790.660452,5893249.25264</coordinates>
+</safeline>
+
+</safelines>
 
 </geography>
 
