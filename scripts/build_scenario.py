@@ -298,6 +298,7 @@ for dest in data["safeLines"]:
     x2,y2,znum,zletter = utm.from_latlon(dest["coordinates"][1]["lat"], dest["coordinates"][1]["lng"])
     #log("Converting %s,%s to utm: %s,%s %s %s" % (dest["coordinates"]["lat"], dest["coordinates"]["lng"],x,y,znum,zletter))
     target = "%s<safeline>\n" % target
+    target = "%s  <name>%s</name>\n" % (target, dest["name"])
     target = "%s  <coordinates>%s,%s</coordinates>\n" % (target, x1,y1)
     target = "%s  <coordinates>%s,%s</coordinates>\n" % (target, x2,y2)
     target = "%s</safeline>\n" % target

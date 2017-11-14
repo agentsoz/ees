@@ -1,8 +1,8 @@
-<xs:schema 
+<xs:schema
   xmlns:xs="http://www.w3.org/2001/XMLSchema"
   targetNamespace="https://github.com/agentsoz/bdi-abm-integration"
   xmlns="https://github.com/agentsoz/bdi-abm-integration"
-  attributeFormDefault="unqualified" 
+  attributeFormDefault="unqualified"
   elementFormDefault="qualified">
 
   <!-- simple elements -->
@@ -10,7 +10,7 @@
   <xs:element name="coordinates" type="xs:string"/>
   <xs:element name="capacity" type="xs:short"/>
   <xs:element name="split" type="xs:decimal"/>
-  
+
   <!-- complex elements -->
 
   <xs:element name="coordinateSystem" type="xs:string"/>
@@ -21,20 +21,20 @@
         <xs:element ref="bdi:name" xmlns:bdi="https://github.com/agentsoz/bdi-abm-integration"/>
         <xs:element ref="bdi:coordinates" xmlns:bdi="https://github.com/agentsoz/bdi-abm-integration"/>
         <xs:element ref="bdi:split" xmlns:bdi="https://github.com/agentsoz/bdi-abm-integration"/>
-        <xs:element 
-          ref="bdi:capacity" 
+        <xs:element
+          ref="bdi:capacity"
            minOccurs="0" maxOccurs="1"
            xmlns:bdi="https://github.com/agentsoz/bdi-abm-integration"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
-  
+
   <xs:element name="destinations">
     <xs:complexType>
       <xs:sequence>
-        <xs:element 
-          ref="bdi:location" 
-          minOccurs="0" maxOccurs="unbounded"  
+        <xs:element
+          ref="bdi:location"
+          minOccurs="0" maxOccurs="unbounded"
           xmlns:bdi="https://github.com/agentsoz/bdi-abm-integration"/>
       </xs:sequence>
     </xs:complexType>
@@ -43,6 +43,7 @@
   <xs:element name="safeline">
     <xs:complexType>
       <xs:sequence>
+        <xs:element ref="bdi:name" xmlns:bdi="https://github.com/agentsoz/bdi-abm-integration"/>
         <xs:element ref="bdi:coordinates" xmlns:bdi="https://github.com/agentsoz/bdi-abm-integration"/>
         <xs:element ref="bdi:coordinates" xmlns:bdi="https://github.com/agentsoz/bdi-abm-integration"/>
       </xs:sequence>
@@ -52,9 +53,9 @@
   <xs:element name="safelines">
     <xs:complexType>
       <xs:sequence>
-        <xs:element 
-          ref="bdi:safeline" 
-          minOccurs="0" maxOccurs="unbounded"  
+        <xs:element
+          ref="bdi:safeline"
+          minOccurs="0" maxOccurs="unbounded"
           xmlns:bdi="https://github.com/agentsoz/bdi-abm-integration"/>
       </xs:sequence>
     </xs:complexType>
@@ -63,18 +64,17 @@
   <xs:element name="geography">
     <xs:complexType>
       <xs:all>
-        <xs:element 
-          ref="bdi:coordinateSystem" 
+        <xs:element
+          ref="bdi:coordinateSystem"
           xmlns:bdi="https://github.com/agentsoz/bdi-abm-integration"/>
-        <xs:element 
-          ref="bdi:destinations" 
+        <xs:element
+          ref="bdi:destinations"
           xmlns:bdi="https://github.com/agentsoz/bdi-abm-integration"/>
-        <xs:element 
-          ref="bdi:safelines" 
+        <xs:element
+          ref="bdi:safelines"
           xmlns:bdi="https://github.com/agentsoz/bdi-abm-integration"/>
       </xs:all>
     </xs:complexType>
   </xs:element>
 
 </xs:schema>
-
