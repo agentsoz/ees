@@ -255,6 +255,7 @@ function create(data, callback) {
 		var fileLog = path.join(scenarioPath, 'scenario.log');
 		var fileJillLog = path.join(scenarioPath, 'jill.log');
 		var fileJillOut = path.join(scenarioPath, 'jill.out');
+		var fileSafeline = path.join(scenarioPath, 'safeline.%d%.out');
 
     	// Read number of agents from config xml
 		var parser = new xml2js.Parser();
@@ -270,6 +271,7 @@ function create(data, callback) {
 			       ' --config ' + fileMain +
 			       ' --logfile ' + fileLog +
 			       ' --loglevel ' + logLevelMain +
+			       ' --safeline-output-file-pattern ' + fileSafeline +
 			       ' --jillconfig "--config={' +
 			       'agents:[{classname:io.github.agentsoz.bushfire.matsimjill.agents.Resident, args:null, count:'+nAgents+'}],' +
 			       'logLevel: ' + logLevelJill + ',' +

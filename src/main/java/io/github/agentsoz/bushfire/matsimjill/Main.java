@@ -172,18 +172,17 @@ public class Main {
     for (int i = 0; i < monitors.size(); i++) {
       String filepath = pattern.replace("%d%", String.valueOf(i));
       logger.info("Writing safe line statistics to file: " + filepath);
-      Collection<List<Double>> exitTimes = monitors.get(i).getExitTimes();
-      if (exitTimes == null) {
-        continue;
-      }
-      List<Double> all = new ArrayList<Double>();
-      for (List<Double> list : exitTimes) {
-        all.addAll(list);
-      }
-      Collections.sort(all);
       PrintWriter writer = new PrintWriter(filepath);
-      for (Double time : all) {
-        writer.println(time);
+      Collection<List<Double>> exitTimes = monitors.get(i).getExitTimes();
+      if (exitTimes != null) {
+        List<Double> all = new ArrayList<Double>();
+        for (List<Double> list : exitTimes) {
+          all.addAll(list);
+        }
+        Collections.sort(all);
+        for (Double time : all) {
+          writer.println(time);
+        }
       }
       writer.close();
     }
