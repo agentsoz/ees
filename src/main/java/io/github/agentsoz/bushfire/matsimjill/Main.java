@@ -2,10 +2,15 @@ package io.github.agentsoz.bushfire.matsimjill;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.TreeMap;
 
 import org.json.simple.parser.ParseException;
+import org.matsim.core.events.handler.EventHandler;
 import org.slf4j.LoggerFactory;
 
 import ch.qos.logback.classic.Level;
@@ -40,12 +45,15 @@ import ch.qos.logback.core.FileAppender;
 import io.github.agentsoz.bdimatsim.MATSimModel;
 import io.github.agentsoz.bushfire.PhoenixFireModule;
 import io.github.agentsoz.bushfire.Time;
+import io.github.agentsoz.bushfire.datamodels.Location;
 import io.github.agentsoz.dataInterface.DataServer;
 import io.github.agentsoz.util.Global;
 
 public class Main {
 
-	private JillBDIModel jillmodel; // BDI model
+    private static Logger logger;
+
+    private JillBDIModel jillmodel; // BDI model
 	private MATSimModel matsimModel; // ABM model
 	private PhoenixFireModule fireModel; // Fire model
 
@@ -54,6 +62,7 @@ public class Main {
 	private static Level logLevel = Level.INFO;
 	private static String[] jillInitArgs = null;
 	private static String matsimOutputDirectory;
+	private static String safelineOutputFilePattern = "./safeline.%d%.csv"; 
 
 	public Main() {
 
@@ -65,7 +74,7 @@ public class Main {
 		parse(cargs);
 
 		// Create the logger
-		createLogger("io.github.agentsoz.bushfire", logFile);
+		logger = createLogger("io.github.agentsoz.bushfire", logFile);
 
 		// Read in the configuration
 		try { 
@@ -105,6 +114,9 @@ public class Main {
 		matsimModel = new MATSimModel(jillmodel);
 		matsimModel.registerDataServer(dataServer);
 
+		// Register the safe lines monitors for MATSim
+		List<SafeLineMonitor> monitors = registerSafeLineMonitors(SimpleConfig.getSafeLines(), matsimModel);
+		
 		// Start the MATSim controller
 		List<String> config = new ArrayList<>() ;
 		config.add( SimpleConfig.getMatSimFile() ) ;
@@ -114,13 +126,70 @@ public class Main {
 		}
 		matsimModel.run( config.toArray(new String[config.size()] ) ) ;
 
+		// Write safe line statistics to file
+		writeSafeLineMonitors(monitors, safelineOutputFilePattern);
+		
 		// All done, so terminate now
 		jillmodel.finish();
 		//		System.exit(0);
 		// get rid of System.exit(...) so that tests run through ...
 	}
+	
+  /**
+   * Registers a {@link SafeLineMonitor} per safe line with MATSim
+   * 
+   * @param safeLines
+   * @param matsimModel
+   */
+  private List<SafeLineMonitor> registerSafeLineMonitors(TreeMap<String, Location[]> safeLines,
+      MATSimModel matsimModel) {
 
-	/**
+    if (safeLines == null) {
+      return null;
+    }
+
+    List<SafeLineMonitor> slMonitors = new ArrayList<SafeLineMonitor>();
+    List<EventHandler> monitors = new ArrayList<EventHandler>();
+    for (Location[] safeline : safeLines.values()) {
+      SafeLineMonitor monitor = new SafeLineMonitor(safeline[0], safeline[1], matsimModel);
+      monitors.add(monitor);
+      slMonitors.add(monitor);
+    }
+    matsimModel.setEventHandlers(monitors);
+    return slMonitors;
+  }
+
+  /**
+   * Writes the safe lines statistics to file
+   * 
+   * @param monitors to write, one per file
+   * @param pattern output file pattern, something like "/path/to/file.%d%.out" where %d% is
+   *        replaced by the monitor index number i.e., 0,1,...
+   * @throws FileNotFoundException
+   */
+  private void writeSafeLineMonitors(List<SafeLineMonitor> monitors, String pattern)
+      throws FileNotFoundException {
+    for (int i = 0; i < monitors.size(); i++) {
+      String filepath = pattern.replace("%d%", String.valueOf(i));
+      logger.info("Writing safe line statistics to file: " + filepath);
+      Collection<List<Double>> exitTimes = monitors.get(i).getExitTimes();
+      if (exitTimes == null) {
+        continue;
+      }
+      List<Double> all = new ArrayList<Double>();
+      for (List<Double> list : exitTimes) {
+        all.addAll(list);
+      }
+      Collections.sort(all);
+      PrintWriter writer = new PrintWriter(filepath);
+      for (Double time : all) {
+        writer.println(time);
+      }
+      writer.close();
+    }
+  }
+	
+  /**
 	 * Parse the command line arguments
 	 */
 	public static void parse(String[] args) {
@@ -158,6 +227,12 @@ public class Main {
 					}
 				}
 				break;
+            case "--safeline-output-file-pattern":
+              if (i + 1 < args.length) {
+                  i++;
+                  safelineOutputFilePattern = args[i];
+              }
+              break;
 			case "--seed":
 				if (i + 1 < args.length) {
 					i++;
@@ -195,6 +270,7 @@ public class Main {
 				+ "  --jillconfig STR  The string '--config={...}' passed to JILL (required)\n"
 				+ "  --logfile FILE    logging output file name (default is '"+logFile+"')\n"
 				+ "  --loglevel LEVEL  log level; one of ERROR,WARN,INFO,DEBUG,TRACE (default is '"+logLevel+"')\n"
+				+ "  --safeline-output-file-pattern  pattern for safeline output files (default is '"+safelineOutputFilePattern+"')\n "
 				+ "  --seed SEED       seed to use for the random number generator (optional)\n"
 				;
 	}

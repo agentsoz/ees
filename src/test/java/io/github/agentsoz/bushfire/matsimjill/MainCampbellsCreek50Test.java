@@ -28,6 +28,7 @@ public class MainCampbellsCreek50Test {
 				"--loglevel", "INFO",
 				//	                "--plan-selection-policy", "FIRST", // ensures it is deterministic, as default is RANDOM
 				"--seed", "12345",
+				"--safeline-output-file-pattern", "scenarios/campbells-creek/safeline.%d%.out",
 				"--jillconfig", "--config={"+
 						"agents:[{classname:io.github.agentsoz.bushfire.matsimjill.agents.Resident, args:null, count:50}],"+
 						"logLevel: WARN,"+

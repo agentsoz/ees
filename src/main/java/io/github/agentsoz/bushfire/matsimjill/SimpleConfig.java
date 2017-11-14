@@ -74,6 +74,7 @@ public class SimpleConfig {
 	private static String fireCoordinateSystem = "longlat";
 	private static String fireFileFormat = "custom";
 	private static String geographyCoordinateSystem = "longlat";
+    private static TreeMap<String, Location[]> safelines = new TreeMap<String, Location[]>();
 
 	private static final String eSimulation = "simulation";
 	private static final String eMATSimFile = "matsimfile";
@@ -95,6 +96,8 @@ public class SimpleConfig {
 	private static final String eEvacuationTiming = "evacuationTiming";
 	private static final String eStart = "start";
 	private static final String ePeak = "peak";
+    private static final String eSafeLines = "safelines";
+    private static final String eSafeLine = "safeline";
 		
 	public static String getMatSimFile() {
 		return matSimFile;
@@ -150,6 +153,10 @@ public class SimpleConfig {
 
 	public static void setConfigFile(String string) {
 		configFile = string;
+	}
+	
+	public static TreeMap<String, Location[]> getSafeLines() {
+	  return safelines;
 	}
 
 	/**
@@ -266,6 +273,26 @@ public class SimpleConfig {
 			double y = Double.parseDouble(sCoords[1]);
 			locations.put(name, new Location(name, x, y, split));
 		}
+		
+        // Get the safe lines 
+        Element slines = (Element)root.getElementsByTagName(eSafeLines).item(0);
+        nl = slines.getElementsByTagName(eSafeLine);
+        for (int i = 0; i < nl.getLength(); i++) {
+          Location[] safeline = new Location[2];
+          Element location = (Element)nl.item(i);
+          String s = location.getElementsByTagName(eCoordinates).item(0).getTextContent().replaceAll("\n", "").trim();
+          String[] sCoords = s.split(",");
+          double x = Double.parseDouble(sCoords[0]);
+          double y = Double.parseDouble(sCoords[1]);
+          safeline[0] = new Location("from", x, y);
+          s = location.getElementsByTagName(eCoordinates).item(1).getTextContent().replaceAll("\n", "").trim();
+          sCoords = s.split(",");
+          x = Double.parseDouble(sCoords[0]);
+          y = Double.parseDouble(sCoords[1]);
+          safeline[1] = new Location("to", x, y);
+          safelines.put(String.valueOf(i), safeline);
+        }
+		
 	}
 	
     /**
