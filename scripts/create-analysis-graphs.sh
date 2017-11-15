@@ -31,7 +31,7 @@ if [ ! -f $scenario_file ]; then
 fi
 
 # Check that the MATSim experienced plans file exists
-experienced_plans_file="$scenario_dir/scenario/scenario_matsim_output/output_plans.xml.gz"
+experienced_plans_file="$scenario_dir/scenario/scenario_matsim_output/ITERS/it.0/0.experienced_plans.xml.gz"
 if [ ! -f $experienced_plans_file ]; then
 	echo "MATSim experienced plans file $experienced_plans_file not found."
 	exit
@@ -44,6 +44,7 @@ arrivals_file=$analysis_dir/arrivalInMinsPastEvacTime
 traveltime_file=$analysis_dir/travelTimeInMins
 distance_file=$analysis_dir/distanceInKms
 
+rm -rf $analysis_dir
 mkdir -p $analysis_dir
 
 
@@ -62,7 +63,7 @@ zcat $experienced_plans_file | grep -B1 'route type="links"' | grep -o "dep_time
 zcat $experienced_plans_file | grep -o 'route type="links".*trav_time=.* distance' | cut -f3 -d' ' | cut -f2 -d'"' | awk -F':' '{printf "%.1f\n", ($1*60 + $2 + $3/60)}' > $traveltime_file.csv
 
 # Extract the distance travelled by agents (in kms)
-zcat $experienced_plans_file | grep -o 'route type="links".*distance=.*">' | cut -f4 -d' ' | cut -f2 -d'"' | awk '{printf "%.1f\n", $1/1000}' > $distance_file.csv
+zcat $experienced_plans_file | grep -o 'route type="links".*distance=.*">' | cut -f6 -d' ' | cut -f2 -d'"' | awk '{printf "%.1f\n", $1/1000}' > $distance_file.csv
 
 # Extract the vehicles times past the safe lines
 for file in $(find $scenario_dir/scenario/ -name "safeline*.out" -print); do
