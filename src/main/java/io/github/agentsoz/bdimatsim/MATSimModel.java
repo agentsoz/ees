@@ -166,19 +166,7 @@ public final class MATSimModel implements ABMServerInterface {
 
 		Config config = ConfigUtils.loadConfig( args[0] ) ;
 
-		for (int i = 1; i < args.length; i++) {
-			switch (args[i]) {
-			case MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR:
-				if (i + 1 < args.length) {
-					i++;
-					logger.info("setting matsim output directory to " + args[i] );
-					config.controler().setOutputDirectory( args[i] );
-				}
-				break;
-			default:
-				throw new RuntimeException("unknown config option") ;
-			}
-		}
+		parseAdditionalArguments(args, config);
 
 		config.network().setTimeVariantNetwork(true);
 
@@ -316,6 +304,22 @@ public final class MATSimModel implements ABMServerInterface {
 		//		Thread matsimThread = new Thread( controller ) ;
 
 		this.bdiServer.finish();
+	}
+
+	private static void parseAdditionalArguments(String[] args, Config config) {
+		for (int i = 1; i < args.length; i++) {
+			switch (args[i]) {
+			case MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR:
+				if (i + 1 < args.length) {
+					i++;
+					logger.info("setting matsim output directory to " + args[i] );
+					config.controler().setOutputDirectory( args[i] );
+				}
+				break;
+			default:
+				throw new RuntimeException("unknown config option") ;
+			}
+		}
 	}
 
 	/**
