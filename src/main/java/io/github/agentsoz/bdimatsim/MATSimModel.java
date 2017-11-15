@@ -110,6 +110,8 @@ public final class MATSimModel implements ABMServerInterface {
 
 	private QSim qSim;
 
+	private List<EventHandler> eventHandlers;
+
 	public static final String MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR = "--matsim-output-directory";
 
 	public final Replanner getReplanner() {
