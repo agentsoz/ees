@@ -1,5 +1,12 @@
 package io.github.agentsoz.bdimatsim;
 
+import java.util.LinkedHashMap;
+
+import javax.inject.Inject;
+
+import org.matsim.api.core.v01.Id;
+import org.matsim.api.core.v01.population.Person;
+
 /*
  * #%L
  * BDI-ABM Integration Package
@@ -29,14 +36,6 @@ import io.github.agentsoz.bdiabm.data.AgentDataContainer;
 import io.github.agentsoz.bdiabm.data.AgentState;
 import io.github.agentsoz.bdiabm.data.AgentStateList;
 import io.github.agentsoz.bdimatsim.app.MATSimApplicationInterface;
-import java.util.LinkedHashMap;
-
-import javax.inject.Inject;
-
-import org.matsim.api.core.v01.Id;
-import org.matsim.api.core.v01.population.Person;
-import org.matsim.core.mobsim.qsim.ActivityEndRescheduler;
-import org.matsim.core.mobsim.qsim.QSim;
 
 /**
  * This class holds MatsimAgent objects and information

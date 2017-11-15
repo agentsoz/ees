@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Singleton;
+
 import org.apache.log4j.Level;
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.Scenario;
@@ -236,6 +238,7 @@ public final class MATSimModel implements ABMServerInterface {
 			@Override public void install() {
 				
 				bind(MATSimModel.class).toInstance( MATSimModel.this );
+
 				
 				install( new EvacQSimModule() ) ;
 				// something in the above does not work; index shifts; agents confusing legs and activities; ... ???
