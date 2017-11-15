@@ -80,6 +80,7 @@ public class Main {
 		try { 
 			SimpleConfig.readConfig();
 		} catch(Exception e){
+			e.printStackTrace();
 			abort(e.getMessage());
 		}
 
@@ -264,6 +265,7 @@ public class Main {
 	 * Just print the command line usage example.
 	 */
 	public static String usage() {
+		new Exception().printStackTrace();
 		return "usage:\n"
 				+ "  --config FILE     simulation configuration file" + "\n"
 				+ "  --help            print this help message and exit\n"
