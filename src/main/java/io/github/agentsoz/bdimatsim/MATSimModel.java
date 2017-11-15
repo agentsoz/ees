@@ -88,7 +88,7 @@ public final class MATSimModel implements ABMServerInterface {
 	/**
 	 * A view onto MATSim agents by the BDI system.
 	 */
-	private AgentManager agentManager ;
+	private final AgentManager agentManager ;
 
 	/**
 	 * BDI agents and MATSim agents need not be the same; at the moment, BDI agents seem to be a subset of the MATSim agents.
@@ -98,19 +98,19 @@ public final class MATSimModel implements ABMServerInterface {
 	/**
 	 * This is in fact a MATSim class that provides a view onto the QSim.
 	 */
-	private MobsimDataProvider mobsimDataProvider = new MobsimDataProvider() ;
+	private final MobsimDataProvider mobsimDataProvider = new MobsimDataProvider() ;
 
 	private final BDIServerInterface bdiServer;
 
 	/**
 	 * some callback interface for during agent creation
 	 */
-	private MATSimApplicationInterface application;
+	private MATSimApplicationInterface plugin = new StubPlugin();
 
 	/**
 	 * essentially something that passes matsim events through
 	 */
-	private AgentActivityEventHandler eventsHandler;
+	private EventsMonitorRegistry eventsHandler;
 
 	private QSim qSim;
 
@@ -143,12 +143,11 @@ public final class MATSimModel implements ABMServerInterface {
 	public MATSimModel( BDIServerInterface bidServer) {
 		this.bdiServer = bidServer ;
 		this.agentManager = new AgentManager( this ) ;
-		this.registerPlugin(new StubPlugin());
 	}
 
 	public final void registerPlugin(MATSimApplicationInterface app) {
 		// this could be extended to accepting more than one plugin if need be. kai, nov'17
-		this.application = app;
+		this.plugin = app;
 	}
 
 //	public List<EventHandler> getEventHandlers() {
@@ -201,7 +200,7 @@ public final class MATSimModel implements ABMServerInterface {
 
 		final Controler controller = new Controler( scenario );
 
-		eventsHandler = new AgentActivityEventHandler();
+		eventsHandler = new EventsMonitorRegistry();
 		controller.getEvents().addHandler(eventsHandler);
 
 		// Register any supplied event handlers
@@ -220,7 +219,7 @@ public final class MATSimModel implements ABMServerInterface {
 			//Utils.initialiseVisualisedAgents(MATSimModel.this) ;
 
 			// Allow the application to adjust the BDI agents list prior to creating agents
-			application.notifyBeforeCreatingBDICounterparts(bdiAgentIDs);
+			plugin.notifyBeforeCreatingBDICounterparts(bdiAgentIDs);
 
 			for(Id<Person> agentId: bdiAgentIDs) {
 				/*Important - add agent to agentManager */
@@ -228,12 +227,12 @@ public final class MATSimModel implements ABMServerInterface {
 			}
 
 			// Allow the application to configure the freshly baked agents
-			application.notifyAfterCreatingBDICounterparts(MATSimModel.this.getBDIAgentIDs());
+			plugin.notifyAfterCreatingBDICounterparts(MATSimModel.this.getBDIAgentIDs());
 
 			// Register new BDI actions and percepts from the application
 			// Must be done after the agents have been created since new 
 			// actions/percepts are registered with each BDI agent
-			agentManager.registerApplicationActionsPercepts(application);
+			agentManager.registerApplicationActionsPercepts(plugin);
 		}
 
 		controller.addOverridingModule(new AbstractModule(){
@@ -361,7 +360,7 @@ public final class MATSimModel implements ABMServerInterface {
 		return this.qSim.getSimTimer().getTimeOfDay() ;
 	}
 
-	AgentActivityEventHandler getEventHandler() {
+	EventsMonitorRegistry getEventMonitors() {
 		return eventsHandler;
 	}
 

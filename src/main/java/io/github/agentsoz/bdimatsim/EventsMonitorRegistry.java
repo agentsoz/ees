@@ -49,7 +49,7 @@ import io.github.agentsoz.bdimatsim.app.BDIPerceptHandler;
  * @author Edmund Kemsley 
  */
 
-public final class AgentActivityEventHandler implements 
+public final class EventsMonitorRegistry implements 
 LinkEnterEventHandler,
 LinkLeaveEventHandler,
 PersonArrivalEventHandler, 

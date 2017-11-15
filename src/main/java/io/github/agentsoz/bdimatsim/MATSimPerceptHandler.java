@@ -27,7 +27,7 @@ import javax.inject.Inject;
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.network.Link;
 import org.matsim.api.core.v01.population.Person;
-import io.github.agentsoz.bdimatsim.AgentActivityEventHandler.MonitoredEventType;
+import io.github.agentsoz.bdimatsim.EventsMonitorRegistry.MonitoredEventType;
 import io.github.agentsoz.bdimatsim.app.BDIPerceptHandler;
 
 /**
@@ -36,7 +36,7 @@ import io.github.agentsoz.bdimatsim.app.BDIPerceptHandler;
 
 public final class MATSimPerceptHandler {
 
-	private final AgentActivityEventHandler eventHandler;
+	private final EventsMonitorRegistry eventHandler;
 
 	/**
 	 * Constructor
@@ -45,7 +45,7 @@ public final class MATSimPerceptHandler {
 	 */
 	@Inject 
 	protected MATSimPerceptHandler(final MATSimModel matSimModel) {
-		this.eventHandler = matSimModel.getEventHandler();
+		this.eventHandler = matSimModel.getEventMonitors();
 	}
 
 	/**

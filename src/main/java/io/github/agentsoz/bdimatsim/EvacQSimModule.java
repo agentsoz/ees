@@ -92,7 +92,7 @@ public class EvacQSimModule extends AbstractModule {
 					@Override protected void configure() {
 						bind(Replanner.class).in( Singleton.class ); 
 						bind(MATSimPerceptHandler.class).in(Singleton.class);
-						bind(AgentActivityEventHandler.class).in(Singleton.class);
+						bind(EventsMonitorRegistry.class).in(Singleton.class);
 					}
 				});
 				return result;
