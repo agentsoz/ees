@@ -7,9 +7,9 @@
 
 <!-- ====================================================================== -->
 
-	<person id="1">
+	<person id="0">
 		<plan selected="yes">
-			<activity type="home" x="251571.1921738536" y="5891005.042528489" end_time="06:00:00" >
+			<activity type="home" x="251571.1921738536" y="5891005.042528489" end_time="00:00:10" >
 			</activity>
 			<leg mode="car">
 			</leg>

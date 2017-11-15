@@ -116,8 +116,8 @@ Specify the timing of the evacuation
 
 ============================================================================-->
 <evacuationTiming>
-  <start>06:00</start>
-  <peak>30</peak>
+  <start>00:01</start>
+  <peak>05</peak>
 </evacuationTiming>
 
 <!--===========================================================================
