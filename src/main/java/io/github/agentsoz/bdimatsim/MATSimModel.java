@@ -20,6 +20,7 @@ import org.matsim.core.controler.Controler;
 import org.matsim.core.controler.OutputDirectoryHierarchy.OverwriteFileSetting;
 import org.matsim.core.events.handler.EventHandler;
 import org.matsim.core.mobsim.framework.MobsimAgent;
+import org.matsim.core.mobsim.framework.PlayPauseSimulationControl;
 import org.matsim.core.mobsim.framework.events.MobsimBeforeSimStepEvent;
 import org.matsim.core.mobsim.framework.events.MobsimInitializedEvent;
 import org.matsim.core.mobsim.framework.listeners.MobsimBeforeSimStepListener;
@@ -233,6 +234,30 @@ public final class MATSimModel implements ABMServerInterface {
 		  }
 		}
 
+		{
+			// FIXME: dsingh, 25aug16: BDI init and start should be done outside of MATSim model 
+			this.bdiServer.init(this.agentManager.getAgentDataContainer(),
+					this.agentManager.getAgentStateList(), this,
+					Utils.getPersonIDsAsArray(this.bdiAgentIDs));
+
+			//Utils.initialiseVisualisedAgents(MATSimModel.this) ;
+
+			// Allow the application to adjust the BDI agents list prior to creating agents
+			application.notifyBeforeCreatingBDICounterparts(bdiAgentIDs);
+
+			for(Id<Person> agentId: bdiAgentIDs) {
+				/*Important - add agent to agentManager */
+				agentManager.createAndAddBDIAgent(agentId);
+			}
+
+			// Allow the application to configure the freshly baked agents
+			application.notifyAfterCreatingBDICounterparts(MATSimModel.this.getBDIAgentIDs());
+
+			// Register new BDI actions and percepts from the application
+			// Must be done after the agents have been created since new 
+			// actions/percepts are registered with each BDI agent
+			agentManager.registerApplicationActionsPercepts(application);
+		}
 		
 		controller.addOverridingModule(new AbstractModule(){
 			@Override public void install() {
@@ -250,26 +275,8 @@ public final class MATSimModel implements ABMServerInterface {
 
 						qSim = (QSim) e.getQueueSimulation() ;
 						
-//						new PlayPauseSimulationControl( qSim ) ;
+						new PlayPauseSimulationControl( qSim ) ;
 
-						//Utils.initialiseVisualisedAgents(MATSimModel.this) ;
-
-						// Allow the application to adjust the BDI agents list prior to creating agents
-						application.notifyBeforeCreatingBDICounterparts(bdiAgentIDs);
-
-						for(Id<Person> agentId: bdiAgentIDs) {
-							/*Important - add agent to agentManager */
-							agentManager.createAndAddBDIAgent(agentId);
-						}
-
-						// Allow the application to configure the freshly baked agents
-						application.notifyAfterCreatingBDICounterparts(MATSimModel.this.getBDIAgentIDs());
-
-						// Register new BDI actions and percepts from the application
-						// Must be done after the agents have been created since new 
-						// actions/percepts are registered with each BDI agent
-						agentManager.registerApplicationActionsPercepts(application);
-						
 						// add stub agent to keep simulation alive.  yyyy find nicer way to do this.
 						Id<Link> dummyLinkId = qSim.getNetsimNetwork().getNetsimLinks().keySet().iterator().next() ;
 						MobsimVehicle dummyVeh = null ;
@@ -310,12 +317,6 @@ public final class MATSimModel implements ABMServerInterface {
 				this.addMobsimListenerBinding().toInstance( mobsimDataProvider );
 			}
 		}) ;
-
-		// FIXME: dsingh, 25aug16: BDI init and start should be done outside of MATSim model 
-		this.bdiServer.init(this.agentManager.getAgentDataContainer(),
-				this.agentManager.getAgentStateList(), this,
-				Utils.getPersonIDsAsArray(this.bdiAgentIDs));
-		// (yy "this" is too powerful an object here, but it saves many lines of code. kai, mar'15)
 
 		this.bdiServer.start();
 
