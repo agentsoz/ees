@@ -129,15 +129,14 @@ public final class Utils {
 	}
 
 	 final static String[] getPersonIDsAsArray( List<Id<Person>> personIds ){
-//		List<Id<Person>> list = personIds ;
-//		String[] agentIDArray = new String[list.size()];
-//		int j = 0;
-//		for(Id<Person> id: list){
-//			agentIDArray[j] = id.toString();
-//			j ++;
-//		}
-//		return agentIDArray;
-		return personIds.toArray( new String[personIds.size()] ) ;
+		String[] agentIDArray = new String[personIds.size()];
+		int j = 0;
+		for(Id<Person> id: personIds){
+			agentIDArray[j] = id.toString();
+			j ++;
+		}
+		return agentIDArray;
+//		return personIds.toArray( new String[personIds.size()] ) ; // wrong type!
 	}
 	 
 	 public static List<Link> findIntersectingLinks(Link link, Network network) {
