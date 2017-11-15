@@ -1,5 +1,7 @@
 package io.github.agentsoz.bdimatsim;
 
+import javax.inject.Inject;
+
 /*
  * #%L
  * BDI-ABM Integration Package
@@ -41,6 +43,7 @@ public final class MATSimPerceptHandler {
 	 * 
 	 * @param matSimModel
 	 */
+	@Inject 
 	protected MATSimPerceptHandler(final MATSimModel matSimModel) {
 		this.eventHandler = matSimModel.getEventHandler();
 	}

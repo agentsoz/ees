@@ -108,20 +108,15 @@ public final class MATSimModel implements ABMServerInterface {
 	 */
 	private AgentActivityEventHandler eventsHandler;
 
-	private List<EventHandler> eventHandlers; 
-	
-    private Replanner replanner;
-
 	private QSim qSim;
+
+	private List<EventHandler> eventHandlers;
 
 	public static final String MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR = "--matsim-output-directory";
 
 	public final Replanner getReplanner() {
-		if ( replanner==null ) {
-			replanner = new Replanner( qSim ) ;
-		}
-		// (self-programmed singleton pattern)
-		return this.replanner ;
+		return qSim.getChildInjector().getInstance( Replanner.class ) ;
+		// this _should_ now be a singleton by injection. kai, nov'17
 	}
 
 	final MATSimAgentManager getAgentManager() {
@@ -240,7 +235,9 @@ public final class MATSimModel implements ABMServerInterface {
 		controller.addOverridingModule(new AbstractModule(){
 			@Override public void install() {
 				
-//				install( new EvacQSimModule() ) ;
+				bind(MATSimModel.class).toInstance( MATSimModel.this );
+				
+				install( new EvacQSimModule() ) ;
 				// something in the above does not work; index shifts; agents confusing legs and activities; ... ???
 				
 				this.addMobsimListenerBinding().toInstance( new MobsimInitializedListener() {

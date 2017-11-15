@@ -1,5 +1,7 @@
 package io.github.agentsoz.bdimatsim;
 
+import javax.inject.Inject;
+
 /*
  * #%L
  * BDI-ABM Integration Package
@@ -62,7 +64,7 @@ public final class Replanner {
 
 	private Scenario scenario;
 
-	public Replanner(QSim qSim2) {
+	@Inject Replanner(QSim qSim2) {
 		setQSim( qSim2 ) ;
 	}
 
