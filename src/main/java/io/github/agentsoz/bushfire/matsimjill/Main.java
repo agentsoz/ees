@@ -80,7 +80,10 @@ public class Main {
 		try { 
 			SimpleConfig.readConfig();
 		} catch(Exception e){
-			abort(e.getMessage());
+//			abort(e.getMessage());
+			abort(e) ;
+			// (if you just pass the message, the exception type is not passed on, so e.g. for a null pointer error one does not
+			// see anything.  kai, nov'17)
 		}
 
 		// Create and initialise the data server used for passing
@@ -202,7 +205,7 @@ public class Main {
 				}
 				break;
 			case "--help":
-				abort(null);
+				abort("");
 				break;
 			case "--jillconfig":
 				if (i + 1 < args.length) {
@@ -280,7 +283,12 @@ public class Main {
 			System.err.println("\nERROR: " + err + "\n");
 		}
 		System.out.println(usage());
-		System.exit(0);
+//		System.exit(0);
+		throw new RuntimeException("abort") ; // throw exception, otherwise test gets stuck.  Sorry ...
+	}
+
+	static void abort(Exception err) {
+		throw new RuntimeException(err) ; // throw exception, otherwise test gets stuck.  Sorry ...
 	}
 
 	public static void main(String[] args) {
@@ -289,7 +297,8 @@ public class Main {
 			sim.start(args);
 		} catch(Exception e) {
 			System.err.println("\nERROR: somethig went wrong, see details below:\n");
-			e.printStackTrace();
+//			e.printStackTrace();
+			throw new RuntimeException(e) ; // throw exception, otherwise test counts as passed.  Sorry ...
 		}
 	}
 

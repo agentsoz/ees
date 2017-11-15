@@ -92,6 +92,8 @@
 		<param name="activityType_2"            value="edu" />
 		<param name="activityPriority_2"        value="1" />
 		<param name="activityTypicalDuration_2" value="08:00:00" />
+
+		<param name="writeExperiencedPlans" value="true" />
 	</module>
 	
 	<module name="strategy">
