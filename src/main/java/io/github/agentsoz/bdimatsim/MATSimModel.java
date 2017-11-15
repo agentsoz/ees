@@ -163,12 +163,13 @@ public final class MATSimModel implements ABMServerInterface {
 		this.application = app;
 	}
 
-	public List<EventHandler> getEventHandlers() {
-	  return eventHandlers;
-	}
+//	public List<EventHandler> getEventHandlers() {
+//		return eventHandlers;
+//	}
+	// do you really need this access?  kai, nov'17
 
 	public void setEventHandlers(List<EventHandler> eventHandlers) {
-	  this.eventHandlers = eventHandlers;
+		this.eventHandlers = eventHandlers;
 	}
 
 
@@ -194,18 +195,18 @@ public final class MATSimModel implements ABMServerInterface {
 		config.network().setTimeVariantNetwork(true);
 
 		config.plans().setActivityDurationInterpretation(ActivityDurationInterpretation.tryEndTimeThenDuration);
-		
+
 
 		// Normally, the qsim starts at the earliest activity end time.  The following tells the mobsim to start
 		// at 2 seconds before 6:00, no matter what is in the initial plans file:
 		config.qsim().setStartTime( 1.00 );
 		config.qsim().setSimStarttimeInterpretation( StarttimeInterpretation.onlyUseStarttime );
-//		config.qsim().setEndTime( 8.*3600 + 1800. );
+		//		config.qsim().setEndTime( 8.*3600 + 1800. );
 
 		config.controler().setWritePlansInterval(1);
 		config.controler().setOverwriteFileSetting( OverwriteFileSetting.deleteDirectoryIfExists );
-		
-//		ConfigUtils.setVspDefaults(config);
+
+		//		ConfigUtils.setVspDefaults(config);
 
 		// ---
 
@@ -221,17 +222,17 @@ public final class MATSimModel implements ABMServerInterface {
 		bdiAgentIDs = Utils.getBDIAgentIDs( scenario );
 
 		// ---
-		
+
 		final Controler controller = new Controler( scenario );
 
 		eventsHandler = new AgentActivityEventHandler();
 		controller.getEvents().addHandler(eventsHandler);
-		
+
 		// Register any supplied event handlers
 		if (eventHandlers != null) {
-		  for (EventHandler handler : eventHandlers) {
-	          controller.getEvents().addHandler(handler);
-		  }
+			for (EventHandler handler : eventHandlers) {
+				controller.getEvents().addHandler(handler);
+			}
 		}
 
 		{
@@ -258,23 +259,23 @@ public final class MATSimModel implements ABMServerInterface {
 			// actions/percepts are registered with each BDI agent
 			agentManager.registerApplicationActionsPercepts(application);
 		}
-		
+
 		controller.addOverridingModule(new AbstractModule(){
 			@Override public void install() {
-				
+
 				bind(MATSimModel.class).toInstance( MATSimModel.this );
 
-				
+
 				install( new EvacQSimModule() ) ;
 				// something in the above does not work; index shifts; agents confusing legs and activities; ... ???
-				
+
 				this.addMobsimListenerBinding().toInstance( new MobsimInitializedListener() {
 					@Override public void notifyMobsimInitialized(MobsimInitializedEvent e) {
 						// for the time being doing this here since from a matsim perspective we would like to
 						// re-create them in every iteration. kai, oct;17
 
 						qSim = (QSim) e.getQueueSimulation() ;
-						
+
 						new PlayPauseSimulationControl( qSim ) ;
 
 						// add stub agent to keep simulation alive.  yyyy find nicer way to do this.
@@ -323,9 +324,9 @@ public final class MATSimModel implements ABMServerInterface {
 		org.apache.log4j.Logger.getRootLogger().setLevel(Level.INFO);
 
 		controller.run();
-		
-//		Thread matsimThread = new Thread( controller ) ;
-		
+
+		//		Thread matsimThread = new Thread( controller ) ;
+
 		this.bdiServer.finish();
 	}
 
@@ -343,7 +344,7 @@ public final class MATSimModel implements ABMServerInterface {
 		}
 	}
 
-	final void setFreeSpeedExample(){
+	private final void setFreeSpeedExample(){
 		// example how to set the freespeed of some link to zero:
 		final double now = this.qSim.getSimTimer().getTimeOfDay();
 		if ( now == 6.*3600. + 10.*60. ) {
@@ -389,10 +390,10 @@ public final class MATSimModel implements ABMServerInterface {
 		return eventsHandler;
 	}
 
-    @Override
-    public Object queryPercept(String agentID, String perceptID) {
-        // TODO Auto-generated method stub
-        return null;
-    }
+	@Override
+	public Object queryPercept(String agentID, String perceptID) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

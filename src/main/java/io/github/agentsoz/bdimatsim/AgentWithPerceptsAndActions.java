@@ -23,6 +23,7 @@ package io.github.agentsoz.bdimatsim;
  */
 
 import io.github.agentsoz.bdiabm.data.ActionContainer;
+import io.github.agentsoz.bdiabm.data.ActionPerceptContainer;
 import io.github.agentsoz.bdiabm.data.PerceptContainer;
 
 import java.util.ArrayList;
@@ -49,8 +50,10 @@ public final class AgentWithPerceptsAndActions {
 //
 //	private final List<Id<Link>> driveToActions = new ArrayList<>() ;
 
-	private ActionContainer actionContainer;
-	private PerceptContainer perceptContainer;
+	/**
+	 * the agent keeps a handle to its own material in {@link AgentDataContainer}, which is globally passed around
+	 */
+	private ActionPerceptContainer actPerceptContainer;
 
 	public final Id<Person> getAgentID() {
 		return agentID;
@@ -65,21 +68,20 @@ public final class AgentWithPerceptsAndActions {
 	}
 
 	public final ActionContainer getActionContainer() {
-		return this.actionContainer;
+		return this.actPerceptContainer.getActionContainer() ;
 	}
 
 	public final PerceptContainer getPerceptContainer() {
-		return this.perceptContainer;
+		return this.actPerceptContainer.getPerceptContainer();
 	}
 
 	AgentWithPerceptsAndActions(MATSimActionHandler actionHandler,
 			MATSimPerceptHandler perceptHandler, Id<Person> agentID,
-			ActionContainer actionContainer, PerceptContainer perceptContainer) {
+			ActionPerceptContainer actPerceptContainer) {
 		this.perceptHandler = perceptHandler;
 		this.actionHandler = actionHandler;
 		this.agentID = agentID;
-		this.actionContainer = actionContainer;
-		this.perceptContainer = perceptContainer;
+		this.actPerceptContainer = actPerceptContainer ;
 	}
 
 //	public final void newDriveTo(Id<Link> newAction) {

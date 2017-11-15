@@ -47,14 +47,14 @@ import io.github.agentsoz.bdimatsim.app.MATSimApplicationInterface;
  */
 final class MATSimAgentManager {
 	private AgentStateList agentStateList;
-	private LinkedHashMap<Id<Person>, AgentWithPerceptsAndActions> matSimAgents;
+	private LinkedHashMap<Id<Person>, AgentWithPerceptsAndActions> agentsWithPerceptsAndActions;
 	private MATSimModel matSimModel;
 	private AgentDataContainer agentDataContainer;
 
 	@Inject MATSimAgentManager(MATSimModel model) {
 		this.matSimModel = model;
 
-		matSimAgents = new LinkedHashMap<>();
+		agentsWithPerceptsAndActions = new LinkedHashMap<>();
 		agentStateList = new AgentStateList();
 		this.agentDataContainer = new AgentDataContainer();
 	}
@@ -68,11 +68,11 @@ final class MATSimAgentManager {
 	}
 
 	final AgentWithPerceptsAndActions getAgent(Id<Person> agentID) {
-		return matSimAgents.get(agentID);
+		return agentsWithPerceptsAndActions.get(agentID);
 	}
 
 	final AgentWithPerceptsAndActions getAgent(String agentID) {
-		return matSimAgents.get(Id.createPersonId(agentID));
+		return agentsWithPerceptsAndActions.get(Id.createPersonId(agentID));
 	}
 
 	/*
@@ -82,14 +82,12 @@ final class MATSimAgentManager {
 	 * functionality
 	 */
 	final boolean createAndAddBDIAgent(Id<Person> agentID) {
-		ActionPerceptContainer agentContainer = agentDataContainer.getOrCreate(agentID.toString());
 		AgentWithPerceptsAndActions agent = new AgentWithPerceptsAndActions(
 				new MATSimActionHandler(matSimModel), 
 				new MATSimPerceptHandler(matSimModel), 
 				agentID,
-				agentContainer.getActionContainer(),
-				agentContainer.getPerceptContainer());
-		matSimAgents.put(agentID, agent);
+				agentDataContainer.getOrCreate(agentID.toString()) );
+		agentsWithPerceptsAndActions.put(agentID, agent);
 		agentStateList.add(new AgentState(agentID.toString()));
 		return true;
 	}
@@ -107,7 +105,7 @@ final class MATSimAgentManager {
 	}
 
 	final boolean removeAgent(Id<Person> agentID) {
-		matSimAgents.remove(agentID);
+		agentsWithPerceptsAndActions.remove(agentID);
 		agentStateList.remove(agentStateList.remove(new AgentState(agentID
 				.toString())));// maybe will work
 		// don't you need to also remove this from agentDataContainer??
@@ -148,7 +146,7 @@ final class MATSimAgentManager {
 	 */
 	private final boolean initiateNewAction(String agentID, String actionID) {
 		// if (matSimAgents.containsKey(new IdImpl(agentID))){
-		if (matSimAgents.containsKey(Id.createPersonId(agentID))) {
+		if (agentsWithPerceptsAndActions.containsKey(Id.createPersonId(agentID))) {
 			AgentWithPerceptsAndActions agent = getAgent(agentID);
 			Object[] parameters = agent.getActionContainer().get(actionID)
 					.getParameters();
@@ -171,7 +169,7 @@ final class MATSimAgentManager {
 	 */
 	private final void dropAction(String agentID, String actionID) {
 		// if (matSimAgents.containsKey(new IdImpl(agentID))){
-		if (matSimAgents.containsKey(Id.createPersonId(agentID))) {
+		if (agentsWithPerceptsAndActions.containsKey(Id.createPersonId(agentID))) {
 
 		}
 	}
