@@ -45,13 +45,13 @@ import io.github.agentsoz.bdimatsim.app.MATSimApplicationInterface;
  *         
  * @author Edmund Kemsley 
  */
-final class MATSimAgentManager {
+public final class AgentManager {
 	private AgentStateList agentStateList;
 	private LinkedHashMap<Id<Person>, AgentWithPerceptsAndActions> agentsWithPerceptsAndActions;
 	private MATSimModel matSimModel;
 	private AgentDataContainer agentDataContainer;
 
-	@Inject MATSimAgentManager(MATSimModel model) {
+	@Inject AgentManager(MATSimModel model) {
 		this.matSimModel = model;
 
 		agentsWithPerceptsAndActions = new LinkedHashMap<>();
@@ -67,11 +67,11 @@ final class MATSimAgentManager {
 		return agentStateList;
 	}
 
-	final AgentWithPerceptsAndActions getAgent(Id<Person> agentID) {
+	public final AgentWithPerceptsAndActions getAgent(Id<Person> agentID) {
 		return agentsWithPerceptsAndActions.get(agentID);
 	}
 
-	final AgentWithPerceptsAndActions getAgent(String agentID) {
+	public final AgentWithPerceptsAndActions getAgent(String agentID) {
 		return agentsWithPerceptsAndActions.get(Id.createPersonId(agentID));
 	}
 
@@ -98,7 +98,7 @@ final class MATSimAgentManager {
 	 */
 	final void registerApplicationActionsPercepts(MATSimApplicationInterface app) {
 		for(Id<Person> agentId: matSimModel.getBDIAgentIDs()) {
-			AgentWithPerceptsAndActions agent = matSimModel.getBDIAgent(agentId);
+			AgentWithPerceptsAndActions agent = matSimModel.getAgentManager().getAgent( agentId );
 			app.registerNewBDIActions(agent.getActionHandler());
 			app.registerNewBDIPercepts(agent.getPerceptHandler());
 		}

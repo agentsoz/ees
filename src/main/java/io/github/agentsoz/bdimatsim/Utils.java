@@ -75,7 +75,7 @@ public final class Utils {
 
 	static void initialiseVisualisedAgents(MATSimModel matSimModel){
 		Map<Id<Link>,? extends Link> links = matSimModel.getScenario().getNetwork().getLinks();
-		for(MobsimAgent agent: matSimModel.getMobsimAgentMap().values()){
+		for(MobsimAgent agent: matSimModel.getMobsimDataProvider().getAgents().values()){
 			SimpleMessage m = new SimpleMessage();
 			m.name = "initAgent";
 			//m.params = new Object[]{agent.getId().toString(),links.get(agent.getCurrentLinkId()).getFromNode().getId().toString(),(((MATSimReplannableAgent)agent).taxi == true?"T":"N")};

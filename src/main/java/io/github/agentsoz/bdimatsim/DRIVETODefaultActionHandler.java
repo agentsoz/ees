@@ -65,7 +65,7 @@ final class DRIVETODefaultActionHandler implements BDIActionHandler {
 		DRIVETODefaultActionHandler.attachNewActivityAtEndOfPlan(newLinkId, Id.createPersonId(agentID), model);
 
 		// Now register a event handler for when the agent arrives at the destination
-		AgentWithPerceptsAndActions agent = model.getBDIAgent(agentID);
+		AgentWithPerceptsAndActions agent = model.getAgentManager().getAgent( agentID );
 		agent.getPerceptHandler().registerBDIPerceptHandler(
 				agent.getAgentID(), 
 				MonitoredEventType.ArrivedAtDestination, 
@@ -73,7 +73,7 @@ final class DRIVETODefaultActionHandler implements BDIActionHandler {
 				new BDIPerceptHandler() {
 					@Override
 					public boolean handle(Id<Person> agentId, Id<Link> linkId, MonitoredEventType monitoredEvent) {
-						AgentWithPerceptsAndActions agent = model.getBDIAgent(agentId);
+						AgentWithPerceptsAndActions agent = model.getAgentManager().getAgent( agentId );
 						Object[] params = { linkId.toString() };
 						agent.getActionContainer().register(MATSimActionList.DRIVETO, params);
 						agent.getActionContainer().get(MATSimActionList.DRIVETO).setState(ActionContent.State.PASSED);
@@ -93,7 +93,7 @@ final class DRIVETODefaultActionHandler implements BDIActionHandler {
 	
 			double now = model.getTime() ; 
 	
-			MobsimAgent agent = model.getMobsimAgentMap().get(agentId);
+			MobsimAgent agent = model.getMobsimDataProvider().getAgents().get(agentId);
 	
 			Plan plan = WithinDayAgentUtils.getModifiablePlan(agent) ;
 	

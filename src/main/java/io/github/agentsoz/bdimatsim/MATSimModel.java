@@ -71,6 +71,7 @@ import io.github.agentsoz.dataInterface.DataServer;
  */
 public final class MATSimModel implements ABMServerInterface {
 	private static final Logger logger = LoggerFactory.getLogger("");
+	public static final String MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR = "--matsim-output-directory";
 
 	private Scenario scenario ;
 
@@ -87,7 +88,7 @@ public final class MATSimModel implements ABMServerInterface {
 	/**
 	 * A view onto MATSim agents by the BDI system.
 	 */
-	private MATSimAgentManager agentManager ;
+	private AgentManager agentManager ;
 
 	/**
 	 * BDI agents and MATSim agents need not be the same; at the moment, BDI agents seem to be a subset of the MATSim agents.
@@ -115,16 +116,11 @@ public final class MATSimModel implements ABMServerInterface {
 
 	private List<EventHandler> eventHandlers;
 
-	public static final String MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR = "--matsim-output-directory";
-
 	public final Replanner getReplanner() {
 		return qSim.getChildInjector().getInstance( Replanner.class ) ;
 		// this _should_ now be a singleton by injection. kai, nov'17
 	}
 
-	final MATSimAgentManager getAgentManager() {
-		return agentManager;
-	}
 	@Override
 	public final void takeControl(AgentDataContainer agentDataContainer){
 		logger.trace("Received {}", agentManager.getAgentDataContainer());
@@ -140,21 +136,13 @@ public final class MATSimModel implements ABMServerInterface {
 		return bdiAgentIDs;
 	}
 
-	final Map<Id<Person>,MobsimAgent> getAgentMap(){
-		return this.mobsimDataProvider.getAgents() ;
-	}
-
 	public final Scenario getScenario() {
 		return this.scenario ;
 	}
 
-	final MobsimDataProvider getMobsimDataProvider() {
-		return this.mobsimDataProvider ;
-	}
-
 	public MATSimModel( BDIServerInterface bidServer) {
 		this.bdiServer = bidServer ;
-		this.agentManager = new MATSimAgentManager( this ) ;
+		this.agentManager = new AgentManager( this ) ;
 		this.registerPlugin(new StubPlugin());
 	}
 
@@ -315,7 +303,7 @@ public final class MATSimModel implements ABMServerInterface {
 					}
 				} ) ; // end anonymous class MobsimListener
 
-				this.addMobsimListenerBinding().toInstance( mobsimDataProvider );
+				this.addMobsimListenerBinding().toInstance( getMobsimDataProvider() );
 			}
 		}) ;
 
@@ -353,7 +341,7 @@ public final class MATSimModel implements ABMServerInterface {
 			event.addLink( scenario.getNetwork().getLinks().get( Id.createLinkId( 6876 )));
 			NetworkUtils.addNetworkChangeEvent( scenario.getNetwork(),event);
 
-			for ( MobsimAgent agent : this.getAgentMap().values() ) {
+			for ( MobsimAgent agent : this.getMobsimDataProvider().getAgents().values() ) {
 				if ( !(agent instanceof StubAgent) ) {
 					this.getReplanner().reRouteCurrentLeg(agent, now);
 				}
@@ -363,23 +351,6 @@ public final class MATSimModel implements ABMServerInterface {
 
 	public final void registerDataServer( DataServer server ) {
 		dataServer = server;
-	}
-
-	// the following seems (or is?) a bit confused since different pieces of the program are accessing different containers.  Seems
-	// that agentManager maintains the list of BDI agents, while mobsimDataProvider maintains a list of the matsim agents.  
-	// The former is a subset of the latter. But it is not so clear if this has to matter, i.e. should there really be two lists, or
-	// just one (like a centralized ldap server)? kai, mar'15
-
-	public final AgentWithPerceptsAndActions getBDIAgent(Id<Person> personId ) {
-		return this.agentManager.getAgent( personId ) ;
-	}
-
-	public final AgentWithPerceptsAndActions getBDIAgent(String agentID) {
-		return this.agentManager.getAgent( agentID ) ;
-	}
-
-	public final Map<Id<Person>, MobsimAgent> getMobsimAgentMap() {
-		return this.mobsimDataProvider.getAgents() ;
 	}
 
 	public final double getTime() {
@@ -394,6 +365,14 @@ public final class MATSimModel implements ABMServerInterface {
 	public Object queryPercept(String agentID, String perceptID) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public AgentManager getAgentManager() {
+		return agentManager;
+	}
+
+	public MobsimDataProvider getMobsimDataProvider() {
+		return mobsimDataProvider;
 	}
 
 }
