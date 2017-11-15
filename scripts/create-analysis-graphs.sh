@@ -80,7 +80,7 @@ for file in $(find $analysis_dir/ -name "safeline*.inMinsPastEvacTime.csv" -prin
 	library(ggplot2)
 
 	tbl<-read.csv('$file', header=FALSE);
-	str(tbl)
+	tbl<-tbl[!duplicated(tbl[,1]), ] # remove duplicates when plotting else area fill gives spikes
 	png('$file.png', width=600, height=600, units="px", res=100);
 	ggplot(data=tbl, aes(x=V1, y=V2)) +
 		geom_area(fill="deepskyblue4") +
