@@ -369,11 +369,11 @@ public final class MATSimModel implements ABMServerInterface {
 	// The former is a subset of the latter. But it is not so clear if this has to matter, i.e. should there really be two lists, or
 	// just one (like a centralized ldap server)? kai, mar'15
 
-	public final MATSimAgent getBDIAgent(Id<Person> personId ) {
+	public final AgentWithPerceptsAndActions getBDIAgent(Id<Person> personId ) {
 		return this.agentManager.getAgent( personId ) ;
 	}
 
-	public final MATSimAgent getBDIAgent(String agentID) {
+	public final AgentWithPerceptsAndActions getBDIAgent(String agentID) {
 		return this.agentManager.getAgent( agentID ) ;
 	}
 

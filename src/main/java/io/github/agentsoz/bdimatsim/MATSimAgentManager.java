@@ -47,7 +47,7 @@ import io.github.agentsoz.bdimatsim.app.MATSimApplicationInterface;
  */
 final class MATSimAgentManager {
 	private AgentStateList agentStateList;
-	private LinkedHashMap<Id<Person>, MATSimAgent> matSimAgents;
+	private LinkedHashMap<Id<Person>, AgentWithPerceptsAndActions> matSimAgents;
 	private MATSimModel matSimModel;
 	private AgentDataContainer agentDataContainer;
 
@@ -67,11 +67,11 @@ final class MATSimAgentManager {
 		return agentStateList;
 	}
 
-	final MATSimAgent getAgent(Id<Person> agentID) {
+	final AgentWithPerceptsAndActions getAgent(Id<Person> agentID) {
 		return matSimAgents.get(agentID);
 	}
 
-	final MATSimAgent getAgent(String agentID) {
+	final AgentWithPerceptsAndActions getAgent(String agentID) {
 		return matSimAgents.get(Id.createPersonId(agentID));
 	}
 
@@ -83,7 +83,7 @@ final class MATSimAgentManager {
 	 */
 	final boolean createAndAddBDIAgent(Id<Person> agentID) {
 		ActionPerceptContainer agentContainer = agentDataContainer.getOrCreate(agentID.toString());
-		MATSimAgent agent = new MATSimAgent(
+		AgentWithPerceptsAndActions agent = new AgentWithPerceptsAndActions(
 				new MATSimActionHandler(matSimModel), 
 				new MATSimPerceptHandler(matSimModel), 
 				agentID,
@@ -100,7 +100,7 @@ final class MATSimAgentManager {
 	 */
 	final void registerApplicationActionsPercepts(MATSimApplicationInterface app) {
 		for(Id<Person> agentId: matSimModel.getBDIAgentIDs()) {
-			MATSimAgent agent = matSimModel.getBDIAgent(agentId);
+			AgentWithPerceptsAndActions agent = matSimModel.getBDIAgent(agentId);
 			app.registerNewBDIActions(agent.getActionHandler());
 			app.registerNewBDIPercepts(agent.getPerceptHandler());
 		}
@@ -149,7 +149,7 @@ final class MATSimAgentManager {
 	private final boolean initiateNewAction(String agentID, String actionID) {
 		// if (matSimAgents.containsKey(new IdImpl(agentID))){
 		if (matSimAgents.containsKey(Id.createPersonId(agentID))) {
-			MATSimAgent agent = getAgent(agentID);
+			AgentWithPerceptsAndActions agent = getAgent(agentID);
 			Object[] parameters = agent.getActionContainer().get(actionID)
 					.getParameters();
 			if (agent.getActionHandler().processAction(agentID, actionID,

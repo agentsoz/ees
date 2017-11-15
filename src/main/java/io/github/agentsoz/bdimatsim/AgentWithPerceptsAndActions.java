@@ -41,13 +41,13 @@ import org.matsim.api.core.v01.population.Person;
  * @author Edmund Kemsley 
  */
 
-public final class MATSimAgent {
+public final class AgentWithPerceptsAndActions {
 	private MATSimPerceptHandler perceptHandler;
 	private MATSimActionHandler actionHandler;
 	private Id<Person> agentID;
-	private String agentType;
-
-	private final List<Id<Link>> driveToActions = new ArrayList<>() ;
+//	private String agentType;
+//
+//	private final List<Id<Link>> driveToActions = new ArrayList<>() ;
 
 	private ActionContainer actionContainer;
 	private PerceptContainer perceptContainer;
@@ -72,7 +72,7 @@ public final class MATSimAgent {
 		return this.perceptContainer;
 	}
 
-	MATSimAgent(MATSimActionHandler actionHandler,
+	AgentWithPerceptsAndActions(MATSimActionHandler actionHandler,
 			MATSimPerceptHandler perceptHandler, Id<Person> agentID,
 			ActionContainer actionContainer, PerceptContainer perceptContainer) {
 		this.perceptHandler = perceptHandler;
@@ -82,40 +82,40 @@ public final class MATSimAgent {
 		this.perceptContainer = perceptContainer;
 	}
 
-	public final void newDriveTo(Id<Link> newAction) {
-		driveToActions.add(newAction);
-	}
-
-	final void removeActions(Id<Link> action) {
-		driveToActions.remove(action);
-	}
-
-	final void clearAllActions() {
-		driveToActions.clear();
-	}
-
-	/*
-	 * Checks the location and returns which driveToAction has been
-	 * PASSED/ARRIVED
-	 */
-	final Id<Link> arrivedAtDriveTo(Id<Link> location) {
-		Iterator<Id<Link>> actions = driveToActions.iterator();
-		while (actions.hasNext()) {
-			Id<Link> dest = actions.next();
-
-			if (dest.equals(location)) {
-				driveToActions.remove(dest);
-				return dest;
-			}
-		}
-		return Id.createLinkId(0);
-	}
-
-	public String getAgentType() {
-		return agentType;
-	}
-
-	public void setAgentType(String agentType) {
-		this.agentType = agentType;
-	}
+//	public final void newDriveTo(Id<Link> newAction) {
+//		driveToActions.add(newAction);
+//	}
+//
+//	final void removeActions(Id<Link> action) {
+//		driveToActions.remove(action);
+//	}
+//
+//	final void clearAllActions() {
+//		driveToActions.clear();
+//	}
+//
+//	/*
+//	 * Checks the location and returns which driveToAction has been
+//	 * PASSED/ARRIVED
+//	 */
+//	final Id<Link> arrivedAtDriveTo(Id<Link> location) {
+//		Iterator<Id<Link>> actions = driveToActions.iterator();
+//		while (actions.hasNext()) {
+//			Id<Link> dest = actions.next();
+//
+//			if (dest.equals(location)) {
+//				driveToActions.remove(dest);
+//				return dest;
+//			}
+//		}
+//		return Id.createLinkId(0);
+//	}
+//
+//	public String getAgentType() {
+//		return agentType;
+//	}
+//
+//	public void setAgentType(String agentType) {
+//		this.agentType = agentType;
+//	}
 }
