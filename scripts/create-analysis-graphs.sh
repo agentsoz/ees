@@ -72,6 +72,8 @@ done
 for file in $(find $analysis_dir/ -name "safeline*.inMinsPastEvacTime.csv" -print); do
 	timeOfLastVehicle=$(tail -1 $file | cut -f1 -d',' | tr -d '\n')
 	numVehicles=$(tail -n+2 $file | wc -l | tr -d '\n')
+	name=''
+	name=$(echo $file | grep -o "safeline.*.inMinsPastEvacTime.csv" | cut -f2 -d'.' |  tr -d '\n')
 	# Plot the histograms
 	R --vanilla <<code
 
@@ -90,13 +92,11 @@ for file in $(find $analysis_dir/ -name "safeline*.inMinsPastEvacTime.csv" -prin
 			axis.text.y = element_text(size=12),
 		) +
 		xlab("Minutes after evacuation start") +
-		ylab("Vehicles past Safe Line") +
-		ggtitle("Total $numVehicles vehicles crossed safeline in $timeOfLastVehicle mins from start")
+		ylab("Vehicles past safeline") +
+		ggtitle("$name safeline\n$numVehicles vehicles crossed in $timeOfLastVehicle mins from start")
 	graphics.off();
 code
 done
-
-exit
 
 # Plot the histograms
 R --vanilla <<code
