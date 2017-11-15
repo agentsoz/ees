@@ -31,6 +31,8 @@ import io.github.agentsoz.bdiabm.data.AgentStateList;
 import io.github.agentsoz.bdimatsim.app.MATSimApplicationInterface;
 import java.util.LinkedHashMap;
 
+import javax.inject.Inject;
+
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.population.Person;
 import org.matsim.core.mobsim.qsim.ActivityEndRescheduler;
@@ -50,7 +52,7 @@ final class MATSimAgentManager {
 	private MATSimModel matSimModel;
 	private AgentDataContainer agentDataContainer;
 
-	MATSimAgentManager(MATSimModel model) {
+	@Inject MATSimAgentManager(MATSimModel model) {
 		this.matSimModel = model;
 
 		matSimAgents = new LinkedHashMap<>();

@@ -37,6 +37,8 @@ import org.matsim.core.mobsim.qsim.ActivityEnginePlugin;
 import org.matsim.core.mobsim.qsim.PopulationPlugin;
 import org.matsim.core.mobsim.qsim.QSimProvider;
 import org.matsim.core.mobsim.qsim.TeleportationPlugin;
+import org.matsim.core.mobsim.qsim.agents.AgentFactory;
+import org.matsim.core.mobsim.qsim.agents.PopulationAgentSource;
 import org.matsim.core.mobsim.qsim.changeeventsengine.NetworkChangeEventsPlugin;
 import org.matsim.core.mobsim.qsim.messagequeueengine.MessageQueuePlugin;
 import org.matsim.core.mobsim.qsim.pt.TransitEnginePlugin;
@@ -46,7 +48,9 @@ import org.matsim.core.mobsim.qsim.qnetsimengine.QNetsimEnginePlugin;
 import org.matsim.core.mobsim.qsim.qnetsimengine.QNetworkFactory;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.Module;
 import com.google.inject.Provides;
+import com.google.inject.Singleton;
 
 /**
  * @author kainagel
@@ -71,7 +75,6 @@ public class EvacQSimModule extends AbstractModule {
 		final Collection<AbstractQSimPlugin> plugins = new ArrayList<>();
 		plugins.add(new MessageQueuePlugin(config1));
 		plugins.add(new ActivityEnginePlugin(config1));
-//		plugins.add(new EvacActivityEnginePlugin(config1));
 		plugins.add(new QNetsimEnginePlugin(config1));
 		if (config1.network().isTimeVariantNetwork()) {
 			plugins.add(new NetworkChangeEventsPlugin(config1));
@@ -82,6 +85,20 @@ public class EvacQSimModule extends AbstractModule {
 		plugins.add(new TeleportationPlugin(config1));
 //		plugins.add(new PopulationPlugin(config1));
 		plugins.add(new EvacPopulationPlugin(config1));
+		plugins.add(new AbstractQSimPlugin(config1) {
+			@Override public Collection<? extends Module> modules() {
+				Collection<Module> result = new ArrayList<>();
+				result.add(new com.google.inject.AbstractModule() {
+					@Override protected void configure() {
+						bind(Replanner.class).in( Singleton.class ); 
+						bind(MATSimAgentManager.class).in( Singleton.class );
+						bind(MATSimPerceptHandler.class).in(Singleton.class);
+						bind(AgentActivityEventHandler.class).in(Singleton.class);
+					}
+				});
+				return result;
+			}
+		}) ;
 		return plugins;
 	}
 }
