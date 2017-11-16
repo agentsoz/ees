@@ -40,6 +40,12 @@ public class MainCampbellsCreek50Test {
 
 		Main.main(args);
 
+		long actualEvents = CRCChecksum.getCRCFromFile( "output/output_events.xml.gz" ) ;
+		System.err.println("actual(events)="+actualEvents) ;
+
+		long actualPlans = CRCChecksum.getCRCFromFile( "output/output_plans.xml.gz" ) ;
+		System.err.println("actual(plans)="+actualPlans) ;
+
 		{
 			long [] expected = new long [] {
 					CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/1/output_events.xml.gz" ), 
@@ -47,14 +53,12 @@ public class MainCampbellsCreek50Test {
 					CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/2/output_events.xml.gz" ) 
 					// 1316710466 eclipse in context
 //					CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/3/output_events.xml.gz" ) 
+					, 3695594801L // travis
 					} ;
-
-			long actual = CRCChecksum.getCRCFromFile( "output/output_events.xml.gz" ) ;
-			System.err.println("actual(events)="+actual) ;
 
 			boolean found = false ;
 			for ( int ii=0 ; ii<expected.length ; ii++ ) {
-				final boolean b = actual==expected[ii];
+				final boolean b = actualEvents==expected[ii];
 				System.err.println(b);
 				if ( b ) {
 					found = true ;
@@ -74,12 +78,9 @@ public class MainCampbellsCreek50Test {
 //					CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/3/output_plans.xml.gz" ) 
 					} ;
 
-			long actual = CRCChecksum.getCRCFromFile( "output/output_plans.xml.gz" ) ;
-			System.err.println("actual(plans)="+actual) ;
-
 			boolean found = false ;
 			for ( int ii=0 ; ii<expected.length ; ii++ ) {
-				final boolean b = actual==expected[ii];
+				final boolean b = actualPlans==expected[ii];
 				System.err.println(b);
 				if ( b ) {
 					found = true ;
