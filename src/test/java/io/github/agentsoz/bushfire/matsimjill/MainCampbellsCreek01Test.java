@@ -29,6 +29,7 @@ public class MainCampbellsCreek01Test {
 				//	                "--plan-selection-policy", "FIRST", // ensures it is deterministic, as default is RANDOM
 				"--seed", "12345",
 				"--safeline-output-file-pattern", "scenarios/campbells-creek-01/safeline.%d%.out",
+				"--matsim-output-directory", utils.getOutputDirectory(),
 				"--jillconfig", "--config={"+
 						"agents:[{classname:io.github.agentsoz.bushfire.matsimjill.agents.Resident, args:null, count:1}],"+
 						"logLevel: WARN,"+
