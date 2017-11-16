@@ -127,7 +127,7 @@ public class Main {
 			config.add( MATSimModel.MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR ) ;
 			config.add( matsimOutputDirectory ) ;
 		}
-		matsimModel.run( config.toArray(new String[config.size()] ) ) ;
+		matsimModel.run( config.toArray(new String[config.size()] ), scenario ) ;
 
 		// Write safe line statistics to file
 		writeSafeLineMonitors(monitors, safelineOutputFilePattern);
