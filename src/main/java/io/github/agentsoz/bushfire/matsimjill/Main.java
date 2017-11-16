@@ -11,7 +11,9 @@ import java.util.TreeMap;
 
 import org.json.simple.parser.ParseException;
 import org.matsim.api.core.v01.Scenario;
+import org.matsim.core.config.ConfigUtils;
 import org.matsim.core.events.handler.EventHandler;
+import org.matsim.core.scenario.ScenarioUtils;
 import org.slf4j.LoggerFactory;
 
 import ch.qos.logback.classic.Level;
@@ -44,6 +46,7 @@ import ch.qos.logback.core.FileAppender;
  */
 
 import io.github.agentsoz.bdimatsim.MATSimModel;
+import io.github.agentsoz.bdimatsim.Utils;
 import io.github.agentsoz.bushfire.PhoenixFireModule;
 import io.github.agentsoz.bushfire.Time;
 import io.github.agentsoz.bushfire.datamodels.Location;
@@ -128,8 +131,14 @@ public class Main {
 			config.add( MATSimModel.MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR ) ;
 			config.add( matsimOutputDirectory ) ;
 		}
-		Scenario scenario = null ;
-		matsimModel.run( config.toArray(new String[config.size()] ), scenario, bdiAgentIds ) ;
+		
+		final String[] matsimArgs = config.toArray(new String[config.size()] );
+
+		org.matsim.core.config.Config matsimConfig = ConfigUtils.loadConfig( matsimArgs[0] ) ;
+		matsimConfig.network().setTimeVariantNetwork(true);
+		Scenario scenario = ScenarioUtils.loadScenario(matsimConfig) ;
+		List<String> bdiAgentIds = Utils.getBDIAgentIDs( scenario );
+		matsimModel.run( matsimArgs, scenario, bdiAgentIds ) ;
 
 		// Write safe line statistics to file
 		writeSafeLineMonitors(monitors, safelineOutputFilePattern);
