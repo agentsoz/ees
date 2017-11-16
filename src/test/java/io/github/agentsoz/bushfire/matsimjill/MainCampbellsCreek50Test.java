@@ -82,6 +82,7 @@ public class MainCampbellsCreek50Test {
 			System.err.println(b);
 			if ( b ) {
 				found = true ;
+				System.err.println(); ;
 				break ;
 			}
 		}

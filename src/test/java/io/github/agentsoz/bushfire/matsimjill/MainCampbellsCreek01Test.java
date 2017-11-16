@@ -40,22 +40,31 @@ public class MainCampbellsCreek01Test {
 		"}"};
 
 		Main.main(args);
-		
-        {
-          long expectedCRC = CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/output_events.xml.gz" ) ;
-          long actualCRC = CRCChecksum.getCRCFromFile( "output/output_events.xml.gz" ) ;
-          Assert.assertEquals (expectedCRC, actualCRC); 
-        }
-        {
-          long expectedCRC = CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/output_plans.xml.gz" ) ;
-          long actualCRC = CRCChecksum.getCRCFromFile( "output/output_plans.xml.gz" ) ;
-          Assert.assertEquals (expectedCRC, actualCRC); 
-        }
-        {
-          long expectedCRC = CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/jill.out" ) ;
-          long actualCRC = CRCChecksum.getCRCFromFile( "scenarios/campbells-creek-01/jill.out" ) ;
-          Assert.assertEquals (expectedCRC, actualCRC); 
-        }
+		long actualCRCevents = CRCChecksum.getCRCFromFile( utils.getOutputDirectory() + "/output_events.xml.gz" ) ;
+		System.err.println( "actual(events)=" + actualCRCevents ) ;
+		long actualCRCplans = CRCChecksum.getCRCFromFile( utils.getOutputDirectory() + "/output_plans.xml.gz" ) ;
+		System.err.println( "actual(plans)=" + actualCRCplans ) ;
+		long actualCRCjill = CRCChecksum.getCRCFromFile( "scenarios/campbells-creek-01/jill.out" ) ;
+		System.err.println( "actual(jill)=" + actualCRCjill ) ;
+
+		{
+			long [] expectedCRC = {
+					CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/output_events.xml.gz" ) 
+			};
+			MainCampbellsCreek50Test.checkSeveral(expectedCRC, actualCRCevents);
+		}
+		{
+			long [] expectedCRC = {
+					CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/output_plans.xml.gz" ) 
+			} ;
+			MainCampbellsCreek50Test.checkSeveral(expectedCRC, actualCRCplans); 
+		}
+		{
+			long [] expectedCRC = {
+					CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/jill.out" ) 
+			} ;
+			MainCampbellsCreek50Test.checkSeveral(expectedCRC, actualCRCjill); 
+		}
 	}
 
 }
