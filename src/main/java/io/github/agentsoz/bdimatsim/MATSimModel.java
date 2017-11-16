@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.apache.log4j.Level;
@@ -73,7 +74,7 @@ public final class MATSimModel implements ABMServerInterface {
 	private static final Logger logger = LoggerFactory.getLogger("");
 	public static final String MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR = "--matsim-output-directory";
 
-	private Scenario scenario ;
+	@Inject private Scenario scenario ;
 
 	/**
 	 * some blackboardy thing that sits betwen ABM and BDI
@@ -143,17 +144,12 @@ public final class MATSimModel implements ABMServerInterface {
 	}
 
 
-	public final void run(String[] args, Scenario scenario1, List<String> bdiAgentIDs, PAAgentManager agentManager1, EventsMonitorRegistry eventsMonitors) {
+	public final void run(String[] args, List<String> bdiAgentIDs, PAAgentManager agentManager1, EventsMonitorRegistry eventsMonitors) {
 		// (this needs to be public)
 
 		this.agentManager = agentManager1 ;
 		
-		Config config ;
-		if ( scenario1==null ) {
-			config = ConfigUtils.loadConfig( args[0] ) ;
-		} else {
-			config = scenario1.getConfig() ;
-		}
+		Config config = scenario.getConfig() ;
 
 		parseAdditionalArguments(args, config);
 
@@ -173,12 +169,6 @@ public final class MATSimModel implements ABMServerInterface {
 		//		ConfigUtils.setVspDefaults(config);
 
 		// ---
-
-		if ( scenario1==null ) {
-			scenario = ScenarioUtils.loadScenario(config) ;
-		} else {
-			scenario = scenario1 ;
-		}
 
 		for ( Link link : scenario.getNetwork().getLinks().values() ) {
 			final double veryLargeSpeed = 9999999999.;
