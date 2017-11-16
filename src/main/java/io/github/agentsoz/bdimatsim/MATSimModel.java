@@ -175,7 +175,6 @@ public final class MATSimModel implements ABMServerInterface {
 
 		parseAdditionalArguments(args, config);
 
-		config.network().setTimeVariantNetwork(true);
 
 		config.plans().setActivityDurationInterpretation(ActivityDurationInterpretation.tryEndTimeThenDuration);
 
