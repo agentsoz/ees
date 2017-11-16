@@ -66,10 +66,6 @@ public final class PAAgentManager {
 		return agentStateList;
 	}
 
-	public final PAAgent getAgent(Id<Person> agentID) {
-		return agentsWithPerceptsAndActions.get(agentID);
-	}
-
 	public final PAAgent getAgent(String agentID) {
 		return agentsWithPerceptsAndActions.get(Id.createPersonId(agentID));
 	}
@@ -97,7 +93,7 @@ public final class PAAgentManager {
 	 */
 	final void registerApplicationActionsPercepts(MATSimApplicationInterface app) {
 		for(Id<Person> agentId: matSimModel.getBDIAgentIDs()) {
-			PAAgent agent = this.getAgent( agentId );
+			PAAgent agent = this.getAgent( agentId.toString() );
 			app.registerNewBDIActions(agent.getActionHandler());
 			app.registerNewBDIPercepts(agent.getPerceptHandler());
 		}
