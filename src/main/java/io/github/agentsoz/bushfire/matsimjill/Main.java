@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.TreeMap;
 
 import org.json.simple.parser.ParseException;
+import org.matsim.api.core.v01.Scenario;
 import org.matsim.core.events.handler.EventHandler;
 import org.slf4j.LoggerFactory;
 
@@ -127,6 +128,7 @@ public class Main {
 			config.add( MATSimModel.MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR ) ;
 			config.add( matsimOutputDirectory ) ;
 		}
+		Scenario scenario = null ;
 		matsimModel.run( config.toArray(new String[config.size()] ), scenario ) ;
 
 		// Write safe line statistics to file
