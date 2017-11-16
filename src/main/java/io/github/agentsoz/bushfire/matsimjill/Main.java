@@ -147,27 +147,11 @@ public class Main {
 		Scenario scenario = ScenarioUtils.loadScenario(matsimConfig) ;
 		List<String> bdiAgentIDs = Utils.getBDIAgentIDs( scenario );
 
-//		EventsMonitorRegistry eventsMonitors = new EventsMonitorRegistry();
-//		PAAgentManager agentManager = new PAAgentManager( this.matsimModel, eventsMonitors ) ;
-
-		// An attempt with Guice.  It really just goes from here ...
-		Injector injector = Guice.createInjector(new AbstractModule() {
-			@Override protected void configure() {
-				bind(PAAgentManager.class).in(Singleton.class);
-				bind(EventsMonitorRegistry.class).in(Singleton.class);
-				bind(MATSimModel.class).toInstance( matsimModel );
-			}
-		});
-		PAAgentManager agentManager = injector.getInstance( PAAgentManager.class ) ;
-		EventsMonitorRegistry eventsMonitors = injector.getInstance( EventsMonitorRegistry.class ) ;
-		// ... to here, plus you can now use @Inject in the bound classes.  Note that this injector here is 
-		// independent from the MATSim injector; there, it is a bit more complicated.  kai, nov'17
-
-		this.jillmodel.init(agentManager.getAgentDataContainer(),
-				agentManager.getAgentStateList(), this.matsimModel,
+		this.jillmodel.init(matsimModel.getAgentManager().getAgentDataContainer(),
+				matsimModel.getAgentManager().getAgentStateList(), this.matsimModel,
 				bdiAgentIDs.toArray( new String[bdiAgentIDs.size()] ));
 
-		matsimModel.run(matsimArgs, bdiAgentIDs, agentManager, eventsMonitors, scenario);
+		matsimModel.run(matsimArgs, bdiAgentIDs, scenario);
 
 		// Write safe line statistics to file
 		writeSafeLineMonitors(monitors, safelineOutputFilePattern);
