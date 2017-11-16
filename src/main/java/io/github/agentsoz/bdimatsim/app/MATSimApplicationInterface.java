@@ -40,21 +40,21 @@ import io.github.agentsoz.bdimatsim.Replanner;
  */
 public interface MATSimApplicationInterface {
 
-	/**
-	 * Called by MATSim to allow the application to register any custom
-	 * BDI actions, using 
-	 * {@link MATSimActionHandler#registerBDIAction(String, BDIActionHandler)}.
-	 * @param withHandler
-	 */
-	public void registerNewBDIActions(MATSimActionHandler withHandler);
-	
-	/**
-	 * Called by MATSim to allow the application to register any custom
-	 * BDI percepts, using 
-	 * {@link MATSimPerceptHandler#registerBDIPercepts(String, BDIPerceptHandler)}.
-	 * @param withHandler
-	 */
-	public void registerNewBDIPercepts(MATSimPerceptHandler withHandler);
+//	/**
+//	 * Called by MATSim to allow the application to register any custom
+//	 * BDI actions, using 
+//	 * {@link MATSimActionHandler#registerBDIAction(String, BDIActionHandler)}.
+//	 * @param withHandler
+//	 */
+//	public void registerNewBDIActions(MATSimActionHandler withHandler);
+//	
+//	/**
+//	 * Called by MATSim to allow the application to register any custom
+//	 * BDI percepts, using 
+//	 * {@link MATSimPerceptHandler#registerBDIPercepts(String, BDIPerceptHandler)}.
+//	 * @param withHandler
+//	 */
+//	public void registerNewBDIPercepts(MATSimPerceptHandler withHandler);
 	
 	/**
 	 * Called by MATSim prior to BDI agents being created and registered;

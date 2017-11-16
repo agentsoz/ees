@@ -34,13 +34,13 @@ import io.github.agentsoz.bdimatsim.Replanner;
 
 public class StubPlugin implements MATSimApplicationInterface {
 
-	@Override
-	public void registerNewBDIActions(MATSimActionHandler withHandler) {
-	}
-
-	@Override
-	public void registerNewBDIPercepts(MATSimPerceptHandler withHandler) {
-	}
+//	@Override
+//	public void registerNewBDIActions(MATSimActionHandler withHandler) {
+//	}
+//
+//	@Override
+//	public void registerNewBDIPercepts(MATSimPerceptHandler withHandler) {
+//	}
 
 	@Override
 	public void notifyBeforeCreatingBDICounterparts(List<String> bdiAgentsIds) {
