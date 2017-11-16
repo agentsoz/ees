@@ -129,7 +129,7 @@ public class Main {
 			config.add( matsimOutputDirectory ) ;
 		}
 		Scenario scenario = null ;
-		matsimModel.run( config.toArray(new String[config.size()] ), scenario ) ;
+		matsimModel.run( config.toArray(new String[config.size()] ), scenario, bdiAgentIds ) ;
 
 		// Write safe line statistics to file
 		writeSafeLineMonitors(monitors, safelineOutputFilePattern);
