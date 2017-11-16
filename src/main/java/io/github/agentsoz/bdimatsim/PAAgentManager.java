@@ -4,6 +4,8 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 /*
  * #%L
  * BDI-ABM Integration Package
@@ -49,6 +51,7 @@ public final class PAAgentManager {
 	private final EventsMonitorRegistry eventsMonitors;
 	private final List<String> bdiAgentIds = new LinkedList<>() ;
 
+	@Inject
 	public PAAgentManager(MATSimModel model, EventsMonitorRegistry eventsMonitors) {
 		this.matSimModel = model;
 		this.eventsMonitors = eventsMonitors;
