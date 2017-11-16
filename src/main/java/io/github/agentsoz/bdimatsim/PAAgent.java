@@ -30,9 +30,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.network.Link;
-import org.matsim.api.core.v01.population.Person;
 
 /**
  * Agent Object on the ABM side Holds information: an
@@ -52,7 +50,7 @@ public final class PAAgent {
 	
 	private MATSimPerceptHandler perceptHandler;
 	private MATSimActionHandler actionHandler;
-	private Id<Person> agentID;
+	private String agentID;
 //	private String agentType;
 //
 //	private final List<Id<Link>> driveToActions = new ArrayList<>() ;
@@ -62,7 +60,7 @@ public final class PAAgent {
 	 */
 	private ActionPerceptContainer actPerceptContainer;
 
-	public final Id<Person> getAgentID() {
+	public final String getAgentID() {
 		return agentID;
 	}
 
@@ -83,7 +81,7 @@ public final class PAAgent {
 	}
 
 	PAAgent(MATSimActionHandler actionHandler,
-			MATSimPerceptHandler perceptHandler, Id<Person> agentID,
+			MATSimPerceptHandler perceptHandler, String agentID,
 			ActionPerceptContainer actPerceptContainer) {
 		this.perceptHandler = perceptHandler;
 		this.actionHandler = actionHandler;

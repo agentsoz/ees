@@ -213,7 +213,7 @@ public final class MATSimModel implements ABMServerInterface {
 
 			for(Id<Person> agentId: bdiAgentIDs) {
 				/*Important - add agent to agentManager */
-				agentManager.createAndAddBDIAgent(agentId);
+				agentManager.createAndAddBDIAgent(agentId.toString());
 			}
 
 			// Allow the application to configure the freshly baked agents

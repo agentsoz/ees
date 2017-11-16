@@ -44,7 +44,7 @@ import io.github.agentsoz.bdimatsim.app.MATSimApplicationInterface;
  */
 public final class PAAgentManager {
 	private final AgentStateList agentStateList;
-	private final LinkedHashMap<Id<Person>, PAAgent> agentsWithPerceptsAndActions;
+	private final LinkedHashMap<String, PAAgent> agentsWithPerceptsAndActions;
 	private final MATSimModel matSimModel;
 	private final AgentDataContainer agentDataContainer;
 	private final EventsMonitorRegistry eventsMonitors;
@@ -67,7 +67,7 @@ public final class PAAgentManager {
 	}
 
 	public final PAAgent getAgent(String agentID) {
-		return agentsWithPerceptsAndActions.get(Id.createPersonId(agentID));
+		return agentsWithPerceptsAndActions.get(agentID);
 	}
 
 	/*
@@ -76,7 +76,7 @@ public final class PAAgentManager {
 	 * Override this method and change the four parameters above to change
 	 * functionality
 	 */
-	final boolean createAndAddBDIAgent(Id<Person> agentID) {
+	final boolean createAndAddBDIAgent(String agentID) {
 		PAAgent agent = new PAAgent(
 				new MATSimActionHandler(matSimModel), 
 				new MATSimPerceptHandler(eventsMonitors), 
@@ -99,10 +99,9 @@ public final class PAAgentManager {
 		}
 	}
 
-	final boolean removeAgent(Id<Person> agentID) {
+	final boolean removeAgent(String agentID) {
 		agentsWithPerceptsAndActions.remove(agentID);
-		agentStateList.remove(agentStateList.remove(new AgentState(agentID
-				.toString())));// maybe will work
+		agentStateList.remove(new AgentState(agentID));// maybe will work
 		// don't you need to also remove this from agentDataContainer??
 		return true;
 	}
@@ -141,7 +140,7 @@ public final class PAAgentManager {
 	 */
 	private final boolean initiateNewAction(String agentID, String actionID) {
 		// if (matSimAgents.containsKey(new IdImpl(agentID))){
-		if (agentsWithPerceptsAndActions.containsKey(Id.createPersonId(agentID))) {
+		if (agentsWithPerceptsAndActions.containsKey(agentID) ) {
 			PAAgent agent = getAgent(agentID);
 			Object[] parameters = agent.getActionContainer().get(actionID)
 					.getParameters();
@@ -163,8 +162,7 @@ public final class PAAgentManager {
 	 * BDI side wants to drop an action
 	 */
 	private final void dropAction(String agentID, String actionID) {
-		// if (matSimAgents.containsKey(new IdImpl(agentID))){
-		if (agentsWithPerceptsAndActions.containsKey(Id.createPersonId(agentID))) {
+		if (agentsWithPerceptsAndActions.containsKey(agentID)) {
 
 		}
 	}

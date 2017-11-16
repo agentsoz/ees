@@ -175,7 +175,7 @@ ActivityEndEventHandler{
 	 * @param handler
 	 * @return
 	 */
-	int registerMonitor(Id<Person> agentId, MonitoredEventType event,Id<Link> linkId, BDIPerceptHandler handler) {
+	int registerMonitor(String agentId, MonitoredEventType event,Id<Link> linkId, BDIPerceptHandler handler) {
 		synchronized (monitors) {
 			monitors.add(new Monitor(agentId, linkId, event, handler));
 			return monitors.size();
@@ -194,9 +194,12 @@ ActivityEndEventHandler{
 		private MonitoredEventType event;
 		private BDIPerceptHandler handler;
 		
-		public Monitor(Id<Person> agentId, Id<Link> linkId, MonitoredEventType event, BDIPerceptHandler handler) {
+		public Monitor(String agentId2, Id<Link> linkId, MonitoredEventType event, BDIPerceptHandler handler) {
 			super();
-			this.agentId = agentId;
+
+			this.agentId = Id.createPersonId(agentId2);
+			// (this is now one of the places where the bdi ids (= Strings) get translated into matsim ids)
+			
 			this.linkId = linkId;
 			this.event = event;
 			this.handler = handler;

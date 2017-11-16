@@ -26,7 +26,6 @@ import javax.inject.Inject;
 
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.network.Link;
-import org.matsim.api.core.v01.population.Person;
 import org.matsim.core.gbl.Gbl;
 
 import io.github.agentsoz.bdimatsim.EventsMonitorRegistry.MonitoredEventType;
@@ -61,7 +60,7 @@ public final class MATSimPerceptHandler {
 	 * @param handler
 	 * @return
 	 */
-	public int registerBDIPerceptHandler(Id<Person> agentId, MonitoredEventType event,Id<Link> linkId, BDIPerceptHandler handler) {
+	public int registerBDIPerceptHandler(String agentId, MonitoredEventType event,Id<Link> linkId, BDIPerceptHandler handler) {
 		return eventHandler.registerMonitor(agentId, event, linkId, handler);
 	}
 
