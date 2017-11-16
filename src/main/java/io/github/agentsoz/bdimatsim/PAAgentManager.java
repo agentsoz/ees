@@ -1,6 +1,8 @@
 package io.github.agentsoz.bdimatsim;
 
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
 
 /*
  * #%L
@@ -45,8 +47,9 @@ public final class PAAgentManager {
 	private final MATSimModel matSimModel;
 	private final AgentDataContainer agentDataContainer;
 	private final EventsMonitorRegistry eventsMonitors;
+	private final List<String> bdiAgentIds = new LinkedList<>() ;
 
-	PAAgentManager(MATSimModel model, EventsMonitorRegistry eventsMonitors) {
+	public PAAgentManager(MATSimModel model, EventsMonitorRegistry eventsMonitors) {
 		this.matSimModel = model;
 		this.eventsMonitors = eventsMonitors;
 
@@ -55,11 +58,11 @@ public final class PAAgentManager {
 		this.agentDataContainer = new AgentDataContainer();
 	}
 
-	final AgentDataContainer getAgentDataContainer() {
+	public final AgentDataContainer getAgentDataContainer() {
 		return agentDataContainer;
 	}
 
-	final AgentStateList getAgentStateList() {
+	public final AgentStateList getAgentStateList() {
 		return agentStateList;
 	}
 
@@ -89,11 +92,15 @@ public final class PAAgentManager {
 	 * @param app
 	 */
 	final void registerApplicationActionsPercepts(MATSimApplicationInterface app) {
-		for(String agentId: matSimModel.getBDIAgentIDs()) {
+		for(String agentId: this.bdiAgentIds ) {
 			PAAgent agent = this.getAgent( agentId );
 			app.registerNewBDIActions(agent.getActionHandler());
 			app.registerNewBDIPercepts(agent.getPerceptHandler());
 		}
+	}
+
+	public final List<String> getBdiAgentIds() {
+		return bdiAgentIds;
 	}
 
 	final boolean removeAgent(String agentID) {

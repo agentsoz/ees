@@ -88,12 +88,7 @@ public final class MATSimModel implements ABMServerInterface {
 	/**
 	 * A view onto MATSim agents by the BDI system.
 	 */
-	private final PAAgentManager agentManager ;
-
-	/**
-	 * BDI agents and MATSim agents need not be the same; at the moment, BDI agents seem to be a subset of the MATSim agents.
-	 */
-	private List<String> bdiAgentIDs;
+	private PAAgentManager agentManager ;
 
 	/**
 	 * This is in fact a MATSim class that provides a view onto the QSim.
@@ -106,11 +101,6 @@ public final class MATSimModel implements ABMServerInterface {
 	 * some callback interface for during agent creation
 	 */
 	private MATSimApplicationInterface plugin = new StubPlugin();
-
-	/**
-	 * essentially something that passes matsim events through
-	 */
-	private EventsMonitorRegistry eventsMonitors = new EventsMonitorRegistry();
 
 	private QSim qSim;
 
@@ -135,17 +125,12 @@ public final class MATSimModel implements ABMServerInterface {
 		if(dataServer != null) agentsUpdateMessages.add(newEvent);
 	}
 
-	public final List<String> getBDIAgentIDs(){
-		return bdiAgentIDs;
-	}
-
 	public final Scenario getScenario() {
 		return this.scenario ;
 	}
 
 	public MATSimModel( BDIServerInterface bidServer) {
 		this.bdiServer = bidServer ;
-		this.agentManager = new PAAgentManager( this, eventsMonitors ) ;
 	}
 
 	public final void registerPlugin(MATSimApplicationInterface app) {
@@ -158,10 +143,10 @@ public final class MATSimModel implements ABMServerInterface {
 	}
 
 
-	public final void run(String[] args, Scenario scenario1, List<String> bdiAgentIds1) {
+	public final void run(String[] args, Scenario scenario1, List<String> bdiAgentIDs, PAAgentManager agentManager1, EventsMonitorRegistry eventsMonitors) {
 		// (this needs to be public)
 
-		this.bdiAgentIDs = bdiAgentIds1 ;
+		this.agentManager = agentManager1 ;
 		
 		Config config ;
 		if ( scenario1==null ) {
@@ -203,11 +188,6 @@ public final class MATSimModel implements ABMServerInterface {
 		}
 
 		{
-			// FIXME: dsingh, 25aug16: BDI init and start should be done outside of MATSim model 
-			this.bdiServer.init(this.agentManager.getAgentDataContainer(),
-					this.agentManager.getAgentStateList(), this,
-					Utils.getPersonIDsAsArray(this.bdiAgentIDs));
-
 			//Utils.initialiseVisualisedAgents(MATSimModel.this) ;
 
 			// Allow the application to adjust the BDI agents list prior to creating agents

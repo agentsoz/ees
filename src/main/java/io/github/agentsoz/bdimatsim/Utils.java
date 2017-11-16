@@ -128,17 +128,6 @@ public final class Utils {
 		return flatLinkIDList;
 	}
 
-	 final static String[] getPersonIDsAsArray( List<String> personIds ){
-//		String[] agentIDArray = new String[bdiAgentIDs.size()];
-//		int j = 0;
-//		for(Id<Person> id: bdiAgentIDs){
-//			agentIDArray[j] = id.toString();
-//			j ++;
-//		}
-//		return agentIDArray;
-		return personIds.toArray( new String[personIds.size()] ) ; // wrong type!
-	}
-	 
 	 public static List<Link> findIntersectingLinks(Link link, Network network) {
 		 return GeometryUtils.findIntersectingLinks(link, network) ;
 	 }
