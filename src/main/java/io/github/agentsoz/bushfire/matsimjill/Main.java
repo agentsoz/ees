@@ -156,7 +156,6 @@ public class Main {
 				bind(PAAgentManager.class).in(Singleton.class);
 				bind(EventsMonitorRegistry.class).in(Singleton.class);
 				bind(MATSimModel.class).toInstance( matsimModel );
-				bind(Scenario.class).toInstance(scenario);
 			}
 		});
 		PAAgentManager agentManager = injector.getInstance( PAAgentManager.class ) ;
@@ -168,7 +167,7 @@ public class Main {
 				agentManager.getAgentStateList(), this.matsimModel,
 				bdiAgentIDs.toArray( new String[bdiAgentIDs.size()] ));
 
-		matsimModel.run(matsimArgs, bdiAgentIDs, agentManager, eventsMonitors);
+		matsimModel.run(matsimArgs, bdiAgentIDs, agentManager, eventsMonitors, scenario);
 
 		// Write safe line statistics to file
 		writeSafeLineMonitors(monitors, safelineOutputFilePattern);
