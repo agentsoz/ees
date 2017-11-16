@@ -1,34 +1,9 @@
 package io.github.agentsoz.bdimatsim;
 
-/*
- * #%L
- * BDI-ABM Integration Package
- * %%
- * Copyright (C) 2014 - 2015 by its authors. See AUTHORS file.
- * %%
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Lesser Public License for more details.
- * 
- * You should have received a copy of the GNU General Lesser Public
- * License along with this program.  If not, see
- * <http://www.gnu.org/licenses/lgpl-3.0.html>.
- * #L%
- */
-
-import io.github.agentsoz.bdimatsim.moduleInterface.data.SimpleMessage;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.matsim.api.core.v01.Coord;
@@ -38,7 +13,6 @@ import org.matsim.api.core.v01.network.Link;
 import org.matsim.api.core.v01.network.Network;
 import org.matsim.api.core.v01.network.Node;
 import org.matsim.api.core.v01.population.Person;
-import org.matsim.core.mobsim.framework.MobsimAgent;
 import org.matsim.core.network.NetworkUtils;
 import org.matsim.core.utils.geometry.GeometryUtils;
 
@@ -71,22 +45,6 @@ public final class Utils {
 			bDIagentIDs.add(id.toString());
 		}
 		return bDIagentIDs;
-	}
-
-	static void initialiseVisualisedAgents(MATSimModel matSimModel){
-		Map<Id<Link>,? extends Link> links = matSimModel.getScenario().getNetwork().getLinks();
-		for(MobsimAgent agent: matSimModel.getMobsimDataProvider().getAgents().values()){
-			SimpleMessage m = new SimpleMessage();
-			m.name = "initAgent";
-			//m.params = new Object[]{agent.getId().toString(),links.get(agent.getCurrentLinkId()).getFromNode().getId().toString(),(((MATSimReplannableAgent)agent).taxi == true?"T":"N")};
-			m.params = new Object[]{//agent.getId().toString(),links.get(agent.getCurrentLinkId()).getFromNode().getId().toString(),"T"};
-					agent.getId().toString(),
-					links.get(agent.getCurrentLinkId()).getFromNode().getCoord().getX(),
-					links.get(agent.getCurrentLinkId()).getFromNode().getCoord().getY()
-			};
-			matSimModel.addExternalEvent("initAgent",m);
-		}
-		//interfaceV.sendInitialAgentData(new ArrayList<MobsimAgent>());
 	}
 
 	final static double[]  computeBoundingBox(Collection<? extends Link> links) {

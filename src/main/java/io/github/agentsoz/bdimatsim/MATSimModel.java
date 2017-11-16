@@ -4,16 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.apache.log4j.Level;
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.network.Link;
-import org.matsim.api.core.v01.population.Person;
 import org.matsim.core.config.Config;
-import org.matsim.core.config.ConfigUtils;
 import org.matsim.core.config.groups.PlansConfigGroup.ActivityDurationInterpretation;
 import org.matsim.core.config.groups.QSimConfigGroup.StarttimeInterpretation;
 import org.matsim.core.controler.AbstractModule;
@@ -32,7 +29,6 @@ import org.matsim.core.network.NetworkChangeEvent;
 import org.matsim.core.network.NetworkChangeEvent.ChangeType;
 import org.matsim.core.network.NetworkChangeEvent.ChangeValue;
 import org.matsim.core.network.NetworkUtils;
-import org.matsim.core.scenario.ScenarioUtils;
 import org.matsim.withinday.mobsim.MobsimDataProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -113,31 +109,8 @@ public final class MATSimModel implements ABMServerInterface {
 	private PlayPauseSimulationControl playPause;
 	private EventsMonitorRegistry eventsMonitors;
 	
-	public final Replanner getReplanner() {
-		return qSim.getChildInjector().getInstance( Replanner.class ) ;
-		// this _should_ now be a singleton by injection. kai, nov'17
-	}
-
-	@Override
-	public final void takeControl(AgentDataContainer agentDataContainer){
-		logger.trace("Received {}", agentManager.getAgentDataContainer());
-		agentManager.updateActions(agentManager.getAgentDataContainer());
-//		playPause.doStep( (int) (playPause.getLocalTime() + 1) );
-	}
-
-	final synchronized void addExternalEvent(String type,SimpleMessage newEvent){
-		//This does mean that the visualiser should be registered very early or events may be thrown away
-		if(dataServer != null) agentsUpdateMessages.add(newEvent);
-	}
-
-	public final Scenario getScenario() {
-		return this.scenario ;
-	}
-
 	public MATSimModel( BDIServerInterface bidServer) {
 		this.bdiServer = bidServer ;
-//		EventsMonitorRegistry eventsMonitors = new EventsMonitorRegistry();
-//		PAAgentManager agentManager = new PAAgentManager( this.matsimModel, eventsMonitors ) ;
 
 		// An attempt with Guice.  It really just goes from here ...
 		Injector injector = Guice.createInjector(new com.google.inject.AbstractModule() {
@@ -153,16 +126,6 @@ public final class MATSimModel implements ABMServerInterface {
 		// independent from the MATSim injector; there, it is a bit more complicated.  kai, nov'17
 		
 	}
-
-	public final void registerPlugin(MATSimApplicationInterface app) {
-		// this could be extended to accepting more than one plugin if need be. kai, nov'17
-		this.plugin = app;
-	}
-
-	public void setEventHandlers(List<EventHandler> eventHandlers) {
-		this.eventHandlers = eventHandlers;
-	}
-
 
 	public final void run(String[] args, List<String> bdiAgentIDs, Scenario scenario1) {
 		// (this needs to be public)
@@ -198,8 +161,6 @@ public final class MATSimModel implements ABMServerInterface {
 		}
 
 		{
-			//Utils.initialiseVisualisedAgents(MATSimModel.this) ;
-
 			// Allow the application to adjust the BDI agents list prior to creating agents
 			plugin.notifyBeforeCreatingBDICounterparts(bdiAgentIDs);
 
@@ -237,8 +198,8 @@ public final class MATSimModel implements ABMServerInterface {
 				// needed so that the plugins in EvacQSimModule can get this injected.
 				// yy maybe put as argument into constructor of the module?
 				
-				bind(MATSimPerceptHandler.class).in(Singleton.class);
-				bind(EventsMonitorRegistry.class).in(Singleton.class);
+//				bind(MATSimPerceptHandler.class).in(Singleton.class);
+//				bind(EventsMonitorRegistry.class).in(Singleton.class);
 
 				install( new EvacQSimModule() ) ;
 
@@ -254,6 +215,8 @@ public final class MATSimModel implements ABMServerInterface {
 						Id<Link> dummyLinkId = qSim.getNetsimNetwork().getNetsimLinks().keySet().iterator().next() ;
 						MobsimVehicle dummyVeh = null ;
 						qSim.insertAgentIntoMobsim(new MATSimStubAgent(dummyLinkId,Id.createPersonId("StubAgent"),dummyVeh));
+
+//						initialiseVisualisedAgents() ;
 					}
 				}) ;
 
@@ -301,6 +264,38 @@ public final class MATSimModel implements ABMServerInterface {
 
 		this.bdiServer.finish();
 	}
+	
+	public final Replanner getReplanner() {
+		return qSim.getChildInjector().getInstance( Replanner.class ) ;
+		// this _should_ now be a singleton by injection. kai, nov'17
+	}
+
+	@Override
+	public final void takeControl(AgentDataContainer agentDataContainer){
+		logger.trace("Received {}", agentManager.getAgentDataContainer());
+		agentManager.updateActions(agentManager.getAgentDataContainer());
+//		playPause.doStep( (int) (playPause.getLocalTime() + 1) );
+	}
+
+	public final synchronized void addDateServerEvent(String type,SimpleMessage newEvent){
+		//This does mean that the visualiser should be registered very early or events may be thrown away
+		if(dataServer != null) agentsUpdateMessages.add(newEvent);
+	}
+
+	public final Scenario getScenario() {
+		return this.scenario ;
+	}
+
+	public final void registerPlugin(MATSimApplicationInterface app) {
+		// this could be extended to accepting more than one plugin if need be. kai, nov'17
+		this.plugin = app;
+	}
+
+	public void setEventHandlers(List<EventHandler> eventHandlers) {
+		this.eventHandlers = eventHandlers;
+	}
+
+
 
 	private static void parseAdditionalArguments(String[] args, Config config) {
 		for (int i = 1; i < args.length; i++) {
@@ -318,11 +313,7 @@ public final class MATSimModel implements ABMServerInterface {
 		}
 	}
 
-	/**
-	 * Publish updates from this model to any connected listeners, such
-	 * as visualisers. Updates buffer is then flushed. 
-	 */
-	final void publishDataToExternalListeners() {
+	private final void publishDataToExternalListeners() {
 		synchronized(this) {
 			if (dataServer != null) {
 				dataServer.stepTime();
@@ -369,6 +360,22 @@ public final class MATSimModel implements ABMServerInterface {
 
 	public MobsimDataProvider getMobsimDataProvider() {
 		return mobsimDataProvider;
+	}
+
+	private void initialiseVisualisedAgents(){
+		Map<Id<Link>,? extends Link> links = this.getScenario().getNetwork().getLinks();
+		for(MobsimAgent agent: this.getMobsimDataProvider().getAgents().values()){
+			SimpleMessage m = new SimpleMessage();
+			m.name = "initAgent";
+			//m.params = new Object[]{agent.getId().toString(),links.get(agent.getCurrentLinkId()).getFromNode().getId().toString(),(((MATSimReplannableAgent)agent).taxi == true?"T":"N")};
+			m.params = new Object[]{//agent.getId().toString(),links.get(agent.getCurrentLinkId()).getFromNode().getId().toString(),"T"};
+					agent.getId().toString(),
+					links.get(agent.getCurrentLinkId()).getFromNode().getCoord().getX(),
+					links.get(agent.getCurrentLinkId()).getFromNode().getCoord().getY()
+			};
+			this.addDateServerEvent("initAgent",m);
+		}
+		//interfaceV.sendInitialAgentData(new ArrayList<MobsimAgent>());
 	}
 
 }
