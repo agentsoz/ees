@@ -74,7 +74,7 @@ public final class MATSimModel implements ABMServerInterface {
 	private static final Logger logger = LoggerFactory.getLogger("");
 	public static final String MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR = "--matsim-output-directory";
 
-	@Inject private Scenario scenario ;
+	private Scenario scenario ;
 
 	/**
 	 * some blackboardy thing that sits betwen ABM and BDI
@@ -144,10 +144,12 @@ public final class MATSimModel implements ABMServerInterface {
 	}
 
 
-	public final void run(String[] args, List<String> bdiAgentIDs, PAAgentManager agentManager1, EventsMonitorRegistry eventsMonitors) {
+	public final void run(String[] args, List<String> bdiAgentIDs, PAAgentManager agentManager1, 
+			EventsMonitorRegistry eventsMonitors, Scenario scenario1) {
 		// (this needs to be public)
 
 		this.agentManager = agentManager1 ;
+		this.scenario = scenario1 ;
 		
 		Config config = scenario.getConfig() ;
 
