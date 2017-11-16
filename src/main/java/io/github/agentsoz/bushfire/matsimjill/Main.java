@@ -9,12 +9,18 @@ import java.util.Collections;
 import java.util.List;
 import java.util.TreeMap;
 
+import javax.inject.Singleton;
+
 import org.json.simple.parser.ParseException;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.core.config.ConfigUtils;
 import org.matsim.core.events.handler.EventHandler;
 import org.matsim.core.scenario.ScenarioUtils;
 import org.slf4j.LoggerFactory;
+
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
@@ -140,13 +146,29 @@ public class Main {
 		matsimConfig.network().setTimeVariantNetwork(true);
 		Scenario scenario = ScenarioUtils.loadScenario(matsimConfig) ;
 		List<String> bdiAgentIDs = Utils.getBDIAgentIDs( scenario );
-		EventsMonitorRegistry eventsMonitors = new EventsMonitorRegistry();
-		PAAgentManager agentManager = new PAAgentManager( this.matsimModel, eventsMonitors ) ;
+
+//		EventsMonitorRegistry eventsMonitors = new EventsMonitorRegistry();
+//		PAAgentManager agentManager = new PAAgentManager( this.matsimModel, eventsMonitors ) ;
+
+		// An attempt with Guice.  It really just goes from here ...
+		Injector injector = Guice.createInjector(new AbstractModule() {
+			@Override protected void configure() {
+				bind(PAAgentManager.class).in(Singleton.class);
+				bind(EventsMonitorRegistry.class).in(Singleton.class);
+				bind(MATSimModel.class).toInstance( matsimModel );
+				bind(Scenario.class).toInstance(scenario);
+			}
+		});
+		PAAgentManager agentManager = injector.getInstance( PAAgentManager.class ) ;
+		EventsMonitorRegistry eventsMonitors = injector.getInstance( EventsMonitorRegistry.class ) ;
+		// ... to here, plus you can now use @Inject in the bound classes.  Note that this injector here is 
+		// independent from the MATSim injector; there, it is a bit more complicated.  kai, nov'17
+
 		this.jillmodel.init(agentManager.getAgentDataContainer(),
 				agentManager.getAgentStateList(), this.matsimModel,
 				bdiAgentIDs.toArray( new String[bdiAgentIDs.size()] ));
 
-		matsimModel.run(matsimArgs, scenario, bdiAgentIDs, agentManager, eventsMonitors);
+		matsimModel.run(matsimArgs, bdiAgentIDs, agentManager, eventsMonitors);
 
 		// Write safe line statistics to file
 		writeSafeLineMonitors(monitors, safelineOutputFilePattern);
