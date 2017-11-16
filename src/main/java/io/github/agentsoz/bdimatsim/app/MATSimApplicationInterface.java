@@ -61,7 +61,7 @@ public interface MATSimApplicationInterface {
 	 * allows the BDI agents list to be adjusted if required 
 	 * @param model
 	 */
-	public void notifyBeforeCreatingBDICounterparts(List<Id<Person>>bdiAgentsIds);
+	public void notifyBeforeCreatingBDICounterparts(List<String> bdiAgentIDs);
 	
 	/**
 	 * Called by MATSim after all the BDI agents have been created and added 
@@ -69,7 +69,7 @@ public interface MATSimApplicationInterface {
 	 * with application specific data, prior to the first simulation step 
 	 * @param bdiAgents map of all BDI agents in MATSim
 	 */
-	public void notifyAfterCreatingBDICounterparts(List<Id<Person>> bdiAgentsIDs);
+	public void notifyAfterCreatingBDICounterparts(List<String> bdiAgentIDs);
 
 	
 	public void run(String[] args);

@@ -43,11 +43,11 @@ public class StubPlugin implements MATSimApplicationInterface {
 	}
 
 	@Override
-	public void notifyBeforeCreatingBDICounterparts(List<Id<Person>> bdiAgentsIds) {
+	public void notifyBeforeCreatingBDICounterparts(List<String> bdiAgentsIds) {
 	}
 
 	@Override
-	public void notifyAfterCreatingBDICounterparts(List<Id<Person>> bdiAgentsIDs) {
+	public void notifyAfterCreatingBDICounterparts(List<String> bdiAgentsIDs) {
 	}
 
 	@Override

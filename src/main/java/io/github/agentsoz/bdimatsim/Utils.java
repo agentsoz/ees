@@ -57,18 +57,18 @@ public final class Utils {
 	@SuppressWarnings("unused")
 	private static final Logger log = Logger.getLogger(Utils.class);
 	
-	static List<Id<Person>> getBDIAgentIDs( Scenario scenario ) {
+	static List<String> getBDIAgentIDs( Scenario scenario ) {
 		// this goes through all matsim agents, ignores the stub agents, and returns as many of those agent ids as the
 		// bdi module wants as bdi agents (the remaining agents will, I guess, remain normal matsim agents).  kai, mar'15
 		
-		ArrayList<Id<Person>> bDIagentIDs = new ArrayList<>();
+		List<String> bDIagentIDs = new ArrayList<>();
 
 		Id<Person> stubId = Id.createPersonId("StubAgent");
 		for ( Id<Person> id : scenario.getPopulation().getPersons().keySet() ) {
 			if(id.compareTo(stubId) == 0){
 				continue;
 			}
-			bDIagentIDs.add(id);
+			bDIagentIDs.add(id.toString());
 		}
 		return bDIagentIDs;
 	}
@@ -128,15 +128,15 @@ public final class Utils {
 		return flatLinkIDList;
 	}
 
-	 final static String[] getPersonIDsAsArray( List<Id<Person>> personIds ){
-		String[] agentIDArray = new String[personIds.size()];
-		int j = 0;
-		for(Id<Person> id: personIds){
-			agentIDArray[j] = id.toString();
-			j ++;
-		}
-		return agentIDArray;
-//		return personIds.toArray( new String[personIds.size()] ) ; // wrong type!
+	 final static String[] getPersonIDsAsArray( List<String> personIds ){
+//		String[] agentIDArray = new String[bdiAgentIDs.size()];
+//		int j = 0;
+//		for(Id<Person> id: bdiAgentIDs){
+//			agentIDArray[j] = id.toString();
+//			j ++;
+//		}
+//		return agentIDArray;
+		return personIds.toArray( new String[personIds.size()] ) ; // wrong type!
 	}
 	 
 	 public static List<Link> findIntersectingLinks(Link link, Network network) {

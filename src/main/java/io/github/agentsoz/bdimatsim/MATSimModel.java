@@ -93,7 +93,7 @@ public final class MATSimModel implements ABMServerInterface {
 	/**
 	 * BDI agents and MATSim agents need not be the same; at the moment, BDI agents seem to be a subset of the MATSim agents.
 	 */
-	private List<Id<Person>> bdiAgentIDs;
+	private List<String> bdiAgentIDs;
 
 	/**
 	 * This is in fact a MATSim class that provides a view onto the QSim.
@@ -135,7 +135,7 @@ public final class MATSimModel implements ABMServerInterface {
 		if(dataServer != null) agentsUpdateMessages.add(newEvent);
 	}
 
-	public final List<Id<Person>> getBDIAgentIDs(){
+	public final List<String> getBDIAgentIDs(){
 		return bdiAgentIDs;
 	}
 
@@ -211,9 +211,9 @@ public final class MATSimModel implements ABMServerInterface {
 			// Allow the application to adjust the BDI agents list prior to creating agents
 			plugin.notifyBeforeCreatingBDICounterparts(bdiAgentIDs);
 
-			for(Id<Person> agentId: bdiAgentIDs) {
+			for(String agentId: bdiAgentIDs) {
 				/*Important - add agent to agentManager */
-				agentManager.createAndAddBDIAgent(agentId.toString());
+				agentManager.createAndAddBDIAgent(agentId);
 			}
 
 			// Allow the application to configure the freshly baked agents

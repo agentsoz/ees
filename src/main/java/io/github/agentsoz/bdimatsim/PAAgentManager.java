@@ -2,9 +2,6 @@ package io.github.agentsoz.bdimatsim;
 
 import java.util.LinkedHashMap;
 
-import org.matsim.api.core.v01.Id;
-import org.matsim.api.core.v01.population.Person;
-
 /*
  * #%L
  * BDI-ABM Integration Package
@@ -92,8 +89,8 @@ public final class PAAgentManager {
 	 * @param app
 	 */
 	final void registerApplicationActionsPercepts(MATSimApplicationInterface app) {
-		for(Id<Person> agentId: matSimModel.getBDIAgentIDs()) {
-			PAAgent agent = this.getAgent( agentId.toString() );
+		for(String agentId: matSimModel.getBDIAgentIDs()) {
+			PAAgent agent = this.getAgent( agentId );
 			app.registerNewBDIActions(agent.getActionHandler());
 			app.registerNewBDIPercepts(agent.getPerceptHandler());
 		}
