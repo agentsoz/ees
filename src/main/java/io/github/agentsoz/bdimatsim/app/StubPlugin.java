@@ -42,9 +42,9 @@ public class StubPlugin implements MATSimApplicationInterface {
 //	public void registerNewBDIPercepts(MATSimPerceptHandler withHandler) {
 //	}
 
-	@Override
-	public void notifyBeforeCreatingBDICounterparts(List<String> bdiAgentsIds) {
-	}
+//	@Override
+//	public void notifyBeforeCreatingBDICounterparts(List<String> bdiAgentsIds) {
+//	}
 
 	@Override
 	public void notifyAfterCreatingBDICounterparts(List<String> bdiAgentsIDs) {

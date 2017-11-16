@@ -56,12 +56,12 @@ public interface MATSimApplicationInterface {
 //	 */
 //	public void registerNewBDIPercepts(MATSimPerceptHandler withHandler);
 	
-	/**
-	 * Called by MATSim prior to BDI agents being created and registered;
-	 * allows the BDI agents list to be adjusted if required 
-	 * @param model
-	 */
-	public void notifyBeforeCreatingBDICounterparts(List<String> bdiAgentIDs);
+//	/**
+//	 * Called by MATSim prior to BDI agents being created and registered;
+//	 * allows the BDI agents list to be adjusted if required 
+//	 * @param model
+//	 */
+//	public void notifyBeforeCreatingBDICounterparts(List<String> bdiAgentIDs);
 	
 	/**
 	 * Called by MATSim after all the BDI agents have been created and added 
