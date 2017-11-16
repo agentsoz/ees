@@ -68,7 +68,7 @@ public final class PAAgent {
 		return perceptHandler;
 	}
 
-	final MATSimActionHandler getActionHandler() {
+	public final MATSimActionHandler getActionHandler() {
 		return actionHandler;
 	}
 

@@ -175,7 +175,6 @@ public final class MATSimModel implements ABMServerInterface {
 			// Register new BDI actions and percepts from the application
 			// Must be done after the agents have been created since new 
 			// actions/percepts are registered with each BDI agent
-			agentManager.registerApplicationActionsPercepts(plugin);
 		}
 
 		// ---
@@ -194,14 +193,7 @@ public final class MATSimModel implements ABMServerInterface {
 		controller.addOverridingModule(new AbstractModule(){
 			@Override public void install() {
 
-				bind(MATSimModel.class).toInstance( MATSimModel.this );
-				// needed so that the plugins in EvacQSimModule can get this injected.
-				// yy maybe put as argument into constructor of the module?
-				
-//				bind(MATSimPerceptHandler.class).in(Singleton.class);
-//				bind(EventsMonitorRegistry.class).in(Singleton.class);
-
-				install( new EvacQSimModule() ) ;
+				install( new EvacQSimModule(MATSimModel.this) ) ;
 
 				this.addMobsimListenerBinding().toInstance( new MobsimInitializedListener() {
 

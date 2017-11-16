@@ -58,9 +58,16 @@ import com.google.inject.Singleton;
  */
 public class EvacQSimModule extends AbstractModule {
 	@Inject Config config ;
+
+	private final MATSimModel matSimModel;
 	
+	public EvacQSimModule(MATSimModel matSimModel) {
+		this.matSimModel = matSimModel;
+	}
+
 	@Override
 	protected void configure() {
+		bind(MATSimModel.class).toInstance(this.matSimModel);
 		bind(Mobsim.class).toProvider(QSimProvider.class);
 		if ( config.qsim().isUseLanes() ) { 
 			bind(QNetworkFactory.class).to( QLanesNetworkFactory.class ) ;

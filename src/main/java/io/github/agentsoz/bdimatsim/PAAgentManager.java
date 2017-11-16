@@ -90,18 +90,6 @@ public final class PAAgentManager {
 		return true;
 	}
 
-	/**
-	 * Register any new BDI actions and percepts provided by the application
-	 * @param app
-	 */
-	final void registerApplicationActionsPercepts(MATSimApplicationInterface app) {
-		for(String agentId: this.bdiAgentIds ) {
-			PAAgent agent = this.getAgent( agentId );
-			app.registerNewBDIActions(agent.getActionHandler());
-			app.registerNewBDIPercepts(agent.getPerceptHandler());
-		}
-	}
-
 	public final List<String> getBdiAgentIds() {
 		return bdiAgentIds;
 	}
