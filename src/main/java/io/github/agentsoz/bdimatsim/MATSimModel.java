@@ -110,7 +110,7 @@ public final class MATSimModel implements ABMServerInterface {
 	/**
 	 * essentially something that passes matsim events through
 	 */
-	private EventsMonitorRegistry eventsHandler;
+	private EventsMonitorRegistry eventsMonitors = new EventsMonitorRegistry();
 
 	private QSim qSim;
 
@@ -145,7 +145,7 @@ public final class MATSimModel implements ABMServerInterface {
 
 	public MATSimModel( BDIServerInterface bidServer) {
 		this.bdiServer = bidServer ;
-		this.agentManager = new PAAgentManager( this ) ;
+		this.agentManager = new PAAgentManager( this, eventsMonitors ) ;
 	}
 
 	public final void registerPlugin(MATSimApplicationInterface app) {
@@ -199,7 +199,6 @@ public final class MATSimModel implements ABMServerInterface {
 
 		bdiAgentIDs = Utils.getBDIAgentIDs( scenario );
 
-		eventsHandler = new EventsMonitorRegistry();
 
 		{
 			// FIXME: dsingh, 25aug16: BDI init and start should be done outside of MATSim model 
@@ -230,7 +229,7 @@ public final class MATSimModel implements ABMServerInterface {
 
 		final Controler controller = new Controler( scenario );
 
-		controller.getEvents().addHandler(eventsHandler);
+		controller.getEvents().addHandler(eventsMonitors);
 
 		// Register any supplied event handlers
 		if (eventHandlers != null) {
@@ -245,14 +244,15 @@ public final class MATSimModel implements ABMServerInterface {
 				bind(MATSimModel.class).toInstance( MATSimModel.this );
 				// needed so that the plugins in EvacQSimModule can get this injected.
 				// yy maybe put as argument into constructor of the module?
+				
+				bind(MATSimPerceptHandler.class).in(Singleton.class);
+				bind(EventsMonitorRegistry.class).in(Singleton.class);
 
 				install( new EvacQSimModule() ) ;
 
 				this.addMobsimListenerBinding().toInstance( new MobsimInitializedListener() {
 
 					@Override public void notifyMobsimInitialized(MobsimInitializedEvent e) {
-						// for the time being doing this here since from a matsim perspective we would like to
-						// re-create them in every iteration. kai, oct;17
 
 						qSim = (QSim) e.getQueueSimulation() ;
 
@@ -363,10 +363,6 @@ public final class MATSimModel implements ABMServerInterface {
 
 	public final double getTime() {
 		return this.qSim.getSimTimer().getTimeOfDay() ;
-	}
-
-	EventsMonitorRegistry getEventMonitors() {
-		return eventsHandler;
 	}
 
 	@Override

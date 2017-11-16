@@ -43,11 +43,11 @@ public final class MATSimPerceptHandler {
 	/**
 	 * Constructor
 	 * 
-	 * @param matSimModel
+	 * @param eventsMonitors
 	 */
 	@Inject 
-	protected MATSimPerceptHandler(final MATSimModel matSimModel) {
-		this.eventHandler = matSimModel.getEventMonitors();
+	protected MATSimPerceptHandler(final EventsMonitorRegistry eventsMonitors) {
+		this.eventHandler = eventsMonitors ;
 		Gbl.assertNotNull( this.eventHandler );
 	}
 

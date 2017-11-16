@@ -2,8 +2,6 @@ package io.github.agentsoz.bdimatsim;
 
 import java.util.LinkedHashMap;
 
-import javax.inject.Inject;
-
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.population.Person;
 
@@ -31,7 +29,6 @@ import org.matsim.api.core.v01.population.Person;
 
 import io.github.agentsoz.bdiabm.data.ActionContainer;
 import io.github.agentsoz.bdiabm.data.ActionContent;
-import io.github.agentsoz.bdiabm.data.ActionPerceptContainer;
 import io.github.agentsoz.bdiabm.data.AgentDataContainer;
 import io.github.agentsoz.bdiabm.data.AgentState;
 import io.github.agentsoz.bdiabm.data.AgentStateList;
@@ -46,13 +43,15 @@ import io.github.agentsoz.bdimatsim.app.MATSimApplicationInterface;
  * @author Edmund Kemsley 
  */
 public final class PAAgentManager {
-	private AgentStateList agentStateList;
-	private LinkedHashMap<Id<Person>, PAAgent> agentsWithPerceptsAndActions;
-	private MATSimModel matSimModel;
-	private AgentDataContainer agentDataContainer;
+	private final AgentStateList agentStateList;
+	private final LinkedHashMap<Id<Person>, PAAgent> agentsWithPerceptsAndActions;
+	private final MATSimModel matSimModel;
+	private final AgentDataContainer agentDataContainer;
+	private final EventsMonitorRegistry eventsMonitors;
 
-	@Inject PAAgentManager(MATSimModel model) {
+	PAAgentManager(MATSimModel model, EventsMonitorRegistry eventsMonitors) {
 		this.matSimModel = model;
+		this.eventsMonitors = eventsMonitors;
 
 		agentsWithPerceptsAndActions = new LinkedHashMap<>();
 		agentStateList = new AgentStateList();
@@ -84,7 +83,7 @@ public final class PAAgentManager {
 	final boolean createAndAddBDIAgent(Id<Person> agentID) {
 		PAAgent agent = new PAAgent(
 				new MATSimActionHandler(matSimModel), 
-				new MATSimPerceptHandler(matSimModel), 
+				new MATSimPerceptHandler(eventsMonitors), 
 				agentID,
 				agentDataContainer.getOrCreate(agentID.toString()) );
 		agentsWithPerceptsAndActions.put(agentID, agent);
@@ -98,7 +97,7 @@ public final class PAAgentManager {
 	 */
 	final void registerApplicationActionsPercepts(MATSimApplicationInterface app) {
 		for(Id<Person> agentId: matSimModel.getBDIAgentIDs()) {
-			AgentWithPerceptsAndActions agent = this.getAgent( agentId );
+			PAAgent agent = this.getAgent( agentId );
 			app.registerNewBDIActions(agent.getActionHandler());
 			app.registerNewBDIPercepts(agent.getPerceptHandler());
 		}

@@ -91,8 +91,6 @@ public class EvacQSimModule extends AbstractModule {
 				result.add(new com.google.inject.AbstractModule() {
 					@Override protected void configure() {
 						bind(Replanner.class).in( Singleton.class ); 
-						bind(MATSimPerceptHandler.class).in(Singleton.class);
-						bind(EventsMonitorRegistry.class).in(Singleton.class);
 					}
 				});
 				return result;
