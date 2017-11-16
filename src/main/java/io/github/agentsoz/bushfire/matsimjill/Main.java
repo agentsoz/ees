@@ -22,6 +22,7 @@ import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.FileAppender;
+import io.github.agentsoz.bdimatsim.EventsMonitorRegistry;
 
 /*
  * #%L
@@ -46,6 +47,7 @@ import ch.qos.logback.core.FileAppender;
  */
 
 import io.github.agentsoz.bdimatsim.MATSimModel;
+import io.github.agentsoz.bdimatsim.PAAgentManager;
 import io.github.agentsoz.bdimatsim.Utils;
 import io.github.agentsoz.bushfire.PhoenixFireModule;
 import io.github.agentsoz.bushfire.Time;
@@ -137,8 +139,14 @@ public class Main {
 		org.matsim.core.config.Config matsimConfig = ConfigUtils.loadConfig( matsimArgs[0] ) ;
 		matsimConfig.network().setTimeVariantNetwork(true);
 		Scenario scenario = ScenarioUtils.loadScenario(matsimConfig) ;
-		List<String> bdiAgentIds = Utils.getBDIAgentIDs( scenario );
-		matsimModel.run( matsimArgs, scenario, bdiAgentIds ) ;
+		List<String> bdiAgentIDs = Utils.getBDIAgentIDs( scenario );
+		EventsMonitorRegistry eventsMonitors = new EventsMonitorRegistry();
+		PAAgentManager agentManager = new PAAgentManager( this.matsimModel, eventsMonitors ) ;
+		this.jillmodel.init(agentManager.getAgentDataContainer(),
+				agentManager.getAgentStateList(), this.matsimModel,
+				bdiAgentIDs.toArray( new String[bdiAgentIDs.size()] ));
+
+		matsimModel.run(matsimArgs, scenario, bdiAgentIDs, agentManager, eventsMonitors);
 
 		// Write safe line statistics to file
 		writeSafeLineMonitors(monitors, safelineOutputFilePattern);
