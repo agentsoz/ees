@@ -60,7 +60,8 @@ public class MainMaldon600Test {
 					CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/1/output_events.xml.gz" ) // 1380811447 eclipse single)
 					, CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/2/output_events.xml.gz" )  
 					, CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/3/output_events.xml.gz" ) // 721059509 mvn console 
-					, CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/4/output_events.xml.gz" ) // 4020076758 mvn console 
+					, CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/4/output_events.xml.gz" ) // 4020076758 mvn console
+					, 1569262693L // travis
 					} ;
 
 			boolean found = false ;
@@ -81,7 +82,8 @@ public class MainMaldon600Test {
 					CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/1/output_plans.xml.gz" ) // 2704415442 eclipse single
 					, CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/2/output_plans.xml.gz" )  
 					, CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/3/output_plans.xml.gz" ) // 2575830431 mvn console  
-					, CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/4/output_plans.xml.gz" ) // 2355435033 mvn console  
+					, CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/4/output_plans.xml.gz" ) // 2355435033 mvn console
+					, 2424434648L // travis
 					} ;
 
 			boolean found = false ;
