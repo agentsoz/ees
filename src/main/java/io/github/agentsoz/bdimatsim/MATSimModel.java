@@ -153,11 +153,6 @@ public final class MATSimModel implements ABMServerInterface {
 		this.plugin = app;
 	}
 
-//	public List<EventHandler> getEventHandlers() {
-//		return eventHandlers;
-//	}
-	// do you really need this access?  kai, nov'17
-
 	public void setEventHandlers(List<EventHandler> eventHandlers) {
 		this.eventHandlers = eventHandlers;
 	}
