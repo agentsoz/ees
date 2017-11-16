@@ -37,6 +37,9 @@ import org.matsim.withinday.mobsim.MobsimDataProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+
 /*
  * #%L
  * BDI-ABM Integration Package
@@ -108,6 +111,7 @@ public final class MATSimModel implements ABMServerInterface {
 	private List<EventHandler> eventHandlers;
 	
 	private PlayPauseSimulationControl playPause;
+	private EventsMonitorRegistry eventsMonitors;
 	
 	public final Replanner getReplanner() {
 		return qSim.getChildInjector().getInstance( Replanner.class ) ;
@@ -132,6 +136,22 @@ public final class MATSimModel implements ABMServerInterface {
 
 	public MATSimModel( BDIServerInterface bidServer) {
 		this.bdiServer = bidServer ;
+//		EventsMonitorRegistry eventsMonitors = new EventsMonitorRegistry();
+//		PAAgentManager agentManager = new PAAgentManager( this.matsimModel, eventsMonitors ) ;
+
+		// An attempt with Guice.  It really just goes from here ...
+		Injector injector = Guice.createInjector(new com.google.inject.AbstractModule() {
+			@Override protected void configure() {
+				bind(PAAgentManager.class).in(Singleton.class);
+				bind(EventsMonitorRegistry.class).in(Singleton.class);
+				bind(MATSimModel.class).toInstance( MATSimModel.this );
+			}
+		});
+		agentManager = injector.getInstance( PAAgentManager.class ) ;
+		eventsMonitors = injector.getInstance( EventsMonitorRegistry.class ) ;
+		// ... to here, plus you can now use @Inject in the bound classes.  Note that this injector here is 
+		// independent from the MATSim injector; there, it is a bit more complicated.  kai, nov'17
+		
 	}
 
 	public final void registerPlugin(MATSimApplicationInterface app) {
@@ -144,11 +164,9 @@ public final class MATSimModel implements ABMServerInterface {
 	}
 
 
-	public final void run(String[] args, List<String> bdiAgentIDs, PAAgentManager agentManager1, 
-			EventsMonitorRegistry eventsMonitors, Scenario scenario1) {
+	public final void run(String[] args, List<String> bdiAgentIDs, Scenario scenario1) {
 		// (this needs to be public)
 
-		this.agentManager = agentManager1 ;
 		this.scenario = scenario1 ;
 		
 		Config config = scenario.getConfig() ;
