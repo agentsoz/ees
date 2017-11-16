@@ -57,7 +57,7 @@ public final class Utils {
 	@SuppressWarnings("unused")
 	private static final Logger log = Logger.getLogger(Utils.class);
 	
-	static List<String> getBDIAgentIDs( Scenario scenario ) {
+	public static List<String> getBDIAgentIDs( Scenario scenario ) {
 		// this goes through all matsim agents, ignores the stub agents, and returns as many of those agent ids as the
 		// bdi module wants as bdi agents (the remaining agents will, I guess, remain normal matsim agents).  kai, mar'15
 		

@@ -163,9 +163,11 @@ public final class MATSimModel implements ABMServerInterface {
 	}
 
 
-	public final void run(String[] args, Scenario scenario1) {
+	public final void run(String[] args, Scenario scenario1, List<String> bdiAgentIds1) {
 		// (this needs to be public)
 
+		this.bdiAgentIDs = bdiAgentIds1 ;
+		
 		Config config ;
 		if ( scenario1==null ) {
 			config = ConfigUtils.loadConfig( args[0] ) ;
@@ -204,9 +206,6 @@ public final class MATSimModel implements ABMServerInterface {
 				link.setFreespeed(veryLargeSpeed);
 			}
 		}
-
-		bdiAgentIDs = Utils.getBDIAgentIDs( scenario );
-
 
 		{
 			// FIXME: dsingh, 25aug16: BDI init and start should be done outside of MATSim model 
