@@ -163,10 +163,15 @@ public final class MATSimModel implements ABMServerInterface {
 	}
 
 
-	public final void run(String[] args) {
+	public final void run(String[] args, Scenario scenario1) {
 		// (this needs to be public)
 
-		Config config = ConfigUtils.loadConfig( args[0] ) ;
+		Config config ;
+		if ( scenario1==null ) {
+			config = ConfigUtils.loadConfig( args[0] ) ;
+		} else {
+			config = scenario1.getConfig() ;
+		}
 
 		parseAdditionalArguments(args, config);
 
@@ -188,7 +193,11 @@ public final class MATSimModel implements ABMServerInterface {
 
 		// ---
 
-		scenario = ScenarioUtils.loadScenario(config) ;
+		if ( scenario1==null ) {
+			scenario = ScenarioUtils.loadScenario(config) ;
+		} else {
+			scenario = scenario1 ;
+		}
 
 		for ( Link link : scenario.getNetwork().getLinks().values() ) {
 			final double veryLargeSpeed = 9999999999.;
