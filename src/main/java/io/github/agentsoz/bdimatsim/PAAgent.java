@@ -39,10 +39,17 @@ import org.matsim.api.core.v01.population.Person;
  *         Agent's actionContainer and perceptContainer, the correct
  *         PerceptHandler and ActionHandler, and lists of driveToActions
  *         
+ *         
  * @author Edmund Kemsley 
  */
-
-public final class AgentWithPerceptsAndActions {
+public final class PAAgent {
+	/* Design decisions/changes:
+	 * - drive actions were never used, so I removed them.  This should make the agent type more general.  kai, oct/nov'17
+	 * - because it was now more general, I renamed it first to AgentWithPerceptsAndActions, and now short to 
+	 *   PAAgent = PerceptActionAgent.  Could be renamed into something else if that makes more sense from the framework
+	 *   perspective.  kai, oct/nov'17
+	 */
+	
 	private MATSimPerceptHandler perceptHandler;
 	private MATSimActionHandler actionHandler;
 	private Id<Person> agentID;
@@ -75,7 +82,7 @@ public final class AgentWithPerceptsAndActions {
 		return this.actPerceptContainer.getPerceptContainer();
 	}
 
-	AgentWithPerceptsAndActions(MATSimActionHandler actionHandler,
+	PAAgent(MATSimActionHandler actionHandler,
 			MATSimPerceptHandler perceptHandler, Id<Person> agentID,
 			ActionPerceptContainer actPerceptContainer) {
 		this.perceptHandler = perceptHandler;
