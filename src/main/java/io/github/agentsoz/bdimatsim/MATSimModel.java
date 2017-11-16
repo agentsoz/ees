@@ -227,7 +227,7 @@ public final class MATSimModel implements ABMServerInterface {
 			}
 
 			// Allow the application to configure the freshly baked agents
-			plugin.notifyAfterCreatingBDICounterparts(MATSimModel.this.getBDIAgentIDs());
+			plugin.notifyAfterCreatingBDICounterparts(bdiAgentIDs);
 
 			// Register new BDI actions and percepts from the application
 			// Must be done after the agents have been created since new 

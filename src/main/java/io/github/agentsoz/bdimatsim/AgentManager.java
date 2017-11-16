@@ -98,7 +98,7 @@ public final class AgentManager {
 	 */
 	final void registerApplicationActionsPercepts(MATSimApplicationInterface app) {
 		for(Id<Person> agentId: matSimModel.getBDIAgentIDs()) {
-			AgentWithPerceptsAndActions agent = matSimModel.getAgentManager().getAgent( agentId );
+			AgentWithPerceptsAndActions agent = this.getAgent( agentId );
 			app.registerNewBDIActions(agent.getActionHandler());
 			app.registerNewBDIPercepts(agent.getPerceptHandler());
 		}
