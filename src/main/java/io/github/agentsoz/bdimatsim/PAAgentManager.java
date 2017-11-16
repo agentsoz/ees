@@ -45,13 +45,13 @@ import io.github.agentsoz.bdimatsim.app.MATSimApplicationInterface;
  *         
  * @author Edmund Kemsley 
  */
-public final class AgentManager {
+public final class PAAgentManager {
 	private AgentStateList agentStateList;
-	private LinkedHashMap<Id<Person>, AgentWithPerceptsAndActions> agentsWithPerceptsAndActions;
+	private LinkedHashMap<Id<Person>, PAAgent> agentsWithPerceptsAndActions;
 	private MATSimModel matSimModel;
 	private AgentDataContainer agentDataContainer;
 
-	@Inject AgentManager(MATSimModel model) {
+	@Inject PAAgentManager(MATSimModel model) {
 		this.matSimModel = model;
 
 		agentsWithPerceptsAndActions = new LinkedHashMap<>();
@@ -67,11 +67,11 @@ public final class AgentManager {
 		return agentStateList;
 	}
 
-	public final AgentWithPerceptsAndActions getAgent(Id<Person> agentID) {
+	public final PAAgent getAgent(Id<Person> agentID) {
 		return agentsWithPerceptsAndActions.get(agentID);
 	}
 
-	public final AgentWithPerceptsAndActions getAgent(String agentID) {
+	public final PAAgent getAgent(String agentID) {
 		return agentsWithPerceptsAndActions.get(Id.createPersonId(agentID));
 	}
 
@@ -82,7 +82,7 @@ public final class AgentManager {
 	 * functionality
 	 */
 	final boolean createAndAddBDIAgent(Id<Person> agentID) {
-		AgentWithPerceptsAndActions agent = new AgentWithPerceptsAndActions(
+		PAAgent agent = new PAAgent(
 				new MATSimActionHandler(matSimModel), 
 				new MATSimPerceptHandler(matSimModel), 
 				agentID,
@@ -147,7 +147,7 @@ public final class AgentManager {
 	private final boolean initiateNewAction(String agentID, String actionID) {
 		// if (matSimAgents.containsKey(new IdImpl(agentID))){
 		if (agentsWithPerceptsAndActions.containsKey(Id.createPersonId(agentID))) {
-			AgentWithPerceptsAndActions agent = getAgent(agentID);
+			PAAgent agent = getAgent(agentID);
 			Object[] parameters = agent.getActionContainer().get(actionID)
 					.getParameters();
 			if (agent.getActionHandler().processAction(agentID, actionID,

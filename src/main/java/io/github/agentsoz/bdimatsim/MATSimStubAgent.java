@@ -30,13 +30,13 @@ import org.matsim.core.mobsim.framework.MobsimDriverAgent;
 import org.matsim.core.mobsim.qsim.interfaces.MobsimVehicle;
 import org.matsim.facilities.Facility;
 import org.matsim.vehicles.Vehicle;
-final class StubAgent implements MobsimDriverAgent{
+final class MATSimStubAgent implements MobsimDriverAgent{
 
 	private Id<Link> currentLinkId;
 	private Id<Person> agentId;
 	private MobsimVehicle vehicle;
 	
-	StubAgent(Id<Link> link, Id<Person> agent, MobsimVehicle vehicle){
+	MATSimStubAgent(Id<Link> link, Id<Person> agent, MobsimVehicle vehicle){
 		this.vehicle = vehicle;
 		currentLinkId = link;
 		agentId = agent;

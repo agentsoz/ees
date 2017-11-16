@@ -88,7 +88,7 @@ public final class MATSimModel implements ABMServerInterface {
 	/**
 	 * A view onto MATSim agents by the BDI system.
 	 */
-	private final AgentManager agentManager ;
+	private final PAAgentManager agentManager ;
 
 	/**
 	 * BDI agents and MATSim agents need not be the same; at the moment, BDI agents seem to be a subset of the MATSim agents.
@@ -115,7 +115,9 @@ public final class MATSimModel implements ABMServerInterface {
 	private QSim qSim;
 
 	private List<EventHandler> eventHandlers;
-
+	
+	private PlayPauseSimulationControl playPause;
+	
 	public final Replanner getReplanner() {
 		return qSim.getChildInjector().getInstance( Replanner.class ) ;
 		// this _should_ now be a singleton by injection. kai, nov'17
@@ -125,6 +127,7 @@ public final class MATSimModel implements ABMServerInterface {
 	public final void takeControl(AgentDataContainer agentDataContainer){
 		logger.trace("Received {}", agentManager.getAgentDataContainer());
 		agentManager.updateActions(agentManager.getAgentDataContainer());
+//		playPause.doStep( (int) (playPause.getLocalTime() + 1) );
 	}
 
 	final synchronized void addExternalEvent(String type,SimpleMessage newEvent){
@@ -142,7 +145,7 @@ public final class MATSimModel implements ABMServerInterface {
 
 	public MATSimModel( BDIServerInterface bidServer) {
 		this.bdiServer = bidServer ;
-		this.agentManager = new AgentManager( this ) ;
+		this.agentManager = new PAAgentManager( this ) ;
 	}
 
 	public final void registerPlugin(MATSimApplicationInterface app) {
@@ -196,19 +199,7 @@ public final class MATSimModel implements ABMServerInterface {
 
 		bdiAgentIDs = Utils.getBDIAgentIDs( scenario );
 
-		// ---
-
-		final Controler controller = new Controler( scenario );
-
 		eventsHandler = new EventsMonitorRegistry();
-		controller.getEvents().addHandler(eventsHandler);
-
-		// Register any supplied event handlers
-		if (eventHandlers != null) {
-			for (EventHandler handler : eventHandlers) {
-				controller.getEvents().addHandler(handler);
-			}
-		}
 
 		{
 			// FIXME: dsingh, 25aug16: BDI init and start should be done outside of MATSim model 
@@ -235,28 +226,42 @@ public final class MATSimModel implements ABMServerInterface {
 			agentManager.registerApplicationActionsPercepts(plugin);
 		}
 
+		// ---
+
+		final Controler controller = new Controler( scenario );
+
+		controller.getEvents().addHandler(eventsHandler);
+
+		// Register any supplied event handlers
+		if (eventHandlers != null) {
+			for (EventHandler handler : eventHandlers) {
+				controller.getEvents().addHandler(handler);
+			}
+		}
+
 		controller.addOverridingModule(new AbstractModule(){
 			@Override public void install() {
 
 				bind(MATSimModel.class).toInstance( MATSimModel.this );
-
+				// needed so that the plugins in EvacQSimModule can get this injected.
+				// yy maybe put as argument into constructor of the module?
 
 				install( new EvacQSimModule() ) ;
-				// something in the above does not work; index shifts; agents confusing legs and activities; ... ???
 
 				this.addMobsimListenerBinding().toInstance( new MobsimInitializedListener() {
+
 					@Override public void notifyMobsimInitialized(MobsimInitializedEvent e) {
 						// for the time being doing this here since from a matsim perspective we would like to
 						// re-create them in every iteration. kai, oct;17
 
 						qSim = (QSim) e.getQueueSimulation() ;
 
-						new PlayPauseSimulationControl( qSim ) ;
+						playPause = new PlayPauseSimulationControl( qSim ) ;
 
 						// add stub agent to keep simulation alive.  yyyy find nicer way to do this.
 						Id<Link> dummyLinkId = qSim.getNetsimNetwork().getNetsimLinks().keySet().iterator().next() ;
 						MobsimVehicle dummyVeh = null ;
-						qSim.insertAgentIntoMobsim(new StubAgent(dummyLinkId,Id.createPersonId("StubAgent"),dummyVeh));
+						qSim.insertAgentIntoMobsim(new MATSimStubAgent(dummyLinkId,Id.createPersonId("StubAgent"),dummyVeh));
 					}
 				}) ;
 
@@ -345,7 +350,7 @@ public final class MATSimModel implements ABMServerInterface {
 			NetworkUtils.addNetworkChangeEvent( scenario.getNetwork(),event);
 
 			for ( MobsimAgent agent : this.getMobsimDataProvider().getAgents().values() ) {
-				if ( !(agent instanceof StubAgent) ) {
+				if ( !(agent instanceof MATSimStubAgent) ) {
 					this.getReplanner().reRouteCurrentLeg(agent, now);
 				}
 			}
@@ -370,7 +375,7 @@ public final class MATSimModel implements ABMServerInterface {
 		return null;
 	}
 
-	public AgentManager getAgentManager() {
+	public PAAgentManager getAgentManager() {
 		return agentManager;
 	}
 
