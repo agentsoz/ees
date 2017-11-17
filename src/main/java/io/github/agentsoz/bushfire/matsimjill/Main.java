@@ -128,33 +128,26 @@ public class Main {
 		jillmodel.registerDataServer(dataServer);
 
 		// Create the MATSim ABM model and register the data server
-		matsimModel = new MATSimModel(jillmodel);
-		matsimModel.registerDataServer(dataServer);
-
-		// Register the safe lines monitors for MATSim
-		List<SafeLineMonitor> monitors = registerSafeLineMonitors(SimpleConfig.getSafeLines(), matsimModel);
-		
-		// Start the MATSim controller
 		List<String> config = new ArrayList<>() ;
 		config.add( SimpleConfig.getMatSimFile() ) ;
 		if ( matsimOutputDirectory != null ) { 
 			config.add( MATSimModel.MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR ) ;
 			config.add( matsimOutputDirectory ) ;
 		}
-		
-		final String[] matsimArgs = config.toArray(new String[config.size()] );
+		matsimModel = new MATSimModel(jillmodel, config.toArray(new String[config.size()] ));
+		matsimModel.registerDataServer(dataServer);
 
-		org.matsim.core.config.Config matsimConfig = ConfigUtils.loadConfig( matsimArgs[0] ) ;
-		matsimConfig.network().setTimeVariantNetwork(true);
-		Scenario scenario = ScenarioUtils.loadScenario(matsimConfig) ;
-		List<String> bdiAgentIDs = Utils.getBDIAgentIDs( scenario );
+		// Register the safe lines monitors for MATSim
+		List<SafeLineMonitor> monitors = registerSafeLineMonitors(SimpleConfig.getSafeLines(), matsimModel);
+		
+		List<String> bdiAgentIDs = Utils.getBDIAgentIDs( matsimModel.getScenario() );
 
 		this.jillmodel.init(matsimModel.getAgentManager().getAgentDataContainer(),
 				matsimModel.getAgentManager().getAgentStateList(), this.matsimModel,
 				bdiAgentIDs.toArray( new String[bdiAgentIDs.size()] ));
 		
 		
-		matsimModel.run(matsimArgs, bdiAgentIDs, scenario);
+		matsimModel.run(bdiAgentIDs);
 
 		// Write safe line statistics to file
 		writeSafeLineMonitors(monitors, safelineOutputFilePattern);
