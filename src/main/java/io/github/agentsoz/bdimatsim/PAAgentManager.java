@@ -46,8 +46,17 @@ import io.github.agentsoz.bdimatsim.app.MATSimApplicationInterface;
  */
 public final class PAAgentManager {
 	private final AgentStateList agentStateList;
-	private final LinkedHashMap<String, PAAgent> agentsWithPerceptsAndActions;
+	/**
+	 * actions & percepts.  Reached around a lot.
+	 */
 	private final AgentDataContainer agentDataContainer;
+	/**
+	 * full agent information, that is, actions, percepts, actionHandlers, perceptHandlers, states.  Since actions&percepts
+	 * on the one hand, and state on the other hand are already in flat indexed containers, the agent model ends up a bit 
+	 * inconsistent (for matsim taste). 
+	 */
+	private final LinkedHashMap<String, PAAgent> agentsWithPerceptsAndActions;
+
 	private final EventsMonitorRegistry eventsMonitors;
 
 	@Inject
