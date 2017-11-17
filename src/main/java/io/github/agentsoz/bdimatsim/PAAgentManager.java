@@ -137,16 +137,12 @@ public final class PAAgentManager {
 		// if (matSimAgents.containsKey(new IdImpl(agentID))){
 		if (agentsWithPerceptsAndActions.containsKey(agentID) ) {
 			PAAgent agent = getAgent(agentID);
-			Object[] parameters = agent.getActionContainer().get(actionID)
-					.getParameters();
-			if (agent.getActionHandler().processAction(agentID, actionID,
-					parameters)) {
-				agent.getActionContainer().get(actionID.toString())
-						.setState(ActionContent.State.RUNNING);
+			Object[] parameters = agent.getActionContainer().get(actionID) .getParameters();
+			if (agent.getActionHandler().processAction(agentID, actionID, parameters)) {
+				agent.getActionContainer().get(actionID.toString()) .setState(ActionContent.State.RUNNING);
 				return true;
 			} else {
-				agent.getActionContainer().get(actionID.toString())
-						.setState(ActionContent.State.FAILED);
+				agent.getActionContainer().get(actionID.toString()) .setState(ActionContent.State.FAILED);
 				return false;
 			}
 		}

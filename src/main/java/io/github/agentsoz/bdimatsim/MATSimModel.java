@@ -76,7 +76,7 @@ public final class MATSimModel implements ABMServerInterface {
 	private Scenario scenario ;
 
 	/**
-	 * some blackboardy thing that sits betwen ABM and BDI
+	 * some blackboardy thing that sits between ABM and BDI
 	 */
 	private DataServer dataServer;
 
