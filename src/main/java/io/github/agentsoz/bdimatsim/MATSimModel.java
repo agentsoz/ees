@@ -94,7 +94,7 @@ public final class MATSimModel implements ABMServerInterface {
 	private final MobsimDataProvider mobsimDataProvider = new MobsimDataProvider() ;
 
 	/**
-	 * currently necesssary since we are calling bdiServer.takeControl from here, but should eventually go away
+	 * currently necessary since we are calling bdiServer.takeControl from here, but should eventually go away
 	 */
 	private final BDIServerInterface bdiServer;
 
@@ -111,7 +111,7 @@ public final class MATSimModel implements ABMServerInterface {
 	private List<EventHandler> eventHandlers;
 	
 	private PlayPauseSimulationControl playPause;
-	private final EventsMonitorRegistry eventsMonitors;
+	private final EventsMonitorRegistry eventsMonitors  = new EventsMonitorRegistry() ;
 	
 	public MATSimModel( BDIServerInterface bidServer, String[] args) {
 		this.bdiServer = bidServer ;
@@ -129,10 +129,9 @@ public final class MATSimModel implements ABMServerInterface {
 //		// ... to here, plus you can now use @Inject in the bound classes.  Note that this injector here is 
 //		// independent from the MATSim injector; there, it is a bit more complicated.  kai, nov'17
 		
-		this.eventsMonitors = new EventsMonitorRegistry() ;
 		this.agentManager = new PAAgentManager(eventsMonitors) ;
 
-		org.matsim.core.config.Config config = ConfigUtils.loadConfig( args[0] ) ;
+		Config config = ConfigUtils.loadConfig( args[0] ) ;
 		parseAdditionalArguments(args, config);
 		config.network().setTimeVariantNetwork(true);
 		scenario = ScenarioUtils.loadScenario(config) ;
@@ -169,22 +168,17 @@ public final class MATSimModel implements ABMServerInterface {
 			}
 		}
 
+		// this could now be done in upstream code.  But since upstream code is user code, maybe we don't want it in there?
 		{
-
 			for(String agentId: bdiAgentIDs) {
 				/*Important - add agent to agentManager */
 				agentManager.createAndAddBDIAgent(agentId);
-
 				agentManager.getAgent(agentId).getActionHandler().registerBDIAction(
-						MATSimActionList.DRIVETO, new DRIVETODefaultActionHandler(this) 
-						);
+						MATSimActionList.DRIVETO, new DRIVETODefaultActionHandler(this) );
 				// moved default action from PAAgentManager to here.  kai, nov'17
-				
 			}
-
 			// Allow the application to configure the freshly baked agents
 			plugin.notifyAfterCreatingBDICounterparts(bdiAgentIDs);
-
 		}
 
 		// ---
