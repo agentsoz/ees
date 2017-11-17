@@ -1,5 +1,6 @@
 package io.github.agentsoz.bdimatsim;
 
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -49,7 +50,6 @@ public final class PAAgentManager {
 	private final MATSimModel matSimModel;
 	private final AgentDataContainer agentDataContainer;
 	private final EventsMonitorRegistry eventsMonitors;
-	private final List<String> bdiAgentIds = new LinkedList<>() ;
 
 	@Inject
 	public PAAgentManager(MATSimModel model, EventsMonitorRegistry eventsMonitors) {
@@ -90,8 +90,8 @@ public final class PAAgentManager {
 		return true;
 	}
 
-	public final List<String> getBdiAgentIds() {
-		return bdiAgentIds;
+	public final Collection<String> getBdiAgentIds() {
+		return agentsWithPerceptsAndActions.keySet() ;
 	}
 
 	final boolean removeAgent(String agentID) {
@@ -105,13 +105,12 @@ public final class PAAgentManager {
 	 * Called by MatsimModel to signal news actions from BDI side Handles two
 	 * types of changes, new actions (INITIATED) and dropped actions
 	 */
-	final void updateActions(AgentDataContainer agentDataContainer) {
+	final void updateActions() {
 		if (agentDataContainer.isEmpty()) {
 			return;
 		}
 		for (String agent : agentDataContainer.keySet()) {
-			ActionContainer actionContainer = agentDataContainer.getOrCreate(
-					agent).getActionContainer();
+			ActionContainer actionContainer = agentDataContainer.getOrCreate( agent).getActionContainer();
 			for (String action : actionContainer.actionIDSet()) {
 				if (actionContainer.get(action).getState() == ActionContent.State.INITIATED) {
 					initiateNewAction(agent, action);
@@ -134,7 +133,6 @@ public final class PAAgentManager {
 	 * ActionHandler then update action to RUNNING
 	 */
 	private final boolean initiateNewAction(String agentID, String actionID) {
-		// if (matSimAgents.containsKey(new IdImpl(agentID))){
 		if (agentsWithPerceptsAndActions.containsKey(agentID) ) {
 			PAAgent agent = getAgent(agentID);
 			Object[] parameters = agent.getActionContainer().get(actionID) .getParameters();

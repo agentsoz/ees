@@ -33,7 +33,7 @@ import io.github.agentsoz.bdimatsim.app.BDIActionHandler;
 
 public final class MATSimActionHandler {
 	
-	private final LinkedHashMap<String, BDIActionHandler> registeredActions;
+	private final LinkedHashMap<String, BDIActionHandler> registeredActions = new LinkedHashMap<>() ;
 
 	/**
 	 * Constructor
@@ -42,12 +42,12 @@ public final class MATSimActionHandler {
 	 */
 	protected MATSimActionHandler(MATSimModel matSimModel) {
 		
-		this.registeredActions = new LinkedHashMap<>();
 		
 		// Register all the actions that we handle by default
 		// The application can later add custom actions in a similar way
 		// and indeed overwrite the default action handlers if needed
-		this.registerBDIAction(MATSimActionList.DRIVETO, new DRIVETODefaultActionHandler(matSimModel));
+//		this.registerBDIAction(MATSimActionList.DRIVETO, new DRIVETODefaultActionHandler(matSimModel));
+		// moved into the specific model. kai, nov'17
 	}
 
 	/** 

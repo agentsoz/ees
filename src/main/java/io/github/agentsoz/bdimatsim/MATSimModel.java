@@ -167,6 +167,12 @@ public final class MATSimModel implements ABMServerInterface {
 			for(String agentId: bdiAgentIDs) {
 				/*Important - add agent to agentManager */
 				agentManager.createAndAddBDIAgent(agentId);
+
+				agentManager.getAgent(agentId).getActionHandler().registerBDIAction(
+						MATSimActionList.DRIVETO, new DRIVETODefaultActionHandler(this) 
+						);
+				// moved default action from PAAgentManager to here.  kai, nov'17
+				
 			}
 
 			// Allow the application to configure the freshly baked agents
@@ -265,7 +271,7 @@ public final class MATSimModel implements ABMServerInterface {
 	@Override
 	public final void takeControl(AgentDataContainer agentDataContainer){
 		logger.trace("Received {}", agentManager.getAgentDataContainer());
-		agentManager.updateActions(agentManager.getAgentDataContainer());
+		agentManager.updateActions();
 //		playPause.doStep( (int) (playPause.getLocalTime() + 1) );
 	}
 

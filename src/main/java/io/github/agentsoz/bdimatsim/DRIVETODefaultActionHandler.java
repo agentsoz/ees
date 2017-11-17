@@ -44,7 +44,7 @@ import io.github.agentsoz.bdimatsim.EventsMonitorRegistry.MonitoredEventType;
 import io.github.agentsoz.bdimatsim.app.BDIActionHandler;
 import io.github.agentsoz.bdimatsim.app.BDIPerceptHandler;
 
-final class DRIVETODefaultActionHandler implements BDIActionHandler {
+public final class DRIVETODefaultActionHandler implements BDIActionHandler {
 	private final MATSimModel model;
 	public DRIVETODefaultActionHandler(MATSimModel model ) {
 		this.model = model;
