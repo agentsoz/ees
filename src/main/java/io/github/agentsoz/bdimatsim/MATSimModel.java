@@ -164,8 +164,6 @@ public final class MATSimModel implements ABMServerInterface {
 		}
 
 		{
-//			// Allow the application to adjust the BDI agents list prior to creating agents
-//			plugin.notifyBeforeCreatingBDICounterparts(bdiAgentIDs);
 
 			for(String agentId: bdiAgentIDs) {
 				/*Important - add agent to agentManager */
@@ -181,9 +179,6 @@ public final class MATSimModel implements ABMServerInterface {
 			// Allow the application to configure the freshly baked agents
 			plugin.notifyAfterCreatingBDICounterparts(bdiAgentIDs);
 
-			// Register new BDI actions and percepts from the application
-			// Must be done after the agents have been created since new 
-			// actions/percepts are registered with each BDI agent
 		}
 
 		// ---
