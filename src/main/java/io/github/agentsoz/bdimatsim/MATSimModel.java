@@ -83,12 +83,12 @@ public final class MATSimModel implements ABMServerInterface {
 	/**
 	 * some message buffer for the data server
 	 */
-	private List<SimpleMessage> agentsUpdateMessages = new ArrayList<>(); 
+	private final List<SimpleMessage> agentsUpdateMessages = new ArrayList<>(); 
 
 	/**
 	 * A view onto MATSim agents by the BDI system.
 	 */
-	private PAAgentManager agentManager ;
+	private final PAAgentManager agentManager ;
 
 	/**
 	 * This is in fact a MATSim class that provides a view onto the QSim.
@@ -107,23 +107,26 @@ public final class MATSimModel implements ABMServerInterface {
 	private List<EventHandler> eventHandlers;
 	
 	private PlayPauseSimulationControl playPause;
-	private EventsMonitorRegistry eventsMonitors;
+	private final EventsMonitorRegistry eventsMonitors;
 	
 	public MATSimModel( BDIServerInterface bidServer) {
 		this.bdiServer = bidServer ;
 
-		// An attempt with Guice.  It really just goes from here ...
-		Injector injector = Guice.createInjector(new com.google.inject.AbstractModule() {
-			@Override protected void configure() {
-				bind(PAAgentManager.class).in(Singleton.class);
-				bind(EventsMonitorRegistry.class).in(Singleton.class);
-				bind(MATSimModel.class).toInstance( MATSimModel.this );
-			}
-		});
-		agentManager = injector.getInstance( PAAgentManager.class ) ;
-		eventsMonitors = injector.getInstance( EventsMonitorRegistry.class ) ;
-		// ... to here, plus you can now use @Inject in the bound classes.  Note that this injector here is 
-		// independent from the MATSim injector; there, it is a bit more complicated.  kai, nov'17
+//		// An attempt with Guice.  It really just goes from here ...
+//		Injector injector = Guice.createInjector(new com.google.inject.AbstractModule() {
+//			@Override protected void configure() {
+//				bind(PAAgentManager.class).in(Singleton.class);
+//				bind(EventsMonitorRegistry.class).in(Singleton.class);
+//				bind(MATSimModel.class).toInstance( MATSimModel.this );
+//			}
+//		});
+//		agentManager = injector.getInstance( PAAgentManager.class ) ;
+//		eventsMonitors = injector.getInstance( EventsMonitorRegistry.class ) ;
+//		// ... to here, plus you can now use @Inject in the bound classes.  Note that this injector here is 
+//		// independent from the MATSim injector; there, it is a bit more complicated.  kai, nov'17
+		
+		this.eventsMonitors = new EventsMonitorRegistry() ;
+		this.agentManager = new PAAgentManager(eventsMonitors) ;
 		
 	}
 
