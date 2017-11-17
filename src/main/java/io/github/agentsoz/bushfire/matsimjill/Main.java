@@ -55,12 +55,12 @@ import io.github.agentsoz.bdimatsim.MATSimActionList;
  */
 
 import io.github.agentsoz.bdimatsim.MATSimModel;
-import io.github.agentsoz.bdimatsim.PAAgentManager;
 import io.github.agentsoz.bdimatsim.Utils;
 import io.github.agentsoz.bushfire.PhoenixFireModule;
 import io.github.agentsoz.bushfire.Time;
 import io.github.agentsoz.bushfire.datamodels.Location;
 import io.github.agentsoz.dataInterface.DataServer;
+import io.github.agentsoz.nonmatsim.PAAgentManager;
 import io.github.agentsoz.util.Global;
 
 public class Main {
