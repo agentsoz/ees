@@ -35,7 +35,7 @@ import io.github.agentsoz.bdimatsim.app.BDIPerceptHandler;
  * @author Edmund Kemsley, Dhirendra Singh
  */
 
-public final class MATSimPerceptHandler {
+public final class PerceptHandler {
 
 	private final EventsMonitorRegistry eventsMonitors;
 
@@ -44,7 +44,7 @@ public final class MATSimPerceptHandler {
 	 * 
 	 * @param eventsMonitors
 	 */ 
-	protected MATSimPerceptHandler(final EventsMonitorRegistry eventsMonitors) {
+	protected PerceptHandler(final EventsMonitorRegistry eventsMonitors) {
 		this.eventsMonitors = eventsMonitors ;
 		Gbl.assertNotNull( this.eventsMonitors );
 	}

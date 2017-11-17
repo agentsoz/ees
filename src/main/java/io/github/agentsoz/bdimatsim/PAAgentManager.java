@@ -79,10 +79,11 @@ public final class PAAgentManager {
 	 */
 	final boolean createAndAddBDIAgent(String agentID) {
 		PAAgent agent = new PAAgent(
-				new MATSimActionHandler(), 
-				new MATSimPerceptHandler(eventsMonitors), 
+				new ActionHandler(), 
+				new PerceptHandler(eventsMonitors), 
 				agentID,
-				agentDataContainer.getOrCreate(agentID.toString()) );
+				agentDataContainer.getOrCreate(agentID.toString()) 
+				);
 		agentsWithPerceptsAndActions.put(agentID, agent);
 		agentStateList.add(new AgentState(agentID.toString()));
 		return true;
@@ -94,7 +95,7 @@ public final class PAAgentManager {
 
 	final boolean removeAgent(String agentID) {
 		agentsWithPerceptsAndActions.remove(agentID);
-		agentStateList.remove(new AgentState(agentID));// maybe will work
+		agentStateList.remove(new AgentState(agentID));// maybe will work // should work now.  kai, nov'17
 		// don't you need to also remove this from agentDataContainer??
 		return true;
 	}

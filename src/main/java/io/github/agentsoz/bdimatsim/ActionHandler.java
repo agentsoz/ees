@@ -31,7 +31,7 @@ import io.github.agentsoz.bdimatsim.app.BDIActionHandler;
  *         MatsimAgents and Matsim system
  */
 
-public final class MATSimActionHandler {
+public final class ActionHandler {
 	
 	private final LinkedHashMap<String, BDIActionHandler> registeredActions = new LinkedHashMap<>() ;
 

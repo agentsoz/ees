@@ -48,8 +48,8 @@ public final class PAAgent {
 	 *   perspective.  kai, oct/nov'17
 	 */
 	
-	private MATSimPerceptHandler perceptHandler;
-	private MATSimActionHandler actionHandler;
+	private PerceptHandler perceptHandler;
+	private ActionHandler actionHandler;
 	private String agentID;
 //	private String agentType;
 //
@@ -64,11 +64,11 @@ public final class PAAgent {
 		return agentID;
 	}
 
-	public final MATSimPerceptHandler getPerceptHandler() {
+	public final PerceptHandler getPerceptHandler() {
 		return perceptHandler;
 	}
 
-	public final MATSimActionHandler getActionHandler() {
+	public final ActionHandler getActionHandler() {
 		return actionHandler;
 	}
 
@@ -80,8 +80,8 @@ public final class PAAgent {
 		return this.actPerceptContainer.getPerceptContainer();
 	}
 
-	PAAgent(MATSimActionHandler actionHandler,
-			MATSimPerceptHandler perceptHandler, String agentID,
+	PAAgent(ActionHandler actionHandler,
+			PerceptHandler perceptHandler, String agentID,
 			ActionPerceptContainer actPerceptContainer) {
 		this.perceptHandler = perceptHandler;
 		this.actionHandler = actionHandler;
