@@ -175,7 +175,7 @@ ActivityEndEventHandler{
 	 * @param handler
 	 * @return
 	 */
-	int registerMonitor(String agentId, MonitoredEventType event,Id<Link> linkId, BDIPerceptHandler handler) {
+	public int registerMonitor(String agentId, MonitoredEventType event,Id<Link> linkId, BDIPerceptHandler handler) {
 		synchronized (monitors) {
 			monitors.add(new Monitor(agentId, linkId, event, handler));
 			return monitors.size();

@@ -1,4 +1,4 @@
-package io.github.agentsoz.bdimatsim;
+package io.github.agentsoz.nonmatsim;
 
 /*
  * #%L
@@ -24,6 +24,7 @@ package io.github.agentsoz.bdimatsim;
 
 import java.util.LinkedHashMap;
 
+import io.github.agentsoz.bdimatsim.MATSimActionList;
 import io.github.agentsoz.bdimatsim.app.BDIActionHandler;
 
 /**

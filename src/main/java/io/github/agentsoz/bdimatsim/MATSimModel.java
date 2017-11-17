@@ -62,6 +62,7 @@ import io.github.agentsoz.bdimatsim.app.MATSimApplicationInterface;
 import io.github.agentsoz.bdimatsim.app.StubPlugin;
 import io.github.agentsoz.bdimatsim.moduleInterface.data.SimpleMessage;
 import io.github.agentsoz.dataInterface.DataServer;
+import io.github.agentsoz.nonmatsim.PAAgentManager;
 
 /**
  * @author QingyuChen, KaiNagel, Dhi Singh

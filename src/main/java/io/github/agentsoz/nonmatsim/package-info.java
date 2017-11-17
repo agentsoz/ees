@@ -4,4 +4,4 @@
  * @author kainagel
  *
  */
-package io.github.agentsoz.abm;
+package io.github.agentsoz.nonmatsim;

@@ -1,4 +1,4 @@
-package io.github.agentsoz.bdimatsim;
+package io.github.agentsoz.nonmatsim;
 
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -34,6 +34,7 @@ import io.github.agentsoz.bdiabm.data.ActionContent;
 import io.github.agentsoz.bdiabm.data.AgentDataContainer;
 import io.github.agentsoz.bdiabm.data.AgentState;
 import io.github.agentsoz.bdiabm.data.AgentStateList;
+import io.github.agentsoz.bdimatsim.EventsMonitorRegistry;
 import io.github.agentsoz.bdimatsim.app.MATSimApplicationInterface;
 
 /**
@@ -85,7 +86,7 @@ public final class PAAgentManager {
 	 * Override this method and change the four parameters above to change
 	 * functionality
 	 */
-	final boolean createAndAddBDIAgent(String agentID) {
+	public final boolean createAndAddBDIAgent(String agentID) {
 		PAAgent agent = new PAAgent(
 				new ActionHandler(), 
 				new PerceptHandler(eventsMonitors), 
@@ -112,7 +113,7 @@ public final class PAAgentManager {
 	 * Called by MatsimModel to signal news actions from BDI side Handles two
 	 * types of changes, new actions (INITIATED) and dropped actions
 	 */
-	final void updateActions() {
+	public final void updateActions() {
 		if (agentDataContainer.isEmpty()) {
 			return;
 		}

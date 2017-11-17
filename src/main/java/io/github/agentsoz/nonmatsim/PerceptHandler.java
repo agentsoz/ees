@@ -1,4 +1,4 @@
-package io.github.agentsoz.bdimatsim;
+package io.github.agentsoz.nonmatsim;
 
 import javax.inject.Inject;
 
@@ -28,6 +28,7 @@ import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.network.Link;
 import org.matsim.core.gbl.Gbl;
 
+import io.github.agentsoz.bdimatsim.EventsMonitorRegistry;
 import io.github.agentsoz.bdimatsim.EventsMonitorRegistry.MonitoredEventType;
 import io.github.agentsoz.bdimatsim.app.BDIPerceptHandler;
 
@@ -60,6 +61,8 @@ public final class PerceptHandler {
 	 * @return
 	 */
 	public int registerBDIPerceptHandler(String agentId, MonitoredEventType event,Id<Link> linkId, BDIPerceptHandler handler) {
+		// yy maybe replace Id<Link> by String? kai, nov'17
+		
 		return eventsMonitors.registerMonitor(agentId, event, linkId, handler);
 	}
 
