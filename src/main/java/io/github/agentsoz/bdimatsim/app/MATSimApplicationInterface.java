@@ -72,7 +72,7 @@ public interface MATSimApplicationInterface {
 	public void notifyAfterCreatingBDICounterparts(List<String> bdiAgentIDs);
 
 	
-	public void run(String[] args);
+	public void run();
 
 	
 	

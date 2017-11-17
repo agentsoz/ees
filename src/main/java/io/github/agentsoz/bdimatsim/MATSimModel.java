@@ -4,13 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Singleton;
-
 import org.apache.log4j.Level;
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.network.Link;
 import org.matsim.core.config.Config;
+import org.matsim.core.config.ConfigUtils;
 import org.matsim.core.config.groups.PlansConfigGroup.ActivityDurationInterpretation;
 import org.matsim.core.config.groups.QSimConfigGroup.StarttimeInterpretation;
 import org.matsim.core.controler.AbstractModule;
@@ -28,13 +27,11 @@ import org.matsim.core.mobsim.qsim.interfaces.MobsimVehicle;
 import org.matsim.core.network.NetworkChangeEvent;
 import org.matsim.core.network.NetworkChangeEvent.ChangeType;
 import org.matsim.core.network.NetworkChangeEvent.ChangeValue;
+import org.matsim.core.scenario.ScenarioUtils;
 import org.matsim.core.network.NetworkUtils;
 import org.matsim.withinday.mobsim.MobsimDataProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.google.inject.Guice;
-import com.google.inject.Injector;
 
 /*
  * #%L
@@ -73,10 +70,10 @@ public final class MATSimModel implements ABMServerInterface {
 	private static final Logger logger = LoggerFactory.getLogger("");
 	public static final String MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR = "--matsim-output-directory";
 
-	private Scenario scenario ;
+	private final Scenario scenario ;
 
 	/**
-	 * some blackboardy thing that sits between ABM and BDI
+	 * some blackboardy thing that sits between ABM and BDI. can be null (so non-final is ok)
 	 */
 	private DataServer dataServer;
 
@@ -86,7 +83,8 @@ public final class MATSimModel implements ABMServerInterface {
 	private final List<SimpleMessage> agentsUpdateMessages = new ArrayList<>(); 
 
 	/**
-	 * A view onto MATSim agents by the BDI system.
+	 * A helper class essentially provided by the framework, used here.  The only direct connection to matsim are the event
+	 * monitors, which need to be registered, via the events monitor registry, as a matsim events handler.
 	 */
 	private final PAAgentManager agentManager ;
 
@@ -95,21 +93,27 @@ public final class MATSimModel implements ABMServerInterface {
 	 */
 	private final MobsimDataProvider mobsimDataProvider = new MobsimDataProvider() ;
 
+	/**
+	 * currently necesssary since we are calling bdiServer.takeControl from here, but should eventually go away
+	 */
 	private final BDIServerInterface bdiServer;
 
 	/**
-	 * some callback interface for during agent creation
+	 * some callback interface for during agent creation. Is settable away from the stub plugin (so non-final is ok).
 	 */
 	private MATSimApplicationInterface plugin = new StubPlugin();
 
 	private QSim qSim;
 
+	/**
+	 * can be null (so non-final is ok)
+	 */
 	private List<EventHandler> eventHandlers;
 	
 	private PlayPauseSimulationControl playPause;
 	private final EventsMonitorRegistry eventsMonitors;
 	
-	public MATSimModel( BDIServerInterface bidServer) {
+	public MATSimModel( BDIServerInterface bidServer, String[] args) {
 		this.bdiServer = bidServer ;
 
 //		// An attempt with Guice.  It really just goes from here ...
@@ -127,17 +131,19 @@ public final class MATSimModel implements ABMServerInterface {
 		
 		this.eventsMonitors = new EventsMonitorRegistry() ;
 		this.agentManager = new PAAgentManager(eventsMonitors) ;
-		
+
+		org.matsim.core.config.Config config = ConfigUtils.loadConfig( args[0] ) ;
+		parseAdditionalArguments(args, config);
+		config.network().setTimeVariantNetwork(true);
+		scenario = ScenarioUtils.loadScenario(config) ;
+
 	}
 
-	public final void run(String[] args, List<String> bdiAgentIDs, Scenario scenario1) {
+	public final void run(List<String> bdiAgentIDs) {
 		// (this needs to be public)
 
-		this.scenario = scenario1 ;
-		
 		Config config = scenario.getConfig() ;
 
-		parseAdditionalArguments(args, config);
 
 
 		config.plans().setActivityDurationInterpretation(ActivityDurationInterpretation.tryEndTimeThenDuration);
