@@ -37,17 +37,16 @@ import io.github.agentsoz.bdimatsim.app.BDIPerceptHandler;
 
 public final class MATSimPerceptHandler {
 
-	private final EventsMonitorRegistry eventHandler;
+	private final EventsMonitorRegistry eventsMonitors;
 
 	/**
 	 * Constructor
 	 * 
 	 * @param eventsMonitors
-	 */
-	@Inject 
+	 */ 
 	protected MATSimPerceptHandler(final EventsMonitorRegistry eventsMonitors) {
-		this.eventHandler = eventsMonitors ;
-		Gbl.assertNotNull( this.eventHandler );
+		this.eventsMonitors = eventsMonitors ;
+		Gbl.assertNotNull( this.eventsMonitors );
 	}
 
 	/**
@@ -61,7 +60,7 @@ public final class MATSimPerceptHandler {
 	 * @return
 	 */
 	public int registerBDIPerceptHandler(String agentId, MonitoredEventType event,Id<Link> linkId, BDIPerceptHandler handler) {
-		return eventHandler.registerMonitor(agentId, event, linkId, handler);
+		return eventsMonitors.registerMonitor(agentId, event, linkId, handler);
 	}
 
 }

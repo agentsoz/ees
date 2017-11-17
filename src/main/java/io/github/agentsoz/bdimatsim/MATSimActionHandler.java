@@ -35,21 +35,6 @@ public final class MATSimActionHandler {
 	
 	private final LinkedHashMap<String, BDIActionHandler> registeredActions = new LinkedHashMap<>() ;
 
-	/**
-	 * Constructor
-	 * 
-	 * @param matSimModel
-	 */
-	protected MATSimActionHandler(MATSimModel matSimModel) {
-		
-		
-		// Register all the actions that we handle by default
-		// The application can later add custom actions in a similar way
-		// and indeed overwrite the default action handlers if needed
-//		this.registerBDIAction(MATSimActionList.DRIVETO, new DRIVETODefaultActionHandler(matSimModel));
-		// moved into the specific model. kai, nov'17
-	}
-
 	/** 
 	 * Registers a new BDI action. Typical usage example:<pre><code>
 	 * registerBDIAction("MyNewAction", new BDIActionHandler() {

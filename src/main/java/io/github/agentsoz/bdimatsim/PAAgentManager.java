@@ -47,13 +47,11 @@ import io.github.agentsoz.bdimatsim.app.MATSimApplicationInterface;
 public final class PAAgentManager {
 	private final AgentStateList agentStateList;
 	private final LinkedHashMap<String, PAAgent> agentsWithPerceptsAndActions;
-	private final MATSimModel matSimModel;
 	private final AgentDataContainer agentDataContainer;
 	private final EventsMonitorRegistry eventsMonitors;
 
 	@Inject
-	public PAAgentManager(MATSimModel model, EventsMonitorRegistry eventsMonitors) {
-		this.matSimModel = model;
+	public PAAgentManager(EventsMonitorRegistry eventsMonitors) {
 		this.eventsMonitors = eventsMonitors;
 
 		agentsWithPerceptsAndActions = new LinkedHashMap<>();
@@ -81,7 +79,7 @@ public final class PAAgentManager {
 	 */
 	final boolean createAndAddBDIAgent(String agentID) {
 		PAAgent agent = new PAAgent(
-				new MATSimActionHandler(matSimModel), 
+				new MATSimActionHandler(), 
 				new MATSimPerceptHandler(eventsMonitors), 
 				agentID,
 				agentDataContainer.getOrCreate(agentID.toString()) );
