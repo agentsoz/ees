@@ -87,12 +87,7 @@ public final class PAAgentManager {
 	 * functionality
 	 */
 	public final boolean createAndAddBDIAgent(String agentID) {
-		PAAgent agent = new PAAgent(
-				new ActionHandler(), 
-				new PerceptHandler(eventsMonitors), 
-				agentID,
-				agentDataContainer.getOrCreate(agentID.toString()) 
-				);
+		PAAgent agent = new PAAgent( eventsMonitors, agentID, agentDataContainer.getOrCreate(agentID.toString()) );
 		agentsWithPerceptsAndActions.put(agentID, agent);
 		agentStateList.add(new AgentState(agentID.toString()));
 		return true;

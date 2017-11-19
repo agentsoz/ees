@@ -59,6 +59,8 @@ ActivityEndEventHandler{
 	/**
 	 * if these event types were sitting in bdi-abm, I would understand this.  But given that they are sitting here,
 	 * why not use the matsim events directly?  kai, nov'17
+	 * Well, in the end this here is an events concentrator/filter: it listens to all events once, and decides which ones to
+	 * pass on to where.  We would not want all BDI agents subscribe to all events directly.  kai, nov'17
 	 */
 	public enum MonitoredEventType {
 		EnteredNode,

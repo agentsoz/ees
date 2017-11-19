@@ -52,13 +52,15 @@ public final class DRIVETODefaultActionHandler implements BDIActionHandler {
 	}
 	@Override
 	public boolean handle(String agentID, String actionID, Object[] args) {
-		// Get nearest link ID and calls the Replanner to map to MATSim.
+
 		Id<Link> newLinkId;
 		if (args[1] instanceof double[]) {
 			double[] coords = (double[]) args[1];
 			newLinkId = ((SearchableNetwork) model.getScenario()
 					.getNetwork()).getNearestLinkExactly(
 					new Coord(coords[0], coords[1])).getId();
+			// yy could probably just give the coordinates to matsim. kai, nov'17
+			
 		} else {
 			throw new RuntimeException("Destination coordinates are not given");
 		}
@@ -67,11 +69,8 @@ public final class DRIVETODefaultActionHandler implements BDIActionHandler {
 
 		// Now register a event handler for when the agent arrives at the destination
 		PAAgent agent = model.getAgentManager().getAgent( agentID );
-		agent.getPerceptHandler().registerBDIPerceptHandler(
-				agent.getAgentID(), 
-				MonitoredEventType.ArrivedAtDestination, 
-				newLinkId,
-				new BDIPerceptHandler() {
+		agent.getPerceptHandler().registerBDIPerceptHandler( agent.getAgentID(), MonitoredEventType.ArrivedAtDestination,
+				newLinkId, new BDIPerceptHandler() {
 					@Override
 					public boolean handle(Id<Person> agentId, Id<Link> linkId, MonitoredEventType monitoredEvent) {
 						PAAgent agent = model.getAgentManager().getAgent( agentId.toString() );
@@ -81,7 +80,8 @@ public final class DRIVETODefaultActionHandler implements BDIActionHandler {
 						agent.getPerceptContainer().put(MATSimPerceptList.ARRIVED, params);
 						return true;
 					}
-				});
+				}
+		);
 		return true;
 	}
 

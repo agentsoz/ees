@@ -25,6 +25,7 @@ package io.github.agentsoz.nonmatsim;
 import io.github.agentsoz.bdiabm.data.ActionContainer;
 import io.github.agentsoz.bdiabm.data.ActionPerceptContainer;
 import io.github.agentsoz.bdiabm.data.PerceptContainer;
+import io.github.agentsoz.bdimatsim.EventsMonitorRegistry;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -48,9 +49,9 @@ public final class PAAgent {
 	 *   perspective.  kai, oct/nov'17
 	 */
 	
-	private PerceptHandler perceptHandler;
-	private ActionHandler actionHandler;
-	private String agentID;
+	private final PerceptHandler perceptHandler;
+	private final ActionHandler actionHandler = new ActionHandler() ;
+	private final String agentID;
 //	private String agentType;
 //
 //	private final List<Id<Link>> driveToActions = new ArrayList<>() ;
@@ -80,11 +81,8 @@ public final class PAAgent {
 		return this.actPerceptContainer.getPerceptContainer();
 	}
 
-	PAAgent(ActionHandler actionHandler,
-			PerceptHandler perceptHandler, String agentID,
-			ActionPerceptContainer actPerceptContainer) {
-		this.perceptHandler = perceptHandler;
-		this.actionHandler = actionHandler;
+	PAAgent(EventsMonitorRegistry eventsMonitors, String agentID, ActionPerceptContainer actPerceptContainer) {
+		this.perceptHandler = new PerceptHandler( eventsMonitors ) ;
 		this.agentID = agentID;
 		this.actPerceptContainer = actPerceptContainer ;
 	}

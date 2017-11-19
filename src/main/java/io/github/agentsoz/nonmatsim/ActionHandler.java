@@ -68,7 +68,7 @@ public final class ActionHandler {
 	 */
 	final boolean processAction(String agentID, String actionID, Object[] parameters) {
 		if ( registeredActions.isEmpty() ) {
-			throw new RuntimeException("not BDI action registered at all; this is probably not what you want; aborting ... " ) ;
+			throw new RuntimeException("no BDI action registered at all; this is probably not what you want; aborting ... " ) ;
 		}
 		for (String action : registeredActions.keySet()) {
 			if (actionID.equals(action)) {

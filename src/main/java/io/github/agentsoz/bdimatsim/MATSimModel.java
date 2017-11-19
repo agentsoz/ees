@@ -135,17 +135,7 @@ public final class MATSimModel implements ABMServerInterface {
 		Config config = ConfigUtils.loadConfig( args[0] ) ;
 		parseAdditionalArguments(args, config);
 		config.network().setTimeVariantNetwork(true);
-		scenario = ScenarioUtils.loadScenario(config) ;
-
-	}
-
-	public final void run(List<String> bdiAgentIDs) {
-		// (this needs to be public)
-
-		Config config = scenario.getConfig() ;
-
-
-
+		
 		config.plans().setActivityDurationInterpretation(ActivityDurationInterpretation.tryEndTimeThenDuration);
 
 
@@ -159,6 +149,15 @@ public final class MATSimModel implements ABMServerInterface {
 		config.controler().setOverwriteFileSetting( OverwriteFileSetting.deleteDirectoryIfExists );
 
 		//		ConfigUtils.setVspDefaults(config);
+
+		// ---
+		
+		scenario = ScenarioUtils.loadScenario(config) ;
+
+	}
+
+	public final void init(List<String> bdiAgentIDs) {
+		// (this needs to be public)
 
 		// ---
 
@@ -207,6 +206,7 @@ public final class MATSimModel implements ABMServerInterface {
 						qSim = (QSim) e.getQueueSimulation() ;
 
 						playPause = new PlayPauseSimulationControl( qSim ) ;
+						playPause.pause(); 
 
 						// add stub agent to keep simulation alive.  yyyy find nicer way to do this.
 						Id<Link> dummyLinkId = qSim.getNetsimNetwork().getNetsimLinks().keySet().iterator().next() ;
@@ -255,9 +255,36 @@ public final class MATSimModel implements ABMServerInterface {
 
 		org.apache.log4j.Logger.getRootLogger().setLevel(Level.INFO);
 
-		controller.run();
+		// this should wrap the controller into a thread:
+		Thread matsimThread = new Thread( controller ) ;
+		matsimThread.start();
 
-		//		Thread matsimThread = new Thread( controller ) ;
+		int ii=0 ;
+		while( this.playPause==null ) {
+			try {
+				Thread.sleep(100);
+				System.err.println("here " + ii ); ii++ ;
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		System.err.println("here " + ii ); ii++ ;
+
+		this.playPause.doStep(3600);
+		
+		System.err.println("here " + ii ); ii++ ;
+
+		this.playPause.doStep(2*3600);
+
+		System.err.println("here " + ii ); ii++ ;
+
+		this.playPause.doStep(3*3600);
+
+		System.exit(-1);
+
+//		controller.run();
 
 		this.bdiServer.finish();
 	}

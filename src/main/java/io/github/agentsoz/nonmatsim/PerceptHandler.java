@@ -46,8 +46,8 @@ public final class PerceptHandler {
 	 * @param eventsMonitors
 	 */ 
 	protected PerceptHandler(final EventsMonitorRegistry eventsMonitors) {
+		Gbl.assertNotNull( eventsMonitors );
 		this.eventsMonitors = eventsMonitors ;
-		Gbl.assertNotNull( this.eventsMonitors );
 	}
 
 	/**
