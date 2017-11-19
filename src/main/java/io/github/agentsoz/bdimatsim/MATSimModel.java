@@ -18,8 +18,10 @@ import org.matsim.core.controler.OutputDirectoryHierarchy.OverwriteFileSetting;
 import org.matsim.core.events.handler.EventHandler;
 import org.matsim.core.mobsim.framework.MobsimAgent;
 import org.matsim.core.mobsim.framework.PlayPauseSimulationControl;
+import org.matsim.core.mobsim.framework.events.MobsimAfterSimStepEvent;
 import org.matsim.core.mobsim.framework.events.MobsimBeforeSimStepEvent;
 import org.matsim.core.mobsim.framework.events.MobsimInitializedEvent;
+import org.matsim.core.mobsim.framework.listeners.MobsimAfterSimStepListener;
 import org.matsim.core.mobsim.framework.listeners.MobsimBeforeSimStepListener;
 import org.matsim.core.mobsim.framework.listeners.MobsimInitializedListener;
 import org.matsim.core.mobsim.qsim.QSim;
@@ -97,7 +99,7 @@ public final class MATSimModel implements ABMServerInterface {
 	/**
 	 * currently necessary since we are calling bdiServer.takeControl from here, but should eventually go away
 	 */
-	private final BDIServerInterface bdiServer;
+//	private final BDIServerInterface bdiServer;
 
 	/**
 	 * some callback interface for during agent creation. Is settable away from the stub plugin (so non-final is ok).
@@ -113,9 +115,10 @@ public final class MATSimModel implements ABMServerInterface {
 	
 	private PlayPauseSimulationControl playPause;
 	private final EventsMonitorRegistry eventsMonitors  = new EventsMonitorRegistry() ;
+	private Thread matsimThread;
 	
 	public MATSimModel( BDIServerInterface bidServer, String[] args) {
-		this.bdiServer = bidServer ;
+//		this.bdiServer = bidServer ;
 
 //		// An attempt with Guice.  It really just goes from here ...
 //		Injector injector = Guice.createInjector(new com.google.inject.AbstractModule() {
@@ -199,6 +202,36 @@ public final class MATSimModel implements ABMServerInterface {
 
 				install( new EvacQSimModule(MATSimModel.this) ) ;
 
+				this.addMobsimListenerBinding().toInstance( new MobsimAfterSimStepListener() {
+					/**
+					 * The most important method - called each time step during the iteration
+					 */		
+					@Override
+					public void notifyMobsimAfterSimStep(MobsimAfterSimStepEvent e) {
+
+						// the real work is done here:
+
+						// On 25 Aug 2016 dsingh said:
+						// The notifyMobsimBeforeSimStep(e) function essentially provides
+						// the simulation clock in any MATSim-BDI integration, since there
+						// is no external controller (MATSim acts as the controller).
+						// So this is where we control and synchronise all models
+						// (ABM, BDI, Fire, other) with respect to data transfer
+						//
+						// 1. First step the data server so that it can conduct
+						//    the data transfer between all connected models
+						publishDataToExternalListeners();
+						// 2. Next, call the BDI model that will populate the 
+						//    agent data container with any action/percepts per agent
+//						bdiServer.takeControl(agentManager.getAgentDataContainer());
+						// 3. Finally, call the MATSim model and process 
+						//    the BDI actions/percepts, and re-populate the 
+						//    agent data container, ready to pass to the BDI system in the 
+						//    next cycle.
+//						MATSimModel.this.takeControl(agentManager.getAgentDataContainer());
+					}
+				} ) ; // end anonymous class MobsimListener
+
 				this.addMobsimListenerBinding().toInstance( new MobsimInitializedListener() {
 
 					@Override public void notifyMobsimInitialized(MobsimInitializedEvent e) {
@@ -217,46 +250,16 @@ public final class MATSimModel implements ABMServerInterface {
 					}
 				}) ;
 
-				this.addMobsimListenerBinding().toInstance( new MobsimBeforeSimStepListener() {
-					/**
-					 * The most important method - called each time step during the iteration
-					 */		
-					@Override
-					public void notifyMobsimBeforeSimStep(MobsimBeforeSimStepEvent e) {
-
-						// the real work is done here:
-
-						// On 25 Aug 2016 dsingh said:
-						// The notifyMobsimBeforeSimStep(e) function essentially provides
-						// the simulation clock in any MATSim-BDI integration, since there
-						// is no external controller (MATSim acts as the controller).
-						// So this is where we control and synchronise all models
-						// (ABM, BDI, Fire, other) with respect to data transfer
-						//
-						// 1. First step the data server so that it can conduct
-						//    the data transfer between all connected models
-						publishDataToExternalListeners();
-						// 2. Next, call the BDI model that will populate the 
-						//    agent data container with any action/percepts per agent
-						bdiServer.takeControl(agentManager.getAgentDataContainer());
-						// 3. Finally, call the MATSim model and process 
-						//    the BDI actions/percepts, and re-populate the 
-						//    agent data container, ready to pass to the BDI system in the 
-						//    next cycle.
-						MATSimModel.this.takeControl(agentManager.getAgentDataContainer());
-					}
-				} ) ; // end anonymous class MobsimListener
-
 				this.addMobsimListenerBinding().toInstance( getMobsimDataProvider() );
 			}
 		}) ;
 
-		this.bdiServer.start();
+//		this.bdiServer.start();
 
 		org.apache.log4j.Logger.getRootLogger().setLevel(Level.INFO);
 
 		// this should wrap the controller into a thread:
-		Thread matsimThread = new Thread( controller ) ;
+		this.matsimThread = new Thread( controller ) ;
 		matsimThread.start();
 
 		int ii=0 ;
@@ -270,23 +273,25 @@ public final class MATSimModel implements ABMServerInterface {
 			}
 		}
 		
-		System.err.println("here " + ii ); ii++ ;
-
-		this.playPause.doStep(3600);
+		return ;
 		
-		System.err.println("here " + ii ); ii++ ;
-
-		this.playPause.doStep(2*3600);
-
-		System.err.println("here " + ii ); ii++ ;
-
-		this.playPause.doStep(3*3600);
-
-		System.exit(-1);
-
-//		controller.run();
-
-		this.bdiServer.finish();
+//		System.err.println("here " + ii ); ii++ ;
+//
+//		this.playPause.doStep(3600);
+//		
+//		System.err.println("here " + ii ); ii++ ;
+//
+//		this.playPause.doStep(2*3600);
+//
+//		System.err.println("here " + ii ); ii++ ;
+//
+//		this.playPause.doStep(3*3600);
+//
+//		System.exit(-1);
+//
+////		controller.run();
+//
+//		this.bdiServer.finish();
 	}
 	
 	public final Replanner getReplanner() {
@@ -298,9 +303,25 @@ public final class MATSimModel implements ABMServerInterface {
 	public final void takeControl(AgentDataContainer agentDataContainer){
 		logger.trace("Received {}", agentManager.getAgentDataContainer());
 		agentManager.updateActions();
-//		playPause.doStep( (int) (playPause.getLocalTime() + 1) );
+		playPause.doStep( (int) (playPause.getLocalTime() + 1) );
 	}
+	public final boolean isFinished() {
+		return playPause.isFinished() ;
+	}
+	public void finish() {
+		playPause.play(); 
+		int ii=0 ;
+		while( matsimThread.isAlive() ) {
+			try {
+				Thread.sleep(100);
+				System.err.println("here " + ii ); ii++ ;
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 
+	}
 	public final synchronized void addDateServerEvent(String type,SimpleMessage newEvent){
 		//This does mean that the visualiser should be registered very early or events may be thrown away
 		if(dataServer != null) agentsUpdateMessages.add(newEvent);
