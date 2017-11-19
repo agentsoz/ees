@@ -147,7 +147,7 @@ public class Main {
 				bdiAgentIDs.toArray( new String[bdiAgentIDs.size()] ));
 		
 		
-		matsimModel.run(bdiAgentIDs);
+		matsimModel.init(bdiAgentIDs);
 
 		// Write safe line statistics to file
 		writeSafeLineMonitors(monitors, safelineOutputFilePattern);
