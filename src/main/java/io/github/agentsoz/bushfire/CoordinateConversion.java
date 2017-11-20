@@ -5,6 +5,8 @@
  */
 package io.github.agentsoz.bushfire;
 
+import java.util.Collections;
+
 /*
  * #%L
  * BDI-ABM Integration Package
@@ -29,6 +31,7 @@ package io.github.agentsoz.bushfire;
 
 
 import java.util.Hashtable;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class CoordinateConversion
@@ -557,9 +560,15 @@ public class CoordinateConversion
 
   private class Digraphs
   {
-    private Map digraph1 = new Hashtable();
-
-    private Map digraph2 = new Hashtable();
+//	  private Map digraph1 = new Hashtable();
+//	    private Map digraph2 = new Hashtable();
+	    private Map digraph1 = Collections.synchronizedMap( new LinkedHashMap() ) ;
+	    private Map digraph2 = Collections.synchronizedMap( new LinkedHashMap() ) ;
+	    // NOTES:
+	    // (1) replace non-deterministic by deterministic data structure for testing
+	    // (2) Hashtable is synchronized while LinkedHashMap is not.  Thus making it synchronized
+	    // just in case (i don't know if this is needed).
+	    // kai, nov'17
 
     private String[] digraph1Array = { "A", "B", "C", "D", "E", "F", "G", "H",
         "J", "K", "L", "M", "N", "P", "Q", "R", "S", "T", "U", "V", "W", "X",
