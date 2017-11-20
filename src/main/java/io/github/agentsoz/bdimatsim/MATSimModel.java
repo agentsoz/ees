@@ -300,9 +300,11 @@ public final class MATSimModel implements ABMServerInterface {
 
 	@Override
 	public final void takeControl(AgentDataContainer agentDataContainer){
-		logger.trace("Received {}", agentManager.getAgentDataContainer());
-		agentManager.updateActions();
-		playPause.doStep( (int) (playPause.getLocalTime() + 1) );
+	  synchronized (agentDataContainer) {
+        logger.trace("Received {}", agentManager.getAgentDataContainer());
+        agentManager.updateActions();
+        playPause.doStep( (int) (playPause.getLocalTime() + 1) );
+      }
 	}
 	public final boolean isFinished() {
 		return playPause.isFinished() ;
