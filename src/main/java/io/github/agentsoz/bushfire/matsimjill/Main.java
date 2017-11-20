@@ -145,6 +145,7 @@ public class Main {
 		this.jillmodel.init(matsimModel.getAgentManager().getAgentDataContainer(),
 				matsimModel.getAgentManager().getAgentStateList(), this.matsimModel,
 				bdiAgentIDs.toArray( new String[bdiAgentIDs.size()] ));
+		this.jillmodel.start();
 		
 		int ii=0 ;
 		System.err.println("in jill main " + ii ); ii++ ;
@@ -155,9 +156,9 @@ public class Main {
 		
 		while ( true ) {
 			System.err.println("in jill main b " + ii ); ii++ ;
-			this.matsimModel.takeControl(matsimModel.getAgentManager().getAgentDataContainer());
+            this.jillmodel.takeControl( matsimModel.getAgentManager().getAgentDataContainer() );
 			System.err.println("in jill main c " + ii ); ii++ ;
-			this.jillmodel.takeControl( matsimModel.getAgentManager().getAgentDataContainer() );
+            this.matsimModel.takeControl(matsimModel.getAgentManager().getAgentDataContainer());
 			System.err.println("in jill main d " + ii ); ii++ ;
 			if( this.matsimModel.isFinished() ) {
 				break ;
