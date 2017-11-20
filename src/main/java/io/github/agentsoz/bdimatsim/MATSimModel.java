@@ -266,7 +266,6 @@ public final class MATSimModel implements ABMServerInterface {
 		while( this.playPause==null ) {
 			try {
 				Thread.sleep(100);
-				System.err.println("here " + ii ); ii++ ;
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -314,7 +313,6 @@ public final class MATSimModel implements ABMServerInterface {
 		while( matsimThread.isAlive() ) {
 			try {
 				Thread.sleep(100);
-				System.err.println("here " + ii ); ii++ ;
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
