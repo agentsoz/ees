@@ -42,21 +42,24 @@ public class MainCampbellsCreek50Test {
 		Main.main(args);
 
 		long [] expectedEvents = new long [] {
-				CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/1/output_events.xml.gz" ), 
+                CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/0/output_events.xml.gz" ), 
+		        //CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/1/output_events.xml.gz" ), 
+				//CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/1/output_events.xml.gz" ), 
 				// 3214464728 mvn console, eclipse single
-				CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/2/output_events.xml.gz" ) 
+				//CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/2/output_events.xml.gz" ), 
 				// 1316710466 eclipse in context
 				//				CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/3/output_events.xml.gz" ) 
-				, 3695594801L // travis
+				3695594801L // travis
 		} ;
 
 		long [] expectedPlans = new long [] {
-				CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/1/output_plans.xml.gz" ), 
+		        CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/0/output_plans.xml.gz" ), 
+				//CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/1/output_plans.xml.gz" ), 
 				// 1884178769 mvn console, eclipse single
-				CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/2/output_plans.xml.gz" )
+				//CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/2/output_plans.xml.gz" ),
 				// eclipse in context
 				//				CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/3/output_plans.xml.gz" )
-				, 547669447L // travis
+				547669447L // travis
 		} ;
 
 		long actualEvents = CRCChecksum.getCRCFromFile( utils.getOutputDirectory() + "/output_events.xml.gz" ) ;
