@@ -148,24 +148,16 @@ public class Main {
 		this.jillmodel.start();
 		
 		int ii=0 ;
-		System.err.println("in jill main " + ii ); ii++ ;
 
 		matsimModel.init(bdiAgentIDs);
 		
-		System.err.println("in jill main " + ii ); ii++ ;
-		
 		while ( true ) {
-			System.err.println("in jill main b " + ii ); ii++ ;
             this.jillmodel.takeControl( matsimModel.getAgentManager().getAgentDataContainer() );
-			System.err.println("in jill main c " + ii ); ii++ ;
             this.matsimModel.takeControl(matsimModel.getAgentManager().getAgentDataContainer());
-			System.err.println("in jill main d " + ii ); ii++ ;
 			if( this.matsimModel.isFinished() ) {
 				break ;
 			}
 		}
-
-		System.err.println("in jill main " + ii ); ii++ ;
 
 		// Write safe line statistics to file
 		writeSafeLineMonitors(monitors, safelineOutputFilePattern);
