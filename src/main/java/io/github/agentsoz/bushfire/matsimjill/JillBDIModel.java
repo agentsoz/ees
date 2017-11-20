@@ -1,8 +1,8 @@
 package io.github.agentsoz.bushfire.matsimjill;
 
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.PriorityQueue;
 
 import org.slf4j.Logger;
@@ -55,14 +55,17 @@ public class JillBDIModel extends JillModel implements DataClient {
 	// Jill initialisation args
 	private String[] initArgs = null;
 	
-	// Map of bushfire agent names to jill agent names
-	private HashMap<String,String> agents;
+	// Map of MATSim agent IDs to jill agent IDs
+	private Map<String,String> mapMATsimToJillIds;
+    // Reverse map of Jill agent IDs to MATSim agent IDs (for convinience)
+    private Map<String,String> mapJillToMATsimIds;
 	
 	// Map<Time,Agent> of scheduled fire alerts 
 	private PriorityQueue<TimedAlert> alerts;
 	
 	public JillBDIModel(String[] initArgs) {
-		agents = new LinkedHashMap<String,String>();
+		mapMATsimToJillIds = new LinkedHashMap<String,String>();
+		mapJillToMATsimIds = new LinkedHashMap<String,String>();
 		alerts = new PriorityQueue<TimedAlert>(SimpleConfig.getNumBDIAgents(), new Comparator<TimedAlert>() {
 			@Override
 			public int compare(TimedAlert o1, TimedAlert o2) {
@@ -97,7 +100,8 @@ public class JillBDIModel extends JillModel implements DataClient {
 			// Now create the given map to jill agent ids
 			for (int i=0; i<params.length; i++) {
 				String jillID = String.valueOf(((Agent)getAgent(i)).getId());
-				agents.put((String)params[i], jillID);
+				mapMATsimToJillIds.put((String)params[i], jillID);
+				mapJillToMATsimIds.put(jillID, (String)params[i]);
 			}
 			return true;
 		}
@@ -130,13 +134,23 @@ public class JillBDIModel extends JillModel implements DataClient {
 		// Send fire alerts to all agents scheduled for this time step (or earlier)
 		while (!alerts.isEmpty() && alerts.peek().getTime() <= timeInSecs) {
 			TimedAlert alert = alerts.poll();
-			String jillId = agents.get(alert.getAgent());
-			adc.getOrCreate(jillId).getPerceptContainer().put(PhoenixFireModule.FIREALERT, new Double(timeInSecs));
+			String matsimAgentId = alert.getAgent();
+			adc.getOrCreate(matsimAgentId).getPerceptContainer().put(PhoenixFireModule.FIREALERT, new Double(timeInSecs));
 		}
+		translateToJillIds(adc);
 		super.takeControl(adc);
+        translateToMATSimIds(adc);
 	}
 	
-	/**
+  private void translateToJillIds(AgentDataContainer adc) {
+    // FIXME: The incoming IDs need to be changed to Jill IDs before the next call
+  }
+
+  private void translateToMATSimIds(AgentDataContainer adc) {
+    // FIXME: The outgoing IDs need to be converted to MATSim IDs before returning
+  }
+
+  /**
 	 * Schedules fire alerts to be send to residents starting at time 
 	 * {@link SimpleConfig#getEvacStartHHMM()} and with a normal peak at
 	 * {@link SimpleConfig#getEvacPeakMins()} minutes after start.
@@ -152,11 +166,11 @@ public class JillBDIModel extends JillModel implements DataClient {
 		double minsMean = mins3Sigma;
 		double evacStartInSeconds = Time.convertTime(hhmm[0], Time.TimestepUnit.HOURS, Time.TimestepUnit.SECONDS) 
 				+ Time.convertTime(hhmm[1], Time.TimestepUnit.MINUTES, Time.TimestepUnit.SECONDS);
-		for (String agent: agents.keySet()) {
+		for (String matsimAgentId: mapMATsimToJillIds.keySet()) {
 			double minsOffset = Global.getRandom().nextGaussian() * minsSigma + minsMean;
 			double secsOffset = Math.round(Time.convertTime(minsOffset, Time.TimestepUnit.MINUTES, Time.TimestepUnit.SECONDS));
 			double evacTimeInSeconds = evacStartInSeconds + secsOffset;
-			alerts.add(new TimedAlert(evacTimeInSeconds, agent));
+			alerts.add(new TimedAlert(evacTimeInSeconds, matsimAgentId));
 		}
 	}
 	
