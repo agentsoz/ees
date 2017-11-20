@@ -104,14 +104,20 @@ ActivityEndEventHandler{
 
 
 	
-	private void callRegisteredHandlers(Event ev) {
-		ArrayList<Monitor> toRemove = new ArrayList<Monitor>();
+	synchronized private void callRegisteredHandlers(Event ev) {
+		// putting in the "synchronized" on 20-nov-2017.  Might be an issue when parallel events handling is active.  kai, nov'17
+		
+		ArrayList<Monitor> toRemove = new ArrayList<>();
 		for (Monitor monitor : monitors) {
 			switch (monitor.getEvent()) {
+			// yy from a matsim perspective, the following are plugged together in a weird way: in matsim, enterLink
+			// would really be the same as leaveNode.  And not enterNode, as the bdi framework keyword implies.  ???
+			// kai, nov'17
 			case EnteredNode:
 				if (ev instanceof LinkEnterEvent) {
 					LinkEnterEvent event = (LinkEnterEvent)ev;
-					if (monitor.getAgentId() == event.getDriverId() && monitor.getLinkId() == event.getLinkId()) {
+//					if (monitor.getAgentId() == event.getDriverId() && monitor.getLinkId() == event.getLinkId()) {
+					if (monitor.getAgentId().equals(event.getDriverId()) && monitor.getLinkId().equals(event.getLinkId())) {
 						if(monitor.getHandler().handle(monitor.getAgentId(), monitor.getLinkId(), monitor.getEvent())) {
 							toRemove.add(monitor);
 						}
@@ -121,7 +127,8 @@ ActivityEndEventHandler{
 			case ExitedNode:
 				if (ev instanceof LinkLeaveEvent) {
 					LinkLeaveEvent event = (LinkLeaveEvent)ev;
-					if (monitor.getAgentId() == event.getDriverId() && monitor.getLinkId() == event.getLinkId()) {
+//					if (monitor.getAgentId() == event.getDriverId() && monitor.getLinkId() == event.getLinkId()) {
+					if (monitor.getAgentId().equals(event.getDriverId()) && monitor.getLinkId().equals(event.getLinkId())) {
 						if(monitor.getHandler().handle(monitor.getAgentId(), monitor.getLinkId(), monitor.getEvent())) {
 							toRemove.add(monitor);
 						}
@@ -131,7 +138,8 @@ ActivityEndEventHandler{
 			case ArrivedAtDestination:
 				if (ev instanceof PersonArrivalEvent) {
 					PersonArrivalEvent event = (PersonArrivalEvent)ev;
-					if (monitor.getAgentId() == event.getPersonId() && monitor.getLinkId() == event.getLinkId()) {
+//					if (monitor.getAgentId() == event.getPersonId() && monitor.getLinkId() == event.getLinkId()) {
+					if (monitor.getAgentId().equals(event.getPersonId()) && monitor.getLinkId().equals(event.getLinkId())) {
 						if(monitor.getHandler().handle(monitor.getAgentId(), monitor.getLinkId(), monitor.getEvent())) {
 							toRemove.add(monitor);
 						}
@@ -141,7 +149,8 @@ ActivityEndEventHandler{
 			case DepartedDestination:
 				if (ev instanceof PersonDepartureEvent) {
 					PersonDepartureEvent event = (PersonDepartureEvent)ev;
-					if (monitor.getAgentId() == event.getPersonId() && monitor.getLinkId() == event.getLinkId()) {
+//					if (monitor.getAgentId() == event.getPersonId() && monitor.getLinkId() == event.getLinkId()) {
+					if (monitor.getAgentId().equals(event.getPersonId()) && monitor.getLinkId().equals(event.getLinkId())) {
 						if (monitor.getHandler().handle(monitor.getAgentId(), monitor.getLinkId(), monitor.getEvent())) {
 							toRemove.add(monitor);
 						}
@@ -151,7 +160,8 @@ ActivityEndEventHandler{
 			case EndedActivity:
 				if (ev instanceof ActivityEndEvent) {
 					ActivityEndEvent event = (ActivityEndEvent)ev;
-					if (monitor.getAgentId() == event.getPersonId() && monitor.getLinkId() == event.getLinkId()) {
+//					if (monitor.getAgentId() == event.getPersonId() && monitor.getLinkId() == event.getLinkId()) {
+					if (monitor.getAgentId().equals(event.getPersonId()) && monitor.getLinkId().equals(event.getLinkId())) {
 						if (monitor.getHandler().handle(monitor.getAgentId(), monitor.getLinkId(), monitor.getEvent())) {
 							toRemove.add(monitor);
 						}
