@@ -36,6 +36,7 @@ public class MainMaldon600Test {
 				"--loglevel", "INFO",
 //				"--plan-selection-policy", "FIRST", // ensures it is deterministic, as default is RANDOM
 				"--seed", "12345",
+                "--safeline-output-file-pattern", "scenarios/campbells-creek/safeline.%d%.out",
 				"--matsim-output-directory", utils.getOutputDirectory(),
 				"--jillconfig", "--config={"+
 						"agents:[{classname:io.github.agentsoz.bushfire.matsimjill.agents.Resident, args:null, count:600}],"+
@@ -48,57 +49,88 @@ public class MainMaldon600Test {
 		};
 
 		Main.main(args);
+		
+	      long [] expectedEvents = new long [] {
+              CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/0/output_events.xml.gz" ), 
+              //CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/1/output_events.xml.gz" ), 
+              //CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/1/output_events.xml.gz" ), 
+              // 3214464728 mvn console, eclipse single
+              //CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/2/output_events.xml.gz" ), 
+              // 1316710466 eclipse in context
+              //              CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/3/output_events.xml.gz" ) 
+              3695594801L // travis
+      } ;
 
-		long actualForEvents = CRCChecksum.getCRCFromFile( utils.getOutputDirectory() + "/output_events.xml.gz" ) ;
-		System.err.println("actual(events)="+actualForEvents) ;
+      long [] expectedPlans = new long [] {
+              CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/0/output_plans.xml.gz" ), 
+              //CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/1/output_plans.xml.gz" ), 
+              // 1884178769 mvn console, eclipse single
+              //CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/2/output_plans.xml.gz" ),
+              // eclipse in context
+              //              CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/3/output_plans.xml.gz" )
+              547669447L // travis
+      } ;
 
-		long actualForPlans = CRCChecksum.getCRCFromFile( utils.getOutputDirectory() + "/output_plans.xml.gz" ) ;
-		System.err.println("actual(plans)="+actualForPlans) ;
+      long actualEvents = CRCChecksum.getCRCFromFile( utils.getOutputDirectory() + "/output_events.xml.gz" ) ;
+      System.err.println("actual(events)="+actualEvents) ;
 
-		{
-			long [] expected = new long [] {
-					CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/1/output_events.xml.gz" ) // 1380811447 eclipse single)
-					, CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/2/output_events.xml.gz" )  
-					, CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/3/output_events.xml.gz" ) // 721059509 mvn console 
-					, CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/4/output_events.xml.gz" ) // 4020076758 mvn console
-					, 1569262693L // travis
-					} ;
+      long actualPlans = CRCChecksum.getCRCFromFile( utils.getOutputDirectory() + "/output_plans.xml.gz" ) ;
+      System.err.println("actual(plans)="+actualPlans) ;
 
-			boolean found = false ;
-			for ( int ii=0 ; ii<expected.length ; ii++ ) {
-				final boolean b = actualForEvents==expected[ii];
-				System.err.println(b);
-				if ( b ) {
-					found = true ;
-					break ;
-				}
-			}
-			if ( !found ) {
-				Assert.fail(); 
-			}
-		}
-		{
-			long [] expected = new long [] {
-					CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/1/output_plans.xml.gz" ) // 2704415442 eclipse single
-					, CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/2/output_plans.xml.gz" )  
-					, CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/3/output_plans.xml.gz" ) // 2575830431 mvn console  
-					, CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/4/output_plans.xml.gz" ) // 2355435033 mvn console
-					, 2424434648L // travis
-					} ;
+      MainCampbellsCreek50Test.checkSeveral(expectedEvents, actualEvents);
+      MainCampbellsCreek50Test.checkSeveral(expectedPlans, actualPlans);
 
-			boolean found = false ;
-			for ( int ii=0 ; ii<expected.length ; ii++ ) {
-				final boolean b = actualForPlans==expected[ii];
-				System.err.println(b);
-				if ( b ) {
-					found = true ;
-					break ;
-				}
-			}
-			if ( !found ) {
-				Assert.fail(); 
-			}
-		}
+
+//		long actualForEvents = CRCChecksum.getCRCFromFile( utils.getOutputDirectory() + "/output_events.xml.gz" ) ;
+//		System.err.println("actual(events)="+actualForEvents) ;
+//
+//		long actualForPlans = CRCChecksum.getCRCFromFile( utils.getOutputDirectory() + "/output_plans.xml.gz" ) ;
+//		System.err.println("actual(plans)="+actualForPlans) ;
+//
+//		{
+//			long [] expected = new long [] {
+//					CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/1/output_events.xml.gz" ) // 1380811447 eclipse single)
+//					, CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/2/output_events.xml.gz" )  
+//					, CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/3/output_events.xml.gz" ) // 721059509 mvn console 
+//					, CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/4/output_events.xml.gz" ) // 4020076758 mvn console
+//					, 1569262693L // travis
+//					} ;
+//
+//			boolean found = false ;
+//			for ( int ii=0 ; ii<expected.length ; ii++ ) {
+//				final boolean b = actualForEvents==expected[ii];
+//				System.err.println(b);
+//				if ( b ) {
+//					found = true ;
+//					break ;
+//				}
+//			}
+//			if ( !found ) {
+//				Assert.fail(); 
+//			}
+//		}
+//		{
+//			long [] expected = new long [] {
+//					CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/1/output_plans.xml.gz" ) // 2704415442 eclipse single
+//					, CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/2/output_plans.xml.gz" )  
+//					, CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/3/output_plans.xml.gz" ) // 2575830431 mvn console  
+//					, CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/4/output_plans.xml.gz" ) // 2355435033 mvn console
+//					, 2424434648L // travis
+//					} ;
+//
+//			boolean found = false ;
+//			for ( int ii=0 ; ii<expected.length ; ii++ ) {
+//				final boolean b = actualForPlans==expected[ii];
+//				System.err.println(b);
+//				if ( b ) {
+//					found = true ;
+//					break ;
+//				}
+//			}
+//			if ( !found ) {
+//				Assert.fail(); 
+//			}
+//		}
 
 
 		// FIXME: still small differences in jill log. dsingh, 06/Nov/17
