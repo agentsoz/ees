@@ -346,7 +346,6 @@ public final class MATSimModel implements ABMServerInterface {
 	private final void publishDataToExternalListeners() {
 		synchronized(this) {
 			if (dataServer != null) {
-				dataServer.stepTime();
 				dataServer.publish( "matsim_agent_updates", agentsUpdateMessages.toArray(new SimpleMessage[agentsUpdateMessages.size()]) );
 			}
 			agentsUpdateMessages.clear();
