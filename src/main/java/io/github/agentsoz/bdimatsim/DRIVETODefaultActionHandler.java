@@ -41,8 +41,8 @@ import org.matsim.core.router.TripStructureUtils.Trip;
 
 import io.github.agentsoz.bdiabm.data.ActionContent;
 import io.github.agentsoz.bdimatsim.EventsMonitorRegistry.MonitoredEventType;
-import io.github.agentsoz.bdimatsim.app.BDIActionHandler;
-import io.github.agentsoz.bdimatsim.app.BDIPerceptHandler;
+import io.github.agentsoz.nonmatsim.BDIActionHandler;
+import io.github.agentsoz.nonmatsim.BDIPerceptHandler;
 import io.github.agentsoz.nonmatsim.PAAgent;
 
 public final class DRIVETODefaultActionHandler implements BDIActionHandler {

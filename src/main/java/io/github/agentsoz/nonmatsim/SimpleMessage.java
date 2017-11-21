@@ -1,10 +1,10 @@
-package io.github.agentsoz.bdimatsim.app;
+package io.github.agentsoz.nonmatsim;
 
 /*
  * #%L
  * BDI-ABM Integration Package
  * %%
- * Copyright (C) 2014 - 2017 by its authors. See AUTHORS file.
+ * Copyright (C) 2014 - 2015 by its authors. See AUTHORS file.
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -22,13 +22,33 @@ package io.github.agentsoz.bdimatsim.app;
  * #L%
  */
 
-public interface BDIActionHandler {
+public class SimpleMessage {
+	public static enum State{
+		INITIAL,RUNNING,PASSED,FAILED,CANCELLED,STOPPED
+	}
+	public int ID;
+	public String agentID;
+	public String name;
+	public Object[] params;
+	public Object[] response;
+	public State state;
 	
-	public boolean handle(String agentID, String actionID, Object[] actionArgs); 
-	// yyyy we have a tendency to pass "global" infrastructure (here: MATSim Model) rather through the constructor.  Reasons:
-	// * The constructor is not part of the interface, so it is easier to change in specific implementations.
-	// * People start putting something like "this.model = model" into the handle method in order to remember the global
-	// object elsewhere in the handler class.  Then, however, it is more transparent to have it in the constructor right away.
-	// kai, nov'17
-
+	@Override
+	public boolean equals(Object other){
+		if(other instanceof SimpleMessage){
+			return ID == ((SimpleMessage)other).ID;
+		}
+		return super.equals(other);
+	}
+	
+	@Override
+	public String toString() {
+		String paramsS = "";
+		for (Object object : params) {
+			paramsS += object.toString() + ",";
+		}
+		
+				
+		return "agentID["+agentID+"] name["+name+"] state["+state+"] params[" + paramsS + "]";
+	}
 }

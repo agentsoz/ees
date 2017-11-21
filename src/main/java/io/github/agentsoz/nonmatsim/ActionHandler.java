@@ -25,7 +25,6 @@ package io.github.agentsoz.nonmatsim;
 import java.util.LinkedHashMap;
 
 import io.github.agentsoz.bdimatsim.MATSimActionList;
-import io.github.agentsoz.bdimatsim.app.BDIActionHandler;
 
 /**
  * @author Edmund Kemsley Processes action/s from MatsimActionList by updating

@@ -1,7 +1,5 @@
 package io.github.agentsoz.nonmatsim;
 
-import javax.inject.Inject;
-
 /*
  * #%L
  * BDI-ABM Integration Package
@@ -26,43 +24,28 @@ import javax.inject.Inject;
 
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.network.Link;
-import org.matsim.core.gbl.Gbl;
+import org.matsim.api.core.v01.population.Person;
 
-import io.github.agentsoz.bdimatsim.EventsMonitorRegistry;
 import io.github.agentsoz.bdimatsim.EventsMonitorRegistry.MonitoredEventType;
 
-/**
- * @author Edmund Kemsley, Dhirendra Singh
- */
-
-public final class PerceptHandler {
-
-	private final EventsMonitorRegistry eventsMonitors;
+public interface BDIPerceptHandler {
 
 	/**
-	 * Constructor
-	 * 
-	 * @param eventsMonitors
-	 */ 
-	protected PerceptHandler(final EventsMonitorRegistry eventsMonitors) {
-		Gbl.assertNotNull( eventsMonitors );
-		this.eventsMonitors = eventsMonitors ;
-	}
-
-	/**
-	 * For a given agent, registers a {@link BDIPerceptHandler} to be called 
-	 * whenever an event of type {@link MonitoredEventType} is triggered
-	 * for {@code linkId}. 
+	 * Handles the given {@link MonitoredEventType}.
+	 * <p>
+	 * Returning true will cause this handler to be removed (seful for handling
+	 * some event once). Returning false will keep this handler registered such
+	 * that it gets called again on subsequent events that match. 
 	 * @param agentId
 	 * @param linkId
-	 * @param event
-	 * @param handler
+	 * @param monitoredEvent
 	 * @return
 	 */
-	public int registerBDIPerceptHandler(String agentId, MonitoredEventType event,Id<Link> linkId, BDIPerceptHandler handler) {
-		// yy maybe replace Id<Link> by String? kai, nov'17
-		
-		return eventsMonitors.registerMonitor(agentId, event, linkId, handler);
-	}
+	public boolean handle(Id<Person> agentId, Id<Link> linkId, MonitoredEventType monitoredEvent); 
+	// yyyy we have a tendency to pass "global" infrastructure (here: MATSim Model) rather through the constructor.  Reasons:
+	// * The constructor is not part of the interface, so it is easier to change in specific implementations.
+	// * People start putting something like "this.model = model" into the handle method in order to remember the global
+	// object elsewhere in the handler class.  Then, however, it is more transparent to have it in the constructor right away.
+	// kai, nov'17
 
 }

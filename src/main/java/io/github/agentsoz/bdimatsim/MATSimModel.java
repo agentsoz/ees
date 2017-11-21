@@ -59,9 +59,9 @@ import org.slf4j.LoggerFactory;
 
 import io.github.agentsoz.bdiabm.ABMServerInterface;
 import io.github.agentsoz.bdiabm.data.AgentDataContainer;
-import io.github.agentsoz.bdimatsim.moduleInterface.data.SimpleMessage;
 import io.github.agentsoz.dataInterface.DataServer;
 import io.github.agentsoz.nonmatsim.PAAgentManager;
+import io.github.agentsoz.nonmatsim.SimpleMessage;
 
 /**
  * @author QingyuChen, KaiNagel, Dhi Singh
@@ -93,11 +93,6 @@ public final class MATSimModel implements ABMServerInterface {
 	 */
 	private final MobsimDataProvider mobsimDataProvider = new MobsimDataProvider() ;
 
-	/**
-	 * currently necessary since we are calling bdiServer.takeControl from here, but should eventually go away
-	 */
-	//	private final BDIServerInterface bdiServer;
-
 	private QSim qSim;
 
 	/**
@@ -110,22 +105,6 @@ public final class MATSimModel implements ABMServerInterface {
 	private Thread matsimThread;
 
 	public MATSimModel( String[] args) {
-		//		this.bdiServer = bidServer ;
-
-		//		// An attempt with Guice.  It really just goes from here ...
-		//		Injector injector = Guice.createInjector(new com.google.inject.AbstractModule() {
-		//			@Override protected void configure() {
-		//				bind(PAAgentManager.class).in(Singleton.class);
-		//				bind(EventsMonitorRegistry.class).in(Singleton.class);
-		//				bind(MATSimModel.class).toInstance( MATSimModel.this );
-		//			}
-		//		});
-		//		agentManager = injector.getInstance( PAAgentManager.class ) ;
-		//		eventsMonitors = injector.getInstance( EventsMonitorRegistry.class ) ;
-		//		// ... to here, plus you can now use @Inject in the bound classes.  Note that this injector here is 
-		//		// independent from the MATSim injector; there, it is a bit more complicated.  kai, nov'17
-
-		this.agentManager = new PAAgentManager(eventsMonitors) ;
 
 		Config config = ConfigUtils.loadConfig( args[0] ) ;
 		parseAdditionalArguments(args, config);
@@ -134,8 +113,6 @@ public final class MATSimModel implements ABMServerInterface {
 		config.plans().setActivityDurationInterpretation(ActivityDurationInterpretation.tryEndTimeThenDuration);
 
 
-		// Normally, the qsim starts at the earliest activity end time.  The following tells the mobsim to start
-		// at 2 seconds before 6:00, no matter what is in the initial plans file:
 		config.qsim().setStartTime( 1.00 );
 		config.qsim().setSimStarttimeInterpretation( StarttimeInterpretation.onlyUseStarttime );
 		//		config.qsim().setEndTime( 8.*3600 + 1800. );
@@ -148,13 +125,13 @@ public final class MATSimModel implements ABMServerInterface {
 		// ---
 
 		scenario = ScenarioUtils.loadScenario(config) ;
+		
+		// ---
 
+		this.agentManager = new PAAgentManager(eventsMonitors) ;
 	}
 
 	public final void init(List<String> bdiAgentIDs) {
-		// (this needs to be public)
-
-		// ---
 
 		for ( Link link : scenario.getNetwork().getLinks().values() ) {
 			final double veryLargeSpeed = 9999999999.;
@@ -163,15 +140,14 @@ public final class MATSimModel implements ABMServerInterface {
 			}
 		}
 
-		// this could now be done in upstream code.  But since upstream code is user code, maybe we don't want it in there?
+		// yy this could now be done in upstream code.  But since upstream code is user code, maybe we don't want it in there?  kai, nov'17
 		for(String agentId: bdiAgentIDs) {
-			/*Important - add agent to agentManager */
 			agentManager.createAndAddBDIAgent(agentId);
+
+			// default action:
 			agentManager.getAgent(agentId).getActionHandler().registerBDIAction(
 					MATSimActionList.DRIVETO, new DRIVETODefaultActionHandler(this) );
-			// moved default action from PAAgentManager to here.  kai, nov'17
 		}
-
 
 		// ---
 
@@ -191,38 +167,7 @@ public final class MATSimModel implements ABMServerInterface {
 
 				install( new EvacQSimModule(MATSimModel.this) ) ;
 
-				this.addMobsimListenerBinding().toInstance( new MobsimAfterSimStepListener() {
-					/**
-					 * The most important method - called each time step during the iteration
-					 */		
-					@Override
-					public void notifyMobsimAfterSimStep(MobsimAfterSimStepEvent e) {
-
-						// the real work is done here:
-
-						// On 25 Aug 2016 dsingh said:
-						// The notifyMobsimBeforeSimStep(e) function essentially provides
-						// the simulation clock in any MATSim-BDI integration, since there
-						// is no external controller (MATSim acts as the controller).
-						// So this is where we control and synchronise all models
-						// (ABM, BDI, Fire, other) with respect to data transfer
-						//
-						// 1. First step the data server so that it can conduct
-						//    the data transfer between all connected models
-						publishDataToExternalListeners();
-						// 2. Next, call the BDI model that will populate the 
-						//    agent data container with any action/percepts per agent
-						//						bdiServer.takeControl(agentManager.getAgentDataContainer());
-						// 3. Finally, call the MATSim model and process 
-						//    the BDI actions/percepts, and re-populate the 
-						//    agent data container, ready to pass to the BDI system in the 
-						//    next cycle.
-						//						MATSimModel.this.takeControl(agentManager.getAgentDataContainer());
-					}
-				} ) ; // end anonymous class MobsimListener
-
 				this.addMobsimListenerBinding().toInstance( new MobsimInitializedListener() {
-
 					@Override public void notifyMobsimInitialized(MobsimInitializedEvent e) {
 
 						qSim = (QSim) e.getQueueSimulation() ;
@@ -238,48 +183,32 @@ public final class MATSimModel implements ABMServerInterface {
 						//						initialiseVisualisedAgents() ;
 					}
 				}) ;
+				
+				// some infrastructure that makes results available: 
+				this.addMobsimListenerBinding().toInstance( new MobsimAfterSimStepListener() {
+					@Override public void notifyMobsimAfterSimStep(MobsimAfterSimStepEvent e) {
+						publishDataToExternalListeners();
+					}
+				} ) ;
 
-				this.addMobsimListenerBinding().toInstance( getMobsimDataProvider() );
+				this.addMobsimListenerBinding().toInstance( mobsimDataProvider );
 			}
 		}) ;
 
-		//		this.bdiServer.start();
-
-		org.apache.log4j.Logger.getRootLogger().setLevel(Level.INFO);
-
-		// this should wrap the controller into a thread:
+		// twrap the controller into a thread and start it:
 		this.matsimThread = new Thread( controller ) ;
 		matsimThread.start();
 
-		int ii=0 ;
 		while( this.playPause==null ) {
 			try {
 				Thread.sleep(100);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 
 		return ;
 
-		//		System.err.println("here " + ii ); ii++ ;
-		//
-		//		this.playPause.doStep(3600);
-		//		
-		//		System.err.println("here " + ii ); ii++ ;
-		//
-		//		this.playPause.doStep(2*3600);
-		//
-		//		System.err.println("here " + ii ); ii++ ;
-		//
-		//		this.playPause.doStep(3*3600);
-		//
-		//		System.exit(-1);
-		//
-		////		controller.run();
-		//
-		//		this.bdiServer.finish();
 	}
 
 	public final Replanner getReplanner() {
@@ -303,12 +232,10 @@ public final class MATSimModel implements ABMServerInterface {
 	}
 	public void finish() {
 		playPause.play(); 
-		int ii=0 ;
 		while( matsimThread.isAlive() ) {
 			try {
 				Thread.sleep(100);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
