@@ -147,15 +147,20 @@ public class Main {
 				bdiAgentIDs.toArray( new String[bdiAgentIDs.size()] ));
 		this.jillmodel.start();
 		
-		int ii=0 ;
-
 		matsimModel.init(bdiAgentIDs);
 		
 		while ( true ) {
             this.jillmodel.takeControl( matsimModel.getAgentManager().getAgentDataContainer() );
             this.matsimModel.takeControl(matsimModel.getAgentManager().getAgentDataContainer());
+            //this.matsimModel.runUntil(Global.getTime()+1, matsimModel.getAgentManager().getAgentDataContainer());
 			if( this.matsimModel.isFinished() ) {
-				break ;
+			  try {
+			    // Added to allow EventsMonitorRegistry.callRegisteredHandlers() to finish, dsingh 21/nov/17
+                Thread.sleep(1000);
+              } catch (InterruptedException e) {
+                e.printStackTrace();
+              }
+			  break ;
 			}
 		}
 
