@@ -3,6 +3,8 @@
  */
 package io.github.agentsoz.bushfire.matsimjill;
 
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Rule;
@@ -78,6 +80,13 @@ public class MainCampbellsCreek50Test {
 		//		}
 	}
 
+	public static void checkSeveral(List<Long> expecteds, long actualEvents) {
+		long [] expectedsArray = new long[expecteds.size()] ;
+		for ( int ii=0 ; ii<expecteds.size() ; ii++ ) {
+			expectedsArray[ii] = expecteds.get(ii) ;
+		}
+		checkSeveral( expectedsArray, actualEvents ) ;
+	}
 	public static void checkSeveral(long[] expectedEvents, long actualEvents) {
 		boolean found = false ;
 		for ( int ii=0 ; ii<expectedEvents.length ; ii++ ) {
