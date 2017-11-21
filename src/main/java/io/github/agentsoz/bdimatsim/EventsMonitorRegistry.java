@@ -23,6 +23,7 @@ package io.github.agentsoz.bdimatsim;
  */
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.matsim.api.core.v01.Id;
@@ -71,6 +72,7 @@ ActivityEndEventHandler{
 	}
 	
 	private List<Monitor> monitors = new ArrayList<>() ;
+    private List<Monitor> toAdd = new ArrayList<>();
 
 	@Override
 	public final void reset(int iteration) {
@@ -105,11 +107,25 @@ ActivityEndEventHandler{
 
 	
 	synchronized private void callRegisteredHandlers(Event ev) {
-		// putting in the "synchronized" on 20-nov-2017.  Might be an issue when parallel events handling is active.  kai, nov'17
-		
-		ArrayList<Monitor> toRemove = new ArrayList<>();
-		for (Monitor monitor : monitors) {
-			switch (monitor.getEvent()) {
+	  // putting in the "synchronized" on 20-nov-2017.  Might be an issue when parallel events handling is active.  kai, nov'17
+
+      // Register any new monitors waiting to be added
+	  // Synchronise on toAdd which is allowed to be updated by other threads
+      synchronized (toAdd) {
+        for(Monitor monitor : toAdd) {
+          monitors.add(monitor);
+        }
+        toAdd.clear();
+      }
+     
+      // the following code assumes that monitors and toRemove cannot be changed by
+      // any other thread, so method should remain synchronized to ensure this
+      // dsingh, 22/nov/17
+      
+      List<Monitor> toRemove = new ArrayList<>();
+      
+      for (Monitor monitor : monitors) {
+	        switch (monitor.getEvent()) {
 			// yy from a matsim perspective, the following are plugged together in a weird way: in matsim, enterLink
 			// would really be the same as leaveNode.  And not enterNode, as the bdi framework keyword implies.  ???
 			// kai, nov'17
@@ -119,7 +135,9 @@ ActivityEndEventHandler{
 //					if (monitor.getAgentId() == event.getDriverId() && monitor.getLinkId() == event.getLinkId()) {
 					if (monitor.getAgentId().equals(event.getDriverId()) && monitor.getLinkId().equals(event.getLinkId())) {
 						if(monitor.getHandler().handle(monitor.getAgentId(), monitor.getLinkId(), monitor.getEvent())) {
-							toRemove.add(monitor);
+						  synchronized (toRemove) {
+                            toRemove.add(monitor);
+                          }
 						}
 					}
 				}
@@ -130,7 +148,7 @@ ActivityEndEventHandler{
 //					if (monitor.getAgentId() == event.getDriverId() && monitor.getLinkId() == event.getLinkId()) {
 					if (monitor.getAgentId().equals(event.getDriverId()) && monitor.getLinkId().equals(event.getLinkId())) {
 						if(monitor.getHandler().handle(monitor.getAgentId(), monitor.getLinkId(), monitor.getEvent())) {
-							toRemove.add(monitor);
+                            toRemove.add(monitor);
 						}
 					}
 				}
@@ -141,7 +159,7 @@ ActivityEndEventHandler{
 //					if (monitor.getAgentId() == event.getPersonId() && monitor.getLinkId() == event.getLinkId()) {
 					if (monitor.getAgentId().equals(event.getPersonId()) && monitor.getLinkId().equals(event.getLinkId())) {
 						if(monitor.getHandler().handle(monitor.getAgentId(), monitor.getLinkId(), monitor.getEvent())) {
-							toRemove.add(monitor);
+                            toRemove.add(monitor);
 						}
 					}
 				} 
@@ -152,7 +170,7 @@ ActivityEndEventHandler{
 //					if (monitor.getAgentId() == event.getPersonId() && monitor.getLinkId() == event.getLinkId()) {
 					if (monitor.getAgentId().equals(event.getPersonId()) && monitor.getLinkId().equals(event.getLinkId())) {
 						if (monitor.getHandler().handle(monitor.getAgentId(), monitor.getLinkId(), monitor.getEvent())) {
-							toRemove.add(monitor);
+                            toRemove.add(monitor);
 						}
 					}
 				}
@@ -163,7 +181,7 @@ ActivityEndEventHandler{
 //					if (monitor.getAgentId() == event.getPersonId() && monitor.getLinkId() == event.getLinkId()) {
 					if (monitor.getAgentId().equals(event.getPersonId()) && monitor.getLinkId().equals(event.getLinkId())) {
 						if (monitor.getHandler().handle(monitor.getAgentId(), monitor.getLinkId(), monitor.getEvent())) {
-							toRemove.add(monitor);
+                            toRemove.add(monitor);
 						}
 					}
 				}
@@ -171,10 +189,12 @@ ActivityEndEventHandler{
 			default:
 				throw new RuntimeException("missing case statement") ;
 			}
-		}
-		for (Monitor monitor : toRemove) {
-			monitors.remove(monitor);
-		}
+      }
+
+      // Remove any monitors scheduled to be removed
+      for (Monitor monitor : toRemove) {
+        monitors.remove(monitor);
+      }
 	}
 	
 	/**
@@ -188,9 +208,9 @@ ActivityEndEventHandler{
 	 * @return
 	 */
 	public int registerMonitor(String agentId, MonitoredEventType event,Id<Link> linkId, BDIPerceptHandler handler) {
-		synchronized (monitors) {
-			monitors.add(new Monitor(agentId, linkId, event, handler));
-			return monitors.size();
+		synchronized (toAdd) {
+			toAdd.add(new Monitor(agentId, linkId, event, handler));
+			return toAdd.size();
 		}
 	}
 
