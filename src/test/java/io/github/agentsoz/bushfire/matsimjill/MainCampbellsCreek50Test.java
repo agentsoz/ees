@@ -59,7 +59,7 @@ public class MainCampbellsCreek50Test {
 				//CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/2/output_plans.xml.gz" ),
 				// eclipse in context
 				//				CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/3/output_plans.xml.gz" )
-				547669447L // travis
+		        3016416866L // 547669447L // travis
 		} ;
 
 		long actualEvents = CRCChecksum.getCRCFromFile( utils.getOutputDirectory() + "/output_events.xml.gz" ) ;
