@@ -1,6 +1,7 @@
 package io.github.agentsoz.nonmatsim;
 
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -112,7 +113,9 @@ public final class PAAgentManager {
 		if (agentDataContainer.isEmpty()) {
 			return;
 		}
-		for (String agent : agentDataContainer.keySet()) {
+        Iterator<String> i = agentDataContainer.getAgentIDs();
+        while (i.hasNext()) {
+            String agent = i.next();
 			ActionContainer actionContainer = agentDataContainer.getOrCreate( agent).getActionContainer();
 			for (String action : actionContainer.actionIDSet()) {
 				if (actionContainer.get(action).getState() == ActionContent.State.INITIATED) {
