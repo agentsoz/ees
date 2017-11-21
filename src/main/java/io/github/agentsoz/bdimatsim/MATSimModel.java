@@ -58,10 +58,7 @@ import org.slf4j.LoggerFactory;
  */
 
 import io.github.agentsoz.bdiabm.ABMServerInterface;
-import io.github.agentsoz.bdiabm.BDIServerInterface;
 import io.github.agentsoz.bdiabm.data.AgentDataContainer;
-import io.github.agentsoz.bdimatsim.app.MATSimApplicationInterface;
-import io.github.agentsoz.bdimatsim.app.StubPlugin;
 import io.github.agentsoz.bdimatsim.moduleInterface.data.SimpleMessage;
 import io.github.agentsoz.dataInterface.DataServer;
 import io.github.agentsoz.nonmatsim.PAAgentManager;
@@ -101,11 +98,6 @@ public final class MATSimModel implements ABMServerInterface {
 	 */
 	//	private final BDIServerInterface bdiServer;
 
-	/**
-	 * some callback interface for during agent creation. Is settable away from the stub plugin (so non-final is ok).
-	 */
-	private MATSimApplicationInterface plugin = new StubPlugin();
-
 	private QSim qSim;
 
 	/**
@@ -117,7 +109,7 @@ public final class MATSimModel implements ABMServerInterface {
 	private final EventsMonitorRegistry eventsMonitors  = new EventsMonitorRegistry() ;
 	private Thread matsimThread;
 
-	public MATSimModel( BDIServerInterface bidServer, String[] args) {
+	public MATSimModel( String[] args) {
 		//		this.bdiServer = bidServer ;
 
 		//		// An attempt with Guice.  It really just goes from here ...
@@ -172,17 +164,14 @@ public final class MATSimModel implements ABMServerInterface {
 		}
 
 		// this could now be done in upstream code.  But since upstream code is user code, maybe we don't want it in there?
-		{
-			for(String agentId: bdiAgentIDs) {
-				/*Important - add agent to agentManager */
-				agentManager.createAndAddBDIAgent(agentId);
-				agentManager.getAgent(agentId).getActionHandler().registerBDIAction(
-						MATSimActionList.DRIVETO, new DRIVETODefaultActionHandler(this) );
-				// moved default action from PAAgentManager to here.  kai, nov'17
-			}
-			// Allow the application to configure the freshly baked agents
-			plugin.notifyAfterCreatingBDICounterparts(bdiAgentIDs);
+		for(String agentId: bdiAgentIDs) {
+			/*Important - add agent to agentManager */
+			agentManager.createAndAddBDIAgent(agentId);
+			agentManager.getAgent(agentId).getActionHandler().registerBDIAction(
+					MATSimActionList.DRIVETO, new DRIVETODefaultActionHandler(this) );
+			// moved default action from PAAgentManager to here.  kai, nov'17
 		}
+
 
 		// ---
 
@@ -334,16 +323,9 @@ public final class MATSimModel implements ABMServerInterface {
 		return this.scenario ;
 	}
 
-	public final void registerPlugin(MATSimApplicationInterface app) {
-		// this could be extended to accepting more than one plugin if need be. kai, nov'17
-		this.plugin = app;
-	}
-
 	public void setEventHandlers(List<EventHandler> eventHandlers) {
 		this.eventHandlers = eventHandlers;
 	}
-
-
 
 	private static void parseAdditionalArguments(String[] args, Config config) {
 		for (int i = 1; i < args.length; i++) {

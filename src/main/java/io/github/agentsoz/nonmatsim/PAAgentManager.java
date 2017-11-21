@@ -3,10 +3,6 @@ package io.github.agentsoz.nonmatsim;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-
-import javax.inject.Inject;
 
 /*
  * #%L
@@ -36,7 +32,6 @@ import io.github.agentsoz.bdiabm.data.AgentDataContainer;
 import io.github.agentsoz.bdiabm.data.AgentState;
 import io.github.agentsoz.bdiabm.data.AgentStateList;
 import io.github.agentsoz.bdimatsim.EventsMonitorRegistry;
-import io.github.agentsoz.bdimatsim.app.MATSimApplicationInterface;
 
 /**
  * This class holds MatsimAgent objects and information
