@@ -3,12 +3,20 @@
  */
 package io.github.agentsoz.bushfire.matsimjill;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
+import org.matsim.core.utils.io.UncheckedIOException;
 import org.matsim.core.utils.misc.CRCChecksum;
 import org.matsim.testcases.MatsimTestUtils;
 import io.github.agentsoz.bushfire.matsimjill.Main;
@@ -78,6 +86,28 @@ public class MainCampbellsCreek50Test {
 		//			long actualCRC = CRCChecksum.getCRCFromFile( "scenarios/campbells-creek/jill.out" ) ;
 		//			Assert.assertEquals (expectedCRC, actualCRC); 
 		//		}
+	}
+
+	public static void checkSeveralFiles(long actual, final String cmpFileName, String baseDir ) {
+		List<Long> expecteds = new ArrayList<>() ;
+	
+		try {
+			Files.walkFileTree(new File(baseDir).toPath(), new SimpleFileVisitor<Path>() {
+				@Override public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+					final String filename = dir + cmpFileName;
+					if ( Files.exists( new File( filename).toPath() ) ) {
+						System.err.println( "checking against " + filename );
+						long crc = CRCChecksum.getCRCFromFile( filename ) ; 
+						expecteds.add(crc) ;
+					}
+					return FileVisitResult.CONTINUE;
+				}
+			});
+		} catch (IOException e) {
+			throw new UncheckedIOException(e.getMessage(), e);
+		}
+	
+		checkSeveral(expecteds, actual);
 	}
 
 	public static void checkSeveral(List<Long> expecteds, long actualEvents) {
