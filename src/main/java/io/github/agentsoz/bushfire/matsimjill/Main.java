@@ -148,11 +148,11 @@ public class Main {
 		this.jillmodel.start();
 		
 		matsimModel.init(bdiAgentIDs);
-		
+
 		while ( true ) {
             this.jillmodel.takeControl( matsimModel.getAgentManager().getAgentDataContainer() );
-            this.matsimModel.takeControl(matsimModel.getAgentManager().getAgentDataContainer());
-            //this.matsimModel.runUntil(Global.getTime()+1, matsimModel.getAgentManager().getAgentDataContainer());
+            //this.matsimModel.takeControl(matsimModel.getAgentManager().getAgentDataContainer());
+            this.matsimModel.runUntil((long)dataServer.getTime(), matsimModel.getAgentManager().getAgentDataContainer());
 			if( this.matsimModel.isFinished() ) {
 			  try {
 			    // Added to allow EventsMonitorRegistry.callRegisteredHandlers() to finish, dsingh 21/nov/17
@@ -162,6 +162,8 @@ public class Main {
               }
 			  break ;
 			}
+            // increment time
+            dataServer.stepTime();
 		}
 
 		// Write safe line statistics to file
