@@ -49,7 +49,7 @@ public class MainCampbellsCreek50Test {
 				//CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/2/output_events.xml.gz" ), 
 				// 1316710466 eclipse in context
 				//				CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/3/output_events.xml.gz" ) 
-				3695594801L // travis
+                254545757L // 3695594801L // travis
 		} ;
 
 		long [] expectedPlans = new long [] {
@@ -64,11 +64,12 @@ public class MainCampbellsCreek50Test {
 
 		long actualEvents = CRCChecksum.getCRCFromFile( utils.getOutputDirectory() + "/output_events.xml.gz" ) ;
 		System.err.println("actual(events)="+actualEvents) ;
-        checkSeveral(expectedEvents, actualEvents);
 
 		long actualPlans = CRCChecksum.getCRCFromFile( utils.getOutputDirectory() + "/output_plans.xml.gz" ) ;
 		System.err.println("actual(plans)="+actualPlans) ;
-		checkSeveral(expectedPlans, actualPlans);
+
+        checkSeveral(expectedEvents, actualEvents);
+        checkSeveral(expectedPlans, actualPlans);
 
 		//		{
 		//			long expectedCRC = CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/jill.out" ) ;
