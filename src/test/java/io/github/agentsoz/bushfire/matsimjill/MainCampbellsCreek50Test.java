@@ -64,11 +64,10 @@ public class MainCampbellsCreek50Test {
 
 		long actualEvents = CRCChecksum.getCRCFromFile( utils.getOutputDirectory() + "/output_events.xml.gz" ) ;
 		System.err.println("actual(events)="+actualEvents) ;
+        checkSeveral(expectedEvents, actualEvents);
 
 		long actualPlans = CRCChecksum.getCRCFromFile( utils.getOutputDirectory() + "/output_plans.xml.gz" ) ;
 		System.err.println("actual(plans)="+actualPlans) ;
-
-		checkSeveral(expectedEvents, actualEvents);
 		checkSeveral(expectedPlans, actualPlans);
 
 		//		{
@@ -82,10 +81,9 @@ public class MainCampbellsCreek50Test {
 		boolean found = false ;
 		for ( int ii=0 ; ii<expectedEvents.length ; ii++ ) {
 			final boolean b = actualEvents==expectedEvents[ii];
-			System.err.println(b);
+			System.err.println("checking if " + actualEvents + "==" + expectedEvents[ii] + " ? " + b);
 			if ( b ) {
 				found = true ;
-				System.err.println(); ;
 				break ;
 			}
 		}
