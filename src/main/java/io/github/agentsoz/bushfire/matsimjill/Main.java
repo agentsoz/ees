@@ -134,7 +134,7 @@ public class Main {
 			config.add( MATSimModel.MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR ) ;
 			config.add( matsimOutputDirectory ) ;
 		}
-		matsimModel = new MATSimModel(jillmodel, config.toArray(new String[config.size()] ));
+		matsimModel = new MATSimModel(config.toArray(new String[config.size()] ));
 		matsimModel.registerDataServer(dataServer);
 
 		// Register the safe lines monitors for MATSim
