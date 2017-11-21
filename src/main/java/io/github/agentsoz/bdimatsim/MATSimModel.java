@@ -99,7 +99,7 @@ public final class MATSimModel implements ABMServerInterface {
 	/**
 	 * currently necessary since we are calling bdiServer.takeControl from here, but should eventually go away
 	 */
-//	private final BDIServerInterface bdiServer;
+	//	private final BDIServerInterface bdiServer;
 
 	/**
 	 * some callback interface for during agent creation. Is settable away from the stub plugin (so non-final is ok).
@@ -112,33 +112,33 @@ public final class MATSimModel implements ABMServerInterface {
 	 * can be null (so non-final is ok)
 	 */
 	private List<EventHandler> eventHandlers;
-	
+
 	private PlayPauseSimulationControl playPause;
 	private final EventsMonitorRegistry eventsMonitors  = new EventsMonitorRegistry() ;
 	private Thread matsimThread;
-	
-	public MATSimModel( BDIServerInterface bidServer, String[] args) {
-//		this.bdiServer = bidServer ;
 
-//		// An attempt with Guice.  It really just goes from here ...
-//		Injector injector = Guice.createInjector(new com.google.inject.AbstractModule() {
-//			@Override protected void configure() {
-//				bind(PAAgentManager.class).in(Singleton.class);
-//				bind(EventsMonitorRegistry.class).in(Singleton.class);
-//				bind(MATSimModel.class).toInstance( MATSimModel.this );
-//			}
-//		});
-//		agentManager = injector.getInstance( PAAgentManager.class ) ;
-//		eventsMonitors = injector.getInstance( EventsMonitorRegistry.class ) ;
-//		// ... to here, plus you can now use @Inject in the bound classes.  Note that this injector here is 
-//		// independent from the MATSim injector; there, it is a bit more complicated.  kai, nov'17
-		
+	public MATSimModel( BDIServerInterface bidServer, String[] args) {
+		//		this.bdiServer = bidServer ;
+
+		//		// An attempt with Guice.  It really just goes from here ...
+		//		Injector injector = Guice.createInjector(new com.google.inject.AbstractModule() {
+		//			@Override protected void configure() {
+		//				bind(PAAgentManager.class).in(Singleton.class);
+		//				bind(EventsMonitorRegistry.class).in(Singleton.class);
+		//				bind(MATSimModel.class).toInstance( MATSimModel.this );
+		//			}
+		//		});
+		//		agentManager = injector.getInstance( PAAgentManager.class ) ;
+		//		eventsMonitors = injector.getInstance( EventsMonitorRegistry.class ) ;
+		//		// ... to here, plus you can now use @Inject in the bound classes.  Note that this injector here is 
+		//		// independent from the MATSim injector; there, it is a bit more complicated.  kai, nov'17
+
 		this.agentManager = new PAAgentManager(eventsMonitors) ;
 
 		Config config = ConfigUtils.loadConfig( args[0] ) ;
 		parseAdditionalArguments(args, config);
 		config.network().setTimeVariantNetwork(true);
-		
+
 		config.plans().setActivityDurationInterpretation(ActivityDurationInterpretation.tryEndTimeThenDuration);
 
 
@@ -154,7 +154,7 @@ public final class MATSimModel implements ABMServerInterface {
 		//		ConfigUtils.setVspDefaults(config);
 
 		// ---
-		
+
 		scenario = ScenarioUtils.loadScenario(config) ;
 
 	}
@@ -223,12 +223,12 @@ public final class MATSimModel implements ABMServerInterface {
 						publishDataToExternalListeners();
 						// 2. Next, call the BDI model that will populate the 
 						//    agent data container with any action/percepts per agent
-//						bdiServer.takeControl(agentManager.getAgentDataContainer());
+						//						bdiServer.takeControl(agentManager.getAgentDataContainer());
 						// 3. Finally, call the MATSim model and process 
 						//    the BDI actions/percepts, and re-populate the 
 						//    agent data container, ready to pass to the BDI system in the 
 						//    next cycle.
-//						MATSimModel.this.takeControl(agentManager.getAgentDataContainer());
+						//						MATSimModel.this.takeControl(agentManager.getAgentDataContainer());
 					}
 				} ) ; // end anonymous class MobsimListener
 
@@ -246,7 +246,7 @@ public final class MATSimModel implements ABMServerInterface {
 						MobsimVehicle dummyVeh = null ;
 						qSim.insertAgentIntoMobsim(new MATSimStubAgent(dummyLinkId,Id.createPersonId("StubAgent"),dummyVeh));
 
-//						initialiseVisualisedAgents() ;
+						//						initialiseVisualisedAgents() ;
 					}
 				}) ;
 
@@ -254,7 +254,7 @@ public final class MATSimModel implements ABMServerInterface {
 			}
 		}) ;
 
-//		this.bdiServer.start();
+		//		this.bdiServer.start();
 
 		org.apache.log4j.Logger.getRootLogger().setLevel(Level.INFO);
 
@@ -271,28 +271,28 @@ public final class MATSimModel implements ABMServerInterface {
 				e.printStackTrace();
 			}
 		}
-		
+
 		return ;
-		
-//		System.err.println("here " + ii ); ii++ ;
-//
-//		this.playPause.doStep(3600);
-//		
-//		System.err.println("here " + ii ); ii++ ;
-//
-//		this.playPause.doStep(2*3600);
-//
-//		System.err.println("here " + ii ); ii++ ;
-//
-//		this.playPause.doStep(3*3600);
-//
-//		System.exit(-1);
-//
-////		controller.run();
-//
-//		this.bdiServer.finish();
+
+		//		System.err.println("here " + ii ); ii++ ;
+		//
+		//		this.playPause.doStep(3600);
+		//		
+		//		System.err.println("here " + ii ); ii++ ;
+		//
+		//		this.playPause.doStep(2*3600);
+		//
+		//		System.err.println("here " + ii ); ii++ ;
+		//
+		//		this.playPause.doStep(3*3600);
+		//
+		//		System.exit(-1);
+		//
+		////		controller.run();
+		//
+		//		this.bdiServer.finish();
 	}
-	
+
 	public final Replanner getReplanner() {
 		return qSim.getChildInjector().getInstance( Replanner.class ) ;
 		// this _should_ now be a singleton by injection. kai, nov'17
@@ -300,11 +300,14 @@ public final class MATSimModel implements ABMServerInterface {
 
 	@Override
 	public final void takeControl(AgentDataContainer agentDataContainer){
-	  synchronized (agentDataContainer) {
-        logger.trace("Received {}", agentManager.getAgentDataContainer());
-        agentManager.updateActions();
-        playPause.doStep( (int) (playPause.getLocalTime() + 1) );
-      }
+		runUntil( (int)(playPause.getLocalTime() + 1), agentDataContainer ) ;
+	}
+	public final void runUntil( long newTime , AgentDataContainer agentDataContainer ) {
+		synchronized (agentDataContainer) {
+			logger.trace("Received {}", agentManager.getAgentDataContainer());
+			agentManager.updateActions();
+			playPause.doStep( (int) (newTime) );
+		}
 	}
 	public final boolean isFinished() {
 		return playPause.isFinished() ;
