@@ -35,7 +35,13 @@ import org.matsim.api.core.v01.network.Link;
 import org.matsim.api.core.v01.network.Network;
 import org.matsim.api.core.v01.network.Node;
 import org.matsim.api.core.v01.population.Person;
+import org.matsim.api.core.v01.population.Population;
+import org.matsim.api.core.v01.population.PopulationFactory;
+import org.matsim.core.config.Config;
+import org.matsim.core.config.ConfigUtils;
 import org.matsim.core.network.NetworkUtils;
+import org.matsim.core.population.PopulationUtils;
+import org.matsim.core.scenario.ScenarioUtils;
 import org.matsim.core.utils.geometry.GeometryUtils;
 
 import com.vividsolutions.jts.geom.LineString;
@@ -52,11 +58,11 @@ public final class Utils {
 
 	@SuppressWarnings("unused")
 	private static final Logger log = Logger.getLogger(Utils.class);
-	
+
 	public static List<String> getBDIAgentIDs( Scenario scenario ) {
 		// this goes through all matsim agents, ignores the stub agents, and returns as many of those agent ids as the
 		// bdi module wants as bdi agents (the remaining agents will, I guess, remain normal matsim agents).  kai, mar'15
-		
+
 		List<String> bDIagentIDs = new ArrayList<>();
 
 		Id<Person> stubId = Id.createPersonId("StubAgent");
@@ -74,7 +80,7 @@ public final class Utils {
 		for ( Link link : links ) {
 			final double xx = link.getCoord().getX();
 			final double yy = link.getCoord().getY();
-	
+
 			boundingBox0[0] = Math.min( boundingBox0[0],  xx ) ; 
 			boundingBox0[1] = Math.min( boundingBox0[1],  yy ) ; 
 			boundingBox0[2] = Math.max( boundingBox0[2],  xx ) ; 
@@ -88,10 +94,10 @@ public final class Utils {
 		int ii = -1 ;
 		for ( Link link : links ) {
 			ii++ ;
-	
+
 			final double xx = link.getCoord().getX();
 			final double yy = link.getCoord().getY();
-	
+
 			array[ii*2] = xx ;
 			array[ii*2+1] = yy;
 		}
@@ -108,26 +114,63 @@ public final class Utils {
 		return flatLinkIDList;
 	}
 
-	 public static List<Link> findIntersectingLinks(Link link, Network network) {
-		 return GeometryUtils.findIntersectingLinks(link, network) ;
-	 }
-	 public static List<Link> findIntersectingLinks(LineString lineString, Network network) {
-		 return GeometryUtils.findIntersectingLinks(lineString, network) ;
-	 }
-	 public static Link getNearestLink(Network network, Coord coord) {
-		 return NetworkUtils.getNearestLink(network, coord) ;
-	 }
-	 public static Link getNearestLinkExactly( Network network, Coord coord ) {
-		 return NetworkUtils.getNearestLinkExactly(network, coord) ;
-	 }
-	 public static Node getNearestNode(Network network, Coord coord) {
-		 return NetworkUtils.getNearestNode(network, coord) ;
-	 }
-	 public static Collection<Node> getNearestNodes(Network network, Coord coord, double distance) {
-		 return NetworkUtils.getNearestNodes(network, coord, distance) ;
-	 }
-	 
-	 
-	 
-	 
+	public static List<Link> findIntersectingLinks(Link link, Network network) {
+		return GeometryUtils.findIntersectingLinks(link, network) ;
+	}
+	public static List<Link> findIntersectingLinks(LineString lineString, Network network) {
+		return GeometryUtils.findIntersectingLinks(lineString, network) ;
+	}
+	public static Link getNearestLink(Network network, Coord coord) {
+		return NetworkUtils.getNearestLink(network, coord) ;
+	}
+	public static Link getNearestLinkExactly( Network network, Coord coord ) {
+		return NetworkUtils.getNearestLinkExactly(network, coord) ;
+	}
+	public static Node getNearestNode(Network network, Coord coord) {
+		return NetworkUtils.getNearestNode(network, coord) ;
+	}
+	public static Collection<Node> getNearestNodes(Network network, Coord coord, double distance) {
+		return NetworkUtils.getNearestNodes(network, coord, distance) ;
+	}
+
+	public static void populationWithBDIAttributeExample() {
+		{
+			Config config = ConfigUtils.createConfig() ;
+
+			Scenario scenario = ScenarioUtils.createScenario( config ) ;
+
+			Population pop = scenario.getPopulation() ;
+			PopulationFactory pf = pop.getFactory() ;
+
+			for ( int ii=0 ; ii<10 ; ii++ ) {
+				Person person = pf.createPerson( Id.createPersonId(ii)) ;
+				person.getAttributes().putAttribute("isBDIAgent", true ) ;
+				pop.addPerson(person);
+			}
+
+			PopulationUtils.writePopulation(pop, "pop.xml");
+		}
+
+		{
+			Config config = ConfigUtils.createConfig() ;
+
+			config.plans().setInputFile("pop.xml");
+
+			Scenario scenario = ScenarioUtils.loadScenario( config ) ;
+
+			for ( Person person : scenario.getPopulation().getPersons().values() ) {
+				final String attribute = (String) person.getAttributes().getAttribute("isBDIAgent");
+				System.out.println( "id=" + person.getId() + "; isBdi=" + attribute ) ; 
+
+			}
+
+
+		}
+
+
+	}
+
+
+
+
 }
