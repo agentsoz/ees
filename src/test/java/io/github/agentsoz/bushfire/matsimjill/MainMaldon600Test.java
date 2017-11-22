@@ -58,7 +58,7 @@ public class MainMaldon600Test {
               //CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/2/output_events.xml.gz" ), 
               // 1316710466 eclipse in context
               //              CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/3/output_events.xml.gz" ) 
-              3695594801L // travis
+              4211426679L // travis
       } ;
 
       long [] expectedPlans = new long [] {
@@ -68,7 +68,7 @@ public class MainMaldon600Test {
               //CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/2/output_plans.xml.gz" ),
               // eclipse in context
               //              CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/3/output_plans.xml.gz" )
-              547669447L // travis
+              3715899067L // travis
       } ;
 
       long actualEvents = CRCChecksum.getCRCFromFile( utils.getOutputDirectory() + "/output_events.xml.gz" ) ;
