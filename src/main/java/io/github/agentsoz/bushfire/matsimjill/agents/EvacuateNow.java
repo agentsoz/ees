@@ -4,6 +4,7 @@ import io.github.agentsoz.abmjill.genact.EnvironmentAction;
 import io.github.agentsoz.bdimatsim.MATSimActionList;
 import io.github.agentsoz.bushfire.datamodels.Location;
 import io.github.agentsoz.bushfire.matsimjill.SimpleConfig;
+import io.github.agentsoz.dataInterface.DataServer;
 
 /*
  * #%L
@@ -56,8 +57,9 @@ public class EvacuateNow extends Plan {
 					String bdiAction = MATSimActionList.DRIVETO;
 					shelterLocation = ((Resident)getAgent()).getShelterLocation();
 					double[] coords = shelterLocation.getCoordinates();
-					Object[] params = {bdiAction, coords};
-					writer.println("Resident "+getAgent().getId()+": is about to start evacuating to shelter in "+shelterLocation);
+					double evacTime = DataServer.getServer("Bushfire").getTime() + 5.0;
+					Object[] params = {bdiAction, coords, evacTime }; // five secs from now
+					writer.println("Resident "+getAgent().getId()+": will start evacuating to shelter in "+shelterLocation + " at time " + evacTime);
 					post(new EnvironmentAction(
 							Integer.toString(((Resident)getAgent()).getId()),
 							bdiAction, params));

@@ -22,7 +22,6 @@ public class MainMaldon600Test {
 
 	@SuppressWarnings("static-method")
 	@Test
-	@Ignore
 	public void testMaldon600() {
 
 		/*
