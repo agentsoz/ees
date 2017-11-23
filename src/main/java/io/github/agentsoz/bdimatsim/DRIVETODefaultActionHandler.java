@@ -67,25 +67,29 @@ public final class DRIVETODefaultActionHandler implements BDIActionHandler {
 
 		double departureTime = (double)args[2];
 		
-		//double now = model.getTime() ; 
-    
     		MobsimAgent agent1 = model.getMobsimDataProvider().getAgents().get(Id.createPersonId(agentID));
     
     		Plan plan = WithinDayAgentUtils.getModifiablePlan(agent1) ;
     
     		List<PlanElement> planElements = plan.getPlanElements() ;
+    		
+    		boolean old = true ;
     
     		int planElementsIndex = planElements.size()-1;
-    		// seems that under normal circumstances in this pgm, size returns 1 und idx is thus 0.
+    		if ( !old ) {
+  			planElementsIndex = WithinDayAgentUtils.getCurrentPlanElementIndex(agent1) ;
+    		}
     
-    		Activity lastAct = (Activity)planElements.get(planElementsIndex);
-    		// i.e. this would be the first activity
+    		Activity act = (Activity)planElements.get(planElementsIndex);
     
     		double endTime = departureTime;
-    		if(endTime <= lastAct.getStartTime() +10){
-    			endTime = lastAct.getStartTime() +10;
+    		if(endTime <= act.getStartTime() +10){
+    			endTime = act.getStartTime() +10;
     		}
-    		lastAct.setEndTime(endTime);
+    		if ( !old ) {
+    			endTime = departureTime ;
+    		}
+    		act.setEndTime(endTime);
     
     		// now the real work begins. This changes the activity (i.e. the destination of the current leg) and then
     		// re-splices the plan

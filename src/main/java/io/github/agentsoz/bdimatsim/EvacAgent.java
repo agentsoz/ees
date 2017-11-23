@@ -116,30 +116,37 @@ class EvacAgent implements MobsimDriverAgent, HasPerson, PlanAgent, HasModifiabl
 		// yyyyyy this seems to be getting the unmodified plan but I don't know why. kai, nov'17
 		
 		// yyyyyy the material below changes test results.  Not completely unexpected, but need to investigate.  kai, nov'17
-//		Plan plan = WithinDayAgentUtils.getModifiablePlan(this) ;
-//		Integer index = WithinDayAgentUtils.getCurrentPlanElementIndex(this) ;
-//		if ( index+1 < plan.getPlanElements().size() ) {
-//			// (otherwise it will fail, but we leave this to the delegate)
-//			
-//			PlanElement nextPlanElement = plan.getPlanElements().get(index+1) ;
-////			log.warn( "next plan element=" + nextPlanElement );
-//			if ( nextPlanElement instanceof Leg ) {
-//				if ( planWasModified || ((Leg)nextPlanElement).getRoute()==null ) {
-////					log.warn("plan was modified; recomputing next trip") ;
-//					Activity act = (Activity) basicAgentDelegate.getCurrentPlanElement() ;
-//					if ( !tripRouter.getStageActivityTypes().isStageActivity(act.getType()) ) {
-//						// (= we just ended a "real" activity)
-//
-//						Trip trip = TripStructureUtils.findTripStartingAtActivity(act, this.getModifiablePlan(), 
-//								tripRouter.getStageActivityTypes() ) ;
-////						log.warn( "trip before=" + trip );
-//						String mainMode = tripRouter.getMainModeIdentifier().identifyMainMode(trip.getTripElements()) ;
+		Plan plan = WithinDayAgentUtils.getModifiablePlan(this) ;
+		Integer index = WithinDayAgentUtils.getCurrentPlanElementIndex(this) ;
+		if ( index+1 < plan.getPlanElements().size() ) {
+			// (otherwise it will fail, but we leave this to the delegate)
+			
+			PlanElement nextPlanElement = plan.getPlanElements().get(index+1) ;
+//			log.warn( "next plan element=" + nextPlanElement );
+			if ( nextPlanElement instanceof Leg ) {
+				if ( planWasModified || ((Leg)nextPlanElement).getRoute()==null ) {
+//					log.warn("plan was modified; recomputing next trip") ;
+					Activity act = (Activity) basicAgentDelegate.getCurrentPlanElement() ;
+					if ( !tripRouter.getStageActivityTypes().isStageActivity(act.getType()) ) {
+						// (= we just ended a "real" activity)
+
+						Trip trip = TripStructureUtils.findTripStartingAtActivity(act, this.getModifiablePlan(), 
+								tripRouter.getStageActivityTypes() ) ;
+						String mainMode = tripRouter.getMainModeIdentifier().identifyMainMode(trip.getTripElements()) ;
 //						editTrips.replanFutureTrip(trip, WithinDayAgentUtils.getModifiablePlan(this), mainMode, now ) ;
-////						log.warn( "trip after=" + trip );
-//					}
-//				}
-//			}
-//		}
+						
+						Trip newTrip = TripStructureUtils.findTripStartingAtActivity(act, this.getModifiablePlan(), 
+								tripRouter.getStageActivityTypes() ) ;
+						if ( ! ( trip.toString().equals(newTrip.toString()) ) ) {
+							log.warn( "prevTrip:\t" + trip.toString() );
+							log.warn( "newTrip:\t" + trip.toString() );
+							log.warn("");
+						}
+						
+					}
+				}
+			}
+		}
 		basicAgentDelegate.endActivityAndComputeNextState(now);
 	}
 

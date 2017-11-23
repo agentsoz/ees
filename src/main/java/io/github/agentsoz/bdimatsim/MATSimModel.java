@@ -7,6 +7,7 @@ import java.util.Map;
 import org.apache.log4j.Level;
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.Scenario;
+import org.matsim.api.core.v01.TransportMode;
 import org.matsim.api.core.v01.network.Link;
 import org.matsim.core.config.Config;
 import org.matsim.core.config.ConfigUtils;
@@ -30,6 +31,7 @@ import org.matsim.core.network.NetworkChangeEvent;
 import org.matsim.core.network.NetworkChangeEvent.ChangeType;
 import org.matsim.core.network.NetworkChangeEvent.ChangeValue;
 import org.matsim.core.scenario.ScenarioUtils;
+import org.matsim.core.trafficmonitoring.FreeSpeedTravelTime;
 import org.matsim.core.network.NetworkUtils;
 import org.matsim.withinday.mobsim.MobsimDataProvider;
 import org.slf4j.Logger;
@@ -164,6 +166,8 @@ public final class MATSimModel implements ABMServerInterface {
 
 		controller.addOverridingModule(new AbstractModule(){
 			@Override public void install() {
+				
+//				this.addTravelTimeBinding(TransportMode.car).to( FreeSpeedTravelTime.class ) ;
 
 				install( new EvacQSimModule(MATSimModel.this) ) ;
 
