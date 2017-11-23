@@ -78,8 +78,8 @@ public class MainCampbellsCreek50Test {
 		long actualPlans = CRCChecksum.getCRCFromFile( utils.getOutputDirectory() + "/output_plans.xml.gz" ) ;
 		System.err.println("actual(plans)="+actualPlans) ;
 
-        checkSeveral(expectedEvents, actualEvents);
-        checkSeveral(expectedPlans, actualPlans);
+        TestUtils.checkSeveral(expectedEvents, actualEvents);
+        TestUtils.checkSeveral(expectedPlans, actualPlans);
 
 		//		{
 		//			long expectedCRC = CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/jill.out" ) ;
@@ -88,48 +88,5 @@ public class MainCampbellsCreek50Test {
 		//		}
 	}
 
-	public static void checkSeveralFiles(long actual, final String cmpFileName, String baseDir ) {
-		List<Long> expecteds = new ArrayList<>() ;
-	
-		try {
-			Files.walkFileTree(new File(baseDir).toPath(), new SimpleFileVisitor<Path>() {
-				@Override public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-					final String filename = dir + cmpFileName;
-					if ( Files.exists( new File( filename).toPath() ) ) {
-						System.err.println( "checking against " + filename );
-						long crc = CRCChecksum.getCRCFromFile( filename ) ; 
-						expecteds.add(crc) ;
-					}
-					return FileVisitResult.CONTINUE;
-				}
-			});
-		} catch (IOException e) {
-			throw new UncheckedIOException(e.getMessage(), e);
-		}
-	
-		checkSeveral(expecteds, actual);
-	}
-
-	public static void checkSeveral(List<Long> expecteds, long actualEvents) {
-		long [] expectedsArray = new long[expecteds.size()] ;
-		for ( int ii=0 ; ii<expecteds.size() ; ii++ ) {
-			expectedsArray[ii] = expecteds.get(ii) ;
-		}
-		checkSeveral( expectedsArray, actualEvents ) ;
-	}
-	public static void checkSeveral(long[] expectedEvents, long actualEvents) {
-		boolean found = false ;
-		for ( int ii=0 ; ii<expectedEvents.length ; ii++ ) {
-			final boolean b = actualEvents==expectedEvents[ii];
-			System.err.println("checking if " + actualEvents + "==" + expectedEvents[ii] + " ? " + b);
-			if ( b ) {
-				found = true ;
-				break ;
-			}
-		}
-		if ( !found ) {
-			Assert.fail(); 
-		}
-	}
 
 }

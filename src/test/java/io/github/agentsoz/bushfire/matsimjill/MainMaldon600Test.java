@@ -3,10 +3,15 @@
  */
 package io.github.agentsoz.bushfire.matsimjill;
 
+import java.util.List;
+import java.util.SortedMap;
+
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
+import org.matsim.api.core.v01.Id;
+import org.matsim.api.core.v01.population.Person;
 import org.matsim.core.utils.misc.CRCChecksum;
 import org.matsim.testcases.MatsimTestUtils;
 import io.github.agentsoz.bushfire.matsimjill.Main;
@@ -34,9 +39,9 @@ public class MainMaldon600Test {
 				"--config",  "scenarios/maldon-2017-11-01/scenario_main.xml", 
 				"--logfile", "scenarios/maldon-2017-11-01/scenario.log",
 				"--loglevel", "INFO",
-//				"--plan-selection-policy", "FIRST", // ensures it is deterministic, as default is RANDOM
+				//				"--plan-selection-policy", "FIRST", // ensures it is deterministic, as default is RANDOM
 				"--seed", "12345",
-                "--safeline-output-file-pattern", "scenarios/campbells-creek/safeline.%d%.out",
+				"--safeline-output-file-pattern", "scenarios/campbells-creek/safeline.%d%.out",
 				"--matsim-output-directory", utils.getOutputDirectory(),
 				"--jillconfig", "--config={"+
 						"agents:[{classname:io.github.agentsoz.bushfire.matsimjill.agents.Resident, args:null, count:600}],"+
@@ -49,88 +54,45 @@ public class MainMaldon600Test {
 		};
 
 		Main.main(args);
+
+		// print these so that we have them:
+		final String actualEventsFilename = utils.getOutputDirectory() + "/output_events.xml.gz";
+		long actualEventsCRC = CRCChecksum.getCRCFromFile( actualEventsFilename ) ;
+		System.err.println("actual(events)="+actualEventsCRC) ;
+
+		long actualPlansCRC = CRCChecksum.getCRCFromFile( utils.getOutputDirectory() + "/output_plans.xml.gz" ) ;
+		System.err.println("actual(plans)="+actualPlansCRC) ;
 		
-	      long [] expectedEvents = new long [] {
-              CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/0/output_events.xml.gz" ), 
-              //CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/1/output_events.xml.gz" ), 
-              //CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/1/output_events.xml.gz" ), 
-              // 3214464728 mvn console, eclipse single
-              //CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/2/output_events.xml.gz" ), 
-              // 1316710466 eclipse in context
-              //              CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/3/output_events.xml.gz" ) 
-              4211426679L // travis
-      } ;
+		// look into events:
 
-      long [] expectedPlans = new long [] {
-              CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/0/output_plans.xml.gz" ), 
-              //CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/1/output_plans.xml.gz" ), 
-              // 1884178769 mvn console, eclipse single
-              //CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/2/output_plans.xml.gz" ),
-              // eclipse in context
-              //              CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/3/output_plans.xml.gz" )
-              3715899067L // travis
-      } ;
+		final String primaryExpectedEventsFilename = utils.getInputDirectory() + "/0/output_events.xml.gz";
 
-      long actualEvents = CRCChecksum.getCRCFromFile( utils.getOutputDirectory() + "/output_events.xml.gz" ) ;
-      System.err.println("actual(events)="+actualEvents) ;
+		SortedMap<Id<Person>, List<Double>> arrivalsExpected = TestUtils.collectArrivals(primaryExpectedEventsFilename) ;
+		SortedMap<Id<Person>, List<Double>> arrivalsActual = TestUtils.collectArrivals( actualEventsFilename ) ;
+		
+		// test with slack:
+		TestUtils.compareEventsWithSlack(arrivalsExpected, arrivalsActual, 600);
+		
+		// exact test, but sorting first:
+//		TestUtils.compareFullEvents(primaryExpectedEventsFilename, actualEventsFilename);
+		
+		// comparing the plain files, but maybe more than one:
+		long [] expectedEvents = new long [] {
+				CRCChecksum.getCRCFromFile( primaryExpectedEventsFilename ), 
+				4211426679L // travis
+		} ;
 
-      long actualPlans = CRCChecksum.getCRCFromFile( utils.getOutputDirectory() + "/output_plans.xml.gz" ) ;
-      System.err.println("actual(plans)="+actualPlans) ;
+		TestUtils.checkSeveral(expectedEvents, actualEventsCRC);
 
-      MainCampbellsCreek50Test.checkSeveral(expectedEvents, actualEvents);
-      MainCampbellsCreek50Test.checkSeveral(expectedPlans, actualPlans);
+		// look into plans:
 
+		long [] expectedPlans = new long [] {
+				CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/0/output_plans.xml.gz" ), 
+				3715899067L // travis
+		} ;
+		
+		TestUtils.checkSeveral(expectedPlans, actualPlansCRC);
 
-//		long actualForEvents = CRCChecksum.getCRCFromFile( utils.getOutputDirectory() + "/output_events.xml.gz" ) ;
-//		System.err.println("actual(events)="+actualForEvents) ;
-//
-//		long actualForPlans = CRCChecksum.getCRCFromFile( utils.getOutputDirectory() + "/output_plans.xml.gz" ) ;
-//		System.err.println("actual(plans)="+actualForPlans) ;
-//
-//		{
-//			long [] expected = new long [] {
-//					CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/1/output_events.xml.gz" ) // 1380811447 eclipse single)
-//					, CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/2/output_events.xml.gz" )  
-//					, CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/3/output_events.xml.gz" ) // 721059509 mvn console 
-//					, CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/4/output_events.xml.gz" ) // 4020076758 mvn console
-//					, 1569262693L // travis
-//					} ;
-//
-//			boolean found = false ;
-//			for ( int ii=0 ; ii<expected.length ; ii++ ) {
-//				final boolean b = actualForEvents==expected[ii];
-//				System.err.println(b);
-//				if ( b ) {
-//					found = true ;
-//					break ;
-//				}
-//			}
-//			if ( !found ) {
-//				Assert.fail(); 
-//			}
-//		}
-//		{
-//			long [] expected = new long [] {
-//					CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/1/output_plans.xml.gz" ) // 2704415442 eclipse single
-//					, CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/2/output_plans.xml.gz" )  
-//					, CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/3/output_plans.xml.gz" ) // 2575830431 mvn console  
-//					, CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/4/output_plans.xml.gz" ) // 2355435033 mvn console
-//					, 2424434648L // travis
-//					} ;
-//
-//			boolean found = false ;
-//			for ( int ii=0 ; ii<expected.length ; ii++ ) {
-//				final boolean b = actualForPlans==expected[ii];
-//				System.err.println(b);
-//				if ( b ) {
-//					found = true ;
-//					break ;
-//				}
-//			}
-//			if ( !found ) {
-//				Assert.fail(); 
-//			}
-//		}
 
 
 		// FIXME: still small differences in jill log. dsingh, 06/Nov/17
