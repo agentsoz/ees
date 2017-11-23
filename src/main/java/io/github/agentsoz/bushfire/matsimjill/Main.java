@@ -65,9 +65,9 @@ import io.github.agentsoz.util.Global;
 
 public class Main {
 
-    private static Logger logger;
+	private static Logger logger;
 
-    private JillBDIModel jillmodel; // BDI model
+	private JillBDIModel jillmodel; // BDI model
 	private MATSimModel matsimModel; // ABM model
 	private PhoenixFireModule fireModel; // Fire model
 
@@ -94,7 +94,7 @@ public class Main {
 		try { 
 			SimpleConfig.readConfig();
 		} catch(Exception e){
-//			abort(e.getMessage());
+			//			abort(e.getMessage());
 			abort(e) ;
 			// (if you just pass the message, the exception type is not passed on, so e.g. for a null pointer error one does not
 			// see anything.  kai, nov'17)
@@ -139,98 +139,99 @@ public class Main {
 
 		// Register the safe lines monitors for MATSim
 		List<SafeLineMonitor> monitors = registerSafeLineMonitors(SimpleConfig.getSafeLines(), matsimModel);
-		
+
 		List<String> bdiAgentIDs = Utils.getBDIAgentIDs( matsimModel.getScenario() );
 
 		this.jillmodel.init(matsimModel.getAgentManager().getAgentDataContainer(),
 				matsimModel.getAgentManager().getAgentStateList(), this.matsimModel,
 				bdiAgentIDs.toArray( new String[bdiAgentIDs.size()] ));
 		this.jillmodel.start();
-		
+
 		matsimModel.init(bdiAgentIDs);
 
 		while ( true ) {
-            this.jillmodel.takeControl( matsimModel.getAgentManager().getAgentDataContainer() );
-            //this.matsimModel.takeControl(matsimModel.getAgentManager().getAgentDataContainer());
-            this.matsimModel.runUntil((long)dataServer.getTime(), matsimModel.getAgentManager().getAgentDataContainer());
+			this.jillmodel.takeControl( matsimModel.getAgentManager().getAgentDataContainer() );
+			//this.matsimModel.takeControl(matsimModel.getAgentManager().getAgentDataContainer());
+			this.matsimModel.runUntil((long)dataServer.getTime(), matsimModel.getAgentManager().getAgentDataContainer());
 			if( this.matsimModel.isFinished() ) {
-			  try {
-			    // Added to allow EventsMonitorRegistry.callRegisteredHandlers() to finish, dsingh 21/nov/17
-                Thread.sleep(1000);
-              } catch (InterruptedException e) {
-                e.printStackTrace();
-              }
-			  break ;
+				try {
+					// Added to allow EventsMonitorRegistry.callRegisteredHandlers() to finish, dsingh 21/nov/17
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				break ;
 			}
-            // increment time
-            dataServer.stepTime();
+			// increment time
+			dataServer.stepTime();
 		}
 
 		// Write safe line statistics to file
 		writeSafeLineMonitors(monitors, safelineOutputFilePattern);
-		
+
 		// All done, so terminate now
 		jillmodel.finish();
 		matsimModel.finish() ;
 		//		System.exit(0);
 		// get rid of System.exit(...) so that tests run through ...
+		DataServer.cleanup() ;
 	}
-	
-  /**
-   * Registers a {@link SafeLineMonitor} per safe line with MATSim
-   * 
-   * @param safeLines
-   * @param matsimModel
-   */
-  private List<SafeLineMonitor> registerSafeLineMonitors(TreeMap<String, Location[]> safeLines,
-      MATSimModel matsimModel) {
 
-    if (safeLines == null) {
-      return null;
-    }
+	/**
+	 * Registers a {@link SafeLineMonitor} per safe line with MATSim
+	 * 
+	 * @param safeLines
+	 * @param matsimModel
+	 */
+	private List<SafeLineMonitor> registerSafeLineMonitors(TreeMap<String, Location[]> safeLines,
+			MATSimModel matsimModel) {
 
-    List<SafeLineMonitor> slMonitors = new ArrayList<SafeLineMonitor>();
-    List<EventHandler> monitors = new ArrayList<EventHandler>();
-    for (String name : safeLines.keySet()) {
-      Location[] safeline = safeLines.get(name);
-      SafeLineMonitor monitor = new SafeLineMonitor(name, safeline[0], safeline[1], matsimModel);
-      monitors.add(monitor);
-      slMonitors.add(monitor);
-    }
-    matsimModel.setEventHandlers(monitors);
-    return slMonitors;
-  }
+		if (safeLines == null) {
+			return null;
+		}
 
-  /**
-   * Writes the safe lines statistics to file
-   * 
-   * @param monitors to write, one per file
-   * @param pattern output file pattern, something like "/path/to/file.%d%.out" where %d% is
-   *        replaced by the monitor index number i.e., 0,1,...
-   * @throws FileNotFoundException
-   */
-  private void writeSafeLineMonitors(List<SafeLineMonitor> monitors, String pattern)
-      throws FileNotFoundException {
-    for (int i = 0; i < monitors.size(); i++) {
-      String filepath = pattern.replace("%d%", monitors.get(i).getName().replace(' ', '-'));
-      logger.info("Writing safe line statistics to file: " + filepath);
-      PrintWriter writer = new PrintWriter(filepath);
-      Collection<List<Double>> exitTimes = monitors.get(i).getExitTimes();
-      if (exitTimes != null) {
-        List<Double> all = new ArrayList<Double>();
-        for (List<Double> list : exitTimes) {
-          all.addAll(list);
-        }
-        Collections.sort(all);
-        for (Double time : all) {
-          writer.println(time);
-        }
-      }
-      writer.close();
-    }
-  }
-	
-  /**
+		List<SafeLineMonitor> slMonitors = new ArrayList<SafeLineMonitor>();
+		List<EventHandler> monitors = new ArrayList<EventHandler>();
+		for (String name : safeLines.keySet()) {
+			Location[] safeline = safeLines.get(name);
+			SafeLineMonitor monitor = new SafeLineMonitor(name, safeline[0], safeline[1], matsimModel);
+			monitors.add(monitor);
+			slMonitors.add(monitor);
+		}
+		matsimModel.setEventHandlers(monitors);
+		return slMonitors;
+	}
+
+	/**
+	 * Writes the safe lines statistics to file
+	 * 
+	 * @param monitors to write, one per file
+	 * @param pattern output file pattern, something like "/path/to/file.%d%.out" where %d% is
+	 *        replaced by the monitor index number i.e., 0,1,...
+	 * @throws FileNotFoundException
+	 */
+	private void writeSafeLineMonitors(List<SafeLineMonitor> monitors, String pattern)
+			throws FileNotFoundException {
+		for (int i = 0; i < monitors.size(); i++) {
+			String filepath = pattern.replace("%d%", monitors.get(i).getName().replace(' ', '-'));
+			logger.info("Writing safe line statistics to file: " + filepath);
+			PrintWriter writer = new PrintWriter(filepath);
+			Collection<List<Double>> exitTimes = monitors.get(i).getExitTimes();
+			if (exitTimes != null) {
+				List<Double> all = new ArrayList<Double>();
+				for (List<Double> list : exitTimes) {
+					all.addAll(list);
+				}
+				Collections.sort(all);
+				for (Double time : all) {
+					writer.println(time);
+				}
+			}
+			writer.close();
+		}
+	}
+
+	/**
 	 * Parse the command line arguments
 	 */
 	public static void parse(String[] args) {
@@ -268,12 +269,12 @@ public class Main {
 					}
 				}
 				break;
-            case "--safeline-output-file-pattern":
-              if (i + 1 < args.length) {
-                  i++;
-                  safelineOutputFilePattern = args[i];
-              }
-              break;
+			case "--safeline-output-file-pattern":
+				if (i + 1 < args.length) {
+					i++;
+					safelineOutputFilePattern = args[i];
+				}
+				break;
 			case "--seed":
 				if (i + 1 < args.length) {
 					i++;
@@ -321,7 +322,7 @@ public class Main {
 			System.err.println("\nERROR: " + err + "\n");
 		}
 		System.out.println(usage());
-//		System.exit(0);
+		//		System.exit(0);
 		throw new RuntimeException("abort") ; // throw exception, otherwise test gets stuck.  Sorry ...
 	}
 
@@ -335,7 +336,7 @@ public class Main {
 			sim.start(args);
 		} catch(Exception e) {
 			System.err.println("\nERROR: somethig went wrong, see details below:\n");
-//			e.printStackTrace();
+			//			e.printStackTrace();
 			throw new RuntimeException(e) ; // throw exception, otherwise test counts as passed.  Sorry ...
 		}
 	}
