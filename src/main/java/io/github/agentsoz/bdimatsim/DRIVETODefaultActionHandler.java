@@ -73,7 +73,7 @@ public final class DRIVETODefaultActionHandler implements BDIActionHandler {
     
     		List<PlanElement> planElements = plan.getPlanElements() ;
     		
-    		boolean old = true ;
+    		boolean old = false ;
     
     		int planElementsIndex = planElements.size()-1;
     		if ( !old ) {
@@ -103,6 +103,12 @@ public final class DRIVETODefaultActionHandler implements BDIActionHandler {
     		// --- old version end
     
     		newAct.setEndTime( Double.POSITIVE_INFINITY ) ;
+    		
+    		if ( !old ) {
+    			for ( int ii=planElements.size()-1 ; ii>planElementsIndex; ii-- ) {
+    				planElements.remove(ii) ;
+    			}
+    		}
     
     		planElements.add(newLeg);
     		planElements.add(newAct); 
