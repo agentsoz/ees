@@ -149,6 +149,10 @@ public class Main {
 
 		matsimModel.init(bdiAgentIDs);
 
+		// Set the simulation start time to 10 mins before the evacuation start, dsingh 24/nov/17
+		// dataServer.setTime(getEvacuationStartTimeInSeconds(-600));
+
+
 		while ( true ) {
 			this.jillmodel.takeControl( matsimModel.getAgentManager().getAgentDataContainer() );
 			//this.matsimModel.takeControl(matsimModel.getAgentManager().getAgentDataContainer());
@@ -175,6 +179,20 @@ public class Main {
 		//		System.exit(0);
 		// get rid of System.exit(...) so that tests run through ...
 		DataServer.cleanup() ;
+	}
+
+	/**
+	 * Gets the simulation start time from the config, with an added delay (can be negative)
+	 * @param delay
+	 * @return
+	 */
+	private static double getEvacuationStartTimeInSeconds(int delay) {
+		int[] evacStartHHMM = SimpleConfig.getEvacStartHHMM();
+		double startInSeconds = Time.convertTime(evacStartHHMM[0], Time.TimestepUnit.HOURS, Time.TimestepUnit.SECONDS)
+				+ Time.convertTime(evacStartHHMM[1], Time.TimestepUnit.MINUTES, Time.TimestepUnit.SECONDS)
+				+ delay;
+		startInSeconds = (startInSeconds <= 0) ? 0 : startInSeconds;
+		return startInSeconds;
 	}
 
 	/**
