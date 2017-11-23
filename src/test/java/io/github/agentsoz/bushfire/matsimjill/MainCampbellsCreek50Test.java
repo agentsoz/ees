@@ -55,21 +55,21 @@ public class MainCampbellsCreek50Test {
 		Main.main(args);
 
 		final String actualEventsFilename = utils.getOutputDirectory() + "/output_events.xml.gz";
-		long actualEvents = CRCChecksum.getCRCFromFile( actualEventsFilename ) ;
-		System.err.println("actual(events)="+actualEvents) ;
+		long actualEventsCRC = CRCChecksum.getCRCFromFile( actualEventsFilename ) ;
+		System.err.println("actual(events)="+actualEventsCRC) ;
 
-		long actualPlans = CRCChecksum.getCRCFromFile( utils.getOutputDirectory() + "/output_plans.xml.gz" ) ;
-		System.err.println("actual(plans)="+actualPlans) ;
+		long actualPlansCRC = CRCChecksum.getCRCFromFile( utils.getOutputDirectory() + "/output_plans.xml.gz" ) ;
+		System.err.println("actual(plans)="+actualPlansCRC) ;
 		
 		// ---
 		
 		final String primaryExpectedEventsFilename = utils.getInputDirectory() + "/0/output_events.xml.gz";
-		long [] expectedEvents = new long [] {
+		long [] expectedEventsCRCs = new long [] {
 				CRCChecksum.getCRCFromFile( primaryExpectedEventsFilename ), 
 				3114851905L // 3695594801L // travis
 		} ;
 
-		long [] expectedPlans = new long [] {
+		long [] expectedPlansCRCs = new long [] {
 				CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/0/output_plans.xml.gz" ), 
 				2234597649L // 547669447L // travis
 		} ;
@@ -82,8 +82,8 @@ public class MainCampbellsCreek50Test {
 		
 		// ---
 
-		TestUtils.checkSeveral(expectedEvents, actualEvents);
-		TestUtils.checkSeveral(expectedPlans, actualPlans);
+		TestUtils.checkSeveral(expectedEventsCRCs, actualEventsCRC);
+		TestUtils.checkSeveral(expectedPlansCRCs, actualPlansCRC);
 
 		//		{
 		//			long expectedCRC = CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/jill.out" ) ;
