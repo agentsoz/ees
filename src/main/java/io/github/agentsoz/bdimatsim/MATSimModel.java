@@ -126,11 +126,12 @@ public final class MATSimModel implements ABMServerInterface {
 
 		// ---
 
-		scenario = ScenarioUtils.loadScenario(config) ;
-		
+		this.agentManager = new PAAgentManager(eventsMonitors) ;
+
 		// ---
 
-		this.agentManager = new PAAgentManager(eventsMonitors) ;
+		scenario = ScenarioUtils.loadScenario(config) ;
+
 	}
 
 	public final void init(List<String> bdiAgentIDs) {
@@ -167,7 +168,7 @@ public final class MATSimModel implements ABMServerInterface {
 		controller.addOverridingModule(new AbstractModule(){
 			@Override public void install() {
 				
-//				this.addTravelTimeBinding(TransportMode.car).to( FreeSpeedTravelTime.class ) ;
+				this.addTravelTimeBinding(TransportMode.car).to( FreeSpeedTravelTime.class ) ;
 
 				install( new EvacQSimModule(MATSimModel.this) ) ;
 
