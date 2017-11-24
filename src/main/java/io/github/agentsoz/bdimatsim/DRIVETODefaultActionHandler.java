@@ -58,94 +58,83 @@ public final class DRIVETODefaultActionHandler implements BDIActionHandler {
 			double[] coords = (double[]) args[1];
 			newLinkId = ((SearchableNetwork) model.getScenario()
 					.getNetwork()).getNearestLinkExactly(
-					new Coord(coords[0], coords[1])).getId();
+							new Coord(coords[0], coords[1])).getId();
 			// yy could probably just give the coordinates to matsim. kai, nov'17
-			
+
 		} else {
 			throw new RuntimeException("Destination coordinates are not given");
 		}
 
 		double departureTime = (double)args[2];
-		
-    		MobsimAgent agent1 = model.getMobsimDataProvider().getAgents().get(Id.createPersonId(agentID));
-    
-    		Plan plan = WithinDayAgentUtils.getModifiablePlan(agent1) ;
-    
-    		List<PlanElement> planElements = plan.getPlanElements() ;
-    		
-    		boolean old = false ;
-    
-    		int planElementsIndex = planElements.size()-1;
-    		if ( !old ) {
-  			planElementsIndex = WithinDayAgentUtils.getCurrentPlanElementIndex(agent1) ;
-    		}
-    
-    		Activity act = (Activity)planElements.get(planElementsIndex);
-    
-    		double endTime = departureTime;
-    		if(endTime <= act.getStartTime() +10){
-    			endTime = act.getStartTime() +10;
-    		}
-    		if ( !old ) {
-    			endTime = departureTime ;
-    		}
-    		act.setEndTime(endTime);
-    
-    		// now the real work begins. This changes the activity (i.e. the destination of the current leg) and then
-    		// re-splices the plan
-    
-    		Activity newAct = model.getScenario().getPopulation().getFactory().createActivityFromLinkId("work", newLinkId ) ;
-    
-    		Leg newLeg = model.getScenario().getPopulation().getFactory().createLeg(TransportMode.car);
-    //		// new Route for current Leg.
-    		newLeg.setDepartureTime(endTime);
-    //		editRoutes.relocateFutureLegRoute(newLeg, lastAct.getLinkId(), newActivityLinkId,((HasPerson)agent).getPerson());
-    		// --- old version end
-    
-    		newAct.setEndTime( Double.POSITIVE_INFINITY ) ;
-    		
-    		if ( !old ) {
-    			for ( int ii=planElements.size()-1 ; ii>planElementsIndex; ii-- ) {
-    				planElements.remove(ii) ;
-    			}
-    		}
-    
-    		planElements.add(newLeg);
-    		planElements.add(newAct); 
-    		
-    //		final List<Trip> trips = TripStructureUtils.getTrips(planElements, stageActivities);
-    		
-    //		Gbl.assertIf( trips.size()>=1 );
-    		
-    		List<PlanElement> sublist = planElements.subList(planElements.size()-3, planElements.size() ) ;
-    		// (the sub-list is "exclusive" the right index)
-    		
-    		Trip trip = TripStructureUtils.getTrips(sublist, model.getReplanner().getEditTrips().getStageActivities()).get(0) ;
-    		model.getReplanner().getEditTrips().replanFutureTrip(trip, plan, TransportMode.car) ;
-    
-    		WithinDayAgentUtils.resetCaches(agent1);
-    		// this is necessary since the simulation may have cached some info from the plan at other places.
-    		// (May not be necessary in this particular situation since there is nothing to cache when an agent is at an activity.) kai, feb'14
-    
-    		model.getReplanner().getEditPlans().rescheduleActivityEnd(agent1);
-    		// this is the only place where the internal interface is truly needed, since it is the only place where the agent needs to be "woken up".
-    		// This is necessary since otherwise the simulation will not touch the agent until its previously scheduled activity end. kai, feb/14
+
+		MobsimAgent agent1 = model.getMobsimDataProvider().getAgents().get(Id.createPersonId(agentID));
+
+		Plan plan = WithinDayAgentUtils.getModifiablePlan(agent1) ;
+
+		List<PlanElement> planElements = plan.getPlanElements() ;
+
+
+		Integer planElementsIndex = WithinDayAgentUtils.getCurrentPlanElementIndex(agent1) ;
+
+		Activity act = (Activity)planElements.get(planElementsIndex);
+
+		act.setEndTime(departureTime);
+
+		// now the real work begins. This changes the activity (i.e. the destination of the current leg) and then
+		// re-splices the plan
+
+		Activity newAct = model.getScenario().getPopulation().getFactory().createActivityFromLinkId("work", newLinkId ) ;
+
+		Leg newLeg = model.getScenario().getPopulation().getFactory().createLeg(TransportMode.car);
+		//		// new Route for current Leg.
+		newLeg.setDepartureTime(departureTime);
+		//		editRoutes.relocateFutureLegRoute(newLeg, lastAct.getLinkId(), newActivityLinkId,((HasPerson)agent).getPerson());
+		// --- old version end
+
+		newAct.setEndTime( Double.POSITIVE_INFINITY ) ;
+		// Dhirendra, this is the place where you decide if the agents should count as alive after arrival (endTime<infty), 
+		// or not (endTime=infty).  Here, I say they should not stay alive, so that our tests run faster.  kai, nov'17
+
+		for ( int ii=planElements.size()-1 ; ii>planElementsIndex; ii-- ) {
+			planElements.remove(ii) ;
+		}
+
+		planElements.add(newLeg);
+		planElements.add(newAct); 
+
+		//		final List<Trip> trips = TripStructureUtils.getTrips(planElements, stageActivities);
+
+		//		Gbl.assertIf( trips.size()>=1 );
+
+		List<PlanElement> sublist = planElements.subList(planElements.size()-3, planElements.size() ) ;
+		// (the sub-list is "exclusive" the right index)
+
+		Trip trip = TripStructureUtils.getTrips(sublist, model.getReplanner().getEditTrips().getStageActivities()).get(0) ;
+		model.getReplanner().getEditTrips().replanFutureTrip(trip, plan, TransportMode.car) ;
+
+		WithinDayAgentUtils.resetCaches(agent1);
+		// this is necessary since the simulation may have cached some info from the plan at other places.
+		// (May not be necessary in this particular situation since there is nothing to cache when an agent is at an activity.) kai, feb'14
+
+		model.getReplanner().getEditPlans().rescheduleActivityEnd(agent1);
+		// this is the only place where the internal interface is truly needed, since it is the only place where the agent needs to be "woken up".
+		// This is necessary since otherwise the simulation will not touch the agent until its previously scheduled activity end. kai, feb/14
 
 		// Now register a event handler for when the agent arrives at the destination
 		PAAgent agent = model.getAgentManager().getAgent( agentID );
 		agent.getPerceptHandler().registerBDIPerceptHandler( agent.getAgentID(), MonitoredEventType.ArrivedAtDestination,
 				newLinkId, new BDIPerceptHandler() {
-					@Override
-					public boolean handle(Id<Person> agentId, Id<Link> linkId, MonitoredEventType monitoredEvent) {
-						PAAgent agent = model.getAgentManager().getAgent( agentId.toString() );
-						Object[] params = { linkId.toString() };
-						agent.getActionContainer().register(MATSimActionList.DRIVETO, params);
-						agent.getActionContainer().get(MATSimActionList.DRIVETO).setState(ActionContent.State.PASSED);
-						agent.getPerceptContainer().put(MATSimPerceptList.ARRIVED, params);
-						return true;
-					}
-				}
-		);
+			@Override
+			public boolean handle(Id<Person> agentId, Id<Link> linkId, MonitoredEventType monitoredEvent) {
+				PAAgent agent = model.getAgentManager().getAgent( agentId.toString() );
+				Object[] params = { linkId.toString() };
+				agent.getActionContainer().register(MATSimActionList.DRIVETO, params);
+				agent.getActionContainer().get(MATSimActionList.DRIVETO).setState(ActionContent.State.PASSED);
+				agent.getPerceptContainer().put(MATSimPerceptList.ARRIVED, params);
+				return true;
+			}
+		}
+				);
 		return true;
 	}
 }
