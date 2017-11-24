@@ -108,9 +108,9 @@ public final class PAAgentManager {
 		if (agentDataContainer.isEmpty()) {
 			return;
 		}
-        Iterator<String> i = agentDataContainer.getAgentIDs();
-        while (i.hasNext()) {
-            String agent = i.next();
+		Iterator<String> i = agentDataContainer.getAgentIDs();
+		while (i.hasNext()) {
+			String agent = i.next();
 			ActionContainer actionContainer = agentDataContainer.getOrCreate( agent).getActionContainer();
 			for (String action : actionContainer.actionIDSet()) {
 				if (actionContainer.get(action).getState() == ActionContent.State.INITIATED) {
@@ -136,13 +136,15 @@ public final class PAAgentManager {
 	private final boolean initiateNewAction(String agentID, String actionID) {
 		if (agentsWithPerceptsAndActions.containsKey(agentID) ) {
 			PAAgent agent = getAgent(agentID);
-			Object[] parameters = agent.getActionContainer().get(actionID) .getParameters();
-			if (agent.getActionHandler().processAction(agentID, actionID, parameters)) {
-				agent.getActionContainer().get(actionID.toString()) .setState(ActionContent.State.RUNNING);
-				return true;
-			} else {
-				agent.getActionContainer().get(actionID.toString()) .setState(ActionContent.State.FAILED);
-				return false;
+			synchronized ( agent ) {
+				Object[] parameters = agent.getActionContainer().get(actionID) .getParameters();
+				if (agent.getActionHandler().processAction(agentID, actionID, parameters)) {
+					agent.getActionContainer().get(actionID.toString()) .setState(ActionContent.State.RUNNING);
+					return true;
+				} else {
+					agent.getActionContainer().get(actionID.toString()) .setState(ActionContent.State.FAILED);
+					return false;
+				}
 			}
 		}
 		return false;
