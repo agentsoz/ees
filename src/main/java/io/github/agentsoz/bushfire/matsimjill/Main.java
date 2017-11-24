@@ -9,18 +9,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.TreeMap;
 
-import javax.inject.Singleton;
-
 import org.json.simple.parser.ParseException;
-import org.matsim.api.core.v01.Scenario;
-import org.matsim.core.config.ConfigUtils;
+import org.matsim.api.core.v01.population.Activity;
+import org.matsim.api.core.v01.population.Person;
+import org.matsim.api.core.v01.population.PlanElement;
+import org.matsim.core.config.groups.QSimConfigGroup.StarttimeInterpretation;
 import org.matsim.core.events.handler.EventHandler;
-import org.matsim.core.scenario.ScenarioUtils;
 import org.slf4j.LoggerFactory;
-
-import com.google.inject.AbstractModule;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
@@ -28,9 +23,6 @@ import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.FileAppender;
-import io.github.agentsoz.bdimatsim.DRIVETODefaultActionHandler;
-import io.github.agentsoz.bdimatsim.EventsMonitorRegistry;
-import io.github.agentsoz.bdimatsim.MATSimActionList;
 
 /*
  * #%L
@@ -60,7 +52,6 @@ import io.github.agentsoz.bushfire.PhoenixFireModule;
 import io.github.agentsoz.bushfire.Time;
 import io.github.agentsoz.bushfire.datamodels.Location;
 import io.github.agentsoz.dataInterface.DataServer;
-import io.github.agentsoz.nonmatsim.PAAgentManager;
 import io.github.agentsoz.util.Global;
 
 public class Main {
@@ -146,12 +137,34 @@ public class Main {
 				matsimModel.getAgentManager().getAgentStateList(), this.matsimModel,
 				bdiAgentIDs.toArray( new String[bdiAgentIDs.size()] ));
 		this.jillmodel.start();
-
-		matsimModel.init(bdiAgentIDs);
+		
 
 		// Set the simulation start time to 10 mins before the evacuation start, dsingh 24/nov/17
-		// dataServer.setTime(getEvacuationStartTimeInSeconds(-600));
-
+		{
+//		dataServer.setTime(getEvacuationStartTimeInSeconds(-600));
+//
+//		matsimModel.getScenario().getConfig().qsim().setStartTime(getEvacuationStartTimeInSeconds(-600)) ;
+//		matsimModel.getScenario().getConfig().qsim().setSimStarttimeInterpretation(StarttimeInterpretation.onlyUseStarttime);
+//		// yy in the longer run, a "minOfStarttimeAndEarliestActivityEnd" would be good. kai, nov'17
+		}
+		
+		// move everything into the far future:
+		for ( Person person : matsimModel.getScenario().getPopulation().getPersons().values() ) {
+			List<PlanElement> planElements = person.getSelectedPlan().getPlanElements() ;
+			int offset = planElements.size();
+			for ( PlanElement pe : planElements ) {
+				if ( pe instanceof Activity ) {
+					((Activity) pe).setEndTime( Double.MAX_VALUE - offset );
+					offset-- ;
+				}
+			}
+		}
+		/* Dhirendra, it might be cleaner to do this in the input xml.  I have tried to remove the "fake" leg completely.
+		 * But then the agents don't have vehicles (yyyy although, on second thought, why??  we need to maintain 
+		 * vehicles for mode choice).
+		 */ 
+		
+		matsimModel.init(bdiAgentIDs);
 
 		while ( true ) {
 			this.jillmodel.takeControl( matsimModel.getAgentManager().getAgentDataContainer() );
