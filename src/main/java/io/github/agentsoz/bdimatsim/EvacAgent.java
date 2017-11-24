@@ -115,7 +115,6 @@ class EvacAgent implements MobsimDriverAgent, HasPerson, PlanAgent, HasModifiabl
 		//		final PlanElement nextPlanElement = basicAgentDelegate.getNextPlanElement();
 		// yyyyyy this seems to be getting the unmodified plan but I don't know why. kai, nov'17
 		
-		// yyyyyy the material below changes test results.  Not completely unexpected, but need to investigate.  kai, nov'17
 		Plan plan = WithinDayAgentUtils.getModifiablePlan(this) ;
 		Integer index = WithinDayAgentUtils.getCurrentPlanElementIndex(this) ;
 		if ( index+1 < plan.getPlanElements().size() ) {
@@ -133,7 +132,7 @@ class EvacAgent implements MobsimDriverAgent, HasPerson, PlanAgent, HasModifiabl
 						Trip trip = TripStructureUtils.findTripStartingAtActivity(act, this.getModifiablePlan(), 
 								tripRouter.getStageActivityTypes() ) ;
 						String mainMode = tripRouter.getMainModeIdentifier().identifyMainMode(trip.getTripElements()) ;
-//						editTrips.replanFutureTrip(trip, WithinDayAgentUtils.getModifiablePlan(this), mainMode, now ) ;
+						editTrips.replanFutureTrip(trip, WithinDayAgentUtils.getModifiablePlan(this), mainMode, now ) ;
 						
 						Trip newTrip = TripStructureUtils.findTripStartingAtActivity(act, this.getModifiablePlan(), 
 								tripRouter.getStageActivityTypes() ) ;

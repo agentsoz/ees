@@ -35,6 +35,7 @@ import org.matsim.api.core.v01.population.Plan;
 import org.matsim.api.core.v01.population.PlanElement;
 import org.matsim.core.mobsim.framework.MobsimAgent;
 import org.matsim.core.mobsim.qsim.agents.WithinDayAgentUtils;
+import org.matsim.core.network.NetworkUtils;
 import org.matsim.core.network.SearchableNetwork;
 import org.matsim.core.router.TripStructureUtils;
 import org.matsim.core.router.TripStructureUtils.Trip;
@@ -56,9 +57,8 @@ public final class DRIVETODefaultActionHandler implements BDIActionHandler {
 		Id<Link> newLinkId;
 		if (args[1] instanceof double[]) {
 			double[] coords = (double[]) args[1];
-			newLinkId = ((SearchableNetwork) model.getScenario()
-					.getNetwork()).getNearestLinkExactly(
-							new Coord(coords[0], coords[1])).getId();
+			newLinkId = NetworkUtils.getNearestLink(model.getScenario().getNetwork(),
+					new Coord(coords[0], coords[1])).getId();
 			// yy could probably just give the coordinates to matsim. kai, nov'17
 
 		} else {
