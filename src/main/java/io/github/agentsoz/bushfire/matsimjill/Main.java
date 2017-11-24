@@ -141,11 +141,11 @@ public class Main {
 
 		// Set the simulation start time to 10 mins before the evacuation start, dsingh 24/nov/17
 		{
-//		dataServer.setTime(getEvacuationStartTimeInSeconds(-600));
-//
-//		matsimModel.getScenario().getConfig().qsim().setStartTime(getEvacuationStartTimeInSeconds(-600)) ;
-//		matsimModel.getScenario().getConfig().qsim().setSimStarttimeInterpretation(StarttimeInterpretation.onlyUseStarttime);
-//		// yy in the longer run, a "minOfStarttimeAndEarliestActivityEnd" would be good. kai, nov'17
+		dataServer.setTime(getEvacuationStartTimeInSeconds(-600));
+
+		matsimModel.getScenario().getConfig().qsim().setStartTime(getEvacuationStartTimeInSeconds(-600)) ;
+		matsimModel.getScenario().getConfig().qsim().setSimStarttimeInterpretation(StarttimeInterpretation.onlyUseStarttime);
+		// yy in the longer run, a "minOfStarttimeAndEarliestActivityEnd" would be good. kai, nov'17
 		}
 		
 		// move everything into the far future:
