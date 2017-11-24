@@ -182,10 +182,10 @@ public final class MATSimModel implements ABMServerInterface {
 						playPause = new PlayPauseSimulationControl( qSim ) ;
 						playPause.pause(); 
 
-						// add stub agent to keep simulation alive.  yyyy find nicer way to do this.
-						Id<Link> dummyLinkId = qSim.getNetsimNetwork().getNetsimLinks().keySet().iterator().next() ;
-						MobsimVehicle dummyVeh = null ;
-						qSim.insertAgentIntoMobsim(new MATSimStubAgent(dummyLinkId,Id.createPersonId("StubAgent"),dummyVeh));
+//						// add stub agent to keep simulation alive.  yyyy find nicer way to do this.
+//						Id<Link> dummyLinkId = qSim.getNetsimNetwork().getNetsimLinks().keySet().iterator().next() ;
+//						MobsimVehicle dummyVeh = null ;
+//						qSim.insertAgentIntoMobsim(new MATSimStubAgent(dummyLinkId,Id.createPersonId("StubAgent"),dummyVeh));
 
 						//						initialiseVisualisedAgents() ;
 					}
