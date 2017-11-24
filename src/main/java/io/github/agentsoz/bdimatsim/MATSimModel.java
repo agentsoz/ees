@@ -227,7 +227,7 @@ public final class MATSimModel implements ABMServerInterface {
 	public final void takeControl(AgentDataContainer agentDataContainer){
 		runUntil( (int)(playPause.getLocalTime() + 1), agentDataContainer ) ;
 	}
-	public final synchronized void runUntil( long newTime , AgentDataContainer agentDataContainer ) {
+	public final void runUntil( long newTime , AgentDataContainer agentDataContainer ) {
 		synchronized (agentDataContainer) {
 			logger.trace("Received {}", agentManager.getAgentDataContainer());
 			agentManager.updateActions();

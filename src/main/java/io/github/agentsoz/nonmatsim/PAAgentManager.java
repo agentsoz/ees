@@ -104,7 +104,7 @@ public final class PAAgentManager {
 	 * Called by MatsimModel to signal news actions from BDI side Handles two
 	 * types of changes, new actions (INITIATED) and dropped actions
 	 */
-	public final synchronized void updateActions() {
+	public final void updateActions() {
 		if (agentDataContainer.isEmpty()) {
 			return;
 		}
@@ -133,7 +133,7 @@ public final class PAAgentManager {
 	 * BDI side passed an action with state INITIATED Pass action parameters to
 	 * ActionHandler then update action to RUNNING
 	 */
-	private final synchronized boolean initiateNewAction(String agentID, String actionID) {
+	private final boolean initiateNewAction(String agentID, String actionID) {
 		if (agentsWithPerceptsAndActions.containsKey(agentID) ) {
 			PAAgent agent = getAgent(agentID);
 			Object[] parameters = agent.getActionContainer().get(actionID) .getParameters();

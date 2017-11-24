@@ -65,7 +65,7 @@ public final class ActionHandler {
 	 *            Parameters associated with the action
 	 * @return
 	 */
-	final synchronized boolean processAction(String agentID, String actionID, Object[] parameters) {
+	final boolean processAction(String agentID, String actionID, Object[] parameters) {
 		if ( registeredActions.isEmpty() ) {
 			throw new RuntimeException("no BDI action registered at all; this is probably not what you want; aborting ... " ) ;
 		}
