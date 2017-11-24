@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Level;
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.TransportMode;
 import org.matsim.api.core.v01.network.Link;
+import org.matsim.api.core.v01.population.Activity;
+import org.matsim.api.core.v01.population.Person;
+import org.matsim.api.core.v01.population.PlanElement;
 import org.matsim.core.config.Config;
 import org.matsim.core.config.ConfigUtils;
 import org.matsim.core.config.groups.PlansConfigGroup.ActivityDurationInterpretation;
@@ -20,19 +22,17 @@ import org.matsim.core.events.handler.EventHandler;
 import org.matsim.core.mobsim.framework.MobsimAgent;
 import org.matsim.core.mobsim.framework.PlayPauseSimulationControl;
 import org.matsim.core.mobsim.framework.events.MobsimAfterSimStepEvent;
-import org.matsim.core.mobsim.framework.events.MobsimBeforeSimStepEvent;
 import org.matsim.core.mobsim.framework.events.MobsimInitializedEvent;
 import org.matsim.core.mobsim.framework.listeners.MobsimAfterSimStepListener;
-import org.matsim.core.mobsim.framework.listeners.MobsimBeforeSimStepListener;
 import org.matsim.core.mobsim.framework.listeners.MobsimInitializedListener;
 import org.matsim.core.mobsim.qsim.QSim;
 import org.matsim.core.mobsim.qsim.interfaces.MobsimVehicle;
 import org.matsim.core.network.NetworkChangeEvent;
 import org.matsim.core.network.NetworkChangeEvent.ChangeType;
 import org.matsim.core.network.NetworkChangeEvent.ChangeValue;
+import org.matsim.core.network.NetworkUtils;
 import org.matsim.core.scenario.ScenarioUtils;
 import org.matsim.core.trafficmonitoring.FreeSpeedTravelTime;
-import org.matsim.core.network.NetworkUtils;
 import org.matsim.withinday.mobsim.MobsimDataProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -126,25 +126,27 @@ public final class MATSimModel implements ABMServerInterface {
 
 		// ---
 
-		this.agentManager = new PAAgentManager(eventsMonitors) ;
-
-		// ---
-
 		scenario = ScenarioUtils.loadScenario(config) ;
 
-	}
-
-	public final void init(List<String> bdiAgentIDs) {
-
+		// make sure links don't have speed infinity (results in problems with the router):
 		for ( Link link : scenario.getNetwork().getLinks().values() ) {
 			final double veryLargeSpeed = 9999999999.;
 			if ( link.getFreespeed() > veryLargeSpeed ) {
 				link.setFreespeed(veryLargeSpeed);
 			}
 		}
+		
+		// ---
+
+		this.agentManager = new PAAgentManager(eventsMonitors) ;
+
+	}
+
+	public final void init(List<String> bdiAgentIDs) {
 
 		// yy this could now be done in upstream code.  But since upstream code is user code, maybe we don't want it in there?  kai, nov'17
-		for(String agentId: bdiAgentIDs) {
+		for(String agentId: bdiAgentIDs) 
+		{
 			agentManager.createAndAddBDIAgent(agentId);
 
 			// default action:
