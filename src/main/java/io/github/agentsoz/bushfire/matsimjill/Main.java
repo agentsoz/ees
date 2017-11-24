@@ -367,7 +367,7 @@ public class Main {
 			sim.start(args);
 		} catch(Exception e) {
 			System.err.println("\nERROR: somethig went wrong, see details below:\n");
-			//			e.printStackTrace();
+						e.printStackTrace();
 			throw new RuntimeException(e) ; // throw exception, otherwise test counts as passed.  Sorry ...
 		}
 	}
