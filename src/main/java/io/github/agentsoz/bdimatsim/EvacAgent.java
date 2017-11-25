@@ -132,7 +132,7 @@ class EvacAgent implements MobsimDriverAgent, HasPerson, PlanAgent, HasModifiabl
 						Trip trip = TripStructureUtils.findTripStartingAtActivity(act, this.getModifiablePlan(), 
 								tripRouter.getStageActivityTypes() ) ;
 						String mainMode = tripRouter.getMainModeIdentifier().identifyMainMode(trip.getTripElements()) ;
-						editTrips.replanFutureTrip(trip, WithinDayAgentUtils.getModifiablePlan(this), mainMode, now ) ;
+//						editTrips.replanFutureTrip(trip, WithinDayAgentUtils.getModifiablePlan(this), mainMode, now ) ;
 						
 						Trip newTrip = TripStructureUtils.findTripStartingAtActivity(act, this.getModifiablePlan(), 
 								tripRouter.getStageActivityTypes() ) ;
