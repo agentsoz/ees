@@ -9,7 +9,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.matsim.core.utils.misc.CRCChecksum;
 import org.matsim.testcases.MatsimTestUtils;
+
 import io.github.agentsoz.bushfire.matsimjill.Main;
+import io.github.agentsoz.util.TestUtils;
 /**
  * @author dsingh
  *
