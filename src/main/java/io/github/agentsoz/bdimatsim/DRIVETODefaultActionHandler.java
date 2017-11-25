@@ -42,10 +42,11 @@ public final class DRIVETODefaultActionHandler implements BDIActionHandler {
 		this.model = model;
 	}
 	@Override
-	public boolean handle(String agentID, String actionID, Object[] args) {
+	public synchronized boolean handle(String agentID, String actionID, Object[] args) {
 		// assertions:
 		if ( args.length < 2 ) {
-			throw new RuntimeException("not enough information; we need coordinate-to-go-to and departure time") ;
+			throw new RuntimeException("not enough information; we need coordinate-to-go-to and departure time. " +
+											   "May be a problem of multi-threading.") ;
 		}
 		if ( ! ( args[1] instanceof double[] ) ) {
 			throw new RuntimeException("argument #1 not of type double[]; cannot be interpreted as coordinate" ) ;
