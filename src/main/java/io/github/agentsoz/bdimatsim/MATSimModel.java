@@ -121,6 +121,8 @@ public final class MATSimModel implements ABMServerInterface {
 
 		config.controler().setWritePlansInterval(1);
 		config.controler().setOverwriteFileSetting( OverwriteFileSetting.deleteDirectoryIfExists );
+		
+//		config.plansCalcRoute().setInsertingAccessEgressWalk(true);
 
 		//		ConfigUtils.setVspDefaults(config);
 
@@ -323,6 +325,10 @@ public final class MATSimModel implements ABMServerInterface {
 
 	public MobsimDataProvider getMobsimDataProvider() {
 		return mobsimDataProvider;
+	}
+	
+	public MobsimAgent getMobsimAgentFromIdString( String idString ) {
+		return this.getMobsimDataProvider().getAgent( Id.createPersonId(idString) ) ;
 	}
 
 	private void initialiseVisualisedAgents(){

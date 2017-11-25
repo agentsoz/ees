@@ -126,7 +126,7 @@ class EvacAgent implements MobsimDriverAgent, HasPerson, PlanAgent, HasModifiabl
 				if ( 
 						//planWasModified || 
 						((Leg)nextPlanElement).getRoute()==null ) {
-					log.warn("leg has no route; recomputing next trip") ;
+//					log.warn("leg has no route; recomputing next trip") ;
 					Activity act = (Activity) basicAgentDelegate.getCurrentPlanElement() ;
 					if ( !tripRouter.getStageActivityTypes().isStageActivity(act.getType()) ) {
 						// (= we just ended a "real" activity)
@@ -134,14 +134,16 @@ class EvacAgent implements MobsimDriverAgent, HasPerson, PlanAgent, HasModifiabl
 						Trip trip = TripStructureUtils.findTripStartingAtActivity(act, this.getModifiablePlan(), 
 								tripRouter.getStageActivityTypes() ) ;
 						String mainMode = tripRouter.getMainModeIdentifier().identifyMainMode(trip.getTripElements()) ;
-						editTrips.replanFutureTrip(trip, WithinDayAgentUtils.getModifiablePlan(this), mainMode, now ) ;
+						editTrips.replanFutureTrip(trip, this.getModifiablePlan(), mainMode, now ) ;
 						
 						Trip newTrip = TripStructureUtils.findTripStartingAtActivity(act, this.getModifiablePlan(), 
 								tripRouter.getStageActivityTypes() ) ;
 						if ( ! ( trip.toString().equals(newTrip.toString()) ) ) {
-							log.warn( "prevTrip:\t" + trip.toString() );
-							log.warn( "newTrip:\t" + trip.toString() );
-							log.warn("");
+//							log.warn( "prevTrip:\t" + trip.toString() );
+//							log.warn("prevRoute:\t" + trip.getLegsOnly().get(0).getRoute().toString()) ;
+//							log.warn("newRoute:\t" + newTrip.getLegsOnly().get(0).getRoute().toString()) ;
+//							log.warn( "newTrip:\t" + newTrip.toString() );
+//							log.warn("");
 						}
 						
 					}

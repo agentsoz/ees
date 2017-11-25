@@ -88,7 +88,7 @@ public final class Replanner {
 		return editTrips;
 	}
 
-	public EditPlans getEditPlans() {
+	public EditPlans editPlans() {
 		return editPlans;
 	}
 

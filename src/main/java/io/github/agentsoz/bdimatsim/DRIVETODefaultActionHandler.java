@@ -29,7 +29,6 @@ import org.matsim.api.core.v01.population.Activity;
 import org.matsim.api.core.v01.population.Person;
 import org.matsim.core.mobsim.framework.MobsimAgent;
 import org.matsim.core.network.NetworkUtils;
-import org.matsim.withinday.utils.EditPlans;
 
 import io.github.agentsoz.bdiabm.data.ActionContent;
 import io.github.agentsoz.bdimatsim.EventsMonitorRegistry.MonitoredEventType;
@@ -56,27 +55,24 @@ public final class DRIVETODefaultActionHandler implements BDIActionHandler {
 		double[] coords = (double[]) args[1];
 		Coord newCoord = new Coord(coords[0], coords[1]);
 		Id<Link> newLinkId = NetworkUtils.getNearestLink(model.getScenario().getNetwork(), newCoord).getId();
-		// yy could probably just give the coordinates to matsim. kai, nov'17
+		//  could give just coordinates to matsim, but for time being need the linkId in the percept anyways
 
-		double departureTime = (double)args[2];
+		double newDepartureTime = (double)args[2];
 
-		MobsimAgent agent1 = model.getMobsimDataProvider().getAgents().get(Id.createPersonId(agentID));
-
-		EditPlans editPlans = model.getReplanner().getEditPlans() ;
+		MobsimAgent agent1 = model.getMobsimAgentFromIdString(agentID) ;
 		
-		// depart immediately:
-		editPlans.rescheduleCurrentActivityEndtime(agent1, departureTime);
+		// new departure time:
+		model.getReplanner().editPlans().rescheduleCurrentActivityEndtime(agent1, newDepartureTime);
+		
+		// need to memorize the mode:
+		String mode = model.getReplanner().editPlans().getModeOfCurrentOrNextTrip(agent1) ;
+		
+		// flush everything beyond current:
+		model.getReplanner().editPlans().flushEverythingBeyondCurrent(agent1) ;
 
 		// new destination
-		Activity newAct = model.getScenario().getPopulation().getFactory().createActivityFromLinkId("work", newLinkId ) ;
-//		Activity newAct = model.getScenario().getPopulation().getFactory().createActivityFromCoord("work", newCoord ) ;
-		newAct.setEndTime( Double.POSITIVE_INFINITY ) ;
-		// Dhirendra, this is the place where you decide if the agents should count as alive after arrival (endTime<infty), 
-		// or not (endTime=infty).  Here, I say they should not stay alive, so that our tests run faster.  kai, nov'17
-
-		String mode = editPlans.getModeOfCurrentOrNextTrip(agent1) ;
-		editPlans.flushEverythingBeyondCurrent(agent1) ;
-		editPlans.addActivityAtEnd(agent1, newAct, mode) ;
+		Activity newAct = model.getReplanner().editPlans().createAgentThatLetsMatsimEnd( "work", newLinkId ) ;
+		model.getReplanner().editPlans().addActivityAtEnd(agent1, newAct, mode) ;
 		
 		// beyond is already non-matsim:
 
@@ -89,6 +85,7 @@ public final class DRIVETODefaultActionHandler implements BDIActionHandler {
 				PAAgent agent = model.getAgentManager().getAgent( agentId.toString() );
 				Object[] params = { linkId.toString() };
 				agent.getActionContainer().register(MATSimActionList.DRIVETO, params);
+				// yy (shouldn't this be earlier?)
 				agent.getActionContainer().get(MATSimActionList.DRIVETO).setState(ActionContent.State.PASSED);
 				agent.getPerceptContainer().put(MATSimPerceptList.ARRIVED, params);
 				return true;
