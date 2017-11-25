@@ -123,8 +123,10 @@ class EvacAgent implements MobsimDriverAgent, HasPerson, PlanAgent, HasModifiabl
 			PlanElement nextPlanElement = plan.getPlanElements().get(index+1) ;
 //			log.warn( "next plan element=" + nextPlanElement );
 			if ( nextPlanElement instanceof Leg ) {
-				if ( planWasModified || ((Leg)nextPlanElement).getRoute()==null ) {
-//					log.warn("plan was modified; recomputing next trip") ;
+				if ( 
+						//planWasModified || 
+						((Leg)nextPlanElement).getRoute()==null ) {
+					log.warn("leg has no route; recomputing next trip") ;
 					Activity act = (Activity) basicAgentDelegate.getCurrentPlanElement() ;
 					if ( !tripRouter.getStageActivityTypes().isStageActivity(act.getType()) ) {
 						// (= we just ended a "real" activity)
@@ -132,7 +134,7 @@ class EvacAgent implements MobsimDriverAgent, HasPerson, PlanAgent, HasModifiabl
 						Trip trip = TripStructureUtils.findTripStartingAtActivity(act, this.getModifiablePlan(), 
 								tripRouter.getStageActivityTypes() ) ;
 						String mainMode = tripRouter.getMainModeIdentifier().identifyMainMode(trip.getTripElements()) ;
-//						editTrips.replanFutureTrip(trip, WithinDayAgentUtils.getModifiablePlan(this), mainMode, now ) ;
+						editTrips.replanFutureTrip(trip, WithinDayAgentUtils.getModifiablePlan(this), mainMode, now ) ;
 						
 						Trip newTrip = TripStructureUtils.findTripStartingAtActivity(act, this.getModifiablePlan(), 
 								tripRouter.getStageActivityTypes() ) ;

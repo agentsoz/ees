@@ -134,9 +134,9 @@ public final class PAAgentManager {
 	 * ActionHandler then update action to RUNNING
 	 */
 	private final boolean initiateNewAction(String agentID, String actionID) {
+		synchronized ( agentID ) {
 		if (agentsWithPerceptsAndActions.containsKey(agentID) ) {
 			PAAgent agent = getAgent(agentID);
-			synchronized ( agent ) {
 				Object[] parameters = agent.getActionContainer().get(actionID) .getParameters();
 				if (agent.getActionHandler().processAction(agentID, actionID, parameters)) {
 					agent.getActionContainer().get(actionID.toString()) .setState(ActionContent.State.RUNNING);

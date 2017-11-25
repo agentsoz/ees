@@ -1,7 +1,5 @@
 package io.github.agentsoz.bdimatsim;
 
-import java.util.List;
-
 /*
  * #%L
  * BDI-ABM Integration Package
@@ -26,19 +24,12 @@ import java.util.List;
 
 import org.matsim.api.core.v01.Coord;
 import org.matsim.api.core.v01.Id;
-import org.matsim.api.core.v01.TransportMode;
 import org.matsim.api.core.v01.network.Link;
 import org.matsim.api.core.v01.population.Activity;
-import org.matsim.api.core.v01.population.Leg;
 import org.matsim.api.core.v01.population.Person;
-import org.matsim.api.core.v01.population.Plan;
-import org.matsim.api.core.v01.population.PlanElement;
 import org.matsim.core.mobsim.framework.MobsimAgent;
-import org.matsim.core.mobsim.qsim.agents.WithinDayAgentUtils;
 import org.matsim.core.network.NetworkUtils;
-import org.matsim.core.network.SearchableNetwork;
-import org.matsim.core.router.TripStructureUtils;
-import org.matsim.core.router.TripStructureUtils.Trip;
+import org.matsim.withinday.utils.EditPlans;
 
 import io.github.agentsoz.bdiabm.data.ActionContent;
 import io.github.agentsoz.bdimatsim.EventsMonitorRegistry.MonitoredEventType;
@@ -53,72 +44,41 @@ public final class DRIVETODefaultActionHandler implements BDIActionHandler {
 	}
 	@Override
 	public boolean handle(String agentID, String actionID, Object[] args) {
-
-		Id<Link> newLinkId;
-		if (args[1] instanceof double[]) {
-			double[] coords = (double[]) args[1];
-			newLinkId = NetworkUtils.getNearestLink(model.getScenario().getNetwork(),
-					new Coord(coords[0], coords[1])).getId();
-			// yy could probably just give the coordinates to matsim. kai, nov'17
-
-		} else {
-			throw new RuntimeException("Destination coordinates are not given");
+		// assertions:
+		if ( args.length < 2 ) {
+			throw new RuntimeException("not enough information; we need coordinate-to-go-to and departure time") ;
 		}
+		if ( ! ( args[1] instanceof double[] ) ) {
+			throw new RuntimeException("argument #1 not of type double[]; cannot be interpreted as coordinate" ) ;
+		}
+
+		// preparations:
+		double[] coords = (double[]) args[1];
+		Coord newCoord = new Coord(coords[0], coords[1]);
+		Id<Link> newLinkId = NetworkUtils.getNearestLink(model.getScenario().getNetwork(), newCoord).getId();
+		// yy could probably just give the coordinates to matsim. kai, nov'17
 
 		double departureTime = (double)args[2];
 
 		MobsimAgent agent1 = model.getMobsimDataProvider().getAgents().get(Id.createPersonId(agentID));
 
-		Plan plan = WithinDayAgentUtils.getModifiablePlan(agent1) ;
+		EditPlans editPlans = model.getReplanner().getEditPlans() ;
+		
+		// depart immediately:
+		editPlans.rescheduleCurrentActivityEndtime(agent1, departureTime);
 
-		List<PlanElement> planElements = plan.getPlanElements() ;
-
-
-		Integer planElementsIndex = WithinDayAgentUtils.getCurrentPlanElementIndex(agent1) ;
-
-		Activity act = (Activity)planElements.get(planElementsIndex);
-
-		act.setEndTime(departureTime);
-
-		// now the real work begins. This changes the activity (i.e. the destination of the current leg) and then
-		// re-splices the plan
-
+		// new destination
 		Activity newAct = model.getScenario().getPopulation().getFactory().createActivityFromLinkId("work", newLinkId ) ;
-
-		Leg newLeg = model.getScenario().getPopulation().getFactory().createLeg(TransportMode.car);
-		//		// new Route for current Leg.
-		newLeg.setDepartureTime(departureTime);
-		//		editRoutes.relocateFutureLegRoute(newLeg, lastAct.getLinkId(), newActivityLinkId,((HasPerson)agent).getPerson());
-		// --- old version end
-
+//		Activity newAct = model.getScenario().getPopulation().getFactory().createActivityFromCoord("work", newCoord ) ;
 		newAct.setEndTime( Double.POSITIVE_INFINITY ) ;
 		// Dhirendra, this is the place where you decide if the agents should count as alive after arrival (endTime<infty), 
 		// or not (endTime=infty).  Here, I say they should not stay alive, so that our tests run faster.  kai, nov'17
 
-		for ( int ii=planElements.size()-1 ; ii>planElementsIndex; ii-- ) {
-			planElements.remove(ii) ;
-		}
-
-		planElements.add(newLeg);
-		planElements.add(newAct); 
-
-		//		final List<Trip> trips = TripStructureUtils.getTrips(planElements, stageActivities);
-
-		//		Gbl.assertIf( trips.size()>=1 );
-
-		List<PlanElement> sublist = planElements.subList(planElements.size()-3, planElements.size() ) ;
-		// (the sub-list is "exclusive" the right index)
-
-		Trip trip = TripStructureUtils.getTrips(sublist, model.getReplanner().getEditTrips().getStageActivities()).get(0) ;
-		model.getReplanner().getEditTrips().replanFutureTrip(trip, plan, TransportMode.car) ;
-
-		WithinDayAgentUtils.resetCaches(agent1);
-		// this is necessary since the simulation may have cached some info from the plan at other places.
-		// (May not be necessary in this particular situation since there is nothing to cache when an agent is at an activity.) kai, feb'14
-
-		model.getReplanner().getEditPlans().rescheduleActivityEnd(agent1);
-		// this is the only place where the internal interface is truly needed, since it is the only place where the agent needs to be "woken up".
-		// This is necessary since otherwise the simulation will not touch the agent until its previously scheduled activity end. kai, feb/14
+		String mode = editPlans.getModeOfCurrentOrNextTrip(agent1) ;
+		editPlans.flushEverythingBeyondCurrent(agent1) ;
+		editPlans.addActivityAtEnd(agent1, newAct, mode) ;
+		
+		// beyond is already non-matsim:
 
 		// Now register a event handler for when the agent arrives at the destination
 		PAAgent agent = model.getAgentManager().getAgent( agentID );
