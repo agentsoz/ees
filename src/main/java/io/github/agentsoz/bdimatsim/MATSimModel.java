@@ -123,7 +123,7 @@ public final class MATSimModel implements ABMServerInterface {
 		config.controler().setOverwriteFileSetting( OverwriteFileSetting.deleteDirectoryIfExists );
 		
 //		config.plansCalcRoute().setInsertingAccessEgressWalk(true);
-
+		
 		//		ConfigUtils.setVspDefaults(config);
 
 		// ---

@@ -22,7 +22,9 @@ package io.github.agentsoz.nonmatsim;
  * #L%
  */
 
+import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 import io.github.agentsoz.bdimatsim.MATSimActionList;
 
@@ -33,7 +35,8 @@ import io.github.agentsoz.bdimatsim.MATSimActionList;
 
 public final class ActionHandler {
 	
-	private final LinkedHashMap<String, BDIActionHandler> registeredActions = new LinkedHashMap<>() ;
+	private final Map<String, BDIActionHandler> registeredActions
+			= Collections.synchronizedMap(new LinkedHashMap<>() );
 
 	/** 
 	 * Registers a new BDI action. Typical usage example:<pre><code>

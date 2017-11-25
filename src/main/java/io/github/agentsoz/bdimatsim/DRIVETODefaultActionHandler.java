@@ -46,7 +46,7 @@ public final class DRIVETODefaultActionHandler implements BDIActionHandler {
 		// assertions:
 		if ( args.length < 2 ) {
 			throw new RuntimeException("not enough information; we need coordinate-to-go-to and departure time. " +
-											   "May be a problem of multi-threading.") ;
+											   "May be a problem of thread interference.") ;
 		}
 		if ( ! ( args[1] instanceof double[] ) ) {
 			throw new RuntimeException("argument #1 not of type double[]; cannot be interpreted as coordinate" ) ;
