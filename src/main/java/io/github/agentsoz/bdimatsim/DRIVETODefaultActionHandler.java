@@ -42,7 +42,7 @@ public final class DRIVETODefaultActionHandler implements BDIActionHandler {
 		this.model = model;
 	}
 	@Override
-	public synchronized boolean handle(String agentID, String actionID, Object[] args) {
+	public boolean handle(String agentID, String actionID, Object[] args) {
 		// assertions:
 		if ( args.length < 2 ) {
 			throw new RuntimeException("not enough information; we need coordinate-to-go-to and departure time. " +

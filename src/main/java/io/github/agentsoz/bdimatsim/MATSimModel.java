@@ -246,11 +246,10 @@ public final class MATSimModel implements ABMServerInterface {
 		runUntil( (int)(playPause.getLocalTime() + 1), agentDataContainer ) ;
 	}
 	public final void runUntil( long newTime , AgentDataContainer agentDataContainer ) {
-		synchronized (agentDataContainer) {
 			logger.trace("Received {}", agentManager.getAgentDataContainer());
-			agentManager.updateActions();
+			agentManager.updateActions(); // handle incoming BDI actions
 			playPause.doStep( (int) (newTime) );
-		}
+			agentManager.transferActionsPerceptsToDataContainer(); // send back BDI actions/percepts/status'
 	}
 	public final boolean isFinished() {
 		return playPause.isFinished() ;

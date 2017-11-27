@@ -26,11 +26,7 @@ import java.util.LinkedHashMap;
  * #L%
  */
 
-import io.github.agentsoz.bdiabm.data.ActionContainer;
-import io.github.agentsoz.bdiabm.data.ActionContent;
-import io.github.agentsoz.bdiabm.data.AgentDataContainer;
-import io.github.agentsoz.bdiabm.data.AgentState;
-import io.github.agentsoz.bdiabm.data.AgentStateList;
+import io.github.agentsoz.bdiabm.data.*;
 import io.github.agentsoz.bdimatsim.EventsMonitorRegistry;
 
 /**
@@ -42,7 +38,6 @@ import io.github.agentsoz.bdimatsim.EventsMonitorRegistry;
  * @author Edmund Kemsley 
  */
 public final class PAAgentManager {
-	private final AgentStateList agentStateList;
 	/**
 	 * actions & percepts.  Reached around a lot.
 	 */
@@ -60,16 +55,11 @@ public final class PAAgentManager {
 		this.eventsMonitors = eventsMonitors;
 
 		agentsWithPerceptsAndActions = new LinkedHashMap<>();
-		agentStateList = new AgentStateList();
 		this.agentDataContainer = new AgentDataContainer();
 	}
 
 	public final AgentDataContainer getAgentDataContainer() {
 		return agentDataContainer;
-	}
-
-	public final AgentStateList getAgentStateList() {
-		return agentStateList;
 	}
 
 	public final PAAgent getAgent(String agentID) {
@@ -83,9 +73,10 @@ public final class PAAgentManager {
 	 * functionality
 	 */
 	public final boolean createAndAddBDIAgent(String agentID) {
-		PAAgent agent = new PAAgent( eventsMonitors, agentID, agentDataContainer.getOrCreate(agentID.toString()) );
+		PAAgent agent = new PAAgent( eventsMonitors, agentID,
+				new ActionPerceptContainer() // own copy, *NOT* connected to agentDataContainer, ds 28/nov/17
+		);
 		agentsWithPerceptsAndActions.put(agentID, agent);
-		agentStateList.add(new AgentState(agentID.toString()));
 		return true;
 	}
 
@@ -95,7 +86,6 @@ public final class PAAgentManager {
 
 	final boolean removeAgent(String agentID) {
 		agentsWithPerceptsAndActions.remove(agentID);
-		agentStateList.remove(new AgentState(agentID));// maybe will work // should work now.  kai, nov'17
 		// don't you need to also remove this from agentDataContainer??
 		return true;
 	}
@@ -114,7 +104,7 @@ public final class PAAgentManager {
 			ActionContainer actionContainer = agentDataContainer.getOrCreate( agent).getActionContainer();
 			for (String action : actionContainer.actionIDSet()) {
 				if (actionContainer.get(action).getState() == ActionContent.State.INITIATED) {
-					initiateNewAction(agent, action);
+					initiateNewAction(agent, action, actionContainer.get(action));
 					/*
 					 * dsingh; 21/apr/15: remove RUNNING actions for efficiency
 					 * reasons so that we do not transit them back and forth.
@@ -133,16 +123,17 @@ public final class PAAgentManager {
 	 * BDI side passed an action with state INITIATED Pass action parameters to
 	 * ActionHandler then update action to RUNNING
 	 */
-	private final boolean initiateNewAction(String agentID, String actionID) {
+	private final boolean initiateNewAction(String agentID, String actionID, ActionContent action) {
 		synchronized ( agentID ) {
 		if (agentsWithPerceptsAndActions.containsKey(agentID) ) {
 			PAAgent agent = getAgent(agentID);
-				Object[] parameters = agent.getActionContainer().get(actionID) .getParameters();
+				Object[] parameters = action.getParameters();
+				agent.getActionContainer().register(actionID,parameters);
 				if (agent.getActionHandler().processAction(agentID, actionID, parameters)) {
-					agent.getActionContainer().get(actionID.toString()) .setState(ActionContent.State.RUNNING);
+					agent.getActionContainer().get(actionID) .setState(ActionContent.State.RUNNING);
 					return true;
 				} else {
-					agent.getActionContainer().get(actionID.toString()) .setState(ActionContent.State.FAILED);
+					agent.getActionContainer().get(actionID) .setState(ActionContent.State.FAILED);
 					return false;
 				}
 			}
@@ -150,6 +141,26 @@ public final class PAAgentManager {
 		return false;
 	}
 
+	public void transferActionsPerceptsToDataContainer() {
+		for (PAAgent agent : agentsWithPerceptsAndActions.values()) {
+			ActionContainer ac = agent.getActionContainer();
+			synchronized (ac) { // cannot be changed while we are in here
+				if (!ac.isEmpty()) {
+					ActionPerceptContainer apc = agentDataContainer.getOrCreate(agent.getAgentID());
+					apc.getActionContainer().copy(ac); // copy is already synchronised
+					ac.clear();
+				}
+			}
+			PerceptContainer pc = agent.getPerceptContainer();
+			synchronized (pc) { // cannot be changed while we are in here
+				if (!pc.isEmpty()) {
+					ActionPerceptContainer apc = agentDataContainer.getOrCreate(agent.getAgentID());
+					apc.getPerceptContainer().copy(pc);
+					pc.clear();
+				}
+			}
+		}
+	}
 	/*
 	 * BDI side wants to drop an action
 	 */
