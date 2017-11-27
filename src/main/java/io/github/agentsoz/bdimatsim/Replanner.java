@@ -69,6 +69,7 @@ public final class Replanner {
 	}
 
 	@Deprecated // yyyy but I don't have an easy replacement yet
+	// (maybe just editTrips.replanCurrentTrip(...)?)
 	protected final void reRouteCurrentLeg( MobsimAgent agent, double now ) {
 		Plan plan = WithinDayAgentUtils.getModifiablePlan(agent) ;
 		PlanElement pe = plan.getPlanElements().get( WithinDayAgentUtils.getCurrentPlanElementIndex(agent)) ;
@@ -79,12 +80,12 @@ public final class Replanner {
 		this.editRoutes.replanCurrentLegRoute((Leg)pe, ((HasPerson)agent).getPerson(), currentLinkIndex, now ) ;
 		WithinDayAgentUtils.resetCaches(agent);
 	}
-
-	public EditRoutes getEditRoutes() {
+	@Deprecated // I don't think that this is really needed for the bushfire applications.  kai, nov'17
+	public EditRoutes editRoutes() {
 		return editRoutes;
 	}
 
-	public EditTrips getEditTrips() {
+	public EditTrips editTrips() {
 		return editTrips;
 	}
 

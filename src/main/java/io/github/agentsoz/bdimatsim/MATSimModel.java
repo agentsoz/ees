@@ -1,18 +1,15 @@
 package io.github.agentsoz.bdimatsim;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.TransportMode;
 import org.matsim.api.core.v01.network.Link;
-import org.matsim.api.core.v01.population.Activity;
-import org.matsim.api.core.v01.population.Person;
-import org.matsim.api.core.v01.population.PlanElement;
+import org.matsim.core.api.experimental.events.EventsManager;
 import org.matsim.core.config.Config;
 import org.matsim.core.config.ConfigUtils;
+import org.matsim.core.config.groups.PlansCalcRouteConfigGroup;
 import org.matsim.core.config.groups.PlansConfigGroup.ActivityDurationInterpretation;
 import org.matsim.core.config.groups.QSimConfigGroup.StarttimeInterpretation;
 import org.matsim.core.controler.AbstractModule;
@@ -26,14 +23,15 @@ import org.matsim.core.mobsim.framework.events.MobsimInitializedEvent;
 import org.matsim.core.mobsim.framework.listeners.MobsimAfterSimStepListener;
 import org.matsim.core.mobsim.framework.listeners.MobsimInitializedListener;
 import org.matsim.core.mobsim.qsim.QSim;
-import org.matsim.core.mobsim.qsim.interfaces.MobsimVehicle;
 import org.matsim.core.network.NetworkChangeEvent;
 import org.matsim.core.network.NetworkChangeEvent.ChangeType;
 import org.matsim.core.network.NetworkChangeEvent.ChangeValue;
 import org.matsim.core.network.NetworkUtils;
+import org.matsim.core.router.costcalculators.RandomizingTimeDistanceTravelDisutilityFactory;
 import org.matsim.core.scenario.ScenarioUtils;
 import org.matsim.core.trafficmonitoring.FreeSpeedTravelTime;
 import org.matsim.withinday.mobsim.MobsimDataProvider;
+import org.matsim.withinday.trafficmonitoring.TravelTimeCollector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -172,9 +170,32 @@ public final class MATSimModel implements ABMServerInterface {
 		controller.addOverridingModule(new AbstractModule(){
 			@Override public void install() {
 				
-				this.addTravelTimeBinding(TransportMode.car).to( FreeSpeedTravelTime.class ) ;
-
-				install( new EvacQSimModule(MATSimModel.this) ) ;
+				{
+					// freespeed mode:
+					this.addTravelTimeBinding(TransportMode.car).to(FreeSpeedTravelTime.class);
+				}
+				{
+					// congested mode:
+					Set<String> analyzedModes = new HashSet<>();
+					analyzedModes.add(TransportMode.car);
+					analyzedModes.add("congested");
+					final TravelTimeCollector congestedTravelTime = new TravelTimeCollector(getScenario(), analyzedModes);
+					this.addEventHandlerBinding().toInstance(congestedTravelTime);
+					this.addTravelTimeBinding("congested").toInstance(congestedTravelTime);
+					this.addMobsimListenerBinding().toInstance(congestedTravelTime);
+				}
+				
+				
+				PlansCalcRouteConfigGroup routeConfigGroup = getConfig().plansCalcRoute();
+				for (String mode : routeConfigGroup.getNetworkModes()) {
+					final RandomizingTimeDistanceTravelDisutilityFactory disutilityFactory
+							= new RandomizingTimeDistanceTravelDisutilityFactory(mode, getConfig().planCalcScore());
+					disutilityFactory.setSigma(0.) ;
+					addTravelDisutilityFactoryBinding(mode).toInstance(disutilityFactory);
+				}
+				
+				
+				install( new EvacQSimModule(MATSimModel.this, controller.getEvents()) ) ;
 
 				this.addMobsimListenerBinding().toInstance( new MobsimInitializedListener() {
 					@Override public void notifyMobsimInitialized(MobsimInitializedEvent e) {
@@ -183,11 +204,6 @@ public final class MATSimModel implements ABMServerInterface {
 
 						playPause = new PlayPauseSimulationControl( qSim ) ;
 						playPause.pause(); 
-
-//						// add stub agent to keep simulation alive.  yyyy find nicer way to do this.
-//						Id<Link> dummyLinkId = qSim.getNetsimNetwork().getNetsimLinks().keySet().iterator().next() ;
-//						MobsimVehicle dummyVeh = null ;
-//						qSim.insertAgentIntoMobsim(new MATSimStubAgent(dummyLinkId,Id.createPersonId("StubAgent"),dummyVeh));
 
 						//						initialiseVisualisedAgents() ;
 					}
@@ -346,5 +362,9 @@ public final class MATSimModel implements ABMServerInterface {
 		}
 		//interfaceV.sendInitialAgentData(new ArrayList<MobsimAgent>());
 	}
-
+	
+	public EventsManager getEvents() {
+		return this.qSim.getEventsManager() ;
+	}
+	
 }

@@ -30,22 +30,19 @@ import java.util.Collection;
 
 import javax.inject.Inject;
 
+import org.matsim.api.core.v01.Id;
+import org.matsim.api.core.v01.network.Link;
+import org.matsim.core.api.experimental.events.EventsManager;
 import org.matsim.core.config.Config;
 import org.matsim.core.mobsim.framework.Mobsim;
 import org.matsim.core.mobsim.qsim.AbstractQSimPlugin;
 import org.matsim.core.mobsim.qsim.ActivityEnginePlugin;
-import org.matsim.core.mobsim.qsim.PopulationPlugin;
 import org.matsim.core.mobsim.qsim.QSimProvider;
 import org.matsim.core.mobsim.qsim.TeleportationPlugin;
-import org.matsim.core.mobsim.qsim.agents.AgentFactory;
-import org.matsim.core.mobsim.qsim.agents.PopulationAgentSource;
 import org.matsim.core.mobsim.qsim.changeeventsengine.NetworkChangeEventsPlugin;
 import org.matsim.core.mobsim.qsim.messagequeueengine.MessageQueuePlugin;
 import org.matsim.core.mobsim.qsim.pt.TransitEnginePlugin;
-import org.matsim.core.mobsim.qsim.qnetsimengine.DefaultQNetworkFactory;
-import org.matsim.core.mobsim.qsim.qnetsimengine.QLanesNetworkFactory;
-import org.matsim.core.mobsim.qsim.qnetsimengine.QNetsimEnginePlugin;
-import org.matsim.core.mobsim.qsim.qnetsimengine.QNetworkFactory;
+import org.matsim.core.mobsim.qsim.qnetsimengine.*;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Module;
@@ -60,20 +57,37 @@ public class EvacQSimModule extends AbstractModule {
 	@Inject Config config ;
 
 	private final MATSimModel matSimModel;
+	private EventsManager eventsManager;
 	
-	public EvacQSimModule(MATSimModel matSimModel) {
+	public EvacQSimModule(MATSimModel matSimModel, EventsManager eventsManager) {
 		this.matSimModel = matSimModel;
+		this.eventsManager = eventsManager;
 	}
 
 	@Override
 	protected void configure() {
 		bind(MATSimModel.class).toInstance(this.matSimModel);
 		bind(Mobsim.class).toProvider(QSimProvider.class);
-		if ( config.qsim().isUseLanes() ) { 
-			bind(QNetworkFactory.class).to( QLanesNetworkFactory.class ) ;
-		} else {
-			bind(QNetworkFactory.class).to( DefaultQNetworkFactory.class ) ;
+		if ( config.qsim().isUseLanes() ) {
+			throw new RuntimeException("not yet implemented for this setup") ;
 		}
+		ConfigurableQNetworkFactory qNetworkFactory = new ConfigurableQNetworkFactory( eventsManager, matSimModel.getScenario() ) ;
+		qNetworkFactory.setTurnAcceptanceLogic(new TurnAcceptanceLogic(){
+			TurnAcceptanceLogic delegate = new DefaultTurnAcceptanceLogic() ;
+			@Override
+			public AcceptTurn isAcceptingTurn(Link currentLink, QLaneI currentLane, Id<Link> nextLinkId, QVehicle veh, QNetwork qNetwork) {
+				AcceptTurn accept = delegate.isAcceptingTurn(currentLink, currentLane, nextLinkId, veh, qNetwork);
+				
+				QLinkI nextQLink = qNetwork.getNetsimLink(nextLinkId);
+				double now = matSimModel.getTime();
+				double speed = nextQLink.getLink().getFreespeed(now);
+				if ( speed < 0.1 ) { // m/s
+					accept = AcceptTurn.WAIT ;
+				}
+				return accept ;
+			}
+		});
+		bind(QNetworkFactory.class).toInstance( qNetworkFactory ) ;
 	}
 
 	@SuppressWarnings("static-method")
