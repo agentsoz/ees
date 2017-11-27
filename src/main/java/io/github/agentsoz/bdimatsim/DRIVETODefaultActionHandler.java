@@ -72,7 +72,7 @@ public final class DRIVETODefaultActionHandler implements BDIActionHandler {
 		model.getReplanner().editPlans().flushEverythingBeyondCurrent(agent1) ;
 
 		// new destination
-		Activity newAct = model.getReplanner().editPlans().createAgentThatLetsMatsimEnd( "work", newLinkId ) ;
+		Activity newAct = model.getReplanner().editPlans().createFinalActivity( "work", newLinkId ) ;
 		model.getReplanner().editPlans().addActivityAtEnd(agent1, newAct, mode) ;
 		
 		// beyond is already non-matsim:
