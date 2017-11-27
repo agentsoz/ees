@@ -88,7 +88,7 @@ public class JillBDIModel extends JillModel implements DataClient {
 
 	@Override
 	public boolean init(AgentDataContainer agentDataContainer,
-			AgentStateList agentList, 
+			AgentStateList agentList,
 			ABMServerInterface abmServer,
 			Object[] params) 
 	{

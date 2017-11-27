@@ -134,7 +134,8 @@ public class Main {
 		List<String> bdiAgentIDs = Utils.getBDIAgentIDs( matsimModel.getScenario() );
 
 		this.jillmodel.init(matsimModel.getAgentManager().getAgentDataContainer(),
-				matsimModel.getAgentManager().getAgentStateList(), this.matsimModel,
+				null, // agentList is not used
+				this.matsimModel,
 				bdiAgentIDs.toArray( new String[bdiAgentIDs.size()] ));
 		this.jillmodel.start();
 		
