@@ -42,7 +42,7 @@ public final class MakeUTurnAndRerouteActionHandler implements BDIActionHandler 
 		this.model = model;
 	}
 	@Override
-	public synchronized boolean handle(String agentID, String actionID, Object[] args) {
+	public boolean handle(String agentID, String actionID, Object[] args) {
 		MobsimAgent agent1 = model.getMobsimAgentFromIdString(agentID) ;
 		
 		// find links:

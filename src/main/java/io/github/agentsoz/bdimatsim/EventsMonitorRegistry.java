@@ -108,8 +108,6 @@ ActivityEndEventHandler{
 
 	
 	private void callRegisteredHandlers(Event ev) {
-	  // putting in the "synchronized" on 20-nov-2017.  Might be an issue when parallel events handling is active.  kai, nov'17
-
       // Register any new monitors waiting to be added
 	  // Synchronise on toAdd which is allowed to be updated by other threads
       synchronized (toAdd) {
@@ -119,10 +117,6 @@ ActivityEndEventHandler{
         toAdd.clear();
       }
      
-      // the following code assumes that monitors and toRemove cannot be changed by
-      // any other thread, so method should remain synchronized to ensure this
-      // dsingh, 22/nov/17
-      
       List<Monitor> toRemove = new ArrayList<>();
       
       for (Monitor monitor : monitors) {

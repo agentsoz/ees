@@ -35,8 +35,7 @@ import io.github.agentsoz.bdimatsim.MATSimActionList;
 
 public final class ActionHandler {
 	
-	private final Map<String, BDIActionHandler> registeredActions
-			= Collections.synchronizedMap(new LinkedHashMap<>() );
+	private final Map<String, BDIActionHandler> registeredActions = new LinkedHashMap<>();
 
 	/** 
 	 * Registers a new BDI action. Typical usage example:<pre><code>
