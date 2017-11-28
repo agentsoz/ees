@@ -124,18 +124,16 @@ public final class PAAgentManager {
 	 * ActionHandler then update action to RUNNING
 	 */
 	private final boolean initiateNewAction(String agentID, String actionID, ActionContent action) {
-		synchronized ( agentID ) {
 		if (agentsWithPerceptsAndActions.containsKey(agentID) ) {
 			PAAgent agent = getAgent(agentID);
-				Object[] parameters = action.getParameters();
-				agent.getActionContainer().register(actionID,parameters);
-				if (agent.getActionHandler().processAction(agentID, actionID, parameters)) {
-					agent.getActionContainer().get(actionID) .setState(ActionContent.State.RUNNING);
-					return true;
-				} else {
-					agent.getActionContainer().get(actionID) .setState(ActionContent.State.FAILED);
-					return false;
-				}
+			Object[] parameters = action.getParameters();
+			agent.getActionContainer().register(actionID,parameters);
+			if (agent.getActionHandler().processAction(agentID, actionID, parameters)) {
+				agent.getActionContainer().get(actionID) .setState(ActionContent.State.RUNNING);
+				return true;
+			} else {
+				agent.getActionContainer().get(actionID) .setState(ActionContent.State.FAILED);
+				return false;
 			}
 		}
 		return false;

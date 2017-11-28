@@ -25,6 +25,7 @@ package io.github.agentsoz.bdimatsim;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.events.ActivityEndEvent;
@@ -71,7 +72,7 @@ ActivityEndEventHandler{
 		EndedActivity;
 	}
 	
-	private List<Monitor> monitors = new ArrayList<>() ;
+	private List<Monitor> monitors = new CopyOnWriteArrayList<>() ;
     private List<Monitor> toAdd = new ArrayList<>();
 
 	@Override
@@ -106,7 +107,7 @@ ActivityEndEventHandler{
 
 
 	
-	synchronized private void callRegisteredHandlers(Event ev) {
+	private void callRegisteredHandlers(Event ev) {
 	  // putting in the "synchronized" on 20-nov-2017.  Might be an issue when parallel events handling is active.  kai, nov'17
 
       // Register any new monitors waiting to be added
@@ -135,9 +136,7 @@ ActivityEndEventHandler{
 //					if (monitor.getAgentId() == event.getDriverId() && monitor.getLinkId() == event.getLinkId()) {
 					if (monitor.getAgentId().equals(event.getDriverId()) && monitor.getLinkId().equals(event.getLinkId())) {
 						if(monitor.getHandler().handle(monitor.getAgentId(), monitor.getLinkId(), monitor.getEvent())) {
-						  synchronized (toRemove) {
                             toRemove.add(monitor);
-                          }
 						}
 					}
 				}
@@ -189,12 +188,10 @@ ActivityEndEventHandler{
 			default:
 				throw new RuntimeException("missing case statement") ;
 			}
-      }
+      	}
 
-      // Remove any monitors scheduled to be removed
-      for (Monitor monitor : toRemove) {
-        monitors.remove(monitor);
-      }
+		// Remove any monitors scheduled to be removed
+		monitors.removeAll(toRemove);
 	}
 	
 	/**

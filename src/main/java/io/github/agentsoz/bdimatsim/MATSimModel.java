@@ -265,7 +265,7 @@ public final class MATSimModel implements ABMServerInterface {
 		}
 
 	}
-	public final synchronized void addDateServerEvent(String type,SimpleMessage newEvent){
+	public final void addDateServerEvent(String type,SimpleMessage newEvent){
 		//This does mean that the visualiser should be registered very early or events may be thrown away
 		if(dataServer != null) agentsUpdateMessages.add(newEvent);
 	}
@@ -295,12 +295,10 @@ public final class MATSimModel implements ABMServerInterface {
 	}
 
 	private final void publishDataToExternalListeners() {
-		synchronized(this) {
-			if (dataServer != null) {
-				dataServer.publish( "matsim_agent_updates", agentsUpdateMessages.toArray(new SimpleMessage[agentsUpdateMessages.size()]) );
-			}
-			agentsUpdateMessages.clear();
+		if (dataServer != null) {
+			dataServer.publish( "matsim_agent_updates", agentsUpdateMessages.toArray(new SimpleMessage[agentsUpdateMessages.size()]) );
 		}
+		agentsUpdateMessages.clear();
 	}
 
 	private final void setFreeSpeedExample(){
