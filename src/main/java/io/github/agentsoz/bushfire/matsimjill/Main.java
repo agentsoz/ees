@@ -169,17 +169,11 @@ public class Main {
 
 		while ( true ) {
 			this.jillmodel.takeControl( matsimModel.getAgentManager().getAgentDataContainer() );
+			if( this.matsimModel.isFinished() ) {
+				break;
+			}
 			//this.matsimModel.takeControl(matsimModel.getAgentManager().getAgentDataContainer());
 			this.matsimModel.runUntil((long)dataServer.getTime(), matsimModel.getAgentManager().getAgentDataContainer());
-			if( this.matsimModel.isFinished() ) {
-				try {
-					// Added to allow EventsMonitorRegistry.callRegisteredHandlers() to finish, dsingh 21/nov/17
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				break ;
-			}
 			// increment time
 			dataServer.stepTime();
 		}
