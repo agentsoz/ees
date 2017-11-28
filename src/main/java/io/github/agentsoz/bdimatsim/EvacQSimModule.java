@@ -32,6 +32,7 @@ import javax.inject.Inject;
 
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.network.Link;
+import org.matsim.api.core.v01.population.Person;
 import org.matsim.core.api.experimental.events.EventsManager;
 import org.matsim.core.config.Config;
 import org.matsim.core.mobsim.framework.Mobsim;
@@ -48,6 +49,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Module;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
+import org.matsim.vehicles.Vehicle;
 
 /**
  * @author kainagel
@@ -83,6 +85,12 @@ public class EvacQSimModule extends AbstractModule {
 				double speed = nextQLink.getLink().getFreespeed(now);
 				if ( speed < 0.1 ) { // m/s
 					accept = AcceptTurn.WAIT ;
+					Id<Person> driverId = veh.getDriver().getId() ;
+					Id<Link> currentLinkId = veh.getCurrentLink().getId() ;
+					Id<Vehicle> vehicleId = veh.getId() ;
+					Id<Link> blockedLinkId = nextLinkId ;
+					eventsManager.processEvent(new NextLinkBlockedEvent( now, vehicleId,
+																			   driverId, currentLinkId, blockedLinkId) );
 				}
 				return accept ;
 			}

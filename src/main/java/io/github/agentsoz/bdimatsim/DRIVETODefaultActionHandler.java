@@ -80,13 +80,13 @@ public final class DRIVETODefaultActionHandler implements BDIActionHandler {
 		// Now register a event handler for when the agent arrives at the destination
 		PAAgent agent = model.getAgentManager().getAgent( agentID );
 		agent.getPerceptHandler().registerBDIPerceptHandler( agent.getAgentID(), MonitoredEventType.ArrivedAtDestination,
-				newLinkId, new BDIPerceptHandler() {
+				newLinkId.toString(), new BDIPerceptHandler() {
 			@Override
 			public boolean handle(Id<Person> agentId, Id<Link> linkId, MonitoredEventType monitoredEvent) {
 				PAAgent agent = model.getAgentManager().getAgent( agentId.toString() );
 				Object[] params = { linkId.toString() };
 				agent.getActionContainer().register(MATSimActionList.DRIVETO, params);
-				// yy (shouldn't this be earlier?)
+				// (shouldn't this be earlier? --> there is a comment in the agent manager. kai, nov'17)
 				agent.getActionContainer().get(MATSimActionList.DRIVETO).setState(ActionContent.State.PASSED);
 				agent.getPerceptContainer().put(MATSimPerceptList.ARRIVED, params);
 				return true;

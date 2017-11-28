@@ -23,7 +23,6 @@ package io.github.agentsoz.bdimatsim;
  */
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -43,6 +42,7 @@ import org.matsim.api.core.v01.network.Link;
 import org.matsim.api.core.v01.population.Person;
 
 import io.github.agentsoz.nonmatsim.BDIPerceptHandler;
+import org.matsim.core.events.handler.BasicEventHandler;
 
 /**
  * Acts as a simple listener for Matsim agent events then
@@ -56,7 +56,8 @@ LinkEnterEventHandler,
 LinkLeaveEventHandler,
 PersonArrivalEventHandler, 
 PersonDepartureEventHandler,
-ActivityEndEventHandler{
+ActivityEndEventHandler,
+		BasicEventHandler {
 
 	/**
 	 * if these event types were sitting in bdi-abm, I would understand this.  But given that they are sitting here,
@@ -69,7 +70,8 @@ ActivityEndEventHandler{
 		ExitedNode,
 		ArrivedAtDestination,
 		DepartedDestination,
-		EndedActivity;
+		EndedActivity,
+		NextLinkBlocked
 	}
 	
 	private List<Monitor> monitors = new CopyOnWriteArrayList<>() ;
@@ -105,6 +107,12 @@ ActivityEndEventHandler{
 		callRegisteredHandlers(event);
 	}
 
+	@Override
+	public void handleEvent( Event event ) {
+		if ( event instanceof NextLinkBlockedEvent) {
+			callRegisteredHandlers(event) ;
+		}
+	}
 
 	
 	private void callRegisteredHandlers(Event ev) {
@@ -121,9 +129,18 @@ ActivityEndEventHandler{
       
       for (Monitor monitor : monitors) {
 	        switch (monitor.getEvent()) {
+				case NextLinkBlocked:
+					if ( ev instanceof NextLinkBlockedEvent ) {
+						NextLinkBlockedEvent event = (NextLinkBlockedEvent) ev;
+						if ( monitor.getAgentId().equals(event.getDriverId() ) ) {
+							if ( monitor.getHandler().handle( monitor.getAgentId(), event.currentLinkId(), monitor.getEvent() ) ) {
+								toRemove.add(monitor) ;
+							}
+						}
+					}
 			// yy from a matsim perspective, the following are plugged together in a weird way: in matsim, enterLink
-			// would really be the same as leaveNode.  And not enterNode, as the bdi framework keyword implies.  ???
-			// kai, nov'17
+			// would really be the same as leaveNode.  And not enterNode, as the bdi framework keyword implies.
+			// Do you really want the naming like this?  kai, nov'17
 			case EnteredNode:
 				if (ev instanceof LinkEnterEvent) {
 					LinkEnterEvent event = (LinkEnterEvent)ev;
@@ -198,7 +215,7 @@ ActivityEndEventHandler{
 	 * @param handler
 	 * @return
 	 */
-	public int registerMonitor(String agentId, MonitoredEventType event,Id<Link> linkId, BDIPerceptHandler handler) {
+	public int registerMonitor(String agentId, MonitoredEventType event,String linkId, BDIPerceptHandler handler) {
 		synchronized (toAdd) {
 			toAdd.add(new Monitor(agentId, linkId, event, handler));
 			return toAdd.size();
@@ -217,13 +234,13 @@ ActivityEndEventHandler{
 		private MonitoredEventType event;
 		private BDIPerceptHandler handler;
 		
-		public Monitor(String agentId2, Id<Link> linkId, MonitoredEventType event, BDIPerceptHandler handler) {
+		public Monitor(String agentId2, String linkId, MonitoredEventType event, BDIPerceptHandler handler) {
 			super();
 
 			this.agentId = Id.createPersonId(agentId2);
 			// (this is now one of the places where the bdi ids (= Strings) get translated into matsim ids)
 			
-			this.linkId = linkId;
+			this.linkId = Id.createLinkId(linkId) ;
 			this.event = event;
 			this.handler = handler;
 		}

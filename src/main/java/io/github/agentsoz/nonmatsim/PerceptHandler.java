@@ -59,9 +59,7 @@ public final class PerceptHandler {
 	 * @param handler
 	 * @return
 	 */
-	public int registerBDIPerceptHandler(String agentId, MonitoredEventType event,Id<Link> linkId, BDIPerceptHandler handler) {
-		// yy maybe replace Id<Link> by String? kai, nov'17
-		
+	public int registerBDIPerceptHandler(String agentId, MonitoredEventType event, String linkId, BDIPerceptHandler handler) {
 		return eventsMonitors.registerMonitor(agentId, event, linkId, handler);
 	}
 
