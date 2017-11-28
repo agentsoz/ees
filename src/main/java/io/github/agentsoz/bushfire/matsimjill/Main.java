@@ -9,7 +9,17 @@ import java.util.Collections;
 import java.util.List;
 import java.util.TreeMap;
 
+import io.github.agentsoz.bdiabm.data.ActionContent;
+import io.github.agentsoz.bdimatsim.EventsMonitorRegistry.MonitoredEventType;
+import io.github.agentsoz.bdimatsim.MATSimActionList;
+import io.github.agentsoz.bdimatsim.MATSimModel;
+import io.github.agentsoz.bdimatsim.MATSimPerceptList;
+import io.github.agentsoz.bdimatsim.Utils;
+import io.github.agentsoz.nonmatsim.BDIPerceptHandler;
+import io.github.agentsoz.nonmatsim.PAAgent;
 import org.json.simple.parser.ParseException;
+import org.matsim.api.core.v01.Id;
+import org.matsim.api.core.v01.network.Link;
 import org.matsim.api.core.v01.population.Activity;
 import org.matsim.api.core.v01.population.Person;
 import org.matsim.api.core.v01.population.PlanElement;
@@ -46,8 +56,6 @@ import ch.qos.logback.core.FileAppender;
  * #L%
  */
 
-import io.github.agentsoz.bdimatsim.MATSimModel;
-import io.github.agentsoz.bdimatsim.Utils;
 import io.github.agentsoz.bushfire.PhoenixFireModule;
 import io.github.agentsoz.bushfire.Time;
 import io.github.agentsoz.bushfire.datamodels.Location;
@@ -166,7 +174,23 @@ public class Main {
 		 */ 
 		
 		matsimModel.init(bdiAgentIDs);
-
+		
+		// add the perception handlers for the blocked links.  yyyyyy BUT I DON'T REALLY KNOW HOW TO DO THIS.  kai, nov'17
+//		for ( String bdiAgentID : bdiAgentIDs ) {
+//			PAAgent agent = matsimModel.getAgentManager().getAgent(bdiAgentID);
+//			agent.getPerceptHandler().registerBDIPerceptHandler( agent.getAgentID(), MonitoredEventType.NextLinkBlocked,
+//					null, new BDIPerceptHandler() {
+//			@Override
+//			public boolean handle(Id<Person> agentId, Id<Link> currentLinkId, MonitoredEventType monitoredEvent) {
+//				PAAgent agent = matsimModel.getAgentManager().getAgent( agentId.toString() );
+//				Object[] params = { currentLinkId.toString() };
+//				agent.getActionContainer().register(MATSimActionList.DRIVETO, params);
+//				agent.getActionContainer().get(MATSimActionList.DRIVETO).setState(ActionContent.State.PASSED);
+//				agent.getPerceptContainer().put(MATSimPerceptList.ARRIVED, params);
+//				return true;
+//			}
+//		}
+		
 		while ( true ) {
 			this.jillmodel.takeControl( matsimModel.getAgentManager().getAgentDataContainer() );
 			if( this.matsimModel.isFinished() ) {
