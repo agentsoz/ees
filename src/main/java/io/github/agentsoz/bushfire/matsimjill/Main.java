@@ -25,6 +25,8 @@ import org.matsim.api.core.v01.population.Person;
 import org.matsim.api.core.v01.population.PlanElement;
 import org.matsim.core.config.groups.QSimConfigGroup.StarttimeInterpretation;
 import org.matsim.core.events.handler.EventHandler;
+import org.matsim.core.network.NetworkChangeEvent;
+import org.matsim.core.network.NetworkUtils;
 import org.slf4j.LoggerFactory;
 
 import ch.qos.logback.classic.Level;
@@ -192,6 +194,19 @@ public class Main {
 //		}
 		
 		while ( true ) {
+			
+			// put in a blocked link.  todo: (1) find out link that is relevant to CC scenario; (2) find out time that is relevant to CC scenario.
+			// todo later: configure this from elsewhere
+//			int blockageTime = 1800 ;
+//			boolean hasPassedBlockageTime = false ;
+//			if ( !hasPassedBlockageTime && dataServer.getTime() > blockageTime ) {
+//				hasPassedBlockageTime = true ;
+//				NetworkChangeEvent changeEvent = new NetworkChangeEvent(blockageTime);
+//				changeEvent.setFreespeedChange(new NetworkChangeEvent.ChangeValue(NetworkChangeEvent.ChangeType.ABSOLUTE_IN_SI_UNITS, 0.));
+//				changeEvent.addLink(matsimModel.getScenario().getNetwork().getLinks().get(Id.createLinkId(6876)));
+//				NetworkUtils.addNetworkChangeEvent(matsimModel.getScenario().getNetwork(), changeEvent);
+//			}
+			
 			this.jillmodel.takeControl( matsimModel.getAgentManager().getAgentDataContainer() );
 			if( this.matsimModel.isFinished() ) {
 				break;
