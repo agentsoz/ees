@@ -310,22 +310,22 @@ public final class MATSimModel implements ABMServerInterface {
 		agentsUpdateMessages.clear();
 	}
 
-	private final void setFreeSpeedExample(){
-		// example how to set the freespeed of some link to zero:
-		final double now = this.qSim.getSimTimer().getTimeOfDay();
-		if ( now == 0.*3600. + 6.*60. ) {
-			NetworkChangeEvent event = new NetworkChangeEvent( now ) ;
-			event.setFreespeedChange(new ChangeValue( ChangeType.ABSOLUTE_IN_SI_UNITS,  0. ));
-			event.addLink( scenario.getNetwork().getLinks().get( Id.createLinkId( 51825 )));
-			NetworkUtils.addNetworkChangeEvent( scenario.getNetwork(),event);
-
-			for ( MobsimAgent agent : this.getMobsimDataProvider().getAgents().values() ) {
-				if ( !(agent instanceof MATSimStubAgent) ) {
-					this.getReplanner().reRouteCurrentLeg(agent, now);
-				}
-			}
-		}
-	}
+//	private final void setFreeSpeedExample(){
+//		// example how to set the freespeed of some link to zero:
+//		final double now = this.qSim.getSimTimer().getTimeOfDay();
+//		if ( now == 0.*3600. + 6.*60. ) {
+//			NetworkChangeEvent event = new NetworkChangeEvent( now ) ;
+//			event.setFreespeedChange(new ChangeValue( ChangeType.ABSOLUTE_IN_SI_UNITS,  0. ));
+//			event.addLink( scenario.getNetwork().getLinks().get( Id.createLinkId( 51825 )));
+//			NetworkUtils.addNetworkChangeEvent( scenario.getNetwork(),event);
+//
+//			for ( MobsimAgent agent : this.getMobsimDataProvider().getAgents().values() ) {
+//				if ( !(agent instanceof MATSimStubAgent) ) {
+//					this.getReplanner().reRouteCurrentLeg(agent, now);
+//				}
+//			}
+//		}
+//	}
 
 	public final void registerDataServer( DataServer server ) {
 		dataServer = server;

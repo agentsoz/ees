@@ -27,22 +27,16 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.matsim.api.core.v01.Id;
-import org.matsim.api.core.v01.events.ActivityEndEvent;
-import org.matsim.api.core.v01.events.Event;
-import org.matsim.api.core.v01.events.LinkEnterEvent;
-import org.matsim.api.core.v01.events.LinkLeaveEvent;
-import org.matsim.api.core.v01.events.PersonArrivalEvent;
-import org.matsim.api.core.v01.events.PersonDepartureEvent;
-import org.matsim.api.core.v01.events.handler.ActivityEndEventHandler;
-import org.matsim.api.core.v01.events.handler.LinkEnterEventHandler;
-import org.matsim.api.core.v01.events.handler.LinkLeaveEventHandler;
-import org.matsim.api.core.v01.events.handler.PersonArrivalEventHandler;
-import org.matsim.api.core.v01.events.handler.PersonDepartureEventHandler;
+import org.matsim.api.core.v01.events.*;
+import org.matsim.api.core.v01.events.handler.*;
 import org.matsim.api.core.v01.network.Link;
 import org.matsim.api.core.v01.population.Person;
 
 import io.github.agentsoz.nonmatsim.BDIPerceptHandler;
+import org.matsim.core.events.algorithms.Vehicle2DriverEventHandler;
 import org.matsim.core.events.handler.BasicEventHandler;
+import org.matsim.core.gbl.Gbl;
+import org.matsim.vehicles.Vehicle;
 
 /**
  * Acts as a simple listener for Matsim agent events then
@@ -57,6 +51,8 @@ LinkLeaveEventHandler,
 PersonArrivalEventHandler, 
 PersonDepartureEventHandler,
 ActivityEndEventHandler,
+		VehicleEntersTrafficEventHandler,
+VehicleLeavesTrafficEventHandler,
 		BasicEventHandler {
 
 	/**
@@ -76,6 +72,22 @@ ActivityEndEventHandler,
 	
 	private List<Monitor> monitors = new CopyOnWriteArrayList<>() ;
     private List<Monitor> toAdd = new ArrayList<>();
+	
+	@Override
+	public void handleEvent(VehicleEntersTrafficEvent event) {
+		delegate.handleEvent(event);
+	}
+	
+	@Override
+	public void handleEvent(VehicleLeavesTrafficEvent event) {
+		delegate.handleEvent(event);
+	}
+	
+	public Id<Person> getDriverOfVehicle(Id<Vehicle> vehicleId) {
+		return delegate.getDriverOfVehicle(vehicleId);
+	}
+	
+	Vehicle2DriverEventHandler delegate = new Vehicle2DriverEventHandler() ;
 
 	@Override
 	public final void reset(int iteration) {
@@ -127,10 +139,14 @@ ActivityEndEventHandler,
      
       List<Monitor> toRemove = new ArrayList<>();
       
+      // yyyyyy in the following, monitor.getLinkId can now be null.  Need to hedge against it!  kai, nov'17
+      
       for (Monitor monitor : monitors) {
 	        switch (monitor.getEvent()) {
 				case NextLinkBlocked:
+//					System.err.println("testing a NextLinkBlocked monitor ...");
 					if ( ev instanceof NextLinkBlockedEvent ) {
+						System.err.println("catching a nextLinkBlocked event") ;
 						NextLinkBlockedEvent event = (NextLinkBlockedEvent) ev;
 						if ( monitor.getAgentId().equals(event.getDriverId() ) ) {
 							if ( monitor.getHandler().handle( monitor.getAgentId(), event.currentLinkId(), monitor.getEvent() ) ) {
@@ -145,7 +161,9 @@ ActivityEndEventHandler,
 				if (ev instanceof LinkEnterEvent) {
 					LinkEnterEvent event = (LinkEnterEvent)ev;
 //					if (monitor.getAgentId() == event.getDriverId() && monitor.getLinkId() == event.getLinkId()) {
-					if (monitor.getAgentId().equals(event.getDriverId()) && monitor.getLinkId().equals(event.getLinkId())) {
+					Id<Person> driverId = this.getDriverOfVehicle(event.getVehicleId());
+					Gbl.assertNotNull(driverId);
+					if (monitor.getAgentId().equals(driverId) && event.getLinkId().equals(monitor.getLinkId())) {
 						if(monitor.getHandler().handle(monitor.getAgentId(), monitor.getLinkId(), monitor.getEvent())) {
                             toRemove.add(monitor);
 						}
@@ -240,7 +258,9 @@ ActivityEndEventHandler,
 			this.agentId = Id.createPersonId(agentId2);
 			// (this is now one of the places where the bdi ids (= Strings) get translated into matsim ids)
 			
-			this.linkId = Id.createLinkId(linkId) ;
+			if ( linkId!=null ) {
+				this.linkId = Id.createLinkId(linkId);
+			}
 			this.event = event;
 			this.handler = handler;
 		}
