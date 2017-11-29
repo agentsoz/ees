@@ -35,6 +35,7 @@ public class MainCampbellsCreek50Test {
 	@Rule public MatsimTestUtils utils = new MatsimTestUtils() ;
 
 	@Test
+	@Ignore
 	public void testCampbellsCreek50() {
 
 		String [] args = {
