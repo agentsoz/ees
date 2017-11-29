@@ -27,7 +27,10 @@ import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.network.Link;
 import org.matsim.api.core.v01.population.Activity;
 import org.matsim.api.core.v01.population.Person;
+import org.matsim.api.core.v01.population.Plan;
+import org.matsim.api.core.v01.population.PlanElement;
 import org.matsim.core.mobsim.framework.MobsimAgent;
+import org.matsim.core.mobsim.qsim.agents.WithinDayAgentUtils;
 import org.matsim.core.network.NetworkUtils;
 
 import io.github.agentsoz.bdiabm.data.ActionContent;
@@ -35,6 +38,9 @@ import io.github.agentsoz.bdimatsim.EventsMonitorRegistry.MonitoredEventType;
 import io.github.agentsoz.nonmatsim.BDIActionHandler;
 import io.github.agentsoz.nonmatsim.BDIPerceptHandler;
 import io.github.agentsoz.nonmatsim.PAAgent;
+import org.opengis.filter.spatial.Within;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class DRIVETODefaultActionHandler implements BDIActionHandler {
 	private final MATSimModel model;
@@ -43,6 +49,7 @@ public final class DRIVETODefaultActionHandler implements BDIActionHandler {
 	}
 	@Override
 	public boolean handle(String agentID, String actionID, Object[] args) {
+//		System.err.println("------------------------------------------------------------------------------------------") ;
 		// assertions:
 		if ( args.length < 2 ) {
 			throw new RuntimeException("not enough information; we need coordinate-to-go-to and departure time. " +
@@ -69,11 +76,14 @@ public final class DRIVETODefaultActionHandler implements BDIActionHandler {
 		String mode = model.getReplanner().editPlans().getModeOfCurrentOrNextTrip(agent1) ;
 		
 		// flush everything beyond current:
+		printPlan("before flush: ", agent1);
 		model.getReplanner().editPlans().flushEverythingBeyondCurrent(agent1) ;
+		printPlan("after flush: " , agent1) ;
 
 		// new destination
-		Activity newAct = model.getReplanner().editPlans().createFinalActivity( "driveTo", newLinkId ) ;
+		Activity newAct = model.getReplanner().editPlans().createFinalActivity( "work", newLinkId ) ;
 		model.getReplanner().editPlans().addActivityAtEnd(agent1, newAct, mode) ;
+		printPlan("after adding act: " , agent1 ) ;
 		
 		// beyond is already non-matsim:
 
@@ -93,6 +103,15 @@ public final class DRIVETODefaultActionHandler implements BDIActionHandler {
 			}
 		}
 				);
+//		System.err.println("------------------------------------------------------------------------------------------") ;
 		return true;
+	}
+	
+	private void printPlan(String str ,MobsimAgent agent1) {
+//		Plan plan = WithinDayAgentUtils.getModifiablePlan(agent1) ;
+//		System.err.println(str + plan ); ;
+//		for ( PlanElement pe : plan.getPlanElements() ) {
+//			System.err.println("    " + pe ); ;
+//		}
 	}
 }
