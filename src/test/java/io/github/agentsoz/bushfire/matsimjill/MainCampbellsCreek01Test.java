@@ -12,6 +12,8 @@ import org.matsim.testcases.MatsimTestUtils;
 
 import io.github.agentsoz.bushfire.matsimjill.Main;
 import io.github.agentsoz.util.TestUtils;
+import org.matsim.utils.eventsfilecomparison.EventsFileComparator;
+
 /**
  * @author dsingh
  *
@@ -42,16 +44,22 @@ public class MainCampbellsCreek01Test {
 		"}"};
 
 		Main.main(args);
-		long actualCRCevents = CRCChecksum.getCRCFromFile( utils.getOutputDirectory() + "/output_events.xml.gz" ) ;
+		final String actualEventsFilename = utils.getOutputDirectory() + "/output_events.xml.gz";
+		long actualCRCevents = CRCChecksum.getCRCFromFile(actualEventsFilename) ;
 		System.err.println( "actual(events)=" + actualCRCevents ) ;
 		long actualCRCplans = CRCChecksum.getCRCFromFile( utils.getOutputDirectory() + "/output_plans.xml.gz" ) ;
 		System.err.println( "actual(plans)=" + actualCRCplans ) ;
 		long actualCRCjill = CRCChecksum.getCRCFromFile( "scenarios/campbells-creek-01/jill.out" ) ;
 		System.err.println( "actual(jill)=" + actualCRCjill ) ;
-
+		
+		final String primaryExpectedEventsFilename = utils.getInputDirectory() + "/output_events.xml.gz";
+		
+		EventsFileComparator.Result result = EventsFileComparator.compare(primaryExpectedEventsFilename, actualEventsFilename);
+		System.err.println("result=" + result ) ;
+		
 		{
 			long [] expectedCRC = {
-					CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/output_events.xml.gz" ) 
+					CRCChecksum.getCRCFromFile(primaryExpectedEventsFilename)
 					, 761998030L // build server
 			};
 			TestUtils.checkSeveral(expectedCRC, actualCRCevents);

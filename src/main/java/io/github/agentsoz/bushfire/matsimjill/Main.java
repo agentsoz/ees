@@ -182,20 +182,25 @@ public class Main {
 		matsimModel.init(bdiAgentIDs);
 		
 		// add the perception handlers for the blocked links.  yyyyyy BUT I DON'T REALLY KNOW HOW TO DO THIS.  kai, nov'17
-//		for ( String bdiAgentID : bdiAgentIDs ) {
-//			PAAgent agent = matsimModel.getAgentManager().getAgent(bdiAgentID);
-//			agent.getPerceptHandler().registerBDIPerceptHandler( agent.getAgentID(), MonitoredEventType.NextLinkBlocked,
-//					null, new BDIPerceptHandler() {
-//			@Override
-//			public boolean handle(Id<Person> agentId, Id<Link> currentLinkId, MonitoredEventType monitoredEvent) {
-//				PAAgent agent = matsimModel.getAgentManager().getAgent( agentId.toString() );
-//				Object[] params = { currentLinkId.toString() };
-//				agent.getActionContainer().register(MATSimActionList.DRIVETO, params);
-//				agent.getActionContainer().get(MATSimActionList.DRIVETO).setState(ActionContent.State.PASSED);
-//				agent.getPerceptContainer().put(MATSimPerceptList.ARRIVED, params);
-//				return true;
-//			}
-//		}
+		if ( setup==Setup.blockage ) {
+			for ( String bdiAgentID : bdiAgentIDs ) {
+				PAAgent agent = matsimModel.getAgentManager().getAgent(bdiAgentID);
+				agent.getPerceptHandler().registerBDIPerceptHandler( agent.getAgentID(), MonitoredEventType.NextLinkBlocked,
+						null, new BDIPerceptHandler() {
+							@Override
+							public boolean handle(Id<Person> agentId, Id<Link> currentLinkId, MonitoredEventType monitoredEvent) {
+								System.err.println("calling the nextLinkBlocked handler") ;
+								PAAgent agent = matsimModel.getAgentManager().getAgent( agentId.toString() );
+								Object[] params = { currentLinkId.toString() };
+								agent.getActionContainer().register(MATSimActionList.DRIVETO, params);
+								agent.getActionContainer().get(MATSimActionList.DRIVETO).setState(ActionContent.State.PASSED);
+								agent.getPerceptContainer().put(MATSimPerceptList.ARRIVED, params);
+								return true;
+							}
+						}
+				);
+			}
+		}
 		
 		boolean hasPassedBlockageTime = false;
 		while ( true ) {
@@ -203,9 +208,9 @@ public class Main {
 			// put in a blocked link.  todo: (1) find out link that is relevant to CC scenario; (2) find out time that is relevant to CC scenario.
 			// todo later: configure this from elsewhere
 			if ( setup==Setup.blockage ) {
-				System.err.println("configuring blockage") ;
 				int blockageTime = 6*60 ;
 				if (!hasPassedBlockageTime && dataServer.getTime() > blockageTime) {
+					System.err.println("configuring blockage") ;
 					hasPassedBlockageTime = true;
 					NetworkChangeEvent changeEvent = new NetworkChangeEvent(blockageTime);
 					changeEvent.setFreespeedChange(new NetworkChangeEvent.ChangeValue(NetworkChangeEvent.ChangeType.ABSOLUTE_IN_SI_UNITS, 0.));
