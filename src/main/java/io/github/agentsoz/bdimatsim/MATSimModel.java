@@ -63,6 +63,8 @@ import io.github.agentsoz.dataInterface.DataServer;
 import io.github.agentsoz.nonmatsim.PAAgentManager;
 import io.github.agentsoz.nonmatsim.SimpleMessage;
 
+import javax.inject.Inject;
+
 /**
  * @author QingyuChen, KaiNagel, Dhi Singh
  */
@@ -103,7 +105,8 @@ public final class MATSimModel implements ABMServerInterface {
 	private PlayPauseSimulationControl playPause;
 	private final EventsMonitorRegistry eventsMonitors  = new EventsMonitorRegistry() ;
 	private Thread matsimThread;
-
+	@Inject private Replanner replanner;
+	
 	public MATSimModel( String[] args) {
 
 		Config config = ConfigUtils.loadConfig( args[0] ) ;
@@ -237,8 +240,9 @@ public final class MATSimModel implements ABMServerInterface {
 	}
 
 	public final Replanner getReplanner() {
-		return qSim.getChildInjector().getInstance( Replanner.class ) ;
+//		return qSim.getChildInjector().getInstance( Replanner.class ) ;
 		// this _should_ now be a singleton by injection. kai, nov'17
+		return this.replanner ;
 	}
 
 	@Override

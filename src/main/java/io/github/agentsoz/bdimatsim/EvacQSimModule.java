@@ -68,7 +68,7 @@ public class EvacQSimModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
-		bind(MATSimModel.class).toInstance(this.matSimModel);
+//		bind(MATSimModel.class).toInstance(this.matSimModel);
 		bind(Mobsim.class).toProvider(QSimProvider.class);
 		if ( config.qsim().isUseLanes() ) {
 			throw new RuntimeException("not yet implemented for this setup") ;
@@ -119,7 +119,8 @@ public class EvacQSimModule extends AbstractModule {
 				Collection<Module> result = new ArrayList<>();
 				result.add(new com.google.inject.AbstractModule() {
 					@Override protected void configure() {
-						bind(Replanner.class).in( Singleton.class ); 
+						bind(Replanner.class).in( Singleton.class );
+						bind(MATSimModel.class).toInstance( matSimModel ) ;
 					}
 				});
 				return result;
