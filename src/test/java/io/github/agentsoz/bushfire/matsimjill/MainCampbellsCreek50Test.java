@@ -52,8 +52,8 @@ public class MainCampbellsCreek50Test {
 						"logLevel: WARN,"+
 						"logFile: \"scenarios/campbells-creek/jill.log\","+
 						"programOutputFile: \"scenarios/campbells-creek/jill.out\","+
-						"randomSeed: 12345,"+ // jill random seed
-						"numThreads: 1"+ // run jill in single-threaded mode so logs are deterministic
+						"randomSeed: 12345"+ // jill random seed
+						//"numThreads: 1"+ // run jill in single-threaded mode so logs are deterministic
 		"}"};
 
 		Main.main(args);

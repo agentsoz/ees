@@ -52,8 +52,8 @@ public class MainMaldon600Test {
 						"logLevel: WARN,"+
 						"logFile: \"scenarios/maldon-2017-11-01/jill.log\","+
 						"programOutputFile: \"scenarios/maldon-2017-11-01/jill.out\","+
-						"randomSeed: 12345,"+ // jill random seed
-						"numThreads: 1"+ // run jill in single-threaded mode so logs are deterministic
+						"randomSeed: 12345"+ // jill random seed
+						//"numThreads: 1"+ // run jill in single-threaded mode so logs are deterministic
 						"}"
 		};
 
