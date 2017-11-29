@@ -17,6 +17,8 @@ import org.matsim.testcases.MatsimTestUtils;
 
 import io.github.agentsoz.bushfire.matsimjill.Main;
 import io.github.agentsoz.util.TestUtils;
+import org.matsim.utils.eventsfilecomparison.EventsFileComparator;
+
 /**
  * @author dsingh
  *
@@ -29,7 +31,6 @@ public class MainMaldon600Test {
 
 	@SuppressWarnings("static-method")
 	@Test
-	@Ignore
 	public void testMaldon600() {
 
 		/*
@@ -70,14 +71,33 @@ public class MainMaldon600Test {
 
 		final String primaryExpectedEventsFilename = utils.getInputDirectory() + "/output_events.xml.gz";
 
-		SortedMap<Id<Person>, List<Double>> arrivalsExpected = TestUtils.collectArrivals(primaryExpectedEventsFilename) ;
-		SortedMap<Id<Person>, List<Double>> arrivalsActual = TestUtils.collectArrivals( actualEventsFilename ) ;
-		
-		// test with slack:
-		TestUtils.compareEventsWithSlack(arrivalsExpected, arrivalsActual, 600);
-		
-		// exact test, but sorting first:
-//		TestUtils.compareFullEvents(primaryExpectedEventsFilename, actualEventsFilename);
+		{
+			System.out.println("\nComparing all events ...") ;
+			EventsFileComparator.Result result = EventsFileComparator.compare(primaryExpectedEventsFilename, actualEventsFilename);
+			System.out.println("result=" + result);
+			System.out.println("... comparing all events done.\n") ;
+		}
+		{
+			System.out.println("\nComparing departures ...") ;
+			SortedMap<Id<Person>, List<Double>> expecteds = TestUtils.collectDepartures(primaryExpectedEventsFilename);
+			SortedMap<Id<Person>, List<Double>> actuals = TestUtils.collectDepartures(actualEventsFilename);
+			TestUtils.compareEventsWithSlack( expecteds, actuals, 5. );
+			System.out.println("... comparing departures done.\n") ;
+		}
+		{
+			System.out.println("\nComparing arrivals ...") ;
+			SortedMap<Id<Person>, List<Double>> expecteds = TestUtils.collectArrivals(primaryExpectedEventsFilename);
+			SortedMap<Id<Person>, List<Double>> actuals = TestUtils.collectArrivals(actualEventsFilename);
+			TestUtils.compareEventsWithSlack( expecteds, actuals, 5. );
+			System.out.println("... comparing arrivals done.\n") ;
+		}
+		{
+			System.out.println("\nComparing activity starts ...") ;
+			SortedMap<Id<Person>, List<Double>> expecteds = TestUtils.collectActivityStarts(primaryExpectedEventsFilename);
+			SortedMap<Id<Person>, List<Double>> actuals = TestUtils.collectActivityStarts(actualEventsFilename);
+			TestUtils.compareEventsWithSlack( expecteds, actuals, 5. );
+			System.out.println("... comparing activity starts done.\n") ;
+		}
 		
 		// comparing the plain files, but maybe more than one:
 		long [] expectedEvents = new long [] {

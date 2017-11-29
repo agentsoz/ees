@@ -59,51 +59,48 @@ public class MainCampbellsCreek01Test {
 		
 		final String primaryExpectedEventsFilename = utils.getInputDirectory() + "/output_events.xml.gz";
 		{
-			System.err.println("\nComparing all events ...") ;
+			System.out.println("\nComparing all events ...") ;
 			EventsFileComparator.Result result = EventsFileComparator.compare(primaryExpectedEventsFilename, actualEventsFilename);
-			System.err.println("result=" + result);
-			System.err.println("... comparing all events done.\n") ;
+			System.out.println("result=" + result);
+			System.out.println("... comparing all events done.\n") ;
 		}
 		{
-			System.err.println("\nComparing departures ...") ;
+			System.out.println("\nComparing departures ...") ;
 			SortedMap<Id<Person>, List<Double>> expecteds = TestUtils.collectDepartures(primaryExpectedEventsFilename);
 			SortedMap<Id<Person>, List<Double>> actuals = TestUtils.collectDepartures(actualEventsFilename);
 			TestUtils.compareEventsWithSlack( expecteds, actuals, 5. );
-			System.err.println("... comparing departures done.\n") ;
+			System.out.println("... comparing departures done.\n") ;
 		}
 		{
-			System.err.println("\nComparing arrivals ...") ;
+			System.out.println("\nComparing arrivals ...") ;
 			SortedMap<Id<Person>, List<Double>> expecteds = TestUtils.collectArrivals(primaryExpectedEventsFilename);
 			SortedMap<Id<Person>, List<Double>> actuals = TestUtils.collectArrivals(actualEventsFilename);
 			TestUtils.compareEventsWithSlack( expecteds, actuals, 5. );
-			System.err.println("... comparing arrivals done.\n") ;
+			System.out.println("... comparing arrivals done.\n") ;
 		}
 		{
-			System.err.println("\nComparing activity starts ...") ;
+			System.out.println("\nComparing activity starts ...") ;
 			SortedMap<Id<Person>, List<Double>> expecteds = TestUtils.collectActivityStarts(primaryExpectedEventsFilename);
 			SortedMap<Id<Person>, List<Double>> actuals = TestUtils.collectActivityStarts(actualEventsFilename);
 			TestUtils.compareEventsWithSlack( expecteds, actuals, 5. );
-			System.err.println("... comparing activity starts done.\n") ;
+			System.out.println("... comparing activity starts done.\n") ;
 		}
 		
 		{
 			long [] expectedCRC = {
 					CRCChecksum.getCRCFromFile(primaryExpectedEventsFilename)
-					, 761998030L // build server
 			};
 			TestUtils.checkSeveral(expectedCRC, actualCRCevents);
 		}
 		{
 			long [] expectedCRC = {
 					CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/output_plans.xml.gz" )
-					, 3926531007L // build server
 			} ;
 			TestUtils.checkSeveral(expectedCRC, actualCRCplans); 
 		}
 		{
 			long [] expectedCRC = {
 					CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/jill.out" )
-					, 2611213709L // build server
 			} ;
 			TestUtils.checkSeveral(expectedCRC, actualCRCjill); 
 		}

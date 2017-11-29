@@ -51,22 +51,19 @@ public class BlockageCampbellsCreek01Test {
 
 		{
 			long [] expectedCRC = {
-					CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/output_events.xml.gz" ) 
-					, 3372222273L // build server
+					CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/output_events.xml.gz" )
 			};
 			TestUtils.checkSeveral(expectedCRC, actualCRCevents);
 		}
 		{
 			long [] expectedCRC = {
 					CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/output_plans.xml.gz" )
-					, 2777753481L // build server
 			} ;
 			TestUtils.checkSeveral(expectedCRC, actualCRCplans); 
 		}
 		{
 			long [] expectedCRC = {
 					CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/jill.out" )
-					, 2611213709L // build server
 			} ;
 			TestUtils.checkSeveral(expectedCRC, actualCRCjill); 
 		}
