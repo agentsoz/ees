@@ -69,14 +69,47 @@ public class EvacuateNow extends Plan {
 			new PlanStep() {
 				public void step() {
 					// Must suspend the agent when waiting for external stimuli
-					writer.println("Resident "+getAgent().getId()+": is driving to shelter in " + shelterLocation);
-					((Resident)getAgent()).suspend(true);
+					writer.println("Resident " + getAgent().getId() + ": is driving to shelter in " + shelterLocation);
+					((Resident) getAgent()).suspend(true);
 				}
 			},
 			// All done
 			new PlanStep() {
 				public void step() {
-					writer.println("Resident "+getAgent().getId()+": has reached shelter in "+ shelterLocation);
+					if (((Resident)getAgent()).getFailedAttempts() > 0) {
+						writer.println("Resident "+getAgent().getId()+": has reached shelter in "+ shelterLocation);
+					} else {
+						// Failed
+						String bdiAction = MATSimActionList.DRIVETO;
+						shelterLocation = ((Resident)getAgent()).getShelterLocation();
+						double[] coords = shelterLocation.getCoordinates();
+						double evacTime = DataServer.getServer("Bushfire").getTime() + 5.0;
+						Object[] params = {bdiAction, coords, evacTime }; // five secs from now
+						writer.println("Resident "+getAgent().getId()+": will start evacuating to shelter in "+shelterLocation + " at time " + evacTime);
+						post(new EnvironmentAction(
+								Integer.toString(((Resident)getAgent()).getId()),
+								bdiAction, params));
+					}
+				}
+			},
+			// Now wait till it is finished
+			new PlanStep() {
+				public void step() {
+					if (((Resident)getAgent()).getFailedAttempts() == 0) {
+						return;
+					}
+					// Must suspend the agent when waiting for external stimuli
+					writer.println("Resident " + getAgent().getId() + ": is driving to shelter in " + shelterLocation);
+					((Resident) getAgent()).suspend(true);
+				}
+			},
+			// All done
+			new PlanStep() {
+				public void step() {
+					if (((Resident) getAgent()).getFailedAttempts() == 0) {
+						return;
+					}
+					writer.println("Resident " + getAgent().getId() + ": has reached shelter in " + shelterLocation);
 				}
 			}
 	};

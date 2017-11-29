@@ -46,6 +46,11 @@ public class Resident extends Agent implements io.github.agentsoz.bdiabm.Agent {
 	
 	private Location shelterLocation = null;
 
+	public int getFailedAttempts() {
+		return failedAttempts;
+	}
+
+	private int failedAttempts;
 
 	public Resident(String str) {
 		super(str);
@@ -106,6 +111,11 @@ public class Resident extends Agent implements io.github.agentsoz.bdiabm.Agent {
 			if (content.getState()==State.PASSED) {
 				// Wake up the agent that was waiting for external action to finish
 				// FIXME: BDI actions put agent in suspend, which won't work for multiple intention stacks 
+				suspend(false);
+			} else if (content.getState()==State.FAILED) {
+				failedAttempts++;
+				// Wake up the agent that was waiting for external action to finish
+				// FIXME: BDI actions put agent in suspend, which won't work for multiple intention stacks
 				suspend(false);
 			}
 		}
