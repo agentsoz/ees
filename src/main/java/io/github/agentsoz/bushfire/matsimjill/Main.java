@@ -71,6 +71,10 @@ public class Main {
 	private JillBDIModel jillmodel; // BDI model
 	private MATSimModel matsimModel; // ABM model
 	private PhoenixFireModule fireModel; // Fire model
+	
+	public static final String SETUP_INDICATOR="--setup" ;
+	public static enum Setup { standard, blockage }
+	private static Setup setup = Setup.standard ;
 
 	// Defaults
 	private static String logFile = Main.class.getSimpleName() + ".log";
@@ -193,19 +197,21 @@ public class Main {
 //			}
 //		}
 		
+		boolean hasPassedBlockageTime = false;
 		while ( true ) {
 			
 			// put in a blocked link.  todo: (1) find out link that is relevant to CC scenario; (2) find out time that is relevant to CC scenario.
 			// todo later: configure this from elsewhere
-//			int blockageTime = 1800 ;
-//			boolean hasPassedBlockageTime = false ;
-//			if ( !hasPassedBlockageTime && dataServer.getTime() > blockageTime ) {
-//				hasPassedBlockageTime = true ;
-//				NetworkChangeEvent changeEvent = new NetworkChangeEvent(blockageTime);
-//				changeEvent.setFreespeedChange(new NetworkChangeEvent.ChangeValue(NetworkChangeEvent.ChangeType.ABSOLUTE_IN_SI_UNITS, 0.));
-//				changeEvent.addLink(matsimModel.getScenario().getNetwork().getLinks().get(Id.createLinkId(6876)));
-//				NetworkUtils.addNetworkChangeEvent(matsimModel.getScenario().getNetwork(), changeEvent);
-//			}
+			if ( setup==Setup.blockage ) {
+				int blockageTime = 1800;
+				if (!hasPassedBlockageTime && dataServer.getTime() > blockageTime) {
+					hasPassedBlockageTime = true;
+					NetworkChangeEvent changeEvent = new NetworkChangeEvent(blockageTime);
+					changeEvent.setFreespeedChange(new NetworkChangeEvent.ChangeValue(NetworkChangeEvent.ChangeType.ABSOLUTE_IN_SI_UNITS, 0.));
+					changeEvent.addLink(matsimModel.getScenario().getNetwork().getLinks().get(Id.createLinkId(6876)));
+					NetworkUtils.addNetworkChangeEvent(matsimModel.getScenario().getNetwork(), changeEvent);
+				}
+			}
 			
 			this.jillmodel.takeControl( matsimModel.getAgentManager().getAgentDataContainer() );
 			if( this.matsimModel.isFinished() ) {
@@ -357,6 +363,11 @@ public class Main {
 					matsimOutputDirectory = args[i];
 				}
 				break;
+				case Main.SETUP_INDICATOR:
+					if(i+1<args.length) {
+						i++ ;
+						setup = Setup.valueOf(args[i]) ;
+					}
 			default:
 				throw new RuntimeException("unknown config option: " + args[i]) ;
 			}

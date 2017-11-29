@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+	<appender name="INFO" class="ch.qos.logback.core.ConsoleAppender">
+		<param name="target" value="System.out" />
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>
+				%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36}.%M\(%line\) - %msg%n
+			</Pattern>
+		</layout>
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>INFO</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+	</appender>
+
+	<!--stupid copy and paste because logback does not have a threshold filter for everything-->
+	<!--_below_ a certain level.  Suggestions from web didn't work for me.  kai, nov'17-->
+
+	<appender name="DEBUG" class="ch.qos.logback.core.ConsoleAppender">
+		<param name="target" value="System.out" />
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>
+				%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36}.%M\(%line\) - %msg%n
+			</Pattern>
+		</layout>
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>DEBUG</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+	</appender>
+
+	<appender name="TRACE" class="ch.qos.logback.core.ConsoleAppender">
+		<param name="target" value="System.out" />
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>
+				%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36}.%M\(%line\) - %msg%n
+			</Pattern>
+		</layout>
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>TRACE</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+	</appender>
+
+	<appender name="STDERR" class="ch.qos.logback.core.ConsoleAppender">
+		<param name="target" value="System.err" />
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>
+				%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36}.%M\(%line\) - %msg%n
+			</Pattern>
+		</layout>
+		<!-- deny all events with a level below xxx -->
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>WARN</level>
+		</filter>
+	</appender>
+
+<!-- 	<logger name="com.mkyong.web" level="debug" additivity="false">
+		<appender-ref ref="STDOUT" />
+	</logger>
+ -->
+	<root level="debug">
+		<appender-ref ref="TRACE" />
+		<appender-ref ref="DEBUG" />
+		<appender-ref ref="INFO" />
+		<appender-ref ref="STDERR" />
+	</root>
+
+	<!--I think that the above approach will now print warning and above messages twice.  log4j has-->
+	<!--a simple from... to ... filter, but logback does not.  kai, nov'17-->
+
+</configuration>
