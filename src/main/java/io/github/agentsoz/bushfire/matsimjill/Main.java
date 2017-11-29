@@ -195,6 +195,9 @@ public class Main {
 								agent.getActionContainer().register(MATSimActionList.DRIVETO, params);
 								agent.getActionContainer().get(MATSimActionList.DRIVETO).setState(ActionContent.State.PASSED);
 								agent.getPerceptContainer().put(MATSimPerceptList.ARRIVED, params);
+								if ( true ) {
+									throw new RuntimeException("I don't really know how to do this. kai");
+								}
 								return true;
 							}
 						}
