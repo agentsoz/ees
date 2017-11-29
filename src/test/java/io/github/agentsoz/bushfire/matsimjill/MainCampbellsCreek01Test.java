@@ -7,12 +7,17 @@ import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
+import org.matsim.api.core.v01.Id;
+import org.matsim.api.core.v01.population.Person;
 import org.matsim.core.utils.misc.CRCChecksum;
 import org.matsim.testcases.MatsimTestUtils;
 
 import io.github.agentsoz.bushfire.matsimjill.Main;
 import io.github.agentsoz.util.TestUtils;
 import org.matsim.utils.eventsfilecomparison.EventsFileComparator;
+
+import java.util.List;
+import java.util.SortedMap;
 
 /**
  * @author dsingh
@@ -53,9 +58,15 @@ public class MainCampbellsCreek01Test {
 		System.err.println( "actual(jill)=" + actualCRCjill ) ;
 		
 		final String primaryExpectedEventsFilename = utils.getInputDirectory() + "/output_events.xml.gz";
-		
-		EventsFileComparator.Result result = EventsFileComparator.compare(primaryExpectedEventsFilename, actualEventsFilename);
-		System.err.println("result=" + result ) ;
+		{
+			EventsFileComparator.Result result = EventsFileComparator.compare(primaryExpectedEventsFilename, actualEventsFilename);
+			System.err.println("result=" + result);
+		}
+		{
+			SortedMap<Id<Person>, List<Double>> expectedArrivals = TestUtils.collectArrivals(primaryExpectedEventsFilename);
+			SortedMap<Id<Person>, List<Double>> actualArrivals = TestUtils.collectArrivals(actualEventsFilename);
+			TestUtils.compareEventsWithSlack( expectedArrivals, actualArrivals, 5. );
+		}
 		
 		{
 			long [] expectedCRC = {
