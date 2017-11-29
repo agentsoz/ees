@@ -67,7 +67,7 @@ public class MainMaldon600Test {
 		
 		// look into events:
 
-		final String primaryExpectedEventsFilename = utils.getInputDirectory() + "/0/output_events.xml.gz";
+		final String primaryExpectedEventsFilename = utils.getInputDirectory() + "/output_events.xml.gz";
 
 		SortedMap<Id<Person>, List<Double>> arrivalsExpected = TestUtils.collectArrivals(primaryExpectedEventsFilename) ;
 		SortedMap<Id<Person>, List<Double>> arrivalsActual = TestUtils.collectArrivals( actualEventsFilename ) ;
@@ -89,7 +89,7 @@ public class MainMaldon600Test {
 		// look into plans:
 
 		long [] expectedPlans = new long [] {
-				CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/0/output_plans.xml.gz" ), 
+				CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/output_plans.xml.gz" ),
 				3715899067L // travis
 		} ;
 		
