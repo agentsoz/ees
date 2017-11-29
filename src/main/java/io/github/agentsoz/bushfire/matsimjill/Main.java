@@ -193,11 +193,9 @@ public class Main {
 								PAAgent agent = matsimModel.getAgentManager().getAgent( agentId.toString() );
 								Object[] params = { currentLinkId.toString() };
 								agent.getActionContainer().register(MATSimActionList.DRIVETO, params);
-								agent.getActionContainer().get(MATSimActionList.DRIVETO).setState(ActionContent.State.PASSED);
-								agent.getPerceptContainer().put(MATSimPerceptList.ARRIVED, params);
-								if ( true ) {
-									throw new RuntimeException("I don't really know how to do this. kai");
-								}
+								agent.getActionContainer().get(MATSimActionList.DRIVETO).setState(ActionContent.State.FAILED);
+								// TODO: should add a new BLOCKED percept below but ok for now, dsingh 30/nov/17
+								//agent.getPerceptContainer().put(MATSimPerceptList.ARRIVED, params);
 								return true;
 							}
 						}

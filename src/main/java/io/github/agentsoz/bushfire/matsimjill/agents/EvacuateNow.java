@@ -85,7 +85,7 @@ public class EvacuateNow extends Plan {
 						double[] coords = shelterLocation.getCoordinates();
 						double evacTime = DataServer.getServer("Bushfire").getTime() + 5.0;
 						Object[] params = {bdiAction, coords, evacTime }; // five secs from now
-						writer.println("Resident "+getAgent().getId()+": will start evacuating to shelter in "+shelterLocation + " at time " + evacTime);
+						writer.println("Resident "+getAgent().getId()+": will replan to shelter in "+shelterLocation + " at time " + evacTime);
 						post(new EnvironmentAction(
 								Integer.toString(((Resident)getAgent()).getId()),
 								bdiAction, params));
