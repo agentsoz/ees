@@ -63,9 +63,18 @@ public class MainCampbellsCreek01Test {
 			System.err.println("result=" + result);
 		}
 		{
-			SortedMap<Id<Person>, List<Double>> expectedArrivals = TestUtils.collectArrivals(primaryExpectedEventsFilename);
-			SortedMap<Id<Person>, List<Double>> actualArrivals = TestUtils.collectArrivals(actualEventsFilename);
-			TestUtils.compareEventsWithSlack( expectedArrivals, actualArrivals, 5. );
+			System.err.println("Comparing departures ...") ;
+			SortedMap<Id<Person>, List<Double>> expecteds = TestUtils.collectDepartures(primaryExpectedEventsFilename);
+			SortedMap<Id<Person>, List<Double>> actuals = TestUtils.collectDepartures(actualEventsFilename);
+			TestUtils.compareEventsWithSlack( expecteds, actuals, 5. );
+			System.err.println("... comparing departures done.") ;
+		}
+		{
+			System.err.println("Comparing arrivals ...") ;
+			SortedMap<Id<Person>, List<Double>> expecteds = TestUtils.collectArrivals(primaryExpectedEventsFilename);
+			SortedMap<Id<Person>, List<Double>> actuals = TestUtils.collectArrivals(actualEventsFilename);
+			TestUtils.compareEventsWithSlack( expecteds, actuals, 5. );
+			System.err.println("... comparing arrivals done.") ;
 		}
 		
 		{
