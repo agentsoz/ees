@@ -68,15 +68,6 @@ public class MainCampbellsCreek50Test {
 		// ---
 		
 		final String primaryExpectedEventsFilename = utils.getInputDirectory() + "/output_events.xml.gz";
-		long [] expectedEventsCRCs = new long [] {
-				CRCChecksum.getCRCFromFile( primaryExpectedEventsFilename ), 
-				2457822228L // 3695594801L // travis
-		} ;
-
-		long [] expectedPlansCRCs = new long [] {
-				CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/output_plans.xml.gz" ),
-				2570508863L // 547669447L // travis
-		} ;
 
 		// ---
 		
@@ -109,9 +100,18 @@ public class MainCampbellsCreek50Test {
 		}
 		
 		// ---
-
-		TestUtils.checkSeveral(expectedEventsCRCs, actualEventsCRC);
-		TestUtils.checkSeveral(expectedPlansCRCs, actualPlansCRC);
+		{
+			long[] expectedEventsCRCs = new long[]{
+					CRCChecksum.getCRCFromFile(primaryExpectedEventsFilename)
+			};
+			TestUtils.checkSeveral(expectedEventsCRCs, actualEventsCRC);
+		}
+		{
+			long[] expectedPlansCRCs = new long[]{
+					CRCChecksum.getCRCFromFile(utils.getInputDirectory() + "/output_plans.xml.gz")
+			};
+			TestUtils.checkSeveral(expectedPlansCRCs, actualPlansCRC);
+		}
 
 		//		{
 		//			long expectedCRC = CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/jill.out" ) ;

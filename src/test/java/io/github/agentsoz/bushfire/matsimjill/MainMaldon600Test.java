@@ -101,8 +101,7 @@ public class MainMaldon600Test {
 		
 		// comparing the plain files, but maybe more than one:
 		long [] expectedEvents = new long [] {
-				CRCChecksum.getCRCFromFile( primaryExpectedEventsFilename ), 
-				3875322657L // travis
+				CRCChecksum.getCRCFromFile( primaryExpectedEventsFilename )
 		} ;
 
 		TestUtils.checkSeveral(expectedEvents, actualEventsCRC);
@@ -110,8 +109,7 @@ public class MainMaldon600Test {
 		// look into plans:
 
 		long [] expectedPlans = new long [] {
-				CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/output_plans.xml.gz" ),
-				5242695L // travis
+				CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/output_plans.xml.gz" )
 		} ;
 		
 		TestUtils.checkSeveral(expectedPlans, actualPlansCRC);
