@@ -48,7 +48,7 @@
   </logger> -->
   
 	<root>
-		<priority value="warn"></priority>
+		<priority value="info"></priority>
 		<appender-ref ref="stdout"/>
 		<appender-ref ref="stderr"/>
 	</root>
