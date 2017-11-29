@@ -59,22 +59,31 @@ public class MainCampbellsCreek01Test {
 		
 		final String primaryExpectedEventsFilename = utils.getInputDirectory() + "/output_events.xml.gz";
 		{
+			System.err.println("\nComparing all events ...") ;
 			EventsFileComparator.Result result = EventsFileComparator.compare(primaryExpectedEventsFilename, actualEventsFilename);
 			System.err.println("result=" + result);
+			System.err.println("... comparing all events done.\n") ;
 		}
 		{
-			System.err.println("Comparing departures ...") ;
+			System.err.println("\nComparing departures ...") ;
 			SortedMap<Id<Person>, List<Double>> expecteds = TestUtils.collectDepartures(primaryExpectedEventsFilename);
 			SortedMap<Id<Person>, List<Double>> actuals = TestUtils.collectDepartures(actualEventsFilename);
 			TestUtils.compareEventsWithSlack( expecteds, actuals, 5. );
-			System.err.println("... comparing departures done.") ;
+			System.err.println("... comparing departures done.\n") ;
 		}
 		{
-			System.err.println("Comparing arrivals ...") ;
+			System.err.println("\nComparing arrivals ...") ;
 			SortedMap<Id<Person>, List<Double>> expecteds = TestUtils.collectArrivals(primaryExpectedEventsFilename);
 			SortedMap<Id<Person>, List<Double>> actuals = TestUtils.collectArrivals(actualEventsFilename);
 			TestUtils.compareEventsWithSlack( expecteds, actuals, 5. );
-			System.err.println("... comparing arrivals done.") ;
+			System.err.println("... comparing arrivals done.\n") ;
+		}
+		{
+			System.err.println("\nComparing activity starts ...") ;
+			SortedMap<Id<Person>, List<Double>> expecteds = TestUtils.collectActivityStarts(primaryExpectedEventsFilename);
+			SortedMap<Id<Person>, List<Double>> actuals = TestUtils.collectActivityStarts(actualEventsFilename);
+			TestUtils.compareEventsWithSlack( expecteds, actuals, 5. );
+			System.err.println("... comparing activity starts done.\n") ;
 		}
 		
 		{
