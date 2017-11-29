@@ -76,7 +76,7 @@ public class EvacuateNow extends Plan {
 			// All done
 			new PlanStep() {
 				public void step() {
-					if (((Resident)getAgent()).getFailedAttempts() > 0) {
+					if (((Resident)getAgent()).getFailedAttempts() == 0) {
 						writer.println("Resident "+getAgent().getId()+": has reached shelter in "+ shelterLocation);
 					} else {
 						// Failed
