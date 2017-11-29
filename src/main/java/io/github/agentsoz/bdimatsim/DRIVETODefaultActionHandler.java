@@ -81,7 +81,7 @@ public final class DRIVETODefaultActionHandler implements BDIActionHandler {
 		printPlan("after flush: " , agent1) ;
 
 		// new destination
-		Activity newAct = model.getReplanner().editPlans().createFinalActivity( "work", newLinkId ) ;
+		Activity newAct = model.getReplanner().editPlans().createFinalActivity( "driveTo", newLinkId ) ;
 		model.getReplanner().editPlans().addActivityAtEnd(agent1, newAct, mode) ;
 		printPlan("after adding act: " , agent1 ) ;
 		

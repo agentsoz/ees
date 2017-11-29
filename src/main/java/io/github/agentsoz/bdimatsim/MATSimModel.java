@@ -9,6 +9,7 @@ import org.matsim.api.core.v01.network.Link;
 import org.matsim.core.api.experimental.events.EventsManager;
 import org.matsim.core.config.Config;
 import org.matsim.core.config.ConfigUtils;
+import org.matsim.core.config.groups.PlanCalcScoreConfigGroup;
 import org.matsim.core.config.groups.PlansCalcRouteConfigGroup;
 import org.matsim.core.config.groups.PlansConfigGroup.ActivityDurationInterpretation;
 import org.matsim.core.config.groups.QSimConfigGroup.StarttimeInterpretation;
@@ -156,6 +157,10 @@ public final class MATSimModel implements ABMServerInterface {
 			agentManager.getAgent(agentId).getActionHandler().registerBDIAction(
 					MATSimActionList.DRIVETO, new DRIVETODefaultActionHandler(this) );
 		}
+		
+		PlanCalcScoreConfigGroup.ActivityParams params = new PlanCalcScoreConfigGroup.ActivityParams("driveTo") ;
+		params.setScoringThisActivityAtAll(false);
+		scenario.getConfig().planCalcScore().addActivityParams(params);
 
 		// ---
 
