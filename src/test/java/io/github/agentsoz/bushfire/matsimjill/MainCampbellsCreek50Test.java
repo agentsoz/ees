@@ -68,12 +68,12 @@ public class MainCampbellsCreek50Test {
 		final String primaryExpectedEventsFilename = utils.getInputDirectory() + "/output_events.xml.gz";
 		long [] expectedEventsCRCs = new long [] {
 				CRCChecksum.getCRCFromFile( primaryExpectedEventsFilename ), 
-				3114851905L // 3695594801L // travis
+				2457822228L // 3695594801L // travis
 		} ;
 
 		long [] expectedPlansCRCs = new long [] {
 				CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/output_plans.xml.gz" ),
-				2234597649L // 547669447L // travis
+				2570508863L // 547669447L // travis
 		} ;
 
 		// ---

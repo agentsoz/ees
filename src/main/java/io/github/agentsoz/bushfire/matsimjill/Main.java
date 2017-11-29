@@ -203,12 +203,13 @@ public class Main {
 			// put in a blocked link.  todo: (1) find out link that is relevant to CC scenario; (2) find out time that is relevant to CC scenario.
 			// todo later: configure this from elsewhere
 			if ( setup==Setup.blockage ) {
-				int blockageTime = 1800;
+				System.err.println("configuring blockage") ;
+				int blockageTime = 6*60 ;
 				if (!hasPassedBlockageTime && dataServer.getTime() > blockageTime) {
 					hasPassedBlockageTime = true;
 					NetworkChangeEvent changeEvent = new NetworkChangeEvent(blockageTime);
 					changeEvent.setFreespeedChange(new NetworkChangeEvent.ChangeValue(NetworkChangeEvent.ChangeType.ABSOLUTE_IN_SI_UNITS, 0.));
-					changeEvent.addLink(matsimModel.getScenario().getNetwork().getLinks().get(Id.createLinkId(6876)));
+					changeEvent.addLink(matsimModel.getScenario().getNetwork().getLinks().get(Id.createLinkId(51825)));
 					NetworkUtils.addNetworkChangeEvent(matsimModel.getScenario().getNetwork(), changeEvent);
 				}
 			}
@@ -368,6 +369,7 @@ public class Main {
 						i++ ;
 						setup = Setup.valueOf(args[i]) ;
 					}
+					break;
 			default:
 				throw new RuntimeException("unknown config option: " + args[i]) ;
 			}
@@ -407,6 +409,10 @@ public class Main {
 	}
 
 	public static void main(String[] args) {
+		System.out.println("called with args=" ) ;
+		for ( int ii=0 ; ii<args.length ; ii++ ){
+			System.out.println( args[ii]) ;
+		}
 		Main sim = new Main();
 		try {
 			sim.start(args);

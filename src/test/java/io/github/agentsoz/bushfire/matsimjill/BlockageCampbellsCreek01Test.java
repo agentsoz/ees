@@ -22,7 +22,7 @@ public class BlockageCampbellsCreek01Test {
 
 	@Test
 	@Ignore
-	public void testCampbellsCreek01() {
+	public void testBlockage01() {
 
 		String [] args = {
 				"--config",  "scenarios/campbells-creek-01/scenario_main.xml", 
@@ -41,7 +41,6 @@ public class BlockageCampbellsCreek01Test {
 						"randomSeed: 12345,"+ // jill random seed
 						"numThreads: 1"+ // run jill in single-threaded mode so logs are deterministic
 		"}"};
-
 		Main.main(args);
 		long actualCRCevents = CRCChecksum.getCRCFromFile( utils.getOutputDirectory() + "/output_events.xml.gz" ) ;
 		System.err.println( "actual(events)=" + actualCRCevents ) ;

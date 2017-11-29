@@ -52,14 +52,14 @@ public class MainCampbellsCreek01Test {
 		{
 			long [] expectedCRC = {
 					CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/output_events.xml.gz" ) 
-					, 3372222273L // build server
+					, 761998030L // build server
 			};
 			TestUtils.checkSeveral(expectedCRC, actualCRCevents);
 		}
 		{
 			long [] expectedCRC = {
 					CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/output_plans.xml.gz" )
-					, 2777753481L // build server
+					, 3926531007L // build server
 			} ;
 			TestUtils.checkSeveral(expectedCRC, actualCRCplans); 
 		}
