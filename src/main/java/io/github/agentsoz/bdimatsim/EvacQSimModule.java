@@ -30,6 +30,8 @@ import java.util.Collection;
 
 import javax.inject.Inject;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.network.Link;
 import org.matsim.api.core.v01.population.Person;
@@ -56,12 +58,15 @@ import org.matsim.vehicles.Vehicle;
  *
  */
 public class EvacQSimModule extends AbstractModule {
+	private static final Logger log = Logger.getLogger(EvacQSimModule.class) ;
+	
 	@Inject Config config ;
 
 	private final MATSimModel matSimModel;
 	private EventsManager eventsManager;
 	
 	public EvacQSimModule(MATSimModel matSimModel, EventsManager eventsManager) {
+		log.setLevel(Level.DEBUG);
 		this.matSimModel = matSimModel;
 		this.eventsManager = eventsManager;
 	}
@@ -78,6 +83,7 @@ public class EvacQSimModule extends AbstractModule {
 			TurnAcceptanceLogic delegate = new DefaultTurnAcceptanceLogic() ;
 			@Override
 			public AcceptTurn isAcceptingTurn(Link currentLink, QLaneI currentLane, Id<Link> nextLinkId, QVehicle veh, QNetwork qNetwork) {
+				
 				AcceptTurn accept = delegate.isAcceptingTurn(currentLink, currentLane, nextLinkId, veh, qNetwork);
 				
 				QLinkI nextQLink = qNetwork.getNetsimLink(nextLinkId);
@@ -92,6 +98,8 @@ public class EvacQSimModule extends AbstractModule {
 					eventsManager.processEvent(new NextLinkBlockedEvent( now, vehicleId,
 																			   driverId, currentLinkId, blockedLinkId) );
 				}
+				log.debug("time=" + matSimModel.getTime() + ";\t fromLink=" + currentLink.getId() +
+								  ";\ttoLink=" + nextLinkId + ";\tanswer=" + accept.name() ) ;
 				return accept ;
 			}
 		});

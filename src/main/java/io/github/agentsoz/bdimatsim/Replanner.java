@@ -24,19 +24,18 @@ import javax.inject.Inject;
  * #L%
  */
 
-import javax.inject.Provider;
-
+import org.apache.log4j.Logger;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.population.Leg;
 import org.matsim.api.core.v01.population.Plan;
 import org.matsim.api.core.v01.population.PlanElement;
+import org.matsim.core.gbl.Gbl;
 import org.matsim.core.mobsim.framework.HasPerson;
 import org.matsim.core.mobsim.framework.MobsimAgent;
 import org.matsim.core.mobsim.qsim.QSim;
 import org.matsim.core.mobsim.qsim.agents.WithinDayAgentUtils;
 import org.matsim.core.router.FastAStarLandmarksFactory;
 import org.matsim.core.router.TripRouter;
-import org.matsim.core.router.TripRouterFactoryBuilderWithDefaults;
 import org.matsim.core.router.util.LeastCostPathCalculator;
 import org.matsim.core.router.util.TravelDisutility;
 import org.matsim.core.router.util.TravelDisutilityUtils;
@@ -45,14 +44,12 @@ import org.matsim.core.router.util.TravelTimeUtils;
 import org.matsim.withinday.utils.EditPlans;
 import org.matsim.withinday.utils.EditRoutes;
 import org.matsim.withinday.utils.EditTrips;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public final class Replanner {
 	// note that this is no longer meant to be extended for customization.  The "action recipes" now go directly into the classes
 	// that implement BDIActionHandler.  kai, nov'17
 	
-	private static final Logger logger = LoggerFactory.getLogger("io.github.agentsoz.bushfiretute.BushfireMain");
+	private static final Logger logger = Logger.getLogger(Replanner.class) ;
 
 	private QSim qsim ;
 	
@@ -60,12 +57,29 @@ public final class Replanner {
 	private EditTrips editTrips ;
 	private EditPlans editPlans ;
 
-	private TripRouter tripRouter;
-
 	private Scenario scenario;
 
-	@Inject Replanner(QSim qSim2) {
-		setQSim( qSim2 ) ;
+	@Inject
+	Replanner(QSim qSim2, TripRouter tripRouter) {
+		this.qsim = qSim2;
+		this.scenario = qSim2.getScenario() ;
+//		// the following is where the router is set up.  Something that uses, e.g., congested travel time, needs more infrastructure.
+//		// Currently, this constructor is ultimately called from within createMobsim.  This is a good place since all necessary infrastructure should
+//		// be available then.  It would have to be passed to here from there (or the router constructed there and passed to here). kai, mar'15
+		TravelTime travelTime = TravelTimeUtils.createFreeSpeedTravelTime() ;
+		TravelDisutility travelDisutility = TravelDisutilityUtils.createFreespeedTravelTimeAndDisutility( scenario.getConfig().planCalcScore() ) ;
+//
+//		TripRouterFactoryBuilderWithDefaults builder = new TripRouterFactoryBuilderWithDefaults() ;
+//		builder.setTravelTime(travelTime);
+//		builder.setTravelDisutility(travelDisutility);
+//		Provider<TripRouter> provider = builder.build( scenario ) ;
+//		tripRouter = provider.get() ;
+		
+		//		LeastCostPathCalculator pathCalculator = new DijkstraFactory().createPathCalculator( scenario.getNetwork(), travelDisutility, travelTime) ;
+		LeastCostPathCalculator pathCalculator = new FastAStarLandmarksFactory().createPathCalculator( scenario.getNetwork(), travelDisutility, travelTime) ;
+		this.editRoutes = new EditRoutes(scenario.getNetwork(), pathCalculator, scenario.getPopulation().getFactory() ) ;
+		this.editTrips = new EditTrips(tripRouter, qsim.getScenario() ) ;
+		this.editPlans = new EditPlans(qsim, tripRouter, editTrips, scenario.getPopulation().getFactory() ) ;
 	}
 
 	@Deprecated // yyyy but I don't have an easy replacement yet
@@ -95,26 +109,5 @@ public final class Replanner {
 
 	static enum Congestion { freespeed, currentCongestion } 
 	static enum AllowedLinks { forCivilians, forEmergencyServices, all }
-	private void setQSim(QSim qSim2) {
-		this.qsim = qSim2 ;
-		this.scenario = qSim2.getScenario() ;
-		// the following is where the router is set up.  Something that uses, e.g., congested travel time, needs more infrastructure.
-		// Currently, this constructor is ultimately called from within createMobsim.  This is a good place since all necessary infrastructure should
-		// be available then.  It would have to be passed to here from there (or the router constructed there and passed to here). kai, mar'15
-		TravelTime travelTime = TravelTimeUtils.createFreeSpeedTravelTime() ;
-		TravelDisutility travelDisutility = TravelDisutilityUtils.createFreespeedTravelTimeAndDisutility( scenario.getConfig().planCalcScore() ) ;
-
-		TripRouterFactoryBuilderWithDefaults builder = new TripRouterFactoryBuilderWithDefaults() ;
-		builder.setTravelTime(travelTime);
-		builder.setTravelDisutility(travelDisutility);
-		Provider<TripRouter> provider = builder.build( scenario ) ;
-		tripRouter = provider.get() ;
-
-		//		LeastCostPathCalculator pathCalculator = new DijkstraFactory().createPathCalculator( scenario.getNetwork(), travelDisutility, travelTime) ;
-		LeastCostPathCalculator pathCalculator = new FastAStarLandmarksFactory().createPathCalculator( scenario.getNetwork(), travelDisutility, travelTime) ;
-		this.editRoutes = new EditRoutes(scenario.getNetwork(), pathCalculator, scenario.getPopulation().getFactory() ) ;
-		this.editTrips = new EditTrips(tripRouter, qsim.getScenario() ) ;
-		this.editPlans = new EditPlans(qsim, tripRouter, editTrips, scenario.getPopulation().getFactory() ) ;
-	}
-
+	
 }

@@ -22,6 +22,8 @@ package io.github.agentsoz.bdimatsim;
  * #L%
  */
 
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.matsim.api.core.v01.Coord;
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.network.Link;
@@ -39,17 +41,19 @@ import io.github.agentsoz.nonmatsim.BDIActionHandler;
 import io.github.agentsoz.nonmatsim.BDIPerceptHandler;
 import io.github.agentsoz.nonmatsim.PAAgent;
 import org.opengis.filter.spatial.Within;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public final class DRIVETODefaultActionHandler implements BDIActionHandler {
+	private static final Logger log = Logger.getLogger( DRIVETODefaultActionHandler.class ) ;
+	
 	private final MATSimModel model;
 	public DRIVETODefaultActionHandler(MATSimModel model ) {
+		log.setLevel(Level.DEBUG);
 		this.model = model;
 	}
 	@Override
 	public boolean handle(String agentID, String actionID, Object[] args) {
-//		System.err.println("------------------------------------------------------------------------------------------") ;
+		log.debug("------------------------------------------------------------------------------------------");
+		log.debug("replanning at simulation time step=" + model.getTime() ) ;
 		// assertions:
 		if ( args.length < 2 ) {
 			throw new RuntimeException("not enough information; we need coordinate-to-go-to and departure time. " +
@@ -70,10 +74,13 @@ public final class DRIVETODefaultActionHandler implements BDIActionHandler {
 		MobsimAgent agent1 = model.getMobsimAgentFromIdString(agentID) ;
 		
 		// new departure time:
-		model.getReplanner().editPlans().rescheduleCurrentActivityEndtime(agent1, newDepartureTime);
+		if ( model.getReplanner().editPlans().isAtRealActivity(agent1) ) {
+			model.getReplanner().editPlans().rescheduleCurrentActivityEndtime(agent1, newDepartureTime);
+		}
 		
 		// need to memorize the mode:
 		String mode = model.getReplanner().editPlans().getModeOfCurrentOrNextTrip(agent1) ;
+//		String mode = "congested" ;
 		
 		// flush everything beyond current:
 		printPlan("before flush: ", agent1);
@@ -103,15 +110,15 @@ public final class DRIVETODefaultActionHandler implements BDIActionHandler {
 			}
 		}
 				);
-//		System.err.println("------------------------------------------------------------------------------------------") ;
+		log.debug("------------------------------------------------------------------------------------------"); ;
 		return true;
 	}
 	
 	private void printPlan(String str ,MobsimAgent agent1) {
-//		Plan plan = WithinDayAgentUtils.getModifiablePlan(agent1) ;
-//		System.err.println(str + plan ); ;
-//		for ( PlanElement pe : plan.getPlanElements() ) {
-//			System.err.println("    " + pe ); ;
-//		}
+		Plan plan = WithinDayAgentUtils.getModifiablePlan(agent1) ;
+		log.debug(str + plan ); ;
+		for ( PlanElement pe : plan.getPlanElements() ) {
+			log.debug("    " + pe ); ;
+		}
 	}
 }

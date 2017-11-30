@@ -261,11 +261,6 @@ class EvacAgent implements MobsimDriverAgent, HasPerson, PlanAgent, HasModifiabl
 		this.planWasModified=true ;
 		return basicAgentDelegate.getModifiablePlan() ;
 	}
-	//	final void resetCaches() {
-	//		basicAgentDelegate.resetCaches();
-	//		driverAgentDelegate.resetCaches(); 
-	//	}
-
 	@Override
 	public Facility<? extends Facility<?>> getCurrentFacility() {
 		return this.basicAgentDelegate.getCurrentFacility();
@@ -283,7 +278,8 @@ class EvacAgent implements MobsimDriverAgent, HasPerson, PlanAgent, HasModifiabl
 
 	@Override
 	public void resetCaches() {
-		this.basicAgentDelegate.resetCaches(); 
+		this.basicAgentDelegate.resetCaches();
+		this.driverAgentDelegate.resetCaches() ;
 	}
 
 	@Override

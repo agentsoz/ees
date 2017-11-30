@@ -26,6 +26,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.events.*;
 import org.matsim.api.core.v01.events.handler.*;
@@ -70,8 +72,14 @@ VehicleLeavesTrafficEventHandler,
 		NextLinkBlocked
 	}
 	
+	private static final Logger log = Logger.getLogger(EventsMonitorRegistry.class ) ;
+	
 	private List<Monitor> monitors = new CopyOnWriteArrayList<>() ;
     private List<Monitor> toAdd = new ArrayList<>();
+    
+    public EventsMonitorRegistry() {
+    	log.setLevel(Level.DEBUG);
+	}
 	
 	@Override
 	public void handleEvent(VehicleEntersTrafficEvent event) {
@@ -144,9 +152,8 @@ VehicleLeavesTrafficEventHandler,
       for (Monitor monitor : monitors) {
 	        switch (monitor.getEvent()) {
 				case NextLinkBlocked:
-//					System.err.println("testing a NextLinkBlocked monitor ...");
 					if ( ev instanceof NextLinkBlockedEvent ) {
-						System.err.println("catching a nextLinkBlocked event") ;
+						log.debug("catching a nextLinkBlocked event"); ;
 						NextLinkBlockedEvent event = (NextLinkBlockedEvent) ev;
 						if ( monitor.getAgentId().equals(event.getDriverId() ) ) {
 							if ( monitor.getHandler().handle( monitor.getAgentId(), event.currentLinkId(), monitor.getEvent() ) ) {

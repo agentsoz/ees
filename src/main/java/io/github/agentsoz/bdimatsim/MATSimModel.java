@@ -31,6 +31,7 @@ import org.matsim.core.network.NetworkUtils;
 import org.matsim.core.router.costcalculators.RandomizingTimeDistanceTravelDisutilityFactory;
 import org.matsim.core.scenario.ScenarioUtils;
 import org.matsim.core.trafficmonitoring.FreeSpeedTravelTime;
+import org.matsim.core.trafficmonitoring.TravelTimeCalculatorModule;
 import org.matsim.withinday.mobsim.MobsimDataProvider;
 import org.matsim.withinday.trafficmonitoring.TravelTimeCollector;
 import org.slf4j.Logger;
@@ -65,6 +66,7 @@ import io.github.agentsoz.nonmatsim.PAAgentManager;
 import io.github.agentsoz.nonmatsim.SimpleMessage;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * @author QingyuChen, KaiNagel, Dhi Singh
@@ -138,6 +140,7 @@ public final class MATSimModel implements ABMServerInterface {
 			if ( link.getFreespeed() > veryLargeSpeed ) {
 				link.setFreespeed(veryLargeSpeed);
 			}
+			link.setFreespeed( link.getFreespeed()/10. ) ; // make slower for blockage test; not permanent yyyyyy
 		}
 		
 		// ---
@@ -178,20 +181,26 @@ public final class MATSimModel implements ABMServerInterface {
 		controller.addOverridingModule(new AbstractModule(){
 			@Override public void install() {
 				
+		bind(TravelTimeCollector.class).in(Singleton.class);
+		addEventHandlerBinding().to(TravelTimeCollector.class);
+		addMobsimListenerBinding().to(TravelTimeCollector.class) ;
+		bindNetworkTravelTime().to(TravelTimeCollector.class);
+
 				{
 					// freespeed mode:
-					this.addTravelTimeBinding(TransportMode.car).to(FreeSpeedTravelTime.class);
+//					this.addTravelTimeBinding(TransportMode.car).to(FreeSpeedTravelTime.class);
 				}
-				{
-					// congested mode:
-					Set<String> analyzedModes = new HashSet<>();
-					analyzedModes.add(TransportMode.car);
-					analyzedModes.add("congested");
-					final TravelTimeCollector congestedTravelTime = new TravelTimeCollector(getScenario(), analyzedModes);
-					this.addEventHandlerBinding().toInstance(congestedTravelTime);
-					this.addTravelTimeBinding("congested").toInstance(congestedTravelTime);
-					this.addMobsimListenerBinding().toInstance(congestedTravelTime);
-				}
+//				{
+//					// congested mode:
+//					Set<String> analyzedModes = new HashSet<>();
+//					analyzedModes.add(TransportMode.car);
+//					analyzedModes.add("congested");
+//					final TravelTimeCollector congestedTravelTime = new TravelTimeCollector(getScenario(), analyzedModes);
+//					this.addEventHandlerBinding().toInstance(congestedTravelTime);
+//					this.addTravelTimeBinding("congested").toInstance(congestedTravelTime);
+//					this.addTravelTimeBinding( TransportMode.car ).toInstance(congestedTravelTime);
+//					this.addMobsimListenerBinding().toInstance(congestedTravelTime);
+//				}
 				
 				
 				PlansCalcRouteConfigGroup routeConfigGroup = getConfig().plansCalcRoute();
