@@ -21,7 +21,6 @@ public class BlockageCampbellsCreek01Test {
 	@Rule public MatsimTestUtils utils = new MatsimTestUtils() ;
 
 	@Test
-	@Ignore
 	public void testBlockage01() {
 
 		String [] args = {

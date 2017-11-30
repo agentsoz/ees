@@ -177,7 +177,18 @@ public class Main {
 		/* Dhirendra, it might be cleaner to do this in the input xml.  I have tried to remove the "fake" leg completely.
 		 * But then the agents don't have vehicles (yyyy although, on second thought, why??  we need to maintain 
 		 * vehicles for mode choice).
-		 */ 
+		 */
+		
+		
+//		int blockageTime = 7*60 ;
+		int blockageTime = 16*60 ;
+		
+		if ( setup==Setup.blockage ) {
+			NetworkChangeEvent changeEvent = new NetworkChangeEvent(blockageTime);
+			changeEvent.setFreespeedChange(new NetworkChangeEvent.ChangeValue(NetworkChangeEvent.ChangeType.ABSOLUTE_IN_SI_UNITS, 0.));
+			changeEvent.addLink(matsimModel.getScenario().getNetwork().getLinks().get(Id.createLinkId(51825)));
+			NetworkUtils.addNetworkChangeEvent(matsimModel.getScenario().getNetwork(), changeEvent);
+		}
 		
 		matsimModel.init(bdiAgentIDs);
 		
@@ -189,7 +200,7 @@ public class Main {
 						null, new BDIPerceptHandler() {
 							@Override
 							public boolean handle(Id<Person> agentId, Id<Link> currentLinkId, MonitoredEventType monitoredEvent) {
-								System.err.println("calling the nextLinkBlocked handler") ;
+								System.out.println("calling the nextLinkBlocked handler") ;
 								PAAgent agent = matsimModel.getAgentManager().getAgent( agentId.toString() );
 								Object[] params = { currentLinkId.toString() };
 								agent.getActionContainer().register(MATSimActionList.DRIVETO, params);
@@ -208,17 +219,16 @@ public class Main {
 			
 			// put in a blocked link.  todo: (1) find out link that is relevant to CC scenario; (2) find out time that is relevant to CC scenario.
 			// todo later: configure this from elsewhere
-			if ( setup==Setup.blockage ) {
-				int blockageTime = 6*60 ;
-				if (!hasPassedBlockageTime && dataServer.getTime() > blockageTime) {
-					System.err.println("configuring blockage") ;
-					hasPassedBlockageTime = true;
-					NetworkChangeEvent changeEvent = new NetworkChangeEvent(blockageTime);
-					changeEvent.setFreespeedChange(new NetworkChangeEvent.ChangeValue(NetworkChangeEvent.ChangeType.ABSOLUTE_IN_SI_UNITS, 0.));
-					changeEvent.addLink(matsimModel.getScenario().getNetwork().getLinks().get(Id.createLinkId(51825)));
-					NetworkUtils.addNetworkChangeEvent(matsimModel.getScenario().getNetwork(), changeEvent);
-				}
-			}
+//			if ( setup==Setup.blockage ) {
+//				if (!hasPassedBlockageTime && dataServer.getTime() > blockageTime) {
+//					System.err.println("configuring blockage") ;
+//					hasPassedBlockageTime = true;
+//					NetworkChangeEvent changeEvent = new NetworkChangeEvent(blockageTime);
+//					changeEvent.setFreespeedChange(new NetworkChangeEvent.ChangeValue(NetworkChangeEvent.ChangeType.ABSOLUTE_IN_SI_UNITS, 0.));
+//					changeEvent.addLink(matsimModel.getScenario().getNetwork().getLinks().get(Id.createLinkId(51825)));
+//					NetworkUtils.addNetworkChangeEvent(matsimModel.getScenario().getNetwork(), changeEvent);
+//				}
+//			}
 			
 			this.jillmodel.takeControl( matsimModel.getAgentManager().getAgentDataContainer() );
 			if( this.matsimModel.isFinished() ) {
