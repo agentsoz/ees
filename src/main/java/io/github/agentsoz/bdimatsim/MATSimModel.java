@@ -140,7 +140,7 @@ public final class MATSimModel implements ABMServerInterface {
 			if ( link.getFreespeed() > veryLargeSpeed ) {
 				link.setFreespeed(veryLargeSpeed);
 			}
-			link.setFreespeed( link.getFreespeed()/10. ) ; // make slower for blockage test; not permanent yyyyyy
+//			link.setFreespeed( link.getFreespeed()/10. ) ; // make slower for blockage test; not permanent yyyyyy
 		}
 		
 		// ---
