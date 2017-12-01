@@ -180,8 +180,7 @@ public class Main {
 		 */
 		
 		
-//		int blockageTime = 7*60 ;
-		int blockageTime = 16*60 ;
+		int blockageTime = 5*60 ;
 		
 		if ( setup==Setup.blockage ) {
 			NetworkChangeEvent changeEvent = new NetworkChangeEvent(blockageTime);
