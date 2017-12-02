@@ -4,12 +4,14 @@ import java.util.*;
 
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.Scenario;
+import org.matsim.api.core.v01.TransportMode;
 import org.matsim.api.core.v01.network.Link;
 import org.matsim.core.api.experimental.events.EventsManager;
 import org.matsim.core.config.Config;
 import org.matsim.core.config.ConfigUtils;
-import org.matsim.core.config.groups.PlanCalcScoreConfigGroup.ModeParams;
+import org.matsim.core.config.groups.PlanCalcScoreConfigGroup;
 import org.matsim.core.config.groups.PlanCalcScoreConfigGroup.ActivityParams;
+import org.matsim.core.config.groups.PlanCalcScoreConfigGroup.ModeParams;
 import org.matsim.core.config.groups.PlansCalcRouteConfigGroup;
 import org.matsim.core.config.groups.PlansConfigGroup.ActivityDurationInterpretation;
 import org.matsim.core.config.groups.QSimConfigGroup.StarttimeInterpretation;
@@ -24,7 +26,7 @@ import org.matsim.core.mobsim.framework.events.MobsimInitializedEvent;
 import org.matsim.core.mobsim.framework.listeners.MobsimAfterSimStepListener;
 import org.matsim.core.mobsim.framework.listeners.MobsimInitializedListener;
 import org.matsim.core.mobsim.qsim.QSim;
-import org.matsim.core.router.NetworkRouting;
+import org.matsim.core.router.NetworkRoutingProvider;
 import org.matsim.core.router.costcalculators.RandomizingTimeDistanceTravelDisutilityFactory;
 import org.matsim.core.scenario.ScenarioUtils;
 import org.matsim.core.trafficmonitoring.FreeSpeedTravelTime;
@@ -135,14 +137,14 @@ public final class MATSimModel implements ABMServerInterface {
 		}
 		
 		// this is for the mobsim:
-		{
-			Collection<String> modes = config.qsim().getMainModes();
-			Set<String> newModes = new TreeSet<>( modes ) ;
-			for ( EvacRoutingMode mode : EvacRoutingMode.values() ) {
-				newModes.add( mode.name() ) ;
-			}
-			config.qsim().setMainModes(newModes);
-		}
+//		{
+//			Collection<String> modes = config.qsim().getMainModes();
+//			Set<String> newModes = new TreeSet<>( modes ) ;
+//			for ( EvacRoutingMode mode : EvacRoutingMode.values() ) {
+//				newModes.add( mode.name() ) ;
+//			}
+//			config.qsim().setMainModes(newModes);
+//		}
 		
 		// this is for scoring:
 		for ( EvacRoutingMode mode : EvacRoutingMode.values() ) {
@@ -166,11 +168,11 @@ public final class MATSimModel implements ABMServerInterface {
 			}
 //			link.setFreespeed( link.getFreespeed()/10. ) ; // make slower for blockage test; not permanent
 			
-			Set<String> modes = new TreeSet<>( link.getAllowedModes());
-			for ( EvacRoutingMode mode : EvacRoutingMode.values() ) {
-				modes.add( mode.name() ) ;
-			}
-			link.setAllowedModes(modes);
+//			Set<String> modes = new TreeSet<>( link.getAllowedModes());
+//			for ( EvacRoutingMode mode : EvacRoutingMode.values() ) {
+//				modes.add( mode.name() ) ;
+//			}
+//			link.setAllowedModes(modes);
 		}
 		
 		// ---
@@ -215,16 +217,19 @@ public final class MATSimModel implements ABMServerInterface {
 					addEventHandlerBinding().to(TravelTimeCollector.class);
 					addMobsimListenerBinding().to(TravelTimeCollector.class);
 					bindNetworkTravelTime().to(TravelTimeCollector.class);
-					final String mode = EvacRoutingMode.carGlobalInformation.name();
-					addTravelTimeBinding(mode).to(TravelTimeCollector.class) ;
-					addRoutingModuleBinding(mode).toProvider( new NetworkRouting(mode) ) ;
+					
+					final String routingMode = EvacRoutingMode.carGlobalInformation.name();
+					addTravelTimeBinding(routingMode).to(TravelTimeCollector.class) ;
+					addRoutingModuleBinding(routingMode).toProvider(
+							new NetworkRoutingProvider(TransportMode.car, EvacRoutingMode.carGlobalInformation.name()) ) ;
 				}
 				{
-					String mode = MATSimModel.EvacRoutingMode.carFreespeed.name() ;
-					addRoutingModuleBinding(mode).toProvider( new NetworkRouting(mode) ) ;
-					addTravelTimeBinding(mode).to(FreeSpeedTravelTime.class);
-//					addTravelDisutilityFactoryBinding(mode).toInstance(
-////							new RandomizingTimeDistanceTravelDisutilityFactory(mode,scenario.getConfig().planCalcScore() ) ) ;
+					String routingMode = MATSimModel.EvacRoutingMode.carFreespeed.name() ;
+					addRoutingModuleBinding(routingMode).toProvider(
+							new NetworkRoutingProvider(TransportMode.car,EvacRoutingMode.carFreespeed.name()) ) ;
+					addTravelTimeBinding(routingMode).to(FreeSpeedTravelTime.class);
+//					addTravelDisutilityFactoryBinding(routingMode).toInstance(
+////							new RandomizingTimeDistanceTravelDisutilityFactory(routingMode,scenario.getConfig().planCalcScore() ) ) ;
 //							new OnlyTimeDependentTravelDisutilityFactory() ) ;
 				}
 		

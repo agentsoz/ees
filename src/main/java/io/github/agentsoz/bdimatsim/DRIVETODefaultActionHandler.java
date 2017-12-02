@@ -60,7 +60,6 @@ public final class DRIVETODefaultActionHandler implements BDIActionHandler {
 		Gbl.assertIf( args[1] instanceof double[] ) ;
 		double[] coords = (double[]) args[1];
 		Coord coord = new Coord( coords[0], coords[1] ) ;
-		System.err.println( "coord=" + coord ) ;
 		Gbl.assertIf( args[3] instanceof MATSimModel.EvacRoutingMode ) ; // could have some default
 
 		// preparations:
@@ -78,15 +77,16 @@ public final class DRIVETODefaultActionHandler implements BDIActionHandler {
 			model.getReplanner().editPlans().rescheduleCurrentActivityEndtime(mobsimAgent, (double)args[2]);
 		}
 		
-		// may need to memorize the mode:
-//		String mode = model.getReplanner().editPlans().getModeOfCurrentOrNextTrip(mobsimAgent) ;
-		String mode = null ; // could have some default
+		// may need to memorize the routingMode:
+//		String routingMode = model.getReplanner().editPlans().getModeOfCurrentOrNextTrip(mobsimAgent) ;
+		String routingMode = null ; // could have some default
 		switch (((MATSimModel.EvacRoutingMode) args[3])) {
 			case carFreespeed:
-				mode = MATSimModel.EvacRoutingMode.carFreespeed.name() ;
+				routingMode = MATSimModel.EvacRoutingMode.carFreespeed.name() ;
 				break;
 			case carGlobalInformation:
-				mode = TransportMode.car ;
+//				routingMode = TransportMode.car ;
+				routingMode = MATSimModel.EvacRoutingMode.carGlobalInformation.name() ;
 				break;
 			default:
 				throw new RuntimeException("not implemented" ) ;
@@ -99,7 +99,7 @@ public final class DRIVETODefaultActionHandler implements BDIActionHandler {
 
 		// new destination
 		Activity newAct = model.getReplanner().editPlans().createFinalActivity( "driveTo", newLinkId ) ;
-		model.getReplanner().editPlans().addActivityAtEnd(mobsimAgent, newAct, mode) ;
+		model.getReplanner().editPlans().addActivityAtEnd(mobsimAgent, newAct, routingMode) ;
 		printPlan("after adding act: " , mobsimAgent ) ;
 		
 		// beyond is already non-matsim:
