@@ -27,6 +27,8 @@ import org.matsim.core.mobsim.framework.listeners.MobsimAfterSimStepListener;
 import org.matsim.core.mobsim.framework.listeners.MobsimInitializedListener;
 import org.matsim.core.mobsim.qsim.QSim;
 import org.matsim.core.router.NetworkRoutingProvider;
+import org.matsim.core.router.costcalculators.OnlyTimeDependentTravelDisutility;
+import org.matsim.core.router.costcalculators.OnlyTimeDependentTravelDisutilityFactory;
 import org.matsim.core.router.costcalculators.RandomizingTimeDistanceTravelDisutilityFactory;
 import org.matsim.core.scenario.ScenarioUtils;
 import org.matsim.core.trafficmonitoring.FreeSpeedTravelTime;
@@ -121,12 +123,11 @@ public final class MATSimModel implements ABMServerInterface {
 
 		config.qsim().setStartTime( 1.00 );
 		config.qsim().setSimStarttimeInterpretation( StarttimeInterpretation.onlyUseStarttime );
-		//		config.qsim().setEndTime( 8.*3600 + 1800. );
 
 		config.controler().setWritePlansInterval(1);
 		config.controler().setOverwriteFileSetting( OverwriteFileSetting.deleteDirectoryIfExists );
 		
-		// this is for routing:
+		// we have to declare those routingModes where we want to use the network router:
 		{
 			Collection<String> modes = config.plansCalcRoute().getNetworkModes();
 			Set<String> newModes = new TreeSet<>( modes ) ;
@@ -136,17 +137,7 @@ public final class MATSimModel implements ABMServerInterface {
 			config.plansCalcRoute().setNetworkModes( newModes );
 		}
 		
-		// this is for the mobsim:
-//		{
-//			Collection<String> modes = config.qsim().getMainModes();
-//			Set<String> newModes = new TreeSet<>( modes ) ;
-//			for ( EvacRoutingMode mode : EvacRoutingMode.values() ) {
-//				newModes.add( mode.name() ) ;
-//			}
-//			config.qsim().setMainModes(newModes);
-//		}
-		
-		// this is for scoring:
+		// the router also needs scoring parameters:
 		for ( EvacRoutingMode mode : EvacRoutingMode.values() ) {
 			ModeParams params = new ModeParams(mode.name());
 			config.planCalcScore().addModeParams(params);
@@ -166,13 +157,6 @@ public final class MATSimModel implements ABMServerInterface {
 			if ( link.getFreespeed() > veryLargeSpeed ) {
 				link.setFreespeed(veryLargeSpeed);
 			}
-//			link.setFreespeed( link.getFreespeed()/10. ) ; // make slower for blockage test; not permanent
-			
-//			Set<String> modes = new TreeSet<>( link.getAllowedModes());
-//			for ( EvacRoutingMode mode : EvacRoutingMode.values() ) {
-//				modes.add( mode.name() ) ;
-//			}
-//			link.setAllowedModes(modes);
 		}
 		
 		// ---
@@ -213,52 +197,40 @@ public final class MATSimModel implements ABMServerInterface {
 		controller.addOverridingModule(new AbstractModule(){
 			@Override public void install() {
 				{
+					final String routingMode = EvacRoutingMode.carGlobalInformation.name();
+
 					bind(TravelTimeCollector.class).in(Singleton.class);
 					addEventHandlerBinding().to(TravelTimeCollector.class);
 					addMobsimListenerBinding().to(TravelTimeCollector.class);
-					bindNetworkTravelTime().to(TravelTimeCollector.class);
-					
-					final String routingMode = EvacRoutingMode.carGlobalInformation.name();
 					addTravelTimeBinding(routingMode).to(TravelTimeCollector.class) ;
+
 					addRoutingModuleBinding(routingMode).toProvider(
-							new NetworkRoutingProvider(TransportMode.car, EvacRoutingMode.carGlobalInformation.name()) ) ;
+							new NetworkRoutingProvider(TransportMode.car, routingMode)
+					) ;
+
+//					final RandomizingTimeDistanceTravelDisutilityFactory disutilityFactory
+//							= new RandomizingTimeDistanceTravelDisutilityFactory(routingMode, getConfig().planCalcScore());
+//					disutilityFactory.setSigma(0.) ;
+					OnlyTimeDependentTravelDisutilityFactory disutilityFactory = new OnlyTimeDependentTravelDisutilityFactory();;
+					addTravelDisutilityFactoryBinding(routingMode).toInstance(disutilityFactory);
 				}
 				{
-					String routingMode = MATSimModel.EvacRoutingMode.carFreespeed.name() ;
+					String routingMode = EvacRoutingMode.carFreespeed.name() ;
+					
 					addRoutingModuleBinding(routingMode).toProvider(
-							new NetworkRoutingProvider(TransportMode.car,EvacRoutingMode.carFreespeed.name()) ) ;
+							new NetworkRoutingProvider(TransportMode.car,routingMode)
+					) ;
+					
 					addTravelTimeBinding(routingMode).to(FreeSpeedTravelTime.class);
-//					addTravelDisutilityFactoryBinding(routingMode).toInstance(
-////							new RandomizingTimeDistanceTravelDisutilityFactory(routingMode,scenario.getConfig().planCalcScore() ) ) ;
-//							new OnlyTimeDependentTravelDisutilityFactory() ) ;
+					
+//					final RandomizingTimeDistanceTravelDisutilityFactory disutilityFactory
+//							= new RandomizingTimeDistanceTravelDisutilityFactory(routingMode, getConfig().planCalcScore());
+//					disutilityFactory.setSigma(0.) ;
+					OnlyTimeDependentTravelDisutilityFactory disutilityFactory = new OnlyTimeDependentTravelDisutilityFactory();;
+					addTravelDisutilityFactoryBinding(routingMode).toInstance(disutilityFactory);
 				}
 		
-		// yyyyyy need to clarify between freespeed and congested router!!
 
-				{
-					// freespeed mode:
-				}
-//				{
-//					// congested mode:
-//					Set<String> analyzedModes = new HashSet<>();
-//					analyzedModes.add(TransportMode.car);
-//					analyzedModes.add("congested");
-//					final TravelTimeCollector congestedTravelTime = new TravelTimeCollector(getScenario(), analyzedModes);
-//					this.addEventHandlerBinding().toInstance(congestedTravelTime);
-//					this.addTravelTimeBinding("congested").toInstance(congestedTravelTime);
-//					this.addTravelTimeBinding( TransportMode.car ).toInstance(congestedTravelTime);
-//					this.addMobsimListenerBinding().toInstance(congestedTravelTime);
-//				}
-				
-				
-				PlansCalcRouteConfigGroup routeConfigGroup = getConfig().plansCalcRoute();
-				for (String mode : routeConfigGroup.getNetworkModes()) {
-					final RandomizingTimeDistanceTravelDisutilityFactory disutilityFactory
-							= new RandomizingTimeDistanceTravelDisutilityFactory(mode, getConfig().planCalcScore());
-					disutilityFactory.setSigma(0.) ;
-					addTravelDisutilityFactoryBinding(mode).toInstance(disutilityFactory);
-				}
-				
 				
 				install( new EvacQSimModule(MATSimModel.this, controller.getEvents()) ) ;
 

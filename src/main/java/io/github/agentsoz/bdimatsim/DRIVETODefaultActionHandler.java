@@ -48,7 +48,7 @@ public final class DRIVETODefaultActionHandler implements BDIActionHandler {
 	
 	private final MATSimModel model;
 	public DRIVETODefaultActionHandler(MATSimModel model ) {
-		log.setLevel(Level.DEBUG);
+//		log.setLevel(Level.DEBUG);
 		this.model = model;
 	}
 	@Override
@@ -77,7 +77,7 @@ public final class DRIVETODefaultActionHandler implements BDIActionHandler {
 			model.getReplanner().editPlans().rescheduleCurrentActivityEndtime(mobsimAgent, (double)args[2]);
 		}
 		
-		// may need to memorize the routingMode:
+		// routingMode:
 //		String routingMode = model.getReplanner().editPlans().getModeOfCurrentOrNextTrip(mobsimAgent) ;
 		String routingMode = null ; // could have some default
 		switch (((MATSimModel.EvacRoutingMode) args[3])) {
