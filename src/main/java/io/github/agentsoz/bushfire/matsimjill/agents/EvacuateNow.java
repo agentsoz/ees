@@ -2,8 +2,8 @@ package io.github.agentsoz.bushfire.matsimjill.agents;
 
 import io.github.agentsoz.abmjill.genact.EnvironmentAction;
 import io.github.agentsoz.bdimatsim.MATSimActionList;
+import io.github.agentsoz.bdimatsim.MATSimModel.EvacRoutingMode;
 import io.github.agentsoz.bushfire.datamodels.Location;
-import io.github.agentsoz.bushfire.matsimjill.SimpleConfig;
 import io.github.agentsoz.dataInterface.DataServer;
 
 /*
@@ -32,6 +32,7 @@ import io.github.agentsoz.jill.lang.Agent;
 import io.github.agentsoz.jill.lang.Goal;
 import io.github.agentsoz.jill.lang.Plan;
 import io.github.agentsoz.jill.lang.PlanStep;
+
 import java.io.PrintStream;
 import java.util.HashMap;
 
@@ -56,9 +57,9 @@ public class EvacuateNow extends Plan {
 				public void step() {
 					String bdiAction = MATSimActionList.DRIVETO;
 					shelterLocation = ((Resident)getAgent()).getShelterLocation();
-					double[] coords = shelterLocation.getCoordinates();
-					double evacTime = DataServer.getServer("Bushfire").getTime() + 5.0;
-					Object[] params = {bdiAction, coords, evacTime }; // five secs from now
+					double [] coords = shelterLocation.getCoordinates() ;
+					double evacTime = DataServer.getServer("Bushfire").getTime() + 5.0; // five secs from now
+					Object[] params = {bdiAction, coords, evacTime, EvacRoutingMode.carFreespeed};
 					writer.println("Resident "+getAgent().getId()+": will start evacuating to shelter in "+shelterLocation + " at time " + evacTime);
 					post(new EnvironmentAction(
 							Integer.toString(((Resident)getAgent()).getId()),
@@ -83,8 +84,8 @@ public class EvacuateNow extends Plan {
 						String bdiAction = MATSimActionList.DRIVETO;
 						shelterLocation = ((Resident)getAgent()).getShelterLocation();
 						double[] coords = shelterLocation.getCoordinates();
-						double evacTime = DataServer.getServer("Bushfire").getTime() + 5.0;
-						Object[] params = {bdiAction, coords, evacTime }; // five secs from now
+						double evacTime = DataServer.getServer("Bushfire").getTime() + 5.0; // five secs from now
+						Object[] params = {bdiAction, coords, evacTime, EvacRoutingMode.carGlobalInformation};
 						writer.println("Resident "+getAgent().getId()+": will replan to shelter in "+shelterLocation + " at time " + evacTime);
 						post(new EnvironmentAction(
 								Integer.toString(((Resident)getAgent()).getId()),

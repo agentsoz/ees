@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedMap;
 
+import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Rule;
@@ -33,6 +34,8 @@ import org.matsim.utils.eventsfilecomparison.EventsFileComparator;
  */
 public class MainCampbellsCreek50Test {
 	// have tests in separate classes so that they run, at least under maven, in separate JVMs.  kai, nov'17
+	
+	Logger log = Logger.getLogger( MainCampbellsCreek50Test.class ) ;
 
 	@Rule public MatsimTestUtils utils = new MatsimTestUtils() ;
 
@@ -72,12 +75,6 @@ public class MainCampbellsCreek50Test {
 		// ---
 		
 		{
-			System.out.println("\nComparing all events ...") ;
-			EventsFileComparator.Result result = EventsFileComparator.compare(primaryExpectedEventsFilename, actualEventsFilename);
-			System.out.println("result=" + result);
-			System.out.println("... comparing all events done.\n") ;
-		}
-		{
 			System.out.println("\nComparing departures ...") ;
 			SortedMap<Id<Person>, List<Double>> expecteds = TestUtils.collectDepartures(primaryExpectedEventsFilename);
 			SortedMap<Id<Person>, List<Double>> actuals = TestUtils.collectDepartures(actualEventsFilename);
@@ -98,14 +95,21 @@ public class MainCampbellsCreek50Test {
 			TestUtils.compareEventsWithSlack( expecteds, actuals, 5. );
 			System.out.println("... comparing activity starts done.\n") ;
 		}
-		
-		// ---
 		{
-			long[] expectedEventsCRCs = new long[]{
-					CRCChecksum.getCRCFromFile(primaryExpectedEventsFilename)
-			};
-			TestUtils.checkSeveral(expectedEventsCRCs, actualEventsCRC);
+			System.out.println("\nComparing all events ...") ;
+			EventsFileComparator.Result result = EventsFileComparator.compare(primaryExpectedEventsFilename, actualEventsFilename);
+			System.out.println("result=" + result);
+			Assert.assertEquals(EventsFileComparator.Result.FILES_ARE_EQUAL, result );
+			System.out.println("... comparing all events done.\n") ;
 		}
+
+		// ---
+//		{
+//			long[] expectedEventsCRCs = new long[]{
+//					CRCChecksum.getCRCFromFile(primaryExpectedEventsFilename)
+//			};
+//			TestUtils.checkSeveral(expectedEventsCRCs, actualEventsCRC);
+//		}
 		{
 			long[] expectedPlansCRCs = new long[]{
 					CRCChecksum.getCRCFromFile(utils.getInputDirectory() + "/output_plans.xml.gz")
