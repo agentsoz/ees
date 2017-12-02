@@ -6,6 +6,7 @@ package io.github.agentsoz.bushfire.matsimjill;
 import java.util.List;
 import java.util.SortedMap;
 
+import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Rule;
@@ -18,6 +19,7 @@ import org.matsim.testcases.MatsimTestUtils;
 import io.github.agentsoz.bushfire.matsimjill.Main;
 import io.github.agentsoz.util.TestUtils;
 import org.matsim.utils.eventsfilecomparison.EventsFileComparator;
+import org.matsim.utils.eventsfilecomparison.EventsFileComparator.Result;
 
 /**
  * @author dsingh
@@ -25,6 +27,8 @@ import org.matsim.utils.eventsfilecomparison.EventsFileComparator;
  */
 public class MainMaldon600Test {
 	// have tests in separate classes so that they run, at least under maven, in separate JVMs.  kai, nov'17
+	
+	private static final Logger log = Logger.getLogger(MainMaldon600Test.class) ;
 
 	@Rule public MatsimTestUtils utils = new MatsimTestUtils() ;
 
@@ -62,49 +66,49 @@ public class MainMaldon600Test {
 		// print these so that we have them:
 		final String actualEventsFilename = utils.getOutputDirectory() + "/output_events.xml.gz";
 		long actualEventsCRC = CRCChecksum.getCRCFromFile( actualEventsFilename ) ;
-		System.err.println("actual(events)="+actualEventsCRC) ;
+		log.warn("actual(events)="+actualEventsCRC) ;
 
 		long actualPlansCRC = CRCChecksum.getCRCFromFile( utils.getOutputDirectory() + "/output_plans.xml.gz" ) ;
-		System.err.println("actual(plans)="+actualPlansCRC) ;
+		log.warn("actual(plans)="+actualPlansCRC) ;
 		
 		// look into events:
 
 		final String primaryExpectedEventsFilename = utils.getInputDirectory() + "/output_events.xml.gz";
 
 		{
-			System.out.println("\nComparing all events ...") ;
-			EventsFileComparator.Result result = EventsFileComparator.compare(primaryExpectedEventsFilename, actualEventsFilename);
-			System.out.println("result=" + result);
-			System.out.println("... comparing all events done.\n") ;
-		}
-		{
-			System.out.println("\nComparing departures ...") ;
+			log.info("\nComparing departures ...") ;
 			SortedMap<Id<Person>, List<Double>> expecteds = TestUtils.collectDepartures(primaryExpectedEventsFilename);
 			SortedMap<Id<Person>, List<Double>> actuals = TestUtils.collectDepartures(actualEventsFilename);
 			TestUtils.compareEventsWithSlack( expecteds, actuals, 5. );
-			System.out.println("... comparing departures done.\n") ;
+			log.info("... comparing departures done.\n") ;
 		}
 		{
-			System.out.println("\nComparing arrivals ...") ;
+			log.info("\nComparing arrivals ...") ;
 			SortedMap<Id<Person>, List<Double>> expecteds = TestUtils.collectArrivals(primaryExpectedEventsFilename);
 			SortedMap<Id<Person>, List<Double>> actuals = TestUtils.collectArrivals(actualEventsFilename);
 			TestUtils.compareEventsWithSlack( expecteds, actuals, 5. );
-			System.out.println("... comparing arrivals done.\n") ;
+			log.info("... comparing arrivals done.\n") ;
 		}
 		{
-			System.out.println("\nComparing activity starts ...") ;
+			log.info("\nComparing activity starts ...") ;
 			SortedMap<Id<Person>, List<Double>> expecteds = TestUtils.collectActivityStarts(primaryExpectedEventsFilename);
 			SortedMap<Id<Person>, List<Double>> actuals = TestUtils.collectActivityStarts(actualEventsFilename);
 			TestUtils.compareEventsWithSlack( expecteds, actuals, 5. );
-			System.out.println("... comparing activity starts done.\n") ;
+			log.info("... comparing activity starts done.\n") ;
+		}
+		{
+			log.info("\nComparing all events ...") ;
+			Result result = EventsFileComparator.compare(primaryExpectedEventsFilename, actualEventsFilename);
+			log.info("result=" + result);
+			Assert.assertEquals(Result.FILES_ARE_EQUAL, result );
+			log.info("... comparing all events done.\n") ;
 		}
 		
 		// comparing the plain files, but maybe more than one:
-		long [] expectedEvents = new long [] {
-				CRCChecksum.getCRCFromFile( primaryExpectedEventsFilename )
-		} ;
-
-		TestUtils.checkSeveral(expectedEvents, actualEventsCRC);
+//		long [] expectedEvents = new long [] {
+//				CRCChecksum.getCRCFromFile( primaryExpectedEventsFilename )
+//		} ;
+//		TestUtils.checkSeveral(expectedEvents, actualEventsCRC);
 
 		// look into plans:
 
