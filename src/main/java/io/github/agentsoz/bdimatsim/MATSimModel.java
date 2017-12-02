@@ -4,12 +4,12 @@ import java.util.*;
 
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.Scenario;
-import org.matsim.api.core.v01.TransportMode;
 import org.matsim.api.core.v01.network.Link;
 import org.matsim.core.api.experimental.events.EventsManager;
 import org.matsim.core.config.Config;
 import org.matsim.core.config.ConfigUtils;
-import org.matsim.core.config.groups.PlanCalcScoreConfigGroup;
+import org.matsim.core.config.groups.PlanCalcScoreConfigGroup.ModeParams;
+import org.matsim.core.config.groups.PlanCalcScoreConfigGroup.ActivityParams;
 import org.matsim.core.config.groups.PlansCalcRouteConfigGroup;
 import org.matsim.core.config.groups.PlansConfigGroup.ActivityDurationInterpretation;
 import org.matsim.core.config.groups.QSimConfigGroup.StarttimeInterpretation;
@@ -24,14 +24,10 @@ import org.matsim.core.mobsim.framework.events.MobsimInitializedEvent;
 import org.matsim.core.mobsim.framework.listeners.MobsimAfterSimStepListener;
 import org.matsim.core.mobsim.framework.listeners.MobsimInitializedListener;
 import org.matsim.core.mobsim.qsim.QSim;
-import org.matsim.core.network.NetworkChangeEvent;
-import org.matsim.core.network.NetworkChangeEvent.ChangeType;
-import org.matsim.core.network.NetworkChangeEvent.ChangeValue;
-import org.matsim.core.network.NetworkUtils;
+import org.matsim.core.router.NetworkRouting;
 import org.matsim.core.router.costcalculators.RandomizingTimeDistanceTravelDisutilityFactory;
 import org.matsim.core.scenario.ScenarioUtils;
 import org.matsim.core.trafficmonitoring.FreeSpeedTravelTime;
-import org.matsim.core.trafficmonitoring.TravelTimeCalculatorModule;
 import org.matsim.withinday.mobsim.MobsimDataProvider;
 import org.matsim.withinday.trafficmonitoring.TravelTimeCollector;
 import org.slf4j.Logger;
@@ -74,6 +70,8 @@ import javax.inject.Singleton;
 public final class MATSimModel implements ABMServerInterface {
 	private static final Logger logger = LoggerFactory.getLogger("");
 	public static final String MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR = "--matsim-output-directory";
+	
+	public static enum EvacRoutingMode {carFreespeed, carGlobalInformation}
 
 	private final Scenario scenario ;
 
@@ -126,6 +124,32 @@ public final class MATSimModel implements ABMServerInterface {
 		config.controler().setWritePlansInterval(1);
 		config.controler().setOverwriteFileSetting( OverwriteFileSetting.deleteDirectoryIfExists );
 		
+		// this is for routing:
+		{
+			Collection<String> modes = config.plansCalcRoute().getNetworkModes();
+			Set<String> newModes = new TreeSet<>( modes ) ;
+			for ( EvacRoutingMode mode : EvacRoutingMode.values() ) {
+				newModes.add( mode.name() ) ;
+			}
+			config.plansCalcRoute().setNetworkModes( newModes );
+		}
+		
+		// this is for the mobsim:
+		{
+			Collection<String> modes = config.qsim().getMainModes();
+			Set<String> newModes = new TreeSet<>( modes ) ;
+			for ( EvacRoutingMode mode : EvacRoutingMode.values() ) {
+				newModes.add( mode.name() ) ;
+			}
+			config.qsim().setMainModes(newModes);
+		}
+		
+		// this is for scoring:
+		for ( EvacRoutingMode mode : EvacRoutingMode.values() ) {
+			ModeParams params = new ModeParams(mode.name());
+			config.planCalcScore().addModeParams(params);
+		}
+		
 //		config.plansCalcRoute().setInsertingAccessEgressWalk(true);
 		
 		//		ConfigUtils.setVspDefaults(config);
@@ -140,7 +164,13 @@ public final class MATSimModel implements ABMServerInterface {
 			if ( link.getFreespeed() > veryLargeSpeed ) {
 				link.setFreespeed(veryLargeSpeed);
 			}
-//			link.setFreespeed( link.getFreespeed()/10. ) ; // make slower for blockage test; not permanent yyyyyy
+//			link.setFreespeed( link.getFreespeed()/10. ) ; // make slower for blockage test; not permanent
+			
+			Set<String> modes = new TreeSet<>( link.getAllowedModes());
+			for ( EvacRoutingMode mode : EvacRoutingMode.values() ) {
+				modes.add( mode.name() ) ;
+			}
+			link.setAllowedModes(modes);
 		}
 		
 		// ---
@@ -161,7 +191,7 @@ public final class MATSimModel implements ABMServerInterface {
 					MATSimActionList.DRIVETO, new DRIVETODefaultActionHandler(this) );
 		}
 		
-		PlanCalcScoreConfigGroup.ActivityParams params = new PlanCalcScoreConfigGroup.ActivityParams("driveTo") ;
+		ActivityParams params = new ActivityParams("driveTo") ;
 		params.setScoringThisActivityAtAll(false);
 		scenario.getConfig().planCalcScore().addActivityParams(params);
 
@@ -180,15 +210,28 @@ public final class MATSimModel implements ABMServerInterface {
 
 		controller.addOverridingModule(new AbstractModule(){
 			@Override public void install() {
-				
-		bind(TravelTimeCollector.class).in(Singleton.class);
-		addEventHandlerBinding().to(TravelTimeCollector.class);
-		addMobsimListenerBinding().to(TravelTimeCollector.class) ;
-		bindNetworkTravelTime().to(TravelTimeCollector.class);
+				{
+					bind(TravelTimeCollector.class).in(Singleton.class);
+					addEventHandlerBinding().to(TravelTimeCollector.class);
+					addMobsimListenerBinding().to(TravelTimeCollector.class);
+					bindNetworkTravelTime().to(TravelTimeCollector.class);
+					final String mode = EvacRoutingMode.carGlobalInformation.name();
+					addTravelTimeBinding(mode).to(TravelTimeCollector.class) ;
+					addRoutingModuleBinding(mode).toProvider( new NetworkRouting(mode) ) ;
+				}
+				{
+					String mode = MATSimModel.EvacRoutingMode.carFreespeed.name() ;
+					addRoutingModuleBinding(mode).toProvider( new NetworkRouting(mode) ) ;
+					addTravelTimeBinding(mode).to(FreeSpeedTravelTime.class);
+//					addTravelDisutilityFactoryBinding(mode).toInstance(
+////							new RandomizingTimeDistanceTravelDisutilityFactory(mode,scenario.getConfig().planCalcScore() ) ) ;
+//							new OnlyTimeDependentTravelDisutilityFactory() ) ;
+				}
+		
+		// yyyyyy need to clarify between freespeed and congested router!!
 
 				{
 					// freespeed mode:
-//					this.addTravelTimeBinding(TransportMode.car).to(FreeSpeedTravelTime.class);
 				}
 //				{
 //					// congested mode:

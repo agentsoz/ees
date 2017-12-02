@@ -26,11 +26,13 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.matsim.api.core.v01.Coord;
 import org.matsim.api.core.v01.Id;
+import org.matsim.api.core.v01.TransportMode;
 import org.matsim.api.core.v01.network.Link;
 import org.matsim.api.core.v01.population.Activity;
 import org.matsim.api.core.v01.population.Person;
 import org.matsim.api.core.v01.population.Plan;
 import org.matsim.api.core.v01.population.PlanElement;
+import org.matsim.core.gbl.Gbl;
 import org.matsim.core.mobsim.framework.MobsimAgent;
 import org.matsim.core.mobsim.qsim.agents.WithinDayAgentUtils;
 import org.matsim.core.network.NetworkUtils;
@@ -40,7 +42,6 @@ import io.github.agentsoz.bdimatsim.EventsMonitorRegistry.MonitoredEventType;
 import io.github.agentsoz.nonmatsim.BDIActionHandler;
 import io.github.agentsoz.nonmatsim.BDIPerceptHandler;
 import io.github.agentsoz.nonmatsim.PAAgent;
-import org.opengis.filter.spatial.Within;
 
 public final class DRIVETODefaultActionHandler implements BDIActionHandler {
 	private static final Logger log = Logger.getLogger( DRIVETODefaultActionHandler.class ) ;
@@ -55,48 +56,57 @@ public final class DRIVETODefaultActionHandler implements BDIActionHandler {
 		log.debug("------------------------------------------------------------------------------------------");
 		log.debug("replanning at simulation time step=" + model.getTime() ) ;
 		// assertions:
-		if ( args.length < 2 ) {
-			throw new RuntimeException("not enough information; we need coordinate-to-go-to and departure time. " +
-											   "May be a problem of thread interference.") ;
-		}
-		if ( ! ( args[1] instanceof double[] ) ) {
-			throw new RuntimeException("argument #1 not of type double[]; cannot be interpreted as coordinate" ) ;
-		}
+		Gbl.assertIf( args.length >= 4 ) ;
+		Gbl.assertIf( args[1] instanceof double[] ) ;
+		double[] coords = (double[]) args[1];
+		Coord coord = new Coord( coords[0], coords[1] ) ;
+		System.err.println( "coord=" + coord ) ;
+		Gbl.assertIf( args[3] instanceof MATSimModel.EvacRoutingMode ) ; // could have some default
 
 		// preparations:
-		double[] coords = (double[]) args[1];
-		Coord newCoord = new Coord(coords[0], coords[1]);
-		Id<Link> newLinkId = NetworkUtils.getNearestLink(model.getScenario().getNetwork(), newCoord).getId();
+		
+		final Link nearestLink = NetworkUtils.getNearestLink(model.getScenario().getNetwork(), coord );
+		Gbl.assertNotNull(nearestLink);
+		Id<Link> newLinkId = nearestLink.getId();
 		//  could give just coordinates to matsim, but for time being need the linkId in the percept anyways
-
-		double newDepartureTime = (double)args[2];
-
-		MobsimAgent agent1 = model.getMobsimAgentFromIdString(agentID) ;
+		
+		MobsimAgent mobsimAgent = model.getMobsimAgentFromIdString(agentID) ;
+		Gbl.assertNotNull(mobsimAgent) ;
 		
 		// new departure time:
-		if ( model.getReplanner().editPlans().isAtRealActivity(agent1) ) {
-			model.getReplanner().editPlans().rescheduleCurrentActivityEndtime(agent1, newDepartureTime);
+		if ( model.getReplanner().editPlans().isAtRealActivity(mobsimAgent) ) {
+			model.getReplanner().editPlans().rescheduleCurrentActivityEndtime(mobsimAgent, (double)args[2]);
 		}
 		
-		// need to memorize the mode:
-		String mode = model.getReplanner().editPlans().getModeOfCurrentOrNextTrip(agent1) ;
-//		String mode = "congested" ;
+		// may need to memorize the mode:
+//		String mode = model.getReplanner().editPlans().getModeOfCurrentOrNextTrip(mobsimAgent) ;
+		String mode = null ; // could have some default
+		switch (((MATSimModel.EvacRoutingMode) args[3])) {
+			case carFreespeed:
+				mode = MATSimModel.EvacRoutingMode.carFreespeed.name() ;
+				break;
+			case carGlobalInformation:
+				mode = TransportMode.car ;
+				break;
+			default:
+				throw new RuntimeException("not implemented" ) ;
+		}
 		
 		// flush everything beyond current:
-		printPlan("before flush: ", agent1);
-		model.getReplanner().editPlans().flushEverythingBeyondCurrent(agent1) ;
-		printPlan("after flush: " , agent1) ;
+		printPlan("before flush: ", mobsimAgent);
+		model.getReplanner().editPlans().flushEverythingBeyondCurrent(mobsimAgent) ;
+		printPlan("after flush: " , mobsimAgent) ;
 
 		// new destination
 		Activity newAct = model.getReplanner().editPlans().createFinalActivity( "driveTo", newLinkId ) ;
-		model.getReplanner().editPlans().addActivityAtEnd(agent1, newAct, mode) ;
-		printPlan("after adding act: " , agent1 ) ;
+		model.getReplanner().editPlans().addActivityAtEnd(mobsimAgent, newAct, mode) ;
+		printPlan("after adding act: " , mobsimAgent ) ;
 		
 		// beyond is already non-matsim:
 
-		// Now register a event handler for when the agent arrives at the destination
-		PAAgent agent = model.getAgentManager().getAgent( agentID );
-		agent.getPerceptHandler().registerBDIPerceptHandler( agent.getAgentID(), MonitoredEventType.ArrivedAtDestination,
+		// Now register an event handler for when the agent arrives at the destination
+		PAAgent paAgent = model.getAgentManager().getAgent( agentID );
+		paAgent.getPerceptHandler().registerBDIPerceptHandler( paAgent.getAgentID(), MonitoredEventType.ArrivedAtDestination,
 				newLinkId.toString(), new BDIPerceptHandler() {
 			@Override
 			public boolean handle(Id<Person> agentId, Id<Link> linkId, MonitoredEventType monitoredEvent) {
