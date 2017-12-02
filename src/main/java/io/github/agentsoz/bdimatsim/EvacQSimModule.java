@@ -66,7 +66,7 @@ public class EvacQSimModule extends AbstractModule {
 	private EventsManager eventsManager;
 	
 	public EvacQSimModule(MATSimModel matSimModel, EventsManager eventsManager) {
-		log.setLevel(Level.DEBUG);
+//		log.setLevel(Level.DEBUG);
 		this.matSimModel = matSimModel;
 		this.eventsManager = eventsManager;
 	}
