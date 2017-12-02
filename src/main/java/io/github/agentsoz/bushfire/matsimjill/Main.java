@@ -199,7 +199,6 @@ public class Main {
 						null, new BDIPerceptHandler() {
 							@Override
 							public boolean handle(Id<Person> agentId, Id<Link> currentLinkId, MonitoredEventType monitoredEvent) {
-								System.out.println("calling the nextLinkBlocked handler") ;
 								PAAgent agent = matsimModel.getAgentManager().getAgent( agentId.toString() );
 								Object[] params = { currentLinkId.toString() };
 								agent.getActionContainer().register(MATSimActionList.DRIVETO, params);

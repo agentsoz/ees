@@ -60,6 +60,7 @@ public class EvacuateNow extends Plan {
 					double [] coords = shelterLocation.getCoordinates() ;
 					double evacTime = DataServer.getServer("Bushfire").getTime() + 5.0; // five secs from now
 					Object[] params = {bdiAction, coords, evacTime, EvacRoutingMode.carFreespeed};
+					// (could use EvacRoutingMode.carFreespeed.name() if you like that better. kai, dec'17)
 					writer.println("Resident "+getAgent().getId()+": will start evacuating to shelter in "+shelterLocation + " at time " + evacTime);
 					post(new EnvironmentAction(
 							Integer.toString(((Resident)getAgent()).getId()),
