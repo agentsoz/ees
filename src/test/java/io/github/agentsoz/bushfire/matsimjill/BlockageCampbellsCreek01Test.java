@@ -7,7 +7,6 @@ import io.github.agentsoz.bdimatsim.MATSimModel;
 import io.github.agentsoz.util.TestUtils;
 import org.apache.log4j.Logger;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.matsim.api.core.v01.Id;
@@ -19,7 +18,7 @@ import org.matsim.utils.eventsfilecomparison.EventsFileComparator;
 import java.util.List;
 import java.util.SortedMap;
 
-import static io.github.agentsoz.bushfire.matsimjill.MainCampbellsCreek01Test.SEPARATOR;
+import static io.github.agentsoz.util.TestUtils.SEPARATOR;
 
 /**
  * @author dsingh
@@ -62,42 +61,12 @@ public class BlockageCampbellsCreek01Test {
 		System.err.println( "actual(jill)=" + actualCRCjill ) ;
 		
 		final String primaryExpectedEventsFilename = utils.getInputDirectory() + "/output_events.xml.gz";
-		{
-			log.info(SEPARATOR) ;
-			log.info("START comparing departures ...") ;
-			SortedMap<Id<Person>, List<Double>> expecteds = TestUtils.collectDepartures(primaryExpectedEventsFilename);
-			SortedMap<Id<Person>, List<Double>> actuals = TestUtils.collectDepartures(actualEventsFilename);
-			TestUtils.compareEventsWithSlack( expecteds, actuals, 5. );
-			log.info("... comparing departures DONE.") ;
-			log.info(SEPARATOR) ;
-		}
-		{
-			log.info(SEPARATOR) ;
-			log.info("START comparing arrivals ...") ;
-			SortedMap<Id<Person>, List<Double>> expecteds = TestUtils.collectArrivals(primaryExpectedEventsFilename);
-			SortedMap<Id<Person>, List<Double>> actuals = TestUtils.collectArrivals(actualEventsFilename);
-			TestUtils.compareEventsWithSlack( expecteds, actuals, 5. );
-			log.info("... comparing arrivals DONE.") ;
-			log.info(SEPARATOR) ;
-		}
-		{
-			log.info(SEPARATOR) ;
-			log.info("Comparing activity starts ...") ;
-			SortedMap<Id<Person>, List<Double>> expecteds = TestUtils.collectActivityStarts(primaryExpectedEventsFilename);
-			SortedMap<Id<Person>, List<Double>> actuals = TestUtils.collectActivityStarts(actualEventsFilename);
-			TestUtils.compareEventsWithSlack( expecteds, actuals, 5. );
-			log.info("... comparing activity starts done.") ;
-			log.info(SEPARATOR) ;
-		}
-		{
-			log.info(SEPARATOR) ;
-			log.info("START comparing all events ...") ;
-			EventsFileComparator.Result result = EventsFileComparator.compare(primaryExpectedEventsFilename, actualEventsFilename);
-			log.info("result=" + result);
-			Assert.assertEquals(EventsFileComparator.Result.FILES_ARE_EQUAL, result );
-			log.info("... comparing all events DONE.") ;
-			log.info(SEPARATOR) ;
-		}
+
+		TestUtils.comparingDepartures(primaryExpectedEventsFilename,actualEventsFilename,5.);
+		TestUtils.comparingArrivals(primaryExpectedEventsFilename,actualEventsFilename,5.);
+		TestUtils.comparingActivityStarts(primaryExpectedEventsFilename,actualEventsFilename, 5.);
+		TestUtils.compareFullEvents(primaryExpectedEventsFilename,actualEventsFilename, true);
+
 
 //		{
 //			long [] expectedCRC = {

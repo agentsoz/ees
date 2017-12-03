@@ -74,34 +74,10 @@ public class MainCampbellsCreek50Test {
 
 		// ---
 		
-		{
-			System.out.println("\nComparing departures ...") ;
-			SortedMap<Id<Person>, List<Double>> expecteds = TestUtils.collectDepartures(primaryExpectedEventsFilename);
-			SortedMap<Id<Person>, List<Double>> actuals = TestUtils.collectDepartures(actualEventsFilename);
-			TestUtils.compareEventsWithSlack( expecteds, actuals, 5. );
-			System.out.println("... comparing departures done.\n") ;
-		}
-		{
-			System.out.println("\nComparing arrivals ...") ;
-			SortedMap<Id<Person>, List<Double>> expecteds = TestUtils.collectArrivals(primaryExpectedEventsFilename);
-			SortedMap<Id<Person>, List<Double>> actuals = TestUtils.collectArrivals(actualEventsFilename);
-			TestUtils.compareEventsWithSlack( expecteds, actuals, 5. );
-			System.out.println("... comparing arrivals done.\n") ;
-		}
-		{
-			System.out.println("\nComparing activity starts ...") ;
-			SortedMap<Id<Person>, List<Double>> expecteds = TestUtils.collectActivityStarts(primaryExpectedEventsFilename);
-			SortedMap<Id<Person>, List<Double>> actuals = TestUtils.collectActivityStarts(actualEventsFilename);
-			TestUtils.compareEventsWithSlack( expecteds, actuals, 5. );
-			System.out.println("... comparing activity starts done.\n") ;
-		}
-		{
-			System.out.println("\nComparing all events ...") ;
-			EventsFileComparator.Result result = EventsFileComparator.compare(primaryExpectedEventsFilename, actualEventsFilename);
-			System.out.println("result=" + result);
-			Assert.assertEquals(EventsFileComparator.Result.FILES_ARE_EQUAL, result );
-			System.out.println("... comparing all events done.\n") ;
-		}
+		TestUtils.comparingDepartures(primaryExpectedEventsFilename,actualEventsFilename,5.);
+		TestUtils.comparingArrivals(primaryExpectedEventsFilename,actualEventsFilename,5.);
+		TestUtils.comparingActivityStarts(primaryExpectedEventsFilename,actualEventsFilename, 5.);
+		TestUtils.compareFullEvents(primaryExpectedEventsFilename,actualEventsFilename, true);
 
 		// ---
 //		{

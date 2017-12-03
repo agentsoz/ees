@@ -74,35 +74,12 @@ public class MainMaldon600Test {
 		// look into events:
 
 		final String primaryExpectedEventsFilename = utils.getInputDirectory() + "/output_events.xml.gz";
+		
+		TestUtils.comparingDepartures(primaryExpectedEventsFilename,actualEventsFilename,5.);
+		TestUtils.comparingArrivals(primaryExpectedEventsFilename,actualEventsFilename,5.);
+		TestUtils.comparingActivityStarts(primaryExpectedEventsFilename,actualEventsFilename, 5.);
+		TestUtils.compareFullEvents(primaryExpectedEventsFilename,actualEventsFilename, true);
 
-		{
-			log.info("\nComparing departures ...") ;
-			SortedMap<Id<Person>, List<Double>> expecteds = TestUtils.collectDepartures(primaryExpectedEventsFilename);
-			SortedMap<Id<Person>, List<Double>> actuals = TestUtils.collectDepartures(actualEventsFilename);
-			TestUtils.compareEventsWithSlack( expecteds, actuals, 5. );
-			log.info("... comparing departures done.\n") ;
-		}
-		{
-			log.info("\nComparing arrivals ...") ;
-			SortedMap<Id<Person>, List<Double>> expecteds = TestUtils.collectArrivals(primaryExpectedEventsFilename);
-			SortedMap<Id<Person>, List<Double>> actuals = TestUtils.collectArrivals(actualEventsFilename);
-			TestUtils.compareEventsWithSlack( expecteds, actuals, 5. );
-			log.info("... comparing arrivals done.\n") ;
-		}
-		{
-			log.info("\nComparing activity starts ...") ;
-			SortedMap<Id<Person>, List<Double>> expecteds = TestUtils.collectActivityStarts(primaryExpectedEventsFilename);
-			SortedMap<Id<Person>, List<Double>> actuals = TestUtils.collectActivityStarts(actualEventsFilename);
-			TestUtils.compareEventsWithSlack( expecteds, actuals, 5. );
-			log.info("... comparing activity starts done.\n") ;
-		}
-		{
-			log.info("\nComparing all events ...") ;
-			Result result = EventsFileComparator.compare(primaryExpectedEventsFilename, actualEventsFilename);
-			log.info("result=" + result);
-			Assert.assertEquals(Result.FILES_ARE_EQUAL, result );
-			log.info("... comparing all events done.\n") ;
-		}
 		
 		// comparing the plain files, but maybe more than one:
 //		long [] expectedEvents = new long [] {
