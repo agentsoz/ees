@@ -9,11 +9,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.TreeMap;
 
+import io.github.agentsoz.bdiabm.ABMServerInterface;
 import io.github.agentsoz.bdiabm.data.ActionContent;
+import io.github.agentsoz.bdiabm.data.AgentDataContainer;
 import io.github.agentsoz.bdimatsim.EventsMonitorRegistry.MonitoredEventType;
 import io.github.agentsoz.bdimatsim.MATSimActionList;
 import io.github.agentsoz.bdimatsim.MATSimModel;
-import io.github.agentsoz.bdimatsim.MATSimPerceptList;
 import io.github.agentsoz.bdimatsim.Utils;
 import io.github.agentsoz.nonmatsim.BDIPerceptHandler;
 import io.github.agentsoz.nonmatsim.PAAgent;
@@ -23,9 +24,12 @@ import org.matsim.api.core.v01.network.Link;
 import org.matsim.api.core.v01.population.Activity;
 import org.matsim.api.core.v01.population.Person;
 import org.matsim.api.core.v01.population.PlanElement;
+import org.matsim.core.config.groups.QSimConfigGroup;
 import org.matsim.core.config.groups.QSimConfigGroup.StarttimeInterpretation;
 import org.matsim.core.events.handler.EventHandler;
 import org.matsim.core.network.NetworkChangeEvent;
+import org.matsim.core.network.NetworkChangeEvent.ChangeType;
+import org.matsim.core.network.NetworkChangeEvent.ChangeValue;
 import org.matsim.core.network.NetworkUtils;
 import org.slf4j.LoggerFactory;
 
@@ -67,10 +71,6 @@ import io.github.agentsoz.util.Global;
 public class Main {
 
 	private static Logger logger;
-
-	private JillBDIModel jillmodel; // BDI model
-	private MATSimModel matsimModel; // ABM model
-	private PhoenixFireModule fireModel; // Fire model
 	
 	public static final String SETUP_INDICATOR="--setup" ;
 	public static enum Setup { standard, blockage }
@@ -96,102 +96,39 @@ public class Main {
 		logger = createLogger("io.github.agentsoz.bushfire", logFile);
 
 		// Read in the configuration
-		try { 
-			SimpleConfig.readConfig();
-		} catch(Exception e){
-			//			abort(e.getMessage());
-			abort(e) ;
-			// (if you just pass the message, the exception type is not passed on, so e.g. for a null pointer error one does not
-			// see anything.  kai, nov'17)
-		}
-
+		SimpleConfig.readConfig();
+			
 		// Create and initialise the data server used for passing
 		// several different types of data around the application 
 		// using a publish/subscribe or pull mechanism
 		DataServer dataServer = DataServer.getServer("Bushfire");
-
-		// Create fire module, load fire data, and register the fire module as
-		// an active data source
-		boolean isGeoJson = SimpleConfig.getFireFireFormat().equals("geojson");
-		if (!isGeoJson) {
-			abort("Fire file must be in GeoJson format.");
-		} 
-		fireModel = new PhoenixFireModule();
-		fireModel.setDataServer(dataServer);
-		fireModel.loadGeoJson(SimpleConfig.getFireFile());
-		fireModel.setEvacStartHHMM(SimpleConfig.getEvacStartHHMM());
-		boolean isGlobalUTM = SimpleConfig.getGeographyCoordinateSystem().toLowerCase().equals("utm");
-		boolean isFireUTM = SimpleConfig.getFireFireCoordinateSystem().toLowerCase().equals("utm");
-		if (isGlobalUTM && !isFireUTM) {
-			fireModel.convertLatLongToUtm();
-		}
-		fireModel.setTimestepUnit(Time.TimestepUnit.SECONDS);
-		fireModel.start();
-
-		// Create the Jill BDI model
-		jillmodel = new JillBDIModel(jillInitArgs);
-		jillmodel.registerDataServer(dataServer);
-
-		// Create the MATSim ABM model and register the data server
-		List<String> config = new ArrayList<>() ;
-		config.add( SimpleConfig.getMatSimFile() ) ;
-		if ( matsimOutputDirectory != null ) { 
-			config.add( MATSimModel.MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR ) ;
-			config.add( matsimOutputDirectory ) ;
-		}
-		matsimModel = new MATSimModel(config.toArray(new String[config.size()] ));
-		matsimModel.registerDataServer(dataServer);
-
-		// Register the safe lines monitors for MATSim
-		List<SafeLineMonitor> monitors = registerSafeLineMonitors(SimpleConfig.getSafeLines(), matsimModel);
-
-		List<String> bdiAgentIDs = Utils.getBDIAgentIDs( matsimModel.getScenario() );
-
-		this.jillmodel.init(matsimModel.getAgentManager().getAgentDataContainer(),
-				null, // agentList is not used
-				this.matsimModel,
-				bdiAgentIDs.toArray( new String[bdiAgentIDs.size()] ));
-		this.jillmodel.start();
 		
-
-		// Set the simulation start time to 10 mins before the evacuation start, dsingh 24/nov/17
-		{
-		dataServer.setTime(getEvacuationStartTimeInSeconds(-600));
-
-		matsimModel.getScenario().getConfig().qsim().setStartTime(getEvacuationStartTimeInSeconds(-600)) ;
-		matsimModel.getScenario().getConfig().qsim().setSimStarttimeInterpretation(StarttimeInterpretation.onlyUseStarttime);
-		// yy in the longer run, a "minOfStarttimeAndEarliestActivityEnd" would be good. kai, nov'17
-		}
+		PhoenixFireModule fireModel = initializeAndStartFireModel(dataServer);
 		
-		// move everything into the far future:
-		for ( Person person : matsimModel.getScenario().getPopulation().getPersons().values() ) {
-			List<PlanElement> planElements = person.getSelectedPlan().getPlanElements() ;
-			int offset = planElements.size();
-			for ( PlanElement pe : planElements ) {
-				if ( pe instanceof Activity ) {
-					((Activity) pe).setEndTime( Double.MAX_VALUE - offset );
-					offset-- ;
-				}
-			}
-		}
-		/* Dhirendra, it might be cleaner to do this in the input xml.  I have tried to remove the "fake" leg completely.
-		 * But then the agents don't have vehicles (yyyy although, on second thought, why??  we need to maintain 
-		 * vehicles for mode choice).
-		 */
+		MATSimModel matsimModel = initializeMATSim(dataServer);
 		
-		
-		int blockageTime = 5*60 ;
 		
 		if ( setup==Setup.blockage ) {
+			// todo later: configure this from elsewhere
+			int blockageTime = 5*60 ;
 			NetworkChangeEvent changeEvent = new NetworkChangeEvent(blockageTime);
-			changeEvent.setFreespeedChange(new NetworkChangeEvent.ChangeValue(NetworkChangeEvent.ChangeType.ABSOLUTE_IN_SI_UNITS, 0.));
+			changeEvent.setFreespeedChange(new ChangeValue(ChangeType.ABSOLUTE_IN_SI_UNITS, 0.));
 			changeEvent.addLink(matsimModel.getScenario().getNetwork().getLinks().get(Id.createLinkId(51825)));
 			NetworkUtils.addNetworkChangeEvent(matsimModel.getScenario().getNetwork(), changeEvent);
 		}
 		
+		// Register the safe lines monitors for MATSim
+		List<SafeLineMonitor> monitors = registerSafeLineMonitors(SimpleConfig.getSafeLines(), matsimModel);
+		
+		List<String> bdiAgentIDs = Utils.getBDIAgentIDs( matsimModel.getScenario() );
+		
+		
+		JillBDIModel jillmodel = initializeAndStartJillModel(dataServer, bdiAgentIDs, matsimModel, matsimModel.getAgentManager().getAgentDataContainer());
+		// (matsimModel is passed in because of its query interface.  which is, however, never used.)
+		
 		matsimModel.init(bdiAgentIDs);
 		
-		// add the perception handlers for the blocked links.  yyyyyy BUT I DON'T REALLY KNOW HOW TO DO THIS.  kai, nov'17
+		// add the perception handlers for the blocked links.
 		if ( setup==Setup.blockage ) {
 			for ( String bdiAgentID : bdiAgentIDs ) {
 				PAAgent agent = matsimModel.getAgentManager().getAgent(bdiAgentID);
@@ -212,30 +149,18 @@ public class Main {
 			}
 		}
 		
-		boolean hasPassedBlockageTime = false;
 		while ( true ) {
 			
-			// put in a blocked link.  todo: (1) find out link that is relevant to CC scenario; (2) find out time that is relevant to CC scenario.
-			// todo later: configure this from elsewhere
-//			if ( setup==Setup.blockage ) {
-//				if (!hasPassedBlockageTime && dataServer.getTime() > blockageTime) {
-//					System.err.println("configuring blockage") ;
-//					hasPassedBlockageTime = true;
-//					NetworkChangeEvent changeEvent = new NetworkChangeEvent(blockageTime);
-//					changeEvent.setFreespeedChange(new NetworkChangeEvent.ChangeValue(NetworkChangeEvent.ChangeType.ABSOLUTE_IN_SI_UNITS, 0.));
-//					changeEvent.addLink(matsimModel.getScenario().getNetwork().getLinks().get(Id.createLinkId(51825)));
-//					NetworkUtils.addNetworkChangeEvent(matsimModel.getScenario().getNetwork(), changeEvent);
-//				}
-//			}
-			
-			this.jillmodel.takeControl( matsimModel.getAgentManager().getAgentDataContainer() );
-			if( this.matsimModel.isFinished() ) {
+			jillmodel.takeControl( matsimModel.getAgentManager().getAgentDataContainer() );
+			if( matsimModel.isFinished() ) {
 				break;
 			}
 			//this.matsimModel.takeControl(matsimModel.getAgentManager().getAgentDataContainer());
-			this.matsimModel.runUntil((long)dataServer.getTime(), matsimModel.getAgentManager().getAgentDataContainer());
+			matsimModel.runUntil((long)dataServer.getTime(), matsimModel.getAgentManager().getAgentDataContainer());
 			// increment time
 			dataServer.stepTime();
+			
+			// yyyyyy fireModel??
 		}
 
 		// Write safe line statistics to file
@@ -248,7 +173,81 @@ public class Main {
 		// get rid of System.exit(...) so that tests run through ...
 		DataServer.cleanup() ;
 	}
+	
+	private static MATSimModel initializeMATSim(DataServer dataServer) {
+		// Create the MATSim ABM model and register the data server
+		List<String> config = new ArrayList<>() ;
+		config.add( SimpleConfig.getMatSimFile() ) ;
+		if ( matsimOutputDirectory != null ) {
+			config.add( MATSimModel.MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR ) ;
+			config.add( matsimOutputDirectory ) ;
+		}
+		MATSimModel matsimModel = new MATSimModel(config.toArray(new String[config.size()] ));
+		matsimModel.registerDataServer(dataServer);
+		
+		// Set the simulation start time to 10 mins before the evacuation start, dsingh 24/nov/17
+		{
+			dataServer.setTime(getEvacuationStartTimeInSeconds(-600));
 
+			matsimModel.getScenario().getConfig().qsim().setStartTime(getEvacuationStartTimeInSeconds(-600)) ;
+			matsimModel.getScenario().getConfig().qsim().setSimStarttimeInterpretation(StarttimeInterpretation.onlyUseStarttime);
+			// yy in the longer run, a "minOfStarttimeAndEarliestActivityEnd" would be good. kai, nov'17
+		}
+		
+		// move everything into the far future:
+		for ( Person person : matsimModel.getScenario().getPopulation().getPersons().values() ) {
+			List<PlanElement> planElements = person.getSelectedPlan().getPlanElements() ;
+			int offset = planElements.size();
+			for ( PlanElement pe : planElements ) {
+				if ( pe instanceof Activity) {
+					((Activity) pe).setEndTime( Double.MAX_VALUE - offset );
+					offset-- ;
+				}
+			}
+		}
+		/* Dhirendra, it might be cleaner to do this in the input xml.  I have tried to remove the "fake" leg completely.
+		 * But then the agents don't have vehicles (yyyy although, on second thought, why??  we need to maintain
+		 * vehicles for mode choice).
+		 */
+		
+		return matsimModel ;
+	}
+	
+	private static JillBDIModel initializeAndStartJillModel(DataServer dataServer, List<String> bdiAgentIDs,
+															ABMServerInterface matsimModel, AgentDataContainer agentDataContainer) {
+		
+		// Create the Jill BDI model
+		JillBDIModel jillmodel = new JillBDIModel(jillInitArgs);
+		jillmodel.registerDataServer(dataServer);
+		jillmodel.init(agentDataContainer,
+				null, // agentList is not used
+				matsimModel,
+				bdiAgentIDs.toArray( new String[bdiAgentIDs.size()] ));
+		jillmodel.start();
+		return jillmodel ;
+	}
+	
+	private static PhoenixFireModule initializeAndStartFireModel(DataServer dataServer) throws IOException, ParseException, java.text.ParseException {
+		// Create fire module, load fire data, and register the fire module as
+		// an active data source
+		boolean isGeoJson = SimpleConfig.getFireFireFormat().equals("geojson");
+		if (!isGeoJson) {
+			abort("Fire file must be in GeoJson format.");
+		}
+		PhoenixFireModule fireModel = new PhoenixFireModule();
+		fireModel.setDataServer(dataServer);
+		fireModel.loadGeoJson(SimpleConfig.getFireFile());
+		fireModel.setEvacStartHHMM(SimpleConfig.getEvacStartHHMM());
+		boolean isGlobalUTM = SimpleConfig.getGeographyCoordinateSystem().toLowerCase().equals("utm");
+		boolean isFireUTM = SimpleConfig.getFireFireCoordinateSystem().toLowerCase().equals("utm");
+		if (isGlobalUTM && !isFireUTM) {
+			fireModel.convertLatLongToUtm();
+		}
+		fireModel.setTimestepUnit(Time.TimestepUnit.SECONDS);
+		fireModel.start();
+		return fireModel ;
+	}
+	
 	/**
 	 * Gets the simulation start time from the config, with an added delay (can be negative)
 	 * @param delay
@@ -269,7 +268,7 @@ public class Main {
 	 * @param safeLines
 	 * @param matsimModel
 	 */
-	private List<SafeLineMonitor> registerSafeLineMonitors(TreeMap<String, Location[]> safeLines,
+	private static List<SafeLineMonitor> registerSafeLineMonitors(TreeMap<String, Location[]> safeLines,
 			MATSimModel matsimModel) {
 
 		if (safeLines == null) {

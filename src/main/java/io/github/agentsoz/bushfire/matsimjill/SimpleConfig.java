@@ -29,12 +29,12 @@ import org.w3c.dom.NodeList;
  * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Lesser Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Lesser Public
  * License along with this program.  If not, see
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
@@ -46,7 +46,7 @@ import io.github.agentsoz.util.Global;
 
 
 /**
- * 
+ *
  * Utility class to hold configuration information
  *
  */
@@ -172,64 +172,73 @@ public class SimpleConfig {
 	  return locs[choice];
 	}
 
-	public static void readConfig() throws Exception {
-		if (configFile == null) {
-			throw new Exception("No configuration file given");
+	public static void readConfig() {
+		try {
+			if (configFile == null) {
+				throw new Exception("No configuration file given");
+			}
+			
+			logger.info("Loading configuration from '" + configFile + "'");
+			
+			// Validate the XML against the schema first
+			SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+			Schema schema = factory.newSchema(); // schema specified in file
+			Validator validator = schema.newValidator();
+			validator.validate(new StreamSource(new File(configFile)));
+			
+			// Now we can start reading; we don't need to add many checks since
+			// the XML is at this point already validated
+			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+			DocumentBuilder db = dbf.newDocumentBuilder();
+			Document doc = db.parse(new FileInputStream(configFile));
+			
+			// Normalisation is optional, but recommended
+			// see http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
+			doc.getDocumentElement().normalize();
+			
+			// Get the root element
+			Element root = (Element)doc.getElementsByTagName(eSimulation).item(0);
+			
+			// Get MATSim config file name
+			matSimFile = doc.getElementsByTagName(eMATSimFile).item(0).getTextContent().replaceAll("\n", "").trim();
+			
+			// Get the fire data
+			Element element = (Element)root.getElementsByTagName(eFireFile).item(0);
+			fireFile = element.getElementsByTagName(eName).item(0).getTextContent().replaceAll("\n", "").trim();
+			fireCoordinateSystem = element.getElementsByTagName(eCoordinates).item(0).getTextContent().replaceAll("\n", "").trim();
+			fireFileFormat = element.getElementsByTagName(eFormat).item(0).getTextContent();
+			
+			// Get the geography data
+			element = (Element)root.getElementsByTagName(eGeographyFile).item(0);
+			geographyFile = element.getElementsByTagName(eName).item(0).getTextContent().replaceAll("\n", "").trim();
+			
+			// Get the number of BDI agents
+			numBDIAgents = Integer.parseInt(root.getElementsByTagName(eNumBDI).item(0).getTextContent().replaceAll("\n", "").trim());
+			
+			// Get the traffic detour behaviour
+			element = (Element)root.getElementsByTagName(eTrafficBehaviour).item(0);
+			element = (Element)element.getElementsByTagName(ePreEvacDetour).item(0);
+			proportionWithRelatives = Double.parseDouble(root.getElementsByTagName(eProportion).item(0).getTextContent().replaceAll("\n", "").trim());
+			maxDistanceToRelatives = Integer.parseInt(root.getElementsByTagName(eRadiusInMtrs).item(0).getTextContent().replaceAll("\n", "").trim());
+	
+			// Get the evacuation timing data
+			element = (Element)root.getElementsByTagName(eEvacuationTiming).item(0);
+			String[] tokens = element.getElementsByTagName(eStart).item(0).getTextContent().replaceAll("\n", "").trim().split(":");
+			evacStartHHMM[0] = Integer.parseInt(tokens[0]);
+			evacStartHHMM[1] = Integer.parseInt(tokens[1]);
+			evacPeakMins= Integer.parseInt(element.getElementsByTagName(ePeak).item(0).getTextContent().replaceAll("\n", "").trim());
+			
+			// Now read the geography file
+			readGeography();
+		} catch(Exception e){
+			//			abort(e.getMessage());
+			Main.abort(e) ;
+			// (if you just pass the message, the exception type is not passed on, so e.g. for a null pointer error one does not
+			// see anything.  kai, nov'17)
 		}
-		
-		logger.info("Loading configuration from '" + configFile + "'");
-		
-		// Validate the XML against the schema first
-		SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-		Schema schema = factory.newSchema(); // schema specified in file
-		Validator validator = schema.newValidator();
-		validator.validate(new StreamSource(new File(configFile)));
-		
-		// Now we can start reading; we don't need to add many checks since
-		// the XML is at this point already validated
-		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		DocumentBuilder db = dbf.newDocumentBuilder();
-		Document doc = db.parse(new FileInputStream(configFile));
-		
-	    // Normalisation is optional, but recommended
-	    // see http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
-	    doc.getDocumentElement().normalize();
-	    
-	    // Get the root element
-		Element root = (Element)doc.getElementsByTagName(eSimulation).item(0);
-		
-		// Get MATSim config file name
-		matSimFile = doc.getElementsByTagName(eMATSimFile).item(0).getTextContent().replaceAll("\n", "").trim();
-		
-		// Get the fire data
-		Element element = (Element)root.getElementsByTagName(eFireFile).item(0);
-		fireFile = element.getElementsByTagName(eName).item(0).getTextContent().replaceAll("\n", "").trim();
-		fireCoordinateSystem = element.getElementsByTagName(eCoordinates).item(0).getTextContent().replaceAll("\n", "").trim();
-		fireFileFormat = element.getElementsByTagName(eFormat).item(0).getTextContent();
-		
-		// Get the geography data
-		element = (Element)root.getElementsByTagName(eGeographyFile).item(0);
-		geographyFile = element.getElementsByTagName(eName).item(0).getTextContent().replaceAll("\n", "").trim();
-		
-		// Get the number of BDI agents
-		numBDIAgents = Integer.parseInt(root.getElementsByTagName(eNumBDI).item(0).getTextContent().replaceAll("\n", "").trim());
-		
-		// Get the traffic detour behaviour
-		element = (Element)root.getElementsByTagName(eTrafficBehaviour).item(0);
-		element = (Element)element.getElementsByTagName(ePreEvacDetour).item(0);
-		proportionWithRelatives = Double.parseDouble(root.getElementsByTagName(eProportion).item(0).getTextContent().replaceAll("\n", "").trim());
-		maxDistanceToRelatives = Integer.parseInt(root.getElementsByTagName(eRadiusInMtrs).item(0).getTextContent().replaceAll("\n", "").trim());
-
-		// Get the evacuation timing data
-		element = (Element)root.getElementsByTagName(eEvacuationTiming).item(0);
-		String[] tokens = element.getElementsByTagName(eStart).item(0).getTextContent().replaceAll("\n", "").trim().split(":");
-		evacStartHHMM[0] = Integer.parseInt(tokens[0]);
-		evacStartHHMM[1] = Integer.parseInt(tokens[1]);
-		evacPeakMins= Integer.parseInt(element.getElementsByTagName(ePeak).item(0).getTextContent().replaceAll("\n", "").trim());
-		
-		// Now read the geography file
-		readGeography();
-	}
+			
+			
+		}
 
 	private static void readGeography() throws Exception {
 		if (geographyFile == null) {
@@ -274,7 +283,7 @@ public class SimpleConfig {
 			locations.put(name, new Location(name, x, y, split));
 		}
 		
-        // Get the safe lines 
+        // Get the safe lines
         Element slines = (Element)root.getElementsByTagName(eSafeLines).item(0);
         nl = slines.getElementsByTagName(eSafeLine);
         for (int i = 0; i < nl.getLength(); i++) {
@@ -299,7 +308,7 @@ public class SimpleConfig {
     /**
      * Normalises the values of the given array, such that each value is divided
      * by the sum of all values.
-     * 
+     *
      * @param values
      * @return
      */
@@ -325,7 +334,7 @@ public class SimpleConfig {
      * Cumulates the values of the given array, such that in the returned array,
      * the value at position i is the sum of all values from index 0..i in the
      * input array.
-     * 
+     *
      * @param values
      * @return
      */
@@ -347,7 +356,7 @@ public class SimpleConfig {
      * that index. To ensure that at least one index is selected, make sure the
      * array is normalised, such that the cumulative probability for element
      * values[length-1] is 1.0.
-     * 
+     *
      * @param values
      *            cumulative probabilities associated with the indexes
      * @return the selected index in the range [0:values.length-1], or -1 if
