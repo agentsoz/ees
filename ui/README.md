@@ -1,5 +1,7 @@
 
 
+## An installation on Mac
+
 ### Prepare local http server
 
 ##### Install http server
@@ -116,13 +118,20 @@ DATADIR=~/Sites/data
 make
 make run
 ```
+(I think that we should change these instructions to something along the lines of
+```
+mvn clean install
+mvn exec:java -Dexec.mainClass="..." -Dexec.vmargs="=Xmx8000m" -Dexec.args="..."
+```
+)
+
 
 Then, it should say, in `~/.forever/serve.js.log`, something like
 ```
 Fri Nov 10 2017 11:51:43 GMT+1100 (AEDT): Bushfire UI server is listening on port 50001
 ```
 
-Now load `localhost/<username>/html` in the (preferably private) browser, where the `html` comes from `(*)` above.
+Now load `localhost/~<username>/html` in the (preferably private) browser, where the `html` comes from `(*)` above.
 
 Things that can happen
 * Emergency evacuation simulation window does not show up -- http server not running; or material not in right place for http server to find it
