@@ -130,8 +130,7 @@ public final class DRIVETODefaultActionHandler implements BDIActionHandler {
 						Object[] params = { currentLinkId.toString() };
 						agent.getActionContainer().register(MATSimActionList.DRIVETO, params);
 						agent.getActionContainer().get(MATSimActionList.DRIVETO).setState(ActionContent.State.FAILED);
-						// TODO: should add a new BLOCKED percept below but ok for now, dsingh 30/nov/17
-						//agent.getPerceptContainer().put(MATSimPerceptList.ARRIVED, params);
+						agent.getPerceptContainer().put(MATSimPerceptList.BLOCKED, params);
 						return true;
 					}
 				}

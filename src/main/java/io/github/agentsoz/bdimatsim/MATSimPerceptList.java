@@ -28,6 +28,6 @@ package io.github.agentsoz.bdimatsim;
 
 public final class MATSimPerceptList {
 	public static final String ARRIVED = "Arrived";
-	public static final String REQUESTLOCATION = "Request Location";
+	public static final String BLOCKED = "Blocked";
 }
 
