@@ -7,9 +7,9 @@ JAR=${BASEDIR}../target/bushfire-2.0.2-SNAPSHOT
 #############################################
 
 # where to install the web app
-WEBDIR=/var/www/html
+WEBDIR=~/Sites/html
 # where bushfire simulation data will live
-DATADIR=/var/www/data
+DATADIR=~/Sites/data
 
 #############################################
 ### END USER CONFIG

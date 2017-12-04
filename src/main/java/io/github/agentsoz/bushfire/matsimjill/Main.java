@@ -105,17 +105,16 @@ public class Main {
 		
 		// do some things for which you need a handle to matsim:
 		matsimModel.registerDataServer(dataServer);
+		// (yyyy this syntax indicates that there might be use cases without dataServer.  Is that the case?
+		// If not, I would rather pass it as a "forced" argument in matsimModel.init(...).  kai, dec'17)
+		
 		List<SafeLineMonitor> monitors = registerSafeLineMonitors(SimpleConfig.getSafeLines(), matsimModel);
 		
-		// do some things for which you need a handle to the matsim config:
-		Config config = matsimModel.loadAndPrepareConfig() ;
-		setSimStartTimesRelativeToAlert(dataServer, config, -10*60 );
-
 		// do some things for which you need a handle to the matsim scenario:
 		Scenario scenario = matsimModel.loadAndPrepareScenario() ;
+		setSimStartTimesRelativeToAlert(dataServer, scenario.getConfig(), -10*60 );
 		setupBlockageIfApplicable(scenario);
 		List<String> bdiAgentIDs = Utils.getBDIAgentIDs( scenario );
-		
 
 		// initialize and start jill (need the bdiAgentIDs, for which we need the material from before)
 		JillBDIModel jillmodel = initializeAndStartJillModel(dataServer, bdiAgentIDs, matsimModel, matsimModel.getAgentManager().getAgentDataContainer());

@@ -104,7 +104,7 @@ sudo port install forever
 Then
 ```
 cd examples/bushfire
-mvn clean install
+mvn clean install -DskipTests
 cd target
 unzip bushfire-2.0.2-SNAPSHOT-minimal.zip
 cd ../ui
@@ -120,7 +120,7 @@ make run
 ```
 (I think that we should change these instructions to something along the lines of
 ```
-mvn clean install
+mvn clean install -DskipTests
 mvn exec:java -Dexec.mainClass="..." -Dexec.vmargs="=Xmx8000m" -Dexec.args="..."
 ```
 )
