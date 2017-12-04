@@ -81,10 +81,6 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 	private static final String FIRE_DATA_MSG = "fire_data";
 	private Config config;
 	
-	public Config getConfig() {
-		return config;
-	}
-	
 	public static enum EvacRoutingMode {carFreespeed, carGlobalInformation}
 
 	private final Scenario scenario ;
@@ -170,14 +166,6 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 
 		this.agentManager = new PAAgentManager(eventsMonitors) ;
 
-	}
-	
-	public Config loadAndPrepareConfig() {
-		// this isn't really doing anything
-		
-		// yyyy make sure this is not called twice
-		
-		return this.config ;
 	}
 	
 	public Scenario loadAndPrepareScenario() {
@@ -435,6 +423,10 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 
 	public EventsManager getEvents() {
 		return this.qSim.getEventsManager() ;
+	}
+	
+	public Config getConfig() {
+		return config;
 	}
 	
 }
