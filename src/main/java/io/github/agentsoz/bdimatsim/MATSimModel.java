@@ -120,6 +120,16 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 		Config config = ConfigUtils.loadConfig( args[0] ) ;
 		parseAdditionalArguments(args, config);
 		config.network().setTimeVariantNetwork(true);
+		
+		scenario = ScenarioUtils.loadScenario(config) ;
+		
+		// make sure links don't have speed infinity (results in problems with the router):
+		for ( Link link : scenario.getNetwork().getLinks().values() ) {
+			final double veryLargeSpeed = 9999999999.;
+			if ( link.getFreespeed() > veryLargeSpeed ) {
+				link.setFreespeed(veryLargeSpeed);
+			}
+		}
 
 		config.plans().setActivityDurationInterpretation(ActivityDurationInterpretation.tryEndTimeThenDuration);
 
@@ -152,15 +162,6 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 
 		// ---
 
-		scenario = ScenarioUtils.loadScenario(config) ;
-
-		// make sure links don't have speed infinity (results in problems with the router):
-		for ( Link link : scenario.getNetwork().getLinks().values() ) {
-			final double veryLargeSpeed = 9999999999.;
-			if ( link.getFreespeed() > veryLargeSpeed ) {
-				link.setFreespeed(veryLargeSpeed);
-			}
-		}
 		
 		// ---
 
