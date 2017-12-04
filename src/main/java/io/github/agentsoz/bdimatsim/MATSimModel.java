@@ -8,6 +8,9 @@ import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.TransportMode;
 import org.matsim.api.core.v01.network.Link;
+import org.matsim.api.core.v01.population.Activity;
+import org.matsim.api.core.v01.population.Person;
+import org.matsim.api.core.v01.population.PlanElement;
 import org.matsim.core.api.experimental.events.EventsManager;
 import org.matsim.core.config.Config;
 import org.matsim.core.config.ConfigUtils;
@@ -77,7 +80,12 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 	private static final Logger logger = LoggerFactory.getLogger("");
 	public static final String MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR = "--matsim-output-directory";
 	private static final String FIRE_DATA_MSG = "fire_data";
-
+	private Config config;
+	
+	public Config getConfig() {
+		return config;
+	}
+	
 	public static enum EvacRoutingMode {carFreespeed, carGlobalInformation}
 
 	private final Scenario scenario ;
@@ -115,22 +123,22 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 	private Thread matsimThread;
 	@Inject private Replanner replanner;
 	
+	public MATSimModel(String matSimFile, String matsimOutputDirectory) {
+		// not the most elegant way of doing this ...
+		// yy maybe just pass the whole string from above and take apart ourselves?
+		this(
+		matsimOutputDirectory==null ?
+				new String[]{matSimFile} :
+				new String[]{ matSimFile, MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR, matsimOutputDirectory }
+		);
+	}
+	
 	public MATSimModel( String[] args) {
 
-		Config config = ConfigUtils.loadConfig( args[0] ) ;
+		config = ConfigUtils.loadConfig( args[0] ) ;
 		parseAdditionalArguments(args, config);
 		config.network().setTimeVariantNetwork(true);
 		
-		scenario = ScenarioUtils.loadScenario(config) ;
-		
-		// make sure links don't have speed infinity (results in problems with the router):
-		for ( Link link : scenario.getNetwork().getLinks().values() ) {
-			final double veryLargeSpeed = 9999999999.;
-			if ( link.getFreespeed() > veryLargeSpeed ) {
-				link.setFreespeed(veryLargeSpeed);
-			}
-		}
-
 		config.plans().setActivityDurationInterpretation(ActivityDurationInterpretation.tryEndTimeThenDuration);
 
 
@@ -162,13 +170,56 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 
 		// ---
 
+		scenario = ScenarioUtils.createScenario(config);
 		
 		// ---
 
 		this.agentManager = new PAAgentManager(eventsMonitors) ;
 
 	}
+	
+	public Config loadAndPrepareConfig() {
+		// this isn't really doing anything
+		
+		// yyyy make sure this is not called twice
+		
+		return this.config ;
+	}
+	
+	public Scenario loadAndPrepareScenario() {
+		
+		// yyyy make sure this is not called twice
 
+		ScenarioUtils.loadScenario(scenario) ;
+		
+		// make sure links don't have speed infinity (results in problems with the router; yy instead repair input files?):
+		for ( Link link : scenario.getNetwork().getLinks().values() ) {
+			final double veryLargeSpeed = 9999999999.;
+			if ( link.getFreespeed() > veryLargeSpeed ) {
+				link.setFreespeed(veryLargeSpeed);
+			}
+		}
+		
+		// move everything into the far future (yy maybe better repair input files?)
+		for ( Person person : scenario.getPopulation().getPersons().values() ) {
+			List<PlanElement> planElements = person.getSelectedPlan().getPlanElements() ;
+			int offset = planElements.size();
+			for ( PlanElement pe : planElements ) {
+				if ( pe instanceof Activity) {
+					((Activity) pe).setEndTime( Double.MAX_VALUE - offset );
+					offset-- ;
+				}
+			}
+		}
+		/* Dhirendra, it might be cleaner to do this in the input xml.  I have tried to remove the "fake" leg completely.
+		 * But then the agents don't have vehicles (yyyy although, on second thought, why??  we need to maintain
+		 * vehicles for mode choice).
+		 */
+		
+		return scenario ;
+	}
+	
+	
 	public final void init(List<String> bdiAgentIDs) {
 
 		// yy this could now be done in upstream code.  But since upstream code is user code, maybe we don't want it in there?  kai, nov'17
@@ -312,9 +363,10 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 		if(dataServer != null) agentsUpdateMessages.add(newEvent);
 	}
 
-	public final Scenario getScenario() {
-		return this.scenario ;
-	}
+//	public final Scenario getScenario() {
+//		return this.scenario ;
+//	}
+	// do we need/want this?
 
 	public void setEventHandlers(List<EventHandler> eventHandlers) {
 		this.eventHandlers = eventHandlers;
@@ -399,7 +451,7 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 	}
 
 	private void initialiseVisualisedAgents(){
-		Map<Id<Link>,? extends Link> links = this.getScenario().getNetwork().getLinks();
+		Map<Id<Link>,? extends Link> links = scenario.getNetwork().getLinks();
 		for(MobsimAgent agent: this.getMobsimDataProvider().getAgents().values()){
 			SimpleMessage m = new SimpleMessage();
 			m.name = "initAgent";
