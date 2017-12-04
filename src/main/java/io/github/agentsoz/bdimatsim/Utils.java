@@ -72,6 +72,13 @@ public final class Utils {
 			}
 			bDIagentIDs.add(id.toString());
 		}
+		
+		// assume in popgen you did something like
+		//     person.getAttributes().putAttribute("isBdiAgent", true/false ) ;
+		// you could now retrieve it via
+		//     person.getAttributes().getAttribute("isBdiAgent") ;
+		// kai, dec'17
+		
 		return bDIagentIDs;
 	}
 
