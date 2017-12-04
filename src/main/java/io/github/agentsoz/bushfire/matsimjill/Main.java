@@ -107,6 +107,10 @@ public class Main {
 		
 		MATSimModel matsimModel = initializeMATSim(dataServer);
 		
+		// the reason why this remains confused is, I think, that the scenario is read inside MATSim. it should rather
+		// be read outside, and then passed to matsim.  The problem with that is that this needs the matsim config, and
+		// thus the matsim config suddenly becomes part of the general scenario setup.  (In particular: time-dependent
+		// network case.)  ????
 		
 		if ( setup==Setup.blockage ) {
 			// todo later: configure this from elsewhere
