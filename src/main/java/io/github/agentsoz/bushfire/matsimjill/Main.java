@@ -24,6 +24,9 @@ import org.matsim.core.network.NetworkChangeEvent;
 import org.matsim.core.network.NetworkChangeEvent.ChangeType;
 import org.matsim.core.network.NetworkChangeEvent.ChangeValue;
 import org.matsim.core.network.NetworkUtils;
+import org.matsim.households.Household;
+import org.matsim.households.Households;
+import org.matsim.households.HouseholdsFactory;
 import org.slf4j.LoggerFactory;
 
 import ch.qos.logback.classic.Level;
