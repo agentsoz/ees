@@ -363,10 +363,10 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 		if(dataServer != null) agentsUpdateMessages.add(newEvent);
 	}
 
-//	public final Scenario getScenario() {
-//		return this.scenario ;
-//	}
-	// do we need/want this?
+	public final Scenario getScenario() {
+		// needed in the BDIActionHandlers!
+		return this.scenario ;
+	}
 
 	public void setEventHandlers(List<EventHandler> eventHandlers) {
 		this.eventHandlers = eventHandlers;
