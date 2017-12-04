@@ -158,6 +158,10 @@ VehicleLeavesTrafficEventHandler,
 						if ( monitor.getAgentId().equals(event.getDriverId() ) ) {
 							if ( monitor.getHandler().handle( monitor.getAgentId(), event.currentLinkId(), monitor.getEvent() ) ) {
 								toRemove.add(monitor) ;
+								Monitor arrivedMonitor = findMonitor(monitor.getAgentId(), MonitoredEventType.ArrivedAtDestination);
+								if (arrivedMonitor != null) {
+									toRemove.add(arrivedMonitor);
+								}
 							}
 						}
 					}
@@ -195,6 +199,10 @@ VehicleLeavesTrafficEventHandler,
 					if (monitor.getAgentId().equals(event.getPersonId()) && monitor.getLinkId().equals(event.getLinkId())) {
 						if(monitor.getHandler().handle(monitor.getAgentId(), monitor.getLinkId(), monitor.getEvent())) {
                             toRemove.add(monitor);
+						}
+						Monitor blockedMonitor = findMonitor(monitor.getAgentId(), MonitoredEventType.NextLinkBlocked);
+						if (blockedMonitor != null) {
+							toRemove.add(blockedMonitor);
 						}
 					}
 				} 
@@ -247,6 +255,20 @@ VehicleLeavesTrafficEventHandler,
 		}
 	}
 
+	/**
+	 * Returns a matching monitor for the given parameters
+	 * @param agentId
+	 * @param event
+	 * @return
+	 */
+	private Monitor findMonitor(Id<Person> agentId, MonitoredEventType event) {
+		for (Monitor monitor : monitors) {
+			if (monitor.getAgentId().equals(agentId) && monitor.getEvent() == event) {
+				return monitor;
+			}
+		}
+		return null;
+	}
 	/**
 	 * Internal structure used to store information about MATSim events to monitor
 	 * @author dsingh

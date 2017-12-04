@@ -106,20 +106,37 @@ public final class DRIVETODefaultActionHandler implements BDIActionHandler {
 
 		// Now register an event handler for when the agent arrives at the destination
 		PAAgent paAgent = model.getAgentManager().getAgent( agentID );
-		paAgent.getPerceptHandler().registerBDIPerceptHandler( paAgent.getAgentID(), MonitoredEventType.ArrivedAtDestination,
+		paAgent.getPerceptHandler().registerBDIPerceptHandler(paAgent.getAgentID(), MonitoredEventType.ArrivedAtDestination,
 				newLinkId.toString(), new BDIPerceptHandler() {
-			@Override
-			public boolean handle(Id<Person> agentId, Id<Link> linkId, MonitoredEventType monitoredEvent) {
-				PAAgent agent = model.getAgentManager().getAgent( agentId.toString() );
-				Object[] params = { linkId.toString() };
-				agent.getActionContainer().register(MATSimActionList.DRIVETO, params);
-				// (shouldn't this be earlier? --> there is a comment in the agent manager. kai, nov'17)
-				agent.getActionContainer().get(MATSimActionList.DRIVETO).setState(ActionContent.State.PASSED);
-				agent.getPerceptContainer().put(MATSimPerceptList.ARRIVED, params);
-				return true;
-			}
-		}
-				);
+					@Override
+					public boolean handle(Id<Person> agentId, Id<Link> linkId, MonitoredEventType monitoredEvent) {
+						PAAgent agent = model.getAgentManager().getAgent(agentId.toString());
+						Object[] params = {linkId.toString()};
+						agent.getActionContainer().register(MATSimActionList.DRIVETO, params);
+						// (shouldn't this be earlier? --> there is a comment in the agent manager. kai, nov'17)
+						agent.getActionContainer().get(MATSimActionList.DRIVETO).setState(ActionContent.State.PASSED);
+						agent.getPerceptContainer().put(MATSimPerceptList.ARRIVED, params);
+						return true;
+					}
+				}
+		);
+
+		// And another in case the agent gets stuck on the way
+		paAgent.getPerceptHandler().registerBDIPerceptHandler( paAgent.getAgentID(), MonitoredEventType.NextLinkBlocked,
+				null, new BDIPerceptHandler() {
+					@Override
+					public boolean handle(Id<Person> agentId, Id<Link> currentLinkId, MonitoredEventType monitoredEvent) {
+						PAAgent agent = model.getAgentManager().getAgent( agentId.toString() );
+						Object[] params = { currentLinkId.toString() };
+						agent.getActionContainer().register(MATSimActionList.DRIVETO, params);
+						agent.getActionContainer().get(MATSimActionList.DRIVETO).setState(ActionContent.State.FAILED);
+						// TODO: should add a new BLOCKED percept below but ok for now, dsingh 30/nov/17
+						//agent.getPerceptContainer().put(MATSimPerceptList.ARRIVED, params);
+						return true;
+					}
+				}
+		);
+
 		log.debug("------------------------------------------------------------------------------------------"); ;
 		return true;
 	}
