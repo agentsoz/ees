@@ -79,12 +79,12 @@ public class MainCampbellsCreek01Test {
 			} ;
 			TestUtils.checkSeveral(expectedCRC, actualCRCplans); 
 		}
-		{
-			long [] expectedCRC = {
-					CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/jill.out" )
-			} ;
-			TestUtils.checkSeveral(expectedCRC, actualCRCjill); 
-		}
+//		{
+//			long [] expectedCRC = {
+//					CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/jill.out" )
+//			} ;
+//			TestUtils.checkSeveral(expectedCRC, actualCRCjill);
+//		}
 	}
 
 }
