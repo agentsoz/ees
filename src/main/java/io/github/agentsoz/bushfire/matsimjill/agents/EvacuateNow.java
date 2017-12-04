@@ -39,10 +39,11 @@ import java.util.HashMap;
 public class EvacuateNow extends Plan { 
 
 	private PrintStream writer = null;
-	private Location shelterLocation = null;
+	private Resident resident;
 	
 	public EvacuateNow(Agent agent, Goal goal, String name) {
 		super(agent, goal, name);
+		resident = (Resident)agent;
 		this.writer = ((Resident)agent).writer;
 		body = steps;
 	}
@@ -52,18 +53,21 @@ public class EvacuateNow extends Plan {
 	}
 	
 	PlanStep[] steps = {
-			// Post the test action
 			new PlanStep() {
 				public void step() {
 					String bdiAction = MATSimActionList.DRIVETO;
-					shelterLocation = ((Resident)getAgent()).getShelterLocation();
-					double [] coords = shelterLocation.getCoordinates() ;
+					Location shelterLocation = resident.getShelterLocation();
+					double[] coords = shelterLocation.getCoordinates();
 					double evacTime = DataServer.getServer("Bushfire").getTime() + 5.0; // five secs from now
-					Object[] params = {bdiAction, coords, evacTime, EvacRoutingMode.carFreespeed};
+					Object[] params = new Object[4];
+					params[0] = bdiAction;
+					params[1] = coords;
+					params[2] = evacTime;
+					params[3] = (resident.getFailedAttempts() > 0) ? EvacRoutingMode.carGlobalInformation : EvacRoutingMode.carFreespeed;
 					// (could use EvacRoutingMode.carFreespeed.name() if you like that better. kai, dec'17)
-					writer.println("Resident "+getAgent().getId()+": will start evacuating to shelter in "+shelterLocation + " at time " + evacTime);
+					writer.println(resident.logPrefix() + "will start driving to shelter in "+ shelterLocation + " at time " + evacTime);
 					post(new EnvironmentAction(
-							Integer.toString(((Resident)getAgent()).getId()),
+							Integer.toString(resident.getId()),
 							bdiAction, params));
 					}
 			},
@@ -71,49 +75,18 @@ public class EvacuateNow extends Plan {
 			new PlanStep() {
 				public void step() {
 					// Must suspend the agent when waiting for external stimuli
-					writer.println("Resident " + getAgent().getId() + ": is driving to shelter in " + shelterLocation);
-					((Resident) getAgent()).suspend(true);
+					resident.suspend(true);
+					// All done, when we return from the above call
 				}
 			},
-			// All done
-			new PlanStep() {
-				public void step() {
-					if (((Resident)getAgent()).getFailedAttempts() == 0) {
-						writer.println("Resident "+getAgent().getId()+": has reached shelter in "+ shelterLocation);
-					} else {
-						// Failed
-						String bdiAction = MATSimActionList.DRIVETO;
-						shelterLocation = ((Resident)getAgent()).getShelterLocation();
-						double[] coords = shelterLocation.getCoordinates();
-						double evacTime = DataServer.getServer("Bushfire").getTime() + 5.0; // five secs from now
-						Object[] params = {bdiAction, coords, evacTime, EvacRoutingMode.carGlobalInformation};
-						writer.println("Resident "+getAgent().getId()+": will replan to shelter in "+shelterLocation + " at time " + evacTime);
-						post(new EnvironmentAction(
-								Integer.toString(((Resident)getAgent()).getId()),
-								bdiAction, params));
-					}
-				}
-			},
-			// Now wait till it is finished
-			new PlanStep() {
-				public void step() {
-					if (((Resident)getAgent()).getFailedAttempts() == 0) {
-						return;
-					}
-					// Must suspend the agent when waiting for external stimuli
-					writer.println("Resident " + getAgent().getId() + ": is driving to shelter in " + shelterLocation);
-					((Resident) getAgent()).suspend(true);
-				}
-			},
-			// All done
-			new PlanStep() {
-				public void step() {
-					if (((Resident) getAgent()).getFailedAttempts() == 0) {
-						return;
-					}
-					writer.println("Resident " + getAgent().getId() + ": has reached shelter in " + shelterLocation);
-				}
-			}
+			// NOTE:
+			// Since Jill does not support multiple intentions yet, any repeated postings of the
+			// RespondToFireAlert goal (if the agent gets a blocked percept and retries) will end up being treated as
+			// sub-goals of this plan, i.e., recursive sub-goals.
+			// Therefore any plan steps below this point will be executed AFTER returning from the recursive call,
+			// and is probably not what we want/expect from the execution engine. For now, avoid adding anything
+			// beyond this point.
+			// dsingh, 5/dec/17
 	};
 
 	@Override

@@ -2,6 +2,7 @@ package io.github.agentsoz.bushfire.matsimjill.agents;
 
 import java.io.PrintStream;
 
+import io.github.agentsoz.dataInterface.DataServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,22 +42,22 @@ public class Resident extends Agent implements io.github.agentsoz.bdiabm.Agent {
 
 	private final Logger logger = LoggerFactory.getLogger("io.github.agentsoz.bushfire");
 
-	public static final String BDI_PERCEPT_FIRE_ALERT = "FireAlert";
-	public PrintStream writer = null;
+	private static final String BDI_PERCEPT_FIRE_ALERT = "FireAlert";
+	private static final String BDI_PERCEPT_ARRIVED = "Arrived";
+	private static final String BDI_PERCEPT_BLOCKED = "Blocked";
+	private static final int MAX_FAILED_ATTEMPTS = 5;
+	PrintStream writer = null;
 	
 	private Location shelterLocation = null;
 
-	public int getFailedAttempts() {
-		return failedAttempts;
-	}
 
 	private int failedAttempts;
 
 	public Resident(String str) {
 		super(str);
 	}
-	
-	public Location getShelterLocation() {
+
+	Location getShelterLocation() {
 	  return shelterLocation;
 	}
 
@@ -76,7 +77,7 @@ public class Resident extends Agent implements io.github.agentsoz.bdiabm.Agent {
 	 */
 	@Override
 	public void finish() {
-		logger.trace("Resident"+getId()+" is terminating");
+		logger.trace(logPrefix()+" is terminating");
 	}
 
 	/** 
@@ -85,9 +86,25 @@ public class Resident extends Agent implements io.github.agentsoz.bdiabm.Agent {
 	 */
 	@Override
 	public void handlePercept(String perceptID, Object parameters) {
-		if (perceptID.equals(BDI_PERCEPT_FIRE_ALERT)) {
+		if (perceptID.equals(BDI_PERCEPT_ARRIVED)) {
+			// Agent just arrived at the shelter
+			writer.println(logPrefix() + "arrived at shelter in " + getShelterLocation());
+		} else if (perceptID.equals(BDI_PERCEPT_BLOCKED)) {
+			// Something went wrong while driving and the road is blocked
+			failedAttempts++;
+			writer.println(logPrefix() + "is blocked (" + parameters + ")");
+			if (failedAttempts < MAX_FAILED_ATTEMPTS) {
+				writer.println(logPrefix()
+						+ "will try to evacuate again (attempt "+(failedAttempts+1)
+						+ " of " + MAX_FAILED_ATTEMPTS
+						+ ")");
+				post(new RespondToFireAlert("RespondToFireAlert"));
+			} else {
+				writer.println(logPrefix() + "is giving up after " + failedAttempts + " failed attempts to evacuate");
+			}
+		} else if (perceptID.equals(BDI_PERCEPT_FIRE_ALERT)) {
 			// Received a fire alert so act now
-			writer.println("Resident "+getId()+" received fire alert at time "+parameters);
+			writer.println(logPrefix() + "received fire alert");
 			post(new RespondToFireAlert("RespondToFireAlert"));
 		}
 	}
@@ -106,14 +123,13 @@ public class Resident extends Agent implements io.github.agentsoz.bdiabm.Agent {
 	 */
 	@Override
 	public void updateAction(String actionID, ActionContent content) {
-		logger.debug("Agent"+getId()+" received action update: "+content);
+		logger.debug(logPrefix() + "received action update: "+content);
 		if (content.getAction_type().equals(MATSimActionList.DRIVETO)) {
 			if (content.getState()==State.PASSED) {
 				// Wake up the agent that was waiting for external action to finish
 				// FIXME: BDI actions put agent in suspend, which won't work for multiple intention stacks 
 				suspend(false);
 			} else if (content.getState()==State.FAILED) {
-				failedAttempts++;
 				// Wake up the agent that was waiting for external action to finish
 				// FIXME: BDI actions put agent in suspend, which won't work for multiple intention stacks
 				suspend(false);
@@ -128,7 +144,7 @@ public class Resident extends Agent implements io.github.agentsoz.bdiabm.Agent {
 	 */
 	@Override
 	public void init(String[] args) {
-		logger.warn("Resident"+getId()+" using a stub for io.github.agentsoz.bdiabm.Agent.init(...)");
+		logger.warn(logPrefix() + "using a stub for io.github.agentsoz.bdiabm.Agent.init(...)");
 	}
 
 	/**
@@ -138,7 +154,7 @@ public class Resident extends Agent implements io.github.agentsoz.bdiabm.Agent {
 	 */
 	@Override
 	public void start() {
-		logger.warn("Resident"+getId()+" using a stub for io.github.agentsoz.bdiabm.Agent.start()");
+		logger.warn(logPrefix() + "using a stub for io.github.agentsoz.bdiabm.Agent.start()");
 	}
 
 	/**
@@ -148,6 +164,14 @@ public class Resident extends Agent implements io.github.agentsoz.bdiabm.Agent {
 	 */
 	@Override
 	public void kill() {
-		logger.warn("Resident"+getId()+" using a stub for io.github.agentsoz.bdiabm.Agent.kill()");
+		logger.warn(logPrefix() + "using a stub for io.github.agentsoz.bdiabm.Agent.kill()");
+	}
+
+	int getFailedAttempts() {
+		return failedAttempts;
+	}
+
+	String logPrefix() {
+		return String.format("Time %05.0f Resident %-4s : ",DataServer.getServer("Bushfire").getTime(), getId());
 	}
 }
