@@ -2,6 +2,8 @@ package io.github.agentsoz.bdimatsim;
 
 import java.util.*;
 
+import com.google.gson.Gson;
+import io.github.agentsoz.dataInterface.DataClient;
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.TransportMode;
@@ -71,10 +73,11 @@ import javax.inject.Singleton;
 /**
  * @author QingyuChen, KaiNagel, Dhi Singh
  */
-public final class MATSimModel implements ABMServerInterface {
+public final class MATSimModel implements ABMServerInterface, DataClient {
 	private static final Logger logger = LoggerFactory.getLogger("");
 	public static final String MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR = "--matsim-output-directory";
-	
+	private static final String FIRE_DATA_MSG = "fire_data";
+
 	public static enum EvacRoutingMode {carFreespeed, carGlobalInformation}
 
 	private final Scenario scenario ;
@@ -358,7 +361,19 @@ public final class MATSimModel implements ABMServerInterface {
 
 	public final void registerDataServer( DataServer server ) {
 		dataServer = server;
+		dataServer.subscribe(this, FIRE_DATA_MSG);
 	}
+
+	@Override
+	public boolean dataUpdate(double time, String dataType, Object data) {
+		if (FIRE_DATA_MSG.equals(dataType)) {
+			logger.error("Received '{}', must do something with it\n{}",
+					dataType, new Gson().toJson(data));
+			return true;
+		}
+		return false;
+	}
+
 
 	public final double getTime() {
 		return this.qSim.getSimTimer().getTimeOfDay() ;
