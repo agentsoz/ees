@@ -127,28 +127,7 @@ public class Main {
 		// (matsimModel is passed in because of its query interface.  which is, however, never used.)
 		
 		matsimModel.init(bdiAgentIDs);
-		
-		// add the perception handlers for the blocked links.
-		if ( setup==Setup.blockage ) {
-			for ( String bdiAgentID : bdiAgentIDs ) {
-				PAAgent agent = matsimModel.getAgentManager().getAgent(bdiAgentID);
-				agent.getPerceptHandler().registerBDIPerceptHandler( agent.getAgentID(), MonitoredEventType.NextLinkBlocked,
-						null, new BDIPerceptHandler() {
-							@Override
-							public boolean handle(Id<Person> agentId, Id<Link> currentLinkId, MonitoredEventType monitoredEvent) {
-								PAAgent agent = matsimModel.getAgentManager().getAgent( agentId.toString() );
-								Object[] params = { currentLinkId.toString() };
-								agent.getActionContainer().register(MATSimActionList.DRIVETO, params);
-								agent.getActionContainer().get(MATSimActionList.DRIVETO).setState(ActionContent.State.FAILED);
-								// TODO: should add a new BLOCKED percept below but ok for now, dsingh 30/nov/17
-								//agent.getPerceptContainer().put(MATSimPerceptList.ARRIVED, params);
-								return true;
-							}
-						}
-				);
-			}
-		}
-		
+
 		while ( true ) {
 			
 			jillmodel.takeControl( matsimModel.getAgentManager().getAgentDataContainer() );
