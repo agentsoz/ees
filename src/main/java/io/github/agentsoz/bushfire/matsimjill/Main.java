@@ -10,20 +10,13 @@ import java.util.List;
 import java.util.TreeMap;
 
 import io.github.agentsoz.bdiabm.ABMServerInterface;
-import io.github.agentsoz.bdiabm.data.ActionContent;
 import io.github.agentsoz.bdiabm.data.AgentDataContainer;
-import io.github.agentsoz.bdimatsim.EventsMonitorRegistry.MonitoredEventType;
-import io.github.agentsoz.bdimatsim.MATSimActionList;
 import io.github.agentsoz.bdimatsim.MATSimModel;
 import io.github.agentsoz.bdimatsim.Utils;
-import io.github.agentsoz.nonmatsim.BDIPerceptHandler;
-import io.github.agentsoz.nonmatsim.PAAgent;
 import org.json.simple.parser.ParseException;
 import org.matsim.api.core.v01.Id;
-import org.matsim.api.core.v01.network.Link;
-import org.matsim.api.core.v01.population.Activity;
-import org.matsim.api.core.v01.population.Person;
-import org.matsim.api.core.v01.population.PlanElement;
+import org.matsim.api.core.v01.Scenario;
+import org.matsim.core.config.Config;
 import org.matsim.core.config.groups.QSimConfigGroup;
 import org.matsim.core.config.groups.QSimConfigGroup.StarttimeInterpretation;
 import org.matsim.core.events.handler.EventHandler;
@@ -103,33 +96,29 @@ public class Main {
 		// using a publish/subscribe or pull mechanism
 		DataServer dataServer = DataServer.getServer("Bushfire");
 		
-		PhoenixFireModule fireModel = initializeAndStartFireModel(dataServer);
+		initializeAndStartFireModel(dataServer);
 		
-		MATSimModel matsimModel = initializeMATSim(dataServer);
+		MATSimModel matsimModel = new MATSimModel( SimpleConfig.getMatSimFile(), matsimOutputDirectory );
 		
-		// the reason why this remains confused is, I think, that the scenario is read inside MATSim. it should rather
-		// be read outside, and then passed to matsim.  The problem with that is that this needs the matsim config, and
-		// thus the matsim config suddenly becomes part of the general scenario setup.  (In particular: time-dependent
-		// network case.)  ????
-		
-		if ( setup==Setup.blockage ) {
-			// todo later: configure this from elsewhere
-			int blockageTime = 5*60 ;
-			NetworkChangeEvent changeEvent = new NetworkChangeEvent(blockageTime);
-			changeEvent.setFreespeedChange(new ChangeValue(ChangeType.ABSOLUTE_IN_SI_UNITS, 0.));
-			changeEvent.addLink(matsimModel.getScenario().getNetwork().getLinks().get(Id.createLinkId(51825)));
-			NetworkUtils.addNetworkChangeEvent(matsimModel.getScenario().getNetwork(), changeEvent);
-		}
-		
-		// Register the safe lines monitors for MATSim
+		// do some things for which you need a handle to matsim:
+		matsimModel.registerDataServer(dataServer);
 		List<SafeLineMonitor> monitors = registerSafeLineMonitors(SimpleConfig.getSafeLines(), matsimModel);
 		
-		List<String> bdiAgentIDs = Utils.getBDIAgentIDs( matsimModel.getScenario() );
+		// do some things for which you need a handle to the matsim config:
+		Config config = matsimModel.loadAndPrepareConfig() ;
+		setSimStartTimesRelativeToAlert(dataServer, config, -10*60 );
+
+		// do some things for which you need a handle to the matsim scenario:
+		Scenario scenario = matsimModel.loadAndPrepareScenario() ;
+		setupBlockageIfApplicable(scenario);
+		List<String> bdiAgentIDs = Utils.getBDIAgentIDs( scenario );
 		
-		
+
+		// initialize and start jill (need the bdiAgentIDs, for which we need the material from before)
 		JillBDIModel jillmodel = initializeAndStartJillModel(dataServer, bdiAgentIDs, matsimModel, matsimModel.getAgentManager().getAgentDataContainer());
 		// (matsimModel is passed in because of its query interface.  which is, however, never used.)
 		
+		// initialize and start matsim (maybe rename?):
 		matsimModel.init(bdiAgentIDs);
 
 		while ( true ) {
@@ -143,7 +132,7 @@ public class Main {
 			// increment time
 			dataServer.stepTime();
 			
-			// yyyyyy fireModel??
+			// firemodel is updated elsewhere
 		}
 
 		// Write safe line statistics to file
@@ -157,43 +146,23 @@ public class Main {
 		DataServer.cleanup() ;
 	}
 	
-	private static MATSimModel initializeMATSim(DataServer dataServer) {
-		// Create the MATSim ABM model and register the data server
-		List<String> config = new ArrayList<>() ;
-		config.add( SimpleConfig.getMatSimFile() ) ;
-		if ( matsimOutputDirectory != null ) {
-			config.add( MATSimModel.MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR ) ;
-			config.add( matsimOutputDirectory ) ;
-		}
-		MATSimModel matsimModel = new MATSimModel(config.toArray(new String[config.size()] ));
-		matsimModel.registerDataServer(dataServer);
+	private static void setSimStartTimesRelativeToAlert(DataServer dataServer, Config config, int offset ) {
+		dataServer.setTime(getEvacuationStartTimeInSeconds(offset));
 		
-		// Set the simulation start time to 10 mins before the evacuation start, dsingh 24/nov/17
-		{
-			dataServer.setTime(getEvacuationStartTimeInSeconds(-600));
-
-			matsimModel.getScenario().getConfig().qsim().setStartTime(getEvacuationStartTimeInSeconds(-600)) ;
-			matsimModel.getScenario().getConfig().qsim().setSimStarttimeInterpretation(StarttimeInterpretation.onlyUseStarttime);
-			// yy in the longer run, a "minOfStarttimeAndEarliestActivityEnd" would be good. kai, nov'17
+		config.qsim().setStartTime(getEvacuationStartTimeInSeconds(offset)) ;
+		config.qsim().setSimStarttimeInterpretation(StarttimeInterpretation.onlyUseStarttime);
+		// yy in the longer run, a "minOfStarttimeAndEarliestActivityEnd" would be good. kai, nov'17
+	}
+	
+	private static void setupBlockageIfApplicable(Scenario scenario) {
+		if ( setup== Setup.blockage ) {
+			// todo later: configure this from elsewhere
+			int blockageTime = 5*60 ;
+			NetworkChangeEvent changeEvent = new NetworkChangeEvent(blockageTime);
+			changeEvent.setFreespeedChange(new ChangeValue(ChangeType.ABSOLUTE_IN_SI_UNITS, 0.));
+			changeEvent.addLink(scenario.getNetwork().getLinks().get(Id.createLinkId(51825)));
+			NetworkUtils.addNetworkChangeEvent(scenario.getNetwork(), changeEvent);
 		}
-		
-		// move everything into the far future:
-		for ( Person person : matsimModel.getScenario().getPopulation().getPersons().values() ) {
-			List<PlanElement> planElements = person.getSelectedPlan().getPlanElements() ;
-			int offset = planElements.size();
-			for ( PlanElement pe : planElements ) {
-				if ( pe instanceof Activity) {
-					((Activity) pe).setEndTime( Double.MAX_VALUE - offset );
-					offset-- ;
-				}
-			}
-		}
-		/* Dhirendra, it might be cleaner to do this in the input xml.  I have tried to remove the "fake" leg completely.
-		 * But then the agents don't have vehicles (yyyy although, on second thought, why??  we need to maintain
-		 * vehicles for mode choice).
-		 */
-		
-		return matsimModel ;
 	}
 	
 	private static JillBDIModel initializeAndStartJillModel(DataServer dataServer, List<String> bdiAgentIDs,
