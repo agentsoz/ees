@@ -111,6 +111,7 @@ public class PhoenixFireModule implements DataSource {
 				logger.info("step {} ({} mins): sending fire alert!!", String.format("%.0f", timestep), String.format("%.0f", time));
 				dataServer.publish(DataTypes.FIRE_ALERT, null);
 			}
+			dataServer.publish(DataTypes.FIRE_DATA, shapes);
 		}
 		lastUpdateTimeInMinutes = time;
 		Double nextTime = fire.higherKey(time);

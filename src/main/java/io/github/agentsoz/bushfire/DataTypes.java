@@ -28,6 +28,7 @@ public class DataTypes {
    public static final String MATSIM_AGENT_UPDATES = "matsim_agent_updates";
    public static final String FIRE                 = "fire";
    public static final String FIRE_ALERT           = "fire_alert";
+   public static final String FIRE_DATA            = "fire_data";
    public static final String EVAC_BROADCAST       = "evac_broadcast";
    public static final String BDI_AGENT_UPDATES    = "bdi_agent_updates";
    public static final String LOCATION             = "location";
