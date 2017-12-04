@@ -68,7 +68,6 @@ import io.github.agentsoz.bdiabm.ABMServerInterface;
 import io.github.agentsoz.bdiabm.data.AgentDataContainer;
 import io.github.agentsoz.dataInterface.DataServer;
 import io.github.agentsoz.nonmatsim.PAAgentManager;
-import io.github.agentsoz.nonmatsim.SimpleMessage;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -94,11 +93,6 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 	 * some blackboardy thing that sits between ABM and BDI. can be null (so non-final is ok)
 	 */
 	private DataServer dataServer;
-
-	/**
-	 * some message buffer for the data server
-	 */
-	private final List<SimpleMessage> agentsUpdateMessages = new ArrayList<>(); 
 
 	/**
 	 * A helper class essentially provided by the framework, used here.  The only direct connection to matsim are the event
@@ -302,11 +296,11 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 				}) ;
 				
 				// some infrastructure that makes results available: 
-				this.addMobsimListenerBinding().toInstance( new MobsimAfterSimStepListener() {
-					@Override public void notifyMobsimAfterSimStep(MobsimAfterSimStepEvent e) {
-						publishDataToExternalListeners();
-					}
-				} ) ;
+				//this.addMobsimListenerBinding().toInstance( new MobsimAfterSimStepListener() {
+				//	@Override public void notifyMobsimAfterSimStep(MobsimAfterSimStepEvent e) {
+				//		publishDataToExternalListeners();
+				//	}
+				//} ) ;
 
 				this.addMobsimListenerBinding().toInstance( mobsimDataProvider );
 			}
@@ -358,10 +352,6 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 		}
 
 	}
-	public final void addDateServerEvent(String type,SimpleMessage newEvent){
-		//This does mean that the visualiser should be registered very early or events may be thrown away
-		if(dataServer != null) agentsUpdateMessages.add(newEvent);
-	}
 
 	public final Scenario getScenario() {
 		// needed in the BDIActionHandlers!
@@ -386,13 +376,6 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 				throw new RuntimeException("unknown config option") ;
 			}
 		}
-	}
-
-	private final void publishDataToExternalListeners() {
-		if (dataServer != null) {
-			dataServer.publish( "matsim_agent_updates", agentsUpdateMessages.toArray(new SimpleMessage[agentsUpdateMessages.size()]) );
-		}
-		agentsUpdateMessages.clear();
 	}
 
 //	private final void setFreeSpeedExample(){
@@ -450,22 +433,6 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 		return this.getMobsimDataProvider().getAgent( Id.createPersonId(idString) ) ;
 	}
 
-	private void initialiseVisualisedAgents(){
-		Map<Id<Link>,? extends Link> links = scenario.getNetwork().getLinks();
-		for(MobsimAgent agent: this.getMobsimDataProvider().getAgents().values()){
-			SimpleMessage m = new SimpleMessage();
-			m.name = "initAgent";
-			//m.params = new Object[]{agent.getId().toString(),links.get(agent.getCurrentLinkId()).getFromNode().getId().toString(),(((MATSimReplannableAgent)agent).taxi == true?"T":"N")};
-			m.params = new Object[]{//agent.getId().toString(),links.get(agent.getCurrentLinkId()).getFromNode().getId().toString(),"T"};
-					agent.getId().toString(),
-					links.get(agent.getCurrentLinkId()).getFromNode().getCoord().getX(),
-					links.get(agent.getCurrentLinkId()).getFromNode().getCoord().getY()
-			};
-			this.addDateServerEvent("initAgent",m);
-		}
-		//interfaceV.sendInitialAgentData(new ArrayList<MobsimAgent>());
-	}
-	
 	public EventsManager getEvents() {
 		return this.qSim.getEventsManager() ;
 	}
