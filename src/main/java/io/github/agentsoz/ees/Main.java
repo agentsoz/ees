@@ -16,6 +16,9 @@ import io.github.agentsoz.bdimatsim.Utils;
 import org.json.simple.parser.ParseException;
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.Scenario;
+import org.matsim.api.core.v01.population.Activity;
+import org.matsim.api.core.v01.population.Person;
+import org.matsim.api.core.v01.population.PlanElement;
 import org.matsim.core.config.Config;
 import org.matsim.core.config.groups.QSimConfigGroup.StarttimeInterpretation;
 import org.matsim.core.events.handler.EventHandler;
@@ -100,17 +103,33 @@ public class Main {
 		
 		// do some things for which you need a handle to matsim:
 		matsimModel.registerDataServer(dataServer);
+		// (yyyy this syntax indicates that there might be use cases without dataServer.  Is that the case?
+		// If not, I would rather pass it as a "forced" argument in matsimModel.init(...).  kai, dec'17)
+		
 		List<SafeLineMonitor> monitors = registerSafeLineMonitors(SimpleConfig.getSafeLines(), matsimModel);
 		
-		// do some things for which you need a handle to the matsim config:
-		Config config = matsimModel.loadAndPrepareConfig() ;
-		setSimStartTimesRelativeToAlert(dataServer, config, -10*60 );
-
 		// do some things for which you need a handle to the matsim scenario:
 		Scenario scenario = matsimModel.loadAndPrepareScenario() ;
+		setSimStartTimesRelativeToAlert(dataServer, scenario.getConfig(), -10*60 );
+		// move everything into the far future (yy maybe better repair input files?)
+		for ( Person person : scenario.getPopulation().getPersons().values() ) {
+			List<PlanElement> planElements = person.getSelectedPlan().getPlanElements() ;
+			int offset = planElements.size();
+			for ( PlanElement pe : planElements ) {
+				if ( pe instanceof Activity) {
+					((Activity) pe).setEndTime( Double.MAX_VALUE - offset );
+					offset-- ;
+				}
+			}
+		}
+		/* Dhirendra, it might be cleaner to do this in the input xml.  I have tried to remove the "fake" leg completely.
+		 * But then the agents don't have vehicles (yyyy although, on second thought, why??  we need to maintain
+		 * vehicles for mode choice).
+		 */
+		
+		
 		setupBlockageIfApplicable(scenario);
 		List<String> bdiAgentIDs = Utils.getBDIAgentIDs( scenario );
-		
 
 		// initialize and start jill (need the bdiAgentIDs, for which we need the material from before)
 		JillBDIModel jillmodel = initializeAndStartJillModel(dataServer, bdiAgentIDs, matsimModel, matsimModel.getAgentManager().getAgentDataContainer());
