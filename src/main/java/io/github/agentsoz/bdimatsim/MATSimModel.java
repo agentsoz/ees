@@ -3,11 +3,17 @@ package io.github.agentsoz.bdimatsim;
 import java.util.*;
 
 import com.google.gson.Gson;
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.geom.Polygon;
 import io.github.agentsoz.dataInterface.DataClient;
+import org.matsim.api.core.v01.Coord;
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.TransportMode;
 import org.matsim.api.core.v01.network.Link;
+import org.matsim.api.core.v01.network.Node;
 import org.matsim.api.core.v01.population.Activity;
 import org.matsim.api.core.v01.population.Person;
 import org.matsim.api.core.v01.population.PlanElement;
@@ -37,6 +43,9 @@ import org.matsim.core.router.costcalculators.OnlyTimeDependentTravelDisutilityF
 import org.matsim.core.router.costcalculators.RandomizingTimeDistanceTravelDisutilityFactory;
 import org.matsim.core.scenario.ScenarioUtils;
 import org.matsim.core.trafficmonitoring.FreeSpeedTravelTime;
+import org.matsim.core.utils.geometry.CoordinateTransformation;
+import org.matsim.core.utils.geometry.GeometryUtils;
+import org.matsim.core.utils.geometry.transformations.TransformationFactory;
 import org.matsim.withinday.mobsim.MobsimDataProvider;
 import org.matsim.withinday.trafficmonitoring.TravelTimeCollector;
 import org.slf4j.Logger;
@@ -390,12 +399,53 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 
 	@Override
 	public boolean dataUpdate(double time, String dataType, Object data) {
+		CoordinateTransformation transform = TransformationFactory.getCoordinateTransformation(
+				TransformationFactory.WGS84, config.global().getCoordinateSystem());
+		
+		
 		if (FIRE_DATA_MSG.equals(dataType)) {
+			final String json = new Gson().toJson(data);
 			logger.error("Received '{}', must do something with it\n{}",
-					dataType, new Gson().toJson(data));
+					dataType, json);
+			logger.error("class =" + data.getClass() ) ;
+
+//			GeoJSONReader reader = new GeoJSONReader();
+//			Geometry geometry = reader.read(json);
+			// unfortunately does not work since the incoming data is not typed accordingly. kai, dec'17
+
+			Map<Double, Double[][]> map = (Map<Double, Double[][]>) data;
+			List<Polygon> polygons = new ArrayList<>() ;
+			// the map key is time; we just take the superset of all polygons
+			for ( Double[][] pairs : map.values() ) {
+				List<Coord> coords = new ArrayList<>() ;
+				for ( int ii=0 ; ii<pairs.length ; ii++ ) {
+					Coord coordOrig = new Coord( pairs[ii][0], pairs[ii][1]) ;
+					Coord coordTransformed = transform.transform(coordOrig) ;
+					coords.add( coordTransformed ) ;
+				}
+				Polygon polygon = GeometryUtils.createGeotoolsPolygon(coords);
+				polygons.add(polygon) ;
+			}
+
+			for ( Node node : scenario.getNetwork().getNodes().values() ) {
+				Point point = GeometryUtils.createGeotoolsPoint( node.getCoord() ) ;
+				for ( Polygon polygon : polygons ) {
+					if (polygon.contains(point)) {
+						logger.warn("node {} is IN fire area", node.getId());
+					} else {
+//						logger.warn("node {} is OUTSIDE fire area", node.getId());
+					}
+				}
+			}
+//			Map map = (Map) data;
+//			for ( Iterator it = map.entrySet().iterator() ; it.hasNext() ; ) {
+//				Map.Entry entry = (Map.Entry) it.next();
+//				logger.error("key={}, value={}", entry.getKey(), entry.getValue());
+//			}
 			return true;
 		}
 		return false;
+		
 	}
 
 
