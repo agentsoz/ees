@@ -191,22 +191,6 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 			}
 		}
 		
-		// move everything into the far future (yy maybe better repair input files?)
-		for ( Person person : scenario.getPopulation().getPersons().values() ) {
-			List<PlanElement> planElements = person.getSelectedPlan().getPlanElements() ;
-			int offset = planElements.size();
-			for ( PlanElement pe : planElements ) {
-				if ( pe instanceof Activity) {
-					((Activity) pe).setEndTime( Double.MAX_VALUE - offset );
-					offset-- ;
-				}
-			}
-		}
-		/* Dhirendra, it might be cleaner to do this in the input xml.  I have tried to remove the "fake" leg completely.
-		 * But then the agents don't have vehicles (yyyy although, on second thought, why??  we need to maintain
-		 * vehicles for mode choice).
-		 */
-
 		scenarioLoaded=true ;
 		return scenario ;
 	}
