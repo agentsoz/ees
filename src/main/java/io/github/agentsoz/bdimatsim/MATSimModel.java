@@ -31,6 +31,7 @@ import org.matsim.core.mobsim.framework.listeners.MobsimInitializedListener;
 import org.matsim.core.mobsim.qsim.QSim;
 import org.matsim.core.router.NetworkRoutingProvider;
 import org.matsim.core.router.costcalculators.OnlyTimeDependentTravelDisutilityFactory;
+import org.matsim.core.router.costcalculators.TravelDisutilityFactory;
 import org.matsim.core.scenario.ScenarioUtils;
 import org.matsim.core.trafficmonitoring.FreeSpeedTravelTime;
 import org.matsim.core.utils.geometry.CoordinateTransformation;
@@ -77,7 +78,8 @@ import javax.inject.Singleton;
 public final class MATSimModel implements ABMServerInterface, DataClient {
 	private static final Logger logger = LoggerFactory.getLogger("");
 	public static final String MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR = "--matsim-output-directory";
-	private static final String FIRE_DATA_MSG = "fire_data";
+	static final String FIRE_DATA_MSG = "fire_data";
+	private final EvacConfig evacConfig;
 	private Config config;
 	
 	public static enum EvacRoutingMode {carFreespeed, carGlobalInformation}
@@ -114,6 +116,8 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 	
 	private boolean scenarioLoaded = false ;
 	
+	private Set<Id<Link>> linksInFireArea = new HashSet<>() ;
+	
 	public MATSimModel(String matSimFile, String matsimOutputDirectory) {
 		// not the most elegant way of doing this ...
 		// yy maybe just pass the whole string from above and take apart ourselves?
@@ -138,6 +142,8 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 
 		config.controler().setWritePlansInterval(1);
 		config.controler().setOverwriteFileSetting( OverwriteFileSetting.deleteDirectoryIfExists );
+		
+		evacConfig = ConfigUtils.addOrGetModule(config,EvacConfig.class) ;
 		
 		// we have to declare those routingModes where we want to use the network router:
 		{
@@ -235,7 +241,10 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 //					final RandomizingTimeDistanceTravelDisutilityFactory disutilityFactory
 //							= new RandomizingTimeDistanceTravelDisutilityFactory(routingMode, getConfig().planCalcScore());
 //					disutilityFactory.setSigma(0.) ;
-					OnlyTimeDependentTravelDisutilityFactory disutilityFactory = new OnlyTimeDependentTravelDisutilityFactory();;
+					TravelDisutilityFactory disutilityFactory = new OnlyTimeDependentTravelDisutilityFactory();
+					if ( evacConfig.getSetup()== EvacConfig.Setup.fireArea ) {
+						disutilityFactory = new EvacTravelDisutility.Factory(linksInFireArea);
+					}
 					addTravelDisutilityFactoryBinding(routingMode).toInstance(disutilityFactory);
 				}
 				{
@@ -250,7 +259,10 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 //					final RandomizingTimeDistanceTravelDisutilityFactory disutilityFactory
 //							= new RandomizingTimeDistanceTravelDisutilityFactory(routingMode, getConfig().planCalcScore());
 //					disutilityFactory.setSigma(0.) ;
-					OnlyTimeDependentTravelDisutilityFactory disutilityFactory = new OnlyTimeDependentTravelDisutilityFactory();;
+					TravelDisutilityFactory disutilityFactory = new OnlyTimeDependentTravelDisutilityFactory();
+					if ( evacConfig.getSetup()== EvacConfig.Setup.fireArea ) {
+						disutilityFactory = new EvacTravelDisutility.Factory(linksInFireArea);
+					}
 					addTravelDisutilityFactoryBinding(routingMode).toInstance(disutilityFactory);
 				}
 		
@@ -377,56 +389,14 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 
 	@Override
 	public boolean dataUpdate(double time, String dataType, Object data) {
-		CoordinateTransformation transform = TransformationFactory.getCoordinateTransformation(
-				TransformationFactory.WGS84, config.global().getCoordinateSystem());
-		
-		
-		if (FIRE_DATA_MSG.equals(dataType)) {
-			final String json = new Gson().toJson(data);
-			logger.error("Received '{}', must do something with it\n{}",
-					dataType, json);
-			logger.error("class =" + data.getClass() ) ;
-
-//			GeoJSONReader reader = new GeoJSONReader();
-//			Geometry geometry = reader.read(json);
-			// unfortunately does not work since the incoming data is not typed accordingly. kai, dec'17
-
-			Map<Double, Double[][]> map = (Map<Double, Double[][]>) data;
-			List<Polygon> polygons = new ArrayList<>() ;
-			// the map key is time; we just take the superset of all polygons
-			for ( Double[][] pairs : map.values() ) {
-				List<Coord> coords = new ArrayList<>() ;
-				for ( int ii=0 ; ii<pairs.length ; ii++ ) {
-					Coord coordOrig = new Coord( pairs[ii][0], pairs[ii][1]) ;
-					Coord coordTransformed = transform.transform(coordOrig) ;
-					coords.add( coordTransformed ) ;
-				}
-				Polygon polygon = GeometryUtils.createGeotoolsPolygon(coords);
-				polygons.add(polygon) ;
-			}
-
-			for ( Node node : scenario.getNetwork().getNodes().values() ) {
-				Point point = GeometryUtils.createGeotoolsPoint( node.getCoord() ) ;
-				for ( Polygon polygon : polygons ) {
-					if (polygon.contains(point)) {
-						logger.warn("node {} is IN fire area", node.getId());
-					} else {
-//						logger.warn("node {} is OUTSIDE fire area", node.getId());
-					}
-				}
-			}
-//			Map map = (Map) data;
-//			for ( Iterator it = map.entrySet().iterator() ; it.hasNext() ; ) {
-//				Map.Entry entry = (Map.Entry) it.next();
-//				logger.error("key={}, value={}", entry.getKey(), entry.getValue());
-//			}
-			return true;
+		if ( evacConfig.getSetup()== EvacConfig.Setup.fireArea ) {
+			// yyyyyy is this called in every time step, or just every 5 min or so?
+			return EvacTravelDisutility.determineLinksInFireArea(dataType, data, config, linksInFireArea, scenario);
+		} else {
+			return true ;
 		}
-		return false;
-		
 	}
-
-
+	
 	public final double getTime() {
 		return this.qSim.getSimTimer().getTimeOfDay() ;
 	}

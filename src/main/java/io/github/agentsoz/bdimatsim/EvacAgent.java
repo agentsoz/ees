@@ -121,12 +121,12 @@ class EvacAgent implements MobsimDriverAgent, HasPerson, PlanAgent, HasModifiabl
 			// (otherwise it will fail, but we leave this to the delegate)
 			
 			PlanElement nextPlanElement = plan.getPlanElements().get(index+1) ;
-//			log.warn( "next plan element=" + nextPlanElement );
+			log.trace( "next plan element=" + nextPlanElement );
 			if ( nextPlanElement instanceof Leg ) {
 				if ( 
 						//planWasModified || 
 						((Leg)nextPlanElement).getRoute()==null ) {
-//					log.warn("leg has no route; recomputing next trip") ;
+					log.trace("leg has no route; recomputing next trip") ;
 					Activity act = (Activity) basicAgentDelegate.getCurrentPlanElement() ;
 					if ( !tripRouter.getStageActivityTypes().isStageActivity(act.getType()) ) {
 						// (= we just ended a "real" activity)
@@ -134,20 +134,21 @@ class EvacAgent implements MobsimDriverAgent, HasPerson, PlanAgent, HasModifiabl
 						Trip trip = TripStructureUtils.findTripStartingAtActivity(act, this.getModifiablePlan(), 
 								tripRouter.getStageActivityTypes() ) ;
 						String mainMode = tripRouter.getMainModeIdentifier().identifyMainMode(trip.getTripElements()) ;
-						log.warn("identified main mode=" + mainMode ) ;
-//						String mainMode = ((Leg) nextPlanElement).getMode() ;
-//						log.warn("arrrgghhh yyyyyy; routing mode directly from leg: " + mainMode ) ;
+						log.debug("identified main mode=" + mainMode ) ;
 						editTrips.replanFutureTrip(trip, this.getModifiablePlan(), mainMode, now ) ;
 						
 						Trip newTrip = TripStructureUtils.findTripStartingAtActivity(act, this.getModifiablePlan(), 
 								tripRouter.getStageActivityTypes() ) ;
-						if ( ! ( trip.toString().equals(newTrip.toString()) ) ) {
-//							log.warn( "prevTrip:\t" + trip.toString() );
-//							log.warn("prevRoute:\t" + trip.getLegsOnly().get(0).getRoute().toString()) ;
-//							log.warn("newRoute:\t" + newTrip.getLegsOnly().get(0).getRoute().toString()) ;
-//							log.warn( "newTrip:\t" + newTrip.toString() );
-//							log.warn("");
-						}
+
+						// something in the following is a null pointer ... which is triggered even
+						// when the log level is above debug.  kai, dec'17
+//						if ( ! ( trip.toString().equals(newTrip.toString()) ) ) {
+//							log.trace( "prevTrip:\t" + trip.toString() );
+//							log.trace("prevRoute:\t" + trip.getLegsOnly().get(0).getRoute().toString()) ;
+//							log.trace("newRoute:\t" + newTrip.getLegsOnly().get(0).getRoute().toString()) ;
+//							log.trace( "newTrip:\t" + newTrip.toString() );
+//							log.trace("");
+//						}
 						
 					}
 				}
