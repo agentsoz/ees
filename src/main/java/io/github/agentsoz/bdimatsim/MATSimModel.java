@@ -122,6 +122,8 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 	private Thread matsimThread;
 	@Inject private Replanner replanner;
 	
+	private boolean scenarioLoaded = false ;
+	
 	public MATSimModel(String matSimFile, String matsimOutputDirectory) {
 		// not the most elegant way of doing this ...
 		// yy maybe just pass the whole string from above and take apart ourselves?
@@ -178,8 +180,6 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 	}
 	
 	public Scenario loadAndPrepareScenario() {
-		
-		// yyyy make sure this is not called twice
 
 		ScenarioUtils.loadScenario(scenario) ;
 		
@@ -206,13 +206,17 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 		 * But then the agents don't have vehicles (yyyy although, on second thought, why??  we need to maintain
 		 * vehicles for mode choice).
 		 */
-		
+
+		scenarioLoaded=true ;
 		return scenario ;
 	}
 	
 	
 	public final void init(List<String> bdiAgentIDs) {
-
+		if ( !scenarioLoaded ) {
+			loadAndPrepareScenario() ;
+		}
+		
 		// yy this could now be done in upstream code.  But since upstream code is user code, maybe we don't want it in there?  kai, nov'17
 		for(String agentId: bdiAgentIDs) 
 		{
