@@ -3,6 +3,7 @@
  */
 package io.github.agentsoz.ees;
 
+import io.github.agentsoz.bdimatsim.EvacConfig;
 import io.github.agentsoz.bdimatsim.MATSimModel;
 import io.github.agentsoz.util.TestUtils;
 import org.apache.log4j.Logger;
@@ -33,7 +34,7 @@ public class BlockageCampbellsCreek01Test {
 				"--seed", "12345",
 				"--safeline-output-file-pattern", "scenarios/campbells-creek-01/safeline.%d%.out",
 				MATSimModel.MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR, utils.getOutputDirectory(),
-				Main.SETUP_INDICATOR, Main.Setup.blockage.name() ,
+				Main.SETUP_INDICATOR, EvacConfig.Setup.blockage.name() ,
 				"--jillconfig", "--config={"+
 						"agents:[{classname:io.github.agentsoz.ees.agents.Resident, args:null, count:1}],"+
 						"logLevel: WARN,"+

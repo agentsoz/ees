@@ -11,6 +11,7 @@ import java.util.TreeMap;
 
 import io.github.agentsoz.bdiabm.ABMServerInterface;
 import io.github.agentsoz.bdiabm.data.AgentDataContainer;
+import io.github.agentsoz.bdimatsim.EvacConfig;
 import io.github.agentsoz.bdimatsim.MATSimModel;
 import io.github.agentsoz.bdimatsim.Utils;
 import org.json.simple.parser.ParseException;
@@ -20,6 +21,7 @@ import org.matsim.api.core.v01.population.Activity;
 import org.matsim.api.core.v01.population.Person;
 import org.matsim.api.core.v01.population.PlanElement;
 import org.matsim.core.config.Config;
+import org.matsim.core.config.ConfigUtils;
 import org.matsim.core.config.groups.QSimConfigGroup.StarttimeInterpretation;
 import org.matsim.core.events.handler.EventHandler;
 import org.matsim.core.network.NetworkChangeEvent;
@@ -67,15 +69,17 @@ public class Main {
 	private static Logger logger;
 	
 	public static final String SETUP_INDICATOR="--setup" ;
-	public static enum Setup { standard, blockage }
-	private static Setup setup = Setup.standard ;
+	private static EvacConfig.Setup setup = EvacConfig.Setup.standard ;
 
 	// Defaults
 	private static String logFile = Main.class.getSimpleName() + ".log";
 	private static Level logLevel = Level.INFO;
 	private static String[] jillInitArgs = null;
 	private static String matsimOutputDirectory;
-	private static String safelineOutputFilePattern = "./safeline.%d%.csv"; 
+	private static String safelineOutputFilePattern = "./safeline.%d%.csv";
+	
+	// yyyyyy careful; the above all stay from one test to the next (if not in separate
+	// JVMs).  kai, dec'17
 
 	public Main() {
 
@@ -100,6 +104,12 @@ public class Main {
 		initializeAndStartFireModel(dataServer);
 		
 		MATSimModel matsimModel = new MATSimModel( SimpleConfig.getMatSimFile(), matsimOutputDirectory );
+		
+		logger.warn("setup=" + setup ) ;
+		
+		EvacConfig evacConfig = ConfigUtils.addOrGetModule(matsimModel.getConfig(), EvacConfig.class);;
+		evacConfig.setSetup(setup);
+		
 		
 		// do some things for which you need a handle to matsim:
 		matsimModel.registerDataServer(dataServer);
@@ -172,7 +182,7 @@ public class Main {
 	}
 	
 	private static void setupBlockageIfApplicable(Scenario scenario) {
-		if ( setup== Setup.blockage ) {
+		if ( setup== EvacConfig.Setup.blockage ) {
 			// todo later: configure this from elsewhere
 			int blockageTime = 5*60 ;
 			NetworkChangeEvent changeEvent = new NetworkChangeEvent(blockageTime);
@@ -349,7 +359,7 @@ public class Main {
 				case Main.SETUP_INDICATOR:
 					if(i+1<args.length) {
 						i++ ;
-						setup = Setup.valueOf(args[i]) ;
+						setup = EvacConfig.Setup.valueOf(args[i]) ;
 					}
 					break;
 			default:
