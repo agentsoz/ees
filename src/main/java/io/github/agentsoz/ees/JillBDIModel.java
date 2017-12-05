@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.PriorityQueue;
 
+import io.github.agentsoz.util.evac.PerceptList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +35,6 @@ import io.github.agentsoz.abmjill.JillModel;
 import io.github.agentsoz.bdiabm.ABMServerInterface;
 import io.github.agentsoz.bdiabm.data.AgentDataContainer;
 import io.github.agentsoz.bdiabm.data.AgentStateList;
-import io.github.agentsoz.util.evac.DataTypes;
 import io.github.agentsoz.util.Time;
 import io.github.agentsoz.dataInterface.DataClient;
 import io.github.agentsoz.dataInterface.DataServer;
@@ -91,7 +91,7 @@ public class JillBDIModel extends JillModel implements DataClient {
 			ABMServerInterface abmServer,
 			Object[] params) 
 	{
-		dataServer.subscribe(this, DataTypes.FIRE_ALERT);
+		dataServer.subscribe(this, PerceptList.FIRE_ALERT);
 
 		// Initialise the Jill model
 		// params[] contains the list of agent names to create
@@ -110,7 +110,7 @@ public class JillBDIModel extends JillModel implements DataClient {
 	@Override
 	public boolean dataUpdate(double time, String dataType, Object data) {
 		switch (dataType) {
-		case DataTypes.FIRE_ALERT:
+		case PerceptList.FIRE_ALERT:
 			fireAlertTime = time;
 			return true;
 		};

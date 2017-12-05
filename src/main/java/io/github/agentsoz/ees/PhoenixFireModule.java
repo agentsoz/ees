@@ -35,7 +35,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 import io.github.agentsoz.util.Time;
-import io.github.agentsoz.util.evac.DataTypes;
+import io.github.agentsoz.util.evac.PerceptList;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -104,21 +104,21 @@ public class PhoenixFireModule implements DataSource {
 		// irrespective of when the fire actually starts
 		if (!fireAlertSent && evacStartInSeconds > 0.0 && timestep >= evacStartInSeconds) { 
 			logger.info("step {} ({} mins): sending fire alert!!", String.format("%.0f", timestep), String.format("%.0f", time));
-			dataServer.publish(DataTypes.FIRE_ALERT, null);
+			dataServer.publish(PerceptList.FIRE_ALERT, null);
 			fireAlertSent = true;
 		}
 		if (!shapes.isEmpty()) {
 			// If evac start not explicitly set, then send alert at fire start
 			if (!fireAlertSent && evacStartInSeconds == 0.0) {
 				logger.info("step {} ({} mins): sending fire alert!!", String.format("%.0f", timestep), String.format("%.0f", time));
-				dataServer.publish(DataTypes.FIRE_ALERT, null);
+				dataServer.publish(PerceptList.FIRE_ALERT, null);
 			}
-			dataServer.publish(DataTypes.FIRE_DATA, shapes);
+			dataServer.publish(PerceptList.FIRE_DATA, shapes);
 		}
 		lastUpdateTimeInMinutes = time;
 		Double nextTime = fire.higherKey(time);
 		if (nextTime != null) {
-			dataServer.registerTimedUpdate(DataTypes.FIRE, this, Time.convertTime(nextTime, Time.TimestepUnit.MINUTES, timestepUnit));
+			dataServer.registerTimedUpdate(PerceptList.FIRE, this, Time.convertTime(nextTime, Time.TimestepUnit.MINUTES, timestepUnit));
 		}
 		return shapes;
 	}
@@ -135,7 +135,7 @@ public class PhoenixFireModule implements DataSource {
 		//	logger.warn("Fire module started, but has no data to publish, so will do nothing");
 		//	return;
 		//}
-		dataServer.registerTimedUpdate(DataTypes.FIRE, this, evacStartInSeconds);
+		dataServer.registerTimedUpdate(PerceptList.FIRE, this, evacStartInSeconds);
 				//convertTime(fire.firstKey(), TimestepUnit.MINUTES, timestepUnit));
 	}
 

@@ -3,6 +3,7 @@ package io.github.agentsoz.ees.agents;
 import java.io.PrintStream;
 
 import io.github.agentsoz.dataInterface.DataServer;
+import io.github.agentsoz.util.evac.PerceptList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,8 +44,6 @@ public class Resident extends Agent implements io.github.agentsoz.bdiabm.Agent {
 	private final Logger logger = LoggerFactory.getLogger("io.github.agentsoz.ees");
 
 	private static final String BDI_PERCEPT_FIRE_ALERT = "FireAlert";
-	private static final String BDI_PERCEPT_ARRIVED = "Arrived";
-	private static final String BDI_PERCEPT_BLOCKED = "Blocked";
 	private static final int MAX_FAILED_ATTEMPTS = 5;
 	PrintStream writer = null;
 	
@@ -86,10 +85,10 @@ public class Resident extends Agent implements io.github.agentsoz.bdiabm.Agent {
 	 */
 	@Override
 	public void handlePercept(String perceptID, Object parameters) {
-		if (perceptID.equals(BDI_PERCEPT_ARRIVED)) {
+		if (perceptID.equals(PerceptList.ARRIVED)) {
 			// Agent just arrived at the shelter
 			writer.println(logPrefix() + "arrived at shelter in " + getShelterLocation());
-		} else if (perceptID.equals(BDI_PERCEPT_BLOCKED)) {
+		} else if (perceptID.equals(PerceptList.BLOCKED)) {
 			// Something went wrong while driving and the road is blocked
 			failedAttempts++;
 			writer.println(logPrefix() + "is blocked (" + parameters + ")");
