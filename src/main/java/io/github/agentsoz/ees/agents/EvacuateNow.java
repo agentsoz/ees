@@ -1,7 +1,7 @@
 package io.github.agentsoz.ees.agents;
 
 import io.github.agentsoz.abmjill.genact.EnvironmentAction;
-import io.github.agentsoz.bdimatsim.MATSimActionList;
+import io.github.agentsoz.util.evac.ActionList;
 import io.github.agentsoz.bdimatsim.MATSimModel.EvacRoutingMode;
 import io.github.agentsoz.util.Location;
 import io.github.agentsoz.dataInterface.DataServer;
@@ -55,7 +55,7 @@ public class EvacuateNow extends Plan {
 	PlanStep[] steps = {
 			new PlanStep() {
 				public void step() {
-					String bdiAction = MATSimActionList.DRIVETO;
+					String bdiAction = ActionList.DRIVETO;
 					Location shelterLocation = resident.getShelterLocation();
 					double[] coords = shelterLocation.getCoordinates();
 					double evacTime = DataServer.getServer("Bushfire").getTime() + 5.0; // five secs from now

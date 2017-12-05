@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import io.github.agentsoz.bdiabm.data.ActionContent;
 import io.github.agentsoz.bdiabm.data.ActionContent.State;
-import io.github.agentsoz.bdimatsim.MATSimActionList;
+import io.github.agentsoz.util.evac.ActionList;
 import io.github.agentsoz.util.Location;
 import io.github.agentsoz.ees.SimpleConfig;
 
@@ -124,7 +124,7 @@ public class Resident extends Agent implements io.github.agentsoz.bdiabm.Agent {
 	@Override
 	public void updateAction(String actionID, ActionContent content) {
 		logger.debug(logPrefix() + "received action update: "+content);
-		if (content.getAction_type().equals(MATSimActionList.DRIVETO)) {
+		if (content.getAction_type().equals(ActionList.DRIVETO)) {
 			if (content.getState()==State.PASSED) {
 				// Wake up the agent that was waiting for external action to finish
 				// FIXME: BDI actions put agent in suspend, which won't work for multiple intention stacks 
