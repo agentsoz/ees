@@ -1,9 +1,9 @@
-package io.github.agentsoz.bushfire.matsimjill.agents;
+package io.github.agentsoz.ees.agents;
 
 import io.github.agentsoz.abmjill.genact.EnvironmentAction;
 import io.github.agentsoz.bdimatsim.MATSimActionList;
 import io.github.agentsoz.bdimatsim.MATSimModel.EvacRoutingMode;
-import io.github.agentsoz.bushfire.datamodels.Location;
+import io.github.agentsoz.util.Location;
 import io.github.agentsoz.dataInterface.DataServer;
 
 /*

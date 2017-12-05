@@ -1,4 +1,4 @@
-package io.github.agentsoz.bushfire.matsimjill.agents;
+package io.github.agentsoz.ees.agents;
 
 /*
  * #%L
@@ -25,7 +25,7 @@ package io.github.agentsoz.bushfire.matsimjill.agents;
 import io.github.agentsoz.jill.lang.Goal;
 import io.github.agentsoz.jill.lang.GoalInfo;
 
-@GoalInfo(hasPlans={"io.github.agentsoz.bushfire.matsimjill.agents.EvacuateNow"})
+@GoalInfo(hasPlans={"io.github.agentsoz.ees.agents.EvacuateNow"})
 public class RespondToFireAlert extends Goal {
 	public RespondToFireAlert(String name) {
 		super(name);

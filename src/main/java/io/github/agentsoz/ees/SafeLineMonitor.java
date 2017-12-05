@@ -1,11 +1,9 @@
-package io.github.agentsoz.bushfire.matsimjill;
+package io.github.agentsoz.ees;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeMap;
 
 import org.matsim.api.core.v01.Id;
@@ -49,7 +47,7 @@ import com.vividsolutions.jts.geom.LineString;
 
 import io.github.agentsoz.bdimatsim.MATSimModel;
 import io.github.agentsoz.bdimatsim.Utils;
-import io.github.agentsoz.bushfire.datamodels.Location;
+import io.github.agentsoz.util.Location;
 
 public class SafeLineMonitor implements LinkEnterEventHandler, LinkLeaveEventHandler,
     PersonArrivalEventHandler, PersonDepartureEventHandler {

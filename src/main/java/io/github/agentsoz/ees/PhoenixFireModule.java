@@ -1,4 +1,4 @@
-package io.github.agentsoz.bushfire;
+package io.github.agentsoz.ees;
 
 /*
  * #%L
@@ -34,6 +34,8 @@ import java.util.Locale;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import io.github.agentsoz.util.Time;
+import io.github.agentsoz.util.evac.DataTypes;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -46,7 +48,7 @@ import io.github.agentsoz.dataInterface.DataSource;
 
 public class PhoenixFireModule implements DataSource {
 
-	private final Logger logger = LoggerFactory.getLogger("io.github.agentsoz.bushfire");
+	private final Logger logger = LoggerFactory.getLogger("io.github.agentsoz.ees");
 
 	public static final String FIREALERT = "FireAlert";
 

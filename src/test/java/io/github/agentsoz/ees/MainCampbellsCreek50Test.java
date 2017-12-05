@@ -1,32 +1,15 @@
 /**
  * 
  */
-package io.github.agentsoz.bushfire.matsimjill;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.FileVisitResult;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.SimpleFileVisitor;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.SortedMap;
+package io.github.agentsoz.ees;
 
 import org.apache.log4j.Logger;
-import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
-import org.matsim.api.core.v01.Id;
-import org.matsim.api.core.v01.population.Person;
-import org.matsim.core.utils.io.UncheckedIOException;
 import org.matsim.core.utils.misc.CRCChecksum;
 import org.matsim.testcases.MatsimTestUtils;
 
-import io.github.agentsoz.bushfire.matsimjill.Main;
 import io.github.agentsoz.util.TestUtils;
-import org.matsim.utils.eventsfilecomparison.EventsFileComparator;
 
 /**
  * @author dsingh
@@ -51,7 +34,7 @@ public class MainCampbellsCreek50Test {
 				"--safeline-output-file-pattern", "scenarios/campbells-creek/safeline.%d%.out",
 				"--matsim-output-directory", utils.getOutputDirectory(),
 				"--jillconfig", "--config={"+
-						"agents:[{classname:io.github.agentsoz.bushfire.matsimjill.agents.Resident, args:null, count:50}],"+
+						"agents:[{classname:io.github.agentsoz.ees.agents.Resident, args:null, count:50}],"+
 						"logLevel: WARN,"+
 						"logFile: \"scenarios/campbells-creek/jill.log\","+
 						"programOutputFile: \"scenarios/campbells-creek/jill.out\","+

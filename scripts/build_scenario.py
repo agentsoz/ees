@@ -238,7 +238,7 @@ popnPrefix = '' # popn names should be 1,2,.. so as to match Jill names!!
 cmd = [
   "java",
   "-cp", args.jar,
-  "io.github.agentsoz.bushfire.GenerateInput",
+  "io.github.agentsoz.util.evac.GenerateInput",
   "-outdir", outdir,
   "-prefix", popnPrefix,
 #  "-matsimpop", "%s/WGS84/RECT/%s&%s" % (nAgents, xy1, xy2),
@@ -310,4 +310,4 @@ f = open(o_geography,'w')
 f.write(newdata)
 f.close()
 
-#java -cp APPJAR io.github.agentsoz.bushfire.GenerateInput    -outdir test    -prefix maldon    -matsimpop "700/EPSG:28355/RECT/234274,5895647&246377,5919215"
+#java -cp APPJAR io.github.agentsoz.util.evac.GenerateInput    -outdir test    -prefix maldon    -matsimpop "700/EPSG:28355/RECT/234274,5895647&246377,5919215"

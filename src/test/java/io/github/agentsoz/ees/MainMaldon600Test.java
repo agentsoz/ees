@@ -1,25 +1,15 @@
 /**
  * 
  */
-package io.github.agentsoz.bushfire.matsimjill;
-
-import java.util.List;
-import java.util.SortedMap;
+package io.github.agentsoz.ees;
 
 import org.apache.log4j.Logger;
-import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
-import org.matsim.api.core.v01.Id;
-import org.matsim.api.core.v01.population.Person;
 import org.matsim.core.utils.misc.CRCChecksum;
 import org.matsim.testcases.MatsimTestUtils;
 
-import io.github.agentsoz.bushfire.matsimjill.Main;
 import io.github.agentsoz.util.TestUtils;
-import org.matsim.utils.eventsfilecomparison.EventsFileComparator;
-import org.matsim.utils.eventsfilecomparison.EventsFileComparator.Result;
 
 /**
  * @author dsingh
@@ -41,7 +31,7 @@ public class MainMaldon600Test {
 --config /var/www/data/user-data/2017-10-23-ds-maldon/scenario/scenario_main.xml 
 --logfile /var/www/data/user-data/2017-10-23-ds-maldon/scenario/scenario.log 
 --loglevel TRACE 
---jillconfig "--config={agents:[{classname:io.github.agentsoz.bushfire.matsimjill.agents.Resident, args:null, count:600}],logLevel: WARN,logFile: \"/var/www/data/user-data/2017-10-23-ds-maldon/scenario/jill.log\",programOutputFile: \"/var/www/data/user-data/2017-10-23-ds-maldon/scenario/jill.out\"}"
+--jillconfig "--config={agents:[{classname:Resident, args:null, count:600}],logLevel: WARN,logFile: \"/var/www/data/user-data/2017-10-23-ds-maldon/scenario/jill.log\",programOutputFile: \"/var/www/data/user-data/2017-10-23-ds-maldon/scenario/jill.out\"}"
 		 */
 		String [] args = {
 				"--config",  "scenarios/maldon-2017-11-01/scenario_main.xml", 
@@ -52,7 +42,7 @@ public class MainMaldon600Test {
 				"--safeline-output-file-pattern", "scenarios/campbells-creek/safeline.%d%.out",
 				"--matsim-output-directory", utils.getOutputDirectory(),
 				"--jillconfig", "--config={"+
-						"agents:[{classname:io.github.agentsoz.bushfire.matsimjill.agents.Resident, args:null, count:600}],"+
+						"agents:[{classname:io.github.agentsoz.ees.agents.Resident, args:null, count:600}],"+
 						"logLevel: WARN,"+
 						"logFile: \"scenarios/maldon-2017-11-01/jill.log\","+
 						"programOutputFile: \"scenarios/maldon-2017-11-01/jill.out\","+

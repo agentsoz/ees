@@ -1,4 +1,4 @@
-package io.github.agentsoz.bushfire.matsimjill;
+package io.github.agentsoz.ees;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -41,7 +41,7 @@ import org.w3c.dom.NodeList;
  * #L%
  */
 
-import io.github.agentsoz.bushfire.datamodels.Location;
+import io.github.agentsoz.util.Location;
 import io.github.agentsoz.util.Global;
 
 
@@ -52,7 +52,7 @@ import io.github.agentsoz.util.Global;
  */
 public class SimpleConfig {
 
-	private static final Logger logger = LoggerFactory.getLogger("io.github.agentsoz.bushfire");
+	private static final Logger logger = LoggerFactory.getLogger("io.github.agentsoz.ees");
 
 	private static Random rand;
 	

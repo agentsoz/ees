@@ -1,4 +1,4 @@
-package io.github.agentsoz.bushfire.matsimjill;
+package io.github.agentsoz.ees;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -17,16 +17,12 @@ import org.json.simple.parser.ParseException;
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.core.config.Config;
-import org.matsim.core.config.groups.QSimConfigGroup;
 import org.matsim.core.config.groups.QSimConfigGroup.StarttimeInterpretation;
 import org.matsim.core.events.handler.EventHandler;
 import org.matsim.core.network.NetworkChangeEvent;
 import org.matsim.core.network.NetworkChangeEvent.ChangeType;
 import org.matsim.core.network.NetworkChangeEvent.ChangeValue;
 import org.matsim.core.network.NetworkUtils;
-import org.matsim.households.Household;
-import org.matsim.households.Households;
-import org.matsim.households.HouseholdsFactory;
 import org.slf4j.LoggerFactory;
 
 import ch.qos.logback.classic.Level;
@@ -58,9 +54,8 @@ import ch.qos.logback.core.FileAppender;
  * #L%
  */
 
-import io.github.agentsoz.bushfire.PhoenixFireModule;
-import io.github.agentsoz.bushfire.Time;
-import io.github.agentsoz.bushfire.datamodels.Location;
+import io.github.agentsoz.util.Time;
+import io.github.agentsoz.util.Location;
 import io.github.agentsoz.dataInterface.DataServer;
 import io.github.agentsoz.util.Global;
 
@@ -89,7 +84,7 @@ public class Main {
 		parse(cargs);
 
 		// Create the logger
-		logger = createLogger("io.github.agentsoz.bushfire", logFile);
+		logger = createLogger("io.github.agentsoz.ees", logFile);
 
 		// Read in the configuration
 		SimpleConfig.readConfig();

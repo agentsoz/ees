@@ -138,7 +138,7 @@
               <addClasspath>true</addClasspath>
               <classpathPrefix>lib/</classpathPrefix>
               <useUniqueVersions>false</useUniqueVersions>
-              <mainClass>io.github.agentsoz.bushfire.matsimjill.Main</mainClass>
+              <mainClass>io.github.agentsoz.ees.Main</mainClass>
             </manifest>
           </archive>
         </configuration>

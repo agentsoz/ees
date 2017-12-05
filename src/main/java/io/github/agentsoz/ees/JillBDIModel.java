@@ -1,4 +1,4 @@
-package io.github.agentsoz.bushfire.matsimjill;
+package io.github.agentsoz.ees;
 
 import java.util.Comparator;
 import java.util.LinkedHashMap;
@@ -34,9 +34,8 @@ import io.github.agentsoz.abmjill.JillModel;
 import io.github.agentsoz.bdiabm.ABMServerInterface;
 import io.github.agentsoz.bdiabm.data.AgentDataContainer;
 import io.github.agentsoz.bdiabm.data.AgentStateList;
-import io.github.agentsoz.bushfire.DataTypes;
-import io.github.agentsoz.bushfire.PhoenixFireModule;
-import io.github.agentsoz.bushfire.Time;
+import io.github.agentsoz.util.evac.DataTypes;
+import io.github.agentsoz.util.Time;
 import io.github.agentsoz.dataInterface.DataClient;
 import io.github.agentsoz.dataInterface.DataServer;
 import io.github.agentsoz.jill.lang.Agent;
@@ -44,7 +43,7 @@ import io.github.agentsoz.util.Global;
 
 public class JillBDIModel extends JillModel implements DataClient {
 
-	private final Logger logger = LoggerFactory.getLogger("io.github.agentsoz.bushfire");
+	private final Logger logger = LoggerFactory.getLogger("io.github.agentsoz.ees");
 
 	private DataServer dataServer;
 	

@@ -1,4 +1,4 @@
-package io.github.agentsoz.bushfire.matsimjill.agents;
+package io.github.agentsoz.ees.agents;
 
 import java.io.PrintStream;
 
@@ -9,8 +9,8 @@ import org.slf4j.LoggerFactory;
 import io.github.agentsoz.bdiabm.data.ActionContent;
 import io.github.agentsoz.bdiabm.data.ActionContent.State;
 import io.github.agentsoz.bdimatsim.MATSimActionList;
-import io.github.agentsoz.bushfire.datamodels.Location;
-import io.github.agentsoz.bushfire.matsimjill.SimpleConfig;
+import io.github.agentsoz.util.Location;
+import io.github.agentsoz.ees.SimpleConfig;
 
 /*
  * #%L
@@ -37,10 +37,10 @@ import io.github.agentsoz.bushfire.matsimjill.SimpleConfig;
 import io.github.agentsoz.jill.lang.Agent;
 import io.github.agentsoz.jill.lang.AgentInfo;
 
-@AgentInfo(hasGoals={"io.github.agentsoz.bushfire.matsimjill.agents.RespondToFireAlert", "io.github.agentsoz.abmjill.genact.EnvironmentAction"})
+@AgentInfo(hasGoals={"io.github.agentsoz.ees.agents.RespondToFireAlert", "io.github.agentsoz.abmjill.genact.EnvironmentAction"})
 public class Resident extends Agent implements io.github.agentsoz.bdiabm.Agent {
 
-	private final Logger logger = LoggerFactory.getLogger("io.github.agentsoz.bushfire");
+	private final Logger logger = LoggerFactory.getLogger("io.github.agentsoz.ees");
 
 	private static final String BDI_PERCEPT_FIRE_ALERT = "FireAlert";
 	private static final String BDI_PERCEPT_ARRIVED = "Arrived";
