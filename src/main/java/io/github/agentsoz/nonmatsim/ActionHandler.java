@@ -22,11 +22,10 @@ package io.github.agentsoz.nonmatsim;
  * #L%
  */
 
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import io.github.agentsoz.bdimatsim.MATSimActionList;
+import io.github.agentsoz.util.evac.ActionList;
 
 /**
  * @author Edmund Kemsley Processes action/s from MatsimActionList by updating
@@ -62,7 +61,7 @@ public final class ActionHandler {
 	 * @param agentID
 	 *            ID of the agent
 	 * @param actionID
-	 *            ID of the action, defined in {@link MATSimActionList}
+	 *            ID of the action, defined in {@link ActionList}
 	 * @param parameters
 	 *            Parameters associated with the action
 	 * @return

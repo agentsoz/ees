@@ -22,11 +22,11 @@ package io.github.agentsoz.bdimatsim;
  * #L%
  */
 
-import org.apache.log4j.Level;
+import io.github.agentsoz.util.evac.ActionList;
+import io.github.agentsoz.util.evac.PerceptList;
 import org.apache.log4j.Logger;
 import org.matsim.api.core.v01.Coord;
 import org.matsim.api.core.v01.Id;
-import org.matsim.api.core.v01.TransportMode;
 import org.matsim.api.core.v01.network.Link;
 import org.matsim.api.core.v01.population.Activity;
 import org.matsim.api.core.v01.population.Person;
@@ -112,10 +112,10 @@ public final class DRIVETODefaultActionHandler implements BDIActionHandler {
 					public boolean handle(Id<Person> agentId, Id<Link> linkId, MonitoredEventType monitoredEvent) {
 						PAAgent agent = model.getAgentManager().getAgent(agentId.toString());
 						Object[] params = {linkId.toString()};
-						agent.getActionContainer().register(MATSimActionList.DRIVETO, params);
+						agent.getActionContainer().register(ActionList.DRIVETO, params);
 						// (shouldn't this be earlier? --> there is a comment in the agent manager. kai, nov'17)
-						agent.getActionContainer().get(MATSimActionList.DRIVETO).setState(ActionContent.State.PASSED);
-						agent.getPerceptContainer().put(MATSimPerceptList.ARRIVED, params);
+						agent.getActionContainer().get(ActionList.DRIVETO).setState(ActionContent.State.PASSED);
+						agent.getPerceptContainer().put(PerceptList.ARRIVED, params);
 						return true;
 					}
 				}
@@ -128,9 +128,9 @@ public final class DRIVETODefaultActionHandler implements BDIActionHandler {
 					public boolean handle(Id<Person> agentId, Id<Link> currentLinkId, MonitoredEventType monitoredEvent) {
 						PAAgent agent = model.getAgentManager().getAgent( agentId.toString() );
 						Object[] params = { currentLinkId.toString() };
-						agent.getActionContainer().register(MATSimActionList.DRIVETO, params);
-						agent.getActionContainer().get(MATSimActionList.DRIVETO).setState(ActionContent.State.FAILED);
-						agent.getPerceptContainer().put(MATSimPerceptList.BLOCKED, params);
+						agent.getActionContainer().register(ActionList.DRIVETO, params);
+						agent.getActionContainer().get(ActionList.DRIVETO).setState(ActionContent.State.FAILED);
+						agent.getPerceptContainer().put(PerceptList.BLOCKED, params);
 						return true;
 					}
 				}
