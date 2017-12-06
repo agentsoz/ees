@@ -6,14 +6,17 @@ JAR=${BASEDIR}../target/bushfire-2.0.2-SNAPSHOT
 ### START USER CONFIG
 #############################################
 
-# where to install the web app
-WEBDIR=~/Sites/html
-# where bushfire simulation data will live
-DATADIR=~/Sites/data
+# To install elsewhere, do something like 'make INSTALL_DIR=~/Sites'
+INSTALL_DIR:=/var/www
 
 #############################################
 ### END USER CONFIG
 #############################################
+
+# where to install the web app
+WEBDIR=${INSTALL_DIR}/html
+# where bushfire simulation data will live
+DATADIR=${INSTALL_DIR}/data
 
 MINIFY_CMD:=java -jar ${BASEDIR}/etc/minify/yuicompressor-2.4.8.jar
 TEMPLATESDIR:=${BASEDIR}../scenarios/template
@@ -44,4 +47,3 @@ run:
 
 clean:
 	rm -rf ${WEBDIR}/*
-

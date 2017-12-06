@@ -267,13 +267,13 @@ function create(data, callback) {
 				// Now run the simulation
 				var plotScript = path.join(distDir,'create-analysis-graphs.sh');
 				var cmd = 'java -cp ' + dist +
-			       ' io.github.agentsoz.bushfire.matsimjill.Main' +
+			       ' io.github.agentsoz.ees.Main' +
 			       ' --config ' + fileMain +
 			       ' --logfile ' + fileLog +
 			       ' --loglevel ' + logLevelMain +
 			       ' --safeline-output-file-pattern ' + fileSafeline +
 			       ' --jillconfig "--config={' +
-			       'agents:[{classname:io.github.agentsoz.bushfire.matsimjill.agents.Resident, args:null, count:'+nAgents+'}],' +
+			       'agents:[{classname:io.github.agentsoz.ees.agents.Resident, args:null, count:'+nAgents+'}],' +
 			       'logLevel: ' + logLevelJill + ',' +
 			       'logFile: \\"' + fileJillLog + '\\",' +
 			       'programOutputFile: \\"' + fileJillOut + '\\"' +
@@ -292,26 +292,31 @@ function create(data, callback) {
 
 function check_creation_progress(data, callback) {
 	var logFile = path.join(dataDir, data.name, 'scenario', 'scenario_matsim_output','logfile.log');
+	global.log("Checking log file: "+ logFile);
 	if (!test('-f', logFile)) {
 		return callback(null, 0);
 	}
-	var cmd = 'cat ' + logFile + ' | grep -i "New QSim\\|ITERATION 0\\|JVM\\|shutdown completed"';
+	var cmd = 'cat ' + logFile + ' | grep -i "NEW QSim\\|ITERATION 0\\|JVM\\|shutdown completed"';
 	global.log(cmd);
 	var stdout = exec(cmd, {silent:true}).stdout;
 
-	var progress = 0;
-	if(stdout.indexOf("ITERATION 0 BEGINS") > -1) {
-		progress += 1;
-	}
-	var count = (stdout.match(/NEW QSim\) AT /g) || []).length;
+    // file exists so +1
+	var progress = 1;
+	var expected = 10;
+
+    // count 'ITERATION 0' events (4 expected), count as 8
+	var count = (stdout.match(/### ITERATION 0 /g) || []).length;
+    progress += 2*count;
+
+    // count '(NEW QSim) AT' events (no fixed expectation)
+	count = (stdout.match(/NEW QSim\) AT /g) || []).length;
 	progress += count;
-	if(stdout.indexOf("ITERATION 0 fires iteration end event") > -1) {
-		progress += 1;
-	}
+	expected += count;
+
 	if(stdout.indexOf("shutdown completed") > -1) {
 		progress += 1;
 	}
-	progress = Math.round((progress/27.0)*100);
+	progress = Math.round(((1.0*progress)/expected)*100);
 	if (progress > 100) progress = 100;
 	return callback(null, progress);
 }
