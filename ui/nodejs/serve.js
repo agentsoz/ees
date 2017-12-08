@@ -265,8 +265,8 @@ function create(data, callback) {
 				//global.log(JSON.stringify(res2));
 		    	var nAgents = res2.simulation.bdiagents[0].trim();
 				// Now run the simulation
-				var plotScript = path.join(distDir,'create-analysis-graphs.sh');
-				var cmd = 'java -cp ' + dist +
+			var plotScript = path.join(distDir,'create-analysis-graphs.sh');
+				var cmd = 'java -Xms2g -Xmx2g -cp ' + dist +
 			       ' io.github.agentsoz.ees.Main' +
 			       ' --config ' + fileMain +
 			       ' --logfile ' + fileLog +
