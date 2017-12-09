@@ -10,12 +10,12 @@ package io.github.agentsoz.bdimatsim;
  * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Lesser Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Lesser Public
  * License along with this program.  If not, see
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
@@ -43,14 +43,14 @@ import org.matsim.vehicles.Vehicle;
 /**
  * Acts as a simple listener for Matsim agent events then
  *         passes to MATSimAgentManager
- * 
- * @author Edmund Kemsley 
+ *
+ * @author Edmund Kemsley
  */
 
-public final class EventsMonitorRegistry implements 
+public final class EventsMonitorRegistry implements
 LinkEnterEventHandler,
 LinkLeaveEventHandler,
-PersonArrivalEventHandler, 
+PersonArrivalEventHandler,
 PersonDepartureEventHandler,
 ActivityEndEventHandler,
 		VehicleEntersTrafficEventHandler,
@@ -78,7 +78,7 @@ VehicleLeavesTrafficEventHandler,
     private List<Monitor> toAdd = new ArrayList<>();
     
     public EventsMonitorRegistry() {
-    	log.setLevel(Level.DEBUG);
+//    	log.setLevel(Level.DEBUG);
 	}
 	
 	@Override
@@ -136,21 +136,23 @@ VehicleLeavesTrafficEventHandler,
 
 	
 	private void callRegisteredHandlers(Event ev) {
-      // Register any new monitors waiting to be added
-	  // Synchronise on toAdd which is allowed to be updated by other threads
-      synchronized (toAdd) {
-        for(Monitor monitor : toAdd) {
-          monitors.add(monitor);
-        }
-        toAdd.clear();
-      }
+		// Register any new monitors waiting to be added
+		// Synchronise on toAdd which is allowed to be updated by other threads
+		synchronized (toAdd) {
+			for(Monitor monitor : toAdd) {
+				monitors.add(monitor);
+			}
+			toAdd.clear();
+		}
      
-      List<Monitor> toRemove = new ArrayList<>();
-      
-      // yyyyyy in the following, monitor.getLinkId can now be null.  Need to hedge against it!  kai, nov'17
-      
-      for (Monitor monitor : monitors) {
+		List<Monitor> toRemove = new ArrayList<>();
+  
+		// yyyyyy in the following, monitor.getLinkId can now be null.  Need to hedge against it!  kai, nov'17
+  
+		for (Monitor monitor : monitors) {
+			// (go through all registered monitoris)
 	        switch (monitor.getEvent()) {
+	        	// (switch according to the type of monitor)
 				case NextLinkBlocked:
 					if ( ev instanceof NextLinkBlockedEvent ) {
 						log.debug("catching a nextLinkBlocked event"); ;
@@ -171,7 +173,6 @@ VehicleLeavesTrafficEventHandler,
 			case EnteredNode:
 				if (ev instanceof LinkEnterEvent) {
 					LinkEnterEvent event = (LinkEnterEvent)ev;
-//					if (monitor.getAgentId() == event.getDriverId() && monitor.getLinkId() == event.getLinkId()) {
 					Id<Person> driverId = this.getDriverOfVehicle(event.getVehicleId());
 					Gbl.assertNotNull(driverId);
 					if (monitor.getAgentId().equals(driverId) && event.getLinkId().equals(monitor.getLinkId())) {
@@ -205,7 +206,7 @@ VehicleLeavesTrafficEventHandler,
 							toRemove.add(blockedMonitor);
 						}
 					}
-				} 
+				}
 				break;
 			case DepartedDestination:
 				if (ev instanceof PersonDepartureEvent) {
@@ -239,9 +240,9 @@ VehicleLeavesTrafficEventHandler,
 	}
 	
 	/**
-	 * For a given agent, registers a {@link BDIPerceptHandler} to be called 
+	 * For a given agent, registers a {@link BDIPerceptHandler} to be called
 	 * whenever an event of type {@link MonitoredEventType} is triggered
-	 * for {@code linkId}. 
+	 * for {@code linkId}.
 	 * @param agentId
 	 * @param linkId
 	 * @param event

@@ -91,54 +91,6 @@ public final class EvacTravelDisutility implements TravelDisutility {
 		this.travelTime = travelTime;
 	}
 	
-	static boolean determineLinksInFireArea(String dataType, Object data, Config config, Set<Id<Link>> linksInFireArea, Scenario scenario) {
-		if (FIRE_DATA_MSG.equals(dataType)) {
-			CoordinateTransformation transform = TransformationFactory.getCoordinateTransformation(
-					TransformationFactory.WGS84, config.global().getCoordinateSystem());
-			final String json = new Gson().toJson(data);
-			log.error("Received '{}', must do something with it\n{}"+
-					dataType +json);
-			log.error("class =" + data.getClass() ) ;
-
-//			GeoJSONReader reader = new GeoJSONReader();
-//			Geometry geometry = reader.read(json);
-			// unfortunately does not work since the incoming data is not typed accordingly. kai, dec'17
-
-			Map<Double, Double[][]> map = (Map<Double, Double[][]>) data;
-			List<Polygon> polygons = new ArrayList<>() ;
-			// the map key is time; we just take the superset of all polygons
-			for ( Double[][] pairs : map.values() ) {
-				List<Coord> coords = new ArrayList<>() ;
-				for ( int ii=0 ; ii<pairs.length ; ii++ ) {
-					Coord coordOrig = new Coord( pairs[ii][0], pairs[ii][1]) ;
-					Coord coordTransformed = transform.transform(coordOrig) ;
-					coords.add( coordTransformed ) ;
-				}
-				Polygon polygon = GeometryUtils.createGeotoolsPolygon(coords);
-				polygons.add(polygon) ;
-			}
-			
-			linksInFireArea.clear();
-
-			for ( Node node : scenario.getNetwork().getNodes().values() ) {
-				Point point = GeometryUtils.createGeotoolsPoint( node.getCoord() ) ;
-				for ( Polygon polygon : polygons ) {
-					if (polygon.contains(point)) {
-						log.warn("node {} is IN fire area"+ node.getId());
-						for ( Link link : node.getOutLinks().values() ) {
-							linksInFireArea.add( link.getId() ) ;
-						}
-						for ( Link link : node.getInLinks().values() ) {
-							linksInFireArea.add( link.getId() ) ;
-						}
-					}
-				}
-			}
-			return true;
-		}
-		return false;
-	}
-	
 	@Override
 	public double getLinkTravelDisutility(final Link link, final double time, final Person person, final Vehicle vehicle) {
 		double factor = 1. ;

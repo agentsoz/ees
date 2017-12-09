@@ -1,12 +1,13 @@
 package io.github.agentsoz.bdimatsim;
 
+import java.io.PrintStream;
 import java.util.*;
 
 import com.google.gson.Gson;
-import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.geom.*;
 import io.github.agentsoz.dataInterface.DataClient;
 import io.github.agentsoz.util.evac.ActionList;
+import org.apache.log4j.Logger;
 import org.matsim.api.core.v01.Coord;
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.Scenario;
@@ -37,10 +38,9 @@ import org.matsim.core.trafficmonitoring.FreeSpeedTravelTime;
 import org.matsim.core.utils.geometry.CoordinateTransformation;
 import org.matsim.core.utils.geometry.GeometryUtils;
 import org.matsim.core.utils.geometry.transformations.TransformationFactory;
+import org.matsim.core.utils.io.IOUtils;
 import org.matsim.withinday.mobsim.MobsimDataProvider;
-import org.matsim.withinday.trafficmonitoring.TravelTimeCollector;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.matsim.withinday.trafficmonitoring.WithinDayTravelTime;
 
 /*
  * #%L
@@ -76,10 +76,12 @@ import javax.inject.Singleton;
  * @author QingyuChen, KaiNagel, Dhi Singh
  */
 public final class MATSimModel implements ABMServerInterface, DataClient {
-	private static final Logger logger = LoggerFactory.getLogger("");
+//	private static final Logger log = LoggerFactory.getLogger("");
+	private static final Logger log = Logger.getLogger(MATSimModel.class) ;
 	public static final String MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR = "--matsim-output-directory";
 	static final String FIRE_DATA_MSG = "fire_data";
 	private final EvacConfig evacConfig;
+	private PrintStream fireWriter;
 	private Config config;
 	
 	public static enum EvacRoutingMode {carFreespeed, carGlobalInformation}
@@ -129,19 +131,20 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 	}
 	
 	public MATSimModel( String[] args) {
-
+//		log.setLevel(Level.DEBUG);
 		config = ConfigUtils.loadConfig( args[0] ) ;
 		parseAdditionalArguments(args, config);
 		config.network().setTimeVariantNetwork(true);
 		
 		config.plans().setActivityDurationInterpretation(ActivityDurationInterpretation.tryEndTimeThenDuration);
 
-
 		config.qsim().setStartTime( 1.00 );
 		config.qsim().setSimStarttimeInterpretation( StarttimeInterpretation.onlyUseStarttime );
 
 		config.controler().setWritePlansInterval(1);
 		config.controler().setOverwriteFileSetting( OverwriteFileSetting.deleteDirectoryIfExists );
+		
+		config.planCalcScore().setWriteExperiencedPlans(true);
 		
 		evacConfig = ConfigUtils.addOrGetModule(config,EvacConfig.class) ;
 		
@@ -172,7 +175,7 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 		// ---
 
 		this.agentManager = new PAAgentManager(eventsMonitors) ;
-
+		
 	}
 	
 	public Scenario loadAndPrepareScenario() {
@@ -229,10 +232,10 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 				{
 					final String routingMode = EvacRoutingMode.carGlobalInformation.name();
 
-					bind(TravelTimeCollector.class).in(Singleton.class);
-					addEventHandlerBinding().to(TravelTimeCollector.class);
-					addMobsimListenerBinding().to(TravelTimeCollector.class);
-					addTravelTimeBinding(routingMode).to(TravelTimeCollector.class) ;
+					bind(WithinDayTravelTime.class).in(Singleton.class);
+					addEventHandlerBinding().to(WithinDayTravelTime.class);
+					addMobsimListenerBinding().to(WithinDayTravelTime.class);
+					addTravelTimeBinding(routingMode).to(WithinDayTravelTime.class) ;
 
 					addRoutingModuleBinding(routingMode).toProvider(
 							new NetworkRoutingProvider(TransportMode.car, routingMode)
@@ -276,7 +279,7 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 						qSim = (QSim) e.getQueueSimulation() ;
 
 						playPause = new PlayPauseSimulationControl( qSim ) ;
-						playPause.pause(); 
+						playPause.pause();
 
 						//						initialiseVisualisedAgents() ;
 					}
@@ -293,7 +296,7 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 			}
 		}) ;
 
-		// twrap the controller into a thread and start it:
+		// wrap the controller into a thread and start it:
 		this.matsimThread = new Thread( controller ) ;
 		matsimThread.start();
 
@@ -304,9 +307,7 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 				e.printStackTrace();
 			}
 		}
-
-		return ;
-
+		
 	}
 
 	public final Replanner getReplanner() {
@@ -320,7 +321,7 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 		runUntil( (int)(playPause.getLocalTime() + 1), agentDataContainer ) ;
 	}
 	public final void runUntil( long newTime , AgentDataContainer agentDataContainer ) {
-			logger.trace("Received {}", agentManager.getAgentDataContainer());
+			log.trace("Received {} " + agentManager.getAgentDataContainer());
 			agentManager.updateActions(); // handle incoming BDI actions
 			playPause.doStep( (int) (newTime) );
 			agentManager.transferActionsPerceptsToDataContainer(); // send back BDI actions/percepts/status'
@@ -329,7 +330,7 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 		return playPause.isFinished() ;
 	}
 	public void finish() {
-		playPause.play(); 
+		playPause.play();
 		while( matsimThread.isAlive() ) {
 			try {
 				Thread.sleep(100);
@@ -337,7 +338,9 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 				e.printStackTrace();
 			}
 		}
-
+		if ( fireWriter!=null ) {
+			fireWriter.close();
+		}
 	}
 
 	public final Scenario getScenario() {
@@ -355,7 +358,7 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 			case MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR:
 				if (i + 1 < args.length) {
 					i++;
-					logger.info("setting matsim output directory to " + args[i] );
+					log.info("setting matsim output directory to " + args[i] );
 					config.controler().setOutputDirectory( args[i] );
 				}
 				break;
@@ -391,7 +394,73 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 	public boolean dataUpdate(double time, String dataType, Object data) {
 		if ( evacConfig.getSetup()== EvacConfig.Setup.fireArea ) {
 			// yyyyyy is this called in every time step, or just every 5 min or so?
-			return EvacTravelDisutility.determineLinksInFireArea(dataType, data, config, linksInFireArea, scenario);
+			if (FIRE_DATA_MSG.equals(dataType)) {
+				CoordinateTransformation transform = TransformationFactory.getCoordinateTransformation(
+						TransformationFactory.WGS84, config.global().getCoordinateSystem());
+				
+				final String json = new Gson().toJson(data);
+				log.debug(json);
+	
+	//			GeoJSONReader reader = new GeoJSONReader();
+	//			Geometry geometry = reader.read(json);
+				// unfortunately does not work since the incoming data is not typed accordingly. kai, dec'17
+	
+				Map<Double, Double[][]> map = (Map<Double, Double[][]>) data;
+				List<Polygon> polygons = new ArrayList<>() ;
+				// the map key is time; we just take the superset of all polygons
+				for ( Double[][] pairs : map.values() ) {
+					List<Coord> coords = new ArrayList<>() ;
+					for ( int ii=0 ; ii<pairs.length ; ii++ ) {
+						Coord coordOrig = new Coord( pairs[ii][0], pairs[ii][1]) ;
+						Coord coordTransformed = transform.transform(coordOrig) ;
+						coords.add( coordTransformed ) ;
+					}
+					Polygon polygon = GeometryUtils.createGeotoolsPolygon(coords);
+					polygons.add(polygon) ;
+				}
+				
+				linksInFireArea.clear();
+	
+				for ( Node node : scenario.getNetwork().getNodes().values() ) {
+					Point point = GeometryUtils.createGeotoolsPoint( node.getCoord() ) ;
+					for ( Polygon polygon : polygons ) {
+						if (polygon.contains(point)) {
+							log.debug("node {} is IN fire area "+ node.getId());
+							for ( Link link : node.getOutLinks().values() ) {
+								linksInFireArea.add( link.getId() ) ;
+							}
+							for ( Link link : node.getInLinks().values() ) {
+								linksInFireArea.add( link.getId() ) ;
+							}
+						}
+					}
+				}
+				
+				if ( fireWriter==null ) {
+					final String filename = config.controler().getOutputDirectory() + "/output_fireCoords.txt.gz";
+					log.warn("writing fire data to " + filename);
+					fireWriter = IOUtils.getPrintStream(filename);
+					fireWriter.println("time\tx\ty") ;
+				}
+				// can't do this earlier since the output directories are not yet prepared
+				// by the controler.  kai, dec'17
+				
+				Envelope env = new Envelope();
+				for(Geometry g : polygons){
+					env.expandToInclude(g.getEnvelopeInternal());
+				}
+				for ( double yy=env.getMinY() ; yy<=env.getMaxY(); yy+=100. ) {
+					for ( double xx=env.getMinX() ; xx<=env.getMaxX() ; xx+=100. ) {
+						if ( polygons.get(0).contains( new GeometryFactory().createPoint(new Coordinate( xx, yy ) ) ) ) {
+							final String str = time + "\t" + xx + "\t" + yy;
+							log.debug(str);
+							fireWriter.println(str);
+						}
+					}
+				}
+				return true;
+			}
+			return false;
 		} else {
 			return true ;
 		}

@@ -24,6 +24,7 @@ package io.github.agentsoz.bdimatsim;
 
 import io.github.agentsoz.util.evac.ActionList;
 import io.github.agentsoz.util.evac.PerceptList;
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.matsim.api.core.v01.Coord;
 import org.matsim.api.core.v01.Id;
@@ -54,13 +55,15 @@ public final class DRIVETODefaultActionHandler implements BDIActionHandler {
 	@Override
 	public boolean handle(String agentID, String actionID, Object[] args) {
 		log.debug("------------------------------------------------------------------------------------------");
-		log.debug("replanning at simulation time step=" + model.getTime() ) ;
 		// assertions:
 		Gbl.assertIf( args.length >= 4 ) ;
 		Gbl.assertIf( args[1] instanceof double[] ) ;
 		double[] coords = (double[]) args[1];
 		Coord coord = new Coord( coords[0], coords[1] ) ;
 		Gbl.assertIf( args[3] instanceof MATSimModel.EvacRoutingMode ) ; // could have some default
+		
+		log.debug("replanning; time step=" + model.getTime()
+		+ "; agentId=" + agentID + "; routing mode " + args[3] ) ;
 
 		// preparations:
 		
@@ -126,6 +129,8 @@ public final class DRIVETODefaultActionHandler implements BDIActionHandler {
 				null, new BDIPerceptHandler() {
 					@Override
 					public boolean handle(Id<Person> agentId, Id<Link> currentLinkId, MonitoredEventType monitoredEvent) {
+						log.debug( "agent with id=" + agentId + " perceiving a " + monitoredEvent + " event on link with id=" +
+										   currentLinkId ) ;
 						PAAgent agent = model.getAgentManager().getAgent( agentId.toString() );
 						Object[] params = { currentLinkId.toString() };
 						agent.getActionContainer().register(ActionList.DRIVETO, params);
