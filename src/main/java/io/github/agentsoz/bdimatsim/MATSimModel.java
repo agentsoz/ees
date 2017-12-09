@@ -311,8 +311,6 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 	}
 
 	public final Replanner getReplanner() {
-//		return qSim.getChildInjector().getInstance( Replanner.class ) ;
-		// this _should_ now be a singleton by injection. kai, nov'17
 		return this.replanner ;
 	}
 
@@ -407,6 +405,7 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 	
 				Map<Double, Double[][]> map = (Map<Double, Double[][]>) data;
 				List<Polygon> polygons = new ArrayList<>() ;
+				List<Geometry> buffers = new ArrayList<>() ;
 				// the map key is time; we just take the superset of all polygons
 				for ( Double[][] pairs : map.values() ) {
 					List<Coord> coords = new ArrayList<>() ;
@@ -417,15 +416,16 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 					}
 					Polygon polygon = GeometryUtils.createGeotoolsPolygon(coords);
 					polygons.add(polygon) ;
+					buffers.add( polygon.buffer(500.) );
 				}
 				
 				linksInFireArea.clear();
 	
 				for ( Node node : scenario.getNetwork().getNodes().values() ) {
 					Point point = GeometryUtils.createGeotoolsPoint( node.getCoord() ) ;
-					for ( Polygon polygon : polygons ) {
-						if (polygon.contains(point)) {
-							log.debug("node {} is IN fire area "+ node.getId());
+					for ( Geometry geometry : buffers ) {
+						if (geometry.contains(point)) {
+							log.debug("node {} is IN fire buffer "+ node.getId());
 							for ( Link link : node.getOutLinks().values() ) {
 								linksInFireArea.add( link.getId() ) ;
 							}
