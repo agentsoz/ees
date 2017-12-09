@@ -68,7 +68,6 @@ public class Main {
 
 	private static Logger logger;
 	
-	public static final String SETUP_INDICATOR="--setup" ;
 	private static EvacConfig.Setup setup = EvacConfig.Setup.standard ;
 
 	// Defaults
@@ -92,7 +91,12 @@ public class Main {
 
 		// Create the logger
 		logger = createLogger("io.github.agentsoz.ees", logFile);
-
+		
+		logger.warn("setup=" + setup ) ;
+		// (I need this "setup" switch to switch between the test cases.  Some other
+		// config design would clearly be ok, but I don't want to impose some config
+		// design on you. kai, dec'17)
+		
 		// Read in the configuration
 		SimpleConfig.readConfig();
 			
@@ -101,26 +105,27 @@ public class Main {
 		// using a publish/subscribe or pull mechanism
 		DataServer dataServer = DataServer.getServer("Bushfire");
 		
+		// get the fire model out of the way:
 		initializeAndStartFireModel(dataServer);
 		
+		
 		MATSimModel matsimModel = new MATSimModel( SimpleConfig.getMatSimFile(), matsimOutputDirectory );
-		
-		logger.warn("setup=" + setup ) ;
-		
-		EvacConfig evacConfig = ConfigUtils.addOrGetModule(matsimModel.getConfig(), EvacConfig.class);;
-		evacConfig.setSetup(setup);
-		
-		
-		// do some things for which you need a handle to matsim:
+
+		// --- do some things for which you need a handle to matsim:
 		matsimModel.registerDataServer(dataServer);
 		// (yyyy this syntax indicates that there might be use cases without dataServer.  Is that the case?
 		// If not, I would rather pass it as a "forced" argument in matsimModel.init(...).  kai, dec'17)
 		
 		List<SafeLineMonitor> monitors = registerSafeLineMonitors(SimpleConfig.getSafeLines(), matsimModel);
 		
-		// do some things for which you need a handle to the matsim scenario:
+		// --- do some things for which you need access to the matsim config:
+		setSimStartTimesRelativeToAlert(dataServer, matsimModel.getConfig(), -10*60 );
+		EvacConfig evacConfig = ConfigUtils.addOrGetModule(matsimModel.getConfig(), EvacConfig.class);;
+		evacConfig.setSetup(setup);
+		
+		
+		// --- do some things for which you need a handle to the matsim scenario:
 		Scenario scenario = matsimModel.loadAndPrepareScenario() ;
-		setSimStartTimesRelativeToAlert(dataServer, scenario.getConfig(), -10*60 );
 		// move everything into the far future (yy maybe better repair input files?)
 		for ( Person person : scenario.getPopulation().getPersons().values() ) {
 			List<PlanElement> planElements = person.getSelectedPlan().getPlanElements() ;
@@ -137,15 +142,14 @@ public class Main {
 		 * vehicles for mode choice).
 		 */
 		
-		
 		setupBlockageIfApplicable(scenario);
 		List<String> bdiAgentIDs = Utils.getBDIAgentIDs( scenario );
 
-		// initialize and start jill (need the bdiAgentIDs, for which we need the material from before)
+		// --- initialize and start jill (need the bdiAgentIDs, for which we need the material from before)
 		JillBDIModel jillmodel = initializeAndStartJillModel(dataServer, bdiAgentIDs, matsimModel, matsimModel.getAgentManager().getAgentDataContainer());
 		// (matsimModel is passed in because of its query interface.  which is, however, never used.)
 		
-		// initialize and start matsim (maybe rename?):
+		// --- initialize and start matsim (maybe rename?):
 		matsimModel.init(bdiAgentIDs);
 
 		while ( true ) {
@@ -356,7 +360,7 @@ public class Main {
 					matsimOutputDirectory = args[i];
 				}
 				break;
-				case Main.SETUP_INDICATOR:
+				case EvacConfig.SETUP_INDICATOR:
 					if(i+1<args.length) {
 						i++ ;
 						setup = EvacConfig.Setup.valueOf(args[i]) ;
