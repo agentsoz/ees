@@ -40,7 +40,7 @@ import org.matsim.core.utils.geometry.GeometryUtils;
 import org.matsim.core.utils.geometry.transformations.TransformationFactory;
 import org.matsim.core.utils.io.IOUtils;
 import org.matsim.withinday.mobsim.MobsimDataProvider;
-import org.matsim.withinday.trafficmonitoring.WithinDayTravelTime;
+import org.matsim.withinday.trafficmonitoring.TravelTimeCollector;
 
 /*
  * #%L
@@ -232,10 +232,10 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 				{
 					final String routingMode = EvacRoutingMode.carGlobalInformation.name();
 
-					bind(WithinDayTravelTime.class).in(Singleton.class);
-					addEventHandlerBinding().to(WithinDayTravelTime.class);
-					addMobsimListenerBinding().to(WithinDayTravelTime.class);
-					addTravelTimeBinding(routingMode).to(WithinDayTravelTime.class) ;
+					bind(TravelTimeCollector.class).in(Singleton.class);
+					addEventHandlerBinding().to(TravelTimeCollector.class);
+					addMobsimListenerBinding().to(TravelTimeCollector.class);
+					addTravelTimeBinding(routingMode).to(TravelTimeCollector.class) ;
 
 					addRoutingModuleBinding(routingMode).toProvider(
 							new NetworkRoutingProvider(TransportMode.car, routingMode)
