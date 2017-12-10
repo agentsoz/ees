@@ -56,6 +56,8 @@ public class SafeLineMonitor implements LinkEnterEventHandler, LinkLeaveEventHan
   private Location from;
   private Location to;
   private MATSimModel model; // actually only need access to network but dunno how, dsingh 14/nov/17
+  // --> just pass model.getScenario().getNetwork()?  But in fact, the new initialization sequence
+  // at some point explicitly has the scenario, so it would be scenario.getNetwork(). kai, dec'17
   private Map<Id<Link>,List<Double>> exitTimes;
 
   public SafeLineMonitor(String name, Location from, Location to, MATSimModel model) {

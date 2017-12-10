@@ -44,7 +44,7 @@ public class FireAreaMaldon600Test {
 				"--seed", "12345",
 				"--safeline-output-file-pattern", "scenarios/campbells-creek/safeline.%d%.out",
 				MATSimModel.MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR, utils.getOutputDirectory(),
-				Main.SETUP_INDICATOR, EvacConfig.Setup.fireArea.name() ,
+				EvacConfig.SETUP_INDICATOR, EvacConfig.Setup.fireArea.name() ,
 				"--jillconfig", "--config={"+
 						"agents:[{classname:io.github.agentsoz.ees.agents.Resident, args:null, count:600}],"+
 						"logLevel: WARN,"+

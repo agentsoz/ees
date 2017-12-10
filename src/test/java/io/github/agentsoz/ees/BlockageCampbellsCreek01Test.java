@@ -19,7 +19,7 @@ import org.matsim.testcases.MatsimTestUtils;
 public class BlockageCampbellsCreek01Test {
 	// have tests in separate classes so that they run, at least under maven, in separate JVMs.  kai, nov'17
 	
-	Logger log = Logger.getLogger(BlockageCampbellsCreek01Test.class) ;
+	Logger log = Logger.getLogger(BlockageCampbellsCreek50Test.class) ;
 
 	@Rule public MatsimTestUtils utils = new MatsimTestUtils() ;
 
@@ -34,7 +34,7 @@ public class BlockageCampbellsCreek01Test {
 				"--seed", "12345",
 				"--safeline-output-file-pattern", "scenarios/campbells-creek-01/safeline.%d%.out",
 				MATSimModel.MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR, utils.getOutputDirectory(),
-				Main.SETUP_INDICATOR, EvacConfig.Setup.blockage.name() ,
+				EvacConfig.SETUP_INDICATOR, EvacConfig.Setup.blockage.name() ,
 				"--jillconfig", "--config={"+
 						"agents:[{classname:io.github.agentsoz.ees.agents.Resident, args:null, count:1}],"+
 						"logLevel: WARN,"+
