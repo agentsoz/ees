@@ -24,6 +24,7 @@ import org.matsim.core.config.Config;
 import org.matsim.core.config.ConfigUtils;
 import org.matsim.core.config.groups.QSimConfigGroup.StarttimeInterpretation;
 import org.matsim.core.events.handler.EventHandler;
+import org.matsim.core.gbl.Gbl;
 import org.matsim.core.network.NetworkChangeEvent;
 import org.matsim.core.network.NetworkChangeEvent.ChangeType;
 import org.matsim.core.network.NetworkChangeEvent.ChangeValue;
@@ -119,8 +120,9 @@ public class Main {
 		List<SafeLineMonitor> monitors = registerSafeLineMonitors(SimpleConfig.getSafeLines(), matsimModel);
 		
 		// --- do some things for which you need access to the matsim config:
-		setSimStartTimesRelativeToAlert(dataServer, matsimModel.getConfig(), -10*60 );
-		EvacConfig evacConfig = ConfigUtils.addOrGetModule(matsimModel.getConfig(), EvacConfig.class);;
+		Config config = matsimModel.loadAndPrepareConfig() ;
+		setSimStartTimesRelativeToAlert(dataServer, config, -10*60 );
+		EvacConfig evacConfig = ConfigUtils.addOrGetModule(config, EvacConfig.class);;
 		evacConfig.setSetup(setup);
 		
 		
@@ -186,14 +188,23 @@ public class Main {
 	}
 	
 	private static void setupBlockageIfApplicable(Scenario scenario) {
-		if ( setup== EvacConfig.Setup.blockage ) {
-			// todo later: configure this from elsewhere
-			int blockageTime = 5*60 ;
-			NetworkChangeEvent changeEvent = new NetworkChangeEvent(blockageTime);
-			changeEvent.setFreespeedChange(new ChangeValue(ChangeType.ABSOLUTE_IN_SI_UNITS, 0.));
-			changeEvent.addLink(scenario.getNetwork().getLinks().get(Id.createLinkId(51825)));
-			NetworkUtils.addNetworkChangeEvent(scenario.getNetwork(), changeEvent);
+		switch( setup ) {
+			// use switch so we catch missing cases. kai, dec'18
+			case standard:
+			case withoutFireArea:
+				return ;
+			case blockage:
+			case withBlockageButWithoutFire:
+				break;
+			default:
+				Gbl.fail() ;
 		}
+		// todo later: configure this from elsewhere
+		int blockageTime = 5*60 ;
+		NetworkChangeEvent changeEvent = new NetworkChangeEvent(blockageTime);
+		changeEvent.setFreespeedChange(new ChangeValue(ChangeType.ABSOLUTE_IN_SI_UNITS, 0.));
+		changeEvent.addLink(scenario.getNetwork().getLinks().get(Id.createLinkId(51825)));
+		NetworkUtils.addNetworkChangeEvent(scenario.getNetwork(), changeEvent);
 	}
 	
 	private static JillBDIModel initializeAndStartJillModel(DataServer dataServer, List<String> bdiAgentIDs,

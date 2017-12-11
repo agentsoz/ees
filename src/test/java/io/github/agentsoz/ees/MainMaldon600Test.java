@@ -3,6 +3,7 @@
  */
 package io.github.agentsoz.ees;
 
+import io.github.agentsoz.bdimatsim.EvacConfig;
 import org.apache.log4j.Logger;
 import org.junit.Ignore;
 import org.junit.Rule;
@@ -26,7 +27,6 @@ public class MainMaldon600Test {
 
 	@SuppressWarnings("static-method")
 	@Test
-	@Ignore
 	public void testMaldon600() {
 
 		/*
@@ -43,6 +43,7 @@ public class MainMaldon600Test {
 				"--seed", "12345",
 				"--safeline-output-file-pattern", "scenarios/campbells-creek/safeline.%d%.out",
 				"--matsim-output-directory", utils.getOutputDirectory(),
+				EvacConfig.SETUP_INDICATOR, EvacConfig.Setup.withoutFireArea.name() ,
 				"--jillconfig", "--config={"+
 						"agents:[{classname:io.github.agentsoz.ees.agents.Resident, args:null, count:600}],"+
 						"logLevel: WARN,"+
