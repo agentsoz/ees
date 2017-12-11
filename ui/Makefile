@@ -7,7 +7,7 @@ JAR=${BASEDIR}../target/bushfire-2.0.2-SNAPSHOT
 #############################################
 
 # To install elsewhere, do something like 'make INSTALL_DIR=~/Sites'
-INSTALL_DIR:=~/Sites/html
+INSTALL_DIR:=/var/www
 
 #############################################
 ### END USER CONFIG
