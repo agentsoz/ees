@@ -4,6 +4,7 @@
 package io.github.agentsoz.ees;
 
 import org.apache.log4j.Logger;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.matsim.core.utils.misc.CRCChecksum;
@@ -25,6 +26,7 @@ public class MainMaldon600Test {
 
 	@SuppressWarnings("static-method")
 	@Test
+	@Ignore
 	public void testMaldon600() {
 
 		/*
