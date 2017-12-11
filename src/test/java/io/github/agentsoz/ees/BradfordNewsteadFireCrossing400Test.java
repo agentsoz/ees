@@ -37,7 +37,6 @@ public class BradfordNewsteadFireCrossing400Test {
 				"--seed", "12345",
 				"--safeline-output-file-pattern", "scenarios/bradford-newstead-fire-crossing/safeline.%d%.out",
 				MATSimModel.MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR, utils.getOutputDirectory(),
-				EvacConfig.SETUP_INDICATOR, EvacConfig.Setup.fireArea.name() ,
 				"--jillconfig", "--config={"+
 						"agents:[{classname:io.github.agentsoz.ees.agents.Resident, args:null, count:400}],"+
 						"logLevel: WARN,"+

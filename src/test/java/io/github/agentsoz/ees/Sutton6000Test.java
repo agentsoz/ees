@@ -38,8 +38,7 @@ public class Sutton6000Test {
 				"--seed", "12345",
 				"--safeline-output-file-pattern", "scenarios/sutton/safeline.%d%.out",
 				MATSimModel.MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR, utils.getOutputDirectory(),
-				EvacConfig.SETUP_INDICATOR, EvacConfig.Setup.fireArea.name() ,
-				"--jillconfig", "--config={"+
+ 				"--jillconfig", "--config={"+
 						"agents:[{classname:io.github.agentsoz.ees.agents.Resident, args:null, count:6000}],"+
 						"logLevel: WARN,"+
 						"logFile: \"scenarios/sutton/jill.log\","+
