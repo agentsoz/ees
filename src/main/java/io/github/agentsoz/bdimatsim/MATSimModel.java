@@ -7,7 +7,6 @@ import com.google.gson.Gson;
 import com.vividsolutions.jts.geom.*;
 import io.github.agentsoz.dataInterface.DataClient;
 import io.github.agentsoz.util.evac.ActionList;
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.matsim.api.core.v01.Coord;
 import org.matsim.api.core.v01.Id;
@@ -28,9 +27,6 @@ import org.matsim.core.controler.OutputDirectoryHierarchy.OverwriteFileSetting;
 import org.matsim.core.events.handler.EventHandler;
 import org.matsim.core.mobsim.framework.MobsimAgent;
 import org.matsim.core.mobsim.framework.PlayPauseSimulationControl;
-import org.matsim.core.mobsim.framework.events.MobsimAfterSimStepEvent;
-import org.matsim.core.mobsim.framework.events.MobsimInitializedEvent;
-import org.matsim.core.mobsim.framework.listeners.MobsimAfterSimStepListener;
 import org.matsim.core.mobsim.framework.listeners.MobsimInitializedListener;
 import org.matsim.core.mobsim.qsim.QSim;
 import org.matsim.core.router.NetworkRoutingProvider;
@@ -42,7 +38,6 @@ import org.matsim.core.utils.geometry.CoordinateTransformation;
 import org.matsim.core.utils.geometry.GeometryUtils;
 import org.matsim.core.utils.geometry.transformations.TransformationFactory;
 import org.matsim.core.utils.io.IOUtils;
-import org.matsim.vehicles.Vehicle;
 import org.matsim.withinday.mobsim.MobsimDataProvider;
 import org.matsim.withinday.trafficmonitoring.TravelTimeCollector;
 
@@ -264,7 +259,7 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 						case blockage:
 							break;
 						case withoutFireArea:
-						case blockageAndWithoutFireArea:
+						case withBlockageButWithoutFire:
 							disutilityFactory = new OnlyTimeDependentTravelDisutilityFactory();
 							break;
 						default:
@@ -430,7 +425,7 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 			case blockage:
 				break;
 			case withoutFireArea:
-			case blockageAndWithoutFireArea:
+			case withBlockageButWithoutFire:
 				return false ;
 			default:
 				throw new RuntimeException("not implemented") ;
