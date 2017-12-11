@@ -33,7 +33,7 @@ public class EvacConfig extends ReflectiveConfigGroup{
 		super(NAME);
 	}
 	
-	public static enum Setup { standard, blockage, fireArea }
+	public static enum Setup { standard, blockage, withoutFireArea, withBlockageButWithoutFire}
 	
 	public void setSetup( Setup setup ) {
 		this.setup = setup ;

@@ -7,7 +7,6 @@ import com.google.gson.Gson;
 import com.vividsolutions.jts.geom.*;
 import io.github.agentsoz.dataInterface.DataClient;
 import io.github.agentsoz.util.evac.ActionList;
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.matsim.api.core.v01.Coord;
 import org.matsim.api.core.v01.Id;
@@ -28,9 +27,6 @@ import org.matsim.core.controler.OutputDirectoryHierarchy.OverwriteFileSetting;
 import org.matsim.core.events.handler.EventHandler;
 import org.matsim.core.mobsim.framework.MobsimAgent;
 import org.matsim.core.mobsim.framework.PlayPauseSimulationControl;
-import org.matsim.core.mobsim.framework.events.MobsimAfterSimStepEvent;
-import org.matsim.core.mobsim.framework.events.MobsimInitializedEvent;
-import org.matsim.core.mobsim.framework.listeners.MobsimAfterSimStepListener;
 import org.matsim.core.mobsim.framework.listeners.MobsimInitializedListener;
 import org.matsim.core.mobsim.qsim.QSim;
 import org.matsim.core.router.NetworkRoutingProvider;
@@ -42,7 +38,6 @@ import org.matsim.core.utils.geometry.CoordinateTransformation;
 import org.matsim.core.utils.geometry.GeometryUtils;
 import org.matsim.core.utils.geometry.transformations.TransformationFactory;
 import org.matsim.core.utils.io.IOUtils;
-import org.matsim.vehicles.Vehicle;
 import org.matsim.withinday.mobsim.MobsimDataProvider;
 import org.matsim.withinday.trafficmonitoring.TravelTimeCollector;
 
@@ -87,6 +82,7 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 	private final EvacConfig evacConfig;
 	private PrintStream fireWriter;
 	private Config config;
+	private boolean configLoaded = false ;
 	
 	public static enum EvacRoutingMode {carFreespeed, carGlobalInformation}
 
@@ -182,7 +178,17 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 		
 	}
 	
+	public Config loadAndPrepareConfig() {
+		// currently already done in constructor.  But I want to make this more
+		// expressive than model.getConfig() and then just hope for the best.  kai, nov'17
+		configLoaded = true ;
+		return config ;
+	}
+	
 	public Scenario loadAndPrepareScenario() {
+		if ( !configLoaded ) {
+			loadAndPrepareConfig() ;
+		}
 
 		ScenarioUtils.loadScenario(scenario) ;
 		
@@ -243,10 +249,21 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 					addEventHandlerBinding().to(TravelTimeCollector.class);
 					addMobsimListenerBinding().to(TravelTimeCollector.class);
 					addTravelTimeBinding(routingMode).to(TravelTimeCollector.class) ;
-
-					TravelDisutilityFactory disutilityFactory = new OnlyTimeDependentTravelDisutilityFactory();
-					if ( evacConfig.getSetup()== EvacConfig.Setup.fireArea ) {
-						disutilityFactory = new EvacTravelDisutility.Factory(linksInFireArea);
+					
+					// travel disutility includes the fire penalty:
+					TravelDisutilityFactory disutilityFactory = new EvacTravelDisutility.Factory(linksInFireArea);
+					switch( evacConfig.getSetup() ) {
+						// use switch so we note missing cases. kai, dec'17
+						case standard:
+							break;
+						case blockage:
+							break;
+						case withoutFireArea:
+						case withBlockageButWithoutFire:
+							disutilityFactory = new OnlyTimeDependentTravelDisutilityFactory();
+							break;
+						default:
+							throw new RuntimeException("not implemented") ;
 					}
 					addTravelDisutilityFactoryBinding(routingMode).toInstance(disutilityFactory);
 				}
@@ -258,9 +275,10 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 					// freespeed travel time:
 					addTravelTimeBinding(routingMode).to(FreeSpeedTravelTime.class);
 					
-					TravelDisutilityFactory disutilityFactory = new OnlyTimeDependentTravelDisutilityFactory();
-					if ( evacConfig.getSetup()== EvacConfig.Setup.fireArea ) {
-						disutilityFactory = new EvacTravelDisutility.Factory(linksInFireArea);
+					// travel disutility includes the fire penalty:
+					TravelDisutilityFactory disutilityFactory = new EvacTravelDisutility.Factory(linksInFireArea);
+					if ( evacConfig.getSetup()== EvacConfig.Setup.withoutFireArea ) {
+						disutilityFactory = new OnlyTimeDependentTravelDisutilityFactory();
 					}
 					addTravelDisutilityFactoryBinding(routingMode).toInstance(disutilityFactory);
 				}
@@ -401,80 +419,88 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 
 	@Override
 	public boolean dataUpdate(double time, String dataType, Object data) {
-		if ( evacConfig.getSetup()== EvacConfig.Setup.fireArea ) {
-			// Is this called in every time step, or just every 5 min or so?  kai, dec'17 --> Normally only one polygon
-			// per time step.  Might want to test for this, and get rid of multi-polygon code below.  On other hand,
-			// probably does not matter much.  kai, dec'17
-			if (FIRE_DATA_MSG.equals(dataType)) {
-				CoordinateTransformation transform = TransformationFactory.getCoordinateTransformation(
-						TransformationFactory.WGS84, config.global().getCoordinateSystem());
-				
-				final String json = new Gson().toJson(data);
-				log.debug(json);
-	
-	//			GeoJSONReader reader = new GeoJSONReader();
-	//			Geometry geometry = reader.read(json);
-				// unfortunately does not work since the incoming data is not typed accordingly. kai, dec'17
-	
-				Map<Double, Double[][]> map = (Map<Double, Double[][]>) data;
-				List<Polygon> polygons = new ArrayList<>() ;
-				List<Geometry> buffers = new ArrayList<>() ;
-				// the map key is time; we just take the superset of all polygons
-				for ( Double[][] pairs : map.values() ) {
-					List<Coord> coords = new ArrayList<>() ;
-					for (Double[] pair : pairs) {
-						coords.add(transform.transform(new Coord(pair[0], pair[1])));
-					}
-					Polygon polygon = GeometryUtils.createGeotoolsPolygon(coords);
-					polygons.add(polygon) ;
-					buffers.add( polygon.buffer(500.) );
-				}
-				
-				linksInFireArea.clear();
-	
-				for ( Node node : scenario.getNetwork().getNodes().values() ) {
-					Point point = GeometryUtils.createGeotoolsPoint( node.getCoord() ) ;
-					for ( Geometry geometry : buffers ) {
-						if (geometry.contains(point)) {
-							log.debug("node {} is IN fire buffer "+ node.getId());
-							for ( Link link : node.getOutLinks().values() ) {
-								linksInFireArea.add( link.getId() ) ;
-							}
-							for ( Link link : node.getInLinks().values() ) {
-								linksInFireArea.add( link.getId() ) ;
-							}
-						}
-					}
-				}
-				
-				if ( fireWriter==null ) {
-					final String filename = config.controler().getOutputDirectory() + "/output_fireCoords.txt.gz";
-					log.warn("writing fire data to " + filename);
-					fireWriter = IOUtils.getPrintStream(filename);
-					fireWriter.println("time\tx\ty") ;
-				}
-				// can't do this earlier since the output directories are not yet prepared
-				// by the controler.  kai, dec'17
-				
-				Envelope env = new Envelope();
-				for(Geometry g : polygons){
-					env.expandToInclude(g.getEnvelopeInternal());
-				}
-				for ( double yy=env.getMinY() ; yy<=env.getMaxY(); yy+=100. ) {
-					for ( double xx=env.getMinX() ; xx<=env.getMaxX() ; xx+=100. ) {
-						if ( polygons.get(0).contains( new GeometryFactory().createPoint(new Coordinate( xx, yy ) ) ) ) {
-							final String str = time + "\t" + xx + "\t" + yy;
-							log.debug(str);
-							fireWriter.println(str);
-						}
-					}
-				}
-				return true;
-			}
-			return false;
-		} else {
-			return true ;
+		switch( evacConfig.getSetup() ) {
+			// use switch so we note missing cases.  kai, dec'17
+			case standard:
+			case blockage:
+				break;
+			case withoutFireArea:
+			case withBlockageButWithoutFire:
+				return false ;
+			default:
+				throw new RuntimeException("not implemented") ;
 		}
+		
+		// Is this called in every time step, or just every 5 min or so?  kai, dec'17 --> Normally only one polygon
+		// per time step.  Might want to test for this, and get rid of multi-polygon code below.  On other hand,
+		// probably does not matter much.  kai, dec'17
+		if (! FIRE_DATA_MSG.equals(dataType)) {
+			return false;
+		}
+		CoordinateTransformation transform = TransformationFactory.getCoordinateTransformation(
+				TransformationFactory.WGS84, config.global().getCoordinateSystem());
+		
+		final String json = new Gson().toJson(data);
+		log.debug(json);
+		
+		//			GeoJSONReader reader = new GeoJSONReader();
+		//			Geometry geometry = reader.read(json);
+		// unfortunately does not work since the incoming data is not typed accordingly. kai, dec'17
+		
+		Map<Double, Double[][]> map = (Map<Double, Double[][]>) data;
+		List<Polygon> polygons = new ArrayList<>() ;
+		List<Geometry> buffers = new ArrayList<>() ;
+		// the map key is time; we just take the superset of all polygons
+		for ( Double[][] pairs : map.values() ) {
+			List<Coord> coords = new ArrayList<>() ;
+			for (Double[] pair : pairs) {
+				coords.add(transform.transform(new Coord(pair[0], pair[1])));
+			}
+			Polygon polygon = GeometryUtils.createGeotoolsPolygon(coords);
+			polygons.add(polygon) ;
+			buffers.add( polygon.buffer(500.) );
+		}
+		
+		linksInFireArea.clear();
+		
+		for ( Node node : scenario.getNetwork().getNodes().values() ) {
+			Point point = GeometryUtils.createGeotoolsPoint( node.getCoord() ) ;
+			for ( Geometry geometry : buffers ) {
+				if (geometry.contains(point)) {
+					log.debug("node {} is IN fire buffer "+ node.getId());
+					for ( Link link : node.getOutLinks().values() ) {
+						linksInFireArea.add( link.getId() ) ;
+					}
+					for ( Link link : node.getInLinks().values() ) {
+						linksInFireArea.add( link.getId() ) ;
+					}
+				}
+			}
+		}
+		
+		if ( fireWriter==null ) {
+			final String filename = config.controler().getOutputDirectory() + "/output_fireCoords.txt.gz";
+			log.warn("writing fire data to " + filename);
+			fireWriter = IOUtils.getPrintStream(filename);
+			fireWriter.println("time\tx\ty") ;
+		}
+		// can't do this earlier since the output directories are not yet prepared
+		// by the controler.  kai, dec'17
+		
+		Envelope env = new Envelope();
+		for(Geometry g : polygons){
+			env.expandToInclude(g.getEnvelopeInternal());
+		}
+		for ( double yy=env.getMinY() ; yy<=env.getMaxY(); yy+=100. ) {
+			for ( double xx=env.getMinX() ; xx<=env.getMaxX() ; xx+=100. ) {
+				if ( polygons.get(0).contains( new GeometryFactory().createPoint(new Coordinate( xx, yy ) ) ) ) {
+					final String str = time + "\t" + xx + "\t" + yy;
+					log.debug(str);
+					fireWriter.println(str);
+				}
+			}
+		}
+		return true;
 	}
 	
 	public final double getTime() {
