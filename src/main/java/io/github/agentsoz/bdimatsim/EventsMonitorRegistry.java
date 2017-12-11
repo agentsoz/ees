@@ -23,10 +23,11 @@ package io.github.agentsoz.bdimatsim;
  */
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.events.*;
@@ -56,7 +57,9 @@ ActivityEndEventHandler,
 		VehicleEntersTrafficEventHandler,
 VehicleLeavesTrafficEventHandler,
 		BasicEventHandler {
-
+	
+	private Map<Id<Vehicle>,Double> linkEnterEventsMap = new LinkedHashMap<>() ;
+	
 	/**
 	 * if these event types were sitting in bdi-abm, I would understand this.  But given that they are sitting here,
 	 * why not use the matsim events directly?  kai, nov'17
@@ -69,7 +72,7 @@ VehicleLeavesTrafficEventHandler,
 		ArrivedAtDestination,
 		DepartedDestination,
 		EndedActivity,
-		NextLinkBlocked
+		AgentInCongestion, NextLinkBlocked
 	}
 	
 	private static final Logger log = Logger.getLogger(EventsMonitorRegistry.class ) ;
@@ -83,19 +86,19 @@ VehicleLeavesTrafficEventHandler,
 	
 	@Override
 	public void handleEvent(VehicleEntersTrafficEvent event) {
-		delegate.handleEvent(event);
+		vehicle2Driver.handleEvent(event);
 	}
 	
 	@Override
 	public void handleEvent(VehicleLeavesTrafficEvent event) {
-		delegate.handleEvent(event);
+		vehicle2Driver.handleEvent(event);
 	}
 	
 	public Id<Person> getDriverOfVehicle(Id<Vehicle> vehicleId) {
-		return delegate.getDriverOfVehicle(vehicleId);
+		return vehicle2Driver.getDriverOfVehicle(vehicleId);
 	}
 	
-	Vehicle2DriverEventHandler delegate = new Vehicle2DriverEventHandler() ;
+	private Vehicle2DriverEventHandler vehicle2Driver = new Vehicle2DriverEventHandler() ;
 
 	@Override
 	public final void reset(int iteration) {
@@ -105,6 +108,7 @@ VehicleLeavesTrafficEventHandler,
 	@Override
 	public final void handleEvent(LinkEnterEvent event) {
 		callRegisteredHandlers(event);
+		linkEnterEventsMap.put( event.getVehicleId(), event.getTime() ) ;
 	}
 
 	@Override
@@ -149,10 +153,17 @@ VehicleLeavesTrafficEventHandler,
   
 		// yyyyyy in the following, monitor.getLinkId can now be null.  Need to hedge against it!  kai, nov'17
   
+		// yy the following feels rather slow.  Say we have 6000 monitors of "something", then
+		// each link enter and link leave event means to go through all 6000 monitors to
+		// find out that they are not involved.  kai, dec'17
 		for (Monitor monitor : monitors) {
-			// (go through all registered monitoris)
 	        switch (monitor.getEvent()) {
 	        	// (switch according to the type of monitor)
+				case AgentInCongestion:
+					if ( ev instanceof AgentInCongestionEvent ) {
+						log.warn("agent stuck in congestion, need to do something with it.");
+					}
+					break ;
 				case NextLinkBlocked:
 					if ( ev instanceof NextLinkBlockedEvent ) {
 						log.debug("catching a nextLinkBlocked event"); ;
@@ -167,6 +178,7 @@ VehicleLeavesTrafficEventHandler,
 							}
 						}
 					}
+					break;
 			// yy from a matsim perspective, the following are plugged together in a weird way: in matsim, enterLink
 			// would really be the same as leaveNode.  And not enterNode, as the bdi framework keyword implies.
 			// Do you really want the naming like this?  kai, nov'17

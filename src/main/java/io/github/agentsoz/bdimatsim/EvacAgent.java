@@ -45,16 +45,14 @@ package io.github.agentsoz.bdimatsim;
 import org.apache.log4j.Logger;
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.network.Link;
+import org.matsim.api.core.v01.network.Network;
 import org.matsim.api.core.v01.population.Activity;
 import org.matsim.api.core.v01.population.Leg;
 import org.matsim.api.core.v01.population.Person;
 import org.matsim.api.core.v01.population.Plan;
 import org.matsim.api.core.v01.population.PlanElement;
 import org.matsim.core.gbl.Gbl;
-import org.matsim.core.mobsim.framework.HasPerson;
-import org.matsim.core.mobsim.framework.MobsimAgent;
-import org.matsim.core.mobsim.framework.MobsimDriverAgent;
-import org.matsim.core.mobsim.framework.PlanAgent;
+import org.matsim.core.mobsim.framework.*;
 import org.matsim.core.mobsim.qsim.agents.BasicPlanAgentImpl;
 import org.matsim.core.mobsim.qsim.agents.HasModifiablePlan;
 import org.matsim.core.mobsim.qsim.agents.PlanBasedDriverAgentImpl;
@@ -78,16 +76,20 @@ class EvacAgent implements MobsimDriverAgent, HasPerson, PlanAgent, HasModifiabl
 
 	private final TripRouter tripRouter  ;
 	private final EditTrips editTrips ;
-
+	private final Network network;
+	private final MobsimTimer simTimer;
+	
 	private boolean planWasModified = false ;
-
+	private double expectedLinkLeaveTime;
+	
 	EvacAgent(final Plan selectedPlan, final Netsim simulation, TripRouter tripRouter) {
 		this.tripRouter = tripRouter;
-		basicAgentDelegate = new BasicPlanAgentImpl(selectedPlan, simulation.getScenario(), simulation.getEventsManager(), 
+		this.basicAgentDelegate = new BasicPlanAgentImpl(selectedPlan, simulation.getScenario(), simulation.getEventsManager(),
 				simulation.getSimTimer() ) ;
-		driverAgentDelegate = new PlanBasedDriverAgentImpl(basicAgentDelegate) ;
-		
-		editTrips = new EditTrips(tripRouter, simulation.getScenario() ) ;
+		this.driverAgentDelegate = new PlanBasedDriverAgentImpl(basicAgentDelegate) ;
+		this.editTrips = new EditTrips(tripRouter, simulation.getScenario() ) ;
+		this.network = simulation.getScenario().getNetwork() ;
+		this.simTimer = simulation.getSimTimer() ;
 
 		// deliberately does NOT keep a back pointer to the whole Netsim; this should also be removed in the constructor call.
 	}
@@ -240,6 +242,12 @@ class EvacAgent implements MobsimDriverAgent, HasPerson, PlanAgent, HasModifiabl
 	@Override
 	public final void notifyMoveOverNode(Id<Link> newLinkId) {
 		driverAgentDelegate.notifyMoveOverNode(newLinkId);
+		Link link = network.getLinks().get( newLinkId ) ;
+		double now = simTimer.getTimeOfDay() ;
+		this.expectedLinkLeaveTime = link.getLength()/link.getFreespeed(now) ;
+	}
+	final double getExpectedLinkLeaveTime() {
+		return this.expectedLinkLeaveTime ;
 	}
 
 	@Override

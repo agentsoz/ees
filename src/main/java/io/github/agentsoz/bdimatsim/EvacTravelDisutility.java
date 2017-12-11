@@ -104,7 +104,8 @@ public final class EvacTravelDisutility implements TravelDisutility {
 	@Override
 	public double getLinkMinimumTravelDisutility(final Link link) {
 		double factor = 1. ;
-		if ( ((Customizable)link).getCustomAttributes().containsKey(IN_FIRE_AREA) ) {
+		if ( linksInFireArea.contains( link.getId() ) ) {
+			log.debug("found link in fire area:" + link.getId() );
 			factor = 10. ;
 		}
 		return factor * this.travelTime.getLinkTravelTime(link, Time.UNDEFINED_TIME, null, null);

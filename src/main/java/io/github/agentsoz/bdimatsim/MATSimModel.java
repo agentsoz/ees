@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 import com.vividsolutions.jts.geom.*;
 import io.github.agentsoz.dataInterface.DataClient;
 import io.github.agentsoz.util.evac.ActionList;
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.matsim.api.core.v01.Coord;
 import org.matsim.api.core.v01.Id;
@@ -27,7 +28,9 @@ import org.matsim.core.controler.OutputDirectoryHierarchy.OverwriteFileSetting;
 import org.matsim.core.events.handler.EventHandler;
 import org.matsim.core.mobsim.framework.MobsimAgent;
 import org.matsim.core.mobsim.framework.PlayPauseSimulationControl;
+import org.matsim.core.mobsim.framework.events.MobsimAfterSimStepEvent;
 import org.matsim.core.mobsim.framework.events.MobsimInitializedEvent;
+import org.matsim.core.mobsim.framework.listeners.MobsimAfterSimStepListener;
 import org.matsim.core.mobsim.framework.listeners.MobsimInitializedListener;
 import org.matsim.core.mobsim.qsim.QSim;
 import org.matsim.core.router.NetworkRoutingProvider;
@@ -39,6 +42,7 @@ import org.matsim.core.utils.geometry.CoordinateTransformation;
 import org.matsim.core.utils.geometry.GeometryUtils;
 import org.matsim.core.utils.geometry.transformations.TransformationFactory;
 import org.matsim.core.utils.io.IOUtils;
+import org.matsim.vehicles.Vehicle;
 import org.matsim.withinday.mobsim.MobsimDataProvider;
 import org.matsim.withinday.trafficmonitoring.TravelTimeCollector;
 
@@ -231,19 +235,15 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 			@Override public void install() {
 				{
 					final String routingMode = EvacRoutingMode.carGlobalInformation.name();
+					
+					addRoutingModuleBinding(routingMode).toProvider(new NetworkRoutingProvider(TransportMode.car, routingMode)) ;
 
+					// congested travel time:
 					bind(TravelTimeCollector.class).in(Singleton.class);
 					addEventHandlerBinding().to(TravelTimeCollector.class);
 					addMobsimListenerBinding().to(TravelTimeCollector.class);
 					addTravelTimeBinding(routingMode).to(TravelTimeCollector.class) ;
 
-					addRoutingModuleBinding(routingMode).toProvider(
-							new NetworkRoutingProvider(TransportMode.car, routingMode)
-					) ;
-
-//					final RandomizingTimeDistanceTravelDisutilityFactory disutilityFactory
-//							= new RandomizingTimeDistanceTravelDisutilityFactory(routingMode, getConfig().planCalcScore());
-//					disutilityFactory.setSigma(0.) ;
 					TravelDisutilityFactory disutilityFactory = new OnlyTimeDependentTravelDisutilityFactory();
 					if ( evacConfig.getSetup()== EvacConfig.Setup.fireArea ) {
 						disutilityFactory = new EvacTravelDisutility.Factory(linksInFireArea);
@@ -253,15 +253,11 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 				{
 					String routingMode = EvacRoutingMode.carFreespeed.name() ;
 					
-					addRoutingModuleBinding(routingMode).toProvider(
-							new NetworkRoutingProvider(TransportMode.car,routingMode)
-					) ;
+					addRoutingModuleBinding(routingMode).toProvider(new NetworkRoutingProvider(TransportMode.car,routingMode)) ;
 					
+					// freespeed travel time:
 					addTravelTimeBinding(routingMode).to(FreeSpeedTravelTime.class);
 					
-//					final RandomizingTimeDistanceTravelDisutilityFactory disutilityFactory
-//							= new RandomizingTimeDistanceTravelDisutilityFactory(routingMode, getConfig().planCalcScore());
-//					disutilityFactory.setSigma(0.) ;
 					TravelDisutilityFactory disutilityFactory = new OnlyTimeDependentTravelDisutilityFactory();
 					if ( evacConfig.getSetup()== EvacConfig.Setup.fireArea ) {
 						disutilityFactory = new EvacTravelDisutility.Factory(linksInFireArea);
@@ -273,17 +269,31 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 				
 				install( new EvacQSimModule(MATSimModel.this, controller.getEvents()) ) ;
 
-				this.addMobsimListenerBinding().toInstance( new MobsimInitializedListener() {
-					@Override public void notifyMobsimInitialized(MobsimInitializedEvent e) {
+				this.addMobsimListenerBinding().toInstance((MobsimInitializedListener) e -> {
 
-						qSim = (QSim) e.getQueueSimulation() ;
+					qSim = (QSim) e.getQueueSimulation() ;
 
-						playPause = new PlayPauseSimulationControl( qSim ) ;
-						playPause.pause();
+					playPause = new PlayPauseSimulationControl( qSim ) ;
+					playPause.pause();
 
-						//						initialiseVisualisedAgents() ;
-					}
+					//						initialiseVisualisedAgents() ;
 				}) ;
+				
+				// early prototype for congestion detection:
+//				this.addMobsimListenerBinding().toInstance(new MobsimAfterSimStepListener() {
+//					@Override
+//					public void notifyMobsimAfterSimStep(MobsimAfterSimStepEvent e) {
+//						for ( MobsimAgent agent : ((QSim)e.getQueueSimulation()).getAgents().values() ) {
+//							if ( agent instanceof EvacAgent ) {
+//								double delay = e.getSimulationTime() - ((EvacAgent) agent).getExpectedLinkLeaveTime();
+//								if ( delay > 60 ) {
+//									Id<Vehicle> vehicleId = ((EvacAgent) agent).getVehicle().getId() ;
+//									getEvents().processEvent( new AgentInCongestionEvent(e.getSimulationTime(), vehicleId, agent.getId(), agent.getCurrentLinkId() ));
+//								}
+//							}
+//						}
+//					}
+//				}) ;
 				
 				// some infrastructure that makes results available: 
 				//this.addMobsimListenerBinding().toInstance( new MobsimAfterSimStepListener() {
@@ -300,6 +310,7 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 		this.matsimThread = new Thread( controller ) ;
 		matsimThread.start();
 
+		// wait until the thread has initialized before returning:
 		while( this.playPause==null ) {
 			try {
 				Thread.sleep(100);
@@ -391,7 +402,9 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 	@Override
 	public boolean dataUpdate(double time, String dataType, Object data) {
 		if ( evacConfig.getSetup()== EvacConfig.Setup.fireArea ) {
-			// yyyyyy is this called in every time step, or just every 5 min or so?
+			// Is this called in every time step, or just every 5 min or so?  kai, dec'17 --> Normally only one polygon
+			// per time step.  Might want to test for this, and get rid of multi-polygon code below.  On other hand,
+			// probably does not matter much.  kai, dec'17
 			if (FIRE_DATA_MSG.equals(dataType)) {
 				CoordinateTransformation transform = TransformationFactory.getCoordinateTransformation(
 						TransformationFactory.WGS84, config.global().getCoordinateSystem());
@@ -409,10 +422,8 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 				// the map key is time; we just take the superset of all polygons
 				for ( Double[][] pairs : map.values() ) {
 					List<Coord> coords = new ArrayList<>() ;
-					for ( int ii=0 ; ii<pairs.length ; ii++ ) {
-						Coord coordOrig = new Coord( pairs[ii][0], pairs[ii][1]) ;
-						Coord coordTransformed = transform.transform(coordOrig) ;
-						coords.add( coordTransformed ) ;
+					for (Double[] pair : pairs) {
+						coords.add(transform.transform(new Coord(pair[0], pair[1])));
 					}
 					Polygon polygon = GeometryUtils.createGeotoolsPolygon(coords);
 					polygons.add(polygon) ;
