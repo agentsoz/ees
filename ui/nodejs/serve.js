@@ -37,7 +37,7 @@ var distDir  = path.join(path.dirname(fs.realpathSync(__filename)), '..','..','d
 var dist = path.join(distDir, global.RELEASE_VERSION + '.jar');
 var templateDir  = path.join(distDir, 'scenarios','template');
 var appDataDir  = path.join(path.dirname(fs.realpathSync(__filename)), '..','..','html');
-var logLevelMain = 'TRACE';
+var logLevelMain = 'INFO';
 var logLevelJill = 'WARN';
 
 // Keeps track of the number of requests handled
@@ -265,6 +265,8 @@ function create(data, callback) {
 				//global.log(JSON.stringify(res2));
 		    	var nAgents = res2.simulation.bdiagents[0].trim();
 				// Now run the simulation
+				// FIXME: repeating the plotScript call since for some reason just
+				// one call doesn't seem to work anymore, dsingh 12/dec/17
 			var plotScript = path.join(distDir,'create-analysis-graphs.sh');
 				var cmd = 'java -Xms2g -Xmx2g -cp ' + dist +
 			       ' io.github.agentsoz.ees.Main' +
@@ -279,6 +281,8 @@ function create(data, callback) {
 			       'programOutputFile: \\"' + fileJillOut + '\\"' +
 			       '}"' +
 			       ' && ' +
+			       plotScript + ' --scenario-output-dir "'+userDir+'"' +
+						 ' && ' +
 			       plotScript + ' --scenario-output-dir "'+userDir+'"' +
 			       '&'
 			       ;
