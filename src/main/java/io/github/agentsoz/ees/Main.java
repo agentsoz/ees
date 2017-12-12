@@ -192,6 +192,7 @@ public class Main {
 			// use switch so we catch missing cases. kai, dec'18
 			case standard:
 			case withoutFireArea:
+			case tertiaryRoadsCorrection:
 				return ;
 			case blockage:
 			case withBlockageButWithoutFire:
