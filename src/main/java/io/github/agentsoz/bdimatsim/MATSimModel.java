@@ -24,6 +24,7 @@ import org.matsim.core.controler.AbstractModule;
 import org.matsim.core.controler.Controler;
 import org.matsim.core.controler.OutputDirectoryHierarchy.OverwriteFileSetting;
 import org.matsim.core.events.handler.EventHandler;
+import org.matsim.core.gbl.Gbl;
 import org.matsim.core.mobsim.framework.MobsimAgent;
 import org.matsim.core.mobsim.framework.PlayPauseSimulationControl;
 import org.matsim.core.mobsim.framework.listeners.MobsimInitializedListener;
@@ -199,6 +200,12 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 			if ( link.getFreespeed() > veryLargeSpeed ) {
 				link.setFreespeed(veryLargeSpeed);
 			}
+			if ( evacConfig.getSetup()== EvacConfig.Setup.tertiaryRoadsCorrection ) {
+				// yyyy correction for much too high speed value on tertiary roads. kai, dec'17
+				if (link.getFreespeed() == 27.77777777777778 && link.getCapacity() == 600.) {
+					link.setFreespeed(50. / 3.6);
+				}
+			}
 		}
 		
 		scenarioLoaded=true ;
@@ -256,15 +263,15 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 					switch( evacConfig.getSetup() ) {
 						// use switch so we note missing cases. kai, dec'17
 						case standard:
-							break;
 						case blockage:
+						case tertiaryRoadsCorrection:
 							break;
 						case withoutFireArea:
 						case withBlockageButWithoutFire:
 							disutilityFactory = new OnlyTimeDependentTravelDisutilityFactory();
 							break;
 						default:
-							throw new RuntimeException("not implemented") ;
+							Gbl.fail();
 					}
 					addTravelDisutilityFactoryBinding(routingMode).toInstance(disutilityFactory);
 				}
@@ -424,6 +431,7 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 			// use switch so we note missing cases.  kai, dec'17
 			case standard:
 			case blockage:
+			case tertiaryRoadsCorrection:
 				break;
 			case withoutFireArea:
 			case withBlockageButWithoutFire:
@@ -459,7 +467,7 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 			}
 			Polygon polygon = GeometryUtils.createGeotoolsPolygon(coords);
 			polygons.add(polygon) ;
-			buffers.add( polygon.buffer(500.) );
+			buffers.add( polygon.buffer(1000.) );
 		}
 		
 		linksInFireArea.clear();
@@ -478,6 +486,11 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 				}
 			}
 		}
+		
+		// yyyyyy The above, together with its corresponding implementation in EvacTravelDisutility,
+		// will in the end make it still better to drive a short path directly through the fire rather than
+		// skirt it in the buffer.  So the penalty needs to depend on the distance to the fire area,
+		// it cannot just be yes/no.  kai, dec'17
 		
 		if ( fireWriter==null ) {
 			final String filename = config.controler().getOutputDirectory() + "/output_fireCoords.txt.gz";
