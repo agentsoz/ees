@@ -7,7 +7,6 @@ import com.google.gson.Gson;
 import com.vividsolutions.jts.geom.*;
 import io.github.agentsoz.dataInterface.DataClient;
 import io.github.agentsoz.util.evac.ActionList;
-import org.apache.log4j.Logger;
 import org.matsim.api.core.v01.Coord;
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.Scenario;
@@ -67,6 +66,8 @@ import io.github.agentsoz.bdiabm.ABMServerInterface;
 import io.github.agentsoz.bdiabm.data.AgentDataContainer;
 import io.github.agentsoz.dataInterface.DataServer;
 import io.github.agentsoz.nonmatsim.PAAgentManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -75,8 +76,8 @@ import javax.inject.Singleton;
  * @author QingyuChen, KaiNagel, Dhi Singh
  */
 public final class MATSimModel implements ABMServerInterface, DataClient {
-//	private static final Logger log = LoggerFactory.getLogger("");
-	private static final Logger log = Logger.getLogger(MATSimModel.class) ;
+	private static final Logger log = LoggerFactory.getLogger(MATSimModel.class);
+	//private static final Logger log = Logger..getLogger(MATSimModel.class) ;
 	public static final String MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR = "--matsim-output-directory";
 	static final String FIRE_DATA_MSG = "fire_data";
 	private final EvacConfig evacConfig;
@@ -348,7 +349,7 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 		runUntil( (int)(playPause.getLocalTime() + 1), agentDataContainer ) ;
 	}
 	public final void runUntil( long newTime , AgentDataContainer agentDataContainer ) {
-			log.trace("Received {} " + agentManager.getAgentDataContainer());
+			log.trace("Received {} ", agentManager.getAgentDataContainer());
 			agentManager.updateActions(); // handle incoming BDI actions
 			playPause.doStep( (int) (newTime) );
 			agentManager.transferActionsPerceptsToDataContainer(); // send back BDI actions/percepts/status'
