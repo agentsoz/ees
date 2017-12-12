@@ -261,7 +261,6 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 					
 					// travel disutility includes the fire penalty:
 					TravelDisutilityFactory disutilityFactory = new EvacTravelDisutility.Factory(linksInFireArea);
-					Gbl.assertNotNull(evacConfig);
 					switch( evacConfig.getSetup() ) {
 						// use switch so we note missing cases. kai, dec'17
 						case standard:
@@ -287,9 +286,20 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 					
 					// travel disutility includes the fire penalty:
 					TravelDisutilityFactory disutilityFactory = new EvacTravelDisutility.Factory(linksInFireArea);
-					if ( evacConfig.getSetup()== EvacConfig.Setup.withoutFireArea ) {
-						disutilityFactory = new OnlyTimeDependentTravelDisutilityFactory();
+					switch( evacConfig.getSetup() ) {
+						// use switch so we note missing cases. kai, dec'17
+						case standard:
+						case blockage:
+						case tertiaryRoadsCorrection:
+							break;
+						case withoutFireArea:
+						case withBlockageButWithoutFire:
+							disutilityFactory = new OnlyTimeDependentTravelDisutilityFactory();
+							break;
+						default:
+							Gbl.fail();
 					}
+
 					addTravelDisutilityFactoryBinding(routingMode).toInstance(disutilityFactory);
 				}
 		
