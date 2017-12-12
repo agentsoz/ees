@@ -81,11 +81,11 @@ public final class EvacTravelDisutility implements TravelDisutility {
 
 	private static final Logger log = Logger.getLogger(EvacTravelDisutility.class);
 
-	private final Set<Id<Link>> linksInFireArea;
+	private final Map<Id<Link>, Double> linksInFireArea;
 	
 	private final TravelTime travelTime;
 
-	private EvacTravelDisutility(final TravelTime travelTime, Set<Id<Link>> linksInFireArea) {
+	private EvacTravelDisutility(final TravelTime travelTime, Map<Id<Link>, Double> linksInFireArea) {
 		this.linksInFireArea = linksInFireArea;
 		Gbl.assertNotNull(travelTime);
 		this.travelTime = travelTime;
@@ -94,7 +94,7 @@ public final class EvacTravelDisutility implements TravelDisutility {
 	@Override
 	public double getLinkTravelDisutility(final Link link, final double time, final Person person, final Vehicle vehicle) {
 		double factor = 1. ;
-		if ( linksInFireArea.contains( link.getId() ) ) {
+		if ( linksInFireArea.keySet().contains( link.getId() ) ) {
 			log.debug("found link in fire area:" + link.getId() );
 			factor = 10. ;
 		}
@@ -104,7 +104,7 @@ public final class EvacTravelDisutility implements TravelDisutility {
 	@Override
 	public double getLinkMinimumTravelDisutility(final Link link) {
 		double factor = 1. ;
-		if ( linksInFireArea.contains( link.getId() ) ) {
+		if ( linksInFireArea.keySet().contains( link.getId() ) ) {
 			log.debug("found link in fire area:" + link.getId() );
 			factor = 10. ;
 		}
@@ -112,9 +112,9 @@ public final class EvacTravelDisutility implements TravelDisutility {
 	}
 	
 	public static final class Factory implements TravelDisutilityFactory {
-		private final Set<Id<Link>> linksInFireArea;
+		private final Map<Id<Link>, Double> linksInFireArea;
 		
-		public Factory(Set<Id<Link>> linksInFireArea ) {
+		public Factory(Map<Id<Link>, Double> linksInFireArea ) {
 			this.linksInFireArea = linksInFireArea ;
 		}
 		@Override

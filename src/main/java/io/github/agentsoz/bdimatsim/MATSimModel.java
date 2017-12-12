@@ -120,7 +120,7 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 	
 	private boolean scenarioLoaded = false ;
 	
-	private Set<Id<Link>> linksInFireArea = new HashSet<>() ;
+	private Map<Id<Link>,Double> penaltyOfLink = new HashMap<>() ;
 	
 	public MATSimModel(String matSimFile, String matsimOutputDirectory) {
 		// not the most elegant way of doing this ...
@@ -260,7 +260,7 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 					addTravelTimeBinding(routingMode).to(TravelTimeCollector.class) ;
 					
 					// travel disutility includes the fire penalty:
-					TravelDisutilityFactory disutilityFactory = new EvacTravelDisutility.Factory(linksInFireArea);
+					TravelDisutilityFactory disutilityFactory = new EvacTravelDisutility.Factory(penaltyOfLink);
 					switch( evacConfig.getSetup() ) {
 						// use switch so we note missing cases. kai, dec'17
 						case standard:
@@ -285,7 +285,7 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 					addTravelTimeBinding(routingMode).to(FreeSpeedTravelTime.class);
 					
 					// travel disutility includes the fire penalty:
-					TravelDisutilityFactory disutilityFactory = new EvacTravelDisutility.Factory(linksInFireArea);
+					TravelDisutilityFactory disutilityFactory = new EvacTravelDisutility.Factory(penaltyOfLink);
 					switch( evacConfig.getSetup() ) {
 						// use switch so we note missing cases. kai, dec'17
 						case standard:
@@ -469,35 +469,40 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 		// unfortunately does not work since the incoming data is not typed accordingly. kai, dec'17
 		
 		Map<Double, Double[][]> map = (Map<Double, Double[][]>) data;
-		List<Polygon> polygons = new ArrayList<>() ;
-		List<Geometry> buffers = new ArrayList<>() ;
+//		List<Polygon> polygons = new ArrayList<>() ;
+//		List<Geometry> buffers = new ArrayList<>() ;
 		// the map key is time; we just take the superset of all polygons
+		Geometry all = null ;
 		for ( Double[][] pairs : map.values() ) {
 			List<Coord> coords = new ArrayList<>() ;
 			for (Double[] pair : pairs) {
 				coords.add(transform.transform(new Coord(pair[0], pair[1])));
 			}
 			Polygon polygon = GeometryUtils.createGeotoolsPolygon(coords);
-			polygons.add(polygon) ;
-			buffers.add( polygon.buffer(1000.) );
+			if ( all==null ) {
+				all = polygon ;
+			} else {
+				all = all.union(polygon);
+			}
+//			polygons.add(polygon) ;
+//			buffers.add( polygon.buffer(1000.) );
 		}
 		
-		linksInFireArea.clear();
+		Geometry buffer = all.buffer(1000.);
+		
+		penaltyOfLink.clear();
 		
 //		https://stackoverflow.com/questions/38404095/how-to-calculate-the-distance-in-meters-between-a-geographic-point-and-a-given-p
 		
 		for ( Node node : scenario.getNetwork().getNodes().values() ) {
 			Point point = GeometryUtils.createGeotoolsPoint( node.getCoord() ) ;
-			for ( Geometry geometry : buffers ) {
-				if (geometry.contains(point)) {
-					log.debug("node {} is IN danger area "+ node.getId());
-					
-					for ( Link link : node.getOutLinks().values() ) {
-						linksInFireArea.add( link.getId() ) ;
-					}
-					for ( Link link : node.getInLinks().values() ) {
-						linksInFireArea.add( link.getId() ) ;
-					}
+			if ( all.contains(point) || buffer.contains(point)) {
+				log.debug("node {} is IN danger area "+ node.getId());
+				for ( Link link : node.getOutLinks().values() ) {
+					penaltyOfLink.put( link.getId() ,1. ) ;
+				}
+				for ( Link link : node.getInLinks().values() ) {
+					penaltyOfLink.put( link.getId() , 1.) ;
 				}
 			}
 		}
@@ -517,12 +522,12 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 		// by the controler.  kai, dec'17
 		
 		Envelope env = new Envelope();
-		for(Geometry g : polygons){
-			env.expandToInclude(g.getEnvelopeInternal());
-		}
+//		for(Geometry g : polygons){
+			env.expandToInclude(all.getEnvelopeInternal());
+//		}
 		for ( double yy=env.getMinY() ; yy<=env.getMaxY(); yy+=100. ) {
 			for ( double xx=env.getMinX() ; xx<=env.getMaxX() ; xx+=100. ) {
-				if ( polygons.get(0).contains( new GeometryFactory().createPoint(new Coordinate( xx, yy ) ) ) ) {
+				if ( all.contains( new GeometryFactory().createPoint(new Coordinate( xx, yy ) ) ) ) {
 					final String str = time + "\t" + xx + "\t" + yy;
 					log.debug(str);
 					fireWriter.println(str);
