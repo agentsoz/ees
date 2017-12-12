@@ -149,6 +149,7 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 		config.planCalcScore().setWriteExperiencedPlans(true);
 		
 		evacConfig = ConfigUtils.addOrGetModule(config,EvacConfig.class) ;
+		Gbl.assertNotNull(evacConfig);
 		
 		// we have to declare those routingModes where we want to use the network router:
 		{
@@ -182,7 +183,7 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 	
 	public Config loadAndPrepareConfig() {
 		// currently already done in constructor.  But I want to make this more
-		// expressive than model.getConfig() and then just hope for the best.  kai, nov'17
+		// expressive than model.getConfig().  kai, nov'17
 		configLoaded = true ;
 		return config ;
 	}
@@ -260,6 +261,7 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 					
 					// travel disutility includes the fire penalty:
 					TravelDisutilityFactory disutilityFactory = new EvacTravelDisutility.Factory(linksInFireArea);
+					Gbl.assertNotNull(evacConfig);
 					switch( evacConfig.getSetup() ) {
 						// use switch so we note missing cases. kai, dec'17
 						case standard:
@@ -472,11 +474,14 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 		
 		linksInFireArea.clear();
 		
+//		https://stackoverflow.com/questions/38404095/how-to-calculate-the-distance-in-meters-between-a-geographic-point-and-a-given-p
+		
 		for ( Node node : scenario.getNetwork().getNodes().values() ) {
 			Point point = GeometryUtils.createGeotoolsPoint( node.getCoord() ) ;
 			for ( Geometry geometry : buffers ) {
 				if (geometry.contains(point)) {
-					log.debug("node {} is IN fire buffer "+ node.getId());
+					log.debug("node {} is IN danger area "+ node.getId());
+					
 					for ( Link link : node.getOutLinks().values() ) {
 						linksInFireArea.add( link.getId() ) ;
 					}

@@ -27,7 +27,7 @@ import org.matsim.core.config.ReflectiveConfigGroup;
 public class EvacConfig extends ReflectiveConfigGroup{
 	public static final String NAME="evac" ;
 	public static final String SETUP_INDICATOR="--setup" ;
-	private Setup setup;
+	private Setup setup = Setup.standard ;
 	
 	public EvacConfig() {
 		super(NAME);
