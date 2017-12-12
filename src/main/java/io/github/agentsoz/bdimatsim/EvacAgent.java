@@ -270,6 +270,9 @@ class EvacAgent implements MobsimDriverAgent, HasPerson, PlanAgent, HasModifiabl
 						new NextLinkBlockedEvent(
 								now, this.getVehicle().getId(), this.getId(), this.getCurrentLinkId(),
 														nextLink.getId() ) );
+				// yyyy this event is now generated both here and in the intersection.  In general,
+				// it should be triggered here, giving the bdi time to compute.  However, the
+				// closure may happen between here and arriving at the node ...  kai, dec'17
 			}
 		}
 		

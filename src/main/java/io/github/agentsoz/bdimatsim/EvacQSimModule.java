@@ -97,6 +97,10 @@ public class EvacQSimModule extends AbstractModule {
 					Id<Link> blockedLinkId = nextLinkId ;
 					eventsManager.processEvent(new NextLinkBlockedEvent( now, vehicleId,
 																			   driverId, currentLinkId, blockedLinkId) );
+					// yyyy this event is now generated both here and in the agent.  In general,
+					// it should be triggered in the agent, giving the bdi time to compute.  However, the
+					// closure may happen between there and arriving at the node ...  kai, dec'17
+					
 				}
 				log.debug("time=" + matSimModel.getTime() + ";\t fromLink=" + currentLink.getId() +
 								  ";\ttoLink=" + nextLinkId + ";\tanswer=" + accept.name() ) ;
