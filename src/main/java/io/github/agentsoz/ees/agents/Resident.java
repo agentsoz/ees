@@ -76,7 +76,7 @@ public class Resident extends Agent implements io.github.agentsoz.bdiabm.Agent {
 	 */
 	@Override
 	public void finish() {
-		logger.trace(logPrefix()+" is terminating");
+		logger.trace("{} is terminating", logPrefix());
 	}
 
 	/** 
@@ -122,7 +122,7 @@ public class Resident extends Agent implements io.github.agentsoz.bdiabm.Agent {
 	 */
 	@Override
 	public void updateAction(String actionID, ActionContent content) {
-		logger.debug(logPrefix() + "received action update: "+content);
+		logger.debug("{} received action update: {}", logPrefix(), content);
 		if (content.getAction_type().equals(ActionList.DRIVETO)) {
 			if (content.getState()==State.PASSED) {
 				// Wake up the agent that was waiting for external action to finish
@@ -143,7 +143,7 @@ public class Resident extends Agent implements io.github.agentsoz.bdiabm.Agent {
 	 */
 	@Override
 	public void init(String[] args) {
-		logger.warn(logPrefix() + "using a stub for io.github.agentsoz.bdiabm.Agent.init(...)");
+		logger.warn("{} using a stub for io.github.agentsoz.bdiabm.Agent.init(...)", logPrefix());
 	}
 
 	/**
@@ -153,7 +153,7 @@ public class Resident extends Agent implements io.github.agentsoz.bdiabm.Agent {
 	 */
 	@Override
 	public void start() {
-		logger.warn(logPrefix() + "using a stub for io.github.agentsoz.bdiabm.Agent.start()");
+		logger.warn("{} using a stub for io.github.agentsoz.bdiabm.Agent.start()", logPrefix());
 	}
 
 	/**
@@ -163,7 +163,7 @@ public class Resident extends Agent implements io.github.agentsoz.bdiabm.Agent {
 	 */
 	@Override
 	public void kill() {
-		logger.warn(logPrefix() + "using a stub for io.github.agentsoz.bdiabm.Agent.kill()");
+		logger.warn("{} using a stub for io.github.agentsoz.bdiabm.Agent.kill()", logPrefix());
 	}
 
 	int getFailedAttempts() {
