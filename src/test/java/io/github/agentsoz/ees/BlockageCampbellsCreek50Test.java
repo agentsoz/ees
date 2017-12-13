@@ -59,7 +59,7 @@ public class BlockageCampbellsCreek50Test {
 
 		// ---
 		
-		TestUtils.comparingDepartures(primaryExpectedEventsFilename,actualEventsFilename,5.);
+		TestUtils.comparingDepartures(primaryExpectedEventsFilename,actualEventsFilename,10.);
 		TestUtils.comparingArrivals(primaryExpectedEventsFilename,actualEventsFilename,5.);
 		TestUtils.comparingActivityStarts(primaryExpectedEventsFilename,actualEventsFilename, 5.);
 		TestUtils.compareFullEvents(primaryExpectedEventsFilename,actualEventsFilename, false);
