@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.PriorityQueue;
 
+import io.github.agentsoz.jill.core.GlobalState;
 import io.github.agentsoz.util.evac.PerceptList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -137,6 +138,7 @@ public class JillBDIModel extends JillModel implements DataClient {
 			adc.getOrCreate(matsimAgentId).getPerceptContainer().put(PhoenixFireModule.FIREALERT, new Double(timeInSecs));
 		}
 		translateToJillIds(adc);
+		adc.getOrCreate(PerceptList.BROADCAST).getPerceptContainer().put(PerceptList.TIME, timeInSecs);
 		super.takeControl(adc);
         translateToMATSimIds(adc);
 	}
@@ -172,8 +174,7 @@ public class JillBDIModel extends JillModel implements DataClient {
 			alerts.add(new TimedAlert(evacTimeInSeconds, matsimAgentId));
 		}
 	}
-	
-	
+
 	private class TimedAlert{
 		private double time;
 		private String agent;

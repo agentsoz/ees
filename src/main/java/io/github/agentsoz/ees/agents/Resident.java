@@ -52,6 +52,8 @@ public class Resident extends Agent implements io.github.agentsoz.bdiabm.Agent {
 	private Prefix prefix = new Prefix();
 	private int failedAttempts;
 
+	private double time = -1;
+
 	public Resident(String str) {
 		super(str);
 	}
@@ -85,7 +87,11 @@ public class Resident extends Agent implements io.github.agentsoz.bdiabm.Agent {
 	 */
 	@Override
 	public void handlePercept(String perceptID, Object parameters) {
-		if (perceptID.equals(PerceptList.ARRIVED)) {
+		if (perceptID.equals(PerceptList.TIME)) {
+			if (parameters instanceof Double) {
+				time = (double) parameters;
+			}
+		} else if (perceptID.equals(PerceptList.ARRIVED)) {
 			// Agent just arrived at the shelter
 			writer.println(prefix + "arrived at shelter in " + getShelterLocation());
 		} else if (perceptID.equals(PerceptList.BLOCKED)) {
@@ -170,13 +176,17 @@ public class Resident extends Agent implements io.github.agentsoz.bdiabm.Agent {
 		return failedAttempts;
 	}
 
+	double getTime() {
+		return time;
+	}
+
 	public String logPrefix() {
 		return prefix.toString();
 	}
 
 	class Prefix{
 		public String toString() {
-			return String.format("Time %05.0f Resident %-4s : ",DataServer.getServer("Bushfire").getTime(), getId());
+			return String.format("Time %05.0f Resident %-4s : ", getTime(), getId());
 		}
 	}
 }

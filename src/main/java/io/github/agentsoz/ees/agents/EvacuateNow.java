@@ -58,7 +58,7 @@ public class EvacuateNow extends Plan {
 					String bdiAction = ActionList.DRIVETO;
 					Location shelterLocation = resident.getShelterLocation();
 					double[] coords = shelterLocation.getCoordinates();
-					double evacTime = DataServer.getServer("Bushfire").getTime() + 5.0; // five secs from now
+					double evacTime = resident.getTime() + 5.0; // five secs from now
 					Object[] params = new Object[4];
 					params[0] = bdiAction;
 					params[1] = coords;
