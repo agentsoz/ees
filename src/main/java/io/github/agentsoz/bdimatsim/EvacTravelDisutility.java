@@ -42,10 +42,10 @@ package io.github.agentsoz.bdimatsim;
  * #L%
  */
 
+import ch.qos.logback.classic.Level;
 import com.google.gson.Gson;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
-import org.apache.log4j.Logger;
 import org.matsim.api.core.v01.Coord;
 import org.matsim.api.core.v01.Customizable;
 import org.matsim.api.core.v01.Id;
@@ -63,6 +63,8 @@ import org.matsim.core.utils.geometry.GeometryUtils;
 import org.matsim.core.utils.geometry.transformations.TransformationFactory;
 import org.matsim.core.utils.misc.Time;
 import org.matsim.vehicles.Vehicle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,13 +81,14 @@ import static io.github.agentsoz.bdimatsim.MATSimModel.FIRE_DATA_MSG;
 public final class EvacTravelDisutility implements TravelDisutility {
 	public static final String IN_FIRE_AREA = "inFireArea";
 
-	private static final Logger log = Logger.getLogger(EvacTravelDisutility.class);
+	private static final Logger log = LoggerFactory.getLogger(EvacTravelDisutility.class) ;
 
 	private final Map<Id<Link>, Double> linksInFireArea;
 	
 	private final TravelTime travelTime;
 
 	private EvacTravelDisutility(final TravelTime travelTime, Map<Id<Link>, Double> linksInFireArea) {
+//		((ch.qos.logback.classic.Logger) log).setLevel(Level.DEBUG);
 		this.linksInFireArea = linksInFireArea;
 		Gbl.assertNotNull(travelTime);
 		this.travelTime = travelTime;
@@ -94,9 +97,10 @@ public final class EvacTravelDisutility implements TravelDisutility {
 	@Override
 	public double getLinkTravelDisutility(final Link link, final double time, final Person person, final Vehicle vehicle) {
 		double factor = 1. ;
-		if ( linksInFireArea.keySet().contains( link.getId() ) ) {
-			log.debug("found link in fire area:" + link.getId() );
-			factor = 10. ;
+		Double result = linksInFireArea.get(link.getId());;
+		if ( result != null ) {
+			factor = result ;
+			log.debug("found link {} in fire area, set factor={}" , link.getId(), factor );
 		}
 		return factor * this.travelTime.getLinkTravelTime(link, time, person, vehicle);
 	}
@@ -104,9 +108,10 @@ public final class EvacTravelDisutility implements TravelDisutility {
 	@Override
 	public double getLinkMinimumTravelDisutility(final Link link) {
 		double factor = 1. ;
-		if ( linksInFireArea.keySet().contains( link.getId() ) ) {
+		Double result = linksInFireArea.get(link.getId());;
+		if ( result != null ) {
 			log.debug("found link in fire area:" + link.getId() );
-			factor = 10. ;
+			factor = result ;
 		}
 		return factor * this.travelTime.getLinkTravelTime(link, Time.UNDEFINED_TIME, null, null);
 	}

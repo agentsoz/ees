@@ -3,6 +3,7 @@ package io.github.agentsoz.bdimatsim;
 import java.io.PrintStream;
 import java.util.*;
 
+import ch.qos.logback.classic.Level;
 import com.google.gson.Gson;
 import com.vividsolutions.jts.geom.*;
 import io.github.agentsoz.dataInterface.DataClient;
@@ -133,7 +134,7 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 	}
 	
 	public MATSimModel( String[] args) {
-//		log.setLevel(Level.DEBUG);
+//		((ch.qos.logback.classic.Logger)log).setLevel(Level.DEBUG);
 		config = ConfigUtils.loadConfig( args[0] ) ;
 		parseAdditionalArguments(args, config);
 		config.network().setTimeVariantNetwork(true);
@@ -440,6 +441,15 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 
 	@Override
 	public boolean dataUpdate(double time, String dataType, Object data) {
+		if ( time+1 < getTime() || time-1 > getTime() ) {
+			log.error( "given time in dataUpdate is {}, simulation time is {}.  " +
+							   "Don't know what that means.  Will use simulation time.",
+					time, getTime() );
+		}
+		double now = getTime() ;
+		
+		log.warn("receiving fire data at time={}", now/3600. ) ;
+		
 		switch( evacConfig.getSetup() ) {
 			// use switch so we note missing cases.  kai, dec'17
 			case standard:
@@ -489,52 +499,96 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 //			buffers.add( polygon.buffer(1000.) );
 		}
 		
-		Geometry buffer = fire.buffer(1000.);
+		Geometry buffer = fire.buffer(10000.);
 		
 		penaltyOfLink.clear();
 		
 //		https://stackoverflow.com/questions/38404095/how-to-calculate-the-distance-in-meters-between-a-geographic-point-and-a-given-p
 		
+		// risk increasing are essentially forbidden:
+		final double buffer2fire = 1000. ;
+		final double out2buffer = 500 ;
+		final double out2fire = out2buffer + buffer2fire ;
+		final double buffer2bufferGettingCloser = 500. ;
+
+		// risk reducing is ok, we just want to keep them short:
+		final double fire2buffer = 20. ;
+		final double fire2out = 10. ;
+		final double buffer2out = 5. ;
+		final double buffer2bufferGettingAway = 5. ;
+
+		// in fire essentially forbidden:
+		final double fire2fire = 1000. ;
+		
+
+		
+		
 		for ( Node node : scenario.getNetwork().getNodes().values() ) {
-			Point point = GeometryUtils.createGeotoolsPoint( node.getCoord() ) ;
-			if ( fire.contains(point) ) {
-				log.debug("node {} is IN fire area "+ node.getId());
-				for ( Link link : node.getOutLinks().values() ) {
-					Point point2 = GeometryUtils.createGeotoolsPoint( link.getToNode().getCoord() ) ;
-					if ( fire.contains(point2) ) {
-						penaltyOfLink.put(link.getId(), 80.); // in is bad
-					} else if ( buffer.contains(point2) ) {
-						penaltyOfLink.put(link.getId(), 40.); // into buffer is better
+			Point point = GeometryUtils.createGeotoolsPoint(node.getCoord());
+			if (fire.contains(point)) {
+				log.debug("node {} is IN fire area " + node.getId());
+				// outlinks:
+				for (Link link : node.getOutLinks().values()) {
+					Point point2 = GeometryUtils.createGeotoolsPoint(link.getToNode().getCoord());
+					if (fire.contains(point2)) {
+						penaltyOfLink.put(link.getId(), fire2fire ); // fire --> fire
+					} else if (buffer.contains(point2)) {
+						penaltyOfLink.put(link.getId(), fire2buffer ); // fire --> buffer
 					} else {
-						penaltyOfLink.put(link.getId(), 20.); // out is best, but should still be short
+						penaltyOfLink.put(link.getId(), fire2out ); // fire --> out
 					}
 				}
-				for ( Link link : node.getInLinks().values() ) {
-					Point point2 = GeometryUtils.createGeotoolsPoint( link.getToNode().getCoord() ) ;
-					if ( fire.contains(point2) ) {
-						penaltyOfLink.put(link.getId(), 80.); // in is bad
-					} else if ( buffer.contains(point2) ) {
-						penaltyOfLink.put(link.getId(), 120.); // from buffer into fire is worse
+				// in links
+				for (Link link : node.getInLinks().values()) {
+					Point point2 = GeometryUtils.createGeotoolsPoint(link.getToNode().getCoord());
+					if (fire.contains(point2)) {
+						penaltyOfLink.put(link.getId(), fire2fire ); // fire <-- fire
+					} else if (buffer.contains(point2)) {
+						penaltyOfLink.put(link.getId(), buffer2fire ); // fire <-- buffer
 					} else {
-						penaltyOfLink.put(link.getId(), 160.); // from out into fire is worst
+						penaltyOfLink.put(link.getId(), out2fire ); // fire <-- out
 					}
 				}
-			}
-			if ( buffer.contains(point)) {
-				log.debug("node {} is IN fire area "+ node.getId());
-				for ( Link link : node.getOutLinks().values() ) {
-					penaltyOfLink.put( link.getId() ,1. ) ;
+			} else if ( buffer.contains(point) ) {
+				log.debug("node {} is IN buffer", node.getId());
+				// outlinks:
+				for (Link link : node.getOutLinks().values()) {
+					Point point2 = GeometryUtils.createGeotoolsPoint(link.getToNode().getCoord());
+					if (fire.contains(point2)) {
+						penaltyOfLink.put(link.getId(), buffer2fire ); // buffer --> fire
+					} else if (buffer.contains(point2)) {// buffer --> buffer
+						final double distanceFromNode = point.distance(fire) ;
+						final double distanceToNode = point2.distance(fire) ;
+						if ( distanceToNode > distanceFromNode ) {
+							penaltyOfLink.put(link.getId(), buffer2bufferGettingAway);
+						} else {
+							penaltyOfLink.put(link.getId(), buffer2bufferGettingCloser);
+						}
+					} else {
+						penaltyOfLink.put(link.getId(), buffer2out ); // buffer --> out
+					}
 				}
-				for ( Link link : node.getInLinks().values() ) {
-					penaltyOfLink.put( link.getId() , 1.) ;
+				// in links
+				for (Link link : node.getInLinks().values()) {
+					Point point2 = GeometryUtils.createGeotoolsPoint(link.getFromNode().getCoord());
+					if (fire.contains(point2)) {
+						penaltyOfLink.put(link.getId(), fire2buffer); // buffer <-- fire
+					} else if (buffer.contains(point2)) { // buffer <-- buffer
+						final double distanceToNode = point.distance(fire) ;
+						final double distanceFromNode = point2.distance(fire) ;
+						if ( distanceToNode > distanceFromNode ) {
+							penaltyOfLink.put(link.getId(), buffer2bufferGettingAway);
+						} else {
+							penaltyOfLink.put(link.getId(), buffer2bufferGettingCloser);
+						}
+					} else {
+						penaltyOfLink.put(link.getId(), out2buffer); // buffer <-- out
+					}
 				}
 			}
 		}
-		
-		// yyyyyy The above, together with its corresponding implementation in EvacTravelDisutility,
-		// will in the end make it still better to drive a short path directly through the fire rather than
-		// skirt it in the buffer.  So the penalty needs to depend on the distance to the fire area,
-		// it cannot just be yes/no.  kai, dec'17
+		// yyyy above is start, but one will need the full "potential" approach from Gregor. Otherwise, you cut a link
+		// in two and get a different answer.  Which should not be. kai, dec'17
 		
 		if ( fireWriter==null ) {
 			final String filename = config.controler().getOutputDirectory() + "/output_fireCoords.txt.gz";
@@ -542,21 +596,27 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 			fireWriter = IOUtils.getPrintStream(filename);
 			fireWriter.println("time\tx\ty") ;
 		}
-		// can't do this earlier since the output directories are not yet prepared
-		// by the controler.  kai, dec'17
+		// can't do this earlier since the output directories are not yet prepared by the controler.  kai, dec'17
 		
 		Envelope env = new Envelope();
 //		for(Geometry g : polygons){
 			env.expandToInclude(fire.getEnvelopeInternal());
 //		}
-		for ( double yy=env.getMinY() ; yy<=env.getMaxY(); yy+=100. ) {
-			for ( double xx=env.getMinX() ; xx<=env.getMaxX() ; xx+=100. ) {
-				if ( fire.contains( new GeometryFactory().createPoint(new Coordinate( xx, yy ) ) ) ) {
-					final String str = time + "\t" + xx + "\t" + yy;
-					log.debug(str);
+		double gridsize = 100. ;
+		boolean atLeastOnePixel = false ;
+		for (double yy = env.getMinY(); yy <= env.getMaxY(); yy += gridsize) {
+			for (double xx = env.getMinX(); xx <= env.getMaxX(); xx += gridsize) {
+				if (fire.contains(new GeometryFactory().createPoint(new Coordinate(xx, yy)))) {
+					final String str = now + "\t" + xx + "\t" + yy;
+//					log.debug(str);
 					fireWriter.println(str);
+					atLeastOnePixel = true;
 				}
 			}
+		}
+		if (!atLeastOnePixel) {
+			final String str = now + "\t" + fire.getCentroid().getX() + "\t" + fire.getCentroid().getY() ;
+			fireWriter.println(str);
 		}
 		return true;
 	}
