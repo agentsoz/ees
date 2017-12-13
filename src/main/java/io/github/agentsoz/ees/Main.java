@@ -11,6 +11,7 @@ import java.util.TreeMap;
 
 import io.github.agentsoz.bdiabm.ABMServerInterface;
 import io.github.agentsoz.bdiabm.data.AgentDataContainer;
+import io.github.agentsoz.bdimatsim.EvacAgentTracker;
 import io.github.agentsoz.bdimatsim.EvacConfig;
 import io.github.agentsoz.bdimatsim.MATSimModel;
 import io.github.agentsoz.bdimatsim.Utils;
@@ -153,7 +154,12 @@ public class Main {
 		
 		// --- initialize and start matsim (maybe rename?):
 		matsimModel.init(bdiAgentIDs);
-
+		
+		EvacAgentTracker tracker = new EvacAgentTracker(matsimModel.getScenario().getNetwork(), matsimModel.getEvents() ) ;
+		matsimModel.getEvents().addHandler( tracker );
+		// yyyy try to replace this by injection. because otherwise it again needs to be done "late enough", which we
+		// wanted to get rid of.  kai, dec'17
+		
 		while ( true ) {
 			
 			jillmodel.takeControl( matsimModel.getAgentManager().getAgentDataContainer() );
