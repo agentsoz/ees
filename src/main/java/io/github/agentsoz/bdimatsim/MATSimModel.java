@@ -27,6 +27,8 @@ import org.matsim.core.events.handler.EventHandler;
 import org.matsim.core.gbl.Gbl;
 import org.matsim.core.mobsim.framework.MobsimAgent;
 import org.matsim.core.mobsim.framework.PlayPauseSimulationControl;
+import org.matsim.core.mobsim.framework.events.MobsimAfterSimStepEvent;
+import org.matsim.core.mobsim.framework.listeners.MobsimAfterSimStepListener;
 import org.matsim.core.mobsim.framework.listeners.MobsimInitializedListener;
 import org.matsim.core.mobsim.qsim.QSim;
 import org.matsim.core.router.NetworkRoutingProvider;
@@ -332,6 +334,7 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 //						}
 //					}
 //				}) ;
+				/** --> now done in {@link EvacAgentTracker} */
 				
 				// some infrastructure that makes results available: 
 				//this.addMobsimListenerBinding().toInstance( new MobsimAfterSimStepListener() {
@@ -472,23 +475,23 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 //		List<Polygon> polygons = new ArrayList<>() ;
 //		List<Geometry> buffers = new ArrayList<>() ;
 		// the map key is time; we just take the superset of all polygons
-		Geometry all = null ;
+		Geometry fire = null ;
 		for ( Double[][] pairs : map.values() ) {
 			List<Coord> coords = new ArrayList<>() ;
 			for (Double[] pair : pairs) {
 				coords.add(transform.transform(new Coord(pair[0], pair[1])));
 			}
 			Polygon polygon = GeometryUtils.createGeotoolsPolygon(coords);
-			if ( all==null ) {
-				all = polygon ;
+			if ( fire==null ) {
+				fire = polygon ;
 			} else {
-				all = all.union(polygon);
+				fire = fire.union(polygon);
 			}
 //			polygons.add(polygon) ;
 //			buffers.add( polygon.buffer(1000.) );
 		}
 		
-		Geometry buffer = all.buffer(1000.);
+		Geometry buffer = fire.buffer(1000.);
 		
 		penaltyOfLink.clear();
 		
@@ -496,8 +499,31 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 		
 		for ( Node node : scenario.getNetwork().getNodes().values() ) {
 			Point point = GeometryUtils.createGeotoolsPoint( node.getCoord() ) ;
-			if ( all.contains(point) || buffer.contains(point)) {
-				log.debug("node {} is IN danger area "+ node.getId());
+			if ( fire.contains(point) ) {
+				log.debug("node {} is IN fire area "+ node.getId());
+				for ( Link link : node.getOutLinks().values() ) {
+					Point point2 = GeometryUtils.createGeotoolsPoint( link.getToNode().getCoord() ) ;
+					if ( fire.contains(point2) ) {
+						penaltyOfLink.put(link.getId(), 80.); // in is bad
+					} else if ( buffer.contains(point2) ) {
+						penaltyOfLink.put(link.getId(), 40.); // into buffer is better
+					} else {
+						penaltyOfLink.put(link.getId(), 20.); // out is best, but should still be short
+					}
+				}
+				for ( Link link : node.getInLinks().values() ) {
+					Point point2 = GeometryUtils.createGeotoolsPoint( link.getToNode().getCoord() ) ;
+					if ( fire.contains(point2) ) {
+						penaltyOfLink.put(link.getId(), 80.); // in is bad
+					} else if ( buffer.contains(point2) ) {
+						penaltyOfLink.put(link.getId(), 120.); // from buffer into fire is worse
+					} else {
+						penaltyOfLink.put(link.getId(), 160.); // from out into fire is worst
+					}
+				}
+			}
+			if ( buffer.contains(point)) {
+				log.debug("node {} is IN fire area "+ node.getId());
 				for ( Link link : node.getOutLinks().values() ) {
 					penaltyOfLink.put( link.getId() ,1. ) ;
 				}
@@ -523,11 +549,11 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 		
 		Envelope env = new Envelope();
 //		for(Geometry g : polygons){
-			env.expandToInclude(all.getEnvelopeInternal());
+			env.expandToInclude(fire.getEnvelopeInternal());
 //		}
 		for ( double yy=env.getMinY() ; yy<=env.getMaxY(); yy+=100. ) {
 			for ( double xx=env.getMinX() ; xx<=env.getMaxX() ; xx+=100. ) {
-				if ( all.contains( new GeometryFactory().createPoint(new Coordinate( xx, yy ) ) ) ) {
+				if ( fire.contains( new GeometryFactory().createPoint(new Coordinate( xx, yy ) ) ) ) {
 					final String str = time + "\t" + xx + "\t" + yy;
 					log.debug(str);
 					fireWriter.println(str);

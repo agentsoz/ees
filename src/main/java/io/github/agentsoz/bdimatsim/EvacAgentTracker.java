@@ -28,6 +28,8 @@ import org.matsim.api.core.v01.events.handler.*;
 import org.matsim.api.core.v01.network.Link;
 import org.matsim.api.core.v01.network.Network;
 import org.matsim.api.core.v01.population.Person;
+import org.matsim.core.api.experimental.events.EventsManager;
+import org.matsim.core.events.LastEventOfSimStep;
 import org.matsim.core.events.algorithms.Vehicle2DriverEventHandler;
 import org.matsim.core.events.handler.BasicEventHandler;
 import org.matsim.vehicles.Vehicle;
@@ -36,8 +38,8 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-@Deprecated // try inside EvacAgent
-class AgentTracker implements
+//@Deprecated // try inside EvacAgent
+public class EvacAgentTracker implements
 		LinkEnterEventHandler,
 				LinkLeaveEventHandler,
 				PersonArrivalEventHandler,
@@ -48,11 +50,13 @@ class AgentTracker implements
 				BasicEventHandler
 {
 	private final Network network;
+	private final EventsManager events;
 	private Map<Id<Vehicle>,Double> linkEnterEventsMap = Collections.synchronizedMap( new LinkedHashMap<>() );
 	private Vehicle2DriverEventHandler vehicle2Driver = new Vehicle2DriverEventHandler() ;
 	
-	AgentTracker( Network network ) {
+	public EvacAgentTracker(Network network, EventsManager events) {
 		this.network = network ;
+		this.events = events ;
 	}
 	
 	double getDelay(Id<Person> personId, double now) {
@@ -105,6 +109,13 @@ class AgentTracker implements
 	
 	@Override
 	public void handleEvent(Event event) {
-	
+		if ( event instanceof LastEventOfSimStep ) {
+			if ( false ) { // replace by congestion condition
+				Id<Vehicle> vehicleId = null ;
+				Id<Person> driverId = null ;
+				Id<Link> currentLinkId = null ;
+				this.events.processEvent( new AgentInCongestionEvent(event.getTime(), vehicleId, driverId, currentLinkId));
+			}
+		}
 	}
 }

@@ -133,8 +133,8 @@ VehicleLeavesTrafficEventHandler,
 
 	@Override
 	public void handleEvent( Event event ) {
-		if ( event instanceof NextLinkBlockedEvent) {
-			callRegisteredHandlers(event) ;
+		if (event instanceof NextLinkBlockedEvent || event instanceof AgentInCongestionEvent ) {
+			callRegisteredHandlers(event);
 		}
 	}
 
@@ -159,11 +159,11 @@ VehicleLeavesTrafficEventHandler,
 		for (Monitor monitor : monitors) {
 	        switch (monitor.getEvent()) {
 	        	// (switch according to the type of monitor)
-//				case AgentInCongestion:
-//					if ( ev instanceof AgentInCongestionEvent ) {
-//						log.warn("agent stuck in congestion, need to do something with it.");
-//					}
-//					break ;
+				case AgentInCongestion:
+					if ( ev instanceof AgentInCongestionEvent ) {
+						log.warn("agent stuck in congestion, need to do something with it.");
+					}
+					break ;
 				case NextLinkBlocked:
 					if ( ev instanceof NextLinkBlockedEvent ) {
 						log.debug("catching a nextLinkBlocked event"); ;
