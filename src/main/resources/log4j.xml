@@ -3,7 +3,7 @@
 <log4j:configuration>
 	<appender name="stdout" class="org.apache.log4j.ConsoleAppender">
 		<layout class="org.apache.log4j.PatternLayout">
-			<param name="ConversionPattern" value="%d{yyyy-mm-dd HH:mm:ss} [%.10t] %5p %C{1}:%L %m%n"/>
+			<param name="ConversionPattern" value="%d{yyyy-mm-dd HH:mm:ss} [%.10t] %5p %C{1}.java:%L %m%n"/>
 		</layout>
 		<filter class="org.apache.log4j.varia.LevelRangeFilter">
 		  <param name="LevelMin" value="trace" />
@@ -13,7 +13,7 @@
 	<appender name="stderr" class="org.apache.log4j.ConsoleAppender">
 		<param name="target" value="System.err" />
 		<layout class="org.apache.log4j.PatternLayout">
-			<param name="ConversionPattern" value="%d{yyyy-mm-dd HH:mm:ss} [%.10t] %5p %C{1}:%L %m%n"/>
+			<param name="ConversionPattern" value="%d{yyyy-mm-dd HH:mm:ss} [%.10t] %5p %C{1}.java:%L %m%n"/>
 		</layout>
 		<filter class="org.apache.log4j.varia.LevelRangeFilter">
 		  <param name="LevelMin" value="warn" />

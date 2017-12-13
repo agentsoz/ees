@@ -27,6 +27,7 @@ public class FireAreaMaldon600Test {
 
 	@SuppressWarnings("static-method")
 	@Test
+	@Ignore // I don't think that this test is contributing anything useful beyond the other tests that we have.  kai, dec'17
 	public void testMaldon600() {
 
 		/*
