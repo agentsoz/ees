@@ -157,7 +157,7 @@ public class Main {
 		
 		EvacAgentTracker tracker = new EvacAgentTracker(matsimModel.getScenario().getNetwork(), matsimModel.getEvents() ) ;
 		matsimModel.getEvents().addHandler( tracker );
-		// yyyy try to replace this by injection. because otherwise it again needs to be done "late enough", which we
+		// yyyy try to replace this by injection. because otherwise it again needs to be added "late enough", which we
 		// wanted to get rid of.  kai, dec'17
 		
 		while ( true ) {
