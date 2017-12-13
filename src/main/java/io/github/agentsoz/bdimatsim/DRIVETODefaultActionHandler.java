@@ -123,7 +123,7 @@ public final class DRIVETODefaultActionHandler implements BDIActionHandler {
 					}
 				}
 		);
-
+		
 		// And another in case the agent gets stuck on the way
 		paAgent.getPerceptHandler().registerBDIPerceptHandler( paAgent.getAgentID(), MonitoredEventType.NextLinkBlocked,
 				null, new BDIPerceptHandler() {
@@ -140,6 +140,7 @@ public final class DRIVETODefaultActionHandler implements BDIActionHandler {
 					}
 				}
 		);
+		
 
 		log.debug("------------------------------------------------------------------------------------------"); ;
 		return true;

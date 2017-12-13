@@ -51,6 +51,7 @@ import org.matsim.api.core.v01.population.Leg;
 import org.matsim.api.core.v01.population.Person;
 import org.matsim.api.core.v01.population.Plan;
 import org.matsim.api.core.v01.population.PlanElement;
+import org.matsim.core.api.experimental.events.EventsManager;
 import org.matsim.core.gbl.Gbl;
 import org.matsim.core.mobsim.framework.*;
 import org.matsim.core.mobsim.qsim.agents.BasicPlanAgentImpl;
@@ -78,6 +79,7 @@ class EvacAgent implements MobsimDriverAgent, HasPerson, PlanAgent, HasModifiabl
 	private final EditTrips editTrips ;
 	private final Network network;
 	private final MobsimTimer simTimer;
+	private final EventsManager eventsManager;
 	
 	private boolean planWasModified = false ;
 	private double expectedLinkLeaveTime;
@@ -90,6 +92,7 @@ class EvacAgent implements MobsimDriverAgent, HasPerson, PlanAgent, HasModifiabl
 		this.editTrips = new EditTrips(tripRouter, simulation.getScenario() ) ;
 		this.network = simulation.getScenario().getNetwork() ;
 		this.simTimer = simulation.getSimTimer() ;
+		this.eventsManager = simulation.getEventsManager() ;
 
 		// deliberately does NOT keep a back pointer to the whole Netsim; this should also be removed in the constructor call.
 	}
@@ -257,7 +260,23 @@ class EvacAgent implements MobsimDriverAgent, HasPerson, PlanAgent, HasModifiabl
 
 	@Override
 	public final boolean isWantingToArriveOnCurrentLink() {
-		return driverAgentDelegate.isWantingToArriveOnCurrentLink();
+		boolean retVal = driverAgentDelegate.isWantingToArriveOnCurrentLink();
+		
+		if (retVal==false) {
+			Link nextLink = this.network.getLinks().get( this.chooseNextLinkId() ) ;
+			final double now = this.simTimer.getTimeOfDay();
+			if (nextLink.getFreespeed(now) < 0.1) {
+				this.eventsManager.processEvent(
+						new NextLinkBlockedEvent(
+								now, this.getVehicle().getId(), this.getId(), this.getCurrentLinkId(),
+														nextLink.getId() ) );
+				// yyyy this event is now generated both here and in the intersection.  In general,
+				// it should be triggered here, giving the bdi time to compute.  However, the
+				// closure may happen between here and arriving at the node ...  kai, dec'17
+			}
+		}
+		
+		return retVal ;
 	}
 
 	//	final Leg getCurrentLeg() {

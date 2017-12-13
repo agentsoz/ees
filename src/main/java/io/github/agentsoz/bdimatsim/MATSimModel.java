@@ -24,8 +24,11 @@ import org.matsim.core.controler.AbstractModule;
 import org.matsim.core.controler.Controler;
 import org.matsim.core.controler.OutputDirectoryHierarchy.OverwriteFileSetting;
 import org.matsim.core.events.handler.EventHandler;
+import org.matsim.core.gbl.Gbl;
 import org.matsim.core.mobsim.framework.MobsimAgent;
 import org.matsim.core.mobsim.framework.PlayPauseSimulationControl;
+import org.matsim.core.mobsim.framework.events.MobsimAfterSimStepEvent;
+import org.matsim.core.mobsim.framework.listeners.MobsimAfterSimStepListener;
 import org.matsim.core.mobsim.framework.listeners.MobsimInitializedListener;
 import org.matsim.core.mobsim.qsim.QSim;
 import org.matsim.core.router.NetworkRoutingProvider;
@@ -119,7 +122,7 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 	
 	private boolean scenarioLoaded = false ;
 	
-	private Set<Id<Link>> linksInFireArea = new HashSet<>() ;
+	private Map<Id<Link>,Double> penaltyOfLink = new HashMap<>() ;
 	
 	public MATSimModel(String matSimFile, String matsimOutputDirectory) {
 		// not the most elegant way of doing this ...
@@ -148,6 +151,7 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 		config.planCalcScore().setWriteExperiencedPlans(true);
 		
 		evacConfig = ConfigUtils.addOrGetModule(config,EvacConfig.class) ;
+		Gbl.assertNotNull(evacConfig);
 		
 		// we have to declare those routingModes where we want to use the network router:
 		{
@@ -181,7 +185,7 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 	
 	public Config loadAndPrepareConfig() {
 		// currently already done in constructor.  But I want to make this more
-		// expressive than model.getConfig() and then just hope for the best.  kai, nov'17
+		// expressive than model.getConfig().  kai, nov'17
 		configLoaded = true ;
 		return config ;
 	}
@@ -198,6 +202,12 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 			final double veryLargeSpeed = 9999999999.;
 			if ( link.getFreespeed() > veryLargeSpeed ) {
 				link.setFreespeed(veryLargeSpeed);
+			}
+			if ( evacConfig.getSetup()== EvacConfig.Setup.tertiaryRoadsCorrection ) {
+				// yyyy correction for much too high speed value on tertiary roads. kai, dec'17
+				if (link.getFreespeed() == 27.77777777777778 && link.getCapacity() == 600.) {
+					link.setFreespeed(50. / 3.6);
+				}
 			}
 		}
 		
@@ -252,19 +262,19 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 					addTravelTimeBinding(routingMode).to(TravelTimeCollector.class) ;
 					
 					// travel disutility includes the fire penalty:
-					TravelDisutilityFactory disutilityFactory = new EvacTravelDisutility.Factory(linksInFireArea);
+					TravelDisutilityFactory disutilityFactory = new EvacTravelDisutility.Factory(penaltyOfLink);
 					switch( evacConfig.getSetup() ) {
 						// use switch so we note missing cases. kai, dec'17
 						case standard:
-							break;
 						case blockage:
+						case tertiaryRoadsCorrection:
 							break;
 						case withoutFireArea:
 						case withBlockageButWithoutFire:
 							disutilityFactory = new OnlyTimeDependentTravelDisutilityFactory();
 							break;
 						default:
-							throw new RuntimeException("not implemented") ;
+							Gbl.fail();
 					}
 					addTravelDisutilityFactoryBinding(routingMode).toInstance(disutilityFactory);
 				}
@@ -277,10 +287,21 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 					addTravelTimeBinding(routingMode).to(FreeSpeedTravelTime.class);
 					
 					// travel disutility includes the fire penalty:
-					TravelDisutilityFactory disutilityFactory = new EvacTravelDisutility.Factory(linksInFireArea);
-					if ( evacConfig.getSetup()== EvacConfig.Setup.withoutFireArea ) {
-						disutilityFactory = new OnlyTimeDependentTravelDisutilityFactory();
+					TravelDisutilityFactory disutilityFactory = new EvacTravelDisutility.Factory(penaltyOfLink);
+					switch( evacConfig.getSetup() ) {
+						// use switch so we note missing cases. kai, dec'17
+						case standard:
+						case blockage:
+						case tertiaryRoadsCorrection:
+							break;
+						case withoutFireArea:
+						case withBlockageButWithoutFire:
+							disutilityFactory = new OnlyTimeDependentTravelDisutilityFactory();
+							break;
+						default:
+							Gbl.fail();
 					}
+
 					addTravelDisutilityFactoryBinding(routingMode).toInstance(disutilityFactory);
 				}
 		
@@ -313,6 +334,7 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 //						}
 //					}
 //				}) ;
+				/** --> now done in {@link EvacAgentTracker} */
 				
 				// some infrastructure that makes results available: 
 				//this.addMobsimListenerBinding().toInstance( new MobsimAfterSimStepListener() {
@@ -424,6 +446,7 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 			// use switch so we note missing cases.  kai, dec'17
 			case standard:
 			case blockage:
+			case tertiaryRoadsCorrection:
 				break;
 			case withoutFireArea:
 			case withBlockageButWithoutFire:
@@ -449,35 +472,71 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 		// unfortunately does not work since the incoming data is not typed accordingly. kai, dec'17
 		
 		Map<Double, Double[][]> map = (Map<Double, Double[][]>) data;
-		List<Polygon> polygons = new ArrayList<>() ;
-		List<Geometry> buffers = new ArrayList<>() ;
+//		List<Polygon> polygons = new ArrayList<>() ;
+//		List<Geometry> buffers = new ArrayList<>() ;
 		// the map key is time; we just take the superset of all polygons
+		Geometry fire = null ;
 		for ( Double[][] pairs : map.values() ) {
 			List<Coord> coords = new ArrayList<>() ;
 			for (Double[] pair : pairs) {
 				coords.add(transform.transform(new Coord(pair[0], pair[1])));
 			}
 			Polygon polygon = GeometryUtils.createGeotoolsPolygon(coords);
-			polygons.add(polygon) ;
-			buffers.add( polygon.buffer(500.) );
+			if ( fire==null ) {
+				fire = polygon ;
+			} else {
+				fire = fire.union(polygon);
+			}
+//			polygons.add(polygon) ;
+//			buffers.add( polygon.buffer(1000.) );
 		}
 		
-		linksInFireArea.clear();
+		Geometry buffer = fire.buffer(1000.);
+		
+		penaltyOfLink.clear();
+		
+//		https://stackoverflow.com/questions/38404095/how-to-calculate-the-distance-in-meters-between-a-geographic-point-and-a-given-p
 		
 		for ( Node node : scenario.getNetwork().getNodes().values() ) {
 			Point point = GeometryUtils.createGeotoolsPoint( node.getCoord() ) ;
-			for ( Geometry geometry : buffers ) {
-				if (geometry.contains(point)) {
-					log.debug("node {} is IN fire buffer "+ node.getId());
-					for ( Link link : node.getOutLinks().values() ) {
-						linksInFireArea.add( link.getId() ) ;
+			if ( fire.contains(point) ) {
+				log.debug("node {} is IN fire area "+ node.getId());
+				for ( Link link : node.getOutLinks().values() ) {
+					Point point2 = GeometryUtils.createGeotoolsPoint( link.getToNode().getCoord() ) ;
+					if ( fire.contains(point2) ) {
+						penaltyOfLink.put(link.getId(), 80.); // in is bad
+					} else if ( buffer.contains(point2) ) {
+						penaltyOfLink.put(link.getId(), 40.); // into buffer is better
+					} else {
+						penaltyOfLink.put(link.getId(), 20.); // out is best, but should still be short
 					}
-					for ( Link link : node.getInLinks().values() ) {
-						linksInFireArea.add( link.getId() ) ;
+				}
+				for ( Link link : node.getInLinks().values() ) {
+					Point point2 = GeometryUtils.createGeotoolsPoint( link.getToNode().getCoord() ) ;
+					if ( fire.contains(point2) ) {
+						penaltyOfLink.put(link.getId(), 80.); // in is bad
+					} else if ( buffer.contains(point2) ) {
+						penaltyOfLink.put(link.getId(), 120.); // from buffer into fire is worse
+					} else {
+						penaltyOfLink.put(link.getId(), 160.); // from out into fire is worst
 					}
 				}
 			}
+			if ( buffer.contains(point)) {
+				log.debug("node {} is IN fire area "+ node.getId());
+				for ( Link link : node.getOutLinks().values() ) {
+					penaltyOfLink.put( link.getId() ,1. ) ;
+				}
+				for ( Link link : node.getInLinks().values() ) {
+					penaltyOfLink.put( link.getId() , 1.) ;
+				}
+			}
 		}
+		
+		// yyyyyy The above, together with its corresponding implementation in EvacTravelDisutility,
+		// will in the end make it still better to drive a short path directly through the fire rather than
+		// skirt it in the buffer.  So the penalty needs to depend on the distance to the fire area,
+		// it cannot just be yes/no.  kai, dec'17
 		
 		if ( fireWriter==null ) {
 			final String filename = config.controler().getOutputDirectory() + "/output_fireCoords.txt.gz";
@@ -489,12 +548,12 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 		// by the controler.  kai, dec'17
 		
 		Envelope env = new Envelope();
-		for(Geometry g : polygons){
-			env.expandToInclude(g.getEnvelopeInternal());
-		}
+//		for(Geometry g : polygons){
+			env.expandToInclude(fire.getEnvelopeInternal());
+//		}
 		for ( double yy=env.getMinY() ; yy<=env.getMaxY(); yy+=100. ) {
 			for ( double xx=env.getMinX() ; xx<=env.getMaxX() ; xx+=100. ) {
-				if ( polygons.get(0).contains( new GeometryFactory().createPoint(new Coordinate( xx, yy ) ) ) ) {
+				if ( fire.contains( new GeometryFactory().createPoint(new Coordinate( xx, yy ) ) ) ) {
 					final String str = time + "\t" + xx + "\t" + yy;
 					log.debug(str);
 					fireWriter.println(str);
