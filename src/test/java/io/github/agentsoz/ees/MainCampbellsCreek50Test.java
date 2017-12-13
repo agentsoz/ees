@@ -57,9 +57,9 @@ public class MainCampbellsCreek50Test {
 
 		// ---
 		
-		TestUtils.comparingDepartures(primaryExpectedEventsFilename,actualEventsFilename,5.);
-		TestUtils.comparingArrivals(primaryExpectedEventsFilename,actualEventsFilename,5.);
-		TestUtils.comparingActivityStarts(primaryExpectedEventsFilename,actualEventsFilename, 5.);
+		TestUtils.comparingDepartures(primaryExpectedEventsFilename,actualEventsFilename,1.);
+		TestUtils.comparingArrivals(primaryExpectedEventsFilename,actualEventsFilename,1.);
+		TestUtils.comparingActivityStarts(primaryExpectedEventsFilename,actualEventsFilename, 1.);
 		TestUtils.compareFullEvents(primaryExpectedEventsFilename,actualEventsFilename, true);
 
 		// ---
