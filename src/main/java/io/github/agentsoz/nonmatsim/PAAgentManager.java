@@ -28,6 +28,8 @@ import java.util.LinkedHashMap;
 
 import io.github.agentsoz.bdiabm.data.*;
 import io.github.agentsoz.bdimatsim.EventsMonitorRegistry;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class holds MatsimAgent objects and information
@@ -38,6 +40,9 @@ import io.github.agentsoz.bdimatsim.EventsMonitorRegistry;
  * @author Edmund Kemsley 
  */
 public final class PAAgentManager {
+
+	private static final Logger log = LoggerFactory.getLogger(PAAgentManager.class);
+
 	/**
 	 * actions & percepts.  Reached around a lot.
 	 */
@@ -127,7 +132,10 @@ public final class PAAgentManager {
 		if (agentsWithPerceptsAndActions.containsKey(agentID) ) {
 			PAAgent agent = getAgent(agentID);
 			Object[] parameters = action.getParameters();
-			agent.getActionContainer().register(actionID,parameters);
+			boolean didRegister = agent.getActionContainer().register(actionID,parameters);
+			if (!didRegister) {
+				log.warn("failed to register new action {}:{}" + actionID, action);
+			}
 			if (agent.getActionHandler().processAction(agentID, actionID, parameters)) {
 				agent.getActionContainer().get(actionID) .setState(ActionContent.State.RUNNING);
 				return true;
