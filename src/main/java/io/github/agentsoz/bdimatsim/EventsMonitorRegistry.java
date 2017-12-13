@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.apache.log4j.Logger;
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.events.*;
 import org.matsim.api.core.v01.events.handler.*;
@@ -40,6 +39,8 @@ import org.matsim.core.events.algorithms.Vehicle2DriverEventHandler;
 import org.matsim.core.events.handler.BasicEventHandler;
 import org.matsim.core.gbl.Gbl;
 import org.matsim.vehicles.Vehicle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static io.github.agentsoz.bdimatsim.EventsMonitorRegistry.MonitoredEventType.*;
 
@@ -50,16 +51,11 @@ import static io.github.agentsoz.bdimatsim.EventsMonitorRegistry.MonitoredEventT
  * @author Edmund Kemsley
  */
 
-public final class EventsMonitorRegistry implements
-LinkEnterEventHandler,
-LinkLeaveEventHandler,
-PersonArrivalEventHandler,
-PersonDepartureEventHandler,
-ActivityEndEventHandler,
-		VehicleEntersTrafficEventHandler,
-VehicleLeavesTrafficEventHandler,
-		BasicEventHandler {
-
+public final class EventsMonitorRegistry implements LinkEnterEventHandler, LinkLeaveEventHandler,
+				   PersonArrivalEventHandler, PersonDepartureEventHandler, ActivityEndEventHandler,
+				   VehicleEntersTrafficEventHandler, VehicleLeavesTrafficEventHandler, BasicEventHandler
+{
+	
 	private Map<Id<Vehicle>,Double> linkEnterEventsMap = new LinkedHashMap<>() ;
 
 	/**
@@ -77,14 +73,17 @@ VehicleLeavesTrafficEventHandler,
 		AgentInCongestion, NextLinkBlocked
 	}
 	
-	private static final Logger log = Logger.getLogger(EventsMonitorRegistry.class ) ;
+	private static final Logger log = LoggerFactory.getLogger(EventsMonitorRegistry.class ) ;
 
 	private LinkedHashMap<MonitoredEventType, List<Monitor>> monitors = new LinkedHashMap<>();
 
     private List<Monitor> toAdd = new ArrayList<>();
     
     public EventsMonitorRegistry() {
-//    	log.setLevel(Level.DEBUG);
+    	// supposedly works like this:
+//		((ch.qos.logback.classic.Logger) log).setLevel(ch.qos.logback.classic.Level.DEBUG);
+		// so the slf4j interface does not have these commands, but the logback implementation does.
+		// kai, based on pointer by dhirendra
 	}
 	
 	@Override
