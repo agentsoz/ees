@@ -41,6 +41,8 @@ import org.matsim.core.events.handler.BasicEventHandler;
 import org.matsim.core.gbl.Gbl;
 import org.matsim.vehicles.Vehicle;
 
+import static io.github.agentsoz.bdimatsim.EventsMonitorRegistry.MonitoredEventType.*;
+
 /**
  * Acts as a simple listener for Matsim agent events then
  *         passes to MATSimAgentManager
@@ -57,9 +59,9 @@ ActivityEndEventHandler,
 		VehicleEntersTrafficEventHandler,
 VehicleLeavesTrafficEventHandler,
 		BasicEventHandler {
-	
+
 	private Map<Id<Vehicle>,Double> linkEnterEventsMap = new LinkedHashMap<>() ;
-	
+
 	/**
 	 * if these event types were sitting in bdi-abm, I would understand this.  But given that they are sitting here,
 	 * why not use the matsim events directly?  kai, nov'17
@@ -76,8 +78,9 @@ VehicleLeavesTrafficEventHandler,
 	}
 	
 	private static final Logger log = Logger.getLogger(EventsMonitorRegistry.class ) ;
-	
-	private List<Monitor> monitors = new CopyOnWriteArrayList<>() ;
+
+	private LinkedHashMap<MonitoredEventType, List<Monitor>> monitors = new LinkedHashMap<>();
+
     private List<Monitor> toAdd = new ArrayList<>();
     
     public EventsMonitorRegistry() {
@@ -108,7 +111,7 @@ VehicleLeavesTrafficEventHandler,
 	@Override
 	public final void handleEvent(LinkEnterEvent event) {
 		callRegisteredHandlers(event);
-		linkEnterEventsMap.put( event.getVehicleId(), event.getTime() ) ;
+		//linkEnterEventsMap.put( event.getVehicleId(), event.getTime() ) ;
 	}
 
 	@Override
@@ -144,7 +147,10 @@ VehicleLeavesTrafficEventHandler,
 		// Synchronise on toAdd which is allowed to be updated by other threads
 		synchronized (toAdd) {
 			for(Monitor monitor : toAdd) {
-				monitors.add(monitor);
+				if (!monitors.containsKey(monitor.getEvent())) {
+					monitors.put(monitor.getEvent(), new CopyOnWriteArrayList<>());
+				}
+				monitors.get(monitor.getEvent()).add(monitor);
 			}
 			toAdd.clear();
 		}
@@ -153,102 +159,91 @@ VehicleLeavesTrafficEventHandler,
   
 		// yyyyyy in the following, monitor.getLinkId can now be null.  Need to hedge against it!  kai, nov'17
   
-		// yy the following feels rather slow.  Say we have 6000 monitors of "something", then
-		// each link enter and link leave event means to go through all 6000 monitors to
-		// find out that they are not involved.  kai, dec'17
-		for (Monitor monitor : monitors) {
-	        switch (monitor.getEvent()) {
-	        	// (switch according to the type of monitor)
-				case AgentInCongestion:
-					if ( ev instanceof AgentInCongestionEvent ) {
-						log.warn("agent stuck in congestion, need to do something with it.");
-					}
-					break ;
-				case NextLinkBlocked:
-					if ( ev instanceof NextLinkBlockedEvent ) {
-						log.debug("catching a nextLinkBlocked event"); ;
-						NextLinkBlockedEvent event = (NextLinkBlockedEvent) ev;
-						if ( monitor.getAgentId().equals(event.getDriverId() ) ) {
-							if ( monitor.getHandler().handle( monitor.getAgentId(), event.currentLinkId(), monitor.getEvent() ) ) {
-								toRemove.add(monitor) ;
-								Monitor arrivedMonitor = findMonitor(monitor.getAgentId(), MonitoredEventType.ArrivedAtDestination);
-								if (arrivedMonitor != null) {
-									toRemove.add(arrivedMonitor);
-								}
-							}
-						}
-					}
-					break;
-			// yy from a matsim perspective, the following are plugged together in a weird way: in matsim, enterLink
-			// would really be the same as leaveNode.  And not enterNode, as the bdi framework keyword implies.
-			// Do you really want the naming like this?  kai, nov'17
-			case EnteredNode:
-				if (ev instanceof LinkEnterEvent) {
-					LinkEnterEvent event = (LinkEnterEvent)ev;
-					Id<Person> driverId = this.getDriverOfVehicle(event.getVehicleId());
-					Gbl.assertNotNull(driverId);
-					if (monitor.getAgentId().equals(driverId) && event.getLinkId().equals(monitor.getLinkId())) {
-						if(monitor.getHandler().handle(monitor.getAgentId(), monitor.getLinkId(), monitor.getEvent())) {
-                            toRemove.add(monitor);
-						}
-					}
-				}
-				break;
-			case ExitedNode:
-				if (ev instanceof LinkLeaveEvent) {
-					LinkLeaveEvent event = (LinkLeaveEvent)ev;
-//					if (monitor.getAgentId() == event.getDriverId() && monitor.getLinkId() == event.getLinkId()) {
-					if (monitor.getAgentId().equals(event.getDriverId()) && monitor.getLinkId().equals(event.getLinkId())) {
-						if(monitor.getHandler().handle(monitor.getAgentId(), monitor.getLinkId(), monitor.getEvent())) {
-                            toRemove.add(monitor);
-						}
-					}
-				}
-				break;
-			case ArrivedAtDestination:
-				if (ev instanceof PersonArrivalEvent) {
-					PersonArrivalEvent event = (PersonArrivalEvent)ev;
-//					if (monitor.getAgentId() == event.getPersonId() && monitor.getLinkId() == event.getLinkId()) {
-					if (monitor.getAgentId().equals(event.getPersonId()) && monitor.getLinkId().equals(event.getLinkId())) {
-						if(monitor.getHandler().handle(monitor.getAgentId(), monitor.getLinkId(), monitor.getEvent())) {
-                            toRemove.add(monitor);
-						}
-						Monitor blockedMonitor = findMonitor(monitor.getAgentId(), MonitoredEventType.NextLinkBlocked);
-						if (blockedMonitor != null) {
-							toRemove.add(blockedMonitor);
-						}
-					}
-				}
-				break;
-			case DepartedDestination:
-				if (ev instanceof PersonDepartureEvent) {
-					PersonDepartureEvent event = (PersonDepartureEvent)ev;
-//					if (monitor.getAgentId() == event.getPersonId() && monitor.getLinkId() == event.getLinkId()) {
-					if (monitor.getAgentId().equals(event.getPersonId()) && monitor.getLinkId().equals(event.getLinkId())) {
-						if (monitor.getHandler().handle(monitor.getAgentId(), monitor.getLinkId(), monitor.getEvent())) {
-                            toRemove.add(monitor);
-						}
-					}
-				}
-				break;
-			case EndedActivity:
-				if (ev instanceof ActivityEndEvent) {
-					ActivityEndEvent event = (ActivityEndEvent)ev;
-//					if (monitor.getAgentId() == event.getPersonId() && monitor.getLinkId() == event.getLinkId()) {
-					if (monitor.getAgentId().equals(event.getPersonId()) && monitor.getLinkId().equals(event.getLinkId())) {
-						if (monitor.getHandler().handle(monitor.getAgentId(), monitor.getLinkId(), monitor.getEvent())) {
-                            toRemove.add(monitor);
-						}
-					}
-				}
-				break;
-			default:
-				throw new RuntimeException("missing case statement") ;
-			}
-      	}
+		if (ev instanceof AgentInCongestionEvent && monitors.containsKey(AgentInCongestion)) {
+			log.warn("agent stuck in congestion, need to do something with it.");
 
-		// Remove any monitors scheduled to be removed
-		monitors.removeAll(toRemove);
+		} else if (ev instanceof NextLinkBlockedEvent && monitors.containsKey(NextLinkBlocked)) {
+			for (Monitor monitor : monitors.get(NextLinkBlocked)) {
+				log.debug("catching a nextLinkBlocked event");
+				;
+				NextLinkBlockedEvent event = (NextLinkBlockedEvent) ev;
+				if (monitor.getAgentId().equals(event.getDriverId())) {
+					if (monitor.getHandler().handle(monitor.getAgentId(), event.currentLinkId(), monitor.getEvent())) {
+						toRemove.add(monitor);
+						Monitor arrivedMonitor = findMonitor(monitor.getAgentId(), MonitoredEventType.ArrivedAtDestination);
+						if (arrivedMonitor != null) {
+							toRemove.add(arrivedMonitor);
+						}
+					}
+				}
+				monitors.get(NextLinkBlocked).removeAll(toRemove);
+			}
+
+		} else if (ev instanceof LinkEnterEvent && monitors.containsKey(EnteredNode)) {
+			for (Monitor monitor : monitors.get(EnteredNode)) {
+				LinkEnterEvent event = (LinkEnterEvent) ev;
+				Id<Person> driverId = this.getDriverOfVehicle(event.getVehicleId());
+				Gbl.assertNotNull(driverId);
+				if (monitor.getAgentId().equals(driverId) && event.getLinkId().equals(monitor.getLinkId())) {
+					if (monitor.getHandler().handle(monitor.getAgentId(), monitor.getLinkId(), monitor.getEvent())) {
+						toRemove.add(monitor);
+					}
+				}
+			}
+			monitors.get(EnteredNode).removeAll(toRemove);
+
+		} else if (ev instanceof LinkLeaveEvent && monitors.containsKey(ExitedNode)) {
+			for (Monitor monitor : monitors.get(ExitedNode)) {
+				LinkLeaveEvent event = (LinkLeaveEvent) ev;
+//					if (monitor.getAgentId() == event.getDriverId() && monitor.getLinkId() == event.getLinkId()) {
+				if (monitor.getAgentId().equals(event.getDriverId()) && monitor.getLinkId().equals(event.getLinkId())) {
+					if (monitor.getHandler().handle(monitor.getAgentId(), monitor.getLinkId(), monitor.getEvent())) {
+						toRemove.add(monitor);
+					}
+				}
+			}
+			monitors.get(ExitedNode).removeAll(toRemove);
+
+		} else if (ev instanceof PersonArrivalEvent && monitors.containsKey(ArrivedAtDestination)) {
+			for (Monitor monitor : monitors.get(ArrivedAtDestination)) {
+				PersonArrivalEvent event = (PersonArrivalEvent) ev;
+//					if (monitor.getAgentId() == event.getPersonId() && monitor.getLinkId() == event.getLinkId()) {
+				if (monitor.getAgentId().equals(event.getPersonId()) && monitor.getLinkId().equals(event.getLinkId())) {
+					if (monitor.getHandler().handle(monitor.getAgentId(), monitor.getLinkId(), monitor.getEvent())) {
+						toRemove.add(monitor);
+					}
+					Monitor blockedMonitor = findMonitor(monitor.getAgentId(), MonitoredEventType.NextLinkBlocked);
+					if (blockedMonitor != null) {
+						toRemove.add(blockedMonitor);
+					}
+				}
+			}
+			monitors.get(ArrivedAtDestination).removeAll(toRemove);
+
+		} else if (ev instanceof PersonDepartureEvent && monitors.containsKey(DepartedDestination)) {
+			for (Monitor monitor : monitors.get(DepartedDestination)) {
+				PersonDepartureEvent event = (PersonDepartureEvent) ev;
+//					if (monitor.getAgentId() == event.getPersonId() && monitor.getLinkId() == event.getLinkId()) {
+				if (monitor.getAgentId().equals(event.getPersonId()) && monitor.getLinkId().equals(event.getLinkId())) {
+					if (monitor.getHandler().handle(monitor.getAgentId(), monitor.getLinkId(), monitor.getEvent())) {
+						toRemove.add(monitor);
+					}
+				}
+			}
+			monitors.get(DepartedDestination).removeAll(toRemove);
+
+		} else if (ev instanceof ActivityEndEvent && monitors.containsKey(EndedActivity)) {
+			for (Monitor monitor : monitors.get(EndedActivity)) {
+				ActivityEndEvent event = (ActivityEndEvent) ev;
+//					if (monitor.getAgentId() == event.getPersonId() && monitor.getLinkId() == event.getLinkId()) {
+				if (monitor.getAgentId().equals(event.getPersonId()) && monitor.getLinkId().equals(event.getLinkId())) {
+					if (monitor.getHandler().handle(monitor.getAgentId(), monitor.getLinkId(), monitor.getEvent())) {
+						toRemove.add(monitor);
+					}
+				}
+			}
+			monitors.get(EndedActivity).removeAll(toRemove);
+		}
 	}
 	
 	/**
@@ -275,7 +270,10 @@ VehicleLeavesTrafficEventHandler,
 	 * @return
 	 */
 	private Monitor findMonitor(Id<Person> agentId, MonitoredEventType event) {
-		for (Monitor monitor : monitors) {
+		if (!monitors.containsKey(event)) {
+			return null;
+		}
+		for (Monitor monitor : monitors.get(event)) {
 			if (monitor.getAgentId().equals(agentId) && monitor.getEvent() == event) {
 				return monitor;
 			}
