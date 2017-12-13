@@ -27,8 +27,6 @@ import org.matsim.core.events.handler.EventHandler;
 import org.matsim.core.gbl.Gbl;
 import org.matsim.core.mobsim.framework.MobsimAgent;
 import org.matsim.core.mobsim.framework.PlayPauseSimulationControl;
-import org.matsim.core.mobsim.framework.events.MobsimAfterSimStepEvent;
-import org.matsim.core.mobsim.framework.listeners.MobsimAfterSimStepListener;
 import org.matsim.core.mobsim.framework.listeners.MobsimInitializedListener;
 import org.matsim.core.mobsim.qsim.QSim;
 import org.matsim.core.router.NetworkRoutingProvider;
@@ -41,7 +39,7 @@ import org.matsim.core.utils.geometry.GeometryUtils;
 import org.matsim.core.utils.geometry.transformations.TransformationFactory;
 import org.matsim.core.utils.io.IOUtils;
 import org.matsim.withinday.mobsim.MobsimDataProvider;
-import org.matsim.withinday.trafficmonitoring.TravelTimeCollector;
+import org.matsim.withinday.trafficmonitoring.WithinDayTravelTime;
 
 /*
  * #%L
@@ -256,10 +254,10 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 					addRoutingModuleBinding(routingMode).toProvider(new NetworkRoutingProvider(TransportMode.car, routingMode)) ;
 
 					// congested travel time:
-					bind(TravelTimeCollector.class).in(Singleton.class);
-					addEventHandlerBinding().to(TravelTimeCollector.class);
-					addMobsimListenerBinding().to(TravelTimeCollector.class);
-					addTravelTimeBinding(routingMode).to(TravelTimeCollector.class) ;
+					bind(WithinDayTravelTime.class).in(Singleton.class);
+					addEventHandlerBinding().to(WithinDayTravelTime.class);
+					addMobsimListenerBinding().to(WithinDayTravelTime.class);
+					addTravelTimeBinding(routingMode).to(WithinDayTravelTime.class) ;
 					
 					// travel disutility includes the fire penalty:
 					TravelDisutilityFactory disutilityFactory = new EvacTravelDisutility.Factory(penaltyOfLink);
