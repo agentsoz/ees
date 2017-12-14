@@ -282,8 +282,6 @@ function create(data, callback) {
 			       '}"' +
 			       ' && ' +
 			       plotScript + ' --scenario-output-dir "'+userDir+'"' +
-						 ' && ' +
-			       plotScript + ' --scenario-output-dir "'+userDir+'"' +
 			       '&'
 			       ;
 				global.log(cmd);
@@ -306,7 +304,7 @@ function check_creation_progress(data, callback) {
 
     // file exists so +1
 	var progress = 1;
-	var expected = 10;
+	var expected = 11;
 
     // count 'ITERATION 0' events (4 expected), count as 8
 	var count = (stdout.match(/### ITERATION 0 /g) || []).length;
@@ -320,6 +318,12 @@ function check_creation_progress(data, callback) {
 	if(stdout.indexOf("shutdown completed") > -1) {
 		progress += 1;
 	}
+
+	var analysisFile = path.join(dataDir, data.name, 'analysis', 'distanceInKms.png');
+	if (test('-f', analysisFile)) {
+		progress += 1;
+	}
+
 	progress = Math.round(((1.0*progress)/expected)*100);
 	if (progress > 100) progress = 100;
 	return callback(null, progress);
