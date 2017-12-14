@@ -116,7 +116,7 @@ public final class PAAgentManager {
 					 * When the action is finished we will add it again with the
 					 * new status.
 					 */
-					actionContainer.remove(action);
+					//actionContainer.remove(action);
 				} else if (actionContainer.get(action).getState() == ActionContent.State.DROPPED) {
 					dropAction(agent, action);
 				}
