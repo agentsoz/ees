@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import com.vividsolutions.jts.geom.*;
 import io.github.agentsoz.dataInterface.DataClient;
 import io.github.agentsoz.util.evac.ActionList;
+import io.github.agentsoz.util.evac.PerceptList;
 import org.matsim.api.core.v01.Coord;
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.Scenario;
@@ -446,7 +447,7 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 
 	public final void registerDataServer( DataServer server ) {
 		dataServer = server;
-		dataServer.subscribe(this, FIRE_DATA_MSG);
+		dataServer.subscribe(this, PerceptList.FIRE_DATA);
 	}
 
 	@Override
@@ -476,7 +477,7 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 		// Is this called in every time step, or just every 5 min or so?  kai, dec'17 --> Normally only one polygon
 		// per time step.  Might want to test for this, and get rid of multi-polygon code below.  On other hand,
 		// probably does not matter much.  kai, dec'17
-		if (! FIRE_DATA_MSG.equals(dataType)) {
+		if (! PerceptList.FIRE_DATA.equals(dataType)) {
 			return false;
 		}
 		CoordinateTransformation transform = TransformationFactory.getCoordinateTransformation(
