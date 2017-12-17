@@ -86,13 +86,13 @@ public class Main {
 
 	}
 
-	public void start(String[] cargs) throws FileNotFoundException, IOException, ParseException, java.text.ParseException {
+	public void start(String[] cargs) throws IOException, ParseException, java.text.ParseException {
 
 		// Parse the command line args
 		parse(cargs);
 
 		// Create the logger
-		logger = createLogger("io.github.agentsoz.ees", logFile);
+		logger = createLogger();
 		
 		logger.warn("setup=" + setup ) ;
 		// (I need this "setup" switch to switch between the test cases.  Some other
@@ -123,7 +123,7 @@ public class Main {
 		// --- do some things for which you need access to the matsim config:
 		Config config = matsimModel.loadAndPrepareConfig() ;
 		setSimStartTimesRelativeToAlert(dataServer, config, -10*60 );
-		EvacConfig evacConfig = ConfigUtils.addOrGetModule(config, EvacConfig.class);;
+		EvacConfig evacConfig = ConfigUtils.addOrGetModule(config, EvacConfig.class);
 		evacConfig.setSetup(setup);
 		
 		
@@ -166,8 +166,9 @@ public class Main {
 			if( matsimModel.isFinished() ) {
 				break;
 			}
-			//this.matsimModel.takeControl(matsimModel.getAgentManager().getAgentDataContainer());
+			//matsimModel.takeControl(matsimModel.getAgentManager().getAgentDataContainer());
 			matsimModel.runUntil((long)dataServer.getTime(), matsimModel.getAgentManager().getAgentDataContainer());
+
 			// increment time
 			dataServer.stepTime();
 			
@@ -228,7 +229,7 @@ public class Main {
 		return jillmodel ;
 	}
 	
-	private static PhoenixFireModule initializeAndStartFireModel(DataServer dataServer) throws IOException, ParseException, java.text.ParseException {
+	private static void initializeAndStartFireModel(DataServer dataServer) throws IOException, ParseException, java.text.ParseException {
 		// Create fire module, load fire data, and register the fire module as
 		// an active data source
 		boolean isGeoJson = SimpleConfig.getFireFireFormat().equals("geojson");
@@ -246,13 +247,12 @@ public class Main {
 		}
 		fireModel.setTimestepUnit(Time.TimestepUnit.SECONDS);
 		fireModel.start();
-		return fireModel ;
 	}
 	
 	/**
-	 * Gets the simulation start time from the config, with an added delay (can be negative)
-	 * @param delay
-	 * @return
+	 * Gets the simulation start time from the config, with an added delay
+	 * @param delay in seconds to add to the start (can be negative)
+	 * @return the start time with delay added, value always >= 0
 	 */
 	private static double getEvacuationStartTimeInSeconds(int delay) {
 		int[] evacStartHHMM = SimpleConfig.getEvacStartHHMM();
@@ -266,8 +266,8 @@ public class Main {
 	/**
 	 * Registers a {@link SafeLineMonitor} per safe line with MATSim
 	 * 
-	 * @param safeLines
-	 * @param matsimModel
+	 * @param safeLines the map of safelines to register for monitoring
+	 * @param matsimModel the model to register with
 	 */
 	private static List<SafeLineMonitor> registerSafeLineMonitors(TreeMap<String, Location[]> safeLines,
 			MATSimModel matsimModel) {
@@ -276,8 +276,8 @@ public class Main {
 			return null;
 		}
 
-		List<SafeLineMonitor> slMonitors = new ArrayList<SafeLineMonitor>();
-		List<EventHandler> monitors = new ArrayList<EventHandler>();
+		List<SafeLineMonitor> slMonitors = new ArrayList<>();
+		List<EventHandler> monitors = new ArrayList<>();
 		for (String name : safeLines.keySet()) {
 			Location[] safeline = safeLines.get(name);
 			SafeLineMonitor monitor = new SafeLineMonitor(name, safeline[0], safeline[1], matsimModel);
@@ -294,17 +294,17 @@ public class Main {
 	 * @param monitors to write, one per file
 	 * @param pattern output file pattern, something like "/path/to/file.%d%.out" where %d% is
 	 *        replaced by the monitor index number i.e., 0,1,...
-	 * @throws FileNotFoundException
+	 * @throws FileNotFoundException if file cannot be written to
 	 */
 	private void writeSafeLineMonitors(List<SafeLineMonitor> monitors, String pattern)
 			throws FileNotFoundException {
-		for (int i = 0; i < monitors.size(); i++) {
-			String filepath = pattern.replace("%d%", monitors.get(i).getName().replace(' ', '-'));
+		for (SafeLineMonitor monitor : monitors) {
+			String filepath = pattern.replace("%d%", monitor.getName().replace(' ', '-'));
 			logger.info("Writing safe line statistics to file: " + filepath);
 			PrintWriter writer = new PrintWriter(filepath);
-			Collection<List<Double>> exitTimes = monitors.get(i).getExitTimes();
+			Collection<List<Double>> exitTimes = monitor.getExitTimes();
 			if (exitTimes != null) {
-				List<Double> all = new ArrayList<Double>();
+				List<Double> all = new ArrayList<>();
 				for (List<Double> list : exitTimes) {
 					all.addAll(list);
 				}
@@ -409,7 +409,7 @@ public class Main {
 				;
 	}
 
-	static void abort(String err) {
+	private static void abort(String err) {
 		if (err != null) {
 			System.err.println("\nERROR: " + err + "\n");
 		}
@@ -424,8 +424,8 @@ public class Main {
 
 	public static void main(String[] args) {
 		System.out.println("called with args=" ) ;
-		for ( int ii=0 ; ii<args.length ; ii++ ){
-			System.out.println( args[ii]) ;
+		for (String arg : args) {
+			System.out.println(arg);
 		}
 		Main sim = new Main();
 		try {
@@ -437,14 +437,16 @@ public class Main {
 		}
 	}
 
-	private static Logger createLogger(String string, String file) {
+	private static Logger createLogger() {
+		final String string = "io.github.agentsoz.ees";
+		final String file = logFile;
 		LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
 		PatternLayoutEncoder ple = new PatternLayoutEncoder();
 
 		ple.setPattern("%date %level [%thread] %caller{1}%msg%n%n");
 		ple.setContext(lc);
 		ple.start();
-		FileAppender<ILoggingEvent> fileAppender = new FileAppender<ILoggingEvent>();
+		FileAppender<ILoggingEvent> fileAppender = new FileAppender<>();
 		fileAppender.setFile(file);
 		fileAppender.setEncoder(ple);
 		fileAppender.setAppend(false);
