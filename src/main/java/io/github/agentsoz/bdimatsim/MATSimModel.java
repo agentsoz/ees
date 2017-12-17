@@ -87,7 +87,7 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 	private Config config;
 	private boolean configLoaded = false ;
 	
-	public static enum EvacRoutingMode {carFreespeed, carGlobalInformation}
+	public static enum EvacRoutingMode {carFreespeed, carGlobalInformation, emergencyVehicle}
 
 	private final Scenario scenario ;
 
@@ -250,10 +250,10 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 		controller.addOverridingModule(new AbstractModule(){
 			@Override public void install() {
 				{
-					final String routingMode = EvacRoutingMode.carGlobalInformation.name();
+					final String routingMode = EvacRoutingMode.emergencyVehicle.name();
 					
 					addRoutingModuleBinding(routingMode).toProvider(new NetworkRoutingProvider(TransportMode.car, routingMode)) ;
-
+					
 					// congested travel time:
 					bind(WithinDayTravelTime.class).in(Singleton.class);
 					addEventHandlerBinding().to(WithinDayTravelTime.class);
@@ -262,6 +262,28 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 					
 					// travel disutility includes the fire penalty:
 					TravelDisutilityFactory disutilityFactory = new EvacTravelDisutility.Factory(penaltyOfLink);
+					
+					// yyyyyy what would we want for penalty?  They probably don't want to drive through the fire.  Just a
+					// much smaller buffer?  kai, dec'17
+					
+//					TravelDisutilityFactory disutilityFactory = new OnlyTimeDependentTravelDisutilityFactory();
+					addTravelDisutilityFactoryBinding(routingMode).toInstance(disutilityFactory);
+				}
+				{
+					final String routingMode = EvacRoutingMode.carGlobalInformation.name();
+					
+					addRoutingModuleBinding(routingMode).toProvider(new NetworkRoutingProvider(TransportMode.car, routingMode)) ;
+					
+					// congested travel time:
+					bind(WithinDayTravelTime.class).in(Singleton.class);
+					addEventHandlerBinding().to(WithinDayTravelTime.class);
+					addMobsimListenerBinding().to(WithinDayTravelTime.class);
+					addTravelTimeBinding(routingMode).to(WithinDayTravelTime.class) ;
+					
+					// travel disutility includes the fire penalty:
+					TravelDisutilityFactory disutilityFactory = new EvacTravelDisutility.Factory(penaltyOfLink);
+					// (yyyyyy the now following cases are just there because of the different tests.  Solve by config,
+					// and/or allow "fire" for all of them (if no data arrives, it makes no difference.  kai, dec'17)
 					switch( evacConfig.getSetup() ) {
 						// use switch so we note missing cases. kai, dec'17
 						case standard:
@@ -287,6 +309,8 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 					
 					// travel disutility includes the fire penalty:
 					TravelDisutilityFactory disutilityFactory = new EvacTravelDisutility.Factory(penaltyOfLink);
+					// (yyyyyy the now following cases are just there because of the different tests.  Solve by config,
+					// and/or allow "fire" for all of them (if no data arrives, it makes no difference.  kai, dec'17)
 					switch( evacConfig.getSetup() ) {
 						// use switch so we note missing cases. kai, dec'17
 						case standard:
@@ -309,31 +333,17 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 				install( new EvacQSimModule(MATSimModel.this, controller.getEvents()) ) ;
 
 				this.addMobsimListenerBinding().toInstance((MobsimInitializedListener) e -> {
-
+					// memorize the qSim:
 					qSim = (QSim) e.getQueueSimulation() ;
 
+					// start the playPause functionality
 					playPause = new PlayPauseSimulationControl( qSim ) ;
 					playPause.pause();
 
 					//						initialiseVisualisedAgents() ;
 				}) ;
 				
-				// early prototype for congestion detection:
-//				this.addMobsimListenerBinding().toInstance(new MobsimAfterSimStepListener() {
-//					@Override
-//					public void notifyMobsimAfterSimStep(MobsimAfterSimStepEvent e) {
-//						for ( MobsimAgent agent : ((QSim)e.getQueueSimulation()).getAgents().values() ) {
-//							if ( agent instanceof EvacAgent ) {
-//								double delay = e.getSimulationTime() - ((EvacAgent) agent).getExpectedLinkLeaveTime();
-//								if ( delay > 60 ) {
-//									Id<Vehicle> vehicleId = ((EvacAgent) agent).getVehicle().getId() ;
-//									getEvents().processEvent( new AgentInCongestionEvent(e.getSimulationTime(), vehicleId, agent.getId(), agent.getCurrentLinkId() ));
-//								}
-//							}
-//						}
-//					}
-//				}) ;
-				/** --> now done in {@link EvacAgentTracker} */
+				// congestion detection in {@link EvacAgentTracker}
 				
 				// some infrastructure that makes results available: 
 				//this.addMobsimListenerBinding().toInstance( new MobsimAfterSimStepListener() {
@@ -499,28 +509,134 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 //			buffers.add( polygon.buffer(1000.) );
 		}
 		
-		Geometry buffer = fire.buffer(10000.);
+		final double bufferWidth = 10000.;
+		Geometry buffer = fire.buffer(bufferWidth);
 		
 		penaltyOfLink.clear();
 		
 //		https://stackoverflow.com/questions/38404095/how-to-calculate-the-distance-in-meters-between-a-geographic-point-and-a-given-p
+		penaltyMethod1(fire, buffer);
+//		penaltyMethod2(fire, buffer, bufferWidth );
+		// yyyyyy I think that penaltyMethod2 looks nicer than method1, but the test for the time
+		// being is using version 1.  kai, dec'17
 		
+		
+		if ( fireWriter==null ) {
+			final String filename = config.controler().getOutputDirectory() + "/output_fireCoords.txt.gz";
+			log.warn("writing fire data to " + filename);
+			fireWriter = IOUtils.getPrintStream(filename);
+			fireWriter.println("time\tx\ty") ;
+		}
+		// can't do this earlier since the output directories are not yet prepared by the controler.  kai, dec'17
+		
+		Envelope env = new Envelope();
+//		for(Geometry g : polygons){
+			env.expandToInclude(fire.getEnvelopeInternal());
+//		}
+		double gridsize = 100. ;
+		boolean atLeastOnePixel = false ;
+		for (double yy = env.getMinY(); yy <= env.getMaxY(); yy += gridsize) {
+			for (double xx = env.getMinX(); xx <= env.getMaxX(); xx += gridsize) {
+				if (fire.contains(new GeometryFactory().createPoint(new Coordinate(xx, yy)))) {
+					final String str = now + "\t" + xx + "\t" + yy;
+//					log.debug(str);
+					fireWriter.println(str);
+					atLeastOnePixel = true;
+				}
+			}
+		}
+		if (!atLeastOnePixel) {
+			final String str = now + "\t" + fire.getCentroid().getX() + "\t" + fire.getCentroid().getY() ;
+			fireWriter.println(str);
+		}
+		return true;
+	}
+	
+	private void penaltyMethod2(Geometry fire, Geometry buffer, double bufferWidth) {
+		// Starting thoughts:
+		// * Could make everything very expensive in buffer + fire, they find the fastest path out.  This may, however,
+		// be through the fire.
+		// * Could make everything very expensive in fire, and factor of 10 less expensive in buffer.  Then they would
+		// find fastest way out of fire, then fastest way out of buffer.
+		// * Problem is that fastest way out of buffer may entail getting or remaining close to the fire.
+		//
+		// What about
+		//
+		// deltaHeight = (bufferWidth-distanceToFireToNode)^2 - (bufferWidth-distanceToFireFromNode)^2,
+		//
+		// e.g. fromNode close to fire = large second term, toNode close to outside = small first term,
+		// deltaHeight negative (since we go downhill).
+		//
+		//  This should look like the Drakensberg, i.e.
+		// * high and flat in the fire
+		// * steep outside the fire but close ("distance ..." small)
+		// * increasingly more flat farther away
+		//
+		// (Actually, the "Drakensberg" is quite misleading, since this is the shape of the 1st derivative.  The
+		// actual slope thus is
+		// * very high in the fire
+		// * quickly becoming less steep outside the fire (which is to make "away and back in" cheaper than
+		//    "in and back out")
+		//
+		// Now use deltaHeight, when positive, as penalty factor (times travel time).  This should penalize "wiggling"
+		// close to the fire more than wiggling farther away.
+		//
+		// In the fire the penalty factor then is bufferWidth^2.
+		//
+		// Links where only one node is in the fire need to be treated as in the fire, otherwise we erode the
+		// sharp edge.
+		
+		// yy in the below formulation, factor could be "zero".  Hedge against that (maybe
+		// even in utility code).
+		// yy Am just doing inLinks.  I think that that should be enough ...
+		// yy Should be able to extract the "height" function ...
+		
+		for ( Node node : scenario.getNetwork().getNodes().values() ) {
+			Point point = GeometryUtils.createGeotoolsPoint(node.getCoord());
+			if (fire.contains(point)) {
+				log.debug("node {} is IN fire area " + node.getId());
+				// in links
+				for (Link link : node.getInLinks().values()) {
+					penaltyOfLink.put( link.getId(), bufferWidth*bufferWidth) ;
+				}
+			} else if ( buffer.contains(point) ) {
+				log.debug("node {} is IN buffer", node.getId());
+				// in links
+				for (Link link : node.getInLinks().values()) {
+					Point point2 = GeometryUtils.createGeotoolsPoint(link.getFromNode().getCoord());
+					if (fire.contains(point2)) { // coming from fire
+						penaltyOfLink.put(link.getId(), bufferWidth*bufferWidth); // treat as "in fire".
+						// (yyyy probably too drastic; will avoid long links leading out of the fire)
+					} else if (buffer.contains(point2)) {
+						final double heightAtFromNode = Math.pow(bufferWidth-point2.distance(fire),2.) ;
+						final double heightAtToNode = Math.pow( bufferWidth - point.distance(fire),2.) ;
+						if ( heightAtToNode>heightAtFromNode) {
+							penaltyOfLink.put( link.getId(), heightAtToNode-heightAtFromNode ) ;
+						}
+					} else { // coming from out
+						final double heightAtToNode = Math.pow( bufferWidth - point.distance(fire),2.) ;
+						penaltyOfLink.put(link.getId(), heightAtToNode ) ;
+						// (height out will always be zero, and so height in will always be larger)
+					}
+				}
+			}
+		}
+	}
+	private void penaltyMethod1(Geometry fire, Geometry buffer) {
 		// risk increasing are essentially forbidden:
 		final double buffer2fire = 1000. ;
 		final double out2buffer = 500 ;
 		final double out2fire = out2buffer + buffer2fire ;
 		final double buffer2bufferGettingCloser = 500. ;
-
+		
 		// risk reducing is ok, we just want to keep them short:
 		final double fire2buffer = 20. ;
 		final double fire2out = 10. ;
 		final double buffer2out = 5. ;
 		final double buffer2bufferGettingAway = 5. ;
-
+		
 		// in fire essentially forbidden:
 		final double fire2fire = 1000. ;
-		
-
 		
 		
 		for ( Node node : scenario.getNetwork().getNodes().values() ) {
@@ -589,36 +705,6 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 		}
 		// yyyy above is start, but one will need the full "potential" approach from Gregor. Otherwise, you cut a link
 		// in two and get a different answer.  Which should not be. kai, dec'17
-		
-		if ( fireWriter==null ) {
-			final String filename = config.controler().getOutputDirectory() + "/output_fireCoords.txt.gz";
-			log.warn("writing fire data to " + filename);
-			fireWriter = IOUtils.getPrintStream(filename);
-			fireWriter.println("time\tx\ty") ;
-		}
-		// can't do this earlier since the output directories are not yet prepared by the controler.  kai, dec'17
-		
-		Envelope env = new Envelope();
-//		for(Geometry g : polygons){
-			env.expandToInclude(fire.getEnvelopeInternal());
-//		}
-		double gridsize = 100. ;
-		boolean atLeastOnePixel = false ;
-		for (double yy = env.getMinY(); yy <= env.getMaxY(); yy += gridsize) {
-			for (double xx = env.getMinX(); xx <= env.getMaxX(); xx += gridsize) {
-				if (fire.contains(new GeometryFactory().createPoint(new Coordinate(xx, yy)))) {
-					final String str = now + "\t" + xx + "\t" + yy;
-//					log.debug(str);
-					fireWriter.println(str);
-					atLeastOnePixel = true;
-				}
-			}
-		}
-		if (!atLeastOnePixel) {
-			final String str = now + "\t" + fire.getCentroid().getX() + "\t" + fire.getCentroid().getY() ;
-			fireWriter.println(str);
-		}
-		return true;
 	}
 	
 	public final double getTime() {
