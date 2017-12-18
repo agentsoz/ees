@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE population SYSTEM "http://www.matsim.org/files/dtd/population_v6.dtd">
+
+<population>
+
+
+
+<!-- ====================================================================== -->
+
+	<person id="0">
+		<plan selected="yes">
+			<activity type="home" x="251571.1921738536" y="5891005.042528489" end_time="00:00:10" >
+			</activity>
+			<leg mode="car">
+			</leg>
+			<activity type="home" x="251571.1921738536" y="5891005.042528489" >
+			</activity>
+		</plan>
+
+	</person>
+
+<!-- ====================================================================== -->
+
+</population>

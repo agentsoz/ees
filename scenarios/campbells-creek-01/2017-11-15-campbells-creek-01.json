@@ -1,0 +1,63 @@
+{
+  "name": "2017-11-15-campbells-creek-01",
+  "township": "Campbells Creek",
+  "defaultMapZoom": 11,
+  "coordinate_system": "latlong",
+  "osmArea": {
+    "rectangle": [
+      -36.9515,
+      144.4084,
+      -37.203,
+      144.0452
+    ],
+    "url": "app-data/mount-alexander-shire/network.xml.gz"
+  },
+  "fire": {
+    "name": "NO_INCIDENT",
+    "url": "",
+    "coordinate_system": "latlong",
+    "format": "geojson"
+  },
+  "destinations": [
+    {
+      "name": "Castlemaine",
+      "coordinates": {
+        "lat": -37.064737,
+        "lng": 144.212304
+      },
+      "split": "100.00"
+    }
+  ],
+  "safeLines": [
+    {
+      "name": "Castlemaine",
+      "coordinates": [
+        {
+          "lat": -37.07273787363827,
+          "lng": 144.20467615127563
+        },
+        {
+          "lat": -37.073902055381005,
+          "lng": 144.20750856399536
+        }
+      ]
+    }
+  ],
+  "vehiclesAreas": [
+    {
+      "name": "1",
+      "bounds": {
+        "south": -37.095059655511264,
+        "west": 144.20244455337524,
+        "north": -37.09321116863934,
+        "east": 144.20493364334106
+      }
+    }
+  ],
+  "evacTime": {
+    "hh": 6,
+    "mm": 0
+  },
+  "evacPeakMins": 30,
+  "maxSpeed": 100
+}

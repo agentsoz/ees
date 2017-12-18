@@ -1,0 +1,84 @@
+{
+  "name": "2017-12-12-sutton",
+  "township": "Harcourt",
+  "defaultMapZoom": 11,
+  "coordinate_system": "latlong",
+  "osmArea": {
+    "rectangle": [
+      -36.8988,
+      144.3452,
+      -37.1108,
+      144.1564
+    ],
+    "url": "app-data/mount-alexander-shire/network.xml.gz"
+  },
+  "fire": {
+    "name": "NO_INCIDENT",
+    "url": "",
+    "coordinate_system": "latlong",
+    "format": "geojson"
+  },
+  "destinations": [
+    {
+      "name": "Elphinstone",
+      "coordinates": {
+        "lat": -37.096682,
+        "lng": 144.346803
+      },
+      "split": "50.00"
+    },
+    {
+      "name": "Castlemaine",
+      "coordinates": {
+        "lat": -37.064737,
+        "lng": 144.212304
+      },
+      "split": "50.00"
+    }
+  ],
+  "safeLines": [
+    {
+      "name": "Elphinstone",
+      "coordinates": [
+        {
+          "lat": -37.00512992384966,
+          "lng": 144.35196875827387
+        },
+        {
+          "lat": -37.00540409459759,
+          "lng": 144.40037726657465
+        }
+      ]
+    },
+    {
+      "name": "Castlemaine",
+      "coordinates": [
+        {
+          "lat": -37.00046886984791,
+          "lng": 144.32965280022472
+        },
+        {
+          "lat": -37.013080474068346,
+          "lng": 144.3447590013966
+        }
+      ]
+    }
+  ],
+  "vehiclesAreas": [
+    {
+      "name": "6000",
+      "bounds": {
+        "south": -36.96317701129701,
+        "west": 144.36552643754112,
+        "north": -36.956970212328116,
+        "east": 144.37891602494346
+      }
+    }
+  ],
+  "evacTime": {
+    "hh": 12,
+    "mm": 0
+  },
+  "evacPeakMins": 60,
+  "maxSpeed": 100
+}

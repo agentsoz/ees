@@ -1,0 +1,63 @@
+{
+  "name": "2017-12-11-bradford-newstead-fire-crossing",
+  "township": "Maldon",
+  "defaultMapZoom": 10,
+  "coordinate_system": "latlong",
+  "osmArea": {
+    "rectangle": [
+      -36.8093,
+      144.2759,
+      -37.0853,
+      143.9257
+    ],
+    "url": "app-data/mount-alexander-shire/network.xml.gz"
+  },
+  "fire": {
+    "name": "20160420_MtAlexShire_FDI75_Iso",
+    "url": "app-data/mount-alexander-shire/maldon/20160420_MtAlexShire_FDI75_Iso.json",
+    "coordinate_system": "latlong",
+    "format": "geojson"
+  },
+  "destinations": [
+    {
+      "name": "Newstead",
+      "coordinates": {
+        "lat": -37.117277,
+        "lng": 144.059986
+      },
+      "split": "100.00"
+    }
+  ],
+  "safeLines": [
+    {
+      "name": "Newstead",
+      "coordinates": [
+        {
+          "lat": -37.032925802184224,
+          "lng": 144.0222358563915
+        },
+        {
+          "lat": -37.00332037044045,
+          "lng": 144.17810438666493
+        }
+      ]
+    }
+  ],
+  "vehiclesAreas": [
+    {
+      "name": "400",
+      "bounds": {
+        "south": -36.950467961919394,
+        "west": 144.0589642507257,
+        "north": -36.94326545461537,
+        "east": 144.06977891747374
+      }
+    }
+  ],
+  "evacTime": {
+    "hh": 11,
+    "mm": 0
+  },
+  "evacPeakMins": 120,
+  "maxSpeed": 100
+}
