@@ -48,11 +48,10 @@
 			<directory>${basedir}</directory>
 			<outputDirectory></outputDirectory>
 			<includes>
-				<include>scenarios/maldon-simple/*.*</include>
+				<include>scenarios/maldon-2017-11-01/*.*</include>
 				<include>scenarios/template/*.*</include>
 				<include>LICENSE.txt</include>
 			</includes>
 		</fileSet>
 	</fileSets>
 </assembly>
-
