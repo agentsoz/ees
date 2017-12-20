@@ -226,9 +226,9 @@ $("body").on(
 			if($('#destinations-list li').length==0) {
 				$('#plus-safelines').hide();
 				$('#existing-destinations').show();
-			} 
+			}
 			if($('#destinations-list li').length < 2) {
-			    $('#split-vehicles-view').fadeOut('slow');	
+			    $('#split-vehicles-view').fadeOut('slow');
 				if($('#destinations-list li').length < 2 || $('#split-vehicles-evenly').is(":checked")) {
 					$('.split-vehicles-dropdown').fadeOut('slow');
 				} else {
@@ -240,6 +240,7 @@ $("body").on(
 // Global handler for remove sign on destinations/safelines
 $("body").on("click", ".glyphicon-info-sign", function(e) {
 	var id = $(this).attr('id');
+	$('#infomodal').find('.modal-body').html(global.help[id]);
 	$('#infomodal').modal('show');
 	e.stopPropagation();
 });
@@ -310,8 +311,8 @@ $(".nav-back").click(function(event) {
 // Save button
 $(".nav-save").click(function(event) {
 	// Validate the form
-	var valid = existing_fires_dropdown_validate() 
-		& vehicles_area_validate() 
+	var valid = existing_fires_dropdown_validate()
+		& vehicles_area_validate()
 		& safe_lines_validate()
 		& split_vehicles_validate();
 	if (valid == 0) {
@@ -322,7 +323,7 @@ $(".nav-save").click(function(event) {
 		});
 		return;
 	}
-	
+
 	var val = '';
 	if (global.save_as != null) {
 		val = global.save_as;
@@ -468,7 +469,7 @@ $("#add-safeline").click(function(event) {
 		$('.draw-line-step-1').hide();
 		$('#existing-destinations').hide();
 		if($('#destinations-list li').length>1) {
-			$('#split-vehicles-view').fadeIn('slow');	
+			$('#split-vehicles-view').fadeIn('slow');
 			if($('#destinations-list li').length < 2 || $('#split-vehicles-evenly').is(":checked")) {
 				$('.split-vehicles-dropdown').fadeOut('slow');
 			} else {
