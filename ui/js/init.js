@@ -29,7 +29,7 @@ global.save_as = null;
 global.townships = [ {
 	name : "Castlemaine",
 	latlon : LATLNG_Castlemaine,
-	osmArea : [ -36.9754, 144.3614, -37.1579, 144.0452 ],
+	osmArea : [ -37.2600, 144.4789, -36.7375, 144.05833 ],
 	roadNetwork : "app-data/mount-alexander-shire/network.xml.gz", 
 	census_data : "According to the 2011 census, Castlemaine had 2918 occupied private dwellings, with on average 1.5 motor vehicles per dwelling",
 	defaultMapZoom : 11,
@@ -48,7 +48,7 @@ global.townships = [ {
 }, {
 	name : "Campbells Creek",
 	latlon : LATLNG_Campbells_Creek,
-	osmArea : [ -36.9515, 144.4084, -37.2030, 144.0452 ],
+	osmArea : [ -37.2600, 144.4789, -36.7375, 144.05833 ],
 	roadNetwork : "app-data/mount-alexander-shire/network.xml.gz", 
 	census_data : "According to the 2011 census, Campbells Creek had 526 occupied private dwellings, with on average 2 motor vehicles per dwelling",
 	defaultMapZoom : 11,
@@ -67,7 +67,7 @@ global.townships = [ {
 }, {
 	name : "Fryerstown",
 	latlon : LATLNG_Fryerstown,
-	osmArea : [ -37.0615, 144.3840, -37.2019, 144.1547 ],
+	osmArea : [ -37.2600, 144.4789, -36.7375, 144.05833 ],
 	roadNetwork : "app-data/mount-alexander-shire/network.xml.gz", 
 	census_data : "According to the 2011 census, Fryerstown had 120 occupied private dwellings, with on average 1.9 motor vehicles per dwelling",
 	defaultMapZoom : 11,
@@ -86,7 +86,7 @@ global.townships = [ {
 }, {
 	name : "Harcourt",
 	latlon : LATLNG_Harcourt,
-	osmArea : [ -36.8988, 144.3452, -37.1108, 144.1564 ],
+	osmArea : [ -37.2600, 144.4789, -36.7375, 144.05833 ],
 	roadNetwork : "app-data/mount-alexander-shire/network.xml.gz", 
 	census_data : "According to the 2011 census, Harcourt had 330 occupied private dwellings, with on average 2.3 motor vehicles per dwelling",
 	defaultMapZoom : 11,
@@ -105,7 +105,7 @@ global.townships = [ {
 }, {
 	name : "Maldon",
 	latlon : LATLNG_Maldon,
-	osmArea : [ -36.8093, 144.2759, -37.0853, 143.9257 ],
+	osmArea : [ -37.2600, 144.4789, -36.7375, 144.05833 ],
 	roadNetwork : "app-data/mount-alexander-shire/network.xml.gz", 
 	census_data : "According to the 2011 census, Maldon had 635 occupied private dwellings, with on average 1.7 motor vehicles per dwelling",
 	defaultMapZoom : 10,
@@ -140,7 +140,7 @@ global.townships = [ {
 }, {
 	name : "Newstead",
 	latlon : LATLNG_Newstead,
-	osmArea : [ -36.9696, 144.3425, -37.1860, 143.9463 ],
+	osmArea : [ -37.2600, 144.4789, -36.7375, 144.05833 ],
 	roadNetwork : "app-data/mount-alexander-shire/network.xml.gz", 
 	census_data : "According to the 2011 census, Newstead had 344 occupied private dwellings, with on average 1.9 motor vehicles per dwelling",
 	defaultMapZoom : 11,
@@ -163,7 +163,7 @@ global.townships = [ {
 }, {
 	name : "Taradale",
 	latlon : LATLNG_Taradale,
-	osmArea : [ -36.9919, 144.4771, -37.2571, 144.1530 ],
+	osmArea : [ -37.2600, 144.4789, -36.7375, 144.05833 ],
 	roadNetwork : "app-data/mount-alexander-shire/network.xml.gz", 
 	census_data : "According to the 2011 census, Taradale had 188 occupied private dwellings, with on average 1.9 motor vehicles per dwelling",
 	defaultMapZoom : 11,
@@ -182,7 +182,7 @@ global.townships = [ {
 }, {
 	name : "Vaughan",
 	latlon : LATLNG_Vaughan,
-	osmArea : [ -37.0615, 144.3840, -37.2019, 144.1547 ],
+	osmArea : [ -37.2600, 144.4789, -36.7375, 144.05833 ],
 	roadNetwork : "app-data/mount-alexander-shire/network.xml.gz", 
 	census_data : "According to the 2011 census, Vaughan had 120 occupied private dwellings, with on average 1.9 motor vehicles per dwelling",
 	defaultMapZoom : 11,
