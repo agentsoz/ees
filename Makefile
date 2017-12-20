@@ -34,5 +34,11 @@ dist:
 target/${DIST}/${DIST}.jar :
 	cd target && unzip -o ${DIST}-minimal.zip
 
+ui-install: target/${DIST}/${DIST}.jar
+	cd ui && $(MAKE) install
+
+ui-start : ui-install
+	cd ui && $(MAKE) run
+
 run: target/${DIST}/${DIST}.jar
 	cd target/${DIST} && ${RUNCMD}
