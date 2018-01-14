@@ -36,14 +36,13 @@ public class MainMaldon600Test {
 --jillconfig "--config={agents:[{classname:Resident, args:null, count:600}],logLevel: WARN,logFile: \"/var/www/data/user-data/2017-10-23-ds-maldon/scenario/jill.log\",programOutputFile: \"/var/www/data/user-data/2017-10-23-ds-maldon/scenario/jill.out\"}"
 		 */
 		String [] args = {
-				"--config",  "scenarios/maldon-2017-11-01/scenario_main.xml", 
+				"--config",  "scenarios/maldon-2017-11-01/scenario_main_without_fire.xml",
 				"--logfile", "scenarios/maldon-2017-11-01/scenario.log",
 				"--loglevel", "INFO",
 				//				"--plan-selection-policy", "FIRST", // ensures it is deterministic, as default is RANDOM
 				"--seed", "12345",
 				"--safeline-output-file-pattern", "scenarios/campbells-creek/safeline.%d%.out",
 				"--matsim-output-directory", utils.getOutputDirectory(),
-				EvacConfig.SETUP_INDICATOR, EvacConfig.Setup.withoutFireArea.name() ,
 				"--jillconfig", "--config={"+
 						"agents:[{classname:io.github.agentsoz.ees.agents.Resident, args:null, count:600}],"+
 						"logLevel: WARN,"+
