@@ -266,13 +266,6 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 				
 				// congestion detection in {@link EvacAgentTracker}
 				
-				// some infrastructure that makes results available: 
-				//this.addMobsimListenerBinding().toInstance( new MobsimAfterSimStepListener() {
-				//	@Override public void notifyMobsimAfterSimStep(MobsimAfterSimStepEvent e) {
-				//		publishDataToExternalListeners();
-				//	}
-				//} ) ;
-
 				this.addMobsimListenerBinding().toInstance( mobsimDataProvider );
 			}
 			
@@ -286,21 +279,6 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 				
 				// travel disutility includes the fire penalty. If no data arrives, it makes no difference.
 				TravelDisutilityFactory disutilityFactory = new EvacTravelDisutility.Factory(penaltyFactorsOfLinks);
-				// (yyyyyy the now following cases are just there because of the different tests.  Solve by config,
-				// and/or allow "fire" for all of them (if no data arrives, it makes no difference.  kai, dec'17)
-				switch( evacConfig.getSetup() ) {
-					// use switch so we note missing cases. kai, dec'17
-					case standard:
-					case blockage:
-					case tertiaryRoadsCorrection:
-						break;
-					case withoutFireArea:
-					case withBlockageButWithoutFire:
-						disutilityFactory = new OnlyTimeDependentTravelDisutilityFactory();
-						break;
-					default:
-						Gbl.fail();
-				}
 				addTravelDisutilityFactoryBinding(routingMode).toInstance(disutilityFactory);
 			}
 			
@@ -315,23 +293,9 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 				addMobsimListenerBinding().to(WithinDayTravelTime.class);
 				addTravelTimeBinding(routingMode).to(WithinDayTravelTime.class) ;
 				
-				// travel disutility includes the fire penalty:
+				// travel disutility includes the fire penalty. If no data arrives, it makes no difference.
 				TravelDisutilityFactory disutilityFactory = new EvacTravelDisutility.Factory(penaltyFactorsOfLinks);
 				// (yyyyyy the now following cases are just there because of the different tests.  Solve by config,
-				// and/or allow "fire" for all of them (if no data arrives, it makes no difference.  kai, dec'17)
-				switch( evacConfig.getSetup() ) {
-					// use switch so we note missing cases. kai, dec'17
-					case standard:
-					case blockage:
-					case tertiaryRoadsCorrection:
-						break;
-					case withoutFireArea:
-					case withBlockageButWithoutFire:
-						disutilityFactory = new OnlyTimeDependentTravelDisutilityFactory();
-						break;
-					default:
-						Gbl.fail();
-				}
 				addTravelDisutilityFactoryBinding(routingMode).toInstance(disutilityFactory);
 			}
 			
@@ -446,19 +410,6 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 		double now = getTime() ;
 		
 		log.warn("receiving fire data at time={}", now/3600. ) ;
-		
-		switch( evacConfig.getSetup() ) {
-			// use switch so we note missing cases.  kai, dec'17
-			case standard:
-			case blockage:
-			case tertiaryRoadsCorrection:
-				break;
-			case withoutFireArea:
-			case withBlockageButWithoutFire:
-				return false ;
-			default:
-				throw new RuntimeException("not implemented") ;
-		}
 		
 		// Is this called in every time step, or just every 5 min or so?  kai, dec'17
 
