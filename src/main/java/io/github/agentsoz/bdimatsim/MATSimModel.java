@@ -1,9 +1,7 @@
 package io.github.agentsoz.bdimatsim;
 
-import java.io.PrintStream;
 import java.util.*;
 
-import ch.qos.logback.classic.Level;
 import com.google.gson.Gson;
 import com.vividsolutions.jts.geom.*;
 import io.github.agentsoz.dataInterface.DataClient;
@@ -14,7 +12,6 @@ import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.TransportMode;
 import org.matsim.api.core.v01.network.Link;
-import org.matsim.api.core.v01.network.Node;
 import org.matsim.core.api.experimental.events.EventsManager;
 import org.matsim.core.config.Config;
 import org.matsim.core.config.ConfigUtils;
@@ -39,7 +36,6 @@ import org.matsim.core.trafficmonitoring.FreeSpeedTravelTime;
 import org.matsim.core.utils.geometry.CoordinateTransformation;
 import org.matsim.core.utils.geometry.GeometryUtils;
 import org.matsim.core.utils.geometry.transformations.TransformationFactory;
-import org.matsim.core.utils.io.IOUtils;
 import org.matsim.withinday.mobsim.MobsimDataProvider;
 import org.matsim.withinday.trafficmonitoring.WithinDayTravelTime;
 
@@ -84,19 +80,14 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 	public static final String MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR = "--matsim-output-directory";
 	static final String FIRE_DATA_MSG = "fire_data";
 	private final EvacConfig evacConfig;
-	private PrintStream fireWriter;
-	private Config config;
+	private final FireWriter fireWriter;
+	private final Config config;
 	private boolean configLoaded = false ;
 	
 	public static enum EvacRoutingMode {carFreespeed, carGlobalInformation, emergencyVehicle}
 
 	private final Scenario scenario ;
-
-	/**
-	 * some blackboardy thing that sits between ABM and BDI. can be null (so non-final is ok)
-	 */
-	private DataServer dataServer;
-
+	
 	/**
 	 * A helper class essentially provided by the framework, used here.  The only direct connection to matsim are the event
 	 * monitors, which need to be registered, via the events monitor registry, as a matsim events handler.
@@ -122,7 +113,7 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 	
 	private boolean scenarioLoaded = false ;
 	
-	private Map<Id<Link>,Double> penaltyOfLink = new HashMap<>() ;
+	private final Map<Id<Link>,Double> penaltyFactorsOfLinks = new HashMap<>() ;
 	
 	public MATSimModel(String matSimFile, String matsimOutputDirectory) {
 		// not the most elegant way of doing this ...
@@ -136,8 +127,11 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 	
 	public MATSimModel( String[] args) {
 //		((ch.qos.logback.classic.Logger)log).setLevel(Level.DEBUG);
+
 		config = ConfigUtils.loadConfig( args[0] ) ;
-		parseAdditionalArguments(args, config);
+
+		Utils.parseAdditionalArguments(args, config);
+
 		config.network().setTimeVariantNetwork(true);
 		
 		config.plans().setActivityDurationInterpretation(ActivityDurationInterpretation.tryEndTimeThenDuration);
@@ -176,15 +170,18 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 		// ---
 
 		scenario = ScenarioUtils.createScenario(config);
+		// (this is _created_ already here so that the scenario pointer can be final)
 		
 		// ---
 
 		this.agentManager = new PAAgentManager(eventsMonitors) ;
 		
+		this.fireWriter = new FireWriter( config ) ;
+		
 	}
 	
 	public Config loadAndPrepareConfig() {
-		// currently already done in constructor.  But I want to make this more
+		// currently already done in constructor.  But I want to have this more
 		// expressive than model.getConfig().  kai, nov'17
 		configLoaded = true ;
 		return config ;
@@ -250,86 +247,9 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 
 		controller.addOverridingModule(new AbstractModule(){
 			@Override public void install() {
-				{
-					final String routingMode = EvacRoutingMode.emergencyVehicle.name();
-					
-					addRoutingModuleBinding(routingMode).toProvider(new NetworkRoutingProvider(TransportMode.car, routingMode)) ;
-					
-					// congested travel time:
-					bind(WithinDayTravelTime.class).in(Singleton.class);
-					addEventHandlerBinding().to(WithinDayTravelTime.class);
-					addMobsimListenerBinding().to(WithinDayTravelTime.class);
-					addTravelTimeBinding(routingMode).to(WithinDayTravelTime.class) ;
-					
-					// travel disutility includes the fire penalty:
-					TravelDisutilityFactory disutilityFactory = new EvacTravelDisutility.Factory(penaltyOfLink);
-					
-					// yyyyyy what would we want for penalty?  They probably don't want to drive through the fire.  Just a
-					// much smaller buffer?  kai, dec'17
-					
-//					TravelDisutilityFactory disutilityFactory = new OnlyTimeDependentTravelDisutilityFactory();
-					addTravelDisutilityFactoryBinding(routingMode).toInstance(disutilityFactory);
-				}
-				{
-					final String routingMode = EvacRoutingMode.carGlobalInformation.name();
-					
-					addRoutingModuleBinding(routingMode).toProvider(new NetworkRoutingProvider(TransportMode.car, routingMode)) ;
-					
-					// congested travel time:
-					bind(WithinDayTravelTime.class).in(Singleton.class);
-					addEventHandlerBinding().to(WithinDayTravelTime.class);
-					addMobsimListenerBinding().to(WithinDayTravelTime.class);
-					addTravelTimeBinding(routingMode).to(WithinDayTravelTime.class) ;
-					
-					// travel disutility includes the fire penalty:
-					TravelDisutilityFactory disutilityFactory = new EvacTravelDisutility.Factory(penaltyOfLink);
-					// (yyyyyy the now following cases are just there because of the different tests.  Solve by config,
-					// and/or allow "fire" for all of them (if no data arrives, it makes no difference.  kai, dec'17)
-					switch( evacConfig.getSetup() ) {
-						// use switch so we note missing cases. kai, dec'17
-						case standard:
-						case blockage:
-						case tertiaryRoadsCorrection:
-							break;
-						case withoutFireArea:
-						case withBlockageButWithoutFire:
-							disutilityFactory = new OnlyTimeDependentTravelDisutilityFactory();
-							break;
-						default:
-							Gbl.fail();
-					}
-					addTravelDisutilityFactoryBinding(routingMode).toInstance(disutilityFactory);
-				}
-				{
-					String routingMode = EvacRoutingMode.carFreespeed.name() ;
-					
-					addRoutingModuleBinding(routingMode).toProvider(new NetworkRoutingProvider(TransportMode.car,routingMode)) ;
-					
-					// freespeed travel time:
-					addTravelTimeBinding(routingMode).to(FreeSpeedTravelTime.class);
-					
-					// travel disutility includes the fire penalty:
-					TravelDisutilityFactory disutilityFactory = new EvacTravelDisutility.Factory(penaltyOfLink);
-					// (yyyyyy the now following cases are just there because of the different tests.  Solve by config,
-					// and/or allow "fire" for all of them (if no data arrives, it makes no difference.  kai, dec'17)
-					switch( evacConfig.getSetup() ) {
-						// use switch so we note missing cases. kai, dec'17
-						case standard:
-						case blockage:
-						case tertiaryRoadsCorrection:
-							break;
-						case withoutFireArea:
-						case withBlockageButWithoutFire:
-							disutilityFactory = new OnlyTimeDependentTravelDisutilityFactory();
-							break;
-						default:
-							Gbl.fail();
-					}
-
-					addTravelDisutilityFactoryBinding(routingMode).toInstance(disutilityFactory);
-				}
-		
-
+				setupEmergencyVehicleRouting();
+				setupCarGlobalInformationRouting();
+				setupCarFreespeedRouting();
 				
 				install( new EvacQSimModule(MATSimModel.this, controller.getEvents()) ) ;
 
@@ -354,6 +274,85 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 				//} ) ;
 
 				this.addMobsimListenerBinding().toInstance( mobsimDataProvider );
+			}
+			
+			private void setupCarFreespeedRouting() {
+				String routingMode = EvacRoutingMode.carFreespeed.name() ;
+				
+				addRoutingModuleBinding(routingMode).toProvider(new NetworkRoutingProvider(TransportMode.car,routingMode)) ;
+				
+				// freespeed travel time:
+				addTravelTimeBinding(routingMode).to(FreeSpeedTravelTime.class);
+				
+				// travel disutility includes the fire penalty. If no data arrives, it makes no difference.
+				TravelDisutilityFactory disutilityFactory = new EvacTravelDisutility.Factory(penaltyFactorsOfLinks);
+				// (yyyyyy the now following cases are just there because of the different tests.  Solve by config,
+				// and/or allow "fire" for all of them (if no data arrives, it makes no difference.  kai, dec'17)
+				switch( evacConfig.getSetup() ) {
+					// use switch so we note missing cases. kai, dec'17
+					case standard:
+					case blockage:
+					case tertiaryRoadsCorrection:
+						break;
+					case withoutFireArea:
+					case withBlockageButWithoutFire:
+						disutilityFactory = new OnlyTimeDependentTravelDisutilityFactory();
+						break;
+					default:
+						Gbl.fail();
+				}
+				addTravelDisutilityFactoryBinding(routingMode).toInstance(disutilityFactory);
+			}
+			
+			private void setupCarGlobalInformationRouting() {
+				final String routingMode = EvacRoutingMode.carGlobalInformation.name();
+				
+				addRoutingModuleBinding(routingMode).toProvider(new NetworkRoutingProvider(TransportMode.car, routingMode)) ;
+				
+				// congested travel time:
+				bind(WithinDayTravelTime.class).in(Singleton.class);
+				addEventHandlerBinding().to(WithinDayTravelTime.class);
+				addMobsimListenerBinding().to(WithinDayTravelTime.class);
+				addTravelTimeBinding(routingMode).to(WithinDayTravelTime.class) ;
+				
+				// travel disutility includes the fire penalty:
+				TravelDisutilityFactory disutilityFactory = new EvacTravelDisutility.Factory(penaltyFactorsOfLinks);
+				// (yyyyyy the now following cases are just there because of the different tests.  Solve by config,
+				// and/or allow "fire" for all of them (if no data arrives, it makes no difference.  kai, dec'17)
+				switch( evacConfig.getSetup() ) {
+					// use switch so we note missing cases. kai, dec'17
+					case standard:
+					case blockage:
+					case tertiaryRoadsCorrection:
+						break;
+					case withoutFireArea:
+					case withBlockageButWithoutFire:
+						disutilityFactory = new OnlyTimeDependentTravelDisutilityFactory();
+						break;
+					default:
+						Gbl.fail();
+				}
+				addTravelDisutilityFactoryBinding(routingMode).toInstance(disutilityFactory);
+			}
+			
+			private void setupEmergencyVehicleRouting() {
+				final String routingMode = EvacRoutingMode.emergencyVehicle.name();
+				
+				addRoutingModuleBinding(routingMode).toProvider(new NetworkRoutingProvider(TransportMode.car, routingMode)) ;
+				
+				// congested travel time:
+				bind(WithinDayTravelTime.class).in(Singleton.class);
+				addEventHandlerBinding().to(WithinDayTravelTime.class);
+				addMobsimListenerBinding().to(WithinDayTravelTime.class);
+				addTravelTimeBinding(routingMode).to(WithinDayTravelTime.class) ;
+				
+				// travel disutility includes the fire penalty:
+				TravelDisutilityFactory disutilityFactory = new EvacTravelDisutility.Factory(penaltyFactorsOfLinks);
+				// yyyyyy This uses the same disutility as the evacuees.  May not be what we want.
+				// But what do we want?  kai, dec'17/jan'18
+
+//					TravelDisutilityFactory disutilityFactory = new OnlyTimeDependentTravelDisutilityFactory();
+				addTravelDisutilityFactoryBinding(routingMode).toInstance(disutilityFactory);
 			}
 		}) ;
 
@@ -380,15 +379,18 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 	public final void takeControl(AgentDataContainer agentDataContainer){
 		runUntil( (int)(playPause.getLocalTime() + 1), agentDataContainer ) ;
 	}
+	
 	public final void runUntil( long newTime , AgentDataContainer agentDataContainer ) {
 			log.trace("Received {} ", agentManager.getAgentDataContainer());
 			agentManager.updateActions(); // handle incoming BDI actions
 			playPause.doStep( (int) (newTime) );
 			agentManager.transferActionsPerceptsToDataContainer(); // send back BDI actions/percepts/status'
 	}
+	
 	public final boolean isFinished() {
 		return playPause.isFinished() ;
 	}
+	
 	public void finish() {
 		playPause.play();
 		while( matsimThread.isAlive() ) {
@@ -411,24 +413,8 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 	public void setEventHandlers(List<EventHandler> eventHandlers) {
 		this.eventHandlers = eventHandlers;
 	}
-
-	private static void parseAdditionalArguments(String[] args, Config config) {
-		for (int i = 1; i < args.length; i++) {
-			switch (args[i]) {
-			case MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR:
-				if (i + 1 < args.length) {
-					i++;
-					log.info("setting matsim output directory to " + args[i] );
-					config.controler().setOutputDirectory( args[i] );
-				}
-				break;
-			default:
-				throw new RuntimeException("unknown config option") ;
-			}
-		}
-	}
-
-//	private final void setFreeSpeedExample(){
+	
+	//	private final void setFreeSpeedExample(){
 //		// example how to set the freespeed of some link to zero:
 //		final double now = this.qSim.getSimTimer().getTimeOfDay();
 //		if ( now == 0.*3600. + 6.*60. ) {
@@ -446,8 +432,8 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 //	}
 
 	public final void registerDataServer( DataServer server ) {
-		dataServer = server;
-		dataServer.subscribe(this, PerceptList.FIRE_DATA);
+		// some blackboardy thing that sits between ABM and BDI
+		server.subscribe(this, PerceptList.FIRE_DATA);
 	}
 
 	@Override
@@ -474,9 +460,11 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 				throw new RuntimeException("not implemented") ;
 		}
 		
-		// Is this called in every time step, or just every 5 min or so?  kai, dec'17 --> Normally only one polygon
-		// per time step.  Might want to test for this, and get rid of multi-polygon code below.  On other hand,
-		// probably does not matter much.  kai, dec'17
+		// Is this called in every time step, or just every 5 min or so?  kai, dec'17
+
+		// Normally only one polygon per time step.  Might want to test for this, and get rid of multi-polygon code
+		// below.  On other hand, probably does not matter much.  kai, dec'17
+		
 		if (! PerceptList.FIRE_DATA.equals(dataType)) {
 			return false;
 		}
@@ -491,8 +479,6 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 		// unfortunately does not work since the incoming data is not typed accordingly. kai, dec'17
 		
 		Map<Double, Double[][]> map = (Map<Double, Double[][]>) data;
-//		List<Polygon> polygons = new ArrayList<>() ;
-//		List<Geometry> buffers = new ArrayList<>() ;
 		// the map key is time; we just take the superset of all polygons
 		Geometry fire = null ;
 		for ( Double[][] pairs : map.values() ) {
@@ -506,214 +492,31 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 			} else {
 				fire = fire.union(polygon);
 			}
-//			polygons.add(polygon) ;
-//			buffers.add( polygon.buffer(1000.) );
 		}
 		
 		final double bufferWidth = 10000.;
 		Geometry buffer = fire.buffer(bufferWidth);
 		
-		penaltyOfLink.clear();
+		penaltyFactorsOfLinks.clear();
 		
 //		https://stackoverflow.com/questions/38404095/how-to-calculate-the-distance-in-meters-between-a-geographic-point-and-a-given-p
-		penaltyMethod1(fire, buffer);
-//		penaltyMethod2(fire, buffer, bufferWidth );
+		Utils.penaltyMethod1(fire, buffer, penaltyFactorsOfLinks, scenario );
+//		penaltyMethod2(fire, buffer, bufferWidth, penaltyFactorsOfLinks, scenario );
 		// yyyyyy I think that penaltyMethod2 looks nicer than method1, but the test for the time
 		// being is using version 1.  kai, dec'17
+		// yy could make this settable, but for the time being this pedestrian approach
+		// seems sufficient.  kai, jan'18
 		
 		
-		if ( fireWriter==null ) {
-			final String filename = config.controler().getOutputDirectory() + "/output_fireCoords.txt.gz";
-			log.warn("writing fire data to " + filename);
-			fireWriter = IOUtils.getPrintStream(filename);
-			fireWriter.println("time\tx\ty") ;
-		}
-		// can't do this earlier since the output directories are not yet prepared by the controler.  kai, dec'17
-		
-		Envelope env = new Envelope();
-//		for(Geometry g : polygons){
-			env.expandToInclude(fire.getEnvelopeInternal());
-//		}
-		double gridsize = 100. ;
-		boolean atLeastOnePixel = false ;
-		for (double yy = env.getMinY(); yy <= env.getMaxY(); yy += gridsize) {
-			for (double xx = env.getMinX(); xx <= env.getMaxX(); xx += gridsize) {
-				if (fire.contains(new GeometryFactory().createPoint(new Coordinate(xx, yy)))) {
-					final String str = now + "\t" + xx + "\t" + yy;
-//					log.debug(str);
-					fireWriter.println(str);
-					atLeastOnePixel = true;
-				}
-			}
-		}
-		if (!atLeastOnePixel) {
-			final String str = now + "\t" + fire.getCentroid().getX() + "\t" + fire.getCentroid().getY() ;
-			fireWriter.println(str);
-		}
+		fireWriter.write( now, fire);
 		return true;
-	}
-	
-	private void penaltyMethod2(Geometry fire, Geometry buffer, double bufferWidth) {
-		// Starting thoughts:
-		// * Could make everything very expensive in buffer + fire, they find the fastest path out.  This may, however,
-		// be through the fire.
-		// * Could make everything very expensive in fire, and factor of 10 less expensive in buffer.  Then they would
-		// find fastest way out of fire, then fastest way out of buffer.
-		// * Problem is that fastest way out of buffer may entail getting or remaining close to the fire.
-		//
-		// What about
-		//
-		// deltaHeight = (bufferWidth-distanceToFireToNode)^2 - (bufferWidth-distanceToFireFromNode)^2,
-		//
-		// e.g. fromNode close to fire = large second term, toNode close to outside = small first term,
-		// deltaHeight negative (since we go downhill).
-		//
-		//  This should look like the Drakensberg, i.e.
-		// * high and flat in the fire
-		// * steep outside the fire but close ("distance ..." small)
-		// * increasingly more flat farther away
-		//
-		// (Actually, the "Drakensberg" is quite misleading, since this is the shape of the 1st derivative.  The
-		// actual slope thus is
-		// * very high in the fire
-		// * quickly becoming less steep outside the fire (which is to make "away and back in" cheaper than
-		//    "in and back out")
-		//
-		// Now use deltaHeight, when positive, as penalty factor (times travel time).  This should penalize "wiggling"
-		// close to the fire more than wiggling farther away.
-		//
-		// In the fire the penalty factor then is bufferWidth^2.
-		//
-		// Links where only one node is in the fire need to be treated as in the fire, otherwise we erode the
-		// sharp edge.
-		
-		// yy in the below formulation, factor could be "zero".  Hedge against that (maybe
-		// even in utility code).
-		// yy Am just doing inLinks.  I think that that should be enough ...
-		// yy Should be able to extract the "height" function ...
-		
-		for ( Node node : scenario.getNetwork().getNodes().values() ) {
-			Point point = GeometryUtils.createGeotoolsPoint(node.getCoord());
-			if (fire.contains(point)) {
-				log.debug("node {} is IN fire area " + node.getId());
-				// in links
-				for (Link link : node.getInLinks().values()) {
-					penaltyOfLink.put( link.getId(), bufferWidth*bufferWidth) ;
-				}
-			} else if ( buffer.contains(point) ) {
-				log.debug("node {} is IN buffer", node.getId());
-				// in links
-				for (Link link : node.getInLinks().values()) {
-					Point point2 = GeometryUtils.createGeotoolsPoint(link.getFromNode().getCoord());
-					if (fire.contains(point2)) { // coming from fire
-						penaltyOfLink.put(link.getId(), bufferWidth*bufferWidth); // treat as "in fire".
-						// (yyyy probably too drastic; will avoid long links leading out of the fire)
-					} else if (buffer.contains(point2)) {
-						final double heightAtFromNode = Math.pow(bufferWidth-point2.distance(fire),2.) ;
-						final double heightAtToNode = Math.pow( bufferWidth - point.distance(fire),2.) ;
-						if ( heightAtToNode>heightAtFromNode) {
-							penaltyOfLink.put( link.getId(), heightAtToNode-heightAtFromNode ) ;
-						}
-					} else { // coming from out
-						final double heightAtToNode = Math.pow( bufferWidth - point.distance(fire),2.) ;
-						penaltyOfLink.put(link.getId(), heightAtToNode ) ;
-						// (height out will always be zero, and so height in will always be larger)
-					}
-				}
-			}
-		}
-	}
-	private void penaltyMethod1(Geometry fire, Geometry buffer) {
-		// risk increasing are essentially forbidden:
-		final double buffer2fire = 1000. ;
-		final double out2buffer = 500 ;
-		final double out2fire = out2buffer + buffer2fire ;
-		final double buffer2bufferGettingCloser = 500. ;
-		
-		// risk reducing is ok, we just want to keep them short:
-		final double fire2buffer = 20. ;
-		final double fire2out = 10. ;
-		final double buffer2out = 5. ;
-		final double buffer2bufferGettingAway = 5. ;
-		
-		// in fire essentially forbidden:
-		final double fire2fire = 1000. ;
-		
-		
-		for ( Node node : scenario.getNetwork().getNodes().values() ) {
-			Point point = GeometryUtils.createGeotoolsPoint(node.getCoord());
-			if (fire.contains(point)) {
-				log.debug("node {} is IN fire area " + node.getId());
-				// outlinks:
-				for (Link link : node.getOutLinks().values()) {
-					Point point2 = GeometryUtils.createGeotoolsPoint(link.getToNode().getCoord());
-					if (fire.contains(point2)) {
-						penaltyOfLink.put(link.getId(), fire2fire ); // fire --> fire
-					} else if (buffer.contains(point2)) {
-						penaltyOfLink.put(link.getId(), fire2buffer ); // fire --> buffer
-					} else {
-						penaltyOfLink.put(link.getId(), fire2out ); // fire --> out
-					}
-				}
-				// in links
-				for (Link link : node.getInLinks().values()) {
-					Point point2 = GeometryUtils.createGeotoolsPoint(link.getToNode().getCoord());
-					if (fire.contains(point2)) {
-						penaltyOfLink.put(link.getId(), fire2fire ); // fire <-- fire
-					} else if (buffer.contains(point2)) {
-						penaltyOfLink.put(link.getId(), buffer2fire ); // fire <-- buffer
-					} else {
-						penaltyOfLink.put(link.getId(), out2fire ); // fire <-- out
-					}
-				}
-			} else if ( buffer.contains(point) ) {
-				log.debug("node {} is IN buffer", node.getId());
-				// outlinks:
-				for (Link link : node.getOutLinks().values()) {
-					Point point2 = GeometryUtils.createGeotoolsPoint(link.getToNode().getCoord());
-					if (fire.contains(point2)) {
-						penaltyOfLink.put(link.getId(), buffer2fire ); // buffer --> fire
-					} else if (buffer.contains(point2)) {// buffer --> buffer
-						final double distanceFromNode = point.distance(fire) ;
-						final double distanceToNode = point2.distance(fire) ;
-						if ( distanceToNode > distanceFromNode ) {
-							penaltyOfLink.put(link.getId(), buffer2bufferGettingAway);
-						} else {
-							penaltyOfLink.put(link.getId(), buffer2bufferGettingCloser);
-						}
-					} else {
-						penaltyOfLink.put(link.getId(), buffer2out ); // buffer --> out
-					}
-				}
-				// in links
-				for (Link link : node.getInLinks().values()) {
-					Point point2 = GeometryUtils.createGeotoolsPoint(link.getFromNode().getCoord());
-					if (fire.contains(point2)) {
-						penaltyOfLink.put(link.getId(), fire2buffer); // buffer <-- fire
-					} else if (buffer.contains(point2)) { // buffer <-- buffer
-						final double distanceToNode = point.distance(fire) ;
-						final double distanceFromNode = point2.distance(fire) ;
-						if ( distanceToNode > distanceFromNode ) {
-							penaltyOfLink.put(link.getId(), buffer2bufferGettingAway);
-						} else {
-							penaltyOfLink.put(link.getId(), buffer2bufferGettingCloser);
-						}
-					} else {
-						penaltyOfLink.put(link.getId(), out2buffer); // buffer <-- out
-					}
-				}
-			}
-		}
-		// yyyy above is start, but one will need the full "potential" approach from Gregor. Otherwise, you cut a link
-		// in two and get a different answer.  Which should not be. kai, dec'17
 	}
 	
 	public final double getTime() {
 		return this.qSim.getSimTimer().getTimeOfDay() ;
 	}
 
-	@Override
-	public Object queryPercept(String agentID, String perceptID) {
+	@Override public Object queryPercept(String agentID, String perceptID) {
 		// TODO Auto-generated method stub
 		return null;
 	}

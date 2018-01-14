@@ -22,12 +22,10 @@ package io.github.agentsoz.bdimatsim;
  * #L%
  */
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
-import org.apache.log4j.Logger;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.Point;
 import org.matsim.api.core.v01.Coord;
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.Scenario;
@@ -45,6 +43,8 @@ import org.matsim.core.scenario.ScenarioUtils;
 import org.matsim.core.utils.geometry.GeometryUtils;
 
 import com.vividsolutions.jts.geom.LineString;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -57,7 +57,7 @@ public final class Utils {
 	private Utils(){} // do not instantiate. kai, mar'15
 
 	@SuppressWarnings("unused")
-	private static final Logger log = Logger.getLogger(Utils.class);
+	private static final Logger log = LoggerFactory.getLogger(Utils.class);
 
 	public static List<String> getBDIAgentIDs( Scenario scenario ) {
 		// this goes through all matsim agents, ignores the stub agents, and returns as many of those agent ids as the
@@ -176,8 +176,179 @@ public final class Utils {
 
 
 	}
-
-
-
-
+	
+	
+	static void parseAdditionalArguments(String[] args, Config config) {
+		for (int i = 1; i < args.length; i++) {
+			switch (args[i]) {
+			case MATSimModel.MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR:
+				if (i + 1 < args.length) {
+					i++;
+					log.info("setting matsim output directory to " + args[i] );
+					config.controler().setOutputDirectory( args[i] );
+				}
+				break;
+			default:
+				throw new RuntimeException("unknown config option") ;
+			}
+		}
+	}
+	
+	static void penaltyMethod2(Geometry fire, Geometry buffer, double bufferWidth,
+									   Map<Id<Link>, Double> penaltyFactorsOfLinks, Scenario scenario ) {
+		// Starting thoughts:
+		// * Could make everything very expensive in buffer + fire, they find the fastest path out.  This may, however,
+		// be through the fire.
+		// * Could make everything very expensive in fire, and factor of 10 less expensive in buffer.  Then they would
+		// find fastest way out of fire, then fastest way out of buffer.
+		// * Problem is that fastest way out of buffer may entail getting or remaining close to the fire.
+		//
+		// What about
+		//
+		// deltaHeight = (bufferWidth-distanceToFireToNode)^2 - (bufferWidth-distanceToFireFromNode)^2,
+		//
+		// e.g. fromNode close to fire = large second term, toNode close to outside = small first term,
+		// deltaHeight negative (since we go downhill).
+		//
+		//  This should look like the Drakensberg, i.e.
+		// * high and flat in the fire
+		// * steep outside the fire but close ("distance ..." small)
+		// * increasingly more flat farther away
+		//
+		// (Actually, the "Drakensberg" is quite misleading, since this is the shape of the 1st derivative.  The
+		// actual slope thus is
+		// * very high in the fire
+		// * quickly becoming less steep outside the fire (which is to make "away and back in" cheaper than
+		//    "in and back out")
+		//
+		// Now use deltaHeight, when positive, as penalty factor (times travel time).  This should penalize "wiggling"
+		// close to the fire more than wiggling farther away.
+		//
+		// In the fire the penalty factor then is bufferWidth^2.
+		//
+		// Links where only one node is in the fire need to be treated as in the fire, otherwise we erode the
+		// sharp edge.
+		
+		// yy in the below formulation, factor could be "zero".  Hedge against that (maybe
+		// even in utility code).
+		// yy Am just doing inLinks.  I think that that should be enough ...
+		// yy Should be able to extract the "height" function ...
+		
+		for ( Node node : scenario.getNetwork().getNodes().values() ) {
+			Point point = GeometryUtils.createGeotoolsPoint(node.getCoord());
+			if (fire.contains(point)) {
+				log.debug("node {} is IN fire area ", node.getId());
+				// in links
+				for (Link link : node.getInLinks().values()) {
+					penaltyFactorsOfLinks.put( link.getId(), bufferWidth*bufferWidth) ;
+				}
+			} else if ( buffer.contains(point) ) {
+				log.debug("node {} is IN buffer", node.getId());
+				// in links
+				for (Link link : node.getInLinks().values()) {
+					Point fromPoint = GeometryUtils.createGeotoolsPoint(link.getFromNode().getCoord());
+					if (fire.contains(fromPoint)) { // coming from fire
+						penaltyFactorsOfLinks.put(link.getId(), bufferWidth*bufferWidth); // treat as "in fire".
+						// (yyyy probably too drastic; will avoid long links leading out of the fire)
+					} else if (buffer.contains(fromPoint)) {
+						final double heightAtFromNode = Math.pow(bufferWidth-fromPoint.distance(fire),2.) ;
+						final double heightAtToNode = Math.pow( bufferWidth - point.distance(fire),2.) ;
+						if ( heightAtToNode>heightAtFromNode) {
+							penaltyFactorsOfLinks.put( link.getId(), heightAtToNode-heightAtFromNode ) ;
+						}
+					} else { // coming from out
+						final double heightAtToNode = Math.pow( bufferWidth - point.distance(fire),2.) ;
+						penaltyFactorsOfLinks.put(link.getId(), heightAtToNode ) ;
+						// (height out will always be zero, and so height in will always be larger)
+					}
+				}
+			}
+		}
+	}
+	
+	static void penaltyMethod1(Geometry fire, Geometry buffer,
+							   Map<Id<Link>, Double> penaltyFactorsOfLinks, Scenario scenario) {
+		// risk increasing are essentially forbidden:
+		final double buffer2fire = 1000. ;
+		final double out2buffer = 500 ;
+		final double out2fire = out2buffer + buffer2fire ;
+		final double buffer2bufferGettingCloser = 500. ;
+		
+		// risk reducing is ok, we just want to keep them short:
+		final double fire2buffer = 20. ;
+		final double fire2out = 10. ;
+		final double buffer2out = 5. ;
+		final double buffer2bufferGettingAway = 5. ;
+		
+		// in fire essentially forbidden:
+		final double fire2fire = 1000. ;
+		
+		
+		for ( Node node : scenario.getNetwork().getNodes().values() ) {
+			Point point = GeometryUtils.createGeotoolsPoint(node.getCoord());
+			if (fire.contains(point)) {
+				log.debug("node {} is IN fire area " + node.getId());
+				// outlinks:
+				for (Link link : node.getOutLinks().values()) {
+					Point point2 = GeometryUtils.createGeotoolsPoint(link.getToNode().getCoord());
+					if (fire.contains(point2)) {
+						penaltyFactorsOfLinks.put(link.getId(), fire2fire ); // fire --> fire
+					} else if (buffer.contains(point2)) {
+						penaltyFactorsOfLinks.put(link.getId(), fire2buffer ); // fire --> buffer
+					} else {
+						penaltyFactorsOfLinks.put(link.getId(), fire2out ); // fire --> out
+					}
+				}
+				// in links
+				for (Link link : node.getInLinks().values()) {
+					Point point2 = GeometryUtils.createGeotoolsPoint(link.getToNode().getCoord());
+					if (fire.contains(point2)) {
+						penaltyFactorsOfLinks.put(link.getId(), fire2fire ); // fire <-- fire
+					} else if (buffer.contains(point2)) {
+						penaltyFactorsOfLinks.put(link.getId(), buffer2fire ); // fire <-- buffer
+					} else {
+						penaltyFactorsOfLinks.put(link.getId(), out2fire ); // fire <-- out
+					}
+				}
+			} else if ( buffer.contains(point) ) {
+				log.debug("node {} is IN buffer", node.getId());
+				// outlinks:
+				for (Link link : node.getOutLinks().values()) {
+					Point point2 = GeometryUtils.createGeotoolsPoint(link.getToNode().getCoord());
+					if (fire.contains(point2)) {
+						penaltyFactorsOfLinks.put(link.getId(), buffer2fire ); // buffer --> fire
+					} else if (buffer.contains(point2)) {// buffer --> buffer
+						final double distanceFromNode = point.distance(fire) ;
+						final double distanceToNode = point2.distance(fire) ;
+						if ( distanceToNode > distanceFromNode ) {
+							penaltyFactorsOfLinks.put(link.getId(), buffer2bufferGettingAway);
+						} else {
+							penaltyFactorsOfLinks.put(link.getId(), buffer2bufferGettingCloser);
+						}
+					} else {
+						penaltyFactorsOfLinks.put(link.getId(), buffer2out ); // buffer --> out
+					}
+				}
+				// in links
+				for (Link link : node.getInLinks().values()) {
+					Point point2 = GeometryUtils.createGeotoolsPoint(link.getFromNode().getCoord());
+					if (fire.contains(point2)) {
+						penaltyFactorsOfLinks.put(link.getId(), fire2buffer); // buffer <-- fire
+					} else if (buffer.contains(point2)) { // buffer <-- buffer
+						final double distanceToNode = point.distance(fire) ;
+						final double distanceFromNode = point2.distance(fire) ;
+						if ( distanceToNode > distanceFromNode ) {
+							penaltyFactorsOfLinks.put(link.getId(), buffer2bufferGettingAway);
+						} else {
+							penaltyFactorsOfLinks.put(link.getId(), buffer2bufferGettingCloser);
+						}
+					} else {
+						penaltyFactorsOfLinks.put(link.getId(), out2buffer); // buffer <-- out
+					}
+				}
+			}
+		}
+		// yyyy above is start, but one will need the full "potential" approach from Gregor. Otherwise, you cut a link
+		// in two and get a different answer.  Which should not be. kai, dec'17
+	}
 }
