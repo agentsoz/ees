@@ -33,7 +33,7 @@ public class BradfordNewsteadFireCrossing400Test {
 				"--config",  "scenarios/bradford-newstead-fire-crossing/scenario_main.xml",
 				"--logfile", "scenarios/bradford-newstead-fire-crossing/scenario.log",
 				"--loglevel", "INFO",
-				//				"--plan-selection-policy", "FIRST", // ensures it is deterministic, as default is RANDOM
+				//				"--plan-selection-policy", "FIRST", // ensures it is dxeterministic, as default is RANDOM
 				"--seed", "12345",
 				"--safeline-output-file-pattern", "scenarios/bradford-newstead-fire-crossing/safeline.%d%.out",
 				MATSimModel.MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR, utils.getOutputDirectory(),
