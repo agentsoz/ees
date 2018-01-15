@@ -212,26 +212,24 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 		return scenario ;
 	}
 	
-	
 	public final void init(List<String> bdiAgentIDs) {
 		if ( !scenarioLoaded ) {
 			loadAndPrepareScenario() ;
 		}
 		
 		// yy this could now be done in upstream code.  But since upstream code is user code, maybe we don't want it in there?  kai, nov'17
-		for(String agentId: bdiAgentIDs) 
-		{
+		for(String agentId: bdiAgentIDs) {
 			agentManager.createAndAddBDIAgent(agentId);
 
 			// default action:
 			agentManager.getAgent(agentId).getActionHandler().registerBDIAction(
 					ActionList.DRIVETO, new DRIVETODefaultActionHandler(this) );
 		}
-		
-		ActivityParams params = new ActivityParams("driveTo") ;
-		params.setScoringThisActivityAtAll(false);
-		scenario.getConfig().planCalcScore().addActivityParams(params);
-
+		{
+			ActivityParams params = new ActivityParams("driveTo");
+			params.setScoringThisActivityAtAll(false);
+			scenario.getConfig().planCalcScore().addActivityParams(params);
+		}
 		// ---
 
 		final Controler controller = new Controler( scenario );
@@ -409,8 +407,6 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 		}
 		double now = getTime() ;
 		
-		log.warn("receiving fire data at time={}", now/3600. ) ;
-		
 		// Is this called in every time step, or just every 5 min or so?  kai, dec'17
 
 		// Normally only one polygon per time step.  Might want to test for this, and get rid of multi-polygon code
@@ -419,6 +415,9 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 		if (! PerceptList.FIRE_DATA.equals(dataType)) {
 			return false;
 		}
+
+		log.warn("receiving fire data at time={}", now/3600. ) ;
+		
 		CoordinateTransformation transform = TransformationFactory.getCoordinateTransformation(
 				TransformationFactory.WGS84, config.global().getCoordinateSystem());
 		
@@ -451,8 +450,8 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 		penaltyFactorsOfLinks.clear();
 		
 //		https://stackoverflow.com/questions/38404095/how-to-calculate-the-distance-in-meters-between-a-geographic-point-and-a-given-p
-		Utils.penaltyMethod1(fire, buffer, penaltyFactorsOfLinks, scenario );
-//		penaltyMethod2(fire, buffer, bufferWidth, penaltyFactorsOfLinks, scenario );
+//		Utils.penaltyMethod1(fire, buffer, penaltyFactorsOfLinks, scenario );
+		Utils.penaltyMethod2(fire, buffer, bufferWidth, penaltyFactorsOfLinks, scenario );
 		// yyyyyy I think that penaltyMethod2 looks nicer than method1, but the test for the time
 		// being is using version 1.  kai, dec'17
 		// yy could make this settable, but for the time being this pedestrian approach
