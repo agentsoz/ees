@@ -48,8 +48,10 @@
 			<directory>${basedir}</directory>
 			<outputDirectory></outputDirectory>
 			<includes>
-				<include>scenarios/maldon-2017-11-01/*.*</include>
+				<include>scenarios/mount-alexander-shire/*.*</include>
+				<include>scenarios/mount-alexander-shire/maldon600/*.*</include>
 				<include>scenarios/template/*.*</include>
+				<include>scenarios/xsd/*.*</include>
 				<include>LICENSE.txt</include>
 			</includes>
 		</fileSet>
