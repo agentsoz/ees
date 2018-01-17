@@ -32,7 +32,7 @@ and input files required by the scenario.
 <simulation
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns="https://github.com/agentsoz/bdi-abm-integration"
-  xsi:schemaLocation="https://github.com/agentsoz/bdi-abm-integration main.xsd">
+  xsi:schemaLocation="https://github.com/agentsoz/bdi-abm-integration ../../xsd/main.xsd">
 
 <!--===========================================================================
 Specifies the top level MATSim configuration file for this scenario
@@ -135,4 +135,3 @@ ${bdiagents_number}
 
 <!--=========================================================================-->
 </simulation>
-
