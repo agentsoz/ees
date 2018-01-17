@@ -9,12 +9,12 @@
   it under the terms of the GNU Lesser General Public License as
   published by the Free Software Foundation, either version 3 of the
   License, or (at your option) any later version.
-  
+
   This program is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Lesser Public License for more details.
-  
+
   You should have received a copy of the GNU General Lesser Public
   License along with this program.  If not, see
   <http://www.gnu.org/licenses/lgpl-3.0.html>.
@@ -32,9 +32,9 @@
 	</module>
 
 	<module name="network">
-		<param name="inputNetworkFile" value="scenario_matsim_network.xml.gz" />
+		<param name="inputNetworkFile" value="../mount_alexander_shire_network.xml.gz" />
 		<param name= "timeVariantNetwork" value= "true" />
-		<param name= "inputChangeEventsFile" value= "scenario_matsim_network_change_events.xml" />
+		<param name= "inputChangeEventsFile" value= "scenario_matsim_network_change_events.xml.gz" />
 	</module>
 
 	<module name="plans">
@@ -57,7 +57,7 @@
 		<!-- "start/endTime" of MobSim (00:00:00 == take earliest activity time/ run as long as active vehicles exist) -->
 		<param name="startTime" value="00:00:00" />
 		<param name="endTime" value="07:00:00" />
-	
+
 		<param name = "snapshotperiod"	value = "00:00:20"/> <!-- 00:00:00 means NO snapshot writing, 00:00:30 means every 30 secs -->
 
 		<param name= "flowCapacityFactor" value= "1.0" />
@@ -65,7 +65,7 @@
 
 		<param name="numberOfThreads" value="1" />
 		<!--setting this to 1 for testing; could be set to a higher number for deployment.  kai, nov'17-->
-		
+
 	</module>
 
 	<module name="planCalcScore">
@@ -77,12 +77,12 @@
 		<param name="performing" value="+6" />
 		<param name="traveling" value="-6" />
 		<param name="waiting" value="-0" />
-		
+
 		<param name="activityType_0"            value="home" />
 		<param name="activityPriority_0"        value="1" />
 		<param name="activityTypicalDuration_0" value="12:00:00" />
 		<param name="activityMinimalDuration_0" value="08:00:00" />
-	
+
 		<param name="activityType_1"            value="work" />
 		<param name="activityPriority_1"        value="1" />
 		<param name="activityTypicalDuration_1" value="08:00:00" />
@@ -91,12 +91,12 @@
 		<param name="activityLatestStartTime_1" value="09:00:00" />
 		<param name="activityEarliestEndTime_1" value="" />
 		<param name="activityClosingTime_1"     value="18:00:00" />
-		
+
 		<param name="activityType_2"            value="edu" />
 		<param name="activityPriority_2"        value="1" />
 		<param name="activityTypicalDuration_2" value="08:00:00" />
 	</module>
-	
+
 	<module name="strategy">
 		<param name="maxAgentPlanMemorySize" value="0" /> <!-- 0 means unlimited -->
 
@@ -105,7 +105,7 @@
 
 		<param name="ModuleProbability_2" value="0.1" />
 		<param name="Module_2" value="ReRoute" />
-	
+
 		<param name="ModuleProbability_3" value="0.1" />
 		<param name="Module_3" value="TimeAllocationMutator" />
 	</module>
