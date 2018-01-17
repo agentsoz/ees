@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!--=========================================================================== 
+<!--===========================================================================
   #%L
   BDI-ABM Integration Package
   %%
@@ -10,12 +10,12 @@
   it under the terms of the GNU Lesser General Public License as
   published by the Free Software Foundation, either version 3 of the
   License, or (at your option) any later version.
-  
+
   This program is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Lesser Public License for more details.
-  
+
   You should have received a copy of the GNU General Lesser Public
   License along with this program.  If not, see
   <http://www.gnu.org/licenses/lgpl-3.0.html>.
@@ -23,24 +23,24 @@
 ============================================================================-->
 
 
-<!-- 
+<!--
 	example data:
-	
-<location> 
+
+<location>
     <name>Harcourt</name>
     <coordinates>256222.51444707022,5901687.72030469</coordinates>
     <capacity>1000</capacity>
 </location>
-<location> 
+<location>
     <name>Lockwood South</name>
     <coordinates>246377.68082871533,5919215.437931696</coordinates>
     <capacity>1000</capacity>
 </location>
 
-	
-        !!! Update 27/Oct/16 DSINGH: Leaving the following information in for 
+
+        !!! Update 27/Oct/16 DSINGH: Leaving the following information in for
             now, will need to be updated.
-            
+
 
 	The following data relates to defining regions etc for the town
 
@@ -58,7 +58,7 @@
 <geography
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns="https://github.com/agentsoz/bdi-abm-integration"
-  xsi:schemaLocation="https://github.com/agentsoz/bdi-abm-integration geography.xsd">
+  xsi:schemaLocation="https://github.com/agentsoz/bdi-abm-integration ../../xsd/geography.xsd">
 
 <coordinateSystem>utm</coordinateSystem>
 
@@ -81,5 +81,3 @@
 </safelines>
 
 </geography>
-
-
