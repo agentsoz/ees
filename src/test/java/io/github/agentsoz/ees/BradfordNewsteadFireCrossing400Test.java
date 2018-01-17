@@ -30,19 +30,19 @@ public class BradfordNewsteadFireCrossing400Test {
 	public void test() {
 
 		String [] args = {
-				"--config",  "scenarios/bradford-newstead-fire-crossing/scenario_main.xml",
-				"--logfile", "scenarios/bradford-newstead-fire-crossing/scenario.log",
+				"--config",  "scenarios/mount-alexander-shire/bradford-newstead-fire-crossing-400/scenario_main.xml",
+				"--logfile", "scenarios/mount-alexander-shire/bradford-newstead-fire-crossing-400/scenario.log",
 				"--loglevel", "INFO",
 				//				"--plan-selection-policy", "FIRST", // ensures it is dxeterministic, as default is RANDOM
 				"--seed", "12345",
-				"--safeline-output-file-pattern", "scenarios/bradford-newstead-fire-crossing/safeline.%d%.out",
+				"--safeline-output-file-pattern", "scenarios/mount-alexander-shire/bradford-newstead-fire-crossing-400/safeline.%d%.out",
 				MATSimModel.MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR, utils.getOutputDirectory(),
 				EvacConfig.SETUP_INDICATOR, EvacConfig.Setup.tertiaryRoadsCorrection.name(),
 				"--jillconfig", "--config={"+
 						"agents:[{classname:io.github.agentsoz.ees.agents.Resident, args:null, count:400}],"+
 						"logLevel: WARN,"+
-						"logFile: \"scenarios/bradford-newstead-fire-crossing/jill.log\","+
-						"programOutputFile: \"scenarios/bradford-newstead-fire-crossing/jill.out\","+
+						"logFile: \"scenarios/mount-alexander-shire/bradford-newstead-fire-crossing-400/jill.log\","+
+						"programOutputFile: \"scenarios/mount-alexander-shire/bradford-newstead-fire-crossing-400/jill.out\","+
 						"randomSeed: 12345"+ // jill random seed
 						//"numThreads: 1"+ // run jill in single-threaded mode so logs are deterministic
 						"}"
