@@ -27,19 +27,19 @@ public class BlockageCampbellsCreek01Test {
 	public void testBlockage01() {
 
 		String [] args = {
-				"--config",  "scenarios/campbells-creek-01/scenario_main.xml", 
-				"--logfile", "scenarios/campbells-creek-01/scenario.log",
+				"--config",  "scenarios/mount-alexander-shire/campbells-creek-1/scenario_main.xml",
+				"--logfile", "scenarios/mount-alexander-shire/campbells-creek-1/scenario.log",
 				"--loglevel", "INFO",
 				//	                "--plan-selection-policy", "FIRST", // ensures it is deterministic, as default is RANDOM
 				"--seed", "12345",
-				"--safeline-output-file-pattern", "scenarios/campbells-creek-01/safeline.%d%.out",
+				"--safeline-output-file-pattern", "scenarios/mount-alexander-shire/campbells-creek-1/safeline.%d%.out",
 				MATSimModel.MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR, utils.getOutputDirectory(),
 				EvacConfig.SETUP_INDICATOR, EvacConfig.Setup.blockage.name() ,
 				"--jillconfig", "--config={"+
 						"agents:[{classname:io.github.agentsoz.ees.agents.Resident, args:null, count:1}],"+
 						"logLevel: WARN,"+
-						"logFile: \"scenarios/campbells-creek-01/jill.log\","+
-						"programOutputFile: \"scenarios/campbells-creek-01/jill.out\","+
+						"logFile: \"scenarios/mount-alexander-shire/campbells-creek-1/jill.log\","+
+						"programOutputFile: \"scenarios/mount-alexander-shire/campbells-creek-1/jill.out\","+
 						"randomSeed: 12345,"+ // jill random seed
 						"numThreads: 1"+ // run jill in single-threaded mode so logs are deterministic
 		"}"};
@@ -49,7 +49,7 @@ public class BlockageCampbellsCreek01Test {
 		System.err.println( "actual(events)=" + actualCRCevents ) ;
 		long actualCRCplans = CRCChecksum.getCRCFromFile( utils.getOutputDirectory() + "/output_plans.xml.gz" ) ;
 		System.err.println( "actual(plans)=" + actualCRCplans ) ;
-		long actualCRCjill = CRCChecksum.getCRCFromFile( "scenarios/campbells-creek-01/jill.out" ) ;
+		long actualCRCjill = CRCChecksum.getCRCFromFile( "scenarios/mount-alexander-shire/campbells-creek-1/jill.out" ) ;
 		System.err.println( "actual(jill)=" + actualCRCjill ) ;
 		
 		final String primaryExpectedEventsFilename = utils.getInputDirectory() + "/output_events.xml.gz";
