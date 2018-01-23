@@ -34,7 +34,8 @@ public class Maldon100WithEmergencyVehiclesTest {
 				"--safeline-output-file-pattern", "scenarios/mount-alexander-shire/maldon-100-with-emergency-vehicles/safeline.%d%.out",
 				"--matsim-output-directory", utils.getOutputDirectory(),
 				"--jillconfig", "--config={"+
-						"agents:[{classname:io.github.agentsoz.ees.agents.Resident, args:null, count:100}],"+
+						"agents:[{classname:io.github.agentsoz.ees.agents.Resident, args:null, count:100},"+
+								"{classname:io.github.agentsoz.ees.agents.Responder, args:[--respondToLonLat, \"Tarrengower Prison,144.048709,-36.979399\"], count:3}],"+
 						"logLevel: WARN,"+
 						"logFile: \"scenarios/mount-alexander-shire/maldon-100-with-emergency-vehicles/jill.log\","+
 						"programOutputFile: \"scenarios/mount-alexander-shire/maldon-100-with-emergency-vehicles/jill.out\","+

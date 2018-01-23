@@ -135,7 +135,7 @@ public class JillBDIModel extends JillModel implements DataClient {
 		while (!alerts.isEmpty() && alerts.peek().getTime() <= timeInSecs) {
 			TimedAlert alert = alerts.poll();
 			String matsimAgentId = alert.getAgent();
-			adc.getOrCreate(matsimAgentId).getPerceptContainer().put(PhoenixFireModule.FIREALERT, new Double(timeInSecs));
+			adc.getOrCreate(matsimAgentId).getPerceptContainer().put(PerceptList.FIRE_ALERT, new Double(timeInSecs));
 		}
 		translateToJillIds(adc);
 		adc.getOrCreate(PerceptList.BROADCAST).getPerceptContainer().put(PerceptList.TIME, timeInSecs);
