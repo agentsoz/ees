@@ -87,7 +87,7 @@ public class Responder extends Agent implements io.github.agentsoz.bdiabm.Agent 
 			}
 		} else if (perceptID.equals(PerceptList.ARRIVED)) {
 			// Agent just arrived at the shelter
-			writer.println(prefix + "arrived at shelter in " + getLocationUnderFireThreat());
+			writer.println(prefix + "arrived at fire threat in " + getLocationUnderFireThreat());
 		} else if (perceptID.equals(PerceptList.FIRE_ALERT)) {
 			// Received a fire alert so act now
 			writer.println(prefix + "received fire alert");
