@@ -40,22 +40,6 @@
 	<module name="plans">
 		<param name="inputPlansFile" value="scenario_matsim_plans.xml" />
 	</module>
-	
-	<!-- ====================================================================== -->
-	<module name="TimeAllocationMutator" >
-		<!-- Default:true; Defines whether time mutation changes an activity's duration. -->
-		<param name="mutationAffectsDuration" value="true" />
-		<!-- Default:1800.0; Defines how many seconds a time mutation can maximally shift a time. -->
-		<param name="mutationRange" value="1800.0" />
-		<!-- false; Use individual settings for each subpopulation. If enabled but no settings are found, regular settings are uses as fallback. -->
-		<param name="useIndividualSettingsForSubpopulations" value="false" />
-	</module>
-<!-- ====================================================================== -->
-
-<module name="changeMode" >
-		<param name="ignoreCarAvailability" value="true" />
-		<param name="modes" value="car,pt" />
-	</module>
 
 	<module name="controler">
 		<param name="outputDirectory" value="output" />
@@ -72,7 +56,7 @@
 	<module name="qsim">
 		<!-- "start/endTime" of MobSim (00:00:00 == take earliest activity time/ run as long as active vehicles exist) -->
 		<param name="startTime" value="00:00:00" />
-		<param name="endTime" value="23:59:59" />
+		<param name="endTime" value="01:00:00" />
 
 		<param name = "snapshotperiod"	value = "00:00:20"/> <!-- 00:00:00 means NO snapshot writing, 00:00:30 means every 30 secs -->
 

@@ -38,7 +38,7 @@ public class Otways50WithTouristsTest {
                 "--jillconfig", "--config={" +
                 "agents:[{classname:io.github.agentsoz.ees.agents.Resident, args:null, count:40}," +
                     "{classname:io.github.agentsoz.ees.agents.Tourist, " +
-                    "args:[--WayHome,\"MelbourneRoute,144.28995,-38.21591], count:10}," +
+                    "args:[--WayHome,\"MelbourneRoute,144.28995,-38.21591\"], count:10}]," +
                 "logLevel: WARN," +
                 "logFile: \"scenarios/otways-50/jill.log\"," +
                 "programOutputFile: \"scenarios/otways-50/jill.out\"," +

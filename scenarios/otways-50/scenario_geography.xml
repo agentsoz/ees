@@ -58,7 +58,7 @@
 <geography
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns="https://github.com/agentsoz/bdi-abm-integration"
-  xsi:schemaLocation="https://github.com/agentsoz/bdi-abm-integration geography.xsd">
+  xsi:schemaLocation="https://github.com/agentsoz/bdi-abm-integration ../xsd/geography.xsd">
 
 <coordinateSystem>utm</coordinateSystem>
 
