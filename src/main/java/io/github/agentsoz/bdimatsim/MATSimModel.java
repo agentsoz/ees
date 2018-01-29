@@ -29,7 +29,6 @@ import org.matsim.core.mobsim.framework.PlayPauseSimulationControl;
 import org.matsim.core.mobsim.framework.listeners.MobsimInitializedListener;
 import org.matsim.core.mobsim.qsim.QSim;
 import org.matsim.core.router.NetworkRoutingProvider;
-import org.matsim.core.router.costcalculators.OnlyTimeDependentTravelDisutilityFactory;
 import org.matsim.core.router.costcalculators.TravelDisutilityFactory;
 import org.matsim.core.scenario.ScenarioUtils;
 import org.matsim.core.trafficmonitoring.FreeSpeedTravelTime;
@@ -78,7 +77,6 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 	private static final Logger log = LoggerFactory.getLogger(MATSimModel.class);
 	//private static final Logger log = Logger..getLogger(MATSimModel.class) ;
 	public static final String MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR = "--matsim-output-directory";
-	static final String FIRE_DATA_MSG = "fire_data";
 	private final EvacConfig evacConfig;
 	private final FireWriter fireWriter;
 	private final Config config;
@@ -396,6 +394,7 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 	public final void registerDataServer( DataServer server ) {
 		// some blackboardy thing that sits between ABM and BDI
 		server.subscribe(this, PerceptList.FIRE_DATA);
+		server.subscribe(this, PerceptList.DISRUPTION);
 	}
 
 	@Override
@@ -411,8 +410,12 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 
 		// Normally only one polygon per time step.  Might want to test for this, and get rid of multi-polygon code
 		// below.  On other hand, probably does not matter much.  kai, dec'17
-		
-		if (! PerceptList.FIRE_DATA.equals(dataType)) {
+
+		if (PerceptList.DISRUPTION.equals(dataType)) {
+			// FIXME: do something with the disruptions data coming in
+			log.warn("receiving at time={} disruptions data={}", (now/3600), data);
+			return true;
+		} else if (! PerceptList.FIRE_DATA.equals(dataType)) {
 			return false;
 		}
 
