@@ -109,7 +109,9 @@ public class Main {
 		
 		// get the fire model out of the way:
 		initializeAndStartFireModel(dataServer);
-		
+
+		// initialise the disruptions module
+		initializeAndStartDisruptionModel(dataServer);
 		
 		MATSimModel matsimModel = new MATSimModel( SimpleConfig.getMatSimFile(), matsimOutputDirectory );
 
@@ -246,7 +248,25 @@ public class Main {
 		fireModel.setTimestepUnit(Time.TimestepUnit.SECONDS);
 		fireModel.start();
 	}
-	
+
+	/**
+	 * Create the disruption model, load the disruption data, and register the model as an active data source
+	 * @param dataServer
+	 * @throws IOException
+	 * @throws ParseException
+	 * @throws java.text.ParseException
+	 */
+	private static void initializeAndStartDisruptionModel(DataServer dataServer) throws IOException, ParseException, java.text.ParseException {
+		DisruptionModel model = new DisruptionModel();
+		model.setDataServer(dataServer);
+		if (SimpleConfig.getDisruptionsFile() != null) {
+			model.loadJson(SimpleConfig.getDisruptionsFile());
+		}
+		// If the disruptions file was not given, then the model starts but does nothing
+		model.setTimestepUnit(Time.TimestepUnit.SECONDS);
+		model.start();
+	}
+
 	/**
 	 * Gets the simulation start time from the config, with an added delay
 	 * @param delay in seconds to add to the start (can be negative)
@@ -380,6 +400,12 @@ public class Main {
 					if(i+1<args.length) {
 						i++ ;
 						setup = EvacConfig.Setup.valueOf(args[i]) ;
+					}
+					break;
+				case "--x-disruptions-file": //FIXME: remove; make part of main config
+					if(i+1<args.length) {
+						i++ ;
+						SimpleConfig.setDisruptionsFile(args[i]) ;
 					}
 					break;
 			default:

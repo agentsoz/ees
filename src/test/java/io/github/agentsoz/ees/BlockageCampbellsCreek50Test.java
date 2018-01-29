@@ -42,7 +42,9 @@ public class BlockageCampbellsCreek50Test {
 						"programOutputFile: \"scenarios/mount-alexander-shire/campbells-creek-50/jill.out\","+
 						"randomSeed: 12345,"+ // jill random seed
 						"numThreads: 1"+ // run jill in single-threaded mode so logs are deterministic
-		"}"};
+						"}",
+				"--x-disruptions-file", "scenarios/mount-alexander-shire/campbells-creek-50/scenario_disruptions.json",
+		};
 
 		Main.main(args);
 

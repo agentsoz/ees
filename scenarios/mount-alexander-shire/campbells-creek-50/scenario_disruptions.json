@@ -1,0 +1,28 @@
+{
+  "help": "
+    List of disruptions to inject into the MATSim network
+    {
+      description: information string, e.g., Accident on Main Road,
+      startHhMm : the time in HHMM format when this disruption takes effect,
+      endHhMm : the time in HHMM format when the disruption is removed
+      effectiveSpeed: a positive number to indicate the effective speed during the disruption,
+      effectiveSpeedUnit : one of: RELATIVE (i.e., percentage of free speed) or KMPH (kilometers per hour),
+      latLon: coordinates as [lat,lon],
+      impactRadiusMtrs: length of road (in metres) around location that is impacted; the disruption will apply to all links within this radius
+    }
+  ",
+
+  "spatialReferenceEPSG" : "EPSG:4326",
+
+  "disruptions" : [
+    {
+      "description" : "Some Road blocked due to fallen tree",
+      "startHHMM" : "0010",
+      "endHHMM" : "2359",
+      "effectiveSpeed" : "0",
+      "effectiveSpeedUnit" : "KMPH",
+      "latLon" : ["-37.078600", "144.2039850"],
+      "impactRadiusMtrs" : "100"
+    }
+  ]
+}
