@@ -28,6 +28,8 @@ import org.matsim.core.mobsim.framework.MobsimAgent;
 import org.matsim.core.mobsim.framework.PlayPauseSimulationControl;
 import org.matsim.core.mobsim.framework.listeners.MobsimInitializedListener;
 import org.matsim.core.mobsim.qsim.QSim;
+import org.matsim.core.network.NetworkChangeEvent;
+import org.matsim.core.network.NetworkUtils;
 import org.matsim.core.router.NetworkRoutingProvider;
 import org.matsim.core.router.costcalculators.TravelDisutilityFactory;
 import org.matsim.core.scenario.ScenarioUtils;
@@ -335,8 +337,7 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 		return this.replanner ;
 	}
 
-	@Override
-	public final void takeControl(AgentDataContainer agentDataContainer){
+	@Override public final void takeControl(AgentDataContainer agentDataContainer){
 		runUntil( (int)(playPause.getLocalTime() + 1), agentDataContainer ) ;
 	}
 	
@@ -374,22 +375,22 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 		this.eventHandlers = eventHandlers;
 	}
 	
-	//	private final void setFreeSpeedExample(){
-//		// example how to set the freespeed of some link to zero:
-//		final double now = this.qSim.getSimTimer().getTimeOfDay();
-//		if ( now == 0.*3600. + 6.*60. ) {
-//			NetworkChangeEvent event = new NetworkChangeEvent( now ) ;
-//			event.setFreespeedChange(new ChangeValue( ChangeType.ABSOLUTE_IN_SI_UNITS,  0. ));
-//			event.addLink( scenario.getNetwork().getLinks().get( Id.createLinkId( 51825 )));
-//			NetworkUtils.addNetworkChangeEvent( scenario.getNetwork(),event);
-//
-//			for ( MobsimAgent agent : this.getMobsimDataProvider().getAgents().values() ) {
-//				if ( !(agent instanceof MATSimStubAgent) ) {
-//					this.getReplanner().reRouteCurrentLeg(agent, now);
-//				}
-//			}
-//		}
-//	}
+	private final void setFreeSpeedExample(){
+		// example how to set the freespeed of some link to zero:
+		final double now = this.qSim.getSimTimer().getTimeOfDay();
+		if ( now == 0.*3600. + 6.*60. ) {
+			NetworkChangeEvent event = new NetworkChangeEvent( now ) ;
+			event.setFreespeedChange(new NetworkChangeEvent.ChangeValue( NetworkChangeEvent.ChangeType.ABSOLUTE_IN_SI_UNITS,  0. ));
+			event.addLink( scenario.getNetwork().getLinks().get( Id.createLinkId( 51825 )));
+			NetworkUtils.addNetworkChangeEvent( scenario.getNetwork(),event);
+
+			for ( MobsimAgent agent : this.getMobsimDataProvider().getAgents().values() ) {
+				if ( !(agent instanceof MATSimStubAgent) ) {
+					this.getReplanner().reRouteCurrentLeg(agent, now);
+				}
+			}
+		}
+	}
 
 	public final void registerDataServer( DataServer server ) {
 		// some blackboardy thing that sits between ABM and BDI
@@ -397,8 +398,7 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 		server.subscribe(this, PerceptList.DISRUPTION);
 	}
 
-	@Override
-	public boolean dataUpdate(double time, String dataType, Object data) {
+	@Override public boolean dataUpdate(double time, String dataType, Object data) {
 		if ( time+1 < getTime() || time-1 > getTime() ) {
 			log.error( "given time in dataUpdate is {}, simulation time is {}.  " +
 							   "Don't know what that means.  Will use simulation time.",

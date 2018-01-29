@@ -38,7 +38,6 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-//@Deprecated // try inside EvacAgent
 public class EvacAgentTracker implements
 		LinkEnterEventHandler,
 				LinkLeaveEventHandler,

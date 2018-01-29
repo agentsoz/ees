@@ -81,14 +81,12 @@ public final class DRIVETODefaultActionHandler implements BDIActionHandler {
 		}
 		
 		// routingMode:
-//		String routingMode = model.getReplanner().editPlans().getModeOfCurrentOrNextTrip(mobsimAgent) ;
 		String routingMode = null ; // could have some default
 		switch (((MATSimModel.EvacRoutingMode) args[3])) {
 			case carFreespeed:
 				routingMode = MATSimModel.EvacRoutingMode.carFreespeed.name() ;
 				break;
 			case carGlobalInformation:
-//				routingMode = TransportMode.car ;
 				routingMode = MATSimModel.EvacRoutingMode.carGlobalInformation.name() ;
 				break;
 			default:
