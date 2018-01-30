@@ -99,7 +99,7 @@ public class EvacQSimModule extends AbstractModule {
 																			   driverId, currentLinkId, blockedLinkId) );
 					// yyyy this event is now generated both here and in the agent.  In general,
 					// it should be triggered in the agent, giving the bdi time to compute.  However, the
-					// closure may happen between there and arriving at the node ...  kai, dec'17
+					// blockage may happen between there and arriving at the node ...  kai, dec'17
 					
 				}
 				log.debug("time=" + matSimModel.getTime() + ";\t fromLink=" + currentLink.getId() +
@@ -124,7 +124,6 @@ public class EvacQSimModule extends AbstractModule {
 			plugins.add(new TransitEnginePlugin(config1));
 		}
 		plugins.add(new TeleportationPlugin(config1));
-//		plugins.add(new PopulationPlugin(config1));
 		plugins.add(new EvacPopulationPlugin(config1));
 		plugins.add(new AbstractQSimPlugin(config1) {
 			@Override public Collection<? extends Module> modules() {
