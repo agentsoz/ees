@@ -4,6 +4,7 @@ import java.util.*;
 
 import com.google.gson.Gson;
 import com.vividsolutions.jts.geom.*;
+import io.github.agentsoz.bdiabm.QueryPerceptInterface;
 import io.github.agentsoz.dataInterface.DataClient;
 import io.github.agentsoz.util.evac.ActionList;
 import io.github.agentsoz.util.evac.PerceptList;
@@ -73,7 +74,7 @@ import javax.inject.Singleton;
 /**
  * @author QingyuChen, KaiNagel, Dhi Singh
  */
-public final class MATSimModel implements ABMServerInterface, DataClient {
+public final class MATSimModel implements ABMServerInterface, QueryPerceptInterface, DataClient {
 	private static final Logger log = LoggerFactory.getLogger(MATSimModel.class);
 	//private static final Logger log = Logger..getLogger(MATSimModel.class) ;
 	public static final String MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR = "--matsim-output-directory";
@@ -469,8 +470,8 @@ public final class MATSimModel implements ABMServerInterface, DataClient {
 		return this.qSim.getSimTimer().getTimeOfDay() ;
 	}
 
-	@Override public Object queryPercept(String agentID, String perceptID) {
-		// TODO Auto-generated method stub
+	@Override public Object queryPercept(String agentID, String perceptID, Object args) {
+		log.warn("received query from agent {} for percept {} with args {}; not implemented yet!", agentID, perceptID, args);
 		return null;
 	}
 

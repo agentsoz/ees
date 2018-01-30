@@ -118,7 +118,7 @@ public final class DRIVETODefaultActionHandler implements BDIActionHandler {
 						agent.getActionContainer().register(ActionList.DRIVETO, params);
 						// (shouldn't this be earlier? --> there is a comment in the agent manager. kai, nov'17)
 						agent.getActionContainer().get(ActionList.DRIVETO).setState(ActionContent.State.PASSED);
-						agent.getPerceptContainer().put(PerceptList.ARRIVED, params);
+						agent.getPerceptContainer().put(PerceptList.ARRIVED, params[0]);
 						return true;
 					}
 				}
@@ -135,7 +135,7 @@ public final class DRIVETODefaultActionHandler implements BDIActionHandler {
 						Object[] params = { currentLinkId.toString() };
 						agent.getActionContainer().register(ActionList.DRIVETO, params);
 						agent.getActionContainer().get(ActionList.DRIVETO).setState(ActionContent.State.FAILED);
-						agent.getPerceptContainer().put(PerceptList.BLOCKED, params);
+						agent.getPerceptContainer().put(PerceptList.BLOCKED, params[0]);
 						return true;
 					}
 				}
