@@ -23,6 +23,7 @@ package io.github.agentsoz.ees.agents;
  * #L%
  */
 
+import io.github.agentsoz.bdiabm.QueryPerceptInterface;
 import io.github.agentsoz.bdiabm.data.ActionContent;
 import io.github.agentsoz.ees.agents.RespondToFire;
 import io.github.agentsoz.jill.lang.Agent;
@@ -45,6 +46,7 @@ public class Tourist extends  Agent implements io.github.agentsoz.bdiabm.Agent {
     private io.github.agentsoz.ees.agents.Tourist.Prefix prefix = new io.github.agentsoz.ees.agents.Tourist.Prefix();
     private int failedAttempts;
     private double time = -1;
+    private QueryPerceptInterface queryInterface;
 
     public Tourist(String id) {
         super(id);
@@ -168,6 +170,18 @@ public class Tourist extends  Agent implements io.github.agentsoz.bdiabm.Agent {
     public void kill() {
         logger.warn("{} using a stub for io.github.agentsoz.bdiabm.Agent.kill()", prefix);
     }
+
+    @Override
+    public void setQueryPerceptInterface(QueryPerceptInterface queryInterface) {
+        this.queryInterface = queryInterface;
+    }
+
+    @Override
+    public QueryPerceptInterface getQueryPerceptInterface() {
+        return queryInterface;
+    }
+
+
 
     double getTime() {
         return time;
