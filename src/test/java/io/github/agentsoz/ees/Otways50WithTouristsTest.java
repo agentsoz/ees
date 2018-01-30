@@ -30,7 +30,7 @@ public class Otways50WithTouristsTest {
         String[] args = {
                 "--config", "scenarios/otways-50/scenario_main.xml",
                 "--logfile", "scenarios/otways-50/scenario.log",
-                "--loglevel", "INFO",
+                "--loglevel", "TRACE",
                 //	                "--plan-selection-policy", "FIRST", // ensures it is deterministic, as default is RANDOM
                 "--seed", "12345",
                 "--safeline-output-file-pattern", "scenarios/otways-50/safeline.%d%.out",
@@ -39,7 +39,7 @@ public class Otways50WithTouristsTest {
                 "agents:[{classname:io.github.agentsoz.ees.agents.Resident, args:null, count:40}," +
                     "{classname:io.github.agentsoz.ees.agents.Tourist, " +
                     "args:[--WayHome,\"MelbourneRoute,144.28995,-38.21591\"], count:10}]," +
-                "logLevel: WARN," +
+                "logLevel: TRACE," +
                 "logFile: \"scenarios/otways-50/jill.log\"," +
                 "programOutputFile: \"scenarios/otways-50/jill.out\"," +
                 "randomSeed: 12345" + // jill random seed
