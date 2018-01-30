@@ -97,6 +97,10 @@ public class JillBDIModel extends JillModel implements DataClient {
 		// Initialise the Jill model
 		// params[] contains the list of agent names to create
 		if (super.init(agentDataContainer, agentList, abmServer, initArgs)) {
+			// Set the BDI query percept interface that the agents can use
+			for (int i=0; i<params.length; i++) {
+				getAgent(i).setQueryPerceptInterface(this.getQueryPerceptInterface());
+			}
 			// Now create the given map to jill agent ids
 			for (int i=0; i<params.length; i++) {
 				String jillID = String.valueOf(((Agent)getAgent(i)).getId());

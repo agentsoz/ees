@@ -1,5 +1,6 @@
 package io.github.agentsoz.ees.agents;
 
+import io.github.agentsoz.bdiabm.QueryPerceptInterface;
 import io.github.agentsoz.bdiabm.data.ActionContent;
 import io.github.agentsoz.bdiabm.data.ActionContent.State;
 import io.github.agentsoz.ees.SimpleConfig;
@@ -43,6 +44,7 @@ public class Responder extends Agent implements io.github.agentsoz.bdiabm.Agent 
 	private Location locationUnderFireThreat = null;
 	private Prefix prefix = new Prefix();
 	private double time = -1;
+	private QueryPerceptInterface queryInterface;
 
 	public Responder(String str) {
 		super(str);
@@ -60,7 +62,7 @@ public class Responder extends Agent implements io.github.agentsoz.bdiabm.Agent 
 	@Override
 	public void start(PrintStream writer, String[] params) {
 		this.writer = writer;
-		if (params != null && params.length == 2 && "--respondToLonLat".equals(params[0])) {
+		if (params != null && params.length == 2 && "--respondToUTM".equals(params[0])) {
 			String[] sCoords = params[1].split(",");
 			locationUnderFireThreat= new Location(sCoords[0], Double.parseDouble(sCoords[1]), Double.parseDouble(sCoords[2]));
 
@@ -87,7 +89,7 @@ public class Responder extends Agent implements io.github.agentsoz.bdiabm.Agent 
 			}
 		} else if (perceptID.equals(PerceptList.ARRIVED)) {
 			// Agent just arrived at the shelter
-			writer.println(prefix + "arrived at fire threat in " + getLocationUnderFireThreat());
+			writer.println(prefix + "arrived at fire threat location " + getLocationUnderFireThreat());
 		} else if (perceptID.equals(PerceptList.FIRE_ALERT)) {
 			// Received a fire alert so act now
 			writer.println(prefix + "received fire alert");
@@ -151,6 +153,16 @@ public class Responder extends Agent implements io.github.agentsoz.bdiabm.Agent 
 	@Override
 	public void kill() {
 		logger.warn("{} using a stub for io.github.agentsoz.bdiabm.Agent.kill()", prefix);
+	}
+
+	@Override
+	public void setQueryPerceptInterface(QueryPerceptInterface queryInterface) {
+		this.queryInterface = queryInterface;
+	}
+
+	@Override
+	public QueryPerceptInterface getQueryPerceptInterface() {
+		return queryInterface;
 	}
 
 	double getTime() {

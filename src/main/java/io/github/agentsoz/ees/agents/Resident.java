@@ -2,7 +2,7 @@ package io.github.agentsoz.ees.agents;
 
 import java.io.PrintStream;
 
-import io.github.agentsoz.dataInterface.DataServer;
+import io.github.agentsoz.bdiabm.QueryPerceptInterface;
 import io.github.agentsoz.util.evac.PerceptList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,6 +52,7 @@ public class Resident extends Agent implements io.github.agentsoz.bdiabm.Agent {
 	private int failedAttempts;
 
 	private double time = -1;
+	private QueryPerceptInterface queryInterface;
 
 	public Resident(String str) {
 		super(str);
@@ -96,7 +97,9 @@ public class Resident extends Agent implements io.github.agentsoz.bdiabm.Agent {
 		} else if (perceptID.equals(PerceptList.BLOCKED)) {
 			// Something went wrong while driving and the road is blocked
 			failedAttempts++;
-			writer.println(prefix + "is blocked (" + parameters + ")");
+			writer.println(prefix + "is blocked at link " + parameters + "");
+			writer.println(prefix + "is currently near coordinates " +
+					getQueryPerceptInterface().queryPercept(String.valueOf(getId()), PerceptList.REQUEST_LOCATION, parameters));
 			if (failedAttempts < MAX_FAILED_ATTEMPTS) {
 				writer.println(prefix
 						+ "will try to evacuate again (attempt "+(failedAttempts+1)
@@ -170,6 +173,17 @@ public class Resident extends Agent implements io.github.agentsoz.bdiabm.Agent {
 	public void kill() {
 		logger.warn("{} using a stub for io.github.agentsoz.bdiabm.Agent.kill()", prefix);
 	}
+
+	@Override
+	public void setQueryPerceptInterface(QueryPerceptInterface queryInterface) {
+		this.queryInterface = queryInterface;
+	}
+
+	@Override
+	public QueryPerceptInterface getQueryPerceptInterface() {
+		return queryInterface;
+	}
+
 
 	int getFailedAttempts() {
 		return failedAttempts;

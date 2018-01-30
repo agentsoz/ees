@@ -62,6 +62,12 @@ public class SimpleConfig {
 	private static String geographyFile = null;
 	private static String fireFile = null;
 
+	private static String disruptionsFile = null; // FIXME: should come from config XML
+	public static void setDisruptionsFile(String disruptionFile) {
+		SimpleConfig.disruptionsFile = disruptionFile;
+	}
+
+
 	private static int numBDIAgents = 1;
 
 	private static double proportionWithKids = 0.0;
@@ -71,9 +77,9 @@ public class SimpleConfig {
 	private static int[] evacStartHHMM = new int[] {0, 0};
 	private static int evacPeakMins = 0;
 	private static TreeMap<String, Location> locations = new TreeMap<String, Location>();
-	private static String fireCoordinateSystem = "longlat";
+	private static String fireCoordinateSystem = "longlat"; // FIXME: use EPSG:4326 here
 	private static String fireFileFormat = "custom";
-	private static String geographyCoordinateSystem = "longlat";
+	private static String geographyCoordinateSystem = "longlat";  // FIXME: use EPSG:4326 here
     private static TreeMap<String, Location[]> safelines = new TreeMap<String, Location[]>();
 
 	private static final String eSimulation = "simulation";
@@ -376,4 +382,7 @@ public class SimpleConfig {
             return index;
     }
 
+	public static String getDisruptionsFile() {
+		return disruptionsFile;
+	}
 }
