@@ -62,7 +62,7 @@ public class Responder extends Agent implements io.github.agentsoz.bdiabm.Agent 
 	@Override
 	public void start(PrintStream writer, String[] params) {
 		this.writer = writer;
-		if (params != null && params.length == 2 && "--respondToLonLat".equals(params[0])) {
+		if (params != null && params.length == 2 && "--respondToUTM".equals(params[0])) {
 			String[] sCoords = params[1].split(",");
 			locationUnderFireThreat= new Location(sCoords[0], Double.parseDouble(sCoords[1]), Double.parseDouble(sCoords[2]));
 
