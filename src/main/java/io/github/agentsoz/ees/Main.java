@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.TreeMap;
 
 import io.github.agentsoz.bdiabm.ABMServerInterface;
+import io.github.agentsoz.bdiabm.QueryPerceptInterface;
 import io.github.agentsoz.bdiabm.data.AgentDataContainer;
 import io.github.agentsoz.bdimatsim.EvacAgentTracker;
 import io.github.agentsoz.bdimatsim.EvacConfig;
@@ -220,7 +221,11 @@ public class Main {
 		
 		// Create the Jill BDI model
 		JillBDIModel jillmodel = new JillBDIModel(jillInitArgs);
+		// Set the query percept interface to use
+		jillmodel.setQueryPerceptInterface((QueryPerceptInterface)matsimModel);
+		// register the server to use for transferring data between models
 		jillmodel.registerDataServer(dataServer);
+		// initialise and start
 		jillmodel.init(agentDataContainer,
 				null, // agentList is not used
 				matsimModel,
