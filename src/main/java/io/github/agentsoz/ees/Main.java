@@ -79,7 +79,10 @@ public class Main {
 	private static String[] jillInitArgs = null;
 	private static String matsimOutputDirectory;
 	private static String safelineOutputFilePattern = "./safeline.%d%.csv";
-	
+
+
+	private static int blockedLinkId = -1; // FIXME: temp fix on 31/01/18; remove once #1 is in place
+
 	// yyyyyy careful; the above all stay from one test to the next (if not in separate
 	// JVMs).  kai, dec'17
 
@@ -212,7 +215,7 @@ public class Main {
 		int blockageTime = 5*60 ;
 		NetworkChangeEvent changeEvent = new NetworkChangeEvent(blockageTime);
 		changeEvent.setFreespeedChange(new ChangeValue(ChangeType.ABSOLUTE_IN_SI_UNITS, 0.));
-		changeEvent.addLink(scenario.getNetwork().getLinks().get(Id.createLinkId(51825)));
+		changeEvent.addLink(scenario.getNetwork().getLinks().get(Id.createLinkId(blockedLinkId)));
 		NetworkUtils.addNetworkChangeEvent(scenario.getNetwork(), changeEvent);
 	}
 	
@@ -411,6 +414,17 @@ public class Main {
 					if(i+1<args.length) {
 						i++ ;
 						SimpleConfig.setDisruptionsFile(args[i]) ;
+					}
+					break;
+				case "--x-blocked-link": //FIXME: remove once issue #1 is closed
+					if(i+1<args.length) {
+						i++ ;
+						try {
+							Main.blockedLinkId= Integer.parseInt(args[i]);
+						} catch (Exception e) {
+							System.err.println("Could not parse blocked link id '"
+									+ args[i] + "' : " + e.getMessage());
+						}
 					}
 					break;
 			default:

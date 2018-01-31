@@ -44,6 +44,7 @@ public class BlockageCampbellsCreek50Test {
 						"numThreads: 1"+ // run jill in single-threaded mode so logs are deterministic
 						"}",
 				"--x-disruptions-file", "scenarios/mount-alexander-shire/campbells-creek-50/scenario_disruptions.json",
+				"--x-blocked-link", "51825",
 		};
 
 		Main.main(args);
