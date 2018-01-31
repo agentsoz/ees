@@ -27,8 +27,13 @@ import org.matsim.core.config.ReflectiveConfigGroup;
 public class EvacConfig extends ReflectiveConfigGroup{
 	public static final String NAME="evac" ;
 	public static final String SETUP_INDICATOR="--setup" ;
+
 	private Setup setup = Setup.standard ;
-	
+	private double congestionEvaluationInterval; // secs between BDI agent evaluatiing if it is in congestion
+	private double congestionToleranceThreshold; // as a proportion of the congestionEvaluationInterval
+
+
+
 	public EvacConfig() {
 		super(NAME);
 	}
@@ -41,5 +46,20 @@ public class EvacConfig extends ReflectiveConfigGroup{
 	public Setup getSetup() {
 		return this.setup ;
 	}
-	
+
+	public double getCongestionEvaluationInterval() {
+		return congestionEvaluationInterval;
+	}
+
+	public void setCongestionEvaluationInterval(double congestionEvaluationInterval) {
+		this.congestionEvaluationInterval = congestionEvaluationInterval;
+	}
+
+	public double getCongestionToleranceThreshold() {
+		return congestionToleranceThreshold;
+	}
+
+	public void setCongestionToleranceThreshold(double congestionToleranceThreshold) {
+		this.congestionToleranceThreshold = congestionToleranceThreshold;
+	}
 }

@@ -50,10 +50,12 @@ public class EvacAgentTracker implements
 {
 	private final Network network;
 	private final EventsManager events;
-	private Map<Id<Vehicle>,Double> linkEnterEventsMap = Collections.synchronizedMap( new LinkedHashMap<>() );
+	private final EvacConfig evacConfig;
+	private Map<Id<Vehicle>,VehicleTrackingData> linkEnterEventsMap = Collections.synchronizedMap( new LinkedHashMap<>() );
 	private Vehicle2DriverEventHandler vehicle2Driver = new Vehicle2DriverEventHandler() ;
-	
-	public EvacAgentTracker(Network network, EventsManager events) {
+
+	public EvacAgentTracker(EvacConfig evacConfig, Network network, EventsManager events) {
+		this.evacConfig = evacConfig;
 		this.network = network ;
 		this.events = events ;
 	}
@@ -87,13 +89,45 @@ public class EvacAgentTracker implements
 	@Override
 	public void handleEvent(LinkEnterEvent event) {
 		Link link = network.getLinks().get( event.getLinkId() ) ;
-		linkEnterEventsMap.put( event.getVehicleId(), event.getTime() + link.getLength()/link.getFreespeed(event.getTime())) ;
+		Id<Vehicle> vehicleId = event.getVehicleId();
+		// Retrieve vehicle data if it exists, else start afresh
+		VehicleTrackingData vehicleData = linkEnterEventsMap.containsKey(vehicleId) ?
+				linkEnterEventsMap.get(vehicleId) : new VehicleTrackingData(vehicleId, event.getTime());
+		// Track estimated time to end of this link
+		vehicleData.setEstArrivalTimeAtCurrentLinkEnd(vehicleData.getEstArrivalTimeAtCurrentLinkEnd()
+				+ Math.ceil(link.getLength() / link.getFreespeed(event.getTime())));
+		linkEnterEventsMap.put(event.getVehicleId(), vehicleData);
 	}
 	
 	@Override
 	public void handleEvent(LinkLeaveEvent event) {
-		linkEnterEventsMap.remove( event.getVehicleId() ) ;
-		// (might not be there, e.g. when vehicle just started on link)
+		// To save checking at every time step which would be expensive, we currently
+		// calculate congestion on link leave events. This has the downside that if the agent is for
+		// whatever reason stuck on a link for a very very long time then it will not "realise" it is
+		// in congestion until it eventually leaves the link; dsingh 31/01/18
+		Link link = network.getLinks().get( event.getLinkId() ) ;
+		Id<Vehicle> vehicleId = event.getVehicleId();
+		// Tracking should always start at the start of some link, so if the agent
+		// was initialised on a link then don't count that
+		if (linkEnterEventsMap.containsKey(vehicleId)) {
+			// Record the travel stats on this link
+			VehicleTrackingData vehicleData = linkEnterEventsMap.get(vehicleId);
+			vehicleData.setDistanceSinceStart(vehicleData.getDistanceSinceStart() + link.getLength());
+			vehicleData.setTimeSinceStart(event.getTime() - vehicleData.getTrackingStartTime());
+			// If it has been long enough since the BDI agent last evaluated if it is in congestion
+			if (vehicleData.getTimeSinceStart() > evacConfig.getCongestionEvaluationInterval()) {
+				// Calculate delay against the estimated travel time for this interval (could be over several links)
+				double totalDelayInThisInterval = event.getTime() - vehicleData.getEstArrivalTimeAtCurrentLinkEnd();
+				// If the delay is greater than the agent's tolerance threshold, then the agent will
+				// now realise (or "believe" in the BDI sense) that it is in congestion
+				if(totalDelayInThisInterval > evacConfig.getCongestionEvaluationInterval() * evacConfig.getCongestionToleranceThreshold()) {
+					// ding ding!
+					this.events.processEvent( new AgentInCongestionEvent(event.getTime(), vehicleId, null, event.getLinkId()));
+				}
+				// remove this vehicle from the map so that we can start tracking it in the next interval afresh
+				linkEnterEventsMap.remove(vehicleId) ;
+			}
+		}
 	}
 	
 	@Override
@@ -108,13 +142,56 @@ public class EvacAgentTracker implements
 	
 	@Override
 	public void handleEvent(Event event) {
-		if ( event instanceof LastEventOfSimStep ) {
-			if ( false ) { // replace by congestion condition
-				Id<Vehicle> vehicleId = null ;
-				Id<Person> driverId = null ;
-				Id<Link> currentLinkId = null ;
-				this.events.processEvent( new AgentInCongestionEvent(event.getTime(), vehicleId, driverId, currentLinkId));
-			}
+
+	}
+
+	class VehicleTrackingData {
+		private Id<Vehicle> vehicleIid;
+		private double trackingStartTime;
+		private double distanceSinceStart;
+		private double timeSinceStart;
+		private double estArrivalTimeAtCurrentLinkEnd;
+
+		public VehicleTrackingData(Id<Vehicle> vehicleIid, double trackingStartTime) {
+			this.vehicleIid = vehicleIid;
+			this.trackingStartTime = trackingStartTime;
+			this.estArrivalTimeAtCurrentLinkEnd = trackingStartTime;
+		}
+
+		public Id<Vehicle> getVehicleIid() {
+			return vehicleIid;
+		}
+
+		public void setVehicleIid(Id<Vehicle> vehicleIid) {
+			this.vehicleIid = vehicleIid;
+		}
+
+		public double getTrackingStartTime() {
+			return trackingStartTime;
+		}
+
+		public double getDistanceSinceStart() {
+			return distanceSinceStart;
+		}
+
+		public void setDistanceSinceStart(double distanceSinceStart) {
+			this.distanceSinceStart = distanceSinceStart;
+		}
+
+		public double getTimeSinceStart() {
+			return timeSinceStart;
+		}
+
+		public void setTimeSinceStart(double timeSinceStart) {
+			this.timeSinceStart = timeSinceStart;
+		}
+
+		public double getEstArrivalTimeAtCurrentLinkEnd() {
+			return estArrivalTimeAtCurrentLinkEnd;
+		}
+
+		public void setEstArrivalTimeAtCurrentLinkEnd(double estTimeToLinkEnd) {
+			this.estArrivalTimeAtCurrentLinkEnd = estTimeToLinkEnd;
 		}
 	}
 }
