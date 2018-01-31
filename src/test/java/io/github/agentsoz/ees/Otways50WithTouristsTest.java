@@ -19,13 +19,13 @@ public class Otways50WithTouristsTest {
 
     // have tests in separate classes so that they run, at least under maven, in separate JVMs.  kai, nov'17
 
-    private static final Logger log = Logger.getLogger(MainCampbellsCreek01Test.class);
+    private static final Logger log = Logger.getLogger(Otways50WithTouristsTest.class);
 
     @Rule
     public MatsimTestUtils utils = new MatsimTestUtils();
 
     @Test
-    public void testCampbellsCreek01() {
+    public void testOtways50Tourist() {
 
         String[] args = {
                 "--config", "scenarios/otways-50/scenario_main.xml",
@@ -38,7 +38,7 @@ public class Otways50WithTouristsTest {
                 "--jillconfig", "--config={" +
                 "agents:[{classname:io.github.agentsoz.ees.agents.Resident, args:null, count:40}," +
                     "{classname:io.github.agentsoz.ees.agents.Tourist, " +
-                    "args:[--WayHome,\"MelbourneRoute,144.28995,-38.21591\"], count:10}]," +
+                    "args:[--WayHome,\"MelbourneRoute,262428,5766695\"], count:10}]," +
                 "logLevel: TRACE," +
                 "logFile: \"scenarios/otways-50/jill.log\"," +
                 "programOutputFile: \"scenarios/otways-50/jill.out\"," +

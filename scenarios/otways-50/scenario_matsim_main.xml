@@ -82,6 +82,12 @@
 		<param name="activityPriority_0"        value="1" />
 		<param name="activityTypicalDuration_0" value="12:00:00" />
 		<param name="activityMinimalDuration_0" value="08:00:00" />
+	
+		<param name="activityType_3"            value="camp" />
+		<param name="activityPriority_3"        value="1" />
+		<param name="activityTypicalDuration_3" value="12:00:00" />
+		<param name="activityMinimalDuration_3" value="08:00:00" />
+
 
 		<param name="activityType_1"            value="work" />
 		<param name="activityPriority_1"        value="1" />
