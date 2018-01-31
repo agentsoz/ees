@@ -42,7 +42,9 @@ public class BlockageCampbellsCreek01Test {
 						"programOutputFile: \"scenarios/mount-alexander-shire/campbells-creek-1/jill.out\","+
 						"randomSeed: 12345,"+ // jill random seed
 						"numThreads: 1"+ // run jill in single-threaded mode so logs are deterministic
-		"}"};
+						"}",
+				"--x-blocked-link", "51825",
+		};
 		Main.main(args);
 		final String actualEventsFilename = utils.getOutputDirectory() + "/output_events.xml.gz";
 		long actualCRCevents = CRCChecksum.getCRCFromFile(actualEventsFilename) ;
