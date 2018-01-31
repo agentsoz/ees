@@ -131,7 +131,8 @@ public class Main {
 		setSimStartTimesRelativeToAlert(dataServer, config, -10*60 );
 		EvacConfig evacConfig = ConfigUtils.addOrGetModule(config, EvacConfig.class);
 		evacConfig.setSetup(setup);
-		
+		evacConfig.setCongestionEvaluationInterval(SimpleConfig.getCongestionEvaluationInterval());
+		evacConfig.setCongestionToleranceThreshold(SimpleConfig.getCongestionToleranceThreshold());
 		
 		// --- do some things for which you need a handle to the matsim scenario:
 		Scenario scenario = matsimModel.loadAndPrepareScenario() ;
@@ -161,7 +162,7 @@ public class Main {
 		// --- initialize and start matsim (maybe rename?):
 		matsimModel.init(bdiAgentIDs);
 		
-		EvacAgentTracker tracker = new EvacAgentTracker(matsimModel.getScenario().getNetwork(), matsimModel.getEvents() ) ;
+		EvacAgentTracker tracker = new EvacAgentTracker(evacConfig, matsimModel.getScenario().getNetwork(), matsimModel.getEvents() ) ;
 		matsimModel.getEvents().addHandler( tracker );
 		// yyyy try to replace this by injection. because otherwise it again needs to be added "late enough", which we
 		// wanted to get rid of.  kai, dec'17
@@ -425,6 +426,22 @@ public class Main {
 							System.err.println("Could not parse blocked link id '"
 									+ args[i] + "' : " + e.getMessage());
 						}
+					}
+					break;
+				case "--x-congestion-config": //FIXME: remove; make part of main config
+					// expect format double:double to indicate interval:threshold
+					if(i+1<args.length) {
+						i++ ;
+						String[] vals = args[i].split(":");
+						try {
+							SimpleConfig.setCongestionEvaluationInterval(Double.parseDouble(vals[0]));
+							SimpleConfig.setCongestionToleranceThreshold(Double.parseDouble(vals[1]));
+
+						} catch (Exception e) {
+							System.err.println("Could not parse congestion config '"
+									+ args[i] + "' : " + e.getMessage());
+						}
+
 					}
 					break;
 			default:

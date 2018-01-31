@@ -63,6 +63,10 @@ public class SimpleConfig {
 	private static String fireFile = null;
 
 	private static String disruptionsFile = null; // FIXME: should come from config XML
+
+	private static double congestionEvaluationInterval = 600; // secs between BDI agent evaluatiing if it is in congestion
+	private static double congestionToleranceThreshold = 0.5; // as a proportion of the congestionEvaluationInterval
+
 	public static void setDisruptionsFile(String disruptionFile) {
 		SimpleConfig.disruptionsFile = disruptionFile;
 	}
@@ -385,4 +389,19 @@ public class SimpleConfig {
 	public static String getDisruptionsFile() {
 		return disruptionsFile;
 	}
+
+    public static void setCongestionToleranceThreshold(double congestionToleranceThreshold) {
+		SimpleConfig.congestionToleranceThreshold = congestionToleranceThreshold;
+    }
+	public static void setCongestionEvaluationInterval(double congestionEvaluationInterval) {
+		SimpleConfig.congestionEvaluationInterval = congestionEvaluationInterval;
+	}
+	public static double getCongestionToleranceThreshold() {
+		return congestionToleranceThreshold;
+	}
+
+	public static double getCongestionEvaluationInterval() {
+		return congestionEvaluationInterval;
+	}
+
 }
