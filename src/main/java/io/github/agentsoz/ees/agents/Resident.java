@@ -99,8 +99,8 @@ public class Resident extends Agent implements io.github.agentsoz.bdiabm.Agent {
 			String status = perceptID.equals(PerceptList.BLOCKED) ? "is blocked" : "is in traffic congestion";
 			failedAttempts++;
 			writer.println(prefix + status + " at link " + parameters);
-			writer.println(prefix + "is currently near coordinates " +
-					getQueryPerceptInterface().queryPercept(String.valueOf(getId()), PerceptList.REQUEST_LOCATION, parameters));
+			Location[] coords = (Location[])getQueryPerceptInterface().queryPercept(String.valueOf(getId()), PerceptList.REQUEST_LOCATION, parameters);
+			writer.println(prefix + "is currently between locations " + coords[0] + " and " + coords[1]);
 			if (failedAttempts < MAX_FAILED_ATTEMPTS) {
 				writer.println(prefix
 						+ "will reevaluate route to destination (attempt "+(failedAttempts+1)
