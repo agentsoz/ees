@@ -94,15 +94,16 @@ public class Resident extends Agent implements io.github.agentsoz.bdiabm.Agent {
 		} else if (perceptID.equals(PerceptList.ARRIVED)) {
 			// Agent just arrived at the shelter
 			writer.println(prefix + "arrived at shelter in " + getShelterLocation());
-		} else if (perceptID.equals(PerceptList.BLOCKED)) {
-			// Something went wrong while driving and the road is blocked
+		} else if (perceptID.equals(PerceptList.BLOCKED) || perceptID.equals(PerceptList.CONGESTION)) {
+			// Something went wrong while driving and the road is blocked or congested
+			String status = perceptID.equals(PerceptList.BLOCKED) ? "is blocked" : "is in traffic congestion";
 			failedAttempts++;
-			writer.println(prefix + "is blocked at link " + parameters + "");
-			writer.println(prefix + "is currently near coordinates " +
-					getQueryPerceptInterface().queryPercept(String.valueOf(getId()), PerceptList.REQUEST_LOCATION, parameters));
+			writer.println(prefix + status + " at link " + parameters);
+			Location[] coords = (Location[])getQueryPerceptInterface().queryPercept(String.valueOf(getId()), PerceptList.REQUEST_LOCATION, parameters);
+			writer.println(prefix + "is currently between locations " + coords[0] + " and " + coords[1]);
 			if (failedAttempts < MAX_FAILED_ATTEMPTS) {
 				writer.println(prefix
-						+ "will try to evacuate again (attempt "+(failedAttempts+1)
+						+ "will reevaluate route to destination (attempt "+(failedAttempts+1)
 						+ " of " + MAX_FAILED_ATTEMPTS
 						+ ")");
 				post(new RespondToFireAlert("RespondToFireAlert"));
