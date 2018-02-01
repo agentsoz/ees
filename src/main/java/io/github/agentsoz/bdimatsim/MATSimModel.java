@@ -8,6 +8,7 @@ import io.github.agentsoz.bdiabm.QueryPerceptInterface;
 import io.github.agentsoz.dataInterface.DataClient;
 import io.github.agentsoz.util.evac.ActionList;
 import io.github.agentsoz.util.evac.PerceptList;
+import io.github.agentsoz.util.Location;
 import org.matsim.api.core.v01.Coord;
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.Scenario;
@@ -471,7 +472,25 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 	}
 
 	@Override public Object queryPercept(String agentID, String perceptID, Object args) {
-		log.warn("received query from agent {} for percept {} with args {}; not implemented yet!", agentID, perceptID, args);
+		log.debug("received query from agent {} for percept {} with args {}; not implemented yet!", agentID, perceptID, args);
+		switch(perceptID) {
+			case PerceptList.REQUEST_LOCATION:
+				if (args == null || !(args instanceof String)) {
+					throw new RuntimeException("Query percept '"+perceptID+"' expecting String argument, but found: " + args);
+				}
+				Link link = scenario.getNetwork().getLinks().get( Id.createLinkId( (String)args ));
+				if(link == null) {
+					log.warn(perceptID + " argument '"+args+"' is not a valid link id");
+					break;
+				}
+				Location[] coords = {
+						new Location(link.getFromNode().getId().toString(), link.getFromNode().getCoord().getX(), link.getFromNode().getCoord().getY()),
+						new Location(link.getToNode().getId().toString(), link.getToNode().getCoord().getX(), link.getToNode().getCoord().getY())
+				};
+				return coords;
+			default:
+				throw new RuntimeException("Unknown query percept '"+perceptID+"' received from agent "+agentID+" with args " + args);
+		}
 		return null;
 	}
 
