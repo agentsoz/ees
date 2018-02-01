@@ -1,0 +1,63 @@
+{
+  "name": "2018-02-01-castlemaine-2000",
+  "township": "Castlemaine",
+  "defaultMapZoom": 11,
+  "coordinate_system": "latlong",
+  "osmArea": {
+    "rectangle": [
+      -37.26,
+      144.4789,
+      -36.7375,
+      144.05833
+    ],
+    "url": "app-data/network.xml.gz"
+  },
+  "fire": {
+    "name": "NO_INCIDENT",
+    "url": "",
+    "coordinate_system": "latlong",
+    "format": "geojson"
+  },
+  "destinations": [
+    {
+      "name": "Harcourt",
+      "coordinates": {
+        "lat": -37.004293,
+        "lng": 144.257085
+      },
+      "split": "100.00"
+    }
+  ],
+  "safeLines": [
+    {
+      "name": "Harcourt",
+      "coordinates": [
+        {
+          "lat": -37.003672237231704,
+          "lng": 144.23937605693936
+        },
+        {
+          "lat": -37.01134879159668,
+          "lng": 144.28091811016202
+        }
+      ]
+    }
+  ],
+  "vehiclesAreas": [
+    {
+      "name": "999",
+      "bounds": {
+        "south": -37.06700202071755,
+        "west": 144.21186733176,
+        "north": -37.063663206761504,
+        "east": 144.2128758423496
+      }
+    }
+  ],
+  "evacTime": {
+    "hh": 12,
+    "mm": 0
+  },
+  "evacPeakMins": 60,
+  "maxSpeed": 100
+}

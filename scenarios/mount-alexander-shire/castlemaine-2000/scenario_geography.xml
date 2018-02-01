@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--===========================================================================
+  #%L
+  BDI-ABM Integration Package
+  %%
+  Copyright (C) 2014 - 2016 by its authors. See AUTHORS file.
+  %%
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as
+  published by the Free Software Foundation, either version 3 of the
+  License, or (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Lesser Public License for more details.
+
+  You should have received a copy of the GNU General Lesser Public
+  License along with this program.  If not, see
+  <http://www.gnu.org/licenses/lgpl-3.0.html>.
+  #L%
+============================================================================-->
+
+
+<!--
+	example data:
+
+<location>
+    <name>Harcourt</name>
+    <coordinates>256222.51444707022,5901687.72030469</coordinates>
+    <capacity>1000</capacity>
+</location>
+<location>
+    <name>Lockwood South</name>
+    <coordinates>246377.68082871533,5919215.437931696</coordinates>
+    <capacity>1000</capacity>
+</location>
+
+
+        !!! Update 27/Oct/16 DSINGH: Leaving the following information in for
+            now, will need to be updated.
+
+
+	The following data relates to defining regions etc for the town
+
+	Evacuation points are where residents will evacuate too.
+
+	Locations require a coordinate (easting, northing).
+
+	The town is divided into "regions".
+	If no regions are defined, the software assumes the whole area is one region.
+
+	Routes are defined by a sequence of control points.
+	If no routes are defined, a route with a single waypoint (the relief centre) is created for each region.
+
+-->
+<geography
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="https://github.com/agentsoz/bdi-abm-integration"
+  xsi:schemaLocation="https://github.com/agentsoz/bdi-abm-integration ../../xsd/geography.xsd">
+
+<coordinateSystem>utm</coordinateSystem>
+
+<destinations>
+<location>
+  <name>Harcourt</name>
+  <coordinates>255934.018201,5901133.6543</coordinates>
+  <split>100.00</split>
+</location>
+
+</destinations>
+
+<safelines>
+<safeline>
+  <name>Harcourt</name>
+  <coordinates>254355.930605,5901156.94523</coordinates>
+  <coordinates>258077.527453,5900411.58462</coordinates>
+</safeline>
+
+</safelines>
+
+</geography>
