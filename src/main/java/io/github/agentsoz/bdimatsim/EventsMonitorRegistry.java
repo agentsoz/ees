@@ -159,7 +159,22 @@ public final class EventsMonitorRegistry implements LinkEnterEventHandler, LinkL
 		// yyyyyy in the following, monitor.getLinkId can now be null.  Need to hedge against it!  kai, nov'17
   
 		if (ev instanceof AgentInCongestionEvent && monitors.containsKey(AgentInCongestion)) {
-			log.warn("agent stuck in congestion, need to do something with it.");
+			for (Monitor monitor : monitors.get(AgentInCongestion)) {
+				AgentInCongestionEvent event = (AgentInCongestionEvent) ev;
+				Id<Person> driverId = this.getDriverOfVehicle(event.getVehicleId());
+				Gbl.assertNotNull(driverId);
+				log.debug("handling AgentInCongestion event");
+				if (monitor.getAgentId().equals(driverId)) {
+					if (monitor.getHandler().handle(monitor.getAgentId(), event.getCurrentLinkId(), monitor.getEvent())) {
+						toRemove.add(monitor);
+						Monitor arrivedMonitor = findMonitor(monitor.getAgentId(), MonitoredEventType.ArrivedAtDestination);
+						if (arrivedMonitor != null) {
+							toRemove.add(arrivedMonitor);
+						}
+					}
+				}
+				monitors.get(AgentInCongestion).removeAll(toRemove);
+			}
 
 		} else if (ev instanceof NextLinkBlockedEvent && monitors.containsKey(NextLinkBlocked)) {
 			for (Monitor monitor : monitors.get(NextLinkBlocked)) {

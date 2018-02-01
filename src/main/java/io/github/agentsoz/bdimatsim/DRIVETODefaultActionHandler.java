@@ -138,7 +138,27 @@ public final class DRIVETODefaultActionHandler implements BDIActionHandler {
 					}
 				}
 		);
-		
+
+		// And yet another in case the agent gets stuck in congestion on the way
+		paAgent.getPerceptHandler().registerBDIPerceptHandler( paAgent.getAgentID(), MonitoredEventType.AgentInCongestion,
+				null, new BDIPerceptHandler() {
+					@Override
+					public boolean handle(Id<Person> agentId, Id<Link> currentLinkId, MonitoredEventType monitoredEvent) {
+						log.debug( "agent with id=" + agentId + " perceiving a " + monitoredEvent + " event on link with id=" +
+								currentLinkId ) ;
+						PAAgent agent = model.getAgentManager().getAgent( agentId.toString() );
+						Object[] params = { currentLinkId.toString() };
+						// Send the congestion percept back to the BDI agent. We should not fail the action here,
+						// but let the BDI agent decide to abort the action if it so decides. However, while
+						// abortion is not supported in Jill we will have to live with failing the action for
+						// the time being; dsingh 1/2/18
+						agent.getActionContainer().register(ActionList.DRIVETO, params);
+						agent.getActionContainer().get(ActionList.DRIVETO).setState(ActionContent.State.FAILED);
+						agent.getPerceptContainer().put(PerceptList.CONGESTION, params[0]);
+						return true;
+					}
+				}
+		);
 
 		log.debug("------------------------------------------------------------------------------------------"); ;
 		return true;
