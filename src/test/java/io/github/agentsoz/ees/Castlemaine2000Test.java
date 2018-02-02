@@ -3,10 +3,12 @@
  */
 package io.github.agentsoz.ees;
 
+import io.github.agentsoz.util.TestUtils;
 import org.apache.log4j.Logger;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
+import org.matsim.core.utils.misc.CRCChecksum;
 import org.matsim.testcases.MatsimTestUtils;
 
 /**
@@ -23,7 +25,6 @@ public class Castlemaine2000Test {
 
 	@SuppressWarnings("static-method")
 	@Test
-	@Ignore
 	public void testCastlemaine2000() {
 		String [] args = {
 				"--config",  "scenarios/mount-alexander-shire/castlemaine-2000/scenario_main.xml",
@@ -40,12 +41,13 @@ public class Castlemaine2000Test {
 						"programOutputFile: \"scenarios/mount-alexander-shire/castlemaine-2000/jill.out\","+
 						"randomSeed: 12345"+ // jill random seed
 						//"numThreads: 1"+ // run jill in single-threaded mode so logs are deterministic
-						"}"
+						"}",
+				"--x-congestion-config", "180:0.25"
 		};
 
 		Main.main(args);
 
-		// FIXME: enable the checks below when expected results are verified and saved; DS 23/jan/18
+		// FIXME: differences in number of arrivals when replanning with congestion; dsingh 2/feb/18
 		/*
 		final String actualEventsFilename = utils.getOutputDirectory() + "/output_events.xml.gz";
 		long actualEventsCRC = CRCChecksum.getCRCFromFile( actualEventsFilename ) ;
@@ -59,11 +61,10 @@ public class Castlemaine2000Test {
 		TestUtils.comparingActivityStarts(primaryExpectedEventsFilename,actualEventsFilename, 1.);
 		TestUtils.compareFullEvents(primaryExpectedEventsFilename,actualEventsFilename, true);
 
-		
 		long [] expectedPlans = new long [] {
 				CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/output_plans.xml.gz" )
 		};
 		TestUtils.checkSeveral(expectedPlans, actualPlansCRC);
-		*/
+		 */
 	}
 }
