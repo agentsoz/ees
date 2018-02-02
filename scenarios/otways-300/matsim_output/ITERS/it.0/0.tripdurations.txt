@@ -1,0 +1,5 @@
+pattern	0+	5+	10+	15+	20+	25+	30+	35+	40+	45+	50+	55+	60+
+camp---driveTo	2	1	1	5	1	0	0	0	0	0	0	0	0
+home---driveTo	22	9	0	8	0	1	0	0	0	0	0	0	0
+
+average trip duration: 496.16 seconds = 00:08:16

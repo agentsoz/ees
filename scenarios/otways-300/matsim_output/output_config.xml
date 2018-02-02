@@ -89,14 +89,29 @@
 	</module>
 <!-- ====================================================================== -->
 	<module name="facilities" >
+		<!-- If set to 'true', empty activity option will be created. -->
+		<param name="addEmptyActivityOption" value="false" />
+		<!-- Default is 'true'. In the case that a facility has no link assigned, the ActivityFacility can be assigned to the closest link. If there should be only one ActivityFacility per link and if no link-assignment should be done, set to 'false'.This will create a new ActivityFacility at the coordinate and the facility will not be assigned to a link. -->
+		<param name="assigningLinksToFacilitiesIfMissing" value="true" />
+		<!-- If set to 'true', opening time will be assigned to activity facilities from ActivityParams. Default is false. This will NOT override option 'addEmptyActivityOption'. -->
+		<param name="assigningOpeningTime" value="false" />
+		<!-- This defines how facilities should be created. Possible values: none fromFile setInScenario onePerActivityLocationInPlansFile  -->
+		<param name="facilitiesSource" value="none" />
+		<!-- A prefix to be used in activityFacility id. -->
+		<param name="idPrefix" value="" />
 		<!-- The Coordinates Reference System in which the coordinates are expressed in the input file. At import, the coordinates will be converted to the coordinate system defined in "global", and willbe converted back at export. If not specified, no conversion happens. -->
 		<param name="inputCRS" value="null" />
 		<param name="inputFacilitiesFile" value="null" />
 		<param name="inputFacilityAttributesFile" value="null" />
+		<!-- Sets whether all activities on a link should be collected within one ActivityFacility. Default is 'true'. If set to 'false', for each coordinate found in the population's activities a separate ActivityFacility will be created. -->
+		<param name="oneFacilityPerLink" value="true" />
+		<!-- If set to 'true' (which is the default), the link and coordinate attributes are replaced by null reference in the activities, as this information is now available via the facility. -->
+		<param name="removingLinksAndCoordinates" value="true" />
 	</module>
 <!-- ====================================================================== -->
 	<module name="global" >
 		<param name="coordinateSystem" value="EPSG:32754" />
+		<param name="insistingOnDeprecatedConfigVersion" value="true" />
 		<!-- "global" number of threads.  This number is used, e.g., for replanning, but NOT in the mobsim.  This can typically be set to as many cores as you have available, or possibly even slightly more. -->
 		<param name="numberOfThreads" value="4" />
 		<param name="randomSeed" value="482564" />
@@ -241,6 +256,20 @@
 			</parameterset>
 			<parameterset type="activityParams" >
 				<param name="activityType" value="home" />
+				<param name="closingTime" value="undefined" />
+				<param name="earliestEndTime" value="undefined" />
+				<param name="latestStartTime" value="undefined" />
+				<param name="minimalDuration" value="08:00:00" />
+				<param name="openingTime" value="undefined" />
+				<param name="priority" value="1.0" />
+				<param name="scoringThisActivityAtAll" value="true" />
+				<!-- typical duration of activity.  needs to be defined and non-zero.  in sec. -->
+				<param name="typicalDuration" value="12:00:00" />
+				<!-- method to compute score at typical duration.  Options: | uniform | relative | Use uniform for backwards compatibility (all activities same score; higher proba to drop long acts). -->
+				<param name="typicalDurationScoreComputation" value="relative" />
+			</parameterset>
+			<parameterset type="activityParams" >
+				<param name="activityType" value="camp" />
 				<param name="closingTime" value="undefined" />
 				<param name="earliestEndTime" value="undefined" />
 				<param name="latestStartTime" value="undefined" />
@@ -496,7 +525,7 @@
 	<module name="qsim" >
 		<!-- If set to true, creates a vehicle for each person corresponding to every network mode. However, this will be overridden if vehicle source is fromVehiclesData. -->
 		<param name="creatingVehiclesForAllNetworkModes" value="true" />
-		<param name="endTime" value="01:00:00" />
+		<param name="endTime" value="07:00:00" />
 		<param name="flowCapacityFactor" value="1.0" />
 		<!-- decides if waiting vehicles enter the network after or before the already driving vehicles were moved. Default: false -->
 		<param name="insertingWaitingVehiclesBeforeDrivingVehicles" value="false" />

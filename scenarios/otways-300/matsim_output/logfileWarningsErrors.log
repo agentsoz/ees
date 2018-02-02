@@ -1,0 +1,9 @@
+2018-02-02 02:10:42,107  WARN MGC:175 Assuming that coordinates are in longitude first notation, i.e. (longitude, latitude).
+2018-02-02 02:10:42,772  WARN MGC:175 Assuming that coordinates are in longitude first notation, i.e. (longitude, latitude).
+2018-02-02 02:11:00,135  WARN CharyparNagelActivityScoring:252 The first and the last activity do not have the same type. 
+2018-02-02 02:11:00,136  WARN CharyparNagelActivityScoring:253 Will score the first activity from midnight to its end, and the last activity from its start to midnight.
+2018-02-02 02:11:00,136  WARN CharyparNagelActivityScoring:254 Because of the nonlinear function, this is not the same as scoring from start to end.
+2018-02-02 02:11:00,136  WARN CharyparNagelActivityScoring:255 first activity: [type=camp][coord=null][linkId=105777][startTime=undefined][endTime=00:25:18][duration=undefined][facilityId=null]
+2018-02-02 02:11:00,136  WARN CharyparNagelActivityScoring:256 last activity: [type=driveTo][coord=null][linkId=99193][startTime=00:41:53][endTime=undefined][duration=undefined][facilityId=null]
+2018-02-02 02:11:00,136  WARN CharyparNagelActivityScoring:257 This may also happen when plans are not completed when the simulation ends.
+2018-02-02 02:11:00,136  WARN CharyparNagelActivityScoring:259 Additional warnings of this type are suppressed.
