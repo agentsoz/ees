@@ -326,7 +326,7 @@
     <plan selected="yes">
       <activity end_time="06:00:00" type="camp" x="790526" y="5752137"/>
       <leg mode="car"/>
-      <activity type="camp" x="790526" y="5752137"/>
+      <activity type="camp" x="763974" y="5745597"/>
     </plan>
   </person>
   <!--============================================================================-->
@@ -334,7 +334,7 @@
     <plan selected="yes">
       <activity end_time="06:00:00" type="camp" x="770988" y="5738385"/>
       <leg mode="car"/>
-      <activity type="camp" x="770988" y="5738385"/>
+      <activity type="camp" x="763974" y="5745597"/>
     </plan>
   </person>
   <!--============================================================================-->
@@ -342,7 +342,7 @@
     <plan selected="yes">
       <activity end_time="06:00:00" type="camp" x="777599" y="5744804"/>
       <leg mode="car"/>
-      <activity type="camp" x="777599" y="5744804"/>
+      <activity type="camp" x="763974" y="5745597"/>
     </plan>
   </person>
   <!--============================================================================-->
@@ -350,7 +350,7 @@
     <plan selected="yes">
       <activity end_time="06:00:00" type="camp" x="777599" y="5744804"/>
       <leg mode="car"/>
-      <activity type="camp" x="777599" y="5744804"/>
+      <activity type="camp" x="763974" y="5745597"/>
     </plan>
   </person>
   <!--============================================================================-->
@@ -358,7 +358,7 @@
     <plan selected="yes">
       <activity end_time="06:00:00" type="camp" x="777540" y="5743393"/>
       <leg mode="car"/>
-      <activity type="camp" x="777540" y="5743393"/>
+      <activity type="camp" x="763974" y="5745597"/>
     </plan>
   </person>
   <!--============================================================================-->
@@ -366,7 +366,7 @@
     <plan selected="yes">
       <activity end_time="06:00:00" type="camp" x="790377" y="5752205"/>
       <leg mode="car"/>
-      <activity type="camp" x="790377" y="5752205"/>
+      <activity type="camp" x="763974" y="5745597"/>
     </plan>
   </person>
   <!--============================================================================-->
@@ -374,7 +374,7 @@
     <plan selected="yes">
       <activity end_time="06:00:00" type="camp" x="777540" y="5743393"/>
       <leg mode="car"/>
-      <activity type="camp" x="777540" y="5743393"/>
+      <activity type="camp" x="763974" y="5745597"/>
     </plan>
   </person>
   <!--============================================================================-->
@@ -382,7 +382,7 @@
     <plan selected="yes">
       <activity end_time="06:00:00" type="camp" x="777540" y="5743393"/>
       <leg mode="car"/>
-      <activity type="camp" x="777540" y="5743393"/>
+      <activity type="camp" x="763974" y="5745597"/>
     </plan>
   </person>
   <!--============================================================================-->
@@ -390,7 +390,7 @@
     <plan selected="yes">
       <activity end_time="06:00:00" type="camp" x="777302" y="5744356"/>
       <leg mode="car"/>
-      <activity type="camp" x="777302" y="5744356"/>
+      <activity type="camp" x="763974" y="5745597"/>
     </plan>
   </person>
   <!--============================================================================-->
@@ -398,8 +398,8 @@
     <plan selected="yes">
       <activity end_time="06:00:00" type="camp" x="777302" y="5744356"/>
       <leg mode="car"/>
-      <activity type="camp" x="777302" y="5744356"/>
+      <activity type="camp" x="763974" y="5745597"/>
     </plan>
-  </person>
+  </person> 
   <!--============================================================================-->
 </population>
