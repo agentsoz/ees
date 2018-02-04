@@ -5,6 +5,7 @@ package io.github.agentsoz.ees;
 
 import io.github.agentsoz.bdimatsim.EvacConfig;
 import org.apache.log4j.Logger;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.matsim.testcases.MatsimTestUtils;
@@ -23,6 +24,7 @@ public class CongestionTorquay500 {
     public MatsimTestUtils utils = new MatsimTestUtils();
 
     @Test
+//    @Ignore
     public void testTorquay500() {
 
         String[] args = {
@@ -33,7 +35,7 @@ public class CongestionTorquay500 {
                 "--seed", "12345",
                 "--safeline-output-file-pattern", "scenarios/Torquay-500/safeline.%d%.out",
                 "--matsim-output-directory", utils.getOutputDirectory(),
-                EvacConfig.SETUP_INDICATOR, EvacConfig.Setup.tertiaryRoadsCorrection.name(),
+//                EvacConfig.SETUP_INDICATOR, EvacConfig.Setup.tertiaryRoadsCorrection.name(),
                 "--jillconfig", "--config={" +
                 "agents:[{classname:io.github.agentsoz.ees.agents.Resident, args:null, count:500}]," +
                 "logLevel: TRACE," +
@@ -41,7 +43,9 @@ public class CongestionTorquay500 {
                 "programOutputFile: \"scenarios/Torquay-500/jill.out\"," +
                 "randomSeed: 12345" + // jill random seed
                 //"numThreads: 1"+ // run jill in single-threaded mode so logs are deterministic
-                "}"};
+                "}",
+                "--x-congestion-config", "180:0.25"
+        };
 
         Main.main(args);
     }

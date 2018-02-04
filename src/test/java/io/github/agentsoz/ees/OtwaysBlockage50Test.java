@@ -21,7 +21,7 @@ import org.matsim.testcases.MatsimTestUtils;
         import org.matsim.testcases.MatsimTestUtils;
 
 /**
- * @author dsingh
+ * @author dsingh, Joel Robertson
  *
  */
 
