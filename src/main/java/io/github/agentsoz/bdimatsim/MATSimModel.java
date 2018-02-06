@@ -116,7 +116,8 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 	private boolean scenarioLoaded = false ;
 	
 	private final Map<Id<Link>,Double> penaltyFactorsOfLinks = new HashMap<>() ;
-	
+	private final Map<Id<Link>,Double> penaltyFactorsOfLinksForEmergencyVehicles = new HashMap<>() ;
+
 	public MATSimModel(String matSimFile, String matsimOutputDirectory) {
 		// not the most elegant way of doing this ...
 		// yy maybe just pass the whole string from above and take apart ourselves?
@@ -311,7 +312,7 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 				addTravelTimeBinding(routingMode).to(WithinDayTravelTime.class) ;
 				
 				// travel disutility includes the fire penalty:
-				TravelDisutilityFactory disutilityFactory = new EvacTravelDisutility.Factory(penaltyFactorsOfLinks);
+				TravelDisutilityFactory disutilityFactory = new EvacTravelDisutility.Factory(penaltyFactorsOfLinksForEmergencyVehicles);
 				// yyyyyy This uses the same disutility as the evacuees.  May not be what we want.
 				// But what do we want?  kai, dec'17/jan'18
 
@@ -453,7 +454,8 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 		Geometry buffer = fire.buffer(bufferWidth);
 		
 		penaltyFactorsOfLinks.clear();
-		
+
+		// FIXME: Using a hardwired 10km buffer for vehicles; move to config
 //		https://stackoverflow.com/questions/38404095/how-to-calculate-the-distance-in-meters-between-a-geographic-point-and-a-given-p
 //		Utils.penaltyMethod1(fire, buffer, penaltyFactorsOfLinks, scenario );
 		Utils.penaltyMethod2(fire, buffer, bufferWidth, penaltyFactorsOfLinks, scenario );
@@ -461,6 +463,10 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 		// being is using version 1.  kai, dec'17
 		// yy could make this settable, but for the time being this pedestrian approach
 		// seems sufficient.  kai, jan'18
+
+		// FIXME: Using a hardwired 1km buffer for emergency services; move to config
+		penaltyFactorsOfLinksForEmergencyVehicles.clear();
+		Utils.penaltyMethod2(fire, buffer, 1000, penaltyFactorsOfLinksForEmergencyVehicles, scenario);
 		
 		
 		fireWriter.write( now, fire);
