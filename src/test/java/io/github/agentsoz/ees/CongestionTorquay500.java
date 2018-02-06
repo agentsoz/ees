@@ -35,7 +35,7 @@ public class CongestionTorquay500 {
                 "--seed", "12345",
                 "--safeline-output-file-pattern", "scenarios/Torquay-500/safeline.%d%.out",
                 "--matsim-output-directory", utils.getOutputDirectory(),
-//                EvacConfig.SETUP_INDICATOR, EvacConfig.Setup.tertiaryRoadsCorrection.name(),
+                EvacConfig.SETUP_INDICATOR, EvacConfig.Setup.tertiaryRoadsCorrection.name(),
                 "--jillconfig", "--config={" +
                 "agents:[{classname:io.github.agentsoz.ees.agents.Resident, args:null, count:500}]," +
                 "logLevel: TRACE," +

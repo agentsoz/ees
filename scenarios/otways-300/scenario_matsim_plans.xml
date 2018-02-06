@@ -2324,81 +2324,81 @@
   <!--============================================================================-->
   <person id="290">
     <plan selected="yes">
-      <activity end_time="06:00:00" type="home" x="777658" y="5743903"/>
+      <activity end_time="06:00:00" type="camp" x="763974" y="5745597"/>
       <leg mode="car"/>
-      <activity type="home" x="777658" y="5743903"/>
+      <activity type="camp" x="763974" y="5745597"/>
     </plan>
   </person>
   <!--============================================================================-->
   <person id="291">
     <plan selected="yes">
-      <activity end_time="06:00:00" type="home" x="777658" y="5743903"/>
+      <activity end_time="06:00:00" type="camp" x="763974" y="5745597"/>
       <leg mode="car"/>
-      <activity type="home" x="777658" y="5743903"/>
+      <activity type="camp" x="763974" y="5745597"/>
     </plan>
   </person>
   <!--============================================================================-->
   <person id="292">
     <plan selected="yes">
-      <activity end_time="06:00:00" type="home" x="778483" y="5744475"/>
+      <activity end_time="06:00:00" type="camp" x="763974" y="5745597"/>
       <leg mode="car"/>
-      <activity type="home" x="778483" y="5744475"/>
+      <activity type="camp" x="763974" y="5745597"/>
     </plan>
   </person>
   <!--============================================================================-->
   <person id="293">
     <plan selected="yes">
-      <activity end_time="06:00:00" type="home" x="777302" y="5744356"/>
+      <activity end_time="06:00:00" type="camp" x="763974" y="5745597"/>
       <leg mode="car"/>
-      <activity type="home" x="777302" y="5744356"/>
+      <activity type="camp" x="763974" y="5745597"/>
     </plan>
   </person>
   <!--============================================================================-->
   <person id="294">
     <plan selected="yes">
-      <activity end_time="06:00:00" type="home" x="777302" y="5744356"/>
+      <activity end_time="06:00:00" type="camp" x="763974" y="5745597"/>
       <leg mode="car"/>
-      <activity type="home" x="777302" y="5744356"/>
+      <activity type="camp" x="763974" y="5745597"/>
     </plan>
   </person>
   <!--============================================================================-->
   <person id="295">
     <plan selected="yes">
-      <activity end_time="06:00:00" type="home" x="777302" y="5744356"/>
+      <activity end_time="06:00:00" type="camp" x="763974" y="5745597"/>
       <leg mode="car"/>
-      <activity type="home" x="777302" y="5744356"/>
+      <activity type="camp" x="763974" y="5745597"/>
     </plan>
   </person>
   <!--============================================================================-->
   <person id="296">
     <plan selected="yes">
-      <activity end_time="06:00:00" type="home" x="777019" y="5742774"/>
+      <activity end_time="06:00:00" type="camp" x="763974" y="5745597"/>
       <leg mode="car"/>
-      <activity type="home" x="777019" y="5742774"/>
+      <activity type="camp" x="763974" y="5745597"/>
     </plan>
   </person>
   <!--============================================================================-->
   <person id="297">
     <plan selected="yes">
-      <activity end_time="06:00:00" type="home" x="777019" y="5742774"/>
+      <activity end_time="06:00:00" type="camp" x="763974" y="5745597"/>
       <leg mode="car"/>
-      <activity type="home" x="777019" y="5742774"/>
+      <activity type="camp" x="763974" y="5745597"/>
     </plan>
   </person>
   <!--============================================================================-->
   <person id="298">
     <plan selected="yes">
-      <activity end_time="06:00:00" type="home" x="777019" y="5742774"/>
+      <activity end_time="06:00:00" type="camp" x="763974" y="5745597"/>
       <leg mode="car"/>
-      <activity type="home" x="777019" y="5742774"/>
+      <activity type="camp" x="763974" y="5745597"/>
     </plan>
   </person>
   <!--============================================================================-->
   <person id="299">
     <plan selected="yes">
-      <activity end_time="06:00:00" type="home" x="777019" y="5742774"/>
+      <activity end_time="06:00:00" type="camp" x="763974" y="5745597"/>
       <leg mode="car"/>
-      <activity type="home" x="777019" y="5742774"/>
+      <activity type="camp" x="763974" y="5745597"/>
     </plan>
   </person>
   <!--============================================================================-->
