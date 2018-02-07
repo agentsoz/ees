@@ -5,7 +5,6 @@ package io.github.agentsoz.ees;
 
 import io.github.agentsoz.bdimatsim.EvacConfig;
 import org.apache.log4j.Logger;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.matsim.testcases.MatsimTestUtils;
@@ -14,11 +13,11 @@ import org.matsim.testcases.MatsimTestUtils;
  * @author dsingh, Joel Robertson
  *
  */
-public class CongestionTorquay500 {
+public class CongestionTorquay500Test {
 
     // have tests in separate classes so that they run, at least under maven, in separate JVMs.  kai, nov'17
 
-    private static final Logger log = Logger.getLogger(CongestionTorquay500.class);
+    private static final Logger log = Logger.getLogger(CongestionTorquay500Test.class);
 
     @Rule
     public MatsimTestUtils utils = new MatsimTestUtils();

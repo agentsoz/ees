@@ -3,7 +3,6 @@ package io.github.agentsoz.ees;
 
         import io.github.agentsoz.bdimatsim.EvacConfig;
         import org.apache.log4j.Logger;
-        import org.junit.Ignore;
         import org.junit.Rule;
         import org.junit.Test;
         import org.matsim.testcases.MatsimTestUtils;
@@ -12,11 +11,11 @@ package io.github.agentsoz.ees;
  * @author dsingh, Joel Robertson
  *
  */
-public class BlockageTorquay500 {
+public class BlockageTorquay500Test {
 
     // have tests in separate classes so that they run, at least under maven, in separate JVMs.  kai, nov'17
 
-    private static final Logger log = Logger.getLogger(BlockageTorquay500.class);
+    private static final Logger log = Logger.getLogger(BlockageTorquay500Test.class);
 
     @Rule
     public MatsimTestUtils utils = new MatsimTestUtils();
@@ -33,7 +32,7 @@ public class BlockageTorquay500 {
                 "--seed", "12345",
                 "--safeline-output-file-pattern", "scenarios/Torquay-500/safeline.%d%.out",
                 "--matsim-output-directory", utils.getOutputDirectory(),
-//                EvacConfig.SETUP_INDICATOR, EvacConfig.Setup.tertiaryRoadsCorrection.name(),
+               EvacConfig.SETUP_INDICATOR, EvacConfig.Setup.blockage.name(),
                 "--jillconfig", "--config={" +
                 "agents:[{classname:io.github.agentsoz.ees.agents.Resident, args:null, count:500}]," +
                 "logLevel: TRACE," +
