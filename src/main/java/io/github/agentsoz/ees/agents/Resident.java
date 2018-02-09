@@ -71,6 +71,8 @@ public class Resident extends Agent implements io.github.agentsoz.bdiabm.Agent {
 	public void start(PrintStream writer, String[] params) {
 		this.writer = writer;
         shelterLocation = SimpleConfig.getRandomEvacLocation();
+
+
 	}
 	
 	/**

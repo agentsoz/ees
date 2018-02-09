@@ -43,10 +43,17 @@ public class Tourist extends  Agent implements io.github.agentsoz.bdiabm.Agent {
     private static final int MAX_FAILED_ATTEMPTS = 5;
     PrintStream writer = null;
     private Location FreewayEntraceLocation = null;
+    private double CongestionEvaluationInterval = 600;
+    private double CongestionToleranceThreshold = 0.5;
+
+
     private io.github.agentsoz.ees.agents.Tourist.Prefix prefix = new io.github.agentsoz.ees.agents.Tourist.Prefix();
     private int failedAttempts;
     private double time = -1;
     private QueryPerceptInterface queryInterface;
+
+
+
 
     public Tourist(String id) {
         super(id);
@@ -56,6 +63,12 @@ public class Tourist extends  Agent implements io.github.agentsoz.bdiabm.Agent {
         return FreewayEntraceLocation;
     }
 
+    Double getCongestionEvaluationInterval() {return CongestionEvaluationInterval;}
+    Double getCongestionToleranceThreshold() {return CongestionToleranceThreshold;}
+
+
+
+
     /**
      * Called by the Jill model when starting a new agent.
      * There is no separate initialisation call prior to this, so all
@@ -64,12 +77,23 @@ public class Tourist extends  Agent implements io.github.agentsoz.bdiabm.Agent {
     @Override
     public void start(PrintStream writer, String[] params) {
         this.writer = writer;
-        if (params != null && params.length == 2 && "--WayHome".equals(params[0])) {
-            String[] sCoords = params[1].split(",");
-            FreewayEntraceLocation= new Location(sCoords[0], Double.parseDouble(sCoords[1]), Double.parseDouble(sCoords[2]));
+        if (params != null) {
+            for (int i=0; i < params.length;i++) {
 
+                 if("--WayHome".equals(params[i])) {
+                    String[] sCoords = params[i+1].split(",");
+                    FreewayEntraceLocation = new Location(sCoords[0], Double.parseDouble(sCoords[1]), Double.parseDouble(sCoords[2]));
+
+                }
+
+                if("--CongestionBehavior".equals(params[i])){
+                    CongestionEvaluationInterval = Double.parseDouble(params[i+1]);
+                    CongestionToleranceThreshold = Double.parseDouble(params[i+2]);
+                }
+            }
         }
     }
+
 
     /**
      * Called by the Jill model when terminating
