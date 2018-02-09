@@ -25,19 +25,19 @@ public class BlockageTorquay500Test {
     public void testTorquay500() {
 
         String[] args = {
-                "--config", "scenarios/Torquay-500/scenario_main.xml",
-                "--logfile", "scenarios/Torquay-500/scenario.log",
+                "--config", "scenarios/otways/torquay-500/scenario_main.xml",
+                "--logfile", "scenarios/otways/torquay-500/scenario.log",
                 "--loglevel", "TRACE",
                 //	                "--plan-selection-policy", "FIRST", // ensures it is deterministic, as default is RANDOM
                 "--seed", "12345",
-                "--safeline-output-file-pattern", "scenarios/Torquay-500/safeline.%d%.out",
+                "--safeline-output-file-pattern", "scenarios/otways/torquay-500/safeline.%d%.out",
                 "--matsim-output-directory", utils.getOutputDirectory(),
                EvacConfig.SETUP_INDICATOR, EvacConfig.Setup.blockage.name(),
                 "--jillconfig", "--config={" +
                 "agents:[{classname:io.github.agentsoz.ees.agents.Resident, args:null, count:500}]," +
                 "logLevel: TRACE," +
-                "logFile: \"scenarios/Torquay-500/jill.log\"," +
-                "programOutputFile: \"scenarios/Torquay-500/jill.out\"," +
+                "logFile: \"scenarios/otways/torquay-500/jill.log\"," +
+                "programOutputFile: \"scenarios/otways/torquay-500/jill.out\"," +
                 "randomSeed: 12345" + // jill random seed
                 //"numThreads: 1"+ // run jill in single-threaded mode so logs are deterministic
                 "}",

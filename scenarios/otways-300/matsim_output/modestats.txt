@@ -1,2 +1,0 @@
-Iteration	car	pt	walk	bike	ride	other	carFreespeed	carGlobalInformation	emergencyVehicle
-0	1.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0
