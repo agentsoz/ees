@@ -488,6 +488,18 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 						new Location(link.getToNode().getId().toString(), link.getToNode().getCoord().getX(), link.getToNode().getCoord().getY())
 				};
 				return coords;
+
+			case PerceptList.REQUEST_DRIVING_DISTANCE_TO:
+				if (args == null || !(args instanceof String)) {
+					throw new RuntimeException("Query percept '"+perceptID+"' expecting String argument, but found: " + args);
+				}
+
+
+
+
+
+
+
 			default:
 				throw new RuntimeException("Unknown query percept '"+perceptID+"' received from agent "+agentID+" with args " + args);
 		}
