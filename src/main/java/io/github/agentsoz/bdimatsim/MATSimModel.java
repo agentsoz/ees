@@ -70,6 +70,7 @@ import io.github.agentsoz.dataInterface.DataServer;
 import io.github.agentsoz.nonmatsim.PAAgentManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -416,16 +417,30 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 
 		if (PerceptList.DISRUPTION.equals(dataType)) {
 			// FIXME: do something with the disruptions data coming in
-			log.warn("receiving at time={} disruptions data={}", (now/3600), data);
 			return true;
 		} else if (! PerceptList.FIRE_DATA.equals(dataType)) {
 			return false;
 		}
-
+		
+		switch( dataType ) {
+			case PerceptList.FIRE_DATA:
+				return processFireData(data, now, penaltyFactorsOfLinks, scenario, penaltyFactorsOfLinksForEmergencyVehicles, fireWriter);
+			case PerceptList.DISRUPTION:
+				return processDisruptionData(data, now, scenario, disruptionWriter);
+			default:
+				throw new RuntimeException("not implemented") ;
+		}
+	}
+	private static boolean processDisruptionData( Object data, double now, Scenario scenario, FireWriter disruptionWriter ) {
+		log.warn("receiving at time={} disruptions data={}", (now/3600), data);
+¯		return false ;
+	}
+	private static boolean processFireData(Object data, double now, Map<Id<Link>, Double> penaltyFactorsOfLinks,
+										   Scenario scenario, Map<Id<Link>, Double> penaltyFactorsOfLinksForEmergencyVehicles, FireWriter fireWriter) {
 		log.warn("receiving fire data at time={}", now/3600. ) ;
 		
 		CoordinateTransformation transform = TransformationFactory.getCoordinateTransformation(
-				TransformationFactory.WGS84, config.global().getCoordinateSystem());
+				TransformationFactory.WGS84, scenario.getConfig().global().getCoordinateSystem());
 		
 		final String json = new Gson().toJson(data);
 		log.debug(json);
@@ -449,25 +464,26 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 				fire = fire.union(polygon);
 			}
 		}
-		
-		final double bufferWidth = 10000.;
-		Geometry buffer = fire.buffer(bufferWidth);
-		
-		penaltyFactorsOfLinks.clear();
 
-		// FIXME: Using a hardwired 10km buffer for vehicles; move to config
 //		https://stackoverflow.com/questions/38404095/how-to-calculate-the-distance-in-meters-between-a-geographic-point-and-a-given-p
+		{
+			// FIXME: Using a hardwired 10km buffer for vehicles; move to config
+			final double bufferWidth = 10000.;
+			Geometry buffer = fire.buffer(bufferWidth);
+			penaltyFactorsOfLinks.clear();
 //		Utils.penaltyMethod1(fire, buffer, penaltyFactorsOfLinks, scenario );
-		Utils.penaltyMethod2(fire, buffer, bufferWidth, penaltyFactorsOfLinks, scenario );
-		// yyyyyy I think that penaltyMethod2 looks nicer than method1, but the test for the time
-		// being is using version 1.  kai, dec'17
-		// yy could make this settable, but for the time being this pedestrian approach
-		// seems sufficient.  kai, jan'18
-
-		// FIXME: Using a hardwired 1km buffer for emergency services; move to config
-		penaltyFactorsOfLinksForEmergencyVehicles.clear();
-		Utils.penaltyMethod2(fire, buffer, 1000, penaltyFactorsOfLinksForEmergencyVehicles, scenario);
-		
+			Utils.penaltyMethod2(fire, buffer, bufferWidth, penaltyFactorsOfLinks, scenario);
+			// I think that penaltyMethod2 looks nicer than method1.  kai, dec'17
+			// yy could make this settable, but for the time being this pedestrian approach
+			// seems sufficient.  kai, jan'18
+		}
+		{
+			// FIXME: Using a hardwired 1km buffer for emergency services; move to config
+			final double bufferWidth = 1000. ;
+			Geometry buffer = fire.buffer(bufferWidth);
+			penaltyFactorsOfLinksForEmergencyVehicles.clear();
+			Utils.penaltyMethod2(fire, buffer, bufferWidth, penaltyFactorsOfLinksForEmergencyVehicles, scenario);
+		}
 		
 		fireWriter.write( now, fire);
 		return true;
