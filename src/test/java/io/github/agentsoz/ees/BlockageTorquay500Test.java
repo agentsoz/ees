@@ -27,7 +27,7 @@ public class BlockageTorquay500Test {
         String[] args = {
                 "--config", "scenarios/otways/torquay-500/scenario_main.xml",
                 "--logfile", "scenarios/otways/torquay-500/scenario.log",
-                "--loglevel", "TRACE",
+                "--loglevel", "INFO",
                 //	                "--plan-selection-policy", "FIRST", // ensures it is deterministic, as default is RANDOM
                 "--seed", "12345",
                 "--safeline-output-file-pattern", "scenarios/otways/torquay-500/safeline.%d%.out",
@@ -35,7 +35,7 @@ public class BlockageTorquay500Test {
                EvacConfig.SETUP_INDICATOR, EvacConfig.Setup.blockage.name(),
                 "--jillconfig", "--config={" +
                 "agents:[{classname:io.github.agentsoz.ees.agents.Resident, args:null, count:500}]," +
-                "logLevel: TRACE," +
+                "logLevel: WARN," +
                 "logFile: \"scenarios/otways/torquay-500/jill.log\"," +
                 "programOutputFile: \"scenarios/otways/torquay-500/jill.out\"," +
                 "randomSeed: 12345" + // jill random seed

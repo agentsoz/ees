@@ -25,6 +25,7 @@ package io.github.agentsoz.ees.agents;
 
 import io.github.agentsoz.bdiabm.QueryPerceptInterface;
 import io.github.agentsoz.bdiabm.data.ActionContent;
+import io.github.agentsoz.ees.SimpleConfig;
 import io.github.agentsoz.ees.agents.RespondToFire;
 import io.github.agentsoz.jill.lang.Agent;
 import io.github.agentsoz.jill.lang.AgentInfo;
@@ -92,6 +93,8 @@ public class Tourist extends  Agent implements io.github.agentsoz.bdiabm.Agent {
                 }
             }
         }
+        SimpleConfig.setCongestionEvaluationInterval(CongestionEvaluationInterval);
+        SimpleConfig.setCongestionToleranceThreshold(CongestionToleranceThreshold);
     }
 
 
