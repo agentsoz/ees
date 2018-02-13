@@ -3,9 +3,12 @@ package io.github.agentsoz.bdimatsim;
 import java.util.*;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.vividsolutions.jts.geom.*;
 import io.github.agentsoz.bdiabm.QueryPerceptInterface;
 import io.github.agentsoz.dataInterface.DataClient;
+import io.github.agentsoz.util.Disruption;
 import io.github.agentsoz.util.evac.ActionList;
 import io.github.agentsoz.util.evac.PerceptList;
 import io.github.agentsoz.util.Location;
@@ -84,10 +87,11 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 	public static final String MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR = "--matsim-output-directory";
 	private final EvacConfig evacConfig;
 	private final FireWriter fireWriter;
+	private final FireWriter disruptionWriter;
 	private final Config config;
 	private boolean configLoaded = false ;
 	
-	public static enum EvacRoutingMode {carFreespeed, carGlobalInformation, emergencyVehicle}
+	public enum EvacRoutingMode {carFreespeed, carGlobalInformation, emergencyVehicle}
 
 	private final Scenario scenario ;
 	
@@ -181,6 +185,7 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 		this.agentManager = new PAAgentManager(eventsMonitors) ;
 		
 		this.fireWriter = new FireWriter( config ) ;
+		this.disruptionWriter = new FireWriter( config ) ;
 		
 	}
 	
@@ -368,6 +373,9 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 		if ( fireWriter!=null ) {
 			fireWriter.close();
 		}
+		if ( disruptionWriter!=null ) {
+			disruptionWriter.close();
+		}
 	}
 
 	public final Scenario getScenario() {
@@ -410,33 +418,81 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 		}
 		double now = getTime() ;
 		
-		// Is this called in every time step, or just every 5 min or so?  kai, dec'17
-
-		// Normally only one polygon per time step.  Might want to test for this, and get rid of multi-polygon code
-		// below.  On other hand, probably does not matter much.  kai, dec'17
-
-		if (PerceptList.DISRUPTION.equals(dataType)) {
-			// FIXME: do something with the disruptions data coming in
-			return true;
-		} else if (! PerceptList.FIRE_DATA.equals(dataType)) {
-			return false;
-		}
-		
 		switch( dataType ) {
 			case PerceptList.FIRE_DATA:
-				return processFireData(data, now, penaltyFactorsOfLinks, scenario, penaltyFactorsOfLinksForEmergencyVehicles, fireWriter);
+				return processFireData(data, now, penaltyFactorsOfLinks, scenario,
+						penaltyFactorsOfLinksForEmergencyVehicles, fireWriter);
 			case PerceptList.DISRUPTION:
 				return processDisruptionData(data, now, scenario, disruptionWriter);
 			default:
 				throw new RuntimeException("not implemented") ;
 		}
 	}
-	private static boolean processDisruptionData( Object data, double now, Scenario scenario, FireWriter disruptionWriter ) {
-		log.warn("receiving at time={} disruptions data={}", (now/3600), data);
-¯		return false ;
+	
+	private boolean processDisruptionData( Object data, double now, Scenario scenario, FireWriter disruptionWriter ) {
+		log.warn("receiving disruption data at time={}", (now/3600) ) ;
+		
+		CoordinateTransformation transform = TransformationFactory.getCoordinateTransformation(
+				TransformationFactory.WGS84, scenario.getConfig().global().getCoordinateSystem());
+		
+		log.warn( new Gson().toJson(data) ) ;
+		
+		Gbl.assertIf( data instanceof  Disruption ); // otherwise does not make sense
+		Disruption dd = (Disruption) data;
+		
+		double speedInMpS = 0 ;
+		switch ( dd.getEffectiveSpeedUnit() ) {
+			case "kmph":
+			case "KMPH":
+				speedInMpS = dd.getEffectiveSpeed() / 3.6 ;
+				break ;
+			default:
+				throw new RuntimeException("unimplemented speed unit") ;
+		}
+		
+		Coord coord = transform.transform( new Coord( dd.getLatLon() ) ) ;
+		
+		Link link = NetworkUtils.getNearestLink(scenario.getNetwork(), coord);;
+		
+		double prevSpeed = link.getFreespeed(now);
+		addNetworkChangeEvent( scenario, speedInMpS, link, dd.getStartHHMM());
+		addNetworkChangeEvent( scenario, prevSpeed , link, dd.getEndHHMM());
+		
+		System.exit(-1) ;
+		return false ;
 	}
+	
+	private void addNetworkChangeEvent(Scenario scenario, double speedInMpS, Link link, String startHHMM) {
+		int hours = Integer.parseInt(startHHMM.substring(0, 2));
+		int minutes = Integer.parseInt(startHHMM.substring(2, 4));
+		double startTime = hours * 3600 + minutes * 60;
+		log.warn("orig={}, hours={}, min={}, sTime={}", startHHMM, hours, minutes, startTime);
+		NetworkChangeEvent changeEvent = new NetworkChangeEvent( startTime ) ;
+		changeEvent.setFreespeedChange(new NetworkChangeEvent.ChangeValue(
+				NetworkChangeEvent.ChangeType.ABSOLUTE_IN_SI_UNITS,  speedInMpS 
+		) ) ;
+		changeEvent.addLink( link ) ;
+
+		NetworkUtils.addNetworkChangeEvent( scenario.getNetwork(),changeEvent);
+		// yyyyyy not so obvious that we need to go through this at all, or rather do it directly. kai, feb'18
+		// yyyyyy there was also some ticket by MZ. kai, feb'18
+		
+		this.qSim.rereadNetworkChangeEvents();
+		
+		this.replanner.addNetworkChangeEvent(changeEvent);
+		
+		throw new RuntimeException("needs to go into corresponding travel time") ;
+		
+	}
+	
 	private static boolean processFireData(Object data, double now, Map<Id<Link>, Double> penaltyFactorsOfLinks,
-										   Scenario scenario, Map<Id<Link>, Double> penaltyFactorsOfLinksForEmergencyVehicles, FireWriter fireWriter) {
+										   Scenario scenario, Map<Id<Link>, Double> penaltyFactorsOfLinksForEmergencyVehicles,
+										   FireWriter fireWriter) {
+		// Is this called in every time step, or just every 5 min or so?  kai, dec'17
+		
+		// Normally only one polygon per time step.  Might want to test for this, and get rid of multi-polygon code
+		// below.  On other hand, probably does not matter much.  kai, dec'17
+		
 		log.warn("receiving fire data at time={}", now/3600. ) ;
 		
 		CoordinateTransformation transform = TransformationFactory.getCoordinateTransformation(
