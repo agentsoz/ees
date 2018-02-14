@@ -27,6 +27,7 @@ import javax.inject.Inject;
 import io.github.agentsoz.bdimatsim.MATSimModel.EvacRoutingMode;
 import org.apache.log4j.Logger;
 import org.matsim.api.core.v01.Scenario;
+import org.matsim.api.core.v01.network.Link;
 import org.matsim.api.core.v01.population.Leg;
 import org.matsim.api.core.v01.population.Plan;
 import org.matsim.api.core.v01.population.PlanElement;
@@ -118,7 +119,28 @@ public final class Replanner {
 		
 		TravelTime globalTTime = this.travelTimes.get(EvacRoutingMode.carGlobalInformation);
 		if ( globalTTime instanceof WithinDayTravelTime ) {
-			((WithinDayTravelTime) globalTTime).changeSpeedMetersPerSecond(link, speed);
+			double now = this.qsim.getSimTimer().getTimeOfDay() ;
+			for ( Link link : changeEvent.getLinks() ) {
+				// in the router, we only care about speed changes:
+				final NetworkChangeEvent.ChangeValue freespeedChange = changeEvent.getFreespeedChange();
+				if (freespeedChange != null ) {
+					double speed;
+					switch ( freespeedChange.getType() ) {
+						case ABSOLUTE_IN_SI_UNITS:
+							speed = freespeedChange.getValue() ;
+							break;
+						case FACTOR:
+							speed = link.getFreespeed(now) * freespeedChange.getValue() ;
+							break;
+						case OFFSET_IN_SI_UNITS:
+							speed = link.getFreespeed(now) + freespeedChange.getValue() ;
+							break;
+						default:
+							throw new RuntimeException(Gbl.NOT_IMPLEMENTED) ;
+					}
+					((WithinDayTravelTime) globalTTime).changeSpeedMetersPerSecond(link, speed);
+				}
+			}
 		}
 	}
 	

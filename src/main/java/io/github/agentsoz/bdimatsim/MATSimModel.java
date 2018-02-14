@@ -423,6 +423,13 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 				return processFireData(data, now, penaltyFactorsOfLinks, scenario,
 						penaltyFactorsOfLinksForEmergencyVehicles, fireWriter);
 			case PerceptList.DISRUPTION:
+				if( ! ( data instanceof Disruption) ) {
+					String msg = "just received dataUpate with dataType=" + dataType +
+										 " but data is not instanceof " +
+										 "Disruption.  Don't know what to do with this." ;
+					log.error(msg) ;
+					throw new RuntimeException(msg) ;
+				}
 				return processDisruptionData(data, now, scenario, disruptionWriter);
 			default:
 				throw new RuntimeException("not implemented") ;
@@ -458,8 +465,7 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 		addNetworkChangeEvent( scenario, speedInMpS, link, dd.getStartHHMM());
 		addNetworkChangeEvent( scenario, prevSpeed , link, dd.getEndHHMM());
 		
-		System.exit(-1) ;
-		return false ;
+		return true ;
 	}
 	
 	private void addNetworkChangeEvent(Scenario scenario, double speedInMpS, Link link, String startHHMM) {
@@ -474,14 +480,12 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 		changeEvent.addLink( link ) ;
 
 		NetworkUtils.addNetworkChangeEvent( scenario.getNetwork(),changeEvent);
-		// yyyyyy not so obvious that we need to go through this at all, or rather do it directly. kai, feb'18
-		// yyyyyy there was also some ticket by MZ. kai, feb'18
 		
 		this.qSim.rereadNetworkChangeEvents();
+		// I would say that for speed changes this is not even needed.  kai, feb'18
 		
 		this.replanner.addNetworkChangeEvent(changeEvent);
-		
-		throw new RuntimeException("needs to go into corresponding travel time") ;
+		// yyyy wanted to delay this until some agent has actually encountered it.  kai, feb'18
 		
 	}
 	
