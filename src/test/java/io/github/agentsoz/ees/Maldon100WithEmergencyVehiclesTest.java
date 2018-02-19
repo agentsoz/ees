@@ -46,8 +46,6 @@ public class Maldon100WithEmergencyVehiclesTest {
 
 		Main.main(args);
 
-		// FIXME: enable the checks below when expected results are verified and saved; DS 23/jan/18
-		/*
 		final String actualEventsFilename = utils.getOutputDirectory() + "/output_events.xml.gz";
 		long actualEventsCRC = CRCChecksum.getCRCFromFile( actualEventsFilename ) ;
 		log.warn("actual(events)="+actualEventsCRC) ;
@@ -65,6 +63,5 @@ public class Maldon100WithEmergencyVehiclesTest {
 				CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/output_plans.xml.gz" )
 		};
 		TestUtils.checkSeveral(expectedPlans, actualPlansCRC);
-		*/
 	}
 }
