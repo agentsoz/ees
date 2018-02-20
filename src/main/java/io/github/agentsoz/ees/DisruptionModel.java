@@ -78,11 +78,6 @@ public class DisruptionModel implements DataSource {
 	public Object getNewData(double timestep, Object parameters) {
 		double time = Time.convertTime(timestep, timestepUnit, Time.TimestepUnit.MINUTES);
 		SortedMap<Double, Disruption> effectiveDisruptions = disruptions.subMap(lastUpdateTimeInMinutes, time);
-		if (!effectiveDisruptions.isEmpty()) {
-			for (Disruption disruption : effectiveDisruptions.values()) {
-				dataServer.publish(PerceptList.DISRUPTION, disruption);
-			}
-		}
 		lastUpdateTimeInMinutes = time;
 		Double nextTime = disruptions.higherKey(time);
 		if (nextTime != null) {
