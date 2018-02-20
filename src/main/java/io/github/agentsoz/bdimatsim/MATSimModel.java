@@ -423,13 +423,6 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 				return processFireData(data, now, penaltyFactorsOfLinks, scenario,
 						penaltyFactorsOfLinksForEmergencyVehicles, fireWriter);
 			case PerceptList.DISRUPTION:
-				if( ! ( data instanceof Disruption) ) {
-					String msg = "just received dataUpate with dataType=" + dataType +
-										 " but data is not instanceof " +
-										 "Disruption.  Don't know what to do with this." ;
-					log.error(msg) ;
-					throw new RuntimeException(msg) ;
-				}
 				return processDisruptionData(data, now, scenario, disruptionWriter);
 			default:
 				throw new RuntimeException("not implemented") ;
@@ -441,30 +434,32 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 		
 		CoordinateTransformation transform = TransformationFactory.getCoordinateTransformation(
 				TransformationFactory.WGS84, scenario.getConfig().global().getCoordinateSystem());
-		
+
 		log.warn( new Gson().toJson(data) ) ;
-		
-		Gbl.assertIf( data instanceof  Disruption ); // otherwise does not make sense
-		Disruption dd = (Disruption) data;
-		
-		double speedInMpS = 0 ;
-		switch ( dd.getEffectiveSpeedUnit() ) {
-			case "kmph":
-			case "KMPH":
-				speedInMpS = dd.getEffectiveSpeed() / 3.6 ;
-				break ;
-			default:
-				throw new RuntimeException("unimplemented speed unit") ;
+
+		Map<Double,Disruption> timeMapOfDisrupions = (Map<Double,Disruption>)data;
+
+		for (Disruption dd : timeMapOfDisrupions.values()) {
+
+			double speedInMpS = 0;
+			switch (dd.getEffectiveSpeedUnit()) {
+				case "kmph":
+				case "KMPH":
+					speedInMpS = dd.getEffectiveSpeed() / 3.6;
+					break;
+				default:
+					throw new RuntimeException("unimplemented speed unit");
+			}
+
+			Coord coord = transform.transform(new Coord(dd.getLatLon()));
+
+			Link link = NetworkUtils.getNearestLink(scenario.getNetwork(), coord);
+			;
+
+			double prevSpeed = link.getFreespeed(now);
+			addNetworkChangeEvent(scenario, speedInMpS, link, dd.getStartHHMM());
+			addNetworkChangeEvent(scenario, prevSpeed, link, dd.getEndHHMM());
 		}
-		
-		Coord coord = transform.transform( new Coord( dd.getLatLon() ) ) ;
-		
-		Link link = NetworkUtils.getNearestLink(scenario.getNetwork(), coord);;
-		
-		double prevSpeed = link.getFreespeed(now);
-		addNetworkChangeEvent( scenario, speedInMpS, link, dd.getStartHHMM());
-		addNetworkChangeEvent( scenario, prevSpeed , link, dd.getEndHHMM());
-		
 		return true ;
 	}
 	
