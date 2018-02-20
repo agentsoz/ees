@@ -68,7 +68,7 @@ public class AttributesInPopulationTest {
 					// otherwise not
 				}
 			}
-			// ... to here is really all that needs to be inserted into the bushfire Main. 
+			// ... to here is really all that needs to be inserted into the bushfire Main.
 			
 		}
 	}
