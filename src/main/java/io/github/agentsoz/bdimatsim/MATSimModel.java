@@ -473,12 +473,11 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 				NetworkChangeEvent.ChangeType.ABSOLUTE_IN_SI_UNITS,  speedInMpS 
 		) ) ;
 		changeEvent.addLink( link ) ;
-
-		NetworkUtils.addNetworkChangeEvent( scenario.getNetwork(),changeEvent);
 		
-		this.qSim.rereadNetworkChangeEvents();
-		// I would say that for speed changes this is not even needed.  kai, feb'18
+		// (1) add to mobsim:
+		this.qSim.addNetworkChangeEvent(changeEvent);
 		
+		// (2) add to replanner:
 		this.replanner.addNetworkChangeEvent(changeEvent);
 		// yyyy wanted to delay this until some agent has actually encountered it.  kai, feb'18
 		

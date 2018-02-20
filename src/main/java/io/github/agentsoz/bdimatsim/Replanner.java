@@ -51,8 +51,6 @@ import org.matsim.withinday.utils.EditTrips;
 
 import java.util.Map;
 
-import static io.github.agentsoz.bdimatsim.MATSimModel.EvacRoutingMode.*;
-
 public final class Replanner {
 	// note that this is no longer meant to be extended for customization.  The "action recipes" now go directly into the classes
 	// that implement BDIActionHandler.  kai, nov'17
@@ -60,18 +58,13 @@ public final class Replanner {
 	private static final Logger logger = Logger.getLogger(Replanner.class) ;
 	private final Map<String, TravelTime> travelTimes;
 	
-	private QSim qsim ;
-	
 	private EditRoutes editRoutes;
 	private EditTrips editTrips ;
 	private EditPlans editPlans ;
-
-	private Scenario scenario;
-
+	
 	@Inject
 	Replanner(QSim qSim2, TripRouter tripRouter, Map<String,TravelTime> travelTimes ) {
-		this.qsim = qSim2;
-		this.scenario = qSim2.getScenario() ;
+		Scenario scenario = qSim2.getScenario();
 		this.travelTimes = travelTimes ;
 		{
 			TravelTime travelTime = TravelTimeUtils.createFreeSpeedTravelTime();
@@ -79,8 +72,8 @@ public final class Replanner {
 			LeastCostPathCalculator pathCalculator = new FastAStarLandmarksFactory().createPathCalculator(scenario.getNetwork(), travelDisutility, travelTime);
 			this.editRoutes = new EditRoutes(scenario.getNetwork(), pathCalculator, scenario.getPopulation().getFactory());
 		}
-		this.editTrips = new EditTrips(tripRouter, qsim.getScenario() ) ;
-		this.editPlans = new EditPlans(qsim, tripRouter, editTrips, scenario.getPopulation().getFactory() ) ;
+		this.editTrips = new EditTrips(tripRouter, qSim2.getScenario() ) ;
+		this.editPlans = new EditPlans(qSim2, tripRouter, editTrips, scenario.getPopulation().getFactory() ) ;
 	}
 
 	@Deprecated // yyyy but I don't have an easy replacement yet
@@ -115,32 +108,11 @@ public final class Replanner {
 		return editPlans;
 	}
 	
-	public void addNetworkChangeEvent(NetworkChangeEvent changeEvent) {
+	final void addNetworkChangeEvent(NetworkChangeEvent changeEvent) {
 		
-		TravelTime globalTTime = this.travelTimes.get(EvacRoutingMode.carGlobalInformation);
+		TravelTime globalTTime = this.travelTimes.get(EvacRoutingMode.carGlobalInformation.name());
 		if ( globalTTime instanceof WithinDayTravelTime ) {
-			double now = this.qsim.getSimTimer().getTimeOfDay() ;
-			for ( Link link : changeEvent.getLinks() ) {
-				// in the router, we only care about speed changes:
-				final NetworkChangeEvent.ChangeValue freespeedChange = changeEvent.getFreespeedChange();
-				if (freespeedChange != null ) {
-					double speed;
-					switch ( freespeedChange.getType() ) {
-						case ABSOLUTE_IN_SI_UNITS:
-							speed = freespeedChange.getValue() ;
-							break;
-						case FACTOR:
-							speed = link.getFreespeed(now) * freespeedChange.getValue() ;
-							break;
-						case OFFSET_IN_SI_UNITS:
-							speed = link.getFreespeed(now) + freespeedChange.getValue() ;
-							break;
-						default:
-							throw new RuntimeException(Gbl.NOT_IMPLEMENTED) ;
-					}
-					((WithinDayTravelTime) globalTTime).changeSpeedMetersPerSecond(link, speed);
-				}
-			}
+			((WithinDayTravelTime) globalTTime).addNetworkChangeEvent(changeEvent);
 		}
 	}
 	
