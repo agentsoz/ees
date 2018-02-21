@@ -100,7 +100,7 @@ function handleNewScenarioInput(event, ui) {
 			initMap();
 			panMapTo(township.latlon, township.defaultMapZoom);
 			drawMarker(township.latlon, township.name);
-			drawSimulationAreaOnMap(township.osmArea);
+			//drawSimulationAreaOnMap(township.osmArea);
 
 			// Set the evac time
 			setEvacTime(global.evacTime);

@@ -1,4 +1,4 @@
-// Google Maps Static API Key 
+// Google Maps Static API Key
 GMAPS_STATIC_KEY='AIzaSyAEYAuIcELlK93kMgSCWOg3ppKONjHFQ6U';
 
 
@@ -13,7 +13,7 @@ window.onload = function(e) {
 	send(shared.MSG_LIST_SCENARIOS, null,
 		function(json) {
 			if (json.msg == shared.MSG_ERROR) {
-				timedPrompt('error', "Could not retrieve scenarios list. " + json.data[0].msg); 
+				timedPrompt('error', "Could not retrieve scenarios list. " + json.data[0].msg);
 			} else {
 				// Set the selection
 				setOptionsForDropdowns(
@@ -29,7 +29,7 @@ window.onload = function(e) {
 			}
 		},
 		function (str) {
-			timedPrompt('error', "Could not retrieve scenarios list. " + str); 
+			timedPrompt('error', "Could not retrieve scenarios list. " + str);
 		}
 	);
 }
@@ -93,7 +93,7 @@ function selectSimulation(scenarioName) {
 	// Set the graphs menu
 	var name = $("#view-scenario-dropdown option:selected").text();
 	var scenario = getScenario(name);
-	getScenarioFromServer(name, 
+	getScenarioFromServer(name,
 		function(scenario) {
 			// save the retrieved scenario
 			global.existing_scenario_selected = scenario;
@@ -106,7 +106,7 @@ function selectSimulation(scenarioName) {
 			$('#playback-link').attr('href',scenario.data.playbackURL);
 		},
 		function(err) {
-			timedPrompt('error', "Could not retrieve scenario '"+name+"'. " + err); 
+			timedPrompt('error', "Could not retrieve scenario '"+name+"'. " + err);
 		}
 	);
 }
@@ -118,11 +118,11 @@ function setScenarioDetails(scenario) {
 	var url = 'https://maps.googleapis.com/maps/api/staticmap';
 	url += '?size=640x350&scale=2&maptype=roadmap';
 	//url += '&zoom=' + scenario.data.defaultMapZoom;
-	url += '&zoom=' + (scenario.data.defaultMapZoom+2);
+	url += '&zoom=' + (scenario.data.defaultMapZoom);
 	//url += '&markers=color:blue|'+township.latlon[0]+','+township.latlon[1];
 	url += '&center='+township.latlon[0]+','+township.latlon[1];
 	url += '&key=' + GMAPS_STATIC_KEY;
-	
+
 	// draw OSM area
 	var a = scenario.data.osmArea.rectangle;
 	var bounds = '&path=color:red|weight:2';
@@ -131,7 +131,7 @@ function setScenarioDetails(scenario) {
 	bounds += '|'+a[2]+','+a[3];
 	bounds += '|'+a[0]+','+a[3];
 	bounds += '|'+a[0]+','+a[1];
-	url += bounds;
+	//url += bounds;
 
 	// draw safe lines
 	for (var i = 0; i < scenario.data.safeLines.length; i++) {
@@ -141,8 +141,8 @@ function setScenarioDetails(scenario) {
 		bounds += '|'+a[1].lat+','+a[1].lng;
 		url += bounds;
 	}
-	
-	// draw vehicles areas 
+
+	// draw vehicles areas
 	for (var i = 0; i < scenario.data.vehiclesAreas.length; i++) {
 		a = scenario.data.vehiclesAreas[i].bounds;
 		bounds = '&path=color:purple|weight:2';
@@ -155,7 +155,7 @@ function setScenarioDetails(scenario) {
 	}
 
 	url = encodeURI(url);
-	
+
 	var o = '<div id="scenario-data">';
 	o += '<img class="img-responsive" src="'+url+'"/>'
 	o += '<table class="table table-striped table-hover">';
@@ -219,7 +219,7 @@ $("body").on("change", ".dropdown-graphs", function(e) {
 		//o += '<object width="100%" type="image/svg+xml" data="';
 		//o += graph.url;
 		//o += '"> Your browser does not support SVG </object>';
-		o += '<img src="' + graph.url + '"/>' 
+		o += '<img src="' + graph.url + '"/>'
 		o += '</div>';
 		$("#graphs").append(o);
 	});
@@ -277,7 +277,7 @@ function setOptionsForGraphsSelection(dropdowns, names) {
 // // suppressInfoWindows : true,
 // // map : global.map
 // // });
-//	
+//
 // var myParser = new geoXML3.parser({map: global.map});
 // myParser.parse('media/data/time_840.0.kml');
 // setTimeout(function(){
