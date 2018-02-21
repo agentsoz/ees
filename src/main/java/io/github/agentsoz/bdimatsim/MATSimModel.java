@@ -453,7 +453,7 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 
 			Coord coord = transform.transform(new Coord(dd.getLatLon()));
 
-			Link link = NetworkUtils.getNearestLink(scenario.getNetwork(), coord);
+			Link link = NetworkUtils.getNearestLinkExactly(scenario.getNetwork(), coord);
 			log.warn( "identified link={} for blockage", link.getId() ) ;
 
 			double prevSpeed = link.getFreespeed(now);
