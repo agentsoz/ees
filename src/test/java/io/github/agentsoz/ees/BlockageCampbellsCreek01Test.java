@@ -43,7 +43,7 @@ public class BlockageCampbellsCreek01Test {
 						"randomSeed: 12345,"+ // jill random seed
 						"numThreads: 1"+ // run jill in single-threaded mode so logs are deterministic
 						"}",
-				"--x-blocked-link", "51825",
+				"--x-disruptions-file", "scenarios/mount-alexander-shire/campbells-creek-01/scenario_disruptions.json",
 		};
 		Main.main(args);
 		final String actualEventsFilename = utils.getOutputDirectory() + "/output_events.xml.gz";
