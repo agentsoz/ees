@@ -551,12 +551,20 @@ $(".nav-create-sim").click(function(event) {
 	send(shared.MSG_CREATE, {name: global.save_as},
 		// Success function
 		function (data) {
-			var limit = 200;
+			var limit = 300; // try 300 times at interval of 2 secs so all up for 10 mins, then give up
 			var progress = 0;
 			$('.progress').show();
 			var timeout = setInterval( function() {
-				// force checks to terminate when limit is reached (should have completed by now)
-				if (limit-- <= 0) return clearInterval(timeout);
+				if (limit-- <= 0) {
+				    // stop checking progress when limit is reached (should have completed by now)
+				    clearInterval(timeout);
+					timedPrompt('error', "Simulation is taking a long time to finish so will stop checking now." +
+					" Perhaps wait a few minutes then check the <a target=\"_blank\" href=\"view.html\">results page</a>," +
+					" or else try creating it again.",
+                        $('.progress-bar-modal').modal('hide'));
+
+				}
+			    console.log("Progress check will timeout in " + limit + " counts");
 				send(shared.MSG_CREATE_PROGRESS, {name: global.save_as},
 						// success
 						function (json) {
@@ -581,14 +589,15 @@ $(".nav-create-sim").click(function(event) {
 						},
 						function (err) {
 							clearInterval(timeout);
-							timedPrompt('error', "Create progress unknown. " + str);
+							timedPrompt('error', "Create progress unknown. " + err,
+                                $('.progress-bar-modal').modal('hide'));
 						}
 					);
-			},	2000);
+			},	2000 /* run the above function every 2s*/);
 		},
 		function (str) {
-			timedPrompt('error', "Could not create simulation. " + str);
-			$('.progress-bar-modal.in').modal('hide');
+			timedPrompt('error', "Could not create simulation. " + str,
+			$('.progress-bar-modal').modal('hide'));
 		}
 	);
 });
@@ -754,8 +763,8 @@ function save(callback, errfn) {
 			}
 		},
 		function (str) {
-			timedPrompt('error', "Could not create simulation. " + str);
-			$('.progress-bar-modal.in').modal('hide');
+			timedPrompt('error', "Could not create simulation. " + str,
+			$('.progress-bar-modal.in').modal('hide'));
 		}
 	);
 

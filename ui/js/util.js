@@ -194,9 +194,9 @@ function send(msg, data, callback, errfn) {
 				if (callback) return callback(json);
 			}
 		},
-		error : function(req, error) {
-			console.log("Save call to /api failed with error: " + error);
-			if (errfn) return errfn(error);
+		error : function (xhr, ajaxOptions, thrownError) {
+			console.log("Call to /api failed with error " + xhr.status + ":" + xhr.responseText);
+			if (errfn) return errfn(xhr.responseText);
 		}
 	});
 }
