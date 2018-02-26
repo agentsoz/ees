@@ -98,7 +98,7 @@ public class Main {
 		// Create the logger
 		logger = createLogger();
 		
-		logger.warn("setup=" + setup ) ;
+		logger.info("setup=" + setup ) ;
 		// (I need this "setup" switch to switch between the test cases.  Some other
 		// config design would clearly be ok, but I don't want to impose some config
 		// design on you. kai, dec'17)
