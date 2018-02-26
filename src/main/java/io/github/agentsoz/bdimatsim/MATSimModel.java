@@ -35,6 +35,7 @@ import org.matsim.core.network.NetworkChangeEvent;
 import org.matsim.core.network.NetworkUtils;
 import org.matsim.core.router.NetworkRoutingProvider;
 import org.matsim.core.router.costcalculators.TravelDisutilityFactory;
+import org.matsim.core.router.util.LeastCostPathCalculator;
 import org.matsim.core.scenario.ScenarioUtils;
 import org.matsim.core.trafficmonitoring.FreeSpeedTravelTime;
 import org.matsim.core.utils.geometry.CoordinateTransformation;
@@ -84,7 +85,7 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 	public static final String MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR = "--matsim-output-directory";
 	private final EvacConfig evacConfig;
 	private final FireWriter fireWriter;
-	private final FireWriter disruptionWriter;
+	private final DisruptionWriter disruptionWriter;
 	private final Config config;
 	private boolean configLoaded = false ;
 
@@ -182,7 +183,7 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 		this.agentManager = new PAAgentManager(eventsMonitors) ;
 
 		this.fireWriter = new FireWriter( config ) ;
-		this.disruptionWriter = new FireWriter( config ) ;
+		this.disruptionWriter = new DisruptionWriter( config ) ;
 
 	}
 
@@ -371,7 +372,7 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 			fireWriter.close();
 		}
 		if ( disruptionWriter!=null ) {
-			disruptionWriter.close();
+			disruptionWriter.finish(this.getTime());
 		}
 	}
 
@@ -426,7 +427,7 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 		}
 	}
 
-	private boolean processDisruptionData( Object data, double now, Scenario scenario, FireWriter disruptionWriter ) {
+	private boolean processDisruptionData( Object data, double now, Scenario scenario, DisruptionWriter disruptionWriter ) {
 		log.info("receiving disruption data at time={}", (now/3600) ); ;
 
 		log.info( new Gson().toJson(data) ) ;
@@ -454,19 +455,22 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 				double prevSpeed = link.getFreespeed(now);
 				log.info("Updating freespeed on link {} from {} to {} due to disruption",
 						link.getId(), prevSpeed, speedInMpS);
-				addNetworkChangeEvent(speedInMpS, link, dd.getStartHHMM());
-//				addNetworkChangeEvent(prevSpeed, link, dd.getEndHHMM());
-				// yyyyyy
+				{
+					double startTime = convertTimeToSeconds(dd.getStartHHMM());
+					addNetworkChangeEvent(speedInMpS, link, startTime);
+					disruptionWriter.write(startTime, link.getId(), link.getCoord(), speedInMpS);
+				}
+				{
+					double startTime = convertTimeToSeconds(dd.getEndHHMM());
+					addNetworkChangeEvent(prevSpeed, link, startTime);
+					disruptionWriter.write(startTime, link.getId(), link.getCoord(), prevSpeed);
+				}
 			}
 		}
 		return true ;
 	}
 
-	private void addNetworkChangeEvent(double speedInMpS, Link link, String startHHMM) {
-		int hours = Integer.parseInt(startHHMM.substring(0, 2));
-		int minutes = Integer.parseInt(startHHMM.substring(2, 4));
-		double startTime = hours * 3600 + minutes * 60;
-		log.info("orig={}, hours={}, min={}, sTime={}", startHHMM, hours, minutes, startTime);
+	private void addNetworkChangeEvent(double speedInMpS, Link link, double startTime) {
 		NetworkChangeEvent changeEvent = new NetworkChangeEvent( startTime ) ;
 		changeEvent.setFreespeedChange(new NetworkChangeEvent.ChangeValue(
 				NetworkChangeEvent.ChangeType.ABSOLUTE_IN_SI_UNITS,  speedInMpS
@@ -481,7 +485,15 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 		// yyyy wanted to delay this until some agent has actually encountered it.  kai, feb'18
 
 	}
-
+	
+	private double convertTimeToSeconds(String startHHMM) {
+		int hours = Integer.parseInt(startHHMM.substring(0, 2));
+		int minutes = Integer.parseInt(startHHMM.substring(2, 4));
+		double startTime = hours * 3600 + minutes * 60;
+		log.info("orig={}, hours={}, min={}, sTime={}", startHHMM, hours, minutes, startTime);
+		return startTime;
+	}
+	
 	private static boolean processFireData(Object data, double now, Map<Id<Link>, Double> penaltyFactorsOfLinks,
 										   Scenario scenario, Map<Id<Link>, Double> penaltyFactorsOfLinksForEmergencyVehicles,
 										   FireWriter fireWriter) {
@@ -563,6 +575,12 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 						new Location(link.getToNode().getId().toString(), link.getToNode().getCoord().getX(), link.getToNode().getCoord().getY())
 				};
 				return coords;
+//			case abc :
+//				LeastCostPathCalculator.Path result = this.replanner.editRoutes(EvacRoutingMode.carFreespeed).getPathCalculator().calcLeastCostPath(
+//						fromNode, toNode, starttime, person, vehicle
+//				);;
+//				result.travelTime ;
+//				result.travelCost ;
 			default:
 				throw new RuntimeException("Unknown query percept '"+perceptID+"' received from agent "+agentID+" with args " + args);
 		}
