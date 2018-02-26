@@ -3,8 +3,6 @@ package io.github.agentsoz.bdimatsim;
 import java.util.*;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.vividsolutions.jts.geom.*;
 import io.github.agentsoz.bdiabm.QueryPerceptInterface;
 import io.github.agentsoz.dataInterface.DataClient;
@@ -73,7 +71,6 @@ import io.github.agentsoz.dataInterface.DataServer;
 import io.github.agentsoz.nonmatsim.PAAgentManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -430,12 +427,9 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 	}
 
 	private boolean processDisruptionData( Object data, double now, Scenario scenario, FireWriter disruptionWriter ) {
-		log.warn("receiving disruption data at time={}", (now/3600) ) ;
+		log.info("receiving disruption data at time={}", (now/3600) ); ;
 
-		CoordinateTransformation transform = TransformationFactory.getCoordinateTransformation(
-				TransformationFactory.WGS84, scenario.getConfig().global().getCoordinateSystem());
-
-		log.warn( new Gson().toJson(data) ) ;
+		log.info( new Gson().toJson(data) ) ;
 
 		Map<Double,Disruption> timeMapOfDisrupions = (Map<Double,Disruption>)data;
 
@@ -458,20 +452,21 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 			List<Link> links = NetworkUtils.getLinks(scenario.getNetwork(),NetworkUtils.getLinkIds(linkIds));
 			for (Link link : links) {
 				double prevSpeed = link.getFreespeed(now);
-				log.debug("Updating freespeed on link {} from {} to {} due to disruption",
+				log.info("Updating freespeed on link {} from {} to {} due to disruption",
 						link.getId(), prevSpeed, speedInMpS);
-				addNetworkChangeEvent(scenario, speedInMpS, link, dd.getStartHHMM());
-				addNetworkChangeEvent(scenario, prevSpeed, link, dd.getEndHHMM());
+				addNetworkChangeEvent(speedInMpS, link, dd.getStartHHMM());
+//				addNetworkChangeEvent(prevSpeed, link, dd.getEndHHMM());
+				// yyyyyy
 			}
 		}
 		return true ;
 	}
 
-	private void addNetworkChangeEvent(Scenario scenario, double speedInMpS, Link link, String startHHMM) {
+	private void addNetworkChangeEvent(double speedInMpS, Link link, String startHHMM) {
 		int hours = Integer.parseInt(startHHMM.substring(0, 2));
 		int minutes = Integer.parseInt(startHHMM.substring(2, 4));
 		double startTime = hours * 3600 + minutes * 60;
-		log.warn("orig={}, hours={}, min={}, sTime={}", startHHMM, hours, minutes, startTime);
+		log.info("orig={}, hours={}, min={}, sTime={}", startHHMM, hours, minutes, startTime);
 		NetworkChangeEvent changeEvent = new NetworkChangeEvent( startTime ) ;
 		changeEvent.setFreespeedChange(new NetworkChangeEvent.ChangeValue(
 				NetworkChangeEvent.ChangeType.ABSOLUTE_IN_SI_UNITS,  speedInMpS
