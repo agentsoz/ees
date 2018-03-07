@@ -15,6 +15,7 @@ import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.TransportMode;
 import org.matsim.api.core.v01.network.Link;
+import org.matsim.api.core.v01.population.Person;
 import org.matsim.api.core.v01.population.PopulationFactory;
 import org.matsim.core.api.experimental.events.EventsManager;
 import org.matsim.core.config.Config;
@@ -578,11 +579,21 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 						new Location(link.getToNode().getId().toString(), link.getToNode().getCoord().getX(), link.getToNode().getCoord().getY())
 				};
 				return coords;
-//			case abc :
-//				LeastCostPathCalculator.Path result = this.replanner.editRoutes(EvacRoutingMode.carFreespeed).getPathCalculator().calcLeastCostPath(
-//						fromNode, toNode, starttime, null, null
-//				);
-//				RouteUtils.calcDistance(result) ;
+			case PerceptList.REQUEST_DRIVING_DISTANCE_TO :
+				if (args == null || !(args instanceof double[])) {
+					throw new RuntimeException("Query percept '"+perceptID+"' expecting double[] coordinates argument, but found: " + args);
+				}
+				double[] dest = (double[]) args;
+				Coord coord = new Coord( dest[0], dest[1] ) ;
+				final Link destLink = NetworkUtils.getNearestLink(getScenario().getNetwork(), coord );
+				Gbl.assertNotNull(destLink);
+				final Link currentLink = scenario.getNetwork().getLinks().get( this.getMobsimAgentFromIdString(agentID).getCurrentLinkId() );
+				final double now = getTime();
+				//final Person person = scenario.getPopulation().getPersons().get(agentID);
+				LeastCostPathCalculator.Path result = this.replanner.editRoutes(EvacRoutingMode.carFreespeed).getPathCalculator().calcLeastCostPath(
+						currentLink.getFromNode(), destLink.getFromNode(), now, null, null
+				);
+				return RouteUtils.calcDistance(result);
 			default:
 				throw new RuntimeException("Unknown query percept '"+perceptID+"' received from agent "+agentID+" with args " + args);
 		}
