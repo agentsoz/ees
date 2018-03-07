@@ -89,6 +89,9 @@ public final class DRIVETODefaultActionHandler implements BDIActionHandler {
 			case carGlobalInformation:
 				routingMode = MATSimModel.EvacRoutingMode.carGlobalInformation.name() ;
 				break;
+			case emergencyVehicle:
+				routingMode = MATSimModel.EvacRoutingMode.emergencyVehicle.name();
+				break;
 			default:
 				throw new RuntimeException("not implemented" ) ;
 		}

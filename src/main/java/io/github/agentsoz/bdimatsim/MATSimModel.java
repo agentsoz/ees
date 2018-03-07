@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import com.vividsolutions.jts.geom.*;
 import io.github.agentsoz.bdiabm.QueryPerceptInterface;
 import io.github.agentsoz.dataInterface.DataClient;
+import io.github.agentsoz.util.Disruption;
 import io.github.agentsoz.util.evac.ActionList;
 import io.github.agentsoz.util.evac.PerceptList;
 import io.github.agentsoz.util.Location;
@@ -14,6 +15,8 @@ import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.TransportMode;
 import org.matsim.api.core.v01.network.Link;
+import org.matsim.api.core.v01.population.Person;
+import org.matsim.api.core.v01.population.PopulationFactory;
 import org.matsim.core.api.experimental.events.EventsManager;
 import org.matsim.core.config.Config;
 import org.matsim.core.config.ConfigUtils;
@@ -32,8 +35,11 @@ import org.matsim.core.mobsim.framework.listeners.MobsimInitializedListener;
 import org.matsim.core.mobsim.qsim.QSim;
 import org.matsim.core.network.NetworkChangeEvent;
 import org.matsim.core.network.NetworkUtils;
+import org.matsim.core.population.routes.NetworkRoute;
+import org.matsim.core.population.routes.RouteUtils;
 import org.matsim.core.router.NetworkRoutingProvider;
 import org.matsim.core.router.costcalculators.TravelDisutilityFactory;
+import org.matsim.core.router.util.LeastCostPathCalculator;
 import org.matsim.core.scenario.ScenarioUtils;
 import org.matsim.core.trafficmonitoring.FreeSpeedTravelTime;
 import org.matsim.core.utils.geometry.CoordinateTransformation;
@@ -52,12 +58,12 @@ import org.matsim.withinday.trafficmonitoring.WithinDayTravelTime;
  * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Lesser Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Lesser Public
  * License along with this program.  If not, see
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
@@ -83,13 +89,14 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 	public static final String MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR = "--matsim-output-directory";
 	private final EvacConfig evacConfig;
 	private final FireWriter fireWriter;
+	private final DisruptionWriter disruptionWriter;
 	private final Config config;
 	private boolean configLoaded = false ;
-	
-	public static enum EvacRoutingMode {carFreespeed, carGlobalInformation, emergencyVehicle}
+
+	public enum EvacRoutingMode {carFreespeed, carGlobalInformation, emergencyVehicle}
 
 	private final Scenario scenario ;
-	
+
 	/**
 	 * A helper class essentially provided by the framework, used here.  The only direct connection to matsim are the event
 	 * monitors, which need to be registered, via the events monitor registry, as a matsim events handler.
@@ -112,11 +119,12 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 	private final EventsMonitorRegistry eventsMonitors  = new EventsMonitorRegistry() ;
 	private Thread matsimThread;
 	@Inject private Replanner replanner;
-	
+
 	private boolean scenarioLoaded = false ;
-	
+
 	private final Map<Id<Link>,Double> penaltyFactorsOfLinks = new HashMap<>() ;
-	
+	private final Map<Id<Link>,Double> penaltyFactorsOfLinksForEmergencyVehicles = new HashMap<>() ;
+
 	public MATSimModel(String matSimFile, String matsimOutputDirectory) {
 		// not the most elegant way of doing this ...
 		// yy maybe just pass the whole string from above and take apart ourselves?
@@ -126,7 +134,7 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 				new String[]{ matSimFile, MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR, matsimOutputDirectory }
 		);
 	}
-	
+
 	public MATSimModel( String[] args) {
 //		((ch.qos.logback.classic.Logger)log).setLevel(Level.DEBUG);
 
@@ -135,7 +143,7 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 		Utils.parseAdditionalArguments(args, config);
 
 		config.network().setTimeVariantNetwork(true);
-		
+
 		config.plans().setActivityDurationInterpretation(ActivityDurationInterpretation.tryEndTimeThenDuration);
 
 		config.qsim().setStartTime( 1.00 );
@@ -143,12 +151,12 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 
 		config.controler().setWritePlansInterval(1);
 		config.controler().setOverwriteFileSetting( OverwriteFileSetting.deleteDirectoryIfExists );
-		
+
 		config.planCalcScore().setWriteExperiencedPlans(true);
-		
+
 		evacConfig = ConfigUtils.addOrGetModule(config,EvacConfig.class) ;
 		Gbl.assertNotNull(evacConfig);
-		
+
 		// we have to declare those routingModes where we want to use the network router:
 		{
 			Collection<String> modes = config.plansCalcRoute().getNetworkModes();
@@ -158,44 +166,45 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 			}
 			config.plansCalcRoute().setNetworkModes( newModes );
 		}
-		
+
 		// the router also needs scoring parameters:
 		for ( EvacRoutingMode mode : EvacRoutingMode.values() ) {
 			ModeParams params = new ModeParams(mode.name());
 			config.planCalcScore().addModeParams(params);
 		}
-		
+
 //		config.plansCalcRoute().setInsertingAccessEgressWalk(true);
-		
+
 		//		ConfigUtils.setVspDefaults(config);
 
 		// ---
 
 		scenario = ScenarioUtils.createScenario(config);
 		// (this is _created_ already here so that the scenario pointer can be final)
-		
+
 		// ---
 
 		this.agentManager = new PAAgentManager(eventsMonitors) ;
-		
+
 		this.fireWriter = new FireWriter( config ) ;
-		
+		this.disruptionWriter = new DisruptionWriter( config ) ;
+
 	}
-	
+
 	public Config loadAndPrepareConfig() {
 		// currently already done in constructor.  But I want to have this more
 		// expressive than model.getConfig().  kai, nov'17
 		configLoaded = true ;
 		return config ;
 	}
-	
+
 	public Scenario loadAndPrepareScenario() {
 		if ( !configLoaded ) {
 			loadAndPrepareConfig() ;
 		}
 
 		ScenarioUtils.loadScenario(scenario) ;
-		
+
 		// make sure links don't have speed infinity (results in problems with the router; yy instead repair input files?):
 		for ( Link link : scenario.getNetwork().getLinks().values() ) {
 			final double veryLargeSpeed = 9999999999.;
@@ -209,16 +218,16 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 				}
 			}
 		}
-		
+
 		scenarioLoaded=true ;
 		return scenario ;
 	}
-	
+
 	public final void init(List<String> bdiAgentIDs) {
 		if ( !scenarioLoaded ) {
 			loadAndPrepareScenario() ;
 		}
-		
+
 		// yy this could now be done in upstream code.  But since upstream code is user code, maybe we don't want it in there?  kai, nov'17
 		for(String agentId: bdiAgentIDs) {
 			agentManager.createAndAddBDIAgent(agentId);
@@ -250,7 +259,7 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 				setupEmergencyVehicleRouting();
 				setupCarGlobalInformationRouting();
 				setupCarFreespeedRouting();
-				
+
 				install( new EvacQSimModule(MATSimModel.this, controller.getEvents()) ) ;
 
 				this.addMobsimListenerBinding().toInstance((MobsimInitializedListener) e -> {
@@ -263,55 +272,55 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 
 					//						initialiseVisualisedAgents() ;
 				}) ;
-				
+
 				// congestion detection in {@link EvacAgentTracker}
-				
+
 				this.addMobsimListenerBinding().toInstance( mobsimDataProvider );
 			}
-			
+
 			private void setupCarFreespeedRouting() {
 				String routingMode = EvacRoutingMode.carFreespeed.name() ;
-				
+
 				addRoutingModuleBinding(routingMode).toProvider(new NetworkRoutingProvider(TransportMode.car,routingMode)) ;
-				
+
 				// freespeed travel time:
 				addTravelTimeBinding(routingMode).to(FreeSpeedTravelTime.class);
-				
+
 				// travel disutility includes the fire penalty. If no data arrives, it makes no difference.
 				TravelDisutilityFactory disutilityFactory = new EvacTravelDisutility.Factory(penaltyFactorsOfLinks);
 				addTravelDisutilityFactoryBinding(routingMode).toInstance(disutilityFactory);
 			}
-			
+
 			private void setupCarGlobalInformationRouting() {
 				final String routingMode = EvacRoutingMode.carGlobalInformation.name();
-				
+
 				addRoutingModuleBinding(routingMode).toProvider(new NetworkRoutingProvider(TransportMode.car, routingMode)) ;
-				
+
 				// congested travel time:
 				bind(WithinDayTravelTime.class).in(Singleton.class);
 				addEventHandlerBinding().to(WithinDayTravelTime.class);
 				addMobsimListenerBinding().to(WithinDayTravelTime.class);
 				addTravelTimeBinding(routingMode).to(WithinDayTravelTime.class) ;
-				
+
 				// travel disutility includes the fire penalty. If no data arrives, it makes no difference.
 				TravelDisutilityFactory disutilityFactory = new EvacTravelDisutility.Factory(penaltyFactorsOfLinks);
 				// (yyyyyy the now following cases are just there because of the different tests.  Solve by config,
 				addTravelDisutilityFactoryBinding(routingMode).toInstance(disutilityFactory);
 			}
-			
+
 			private void setupEmergencyVehicleRouting() {
 				final String routingMode = EvacRoutingMode.emergencyVehicle.name();
-				
+
 				addRoutingModuleBinding(routingMode).toProvider(new NetworkRoutingProvider(TransportMode.car, routingMode)) ;
-				
+
 				// congested travel time:
 				bind(WithinDayTravelTime.class).in(Singleton.class);
 				addEventHandlerBinding().to(WithinDayTravelTime.class);
 				addMobsimListenerBinding().to(WithinDayTravelTime.class);
 				addTravelTimeBinding(routingMode).to(WithinDayTravelTime.class) ;
-				
+
 				// travel disutility includes the fire penalty:
-				TravelDisutilityFactory disutilityFactory = new EvacTravelDisutility.Factory(penaltyFactorsOfLinks);
+				TravelDisutilityFactory disutilityFactory = new EvacTravelDisutility.Factory(penaltyFactorsOfLinksForEmergencyVehicles);
 				// yyyyyy This uses the same disutility as the evacuees.  May not be what we want.
 				// But what do we want?  kai, dec'17/jan'18
 
@@ -332,7 +341,7 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 				e.printStackTrace();
 			}
 		}
-		
+
 	}
 
 	public final Replanner getReplanner() {
@@ -342,18 +351,18 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 	@Override public final void takeControl(AgentDataContainer agentDataContainer){
 		runUntil( (int)(playPause.getLocalTime() + 1), agentDataContainer ) ;
 	}
-	
+
 	public final void runUntil( long newTime , AgentDataContainer agentDataContainer ) {
 			log.trace("Received {} ", agentManager.getAgentDataContainer());
 			agentManager.updateActions(); // handle incoming BDI actions
 			playPause.doStep( (int) (newTime) );
 			agentManager.transferActionsPerceptsToDataContainer(); // send back BDI actions/percepts/status'
 	}
-	
+
 	public final boolean isFinished() {
 		return playPause.isFinished() ;
 	}
-	
+
 	public void finish() {
 		playPause.play();
 		while( matsimThread.isAlive() ) {
@@ -366,6 +375,9 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 		if ( fireWriter!=null ) {
 			fireWriter.close();
 		}
+		if ( disruptionWriter!=null ) {
+			disruptionWriter.finish(this.getTime());
+		}
 	}
 
 	public final Scenario getScenario() {
@@ -376,7 +388,7 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 	public void setEventHandlers(List<EventHandler> eventHandlers) {
 		this.eventHandlers = eventHandlers;
 	}
-	
+
 	private final void setFreeSpeedExample(){
 		// example how to set the freespeed of some link to zero:
 		final double now = this.qSim.getSimTimer().getTimeOfDay();
@@ -407,32 +419,105 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 					time, getTime() );
 		}
 		double now = getTime() ;
-		
+
+		switch( dataType ) {
+			case PerceptList.FIRE_DATA:
+				return processFireData(data, now, penaltyFactorsOfLinks, scenario,
+						penaltyFactorsOfLinksForEmergencyVehicles, fireWriter);
+			case PerceptList.DISRUPTION:
+				return processDisruptionData(data, now, scenario, disruptionWriter);
+			default:
+				throw new RuntimeException("not implemented") ;
+		}
+	}
+
+	private boolean processDisruptionData( Object data, double now, Scenario scenario, DisruptionWriter disruptionWriter ) {
+		log.info("receiving disruption data at time={}", (now/3600) ); ;
+
+		log.info( new Gson().toJson(data) ) ;
+
+		Map<Double,Disruption> timeMapOfDisrupions = (Map<Double,Disruption>)data;
+
+		for (Disruption dd : timeMapOfDisrupions.values()) {
+
+			double speedInMpS = 0;
+			switch (dd.getEffectiveSpeedUnit()) {
+				case "kmph":
+				case "KMPH":
+					speedInMpS = dd.getEffectiveSpeed() / 3.6;
+					break;
+				default:
+					throw new RuntimeException("unimplemented speed unit");
+			}
+
+			String linkIds = Arrays.toString(dd.getImpactLinks())
+					.replaceAll("\\[", "")
+					.replaceAll("\\]", "")
+					.replaceAll(",", " ");
+			List<Link> links = NetworkUtils.getLinks(scenario.getNetwork(),NetworkUtils.getLinkIds(linkIds));
+			for (Link link : links) {
+				double prevSpeed = link.getFreespeed(now);
+				log.info("Updating freespeed on link {} from {} to {} due to disruption",
+						link.getId(), prevSpeed, speedInMpS);
+				{
+					double startTime = convertTimeToSeconds(dd.getStartHHMM());
+					addNetworkChangeEvent(speedInMpS, link, startTime);
+					disruptionWriter.write(startTime, link.getId(), link.getCoord(), speedInMpS);
+				}
+				{
+					double startTime = convertTimeToSeconds(dd.getEndHHMM());
+					addNetworkChangeEvent(prevSpeed, link, startTime);
+					disruptionWriter.write(startTime, link.getId(), link.getCoord(), prevSpeed);
+				}
+			}
+		}
+		return true ;
+	}
+
+	private void addNetworkChangeEvent(double speedInMpS, Link link, double startTime) {
+		NetworkChangeEvent changeEvent = new NetworkChangeEvent( startTime ) ;
+		changeEvent.setFreespeedChange(new NetworkChangeEvent.ChangeValue(
+				NetworkChangeEvent.ChangeType.ABSOLUTE_IN_SI_UNITS,  speedInMpS
+		) ) ;
+		changeEvent.addLink( link ) ;
+
+		// (1) add to mobsim:
+		this.qSim.addNetworkChangeEvent(changeEvent);
+
+		// (2) add to replanner:
+		this.replanner.addNetworkChangeEvent(changeEvent);
+		// yyyy wanted to delay this until some agent has actually encountered it.  kai, feb'18
+
+	}
+	
+	private double convertTimeToSeconds(String startHHMM) {
+		int hours = Integer.parseInt(startHHMM.substring(0, 2));
+		int minutes = Integer.parseInt(startHHMM.substring(2, 4));
+		double startTime = hours * 3600 + minutes * 60;
+		log.info("orig={}, hours={}, min={}, sTime={}", startHHMM, hours, minutes, startTime);
+		return startTime;
+	}
+	
+	private static boolean processFireData(Object data, double now, Map<Id<Link>, Double> penaltyFactorsOfLinks,
+										   Scenario scenario, Map<Id<Link>, Double> penaltyFactorsOfLinksForEmergencyVehicles,
+										   FireWriter fireWriter) {
 		// Is this called in every time step, or just every 5 min or so?  kai, dec'17
 
 		// Normally only one polygon per time step.  Might want to test for this, and get rid of multi-polygon code
 		// below.  On other hand, probably does not matter much.  kai, dec'17
 
-		if (PerceptList.DISRUPTION.equals(dataType)) {
-			// FIXME: do something with the disruptions data coming in
-			log.warn("receiving at time={} disruptions data={}", (now/3600), data);
-			return true;
-		} else if (! PerceptList.FIRE_DATA.equals(dataType)) {
-			return false;
-		}
-
 		log.warn("receiving fire data at time={}", now/3600. ) ;
-		
+
 		CoordinateTransformation transform = TransformationFactory.getCoordinateTransformation(
-				TransformationFactory.WGS84, config.global().getCoordinateSystem());
-		
+				TransformationFactory.WGS84, scenario.getConfig().global().getCoordinateSystem());
+
 		final String json = new Gson().toJson(data);
 		log.debug(json);
-		
+
 		//			GeoJSONReader reader = new GeoJSONReader();
 		//			Geometry geometry = reader.read(json);
 		// unfortunately does not work since the incoming data is not typed accordingly. kai, dec'17
-		
+
 		Map<Double, Double[][]> map = (Map<Double, Double[][]>) data;
 		// the map key is time; we just take the superset of all polygons
 		Geometry fire = null ;
@@ -448,25 +533,31 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 				fire = fire.union(polygon);
 			}
 		}
-		
-		final double bufferWidth = 10000.;
-		Geometry buffer = fire.buffer(bufferWidth);
-		
-		penaltyFactorsOfLinks.clear();
-		
+
 //		https://stackoverflow.com/questions/38404095/how-to-calculate-the-distance-in-meters-between-a-geographic-point-and-a-given-p
+		{
+			// FIXME: Using a hardwired 10km buffer for vehicles; move to config
+			final double bufferWidth = 10000.;
+			Geometry buffer = fire.buffer(bufferWidth);
+			penaltyFactorsOfLinks.clear();
 //		Utils.penaltyMethod1(fire, buffer, penaltyFactorsOfLinks, scenario );
-		Utils.penaltyMethod2(fire, buffer, bufferWidth, penaltyFactorsOfLinks, scenario );
-		// yyyyyy I think that penaltyMethod2 looks nicer than method1, but the test for the time
-		// being is using version 1.  kai, dec'17
-		// yy could make this settable, but for the time being this pedestrian approach
-		// seems sufficient.  kai, jan'18
-		
-		
+			Utils.penaltyMethod2(fire, buffer, bufferWidth, penaltyFactorsOfLinks, scenario);
+			// I think that penaltyMethod2 looks nicer than method1.  kai, dec'17
+			// yy could make this settable, but for the time being this pedestrian approach
+			// seems sufficient.  kai, jan'18
+		}
+		{
+			// FIXME: Using a hardwired 1km buffer for emergency services; move to config
+			final double bufferWidth = 1000. ;
+			Geometry buffer = fire.buffer(bufferWidth);
+			penaltyFactorsOfLinksForEmergencyVehicles.clear();
+			Utils.penaltyMethod2(fire, buffer, bufferWidth, penaltyFactorsOfLinksForEmergencyVehicles, scenario);
+		}
+
 		fireWriter.write( now, fire);
 		return true;
 	}
-	
+
 	public final double getTime() {
 		return this.qSim.getSimTimer().getTimeOfDay() ;
 	}
@@ -488,18 +579,21 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 						new Location(link.getToNode().getId().toString(), link.getToNode().getCoord().getX(), link.getToNode().getCoord().getY())
 				};
 				return coords;
-
-			case PerceptList.REQUEST_DRIVING_DISTANCE_TO:
-				if (args == null || !(args instanceof String)) {
-					throw new RuntimeException("Query percept '"+perceptID+"' expecting String argument, but found: " + args);
+			case PerceptList.REQUEST_DRIVING_DISTANCE_TO :
+				if (args == null || !(args instanceof double[])) {
+					throw new RuntimeException("Query percept '"+perceptID+"' expecting double[] coordinates argument, but found: " + args);
 				}
-
-
-
-
-
-
-
+				double[] dest = (double[]) args;
+				Coord coord = new Coord( dest[0], dest[1] ) ;
+				final Link destLink = NetworkUtils.getNearestLink(getScenario().getNetwork(), coord );
+				Gbl.assertNotNull(destLink);
+				final Link currentLink = scenario.getNetwork().getLinks().get( this.getMobsimAgentFromIdString(agentID).getCurrentLinkId() );
+				final double now = getTime();
+				//final Person person = scenario.getPopulation().getPersons().get(agentID);
+				LeastCostPathCalculator.Path result = this.replanner.editRoutes(EvacRoutingMode.carFreespeed).getPathCalculator().calcLeastCostPath(
+						currentLink.getFromNode(), destLink.getFromNode(), now, null, null
+				);
+				return RouteUtils.calcDistance(result);
 			default:
 				throw new RuntimeException("Unknown query percept '"+perceptID+"' received from agent "+agentID+" with args " + args);
 		}
@@ -513,7 +607,7 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 	public MobsimDataProvider getMobsimDataProvider() {
 		return mobsimDataProvider;
 	}
-	
+
 	public MobsimAgent getMobsimAgentFromIdString( String idString ) {
 		return this.getMobsimDataProvider().getAgent( Id.createPersonId(idString) ) ;
 	}
@@ -521,9 +615,9 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 	public EventsManager getEvents() {
 		return this.qSim.getEventsManager() ;
 	}
-	
+
 	public Config getConfig() {
 		return config;
 	}
-	
+
 }
