@@ -98,7 +98,7 @@ public class Main {
 		// Create the logger
 		logger = createLogger();
 		
-		logger.warn("setup=" + setup ) ;
+		logger.info("setup=" + setup ) ;
 		// (I need this "setup" switch to switch between the test cases.  Some other
 		// config design would clearly be ok, but I don't want to impose some config
 		// design on you. kai, dec'17)
@@ -152,7 +152,6 @@ public class Main {
 		 * vehicles for mode choice).
 		 */
 		
-		setupBlockageIfApplicable(scenario);
 		List<String> bdiAgentIDs = Utils.getBDIAgentIDs( scenario );
 
 		// --- initialize and start jill (need the bdiAgentIDs, for which we need the material from before)
@@ -199,25 +198,6 @@ public class Main {
 		config.qsim().setStartTime(getEvacuationStartTimeInSeconds(offset)) ;
 		config.qsim().setSimStarttimeInterpretation(StarttimeInterpretation.onlyUseStarttime);
 		// yy in the longer run, a "minOfStarttimeAndEarliestActivityEnd" would be good. kai, nov'17
-	}
-	
-	private static void setupBlockageIfApplicable(Scenario scenario) {
-		switch( setup ) {
-			// use switch so we catch missing cases. kai, dec'18
-			case standard:
-			case tertiaryRoadsCorrection:
-				return ;
-			case blockage:
-				break;
-			default:
-				Gbl.fail() ;
-		}
-		// todo later: configure this from elsewhere
-		int blockageTime = 5*60 ;
-		NetworkChangeEvent changeEvent = new NetworkChangeEvent(blockageTime);
-		changeEvent.setFreespeedChange(new ChangeValue(ChangeType.ABSOLUTE_IN_SI_UNITS, 0.));
-		changeEvent.addLink(scenario.getNetwork().getLinks().get(Id.createLinkId(blockedLinkId)));
-		NetworkUtils.addNetworkChangeEvent(scenario.getNetwork(), changeEvent);
 	}
 	
 	private static JillBDIModel initializeAndStartJillModel(DataServer dataServer, List<String> bdiAgentIDs,
@@ -415,17 +395,6 @@ public class Main {
 					if(i+1<args.length) {
 						i++ ;
 						SimpleConfig.setDisruptionsFile(args[i]) ;
-					}
-					break;
-				case "--x-blocked-link": //FIXME: remove once issue #1 is closed
-					if(i+1<args.length) {
-						i++ ;
-						try {
-							Main.blockedLinkId= Integer.parseInt(args[i]);
-						} catch (Exception e) {
-							System.err.println("Could not parse blocked link id '"
-									+ args[i] + "' : " + e.getMessage());
-						}
 					}
 					break;
 				case "--x-congestion-config": //FIXME: remove; make part of main config

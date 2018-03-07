@@ -28,7 +28,7 @@ body {
 
 #map {
  width: 100%;
- height: 500px;
+ height: 700px;
  padding: 0;
  /*  background-color: grey; */
 }
@@ -187,10 +187,10 @@ ul.ui-autocomplete {
 .mt-m1dot5 {
  margin-top: -1.5em;
 }
- 
+
 .mb-1dot5 {
  margin-bottom: 1.5em;
- 
+
 }
 
 .draw-area-step-1, .draw-line-step-1 {
@@ -221,13 +221,13 @@ ul.ui-autocomplete {
 
 .split-vehicles-dropdown {
  display: none;
- width:5em; 
- padding:1pt; 
- height:inherit;  
+ width:5em;
+ padding:1pt;
+ height:inherit;
 }
 
 #split-vehicles-view {
  display: none;
- margin-right:1em; 
+ margin-right:1em;
  font-size: 14px;
 }

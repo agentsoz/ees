@@ -103,6 +103,9 @@ public class Resident extends Agent implements io.github.agentsoz.bdiabm.Agent {
 			writer.println(prefix + status + " at link " + parameters);
 			Location[] coords = (Location[])getQueryPerceptInterface().queryPercept(String.valueOf(getId()), PerceptList.REQUEST_LOCATION, parameters);
 			writer.println(prefix + "is currently between locations " + coords[0] + " and " + coords[1]);
+			double distanceToSafePlace = (double)getQueryPerceptInterface().queryPercept(String.valueOf(getId()),
+					PerceptList.REQUEST_DRIVING_DISTANCE_TO, getShelterLocation().getCoordinates());
+			writer.println(prefix + "estimated driving distance to shelter accounting for detour is " + String.format("%.1f",distanceToSafePlace/1000) + "km");
 			if (failedAttempts < MAX_FAILED_ATTEMPTS) {
 				writer.println(prefix
 						+ "will reevaluate route to destination (attempt "+(failedAttempts+1)

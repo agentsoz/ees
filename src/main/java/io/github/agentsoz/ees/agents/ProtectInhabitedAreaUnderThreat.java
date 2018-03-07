@@ -62,8 +62,8 @@ public class ProtectInhabitedAreaUnderThreat extends Plan {
 					params[1] = coords;
 					params[2] = evacTime;
 					// FIXME use EvacRoutingMode.emergencyVehicle once emergency vehicle routing is implemented; DS 23/jan/18
-					// params[3] = EvacRoutingMode.emergencyVehicle;
-					params[3] = EvacRoutingMode.carFreespeed;
+					params[3] = EvacRoutingMode.emergencyVehicle;
+					//params[3] = EvacRoutingMode.carFreespeed;
 					writer.println(responder.logPrefix() + "will start driving to "+ threatenedLocation + " under fire threat at time " + evacTime);
 					post(new EnvironmentAction(
 							Integer.toString(responder.getId()),

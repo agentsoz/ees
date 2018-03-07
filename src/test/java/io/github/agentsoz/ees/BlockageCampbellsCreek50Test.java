@@ -34,7 +34,6 @@ public class BlockageCampbellsCreek50Test {
 				"--seed", "12345",
 				"--safeline-output-file-pattern", "scenarios/mount-alexander-shire/campbells-creek-50/safeline.%d%.out",
 				MATSimModel.MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR, utils.getOutputDirectory(),
-				EvacConfig.SETUP_INDICATOR, EvacConfig.Setup.blockage.name() ,
 				"--jillconfig", "--config={"+
 						"agents:[{classname:io.github.agentsoz.ees.agents.Resident, args:null, count:50}],"+
 						"logLevel: WARN,"+
@@ -44,7 +43,6 @@ public class BlockageCampbellsCreek50Test {
 						"numThreads: 1"+ // run jill in single-threaded mode so logs are deterministic
 						"}",
 				"--x-disruptions-file", "scenarios/mount-alexander-shire/campbells-creek-50/scenario_disruptions.json",
-				"--x-blocked-link", "51825",
 		};
 
 		Main.main(args);
