@@ -62,6 +62,16 @@ public class SimpleConfig {
 	private static String geographyFile = null;
 	private static String fireFile = null;
 
+	private static String disruptionsFile = null; // FIXME: should come from config XML
+
+	private static double congestionEvaluationInterval = 600; // secs between BDI agent evaluatiing if it is in congestion
+	private static double congestionToleranceThreshold = 0.5; // as a proportion of the congestionEvaluationInterval
+
+	public static void setDisruptionsFile(String disruptionFile) {
+		SimpleConfig.disruptionsFile = disruptionFile;
+	}
+
+
 	private static int numBDIAgents = 1;
 
 	private static double proportionWithKids = 0.0;
@@ -71,9 +81,9 @@ public class SimpleConfig {
 	private static int[] evacStartHHMM = new int[] {0, 0};
 	private static int evacPeakMins = 0;
 	private static TreeMap<String, Location> locations = new TreeMap<String, Location>();
-	private static String fireCoordinateSystem = "longlat";
+	private static String fireCoordinateSystem = "longlat"; // FIXME: use EPSG:4326 here
 	private static String fireFileFormat = "custom";
-	private static String geographyCoordinateSystem = "longlat";
+	private static String geographyCoordinateSystem = "longlat";  // FIXME: use EPSG:4326 here
     private static TreeMap<String, Location[]> safelines = new TreeMap<String, Location[]>();
 
 	private static final String eSimulation = "simulation";
@@ -375,5 +385,23 @@ public class SimpleConfig {
             }
             return index;
     }
+
+	public static String getDisruptionsFile() {
+		return disruptionsFile;
+	}
+
+    public static void setCongestionToleranceThreshold(double congestionToleranceThreshold) {
+		SimpleConfig.congestionToleranceThreshold = congestionToleranceThreshold;
+    }
+	public static void setCongestionEvaluationInterval(double congestionEvaluationInterval) {
+		SimpleConfig.congestionEvaluationInterval = congestionEvaluationInterval;
+	}
+	public static double getCongestionToleranceThreshold() {
+		return congestionToleranceThreshold;
+	}
+
+	public static double getCongestionEvaluationInterval() {
+		return congestionEvaluationInterval;
+	}
 
 }

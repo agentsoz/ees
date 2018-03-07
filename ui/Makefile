@@ -1,6 +1,10 @@
 SHELL:=/bin/bash
+
+VERSION:=ees-2.0.2-SNAPSHOT
+
 BASEDIR=$(shell cd $(dir $(firstword $(MAKEFILE_LIST))) && pwd)/
-JAR=${BASEDIR}../target/bushfire-2.0.2-SNAPSHOT
+JARDIR=${BASEDIR}../target/${VERSION}
+JARARCHIVE=${BASEDIR}../target/${VERSION}-dist.zip
 
 #############################################
 ### START USER CONFIG
@@ -24,13 +28,25 @@ SCRIPTSDIR:=${BASEDIR}../scripts
 
 all: install
 
-config:
+${JARDIR}:
+	mkdir -p ${JARDIR}
+	unzip ${JARARCHIVE} -d ${JARDIR}/..
+
+config: ${JARARCHIVE} ${JARDIR}
 	mkdir -p ${WEBDIR}
 
 install: config
-	rsync -a -F --delete --delete-excluded ${BASEDIR} ${WEBDIR}
+	# first copt the distribution to the data dir
+	rsync -avz --delete --delete-excluded ${JARDIR} ${DATADIR}
+	# next sync the ui to the web dir and set up links so ui can access data files
+	rsync -avz --delete --delete-excluded ${DATADIR}/${VERSION}/ui/ ${WEBDIR}
 	ln -s ${DATADIR}/user-data ${WEBDIR}/user-data
-	rsync -avz --delete --delete-excluded ${JAR} ${DATADIR}
+	ln -s ${DATADIR}/${VERSION}/app-data ${WEBDIR}/app-data
+	ln -s ${DATADIR}/${VERSION}/scenarios/mount-alexander-shire/mount_alexander_shire_network.xml.gz ${WEBDIR}/app-data/network.xml.gz
+	# now set up the user data dir where scenarios will be created by the ui
+	mkdir -p ${DATADIR}/user-data
+	rsync -avz --delete --delete-excluded ${DATADIR}/${VERSION}/scenarios/xsd ${DATADIR}/user-data
+	cp ${DATADIR}/${VERSION}/scenarios/mount-alexander-shire/mount_alexander_shire_network.xml.gz ${DATADIR}/user-data/network.xml.gz
 
 minify : config
 	#

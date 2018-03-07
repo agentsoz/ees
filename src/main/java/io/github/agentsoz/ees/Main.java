@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.TreeMap;
 
 import io.github.agentsoz.bdiabm.ABMServerInterface;
+import io.github.agentsoz.bdiabm.QueryPerceptInterface;
 import io.github.agentsoz.bdiabm.data.AgentDataContainer;
 import io.github.agentsoz.bdimatsim.EvacAgentTracker;
 import io.github.agentsoz.bdimatsim.EvacConfig;
@@ -78,7 +79,10 @@ public class Main {
 	private static String[] jillInitArgs = null;
 	private static String matsimOutputDirectory;
 	private static String safelineOutputFilePattern = "./safeline.%d%.csv";
-	
+
+
+	private static int blockedLinkId = -1; // FIXME: temp fix on 31/01/18; remove once #1 is in place
+
 	// yyyyyy careful; the above all stay from one test to the next (if not in separate
 	// JVMs).  kai, dec'17
 
@@ -94,7 +98,7 @@ public class Main {
 		// Create the logger
 		logger = createLogger();
 		
-		logger.warn("setup=" + setup ) ;
+		logger.info("setup=" + setup ) ;
 		// (I need this "setup" switch to switch between the test cases.  Some other
 		// config design would clearly be ok, but I don't want to impose some config
 		// design on you. kai, dec'17)
@@ -109,7 +113,9 @@ public class Main {
 		
 		// get the fire model out of the way:
 		initializeAndStartFireModel(dataServer);
-		
+
+		// initialise the disruptions module
+		initializeAndStartDisruptionModel(dataServer);
 		
 		MATSimModel matsimModel = new MATSimModel( SimpleConfig.getMatSimFile(), matsimOutputDirectory );
 
@@ -125,7 +131,8 @@ public class Main {
 		setSimStartTimesRelativeToAlert(dataServer, config, -10*60 );
 		EvacConfig evacConfig = ConfigUtils.addOrGetModule(config, EvacConfig.class);
 		evacConfig.setSetup(setup);
-		
+		evacConfig.setCongestionEvaluationInterval(SimpleConfig.getCongestionEvaluationInterval());
+		evacConfig.setCongestionToleranceThreshold(SimpleConfig.getCongestionToleranceThreshold());
 		
 		// --- do some things for which you need a handle to the matsim scenario:
 		Scenario scenario = matsimModel.loadAndPrepareScenario() ;
@@ -145,7 +152,6 @@ public class Main {
 		 * vehicles for mode choice).
 		 */
 		
-		setupBlockageIfApplicable(scenario);
 		List<String> bdiAgentIDs = Utils.getBDIAgentIDs( scenario );
 
 		// --- initialize and start jill (need the bdiAgentIDs, for which we need the material from before)
@@ -155,7 +161,7 @@ public class Main {
 		// --- initialize and start matsim (maybe rename?):
 		matsimModel.init(bdiAgentIDs);
 		
-		EvacAgentTracker tracker = new EvacAgentTracker(matsimModel.getScenario().getNetwork(), matsimModel.getEvents() ) ;
+		EvacAgentTracker tracker = new EvacAgentTracker(evacConfig, matsimModel.getScenario().getNetwork(), matsimModel.getEvents() ) ;
 		matsimModel.getEvents().addHandler( tracker );
 		// yyyy try to replace this by injection. because otherwise it again needs to be added "late enough", which we
 		// wanted to get rid of.  kai, dec'17
@@ -194,33 +200,16 @@ public class Main {
 		// yy in the longer run, a "minOfStarttimeAndEarliestActivityEnd" would be good. kai, nov'17
 	}
 	
-	private static void setupBlockageIfApplicable(Scenario scenario) {
-		switch( setup ) {
-			// use switch so we catch missing cases. kai, dec'18
-			case standard:
-			case withoutFireArea:
-			case tertiaryRoadsCorrection:
-				return ;
-			case blockage:
-			case withBlockageButWithoutFire:
-				break;
-			default:
-				Gbl.fail() ;
-		}
-		// todo later: configure this from elsewhere
-		int blockageTime = 5*60 ;
-		NetworkChangeEvent changeEvent = new NetworkChangeEvent(blockageTime);
-		changeEvent.setFreespeedChange(new ChangeValue(ChangeType.ABSOLUTE_IN_SI_UNITS, 0.));
-		changeEvent.addLink(scenario.getNetwork().getLinks().get(Id.createLinkId(51825)));
-		NetworkUtils.addNetworkChangeEvent(scenario.getNetwork(), changeEvent);
-	}
-	
 	private static JillBDIModel initializeAndStartJillModel(DataServer dataServer, List<String> bdiAgentIDs,
 															ABMServerInterface matsimModel, AgentDataContainer agentDataContainer) {
 		
 		// Create the Jill BDI model
 		JillBDIModel jillmodel = new JillBDIModel(jillInitArgs);
+		// Set the query percept interface to use
+		jillmodel.setQueryPerceptInterface((QueryPerceptInterface)matsimModel);
+		// register the server to use for transferring data between models
 		jillmodel.registerDataServer(dataServer);
+		// initialise and start
 		jillmodel.init(agentDataContainer,
 				null, // agentList is not used
 				matsimModel,
@@ -248,7 +237,25 @@ public class Main {
 		fireModel.setTimestepUnit(Time.TimestepUnit.SECONDS);
 		fireModel.start();
 	}
-	
+
+	/**
+	 * Create the disruption model, load the disruption data, and register the model as an active data source
+	 * @param dataServer
+	 * @throws IOException
+	 * @throws ParseException
+	 * @throws java.text.ParseException
+	 */
+	private static void initializeAndStartDisruptionModel(DataServer dataServer) throws IOException, ParseException, java.text.ParseException {
+		DisruptionModel model = new DisruptionModel();
+		model.setDataServer(dataServer);
+		if (SimpleConfig.getDisruptionsFile() != null) {
+			model.loadJson(SimpleConfig.getDisruptionsFile());
+		}
+		// If the disruptions file was not given, then the model starts but does nothing
+		model.setTimestepUnit(Time.TimestepUnit.SECONDS);
+		model.start();
+	}
+
 	/**
 	 * Gets the simulation start time from the config, with an added delay
 	 * @param delay in seconds to add to the start (can be negative)
@@ -382,6 +389,28 @@ public class Main {
 					if(i+1<args.length) {
 						i++ ;
 						setup = EvacConfig.Setup.valueOf(args[i]) ;
+					}
+					break;
+				case "--x-disruptions-file": //FIXME: remove; make part of main config
+					if(i+1<args.length) {
+						i++ ;
+						SimpleConfig.setDisruptionsFile(args[i]) ;
+					}
+					break;
+				case "--x-congestion-config": //FIXME: remove; make part of main config
+					// expect format double:double to indicate interval:threshold
+					if(i+1<args.length) {
+						i++ ;
+						String[] vals = args[i].split(":");
+						try {
+							SimpleConfig.setCongestionEvaluationInterval(Double.parseDouble(vals[0]));
+							SimpleConfig.setCongestionToleranceThreshold(Double.parseDouble(vals[1]));
+
+						} catch (Exception e) {
+							System.err.println("Could not parse congestion config '"
+									+ args[i] + "' : " + e.getMessage());
+						}
+
 					}
 					break;
 			default:

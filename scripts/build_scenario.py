@@ -118,16 +118,14 @@ prefix = args.name
 outdir = os.path.join(args.outdir, prefix)
 
 t_main = os.path.join(args.templatesdir, "t_main.xml")
-t_main_xsd = os.path.join(args.templatesdir, "main.xsd")
 t_matsim = os.path.join(args.templatesdir, "t_matsim.xml")
 t_matsim_network_change = os.path.join(args.templatesdir, "t_matsim_network_change_events.xml")
 t_matsim_plans = os.path.join(args.templatesdir, "t_matsim_plans.xml")
 t_geography = os.path.join(args.templatesdir, "t_geography.xml")
-t_geography_xsd = os.path.join(args.templatesdir, "geography.xsd")
 
 o_main = os.path.join(outdir, "%s_main.xml" % prefix)
 o_matsim = os.path.join(outdir, "%s_matsim_main.xml" % prefix)
-o_matsim_network = os.path.join(outdir, "%s_matsim_network.xml.gz" % prefix)
+o_matsim_network = os.path.join(outdir, "../../network.xml.gz")
 o_matsim_network_change = os.path.join(outdir, "%s_matsim_network_change_events.xml" % prefix)
 o_matsim_plans = os.path.join(outdir, "%s_matsim_plans.xml" % prefix)
 o_matsim_outdir = os.path.join(outdir, "%s_matsim_output" % prefix)
@@ -166,7 +164,7 @@ main_replacements = {
     '${evac_peak}' : "%d" % data["evacPeakMins"],
     '${geographyfile_name}' : o_geography,
     '${inputNetworkFile}' : o_matsim_network,
-    '${inputChangeEventsFile}' : o_matsim_network_change,
+    '${inputChangeEventsFile}' : "%s.gz" % o_matsim_network_change,
     '${inputPlansFile}' : o_matsim_plans,
     '${outputDirectory}' : o_matsim_outdir,
     '${bdiagents_number}' : "%s" % nAgents,
@@ -186,9 +184,6 @@ with open(t_main) as infile, open(o_main, 'w') as outfile:
         for src, target in main_replacements.iteritems():
             line = line.replace(src, target)
         outfile.write(line)
-cmd = ["cp", t_main_xsd, outdir]
-log(cmd)
-subprocess.call(cmd)
 
 # write the fire file
 if data["fire"]["name"] == "NO_INCIDENT":
@@ -210,9 +205,9 @@ with open(t_matsim) as infile, open(o_matsim, 'w') as outfile:
         outfile.write(line)
 
 # write the MATSim network file
-i_network = os.path.join(args.datadir, data["osmArea"]["url"])
-log("FIXME: writing MATSim network file '%s' from '%s'" % (o_matsim_network, i_network))
-copyfile(i_network, o_matsim_network)
+#i_network = os.path.join(args.datadir, data["osmArea"]["url"])
+#log("FIXME: writing MATSim network file '%s' from '%s'" % (o_matsim_network, i_network))
+#copyfile(i_network, o_matsim_network)
 
 network_change_replacements = {
     '${maxSpeed}' : "%s" % (data["maxSpeed"]/100.0),
@@ -228,6 +223,9 @@ with open(t_matsim_network_change) as infile, open(o_matsim_network_change, 'w')
         for src, target in network_change_replacements.iteritems():
             line = line.replace(src, target)
         outfile.write(line)
+cmd = ['gzip', o_matsim_network_change]
+log(cmd)
+subprocess.call(cmd)
 
 # write the population file
 #log("FIXME: hardwired %s agents" % nAgents)
@@ -267,9 +265,6 @@ with open(t_geography) as infile, open(o_geography, 'w') as outfile:
         for src, target in geography_replacements.iteritems():
             line = line.replace(src, target)
         outfile.write(line)
-cmd = ["cp", t_geography_xsd, outdir]
-log(cmd)
-subprocess.call(cmd)
 
 # write destination locations
 src = '<!--${location}-->'

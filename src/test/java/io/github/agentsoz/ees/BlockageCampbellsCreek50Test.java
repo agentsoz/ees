@@ -27,22 +27,23 @@ public class BlockageCampbellsCreek50Test {
 	public void testBlockage50() {
 
 		String [] args = {
-				"--config",  "scenarios/campbells-creek/scenario_main.xml", 
-				"--logfile", "scenarios/campbells-creek/scenario.log",
+				"--config",  "scenarios/mount-alexander-shire/campbells-creek-50/scenario_main.xml",
+				"--logfile", "scenarios/mount-alexander-shire/campbells-creek-50/scenario.log",
 				"--loglevel", "INFO",
 				//	                "--plan-selection-policy", "FIRST", // ensures it is deterministic, as default is RANDOM
 				"--seed", "12345",
-				"--safeline-output-file-pattern", "scenarios/campbells-creek/safeline.%d%.out",
+				"--safeline-output-file-pattern", "scenarios/mount-alexander-shire/campbells-creek-50/safeline.%d%.out",
 				MATSimModel.MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR, utils.getOutputDirectory(),
-				EvacConfig.SETUP_INDICATOR, EvacConfig.Setup.blockage.name() ,
 				"--jillconfig", "--config={"+
 						"agents:[{classname:io.github.agentsoz.ees.agents.Resident, args:null, count:50}],"+
 						"logLevel: WARN,"+
-						"logFile: \"scenarios/campbells-creek/jill.log\","+
-						"programOutputFile: \"scenarios/campbells-creek/jill.out\","+
+						"logFile: \"scenarios/mount-alexander-shire/campbells-creek-50/jill.log\","+
+						"programOutputFile: \"scenarios/mount-alexander-shire/campbells-creek-50/jill.out\","+
 						"randomSeed: 12345,"+ // jill random seed
 						"numThreads: 1"+ // run jill in single-threaded mode so logs are deterministic
-		"}"};
+						"}",
+				"--x-disruptions-file", "scenarios/mount-alexander-shire/campbells-creek-50/scenario_disruptions.json",
+		};
 
 		Main.main(args);
 

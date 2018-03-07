@@ -28,21 +28,21 @@ public class Sutton6000Test {
 	@SuppressWarnings("static-method")
 	@Test
 	@Ignore
-	public void test() {
+	public void testSutton6000() {
 
 		String [] args = {
-				"--config",  "scenarios/sutton/scenario_main.xml",
-				"--logfile", "scenarios/sutton/scenario.log",
+				"--config",  "scenarios/mount-alexander-shire/sutton-6000/scenario_main.xml",
+				"--logfile", "scenarios/mount-alexander-shire/sutton-6000/scenario.log",
 				"--loglevel", "INFO",
 				//				"--plan-selection-policy", "FIRST", // ensures it is deterministic, as default is RANDOM
 				"--seed", "12345",
-				"--safeline-output-file-pattern", "scenarios/sutton/safeline.%d%.out",
+				"--safeline-output-file-pattern", "scenarios/mount-alexander-shire/sutton-6000/safeline.%d%.out",
 				MATSimModel.MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR, utils.getOutputDirectory(),
  				"--jillconfig", "--config={"+
 						"agents:[{classname:io.github.agentsoz.ees.agents.Resident, args:null, count:6000}],"+
 						"logLevel: WARN,"+
-						"logFile: \"scenarios/sutton/jill.log\","+
-						"programOutputFile: \"scenarios/sutton/jill.out\","+
+						"logFile: \"scenarios/mount-alexander-shire/sutton-6000/jill.log\","+
+						"programOutputFile: \"scenarios/mount-alexander-shire/sutton-6000/jill.out\","+
 						"randomSeed: 12345"+ // jill random seed
 						//"numThreads: 1"+ // run jill in single-threaded mode so logs are deterministic
 						"}"

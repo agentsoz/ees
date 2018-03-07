@@ -27,18 +27,18 @@ public class MainCampbellsCreek01Test {
 	public void testCampbellsCreek01() {
 
 		String [] args = {
-				"--config",  "scenarios/campbells-creek-01/scenario_main.xml", 
-				"--logfile", "scenarios/campbells-creek-01/scenario.log",
+				"--config",  "scenarios/mount-alexander-shire/campbells-creek-1/scenario_main.xml",
+				"--logfile", "scenarios/mount-alexander-shire/campbells-creek-1/scenario.log",
 				"--loglevel", "INFO",
 				//	                "--plan-selection-policy", "FIRST", // ensures it is deterministic, as default is RANDOM
 				"--seed", "12345",
-				"--safeline-output-file-pattern", "scenarios/campbells-creek-01/safeline.%d%.out",
+				"--safeline-output-file-pattern", "scenarios/mount-alexander-shire/campbells-creek-1/safeline.%d%.out",
 				"--matsim-output-directory", utils.getOutputDirectory(),
 				"--jillconfig", "--config={"+
 						"agents:[{classname:io.github.agentsoz.ees.agents.Resident, args:null, count:1}],"+
 						"logLevel: WARN,"+
-						"logFile: \"scenarios/campbells-creek-01/jill.log\","+
-						"programOutputFile: \"scenarios/campbells-creek-01/jill.out\","+
+						"logFile: \"scenarios/mount-alexander-shire/campbells-creek-1/jill.log\","+
+						"programOutputFile: \"scenarios/mount-alexander-shire/campbells-creek-1/jill.out\","+
 						"randomSeed: 12345"+ // jill random seed
 						//"numThreads: 1"+ // run jill in single-threaded mode so logs are deterministic
 		"}"};
@@ -49,7 +49,7 @@ public class MainCampbellsCreek01Test {
 		log.info( "actual(events)=" + actualCRCevents ); ;
 		long actualCRCplans = CRCChecksum.getCRCFromFile( utils.getOutputDirectory() + "/output_plans.xml.gz" ) ;
 		log.info( "actual(plans)=" + actualCRCplans ); ;
-		long actualCRCjill = CRCChecksum.getCRCFromFile( "scenarios/campbells-creek-01/jill.out" ) ;
+		long actualCRCjill = CRCChecksum.getCRCFromFile( "scenarios/mount-alexander-shire/campbells-creek-1/jill.out" ) ;
 		log.info( "actual(jill)=" + actualCRCjill ) ;
 		
 		final String primaryExpectedEventsFilename = utils.getInputDirectory() + "/output_events.xml.gz";

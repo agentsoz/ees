@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--===========================================================================
+  #%L
+  BDI-ABM Integration Package
+  %%
+  Copyright (C) 2014 - 2016 by its authors. See AUTHORS file.
+  %%
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as
+  published by the Free Software Foundation, either version 3 of the
+  License, or (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Lesser Public License for more details.
+
+  You should have received a copy of the GNU General Lesser Public
+  License along with this program.  If not, see
+  <http://www.gnu.org/licenses/lgpl-3.0.html>.
+  #L%
+============================================================================-->
+
+
+<!--===========================================================================
+This is the top level config file for the scenario.
+Its primary role is to point to all of the other config
+and input files required by the scenario.
+============================================================================-->
+
+<simulation
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="https://github.com/agentsoz/bdi-abm-integration"
+  xsi:schemaLocation="https://github.com/agentsoz/bdi-abm-integration ../../xsd/main.xsd">
+
+<!--===========================================================================
+Specifies the top level MATSim configuration file for this scenario
+  name:
+    path to file; if using relative path, specify relative to the
+    bushfire root directory, e.g., ./sample_data/maldon.xml
+============================================================================-->
+<matsimfile>
+scenarios/mount-alexander-shire/castlemaine-1000/scenario_matsim_main.xml
+</matsimfile>
+
+<!--===========================================================================
+Specifies the timestamped fire progression fire model file
+
+  name:
+    path to fire model file; if using relative path, specify relative to the
+    bushfire root directory, e.g., scenarios/maldon-simple/maldon_fire.xml
+
+  coordinates:
+    coordinate system used in the input file; should be one of {utm,latlong}
+
+  format:
+    fire file format; should be one of {geojson}
+
+For an example of the fire input file see ./sample_data/maldon_fire.json
+============================================================================-->
+<firefile>
+  <name>scenarios/mount-alexander-shire/castlemaine-1000/scenario_fire.json</name>
+  <coordinates>latlong</coordinates>
+  <format>geojson</format>
+</firefile>
+
+<!--===========================================================================
+Specifies the geography file for this scenario
+
+  name:
+    path to file; if using relative path, specify relative to the
+    bushfire root directory, e.g., scenarios/maldon-simple/maldon_geography.xml
+
+  coordinates:
+    coordinate system used in the input file; should be one of {utm,latlong}
+
+For an example of the geography file see ./sample_data/maldon_geography.json
+============================================================================-->
+<geographyfile>
+  <name>scenarios/mount-alexander-shire/castlemaine-1000/scenario_geography.xml</name>
+</geographyfile>
+
+<!--===========================================================================
+Specify attributes that impact the behaviour of vehicles during evacuation
+
+  relatives:
+    the proportion of vehicles (between 0.0-1.0) that will first take a detour
+    to a nearby location (determined by the max_distance_to_relatives value)
+    to attend to loved ones (relatives), before evacuating towards the
+    designated relief centres.
+
+  max_distance_to_relatives:
+    the maximum distance (in mtrs) from an agent's start location to the detour
+    location; for example setting this to 1000 will force vehicles that detour
+    to check on relatives to drive up to 1km to an arbitrarily chosen location
+    prior to evacuating.
+
+============================================================================-->
+<trafficBehaviour>
+  <preEvacDetour>
+    <proportion>0.3</proportion>
+    <radiusInMtrs>1000</radiusInMtrs>
+  </preEvacDetour>
+</trafficBehaviour>
+
+<!--===========================================================================
+Specify the timing of the evacuation
+
+  evac_start:
+     time of day in HH:MM when the evacuation should start
+  evac_peak:
+     time in MINS past the evacuation start time at which the peak of
+     vehicles leaving will occur; in other words, evac_start defines the
+     left tail extreme of a normal distribution that has a mean at evac_peak.
+
+============================================================================-->
+<evacuationTiming>
+  <start>12:00</start>
+  <peak>60</peak>
+</evacuationTiming>
+
+<!--===========================================================================
+Number of BDI agents (N) to initialise.
+
+The total number of agents (M) is determined by the MATSim population file.
+
+The final number of BDI agents will be the lesser of N,M. Setting N really high
+(so that it is always greater than M), will ensure that the entire MATSim
+population has BDI conterparts.
+============================================================================-->
+<bdiagents>
+999
+</bdiagents>
+
+<!--=========================================================================-->
+</simulation>

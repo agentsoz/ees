@@ -5,7 +5,7 @@ module.exports = {
 	 * Emergency Evacuation Simulator (EES) release JAR
 	 * -----------------------------------------------------------------------
 	 */
-	 RELEASE_VERSION : 'bushfire-2.0.2-SNAPSHOT',
+	 RELEASE_VERSION : 'ees-2.0.2-SNAPSHOT',
 
 	/*
 	 * -----------------------------------------------------------------------

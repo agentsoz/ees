@@ -129,7 +129,10 @@ app.post('/', function(req, res) {
 		    	return;
 			}
 			files.forEach(function(file) {
+				// Include only files that match the pattern 20* (name starts with year)
+				if (file.match("^20")) {
 			    list.push({name: file});
+				}
 			});
 			send(res, {'msg': shared.MSG_LIST_SCENARIOS,
 				'data' : list});

@@ -1,0 +1,84 @@
+{
+  "name": "2018-01-23-maldon-100-with-emergency-vehicles",
+  "township": "Maldon",
+  "defaultMapZoom": 10,
+  "coordinate_system": "latlong",
+  "osmArea": {
+    "rectangle": [
+      -37.26,
+      144.4789,
+      -36.7375,
+      144.05833
+    ],
+    "url": "app-data/network.xml.gz"
+  },
+  "fire": {
+    "name": "20160420_MtAlexShire_FDI75_Iso",
+    "url": "app-data/maldon/20160420_MtAlexShire_FDI75_Iso.json",
+    "coordinate_system": "latlong",
+    "format": "geojson"
+  },
+  "destinations": [
+    {
+      "name": "Castlemaine",
+      "coordinates": {
+        "lat": -37.064737,
+        "lng": 144.212304
+      },
+      "split": "50.00"
+    },
+    {
+      "name": "Harcourt",
+      "coordinates": {
+        "lat": -37.004293,
+        "lng": 144.257085
+      },
+      "split": "50.00"
+    }
+  ],
+  "safeLines": [
+    {
+      "name": "Castlemaine",
+      "coordinates": [
+        {
+          "lat": -37.01520962541806,
+          "lng": 144.0672454610467
+        },
+        {
+          "lat": -37.00396926398165,
+          "lng": 144.08784482628107
+        }
+      ]
+    },
+    {
+      "name": "Harcourt",
+      "coordinates": [
+        {
+          "lat": -36.95926553532829,
+          "lng": 144.11565399030223
+        },
+        {
+          "lat": -36.99930813882046,
+          "lng": 144.11496734479442
+        }
+      ]
+    }
+  ],
+  "vehiclesAreas": [
+    {
+      "name": "100",
+      "bounds": {
+        "south": -36.99469699355209,
+        "west": 144.0594506263733,
+        "north": -36.98743011147801,
+        "east": 144.07146692276
+      }
+    }
+  ],
+  "evacTime": {
+    "hh": 12,
+    "mm": 0
+  },
+  "evacPeakMins": 60,
+  "maxSpeed": 100
+}

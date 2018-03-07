@@ -23,7 +23,7 @@
 	xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
-	<id>minimal</id>
+	<id>dist</id>
 	<formats>
 		<format>zip</format>
 	</formats>
@@ -45,11 +45,30 @@
 			</includes>
 		</fileSet>
 		<fileSet>
-			<directory>${basedir}</directory>
+			<directory>${basedir}/scenarios/mount-alexander-shire</directory>
 			<outputDirectory></outputDirectory>
 			<includes>
-				<include>scenarios/maldon-2017-11-01/*.*</include>
+				<include>app-data/**</include>
+			</includes>
+		</fileSet>
+		<fileSet>
+			<directory>${basedir}</directory>
+			<outputDirectory></outputDirectory>
+			<excludes>
+				<exclude>**/*.log</exclude>
+				<exclude>**/*.out</exclude>
+			</excludes>
+			<includes>
+				<include>scenarios/mount-alexander-shire/mount_alexander_shire_network.xml.gz</include>
+				<include>scenarios/mount-alexander-shire/maldon-600/*.*</include>
 				<include>scenarios/template/*.*</include>
+				<include>scenarios/xsd/*.*</include>
+				<include>ui/*.html</include>
+				<include>ui/css/**</include>
+				<include>ui/js/**</include>
+				<include>ui/lib/**</include>
+				<include>ui/media/**</include>
+				<include>ui/nodejs/**</include>
 				<include>LICENSE.txt</include>
 			</includes>
 		</fileSet>
