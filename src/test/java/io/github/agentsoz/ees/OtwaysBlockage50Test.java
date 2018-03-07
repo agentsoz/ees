@@ -53,8 +53,8 @@ public class OtwaysBlockage50Test {
                 "randomSeed: 12345," + // jill random seed
                 "numThreads: 1" + // run jill in single-threaded mode so logs are deterministic
                 "}",
-//                "--x-disruptions-file", "scenarios/otways/otways-50/scenario_disruptions.json",
-                "--x-blocked-link", "89175",
+                "--x-disruptions-file", "scenarios/otways/otways-50/scenario_disruptions.json",
+//                "--x-blocked-link", "89175",
         };
 
         Main.main(args);
