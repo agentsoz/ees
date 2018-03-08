@@ -3,9 +3,11 @@
  */
 package io.github.agentsoz.ees;
 
+import io.github.agentsoz.util.TestUtils;
 import org.apache.log4j.Logger;
 import org.junit.Rule;
 import org.junit.Test;
+import org.matsim.core.utils.misc.CRCChecksum;
 import org.matsim.testcases.MatsimTestUtils;
 
 /**
@@ -39,13 +41,11 @@ public class Denmark1000Test {
 						"randomSeed: 12345"+ // jill random seed
 						//"numThreads: 1"+ // run jill in single-threaded mode so logs are deterministic
 						"}",
-				//"--x-congestion-config", "180:0.25"
+				"--x-congestion-config", "600:100.0" // disable congestion (else results are non-deterministic) by putting threshold really high
 		};
 
 		Main.main(args);
 
-		// FIXME: differences in number of arrivals when replanning with congestion; dsingh 2/feb/18
-		/*
 		final String actualEventsFilename = utils.getOutputDirectory() + "/output_events.xml.gz";
 		long actualEventsCRC = CRCChecksum.getCRCFromFile( actualEventsFilename ) ;
 		log.warn("actual(events)="+actualEventsCRC) ;
@@ -62,6 +62,5 @@ public class Denmark1000Test {
 				CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/output_plans.xml.gz" )
 		};
 		TestUtils.checkSeveral(expectedPlans, actualPlansCRC);
-		 */
 	}
 }
