@@ -240,7 +240,7 @@ cmd = [
   "-outdir", outdir,
   "-prefix", popnPrefix,
 #  "-matsimpop", "%s/WGS84/RECT/%s&%s" % (nAgents, xy1, xy2),
-  "-wkt", "EPSG:28355",
+  "-wkt", "EPSG:28355", # FIXME: EPSG should be an input param, else won't work for other regions
   "-verbose", "true" if args.verbose else "false"
 ]
 for area in data["vehiclesAreas"]:
