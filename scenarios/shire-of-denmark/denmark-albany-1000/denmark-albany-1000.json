@@ -1,0 +1,58 @@
+{
+  "name": "2018-03-08-denmark-albany-1000",
+  "township": "Castlemaine",
+  "defaultMapZoom": 11,
+  "coordinate_system": "latlong",
+  "osmArea": {
+    "rectangle": [],
+    "url": "app-data/network.xml.gz"
+  },
+  "fire": {
+    "name": "NO_INCIDENT",
+    "url": "",
+    "coordinate_system": "latlong",
+    "format": "geojson"
+  },
+  "destinations": [
+    {
+      "name": "Albany",
+      "coordinates": {
+        "lat": -35.007016,
+        "lng": 117.910380
+      },
+      "split": "100.00"
+    }
+  ],
+  "safeLines": [
+    {
+      "name": "Albany",
+      "coordinates": [
+        {
+          "lat": -34.953797,
+          "lng": 117.739320
+        },
+        {
+          "lat": -35.053047,
+          "lng": 117.743261
+        }
+      ]
+    }
+  ],
+  "vehiclesAreas": [
+    {
+      "name": "1000",
+      "bounds": {
+        "south": -34.9709,
+        "west": 117.3426,
+        "north": -34.9543,
+        "east": 117.3650
+      }
+    }
+  ],
+  "evacTime": {
+    "hh": 14,
+    "mm": 0
+  },
+  "evacPeakMins": 60,
+  "maxSpeed": 70
+}

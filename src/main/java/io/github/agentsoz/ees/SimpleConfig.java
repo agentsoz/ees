@@ -55,7 +55,7 @@ public class SimpleConfig {
 	private static final Logger logger = LoggerFactory.getLogger("io.github.agentsoz.ees");
 
 	private static Random rand;
-	
+
 	private static String configFile = null;
 
 	private static String matSimFile = null;
@@ -77,7 +77,7 @@ public class SimpleConfig {
 	private static double proportionWithKids = 0.0;
 	private static double proportionWithRelatives = 0.0;
 	private static int maxDistanceToRelatives = 1000;
-	
+
 	private static int[] evacStartHHMM = new int[] {0, 0};
 	private static int evacPeakMins = 0;
 	private static TreeMap<String, Location> locations = new TreeMap<String, Location>();
@@ -108,7 +108,7 @@ public class SimpleConfig {
 	private static final String ePeak = "peak";
     private static final String eSafeLines = "safelines";
     private static final String eSafeLine = "safeline";
-		
+
 	public static String getMatSimFile() {
 		return matSimFile;
 	}
@@ -136,7 +136,7 @@ public class SimpleConfig {
 	public static int[] getEvacStartHHMM() {
 		return evacStartHHMM;
 	}
-	
+
 	public static int getEvacPeakMins() {
 		return evacPeakMins;
 	}
@@ -164,7 +164,7 @@ public class SimpleConfig {
 	public static void setConfigFile(String string) {
 		configFile = string;
 	}
-	
+
 	public static TreeMap<String, Location[]> getSafeLines() {
 	  return safelines;
 	}
@@ -202,57 +202,57 @@ public class SimpleConfig {
 			if (configFile == null) {
 				throw new Exception("No configuration file given");
 			}
-			
+
 			logger.info("Loading configuration from '" + configFile + "'");
-			
+
 			// Validate the XML against the schema first
 			SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 			Schema schema = factory.newSchema(); // schema specified in file
 			Validator validator = schema.newValidator();
 			validator.validate(new StreamSource(new File(configFile)));
-			
+
 			// Now we can start reading; we don't need to add many checks since
 			// the XML is at this point already validated
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 			DocumentBuilder db = dbf.newDocumentBuilder();
 			Document doc = db.parse(new FileInputStream(configFile));
-			
+
 			// Normalisation is optional, but recommended
 			// see http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
 			doc.getDocumentElement().normalize();
-			
+
 			// Get the root element
 			Element root = (Element)doc.getElementsByTagName(eSimulation).item(0);
-			
+
 			// Get MATSim config file name
 			matSimFile = doc.getElementsByTagName(eMATSimFile).item(0).getTextContent().replaceAll("\n", "").trim();
-			
+
 			// Get the fire data
 			Element element = (Element)root.getElementsByTagName(eFireFile).item(0);
 			fireFile = element.getElementsByTagName(eName).item(0).getTextContent().replaceAll("\n", "").trim();
 			fireCoordinateSystem = element.getElementsByTagName(eCoordinates).item(0).getTextContent().replaceAll("\n", "").trim();
 			fireFileFormat = element.getElementsByTagName(eFormat).item(0).getTextContent();
-			
+
 			// Get the geography data
 			element = (Element)root.getElementsByTagName(eGeographyFile).item(0);
 			geographyFile = element.getElementsByTagName(eName).item(0).getTextContent().replaceAll("\n", "").trim();
-			
+
 			// Get the number of BDI agents
 			numBDIAgents = Integer.parseInt(root.getElementsByTagName(eNumBDI).item(0).getTextContent().replaceAll("\n", "").trim());
-			
+
 			// Get the traffic detour behaviour
 			element = (Element)root.getElementsByTagName(eTrafficBehaviour).item(0);
 			element = (Element)element.getElementsByTagName(ePreEvacDetour).item(0);
 			proportionWithRelatives = Double.parseDouble(root.getElementsByTagName(eProportion).item(0).getTextContent().replaceAll("\n", "").trim());
 			maxDistanceToRelatives = Integer.parseInt(root.getElementsByTagName(eRadiusInMtrs).item(0).getTextContent().replaceAll("\n", "").trim());
-	
+
 			// Get the evacuation timing data
 			element = (Element)root.getElementsByTagName(eEvacuationTiming).item(0);
 			String[] tokens = element.getElementsByTagName(eStart).item(0).getTextContent().replaceAll("\n", "").trim().split(":");
 			evacStartHHMM[0] = Integer.parseInt(tokens[0]);
 			evacStartHHMM[1] = Integer.parseInt(tokens[1]);
 			evacPeakMins= Integer.parseInt(element.getElementsByTagName(ePeak).item(0).getTextContent().replaceAll("\n", "").trim());
-			
+
 			// Now read the geography file
 			readGeography();
 		} catch(Exception e){
@@ -261,36 +261,36 @@ public class SimpleConfig {
 			// (if you just pass the message, the exception type is not passed on, so e.g. for a null pointer error one does not
 			// see anything.  kai, nov'17)
 		}
-			
-			
+
+
 		}
 
 	private static void readGeography() throws Exception {
 		if (geographyFile == null) {
 			throw new Exception("No geography file given");
 		}
-		
+
 		logger.info("Loading geography from '" + geographyFile + "'");
-		
+
 		// Validate the XML against the schema first
 		SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 		Schema schema = factory.newSchema(); // schema specified in file
 		Validator validator = schema.newValidator();
 		validator.validate(new StreamSource(new File(geographyFile)));
-		
+
 		// Now we can start reading; we don't need to add many checks since
 		// the XML is at this point already validated
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		DocumentBuilder db = dbf.newDocumentBuilder();
 		Document doc = db.parse(new FileInputStream(geographyFile));
-		
+
 	    // Normalisation is optional, but recommended
 	    // see http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
 	    doc.getDocumentElement().normalize();
 
 	    // Get the root element
 		Element root = (Element)doc.getElementsByTagName(eGeography).item(0);
-		
+
 		// Get the coordinate system
 		geographyCoordinateSystem = root.getElementsByTagName(eCoordinateSystem).item(0).getTextContent().replaceAll("\n", "").trim();
 
@@ -307,7 +307,7 @@ public class SimpleConfig {
 			double y = Double.parseDouble(sCoords[1]);
 			locations.put(name, new Location(name, x, y, split));
 		}
-		
+
         // Get the safe lines
         Element slines = (Element)root.getElementsByTagName(eSafeLines).item(0);
         nl = slines.getElementsByTagName(eSafeLine);
@@ -327,9 +327,9 @@ public class SimpleConfig {
           safeline[1] = new Location("to", x, y);
           safelines.put(name, safeline);
         }
-		
+
 	}
-	
+
     /**
      * Normalises the values of the given array, such that each value is divided
      * by the sum of all values.

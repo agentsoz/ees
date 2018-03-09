@@ -45,7 +45,7 @@ public class Resident extends Agent implements io.github.agentsoz.bdiabm.Agent {
 
 	private static final int MAX_FAILED_ATTEMPTS = 5;
 	PrintStream writer = null;
-	
+
 	private Location shelterLocation = null;
 
 	private Prefix prefix = new Prefix();
@@ -74,7 +74,7 @@ public class Resident extends Agent implements io.github.agentsoz.bdiabm.Agent {
 
 
 	}
-	
+
 	/**
 	 * Called by the Jill model when terminating
 	 */
@@ -83,9 +83,9 @@ public class Resident extends Agent implements io.github.agentsoz.bdiabm.Agent {
 		logger.trace("{} is terminating", prefix);
 	}
 
-	/** 
+	/**
 	 * Called by the Jill model with the status of a BDI percept
-	 * for this agent, coming from the ABM environment. 
+	 * for this agent, coming from the ABM environment.
 	 */
 	@Override
 	public void handlePercept(String perceptID, Object parameters) {
@@ -130,9 +130,9 @@ public class Resident extends Agent implements io.github.agentsoz.bdiabm.Agent {
 	public void packageAction(String actionID, Object[] parameters) {
 	}
 
-	/** 
+	/**
 	 * Called by the Jill model with the status of a BDI action previously
-	 * posted by this agent to the ABM environment. 
+	 * posted by this agent to the ABM environment.
 	 */
 	@Override
 	public void updateAction(String actionID, ActionContent content) {
@@ -140,7 +140,7 @@ public class Resident extends Agent implements io.github.agentsoz.bdiabm.Agent {
 		if (content.getAction_type().equals(ActionList.DRIVETO)) {
 			if (content.getState()==State.PASSED) {
 				// Wake up the agent that was waiting for external action to finish
-				// FIXME: BDI actions put agent in suspend, which won't work for multiple intention stacks 
+				// FIXME: BDI actions put agent in suspend, which won't work for multiple intention stacks
 				suspend(false);
 			} else if (content.getState()==State.FAILED) {
 				// Wake up the agent that was waiting for external action to finish
@@ -161,7 +161,7 @@ public class Resident extends Agent implements io.github.agentsoz.bdiabm.Agent {
 	}
 
 	/**
-	 * BDI-ABM agent start function; Not used by Jill. 
+	 * BDI-ABM agent start function; Not used by Jill.
 	 * Use {@link #start(PrintStream, String[])} instead
 	 * to perform agent startup.
 	 */
@@ -171,7 +171,7 @@ public class Resident extends Agent implements io.github.agentsoz.bdiabm.Agent {
 	}
 
 	/**
-	 * BDI-ABM agent kill function; Not used by Jill. 
+	 * BDI-ABM agent kill function; Not used by Jill.
 	 * Use {@link #finish()} instead
 	 * to perform agent termination.
 	 */
