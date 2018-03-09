@@ -26,7 +26,7 @@ import org.matsim.testcases.MatsimTestUtils;
  */
 
 public class OtwaysBlockage50Test {
-    // have tests in separate classes so that they run, at least under maven, in separate JVMs.  kai, nov'17
+    // have tests in separate classes so that they run, at least und    er maven, in separate JVMs.  kai, nov'17
 
     Logger log = Logger.getLogger(OtwaysBlockage50Test.class);
 
