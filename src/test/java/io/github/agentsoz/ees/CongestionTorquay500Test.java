@@ -5,6 +5,7 @@ package io.github.agentsoz.ees;
 
 import io.github.agentsoz.bdimatsim.EvacConfig;
 import org.apache.log4j.Logger;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.matsim.testcases.MatsimTestUtils;
@@ -23,7 +24,7 @@ public class CongestionTorquay500Test {
     public MatsimTestUtils utils = new MatsimTestUtils();
 
     @Test
-//    Ignore
+    @Ignore
     public void testTorquay500() {
 
         String[] args = {
