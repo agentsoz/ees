@@ -182,6 +182,21 @@ public class SimpleConfig {
 	  return locs[choice];
 	}
 
+	public static Location getEvacLocation(String nearest) {
+		Location[] locs = locations.values().toArray(new Location[0]);
+		double[] splits = new double[locs.length];
+		for (int i = 0; i < locs.length; i++) {
+			if (locs[i].getName()==nearest){
+				splits[i] = 6*(Double)(locs[i].getAttributes());
+			}
+			else
+			splits[i] = (Double)(locs[i].getAttributes());
+		}
+		int choice = selectIndexFromCumulativeProbabilities(cumulate(normalise(splits)));
+		return locs[choice];
+	}
+
+
 	public static void readConfig() {
 		try {
 			if (configFile == null) {

@@ -1,5 +1,11 @@
 package io.github.agentsoz.ees.agents;
 
+import io.github.agentsoz.abmjill.genact.EnvironmentAction;
+import io.github.agentsoz.util.evac.ActionList;
+import io.github.agentsoz.bdimatsim.MATSimModel.EvacRoutingMode;
+import io.github.agentsoz.util.Location;
+import io.github.agentsoz.dataInterface.DataServer;
+
 /*
  * #%L
  * Jill Cognitive Agents Platform
@@ -22,10 +28,6 @@ package io.github.agentsoz.ees.agents;
  * #L%
  */
 
-import io.github.agentsoz.abmjill.genact.EnvironmentAction;
-import io.github.agentsoz.util.evac.ActionList;
-import io.github.agentsoz.bdimatsim.MATSimModel.EvacRoutingMode;
-import io.github.agentsoz.util.Location;
 import io.github.agentsoz.jill.lang.Agent;
 import io.github.agentsoz.jill.lang.Goal;
 import io.github.agentsoz.jill.lang.Plan;
