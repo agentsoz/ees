@@ -3,6 +3,7 @@ package io.github.agentsoz.ees;
 
         import io.github.agentsoz.bdimatsim.EvacConfig;
         import org.apache.log4j.Logger;
+        import org.junit.Ignore;
         import org.junit.Rule;
         import org.junit.Test;
         import org.matsim.testcases.MatsimTestUtils;
