@@ -37,23 +37,22 @@ public class OtwaysBlockage50Test {
     public void testBlockage50() {
 
         String[] args = {
-                "--config", "scenarios/otways/otways-50/scenario_main.xml",
-                "--logfile", "scenarios/otways/otways-50/scenario.log",
+                "--config", "scenarios/surf-coast-shire/otways-50/scenario_main.xml",
+                "--logfile", "scenarios/surf-coast-shire/otways-50/scenario.log",
                 "--loglevel", "INFO",
                 //	                "--plan-selection-policy", "FIRST", // ensures it is deterministic, as default is RANDOM
                 "--seed", "12345",
-                "--safeline-output-file-pattern", "scenarios/otways/otways-50/safeline.%d%.out",
+                "--safeline-output-file-pattern", "scenarios/surf-coast-shire/otways-50/safeline.%d%.out",
                 MATSimModel.MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR, utils.getOutputDirectory(),
-                EvacConfig.SETUP_INDICATOR, EvacConfig.Setup.blockage.name(),
                 "--jillconfig", "--config={" +
                 "agents:[{classname:io.github.agentsoz.ees.agents.Resident, args:null, count:50}]," +
                 "logLevel: WARN," +
-                "logFile: \"scenarios/otways/otways-50/jill.log\"," +
-                "programOutputFile: \"scenarios/otways/otways-50/jill.out\"," +
+                "logFile: \"scenarios/surf-coast-shire/otways-50/jill.log\"," +
+                "programOutputFile: \"scenarios/surf-coast-shire/otways-50/jill.out\"," +
                 "randomSeed: 12345," + // jill random seed
                 "numThreads: 1" + // run jill in single-threaded mode so logs are deterministic
                 "}",
-                "--x-disruptions-file", "scenarios/otways/otways-50/scenario_disruptions.json",
+                "--x-disruptions-file", "scenarios/surf-coast-shire/otways-50/scenario_disruptions.json",
 //                "--x-blocked-link", "89175",
         };
 
