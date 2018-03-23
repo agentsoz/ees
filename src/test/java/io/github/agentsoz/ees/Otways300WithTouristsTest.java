@@ -4,9 +4,11 @@
 package io.github.agentsoz.ees;
 
 import io.github.agentsoz.bdimatsim.EvacConfig;
+import io.github.agentsoz.util.TestUtils;
 import org.apache.log4j.Logger;
 import org.junit.Rule;
 import org.junit.Test;
+import org.matsim.core.utils.misc.CRCChecksum;
 import org.matsim.testcases.MatsimTestUtils;
 
 /**
@@ -45,44 +47,24 @@ public class Otways300WithTouristsTest {
                 "}"};
 
         Main.main(args);
+
+        final String actualEventsFilename = utils.getOutputDirectory() + "/output_events.xml.gz";
+        long actualEventsCRC = CRCChecksum.getCRCFromFile( actualEventsFilename ) ;
+        System.err.println("actual(events)="+actualEventsCRC) ;
+
+        long actualPlansCRC = CRCChecksum.getCRCFromFile( utils.getOutputDirectory() + "/output_plans.xml.gz" ) ;
+        System.err.println("actual(plans)="+actualPlansCRC) ;
+
+        // ---
+
+        final String primaryExpectedEventsFilename = utils.getInputDirectory() + "/output_events.xml.gz";
+
+        // ---
+
+        TestUtils.comparingDepartures(primaryExpectedEventsFilename,actualEventsFilename,10.);
+        TestUtils.comparingArrivals(primaryExpectedEventsFilename,actualEventsFilename,10.);
+        TestUtils.comparingActivityStarts(primaryExpectedEventsFilename,actualEventsFilename, 10.);
+        TestUtils.compareFullEvents(primaryExpectedEventsFilename,actualEventsFilename, false);
     }
 }
 
-//	FIXME:Diff checks need to be enabled once expected behaviour is established-- Joel Jan '18
-// final String actualEventsFilename = utils.getOutputDirectory() + "/output_events.xml.gz";
-//		long actualCRCevents = CRCChecksum.getCRCFromFile(actualEventsFilename) ;
-//		log.info( "actual(events)=" + actualCRCevents ); ;
-//		long actualCRCplans = CRCChecksum.getCRCFromFile( utils.getOutputDirectory() + "/output_plans.xml.gz" ) ;
-//		log.info( "actual(plans)=" + actualCRCplans ); ;
-//		long actualCRCjill = CRCChecksum.getCRCFromFile( "scenarios/mount-alexander-shire/campbells-creek-1/jill.out" ) ;
-//		log.info( "actual(jill)=" + actualCRCjill ) ;
-//
-//		final String primaryExpectedEventsFilename = utils.getInputDirectory() + "/output_events.xml.gz";
-//
-//		TestUtils.comparingDepartures(primaryExpectedEventsFilename,actualEventsFilename,1.);
-//		TestUtils.comparingArrivals(primaryExpectedEventsFilename,actualEventsFilename,1.);
-//		TestUtils.comparingActivityStarts(primaryExpectedEventsFilename,actualEventsFilename, 1.);
-//		TestUtils.compareFullEvents(primaryExpectedEventsFilename,actualEventsFilename, true);
-//
-//		//		{
-////			long [] expectedCRC = {
-////					CRCChecksum.getCRCFromFile(primaryExpectedEventsFilename)
-////			};
-////			TestUtils.checkSeveral(expectedCRC, actualCRCevents);
-////		}
-//
-//		{
-//			long [] expectedCRC = {
-//					CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/output_plans.xml.gz" )
-//			} ;
-//			TestUtils.checkSeveral(expectedCRC, actualCRCplans);
-//		}
-////		{
-////			long [] expectedCRC = {
-////					CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/jill.out" )
-////			} ;
-////			TestUtils.checkSeveral(expectedCRC, actualCRCjill);
-////		}
-//	}
-//
-//}
