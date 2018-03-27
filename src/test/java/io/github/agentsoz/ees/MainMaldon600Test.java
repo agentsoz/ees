@@ -82,7 +82,8 @@ public class MainMaldon600Test {
 		// look into plans:
 
 		long [] expectedPlans = new long [] {
-				CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/output_plans.xml.gz" )
+				CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/output_plans.xml.gz" ),
+				CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/win/output_plans.xml.gz" )
 		} ;
 		
 		TestUtils.checkSeveral(expectedPlans, actualPlansCRC);
