@@ -253,7 +253,7 @@ public class Main {
 		}
 		// If the disruptions file was not given, then the model starts but does nothing
 		model.setTimestepUnit(Time.TimestepUnit.SECONDS);
-		model.start();
+		model.start(SimpleConfig.getEvacStartHHMM());
 	}
 
 	/**

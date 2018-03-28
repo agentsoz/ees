@@ -97,11 +97,10 @@ public class DisruptionModel implements DataSource {
 	/**
 	 * Start publishing disruptions data
 	 */
-	public void start() {
-		Double nextTime = disruptions.higherKey(0.0);
-		if (nextTime != null) {
-			dataServer.registerTimedUpdate(PerceptList.DISRUPTION, this, Time.convertTime(nextTime, Time.TimestepUnit.MINUTES, timestepUnit));
-		}
+	public void start(int[] hhmm) {
+		double startTimeInSeconds = Time.convertTime(hhmm[0], Time.TimestepUnit.HOURS, Time.TimestepUnit.SECONDS)
+				+ Time.convertTime(hhmm[1], Time.TimestepUnit.MINUTES, Time.TimestepUnit.SECONDS);
+		dataServer.registerTimedUpdate(PerceptList.DISRUPTION, this, Time.convertTime(startTimeInSeconds, Time.TimestepUnit.SECONDS, timestepUnit));
 	}
 
 	/**
@@ -111,6 +110,5 @@ public class DisruptionModel implements DataSource {
 	void setTimestepUnit(Time.TimestepUnit unit) {
 		timestepUnit = unit;
 	}
-
 }
 
