@@ -461,11 +461,17 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 						link.getId(), prevSpeed, speedInMpS);
 				{
 					double startTime = convertTimeToSeconds(dd.getStartHHMM());
+					if (startTime < now) {
+						startTime = now;
+					}
 					addNetworkChangeEvent(speedInMpS, link, startTime);
 					disruptionWriter.write(startTime, link.getId(), link.getCoord(), speedInMpS);
 				}
 				{
 					double startTime = convertTimeToSeconds(dd.getEndHHMM());
+					if (startTime < now) {
+						startTime = now;
+					}
 					addNetworkChangeEvent(prevSpeed, link, startTime);
 					disruptionWriter.write(startTime, link.getId(), link.getCoord(), prevSpeed);
 				}
