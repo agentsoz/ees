@@ -42,8 +42,8 @@ public class CongestionTorquay500Test {
                 "logLevel: WARN," +
                 "logFile: \"scenarios/surf-coast-shire/torquay-500/jill.log\"," +
                 "programOutputFile: \"scenarios/surf-coast-shire/torquay-500/jill.out\"," +
-                "randomSeed: 12345" + // jill random seed
-                //"numThreads: 1"+ // run jill in single-threaded mode so logs are deterministic
+                "randomSeed: 12345," + // jill random seed
+                "numThreads: 1"+ // run jill in single-threaded mode so logs are deterministic
                 "}",
                 "--x-congestion-config", "120:0.1"
         };

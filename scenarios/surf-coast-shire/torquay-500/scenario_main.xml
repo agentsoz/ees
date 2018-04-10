@@ -131,7 +131,7 @@ The final number of BDI agents will be the lesser of N,M. Setting N really high
 population has BDI conterparts.
 ============================================================================-->
 <bdiagents>
-50
+500
 </bdiagents>
 
 <!--=========================================================================-->
