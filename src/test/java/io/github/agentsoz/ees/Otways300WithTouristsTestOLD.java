@@ -3,45 +3,42 @@
  */
 package io.github.agentsoz.ees;
 
-import io.github.agentsoz.bdimatsim.EvacConfig;
-import io.github.agentsoz.util.TestUtils;
 import org.apache.log4j.Logger;
 import org.junit.Rule;
 import org.junit.Test;
-import org.matsim.core.utils.misc.CRCChecksum;
 import org.matsim.testcases.MatsimTestUtils;
 
 /**
  * @author dsingh, Joel Robertson
  *
  */
-public class Otways300WithTouristsTest {
+public class Otways300WithTouristsTestOLD {
 
     // have tests in separate classes so that they run, at least under maven, in separate JVMs.  kai, nov'17
 
-    private static final Logger log = Logger.getLogger(Otways300WithTouristsTest.class);
+    private static final Logger log = Logger.getLogger(Otways300WithTouristsTestOLD.class);
 
     @Rule
     public MatsimTestUtils utils = new MatsimTestUtils();
 
     @Test
-    public void testOtways300Tourist() {
+    public void testOtways300TouristOLD() {
 
         String[] args = {
-                "--config", "scenarios/surf-coast-shire/otways-300/scenario_main.xml",
-                "--logfile", "scenarios/surf-coast-shire/otways-300/scenario.log",
+                "--config", "scenarios/surf-coast-shire/otways-300-old/scenario_main.xml",
+                "--logfile", "scenarios/surf-coast-shire/otways-300-old/scenario.log",
                 "--loglevel", "INFO",
                 //	                "--plan-selection-policy", "FIRST", // ensures it is deterministic, as default is RANDOM
                 "--seed", "12345",
-                "--safeline-output-file-pattern", "scenarios/surf-coast-shire/otways-300/safeline.%d%.out",
+                "--safeline-output-file-pattern", "scenarios/surf-coast-shire/otways-300-old/safeline.%d%.out",
                 "--matsim-output-directory", utils.getOutputDirectory(),
                 "--jillconfig", "--config={" +
                 "agents:[{classname:io.github.agentsoz.ees.agents.Resident, args:null, count:290}," +
                     "{classname:io.github.agentsoz.ees.agents.Tourist, " +
                     "args:[--WayHome,\"MelbourneRoute,787484,5764290\",--CongestionBehaviour,1200,0.5], count:10}]," +
                 "logLevel: WARN," +
-                "logFile: \"scenarios/surf-coast-shire/otways-300/jill.log\"," +
-                "programOutputFile: \"scenarios/surf-coast-shire/otways-300/jill.out\"," +
+                "logFile: \"scenarios/surf-coast-shire/otways-300-old/jill.log\"," +
+                "programOutputFile: \"scenarios/surf-coast-shire/otways-300-old/jill.out\"," +
                 "randomSeed: 12345" + // jill random seed
                 //"numThreads: 1"+ // run jill in single-threaded mode so logs are deterministic
                 "}"};
