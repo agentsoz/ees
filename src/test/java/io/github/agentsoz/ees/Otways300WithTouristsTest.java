@@ -42,29 +42,29 @@ public class Otways300WithTouristsTest {
                 "logLevel: WARN," +
                 "logFile: \"scenarios/surf-coast-shire/otways-300/jill.log\"," +
                 "programOutputFile: \"scenarios/surf-coast-shire/otways-300/jill.out\"," +
-                "randomSeed: 12345" + // jill random seed
-                //"numThreads: 1"+ // run jill in single-threaded mode so logs are deterministic
+                "randomSeed: 12345," + // jill random seed
+                "numThreads: 1"+ // run jill in single-threaded mode so logs are deterministic
                 "}"};
 
         Main.main(args);
 
-//        final String actualEventsFilename = utils.getOutputDirectory() + "/output_events.xml.gz";
-//        long actualEventsCRC = CRCChecksum.getCRCFromFile( actualEventsFilename ) ;
-//        System.err.println("actual(events)="+actualEventsCRC) ;
-//
-//        long actualPlansCRC = CRCChecksum.getCRCFromFile( utils.getOutputDirectory() + "/output_plans.xml.gz" ) ;
-//        System.err.println("actual(plans)="+actualPlansCRC) ;
-//
-//        // ---
-//
-//        final String primaryExpectedEventsFilename = utils.getInputDirectory() + "/output_events.xml.gz";
-//
-//        // ---
-//
-//        TestUtils.comparingDepartures(primaryExpectedEventsFilename,actualEventsFilename,10.);
-//        TestUtils.comparingArrivals(primaryExpectedEventsFilename,actualEventsFilename,10.);
-//        TestUtils.comparingActivityStarts(primaryExpectedEventsFilename,actualEventsFilename, 10.);
-//        TestUtils.compareFullEvents(primaryExpectedEventsFilename,actualEventsFilename, false);
+        final String actualEventsFilename = utils.getOutputDirectory() + "/output_events.xml.gz";
+        long actualEventsCRC = CRCChecksum.getCRCFromFile( actualEventsFilename ) ;
+        System.err.println("actual(events)="+actualEventsCRC) ;
+
+        long actualPlansCRC = CRCChecksum.getCRCFromFile( utils.getOutputDirectory() + "/output_plans.xml.gz" ) ;
+        System.err.println("actual(plans)="+actualPlansCRC) ;
+
+        // ---
+
+        final String primaryExpectedEventsFilename = utils.getInputDirectory() + "/output_events.xml.gz";
+
+        // ---
+
+        TestUtils.comparingDepartures(primaryExpectedEventsFilename,actualEventsFilename,10.);
+        TestUtils.comparingArrivals(primaryExpectedEventsFilename,actualEventsFilename,10.);
+        TestUtils.comparingActivityStarts(primaryExpectedEventsFilename,actualEventsFilename, 10.);
+        TestUtils.compareFullEvents(primaryExpectedEventsFilename,actualEventsFilename, false);
     }
 }
 
