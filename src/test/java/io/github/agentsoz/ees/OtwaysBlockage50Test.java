@@ -34,6 +34,7 @@ public class OtwaysBlockage50Test {
     public MatsimTestUtils utils = new MatsimTestUtils();
 
     @Test
+
     public void testBlockage50() {
 
         String[] args = {
@@ -71,9 +72,9 @@ public class OtwaysBlockage50Test {
 
         // ---
 
-        TestUtils.comparingDepartures(primaryExpectedEventsFilename,actualEventsFilename,10.);
-        TestUtils.comparingArrivals(primaryExpectedEventsFilename,actualEventsFilename,10.);
-        TestUtils.comparingActivityStarts(primaryExpectedEventsFilename,actualEventsFilename, 10.);
+        TestUtils.comparingDepartures(primaryExpectedEventsFilename,actualEventsFilename,300.);
+        TestUtils.comparingArrivals(primaryExpectedEventsFilename,actualEventsFilename,300.);
+        TestUtils.comparingActivityStarts(primaryExpectedEventsFilename,actualEventsFilename, 300.);
         TestUtils.compareFullEvents(primaryExpectedEventsFilename,actualEventsFilename, false);
 
     }

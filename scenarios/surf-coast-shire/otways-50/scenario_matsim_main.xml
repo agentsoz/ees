@@ -32,7 +32,7 @@
 	</module>
 
 	<module name="network">
-		<param name="inputNetworkFile" value="scenario_matsim_network.xml" />
+		<param name="inputNetworkFile" value="../surf_coast_shire_network.xml.gz" />
 		<param name= "timeVariantNetwork" value= "true" />
 		<param name= "inputChangeEventsFile" value= "scenario_matsim_network_change_events.xml" />
 	</module>

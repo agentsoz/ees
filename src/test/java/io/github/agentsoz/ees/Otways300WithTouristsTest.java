@@ -61,9 +61,9 @@ public class Otways300WithTouristsTest {
 
         // ---
 
-        TestUtils.comparingDepartures(primaryExpectedEventsFilename,actualEventsFilename,10.);
-        TestUtils.comparingArrivals(primaryExpectedEventsFilename,actualEventsFilename,10.);
-        TestUtils.comparingActivityStarts(primaryExpectedEventsFilename,actualEventsFilename, 10.);
+        TestUtils.comparingDepartures(primaryExpectedEventsFilename,actualEventsFilename,300.);
+        TestUtils.comparingArrivals(primaryExpectedEventsFilename,actualEventsFilename,300.);
+        TestUtils.comparingActivityStarts(primaryExpectedEventsFilename,actualEventsFilename, 300.);
         TestUtils.compareFullEvents(primaryExpectedEventsFilename,actualEventsFilename, false);
     }
 }
