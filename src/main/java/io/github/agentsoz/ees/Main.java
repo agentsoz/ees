@@ -17,7 +17,6 @@ import io.github.agentsoz.bdimatsim.EvacConfig;
 import io.github.agentsoz.bdimatsim.MATSimModel;
 import io.github.agentsoz.bdimatsim.Utils;
 import org.json.simple.parser.ParseException;
-import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.population.Activity;
 import org.matsim.api.core.v01.population.Person;
@@ -26,11 +25,6 @@ import org.matsim.core.config.Config;
 import org.matsim.core.config.ConfigUtils;
 import org.matsim.core.config.groups.QSimConfigGroup.StarttimeInterpretation;
 import org.matsim.core.events.handler.EventHandler;
-import org.matsim.core.gbl.Gbl;
-import org.matsim.core.network.NetworkChangeEvent;
-import org.matsim.core.network.NetworkChangeEvent.ChangeType;
-import org.matsim.core.network.NetworkChangeEvent.ChangeValue;
-import org.matsim.core.network.NetworkUtils;
 import org.slf4j.LoggerFactory;
 
 import ch.qos.logback.classic.Level;
@@ -79,6 +73,7 @@ public class Main {
 	private static String[] jillInitArgs = null;
 	private static String matsimOutputDirectory;
 	private static String safelineOutputFilePattern = "./safeline.%d%.csv";
+	private static boolean sendFireAlertOnFireStart = true;
 
 
 	private static int blockedLinkId = -1; // FIXME: temp fix on 31/01/18; remove once #1 is in place
@@ -225,7 +220,7 @@ public class Main {
 		if (!isGeoJson) {
 			abort("Fire file must be in GeoJson format.");
 		}
-		PhoenixFireModule fireModel = new PhoenixFireModule();
+		PhoenixFireModule fireModel = new PhoenixFireModule(sendFireAlertOnFireStart);
 		fireModel.setDataServer(dataServer);
 		fireModel.loadGeoJson(SimpleConfig.getFireFile());
 		fireModel.setEvacStartHHMM(SimpleConfig.getEvacStartHHMM());
@@ -379,6 +374,17 @@ public class Main {
 					}
 				}
 				break;
+				case "--sendFireAlertOnFireStart":
+					if (i + 1 < args.length) {
+						i++;
+						try {
+							sendFireAlertOnFireStart = Boolean.parseBoolean(args[i]);
+						} catch (Exception e) {
+							System.err.println("Could not parse boolean '"
+									+ args[i] + "' : " + e.getMessage());
+						}
+					}
+					break;
 			case MATSimModel.MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR:
 				if (i + 1 < args.length) {
 					i++;

@@ -58,8 +58,10 @@ public class PhoenixFireModule implements DataSource {
 	private double evacStartInSeconds = 0.0;
 	private boolean fireAlertSent = false;
 
-	public PhoenixFireModule() {
+	public PhoenixFireModule(boolean sendFireAlertOnFireStart) {
+
 		fire = new TreeMap<Double, Double[][]>();
+		fireAlertSent = !sendFireAlertOnFireStart;
 	}
 
 	@SuppressWarnings("unchecked")
