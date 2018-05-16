@@ -15,8 +15,6 @@ import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.TransportMode;
 import org.matsim.api.core.v01.network.Link;
-import org.matsim.api.core.v01.population.Person;
-import org.matsim.api.core.v01.population.PopulationFactory;
 import org.matsim.core.api.experimental.events.EventsManager;
 import org.matsim.core.config.Config;
 import org.matsim.core.config.ConfigUtils;
@@ -35,7 +33,6 @@ import org.matsim.core.mobsim.framework.listeners.MobsimInitializedListener;
 import org.matsim.core.mobsim.qsim.QSim;
 import org.matsim.core.network.NetworkChangeEvent;
 import org.matsim.core.network.NetworkUtils;
-import org.matsim.core.population.routes.NetworkRoute;
 import org.matsim.core.population.routes.RouteUtils;
 import org.matsim.core.router.NetworkRoutingProvider;
 import org.matsim.core.router.costcalculators.TravelDisutilityFactory;
@@ -410,6 +407,7 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 		// some blackboardy thing that sits between ABM and BDI
 		server.subscribe(this, PerceptList.FIRE_DATA);
 		server.subscribe(this, PerceptList.DISRUPTION);
+		server.subscribe(this, PerceptList.EMERGENCY_MESSAGE);
 	}
 
 	@Override public boolean dataUpdate(double time, String dataType, Object data) {
@@ -426,6 +424,8 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 						penaltyFactorsOfLinksForEmergencyVehicles, fireWriter);
 			case PerceptList.DISRUPTION:
 				return processDisruptionData(data, now, scenario, disruptionWriter);
+			case PerceptList.EMERGENCY_MESSAGE:
+				return processEmergencyMessageData(data, now, scenario);
 			default:
 				throw new RuntimeException("not implemented") ;
 		}
@@ -477,6 +477,14 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 				}
 			}
 		}
+		return true ;
+	}
+
+	private boolean processEmergencyMessageData(Object data, double now, Scenario scenario) {
+		log.info("receiving emergency message data at time={}", (now/3600) ); ;
+
+		log.info( new Gson().toJson(data) ) ;
+
 		return true ;
 	}
 
