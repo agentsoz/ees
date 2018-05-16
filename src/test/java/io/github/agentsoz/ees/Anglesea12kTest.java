@@ -13,7 +13,7 @@ import org.matsim.testcases.MatsimTestUtils;
  * @author dsingh
  *
  */
-@Ignore
+//@Ignore
 public class Anglesea12kTest {
     // have tests in separate classes so that they run, at least und    er maven, in separate JVMs.  kai, nov'17
 
@@ -41,6 +41,7 @@ public class Anglesea12kTest {
                 "randomSeed: 12345," + // jill random seed
                 "numThreads: 1" + // run jill in single-threaded mode so logs are deterministic
                 "}",
+                "--x-congestion-config", "100000:100000" // virtually disallow congestion re-routing (painfully slow otherwise!)
         };
 
         Main.main(args);
