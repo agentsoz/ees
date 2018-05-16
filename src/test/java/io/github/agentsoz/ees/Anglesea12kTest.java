@@ -1,60 +1,47 @@
 package io.github.agentsoz.ees;
 
-import io.github.agentsoz.bdimatsim.EvacConfig;
 import io.github.agentsoz.bdimatsim.MATSimModel;
 import io.github.agentsoz.util.TestUtils;
 import org.apache.log4j.Logger;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.matsim.core.utils.misc.CRCChecksum;
 import org.matsim.testcases.MatsimTestUtils;
 
-
-
-        import io.github.agentsoz.bdimatsim.EvacConfig;
-        import io.github.agentsoz.bdimatsim.MATSimModel;
-        import io.github.agentsoz.util.TestUtils;
-        import org.apache.log4j.Logger;
-        import org.junit.Rule;
-        import org.junit.Test;
-        import org.matsim.core.utils.misc.CRCChecksum;
-        import org.matsim.testcases.MatsimTestUtils;
-
 /**
- * @author dsingh, Joel Robertson
+ * @author dsingh
  *
  */
-
-public class OtwaysBlockage50Test {
+//@Ignore
+public class Anglesea12kTest {
     // have tests in separate classes so that they run, at least und    er maven, in separate JVMs.  kai, nov'17
 
-    Logger log = Logger.getLogger(OtwaysBlockage50Test.class);
+    Logger log = Logger.getLogger(Anglesea12kTest.class);
 
     @Rule
     public MatsimTestUtils utils = new MatsimTestUtils();
 
     @Test
-
-    public void testBlockage50() {
+    public void testAnglesea12k() {
 
         String[] args = {
-                "--config", "scenarios/surf-coast-shire/otways-50/scenario_main.xml",
-                "--logfile", "scenarios/surf-coast-shire/otways-50/scenario.log",
+                "--config", "scenarios/surf-coast-shire/anglesea-12k/scenario_main.xml",
+                "--logfile", "scenarios/surf-coast-shire/anglesea-12k/scenario.log",
                 "--loglevel", "INFO",
                 //	                "--plan-selection-policy", "FIRST", // ensures it is deterministic, as default is RANDOM
                 "--seed", "12345",
-                "--safeline-output-file-pattern", "scenarios/surf-coast-shire/otways-50/safeline.%d%.out",
+                "--safeline-output-file-pattern", "scenarios/surf-coast-shire/anglesea-12k/safeline.%d%.out",
                 MATSimModel.MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR, utils.getOutputDirectory(),
                 "--jillconfig", "--config={" +
-                "agents:[{classname:io.github.agentsoz.ees.agents.Resident, args:null, count:50}]," +
+                "agents:[{classname:io.github.agentsoz.ees.agents.Resident, args:null, count:12052}]," +
                 "logLevel: WARN," +
-                "logFile: \"scenarios/surf-coast-shire/otways-50/jill.log\"," +
-                "programOutputFile: \"scenarios/surf-coast-shire/otways-50/jill.out\"," +
+                "logFile: \"scenarios/surf-coast-shire/anglesea-12k/jill.log\"," +
+                "programOutputFile: \"scenarios/surf-coast-shire/anglesea-12k/jill.out\"," +
                 "randomSeed: 12345," + // jill random seed
                 "numThreads: 1" + // run jill in single-threaded mode so logs are deterministic
                 "}",
-                "--x-disruptions-file", "scenarios/surf-coast-shire/otways-50/scenario_disruptions.json",
-//                "--x-blocked-link", "89175",
+                "--x-congestion-config", "100000:100000" // virtually disallow congestion re-routing (painfully slow otherwise!)
         };
 
         Main.main(args);
@@ -72,10 +59,10 @@ public class OtwaysBlockage50Test {
 
         // ---
 
-        TestUtils.comparingDepartures(primaryExpectedEventsFilename,actualEventsFilename,300.);
-        TestUtils.comparingArrivals(primaryExpectedEventsFilename,actualEventsFilename,300.);
-        TestUtils.comparingActivityStarts(primaryExpectedEventsFilename,actualEventsFilename, 300.);
-        TestUtils.compareFullEvents(primaryExpectedEventsFilename,actualEventsFilename, false);
+        //TestUtils.comparingDepartures(primaryExpectedEventsFilename,actualEventsFilename,300.);
+        //TestUtils.comparingArrivals(primaryExpectedEventsFilename,actualEventsFilename,300.);
+        //TestUtils.comparingActivityStarts(primaryExpectedEventsFilename,actualEventsFilename, 300.);
+        //TestUtils.compareFullEvents(primaryExpectedEventsFilename,actualEventsFilename, false);
 
     }
 }
