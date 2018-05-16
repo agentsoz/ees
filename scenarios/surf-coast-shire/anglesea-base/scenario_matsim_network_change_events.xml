@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<networkChangeEvents xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.matsim.org/files/dtd" xsi:schemaLocation="http://www.matsim.org/files/dtd http://www.matsim.org/files/dtd/networkChangeEvents.xsd">
+
+ <networkChangeEvent startTime="00:00:00">
+    <link refId="dummy-linkid-that-should-never-match"/>
+    <link refId="10023"/>
+ 
+   <freespeed type="scaleFactor" value="1.0"/>
+  </networkChangeEvent>
+</networkChangeEvents>
