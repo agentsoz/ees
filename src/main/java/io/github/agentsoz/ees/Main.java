@@ -111,7 +111,10 @@ public class Main {
 
 		// initialise the disruptions module
 		initializeAndStartDisruptionModel(dataServer);
-		
+
+		// initialise the messaging module
+		initializeAndStartMessagingModel(dataServer);
+
 		MATSimModel matsimModel = new MATSimModel( SimpleConfig.getMatSimFile(), matsimOutputDirectory );
 
 		// --- do some things for which you need a handle to matsim:
@@ -247,6 +250,24 @@ public class Main {
 			model.loadJson(SimpleConfig.getDisruptionsFile());
 		}
 		// If the disruptions file was not given, then the model starts but does nothing
+		model.setTimestepUnit(Time.TimestepUnit.SECONDS);
+		model.start(SimpleConfig.getEvacStartHHMM());
+	}
+
+	/**
+	 * Create the disruption model, load the disruption data, and register the model as an active data source
+	 * @param dataServer
+	 * @throws IOException
+	 * @throws ParseException
+	 * @throws java.text.ParseException
+	 */
+	private static void initializeAndStartMessagingModel(DataServer dataServer) throws IOException, ParseException, java.text.ParseException {
+		MessagingModel model = new MessagingModel();
+		model.setDataServer(dataServer);
+		if (SimpleConfig.getMessagesFile() != null) {
+			model.loadJson(SimpleConfig.getMessagesFile());
+		}
+		// If the messages file was not given, then the model starts but does nothing
 		model.setTimestepUnit(Time.TimestepUnit.SECONDS);
 		model.start(SimpleConfig.getEvacStartHHMM());
 	}
@@ -401,6 +422,12 @@ public class Main {
 					if(i+1<args.length) {
 						i++ ;
 						SimpleConfig.setDisruptionsFile(args[i]) ;
+					}
+					break;
+				case "--x-messages-file": //FIXME: remove; make part of main config
+					if(i+1<args.length) {
+						i++ ;
+						SimpleConfig.setMessagesFile(args[i]) ;
 					}
 					break;
 				case "--x-congestion-config": //FIXME: remove; make part of main config

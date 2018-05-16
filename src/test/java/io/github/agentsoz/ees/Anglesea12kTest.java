@@ -41,7 +41,8 @@ public class Anglesea12kTest {
                 "randomSeed: 12345," + // jill random seed
                 "numThreads: 1" + // run jill in single-threaded mode so logs are deterministic
                 "}",
-                "--x-congestion-config", "100000:100000" // virtually disallow congestion re-routing (painfully slow otherwise!)
+                "--x-congestion-config", "100000:100000", // virtually disallow congestion re-routing (painfully slow otherwise!)
+                "--x-messages-file", "scenarios/surf-coast-shire/anglesea-12k/scenario_messages.json",
         };
 
         Main.main(args);
