@@ -395,17 +395,17 @@ public class Main {
 					}
 				}
 				break;
-				case "--sendFireAlertOnFireStart":
-					if (i + 1 < args.length) {
-						i++;
-						try {
-							sendFireAlertOnFireStart = Boolean.parseBoolean(args[i]);
-						} catch (Exception e) {
-							System.err.println("Could not parse boolean '"
-									+ args[i] + "' : " + e.getMessage());
-						}
+			case "--sendFireAlertOnFireStart":
+				if (i + 1 < args.length) {
+					i++;
+					try {
+						sendFireAlertOnFireStart = Boolean.parseBoolean(args[i]);
+					} catch (Exception e) {
+						System.err.println("Could not parse boolean '"
+								+ args[i] + "' : " + e.getMessage());
 					}
-					break;
+				}
+				break;
 			case MATSimModel.MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR:
 				if (i + 1 < args.length) {
 					i++;

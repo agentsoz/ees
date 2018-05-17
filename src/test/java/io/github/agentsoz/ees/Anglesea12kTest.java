@@ -42,8 +42,9 @@ public class Anglesea12kTest {
                 "numThreads: 1" + // run jill in single-threaded mode so logs are deterministic
                 "}",
                 "--x-congestion-config", "100000:100000", // virtually disallow congestion re-routing (painfully slow otherwise!)
-                "--x-messages-file", "scenarios/surf-coast-shire/anglesea-12k/scenario_messages.json",
-                "--x-zones-file", "scenarios/surf-coast-shire/anglesea-12k/Anglesea_SA1s_WSG84.json",
+                "--sendFireAlertOnFireStart", "false", // disable fire alert from fire model, instead will use messaging
+                "--x-messages-file", "scenarios/surf-coast-shire/anglesea-12k/scenario_messages.json", // specifies when to send evac now msg
+                "--x-zones-file", "scenarios/surf-coast-shire/anglesea-12k/Anglesea_SA1s_WSG84.json", // map from zone (SA1) ids to shapes
         };
 
         Main.main(args);
