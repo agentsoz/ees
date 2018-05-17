@@ -81,7 +81,7 @@ public class MessagingModel implements DataSource {
 			cal.setTime(date);
 			double minutes = 60 * cal.get(Calendar.HOUR_OF_DAY) + cal.get(Calendar.MINUTE);
 			// get the enclosing polygon for each zone
-			Map<String,Double[][]> map = message.getBroadcastZones();
+			TreeMap<String,Double[][]> map = message.getBroadcastZones();
 			for (String zoneId : map.keySet()) {
 				if (zones.containsKey(zoneId)) {
 					map.put(zoneId,zones.get(zoneId));
