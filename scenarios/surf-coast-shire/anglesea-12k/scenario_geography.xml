@@ -32,9 +32,14 @@
 <coordinateSystem>utm</coordinateSystem>
 
 <destinations>
-  <location>
+  <!-- <location>
     <name>Torquay Foreshore</name>
     <coordinates>790772,5752462</coordinates>
+    <split>100.00</split>
+  </location> -->
+  <location>
+    <name>Torquay Golf Course</name>
+    <coordinates>789594,5751184</coordinates>
     <split>100.00</split>
   </location>
 </destinations>
@@ -42,6 +47,5 @@
 <safelines>
 <!-- intentionally empty -->
 </safelines>
-
 
 </geography>
