@@ -25,7 +25,6 @@ package io.github.agentsoz.ees;
 import com.google.gson.Gson;
 import io.github.agentsoz.dataInterface.DataServer;
 import io.github.agentsoz.dataInterface.DataSource;
-import io.github.agentsoz.util.Disruption;
 import io.github.agentsoz.util.EmergencyMessage;
 import io.github.agentsoz.util.Time;
 import io.github.agentsoz.util.evac.PerceptList;
@@ -49,29 +48,88 @@ public class MessagingModel implements DataSource {
 	private DataServer dataServer = null;
 	private double lastUpdateTimeInMinutes = -1;
 	private TreeMap<Double, EmergencyMessage> messages;
+	private TreeMap<String, Double[][]> zones;
+
 	private Time.TimestepUnit timestepUnit = Time.TimestepUnit.SECONDS;
 
 	public MessagingModel() {
+
 		messages = new TreeMap<>();
+		zones = new TreeMap<>();
+
 	}
 
-	void loadJson(String file) throws IOException, ParseException, java.text.ParseException {
+	@SuppressWarnings("unchecked")
+	void loadJsonMessagesForZones(String msgFile, String zonesFile) throws IOException, ParseException, java.text.ParseException {
+		//First load the zones
+		loadGeoJsonZones(zonesFile);
+		// Then the messages
 		Gson gson = new Gson();
-		logger.info("Loading JSON messages file: " + file);
+		logger.info("Loading JSON messages file: " + msgFile);
 		// Create the JSON parsor
 		JSONParser parser = new JSONParser();
 		// Read in the JSON file
-		JSONObject json = (JSONObject) (parser.parse(new FileReader(file)));
+		JSONObject json = (JSONObject) (parser.parse(new FileReader(msgFile)));
 		JSONArray list = (JSONArray) json.get("messages");
 		for (JSONObject object : (Iterable<JSONObject>) list) {
-			String str = object.toJSONString();
-			EmergencyMessage message = gson.fromJson(str, EmergencyMessage.class);
+			// create the message object directly from JSON
+			EmergencyMessage message = gson.fromJson(object.toJSONString(), EmergencyMessage.class);
+			// convert the HHMM broadcast time to simulation time units
 			DateFormat format = new SimpleDateFormat("HHmm", Locale.ENGLISH);
 			Date date = format.parse(message.getBroadcastHHMM());
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(date);
 			double minutes = 60 * cal.get(Calendar.HOUR_OF_DAY) + cal.get(Calendar.MINUTE);
+			// get the enclosing polygon for each zone
+			Map<String,Double[][]> map = message.getBroadcastZones();
+			for (String zoneId : map.keySet()) {
+				if (zones.containsKey(zoneId)) {
+					map.put(zoneId,zones.get(zoneId));
+				}
+			}
+			message.setBroadcastZones(map);
+			// save it
 			messages.put(minutes, message);
+		}
+	}
+
+	/**
+	 * Expects a GeoJSON structure of the form:
+	 * {@code
+	 * {...,"features":[
+	 *  {"properties":{"SA1_MAIN11": "id1",...},
+	 *   "geometry":{"type":"Polygon","coordinates":[[ [lon1,lat1],[lon2,lat2] ]]}
+	 *  },...]}
+	 *
+	 * @param file
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 * @throws ParseException
+	 * @throws java.text.ParseException
+	 */
+	@SuppressWarnings("unchecked")
+	private void loadGeoJsonZones(String file) throws IOException, ParseException, java.text.ParseException {
+		logger.info("Loading zones from GeoJSON file: " + file);
+		// Create the JSON parsor
+		JSONParser parser = new JSONParser();
+		// Read in the JSON file
+		JSONObject json = (JSONObject) (parser.parse(new FileReader(file)));
+		// Loop through the features (which contains the time-stamped fire
+		// shapes)
+		JSONArray features = (JSONArray) json.get("features");
+		for (JSONObject feature : (Iterable<JSONObject>) features) {
+			JSONObject properties = (JSONObject) feature.get("properties");
+			JSONObject geometry = (JSONObject) feature.get("geometry");
+			JSONArray jcoords = (JSONArray) geometry.get("coordinates");
+			JSONArray coords = (JSONArray) jcoords.get(0);
+			Double[][] polygon = new Double[coords.size()][2];
+			Iterator<JSONArray> it = coords.iterator();
+			int i = 0;
+			while (it.hasNext()) {
+				polygon[i++] = (Double[]) it.next().toArray(new Double[2]);
+			}
+			String zoneId = (String) properties.get("SA1_MAIN11");
+			zones.put(zoneId, polygon);
 		}
 	}
 

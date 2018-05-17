@@ -43,6 +43,7 @@ public class Anglesea12kTest {
                 "}",
                 "--x-congestion-config", "100000:100000", // virtually disallow congestion re-routing (painfully slow otherwise!)
                 "--x-messages-file", "scenarios/surf-coast-shire/anglesea-12k/scenario_messages.json",
+                "--x-zones-file", "scenarios/surf-coast-shire/anglesea-12k/Anglesea_SA1s_WSG84.json",
         };
 
         Main.main(args);

@@ -15,7 +15,13 @@
       "type" : "EVACUATE_NOW",
       "content" : "Evacuate now if safe to do so",
       "broadcastHHMM" : "1500",
-      "broadcastZones" : ["20303104904", "20303104905", "20303104906", "20303104907", "20303104909", "20303104910"]
+      "broadcastZones" : {
+        "20303104904": null,
+        "20303104905": null,
+        "20303104906": null,
+        "20303104907": null,
+        "20303104909": null,
+        "20303104910": null}
     }
   ]
 }
