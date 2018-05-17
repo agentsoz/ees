@@ -57,7 +57,7 @@ public final class DRIVETODefaultActionHandler implements BDIActionHandler {
 	public boolean handle(String agentID, String actionID, Object[] args) {
 		log.debug("------------------------------------------------------------------------------------------");
 		{
-			// dsingh, 16/may/18, towards #12
+			// dsingh 16/may/18 - towards #12
 			if (args.length < 4) {
 				log.error("agent " + agentID + " DRIVETO handler has " +args.length + " args (>=4 expected); will continue without handling this event");
 				return true;
@@ -128,7 +128,7 @@ public final class DRIVETODefaultActionHandler implements BDIActionHandler {
 						// (shouldn't this be earlier? --> there is a comment in the agent manager. kai, nov'17)
 						//agent.getActionContainer().get(ActionList.DRIVETO).setState(ActionContent.State.PASSED);
 						{
-							// dsingh, 17/may/18 - attempt at fixing issue #12 below
+							// dsingh, 17/may/18  -  attempt at fixing issue #12 below
 							ActionContainer ac = agent.getActionContainer();
 							synchronized (ac) {
 								ActionContent acc = ac.get(ActionList.DRIVETO);
