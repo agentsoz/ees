@@ -14,13 +14,13 @@
     {
       "type" : "EVACUATE_NOW",
       "content" : "Evacuate now if safe to do so",
-      "broadcastHHMM" : "1400",
+      "broadcastHHMM" : "1800",
       "broadcastZones" : {"20303104904": null, "20303104907": null}
     },
     {
       "type" : "EVACUATE_NOW",
       "content" : "Evacuate now if safe to do so",
-      "broadcastHHMM" : "1430",
+      "broadcastHHMM" : "1400",
       "broadcastZones" : {"20303104909": null}
     },
     {
@@ -32,13 +32,13 @@
     {
       "type" : "EVACUATE_NOW",
       "content" : "Evacuate now if safe to do so",
-      "broadcastHHMM" : "1530",
+      "broadcastHHMM" : "1600",
       "broadcastZones" : {"20303104905": null}
     },
     {
       "type" : "EVACUATE_NOW",
       "content" : "Evacuate now if safe to do so",
-      "broadcastHHMM" : "1600",
+      "broadcastHHMM" : "1700",
       "broadcastZones" : {"20303104906": null}
     }
   ]

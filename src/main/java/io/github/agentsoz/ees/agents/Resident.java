@@ -55,6 +55,8 @@ public class Resident extends Agent implements io.github.agentsoz.bdiabm.Agent {
 	private double time = -1;
 	private QueryPerceptInterface queryInterface;
 
+	private boolean isEvacuating = false;
+
 	public Resident(String str) {
 		super(str);
 	}
@@ -124,7 +126,12 @@ public class Resident extends Agent implements io.github.agentsoz.bdiabm.Agent {
 			EmergencyMessage.EmergencyMessageType type = (EmergencyMessage.EmergencyMessageType)parameters;
 			writer.println(prefix + "received emergency message " + type);
 			if (type==EmergencyMessage.EmergencyMessageType.EVACUATE_NOW) {
-				post(new RespondToFireAlert("RespondToFireAlert"));
+				if (isEvacuating) {
+					writer.println(prefix + "will ignore "+type+" message as already evacuating");
+				} else {
+					isEvacuating = true;
+					post(new RespondToFireAlert("RespondToFireAlert"));
+				}
 			}
 		}
 	}
