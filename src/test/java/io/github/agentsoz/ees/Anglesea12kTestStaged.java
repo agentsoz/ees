@@ -1,7 +1,6 @@
 package io.github.agentsoz.ees;
 
 import io.github.agentsoz.bdimatsim.MATSimModel;
-import io.github.agentsoz.util.TestUtils;
 import org.apache.log4j.Logger;
 import org.junit.Ignore;
 import org.junit.Rule;
@@ -14,16 +13,16 @@ import org.matsim.testcases.MatsimTestUtils;
  *
  */
 //@Ignore
-public class Anglesea12kTest {
+public class Anglesea12kTestStaged {
     // have tests in separate classes so that they run, at least und    er maven, in separate JVMs.  kai, nov'17
 
-    Logger log = Logger.getLogger(Anglesea12kTest.class);
+    Logger log = Logger.getLogger(Anglesea12kTestStaged.class);
 
     @Rule
     public MatsimTestUtils utils = new MatsimTestUtils();
 
     @Test
-    public void testAnglesea12k() {
+    public void testAnglesea12kStaged() {
 
         String[] args = {
                 "--config", "scenarios/surf-coast-shire/anglesea-12k/scenario_main.xml",
@@ -43,7 +42,7 @@ public class Anglesea12kTest {
                 "}",
                 "--x-congestion-config", "100000:100000", // virtually disallow congestion re-routing (painfully slow otherwise!)
                 "--sendFireAlertOnFireStart", "false", // disable fire alert from fire model, instead will use messaging
-                "--x-messages-file", "scenarios/surf-coast-shire/anglesea-12k/scenario_messages.json", // specifies when to send evac now msg
+                "--x-messages-file", "scenarios/surf-coast-shire/anglesea-12k/scenario_messages_staged.json", // specifies when to send evac now msg
                 "--x-zones-file", "scenarios/surf-coast-shire/anglesea-12k/Anglesea_SA1s_WSG84.json", // map from zone (SA1) ids to shapes
         };
 

@@ -111,7 +111,10 @@ public class Main {
 
 		// initialise the disruptions module
 		initializeAndStartDisruptionModel(dataServer);
-		
+
+		// initialise the messaging module
+		initializeAndStartMessagingModel(dataServer);
+
 		MATSimModel matsimModel = new MATSimModel( SimpleConfig.getMatSimFile(), matsimOutputDirectory );
 
 		// --- do some things for which you need a handle to matsim:
@@ -252,6 +255,24 @@ public class Main {
 	}
 
 	/**
+	 * Create the disruption model, load the disruption data, and register the model as an active data source
+	 * @param dataServer
+	 * @throws IOException
+	 * @throws ParseException
+	 * @throws java.text.ParseException
+	 */
+	private static void initializeAndStartMessagingModel(DataServer dataServer) throws IOException, ParseException, java.text.ParseException {
+		MessagingModel model = new MessagingModel();
+		model.setDataServer(dataServer);
+		// If the messages file was not given, then the model starts but does nothing
+		if (SimpleConfig.getMessagesFile() != null && SimpleConfig.getZonesFile() != null) {
+			model.loadJsonMessagesForZones(SimpleConfig.getMessagesFile(), SimpleConfig.getZonesFile());
+		}
+		model.setTimestepUnit(Time.TimestepUnit.SECONDS);
+		model.start(SimpleConfig.getEvacStartHHMM());
+	}
+
+	/**
 	 * Gets the simulation start time from the config, with an added delay
 	 * @param delay in seconds to add to the start (can be negative)
 	 * @return the start time with delay added, value always >= 0
@@ -374,17 +395,17 @@ public class Main {
 					}
 				}
 				break;
-				case "--sendFireAlertOnFireStart":
-					if (i + 1 < args.length) {
-						i++;
-						try {
-							sendFireAlertOnFireStart = Boolean.parseBoolean(args[i]);
-						} catch (Exception e) {
-							System.err.println("Could not parse boolean '"
-									+ args[i] + "' : " + e.getMessage());
-						}
+			case "--sendFireAlertOnFireStart":
+				if (i + 1 < args.length) {
+					i++;
+					try {
+						sendFireAlertOnFireStart = Boolean.parseBoolean(args[i]);
+					} catch (Exception e) {
+						System.err.println("Could not parse boolean '"
+								+ args[i] + "' : " + e.getMessage());
 					}
-					break;
+				}
+				break;
 			case MATSimModel.MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR:
 				if (i + 1 < args.length) {
 					i++;
@@ -401,6 +422,18 @@ public class Main {
 					if(i+1<args.length) {
 						i++ ;
 						SimpleConfig.setDisruptionsFile(args[i]) ;
+					}
+					break;
+				case "--x-messages-file": //FIXME: remove; make part of main config
+					if(i+1<args.length) {
+						i++ ;
+						SimpleConfig.setMessagesFile(args[i]) ;
+					}
+					break;
+				case "--x-zones-file": //FIXME: remove; make part of main config
+					if(i+1<args.length) {
+						i++ ;
+						SimpleConfig.setZonesFile(args[i]) ;
 					}
 					break;
 				case "--x-congestion-config": //FIXME: remove; make part of main config

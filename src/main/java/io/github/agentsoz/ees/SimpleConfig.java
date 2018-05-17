@@ -63,7 +63,8 @@ public class SimpleConfig {
 	private static String fireFile = null;
 
 	private static String disruptionsFile = null; // FIXME: should come from config XML
-
+	private static String messagesFile = null;  // FIXME: should come from config XML
+	private static String zonesFile = null; // FIXME: should come from config XML
 	private static double congestionEvaluationInterval = 600; // secs between BDI agent evaluatiing if it is in congestion
 	private static double congestionToleranceThreshold = 0.5; // as a proportion of the congestionEvaluationInterval
 
@@ -419,4 +420,19 @@ public class SimpleConfig {
 		return congestionEvaluationInterval;
 	}
 
+	public static String getMessagesFile() {
+		return messagesFile;
+	}
+
+	public static void setMessagesFile(String messagesFile) {
+		SimpleConfig.messagesFile = messagesFile;
+	}
+
+	public static String getZonesFile() {
+		return zonesFile;
+	}
+
+	public static void setZonesFile(String zonesFile) {
+        SimpleConfig.zonesFile = zonesFile;
+    }
 }

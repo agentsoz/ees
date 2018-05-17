@@ -3,6 +3,7 @@ package io.github.agentsoz.ees.agents;
 import java.io.PrintStream;
 
 import io.github.agentsoz.bdiabm.QueryPerceptInterface;
+import io.github.agentsoz.util.EmergencyMessage;
 import io.github.agentsoz.util.evac.PerceptList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,6 +54,8 @@ public class Resident extends Agent implements io.github.agentsoz.bdiabm.Agent {
 
 	private double time = -1;
 	private QueryPerceptInterface queryInterface;
+
+	private boolean isEvacuating = false;
 
 	public Resident(String str) {
 		super(str);
@@ -119,6 +122,17 @@ public class Resident extends Agent implements io.github.agentsoz.bdiabm.Agent {
 			// Received a fire alert so act now
 			writer.println(prefix + "received fire alert");
 			post(new RespondToFireAlert("RespondToFireAlert"));
+		} else if (perceptID.equals(PerceptList.EMERGENCY_MESSAGE)) {
+			EmergencyMessage.EmergencyMessageType type = (EmergencyMessage.EmergencyMessageType)parameters;
+			writer.println(prefix + "received emergency message " + type);
+			if (type==EmergencyMessage.EmergencyMessageType.EVACUATE_NOW) {
+				if (isEvacuating) {
+					writer.println(prefix + "will ignore "+type+" message as already evacuating");
+				} else {
+					isEvacuating = true;
+					post(new RespondToFireAlert("RespondToFireAlert"));
+				}
+			}
 		}
 	}
 
