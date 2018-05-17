@@ -22,6 +22,7 @@ package io.github.agentsoz.bdimatsim;
  * #L%
  */
 
+import io.github.agentsoz.bdiabm.data.ActionContainer;
 import io.github.agentsoz.util.evac.ActionList;
 import io.github.agentsoz.util.evac.PerceptList;
 import org.apache.log4j.Level;
@@ -55,6 +56,13 @@ public final class DRIVETODefaultActionHandler implements BDIActionHandler {
 	@Override
 	public boolean handle(String agentID, String actionID, Object[] args) {
 		log.debug("------------------------------------------------------------------------------------------");
+		{
+			// dsingh, 16/may/18, towards #12
+			if (args.length < 4) {
+				log.error("agent " + agentID + " DRIVETO handler has " +args.length + " args (>=4 expected); will continue without handling this event");
+				return true;
+			}
+		}
 		// assertions:
 		Gbl.assertIf( args.length >= 4 ) ;
 		Gbl.assertIf( args[1] instanceof double[] ) ;
@@ -118,7 +126,19 @@ public final class DRIVETODefaultActionHandler implements BDIActionHandler {
 						Object[] params = {linkId.toString()};
 						agent.getActionContainer().register(ActionList.DRIVETO, params);
 						// (shouldn't this be earlier? --> there is a comment in the agent manager. kai, nov'17)
-						agent.getActionContainer().get(ActionList.DRIVETO).setState(ActionContent.State.PASSED);
+						//agent.getActionContainer().get(ActionList.DRIVETO).setState(ActionContent.State.PASSED);
+						{
+							// dsingh, 17/may/18 - attempt at fixing issue #12 below
+							ActionContainer ac = agent.getActionContainer();
+							synchronized (ac) {
+								ActionContent acc = ac.get(ActionList.DRIVETO);
+								if (acc == null) {
+									log.error("agent with id=" + agentId + " has null action content for DRIVETO action!!");
+								} else {
+									acc.setState(ActionContent.State.PASSED);
+								}
+							}
+						}
 						agent.getPerceptContainer().put(PerceptList.ARRIVED, params[0]);
 						return true;
 					}
