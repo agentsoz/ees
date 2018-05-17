@@ -5,7 +5,9 @@ import java.util.*;
 import com.google.gson.Gson;
 import com.vividsolutions.jts.geom.*;
 import io.github.agentsoz.bdiabm.QueryPerceptInterface;
+import io.github.agentsoz.bdiabm.data.ActionContent;
 import io.github.agentsoz.dataInterface.DataClient;
+import io.github.agentsoz.nonmatsim.PAAgent;
 import io.github.agentsoz.util.Disruption;
 import io.github.agentsoz.util.EmergencyMessage;
 import io.github.agentsoz.util.evac.ActionList;
@@ -521,6 +523,11 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 				log.info("For zone " + zoneId + ", found "+personsMatched+" persons currently within it");
 			}
 			log.info("Message " + msg.getType() + " will be sent to " + personsInZones.size() + " persons in zones " + msg.getBroadcastZones().keySet());
+			// package the messages up to send to the BDI side
+			for (Id<Person> personId : personsInZones) {
+				PAAgent agent = this.getAgentManager().getAgent(personId.toString());
+				agent.getPerceptContainer().put(PerceptList.EMERGENCY_MESSAGE, msg.getType());
+			}
 
 		}
 		return true ;
