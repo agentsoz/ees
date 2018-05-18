@@ -4,6 +4,7 @@
 package io.github.agentsoz.ees;
 
 import io.github.agentsoz.util.TestUtils;
+import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.apache.log4j.Logger;
 import org.junit.Rule;
 import org.junit.Test;
@@ -19,7 +20,7 @@ public class AngleseaBase12kTest {
     // have tests in separate classes so that they run, at least under maven, in separate JVMs.  kai, nov'17
 
     private static final Logger log = Logger.getLogger(AngleseaBase12kTest.class);
-
+    @Ignore
     @Rule
     public MatsimTestUtils utils = new MatsimTestUtils();
 
