@@ -34,12 +34,12 @@ import io.github.agentsoz.jill.lang.PlanStep;
 import java.io.PrintStream;
 import java.util.Map;
 
-public class GoHome extends Plan {
+public class LeaveRegion extends Plan {
 
     private PrintStream writer = null;
     private Tourist tourist;
 
-    public GoHome(Agent agent, Goal goal, String name) {
+    public LeaveRegion(Agent agent, Goal goal, String name) {
         super(agent, goal, name);
         tourist = (Tourist)agent;
         this.writer = ((Tourist)agent).writer;
