@@ -25,7 +25,7 @@ package io.github.agentsoz.ees.agents;
 import io.github.agentsoz.jill.lang.Goal;
 import io.github.agentsoz.jill.lang.GoalInfo;
 
-@GoalInfo(hasPlans={"io.github.agentsoz.ees.agents.GoHome"})
+@GoalInfo(hasPlans={"io.github.agentsoz.ees.agents.LeaveRegion"})
 public class RespondToFire extends Goal {
     public RespondToFire(String name) {
         super(name);

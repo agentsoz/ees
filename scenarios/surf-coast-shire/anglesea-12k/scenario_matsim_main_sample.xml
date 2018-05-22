@@ -32,13 +32,13 @@
 	</module>
 
 	<module name="network">
-		<param name="inputNetworkFile" value="scenario_matsim_network.xml" />
-		<param name= "timeVariantNetwork" value= "true" />
-		<param name= "inputChangeEventsFile" value= "scenario_matsim_network_change_events.xml" />
+		<param name="inputNetworkFile" value="../surf_coast_shire_network.xml.gz" />
+		<param name= "timeVariantNetwork" value= "false" />
+		<!--<param name= "inputChangeEventsFile" value= "scenario_matsim_network_change_events.xml" />-->
 	</module>
 
 	<module name="plans">
-		<param name="inputPlansFile" value="scenario_matsim_plans.xml" />
+		<param name="inputPlansFile" value="scenario_matsim_plans_sample.xml" />
 	</module>
 
 	<module name="controler">
@@ -55,17 +55,17 @@
 
 	<module name="qsim">
 		<!-- "start/endTime" of MobSim (00:00:00 == take earliest activity time/ run as long as active vehicles exist) -->
-		<param name="startTime" value="13:00:00" />
-		<param name="endTime" value="23:00:00" />
+		<param name="startTime" value="00:00:00" />
+		<param name="endTime" value="23:59:59" />
 
 		<param name = "snapshotperiod"	value = "00:00:20"/> <!-- 00:00:00 means NO snapshot writing, 00:00:30 means every 30 secs -->
 
-		<param name= "flowCapacityFactor" value= "1.0" />
+		<param name= "flowCapacityFactor" value= "0.04" />
 		<param name= "storageCapacityFactor" value= "1.0" />
 
 		<param name="numberOfThreads" value="1" />
 		<!--setting this to 1 for testing; could be set to a higher number for deployment.  kai, nov'17-->
-		
+
 	</module>
 
 	<module name="planCalcScore">
@@ -82,7 +82,7 @@
 		<param name="activityPriority_0"        value="1" />
 		<param name="activityTypicalDuration_0" value="12:00:00" />
 		<param name="activityMinimalDuration_0" value="08:00:00" />
-	
+
 		<param name="activityType_3"            value="camp" />
 		<param name="activityPriority_3"        value="1" />
 		<param name="activityTypicalDuration_3" value="12:00:00" />
