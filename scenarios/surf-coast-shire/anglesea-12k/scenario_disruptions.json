@@ -15,12 +15,12 @@
 
   "disruptions" : [
     {
-      "description" : "Road blocked near -38.405093, 144.189406 due to  accident.",
+      "description" : "Accident near Anglesea IGA with both lanes blocked",
       "startHHMM" : "1630",
       "endHHMM" : "2300",
       "effectiveSpeed" : "0",
       "effectiveSpeedUnit" : "KMPH",
-      "impactedLinks" : ["23609-23607-23605-23603-23601-23599-23597-23595-23593-23591-23589-23587-23585"]
+      "impactedLinks" : ["23631-23629-23627-23625-23623","23622-23624-23626-23628-23630"]
     }
   ]
 }
