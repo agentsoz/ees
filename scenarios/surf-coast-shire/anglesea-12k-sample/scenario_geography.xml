@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--===========================================================================
+  #%L
+  BDI-ABM Integration Package
+  %%
+  Copyright (C) 2014 - 2016 by its authors. See AUTHORS file.
+  %%
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as
+  published by the Free Software Foundation, either version 3 of the
+  License, or (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Lesser Public License for more details.
+
+  You should have received a copy of the GNU General Lesser Public
+  License along with this program.  If not, see
+  <http://www.gnu.org/licenses/lgpl-3.0.html>.
+  #L%
+============================================================================-->
+
+
+<geography
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="https://github.com/agentsoz/bdi-abm-integration"
+  xsi:schemaLocation="https://github.com/agentsoz/bdi-abm-integration ../../xsd/geography.xsd">
+
+<!-- dsingh, 16 May 2018: Should use EPSG here, see https://github.com/agentsoz/bdi-abm-integration/issues/34 -->
+<coordinateSystem>utm</coordinateSystem>
+
+<destinations>
+  <!-- <location>
+    <name>Torquay Foreshore</name>
+    <coordinates>790772,5752462</coordinates>
+    <split>100.00</split>
+  </location> -->
+  <location>
+    <name>Torquay Golf Course</name>
+    <coordinates>789594,5751184</coordinates>
+    <split>100.00</split>
+  </location>
+</destinations>
+
+<safelines>
+<!-- intentionally empty -->
+</safelines>
+
+</geography>
