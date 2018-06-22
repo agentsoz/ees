@@ -24,41 +24,41 @@ public class Anglesea12kTestStagedSample {
     public void testAnglesea12kStaged() {
 
         String[] args = {
-                "--config", "scenarios/surf-coast-shire/anglesea-12k/scenario_main_sample.xml",
-                "--logfile", "scenarios/surf-coast-shire/anglesea-12k/scenario.log",
+                "--config", "scenarios/surf-coast-shire/anglesea-12k-sample/scenario_main_sample.xml",
+                "--logfile", "scenarios/surf-coast-shire/anglesea-12k-sample/scenario.log",
                 "--loglevel", "INFO",
                 //	                "--plan-selection-policy", "FIRST", // ensures it is deterministic, as default is RANDOM
                 "--seed", "12345",
-                "--safeline-output-file-pattern", "scenarios/surf-coast-shire/anglesea-12k/safeline.%d%.out",
+                "--safeline-output-file-pattern", "scenarios/surf-coast-shire/anglesea-12k-sample/safeline.%d%.out",
                 MATSimModel.MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR, utils.getOutputDirectory(),
                 "--jillconfig", "--config={" +
                 "agents:[{classname:io.github.agentsoz.ees.agents.Resident, args:null, count:482}]," +
                 "logLevel: WARN," +
-                "logFile: \"scenarios/surf-coast-shire/anglesea-12k/jill.log\"," +
-                "programOutputFile: \"scenarios/surf-coast-shire/anglesea-12k/jill.out\"," +
+                "logFile: \"scenarios/surf-coast-shire/anglesea-12k-sample/jill.log\"," +
+                "programOutputFile: \"scenarios/surf-coast-shire/anglesea-12k-sample/jill.out\"," +
                 "randomSeed: 12345," + // jill random seed
                 "numThreads: 1" + // run jill in single-threaded mode so logs are deterministic
                 "}",
                 "--x-congestion-config", "120:.8", // virtually disallow congestion re-routing (painfully slow otherwise!)
                 "--sendFireAlertOnFireStart", "false", // disable fire alert from fire model, instead will use messaging
-                "--x-messages-file", "scenarios/surf-coast-shire/anglesea-12k/scenario_messages_staged.json", // specifies when to send evac now msg
-                "--x-zones-file", "scenarios/surf-coast-shire/anglesea-12k/Anglesea_SA1s_WSG84.json", // map from zone (SA1) ids to shapes
+                "--x-messages-file", "scenarios/surf-coast-shire/anglesea-12k-sample/scenario_messages_staged.json", // specifies when to send evac now msg
+                "--x-zones-file", "scenarios/surf-coast-shire/anglesea-12k-sample/Anglesea_SA1s_WSG84.json", // map from zone (SA1) ids to shapes
         };
 
         Main.main(args);
 
-        final String actualEventsFilename = utils.getOutputDirectory() + "/output_events.xml.gz";
-        long actualEventsCRC = CRCChecksum.getCRCFromFile( actualEventsFilename ) ;
-        System.err.println("actual(events)="+actualEventsCRC) ;
-
-        long actualPlansCRC = CRCChecksum.getCRCFromFile( utils.getOutputDirectory() + "/output_plans.xml.gz" ) ;
-        System.err.println("actual(plans)="+actualPlansCRC) ;
-
-        // ---
-
-        final String primaryExpectedEventsFilename = utils.getInputDirectory() + "/output_events.xml.gz";
-
-        // ---
+//        final String actualEventsFilename = utils.getOutputDirectory() + "/output_events.xml.gz";
+//        long actualEventsCRC = CRCChecksum.getCRCFromFile( actualEventsFilename ) ;
+//        System.err.println("actual(events)="+actualEventsCRC) ;
+//
+//        long actualPlansCRC = CRCChecksum.getCRCFromFile( utils.getOutputDirectory() + "/output_plans.xml.gz" ) ;
+//        System.err.println("actual(plans)="+actualPlansCRC) ;
+//
+//        // ---
+//
+//        final String primaryExpectedEventsFilename = utils.getInputDirectory() + "/output_events.xml.gz";
+//
+//        // ---
 
         //TestUtils.comparingDepartures(primaryExpectedEventsFilename,actualEventsFilename,300.);
         //TestUtils.comparingArrivals(primaryExpectedEventsFilename,actualEventsFilename,300.);

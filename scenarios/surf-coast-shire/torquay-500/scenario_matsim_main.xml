@@ -61,7 +61,7 @@
 		<param name = "snapshotperiod"	value = "00:00:20"/> <!-- 00:00:00 means NO snapshot writing, 00:00:30 means every 30 secs -->
 
 		<param name= "flowCapacityFactor" value= ".04" />
-		<param name= "storageCapacityFactor" value= "0.04" />
+		<param name= "storageCapacityFactor" value= ".04" />
 
 		<param name="numberOfThreads" value="1" />
 		<!--setting this to 1 for testing; could be set to a higher number for deployment.  kai, nov'17-->

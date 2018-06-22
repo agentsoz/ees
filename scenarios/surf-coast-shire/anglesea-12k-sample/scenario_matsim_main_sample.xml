@@ -44,7 +44,7 @@
 	<module name="controler">
 		<param name="outputDirectory" value="output" />
 		<param name="firstIteration" value="0" />
-		<param name="lastIteration" value="0" />
+		<param name="lastIteration" value="10" />
 		<param name="mobsim" value="qsim" />
 		<param name = "snapshotFormat" value="googleearth"/> <!-- enable KML output; also must enable snapshotperiod -->
 	</module>
@@ -61,7 +61,7 @@
 		<param name = "snapshotperiod"	value = "00:00:20"/> <!-- 00:00:00 means NO snapshot writing, 00:00:30 means every 30 secs -->
 
 		<param name= "flowCapacityFactor" value= "0.04" />
-		<param name= "storageCapacityFactor" value= "1.0" />
+		<param name= "storageCapacityFactor" value= "0.04" />
 
 		<param name="numberOfThreads" value="1" />
 		<!--setting this to 1 for testing; could be set to a higher number for deployment.  kai, nov'17-->

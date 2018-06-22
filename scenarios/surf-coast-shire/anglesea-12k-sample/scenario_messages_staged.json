@@ -1,0 +1,45 @@
+{
+  "help": [
+    "List of emergency messages to inject into the simulation",
+    "{",
+      "type: one of ADVICE, WATCH_AND_ACT, EVACUATE_NOW",
+      "broadcastHHMM : the time in HHMM format when this message is to be sent",
+      "broadcastZones: list of zones IDs to which this message should be sent",
+    "}"
+  ],
+
+  "spatialReferenceEPSG" : "EPSG:32754",
+
+  "messages" : [
+    {
+      "type" : "EVACUATE_NOW",
+      "content" : "Evacuate now if safe to do so",
+      "broadcastHHMM" : "1800",
+      "broadcastZones" : {"20303104904": null, "20303104907": null}
+    },
+    {
+      "type" : "EVACUATE_NOW",
+      "content" : "Evacuate now if safe to do so",
+      "broadcastHHMM" : "1400",
+      "broadcastZones" : {"20303104909": null}
+    },
+    {
+      "type" : "EVACUATE_NOW",
+      "content" : "Evacuate now if safe to do so",
+      "broadcastHHMM" : "1500",
+      "broadcastZones" : {"20303104910": null}
+    },
+    {
+      "type" : "EVACUATE_NOW",
+      "content" : "Evacuate now if safe to do so",
+      "broadcastHHMM" : "1600",
+      "broadcastZones" : {"20303104905": null}
+    },
+    {
+      "type" : "EVACUATE_NOW",
+      "content" : "Evacuate now if safe to do so",
+      "broadcastHHMM" : "1700",
+      "broadcastZones" : {"20303104906": null}
+    }
+  ]
+}
