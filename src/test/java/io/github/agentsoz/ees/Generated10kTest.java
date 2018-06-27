@@ -2,6 +2,7 @@ package io.github.agentsoz.ees;
 
 import io.github.agentsoz.bdimatsim.MATSimModel;
 import org.apache.log4j.Logger;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.matsim.core.utils.misc.CRCChecksum;
@@ -19,7 +20,7 @@ public class Generated10kTest {
 
     @Rule
     public MatsimTestUtils utils = new MatsimTestUtils();
-
+    @Ignore
     @Test
     public void testGenerated10k() {
 
