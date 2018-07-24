@@ -152,6 +152,10 @@ public class Main {
 		
 		List<String> bdiAgentIDs = Utils.getBDIAgentIDs( scenario );
 
+
+		// initialise the diffusionmodule
+		initializeAndStartDiffusionModel(dataServer, bdiAgentIDs);
+
 		// --- initialize and start jill (need the bdiAgentIDs, for which we need the material from before)
 		JillBDIModel jillmodel = initializeAndStartJillModel(dataServer, bdiAgentIDs, matsimModel, matsimModel.getAgentManager().getAgentDataContainer());
 		// (matsimModel is passed in because of its query interface.  which is, however, never used.)
@@ -270,6 +274,23 @@ public class Main {
 		}
 		model.setTimestepUnit(Time.TimestepUnit.SECONDS);
 		model.start(SimpleConfig.getEvacStartHHMM());
+	}
+
+	/**
+	 * Create the diffusion model, and register the model as an active data source/sink
+	 * @param dataServer
+	 * @throws IOException
+	 * @throws ParseException
+	 * @throws java.text.ParseException
+	 */
+	private static void initializeAndStartDiffusionModel(DataServer dataServer, List<String> agentsList) throws IOException, ParseException, java.text.ParseException {
+		if (SimpleConfig.getDiffusionConfig() != null) {
+			DiffusionModel model = new DiffusionModel(SimpleConfig.getDiffusionConfig());
+			model.setDataServer(dataServer);
+			model.init(agentsList);
+			model.setTimestepUnit(Time.TimestepUnit.MINUTES);
+			model.start(SimpleConfig.getEvacStartHHMM());
+		}
 	}
 
 	/**
@@ -450,6 +471,12 @@ public class Main {
 									+ args[i] + "' : " + e.getMessage());
 						}
 
+					}
+					break;
+				case "--x-diffusion-config":
+					if (i + 1 < args.length) {
+						i++;
+						SimpleConfig.setDiffusionConfig(args[i]);
 					}
 					break;
 			default:

@@ -8,9 +8,9 @@ import io.github.agentsoz.dataInterface.DataServer;
 import io.github.agentsoz.dataInterface.DataSource;
 import io.github.agentsoz.socialnetwork.util.DiffusedContent;
 import io.github.agentsoz.util.Time;
+import io.github.agentsoz.util.evac.PerceptList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import io.github.agentsoz.socialnetwork.util.DataTypes;
 
 import java.util.HashMap;
 import java.util.List;
@@ -28,55 +28,34 @@ public class DiffusionModel implements DataSource, DataClient {
     private double lastUpdateTimeInMinutes = -1;
     private Time.TimestepUnit timestepUnit = Time.TimestepUnit.SECONDS;
 
-    final Logger logger = LoggerFactory.getLogger("");
+    private final Logger logger = LoggerFactory.getLogger("io.github.agentsoz.ees");
 
-    public DiffusionModel(String configFile, DataServer ds) {
+    public DiffusionModel(String configFile) {
         this.snManager = new SocialNetworkManager(configFile);
-        this.dataServer = ds;
         this.allStepsInfoSpreadMap = new TreeMap<Double, DiffusedContent>();
     }
 
-    public void initSocialAgentMap(List<String> idList) {
-
-        // initSNManagerBasedOnConfigs();
+    public void init(List<String> idList) {
         for (String id : idList) {
             this.snManager.createSocialAgent(id); //populate agentmap
         }
-    }
-
-    public void initSNModel() { // set SNManager based on main configs unless already set
-
-        //setTimestepUnit();
         this.snManager.genNetworkAndDiffModels(); // setup configs, gen network and diffusion models
         this.snManager.printSNModelconfigs();
-
         //subscribe to BDI data updates
-        this.dataServer.subscribe(this, DataTypes.BDI_STATE_UPDATES);
-
+        this.dataServer.subscribe(this, PerceptList.BDI_STATE_UPDATES);
     }
 
-    public SocialNetworkManager getSNManager() {
-        return this.snManager;
-    }
-
-    public void setSNManager(SocialNetworkManager sn) {
-        this.snManager = sn;
-    }
-
-    public void stepDiffusionProcess() {
-
+    private void stepDiffusionProcess() {
         if (snManager.processDiffusion((long) dataServer.getTime())) {
-            if (SNConfig.getDiffusionType().equals(DataTypes.icModel)) {
-                ICModel icModel = (ICModel) getSNManager().getDiffModel();
+            if (snManager.getDiffModel() instanceof ICModel) {
+                ICModel icModel = (ICModel) snManager.getDiffModel();
                 HashMap<String, Integer[]> latestUpdate = icModel.getLatestDiffusionUpdates();
-
-
-                DiffusedContent dc = new DiffusedContent();
-                dc.setContentSpreadMap(latestUpdate);
-                this.allStepsInfoSpreadMap.put(dataServer.getTime(), dc);
-
-                logger.debug("put timed diffusion updates for ICModel at {}", dataServer.getTime());
-
+                if (!latestUpdate.isEmpty()) {
+                    DiffusedContent dc = new DiffusedContent();
+                    dc.setContentSpreadMap(latestUpdate);
+                    this.allStepsInfoSpreadMap.put(dataServer.getTime(), dc);
+                    logger.debug("put timed diffusion updates for ICModel at {}", dataServer.getTime());
+                }
             }
 
         }
@@ -88,9 +67,12 @@ public class DiffusionModel implements DataSource, DataClient {
         double currentTime = Time.convertTime(timestep, timestepUnit, Time.TimestepUnit.MINUTES);
         SortedMap<Double, DiffusedContent> periodicInfoSpread = allStepsInfoSpreadMap.subMap(lastUpdateTimeInMinutes, currentTime);
         lastUpdateTimeInMinutes = currentTime;
-        Double nextTime = allStepsInfoSpreadMap.higherKey(currentTime);
+        //Double nextTime = timestep + SNConfig.getDiffturn(); //allStepsInfoSpreadMap.higherKey(currentTime);
+        Double nextTime = timestep; // FIXME: should be timestep + SNConfig.getDiffturn()
         if (nextTime != null) {
-            dataServer.registerTimedUpdate(DataTypes.DIFFUSION, this, Time.convertTime(nextTime, Time.TimestepUnit.MINUTES, timestepUnit));
+            dataServer.registerTimedUpdate(PerceptList.DIFFUSION, this, nextTime);
+            // step the model before begin called again
+            stepDiffusionProcess();
         }
         return periodicInfoSpread;
     }
@@ -101,7 +83,7 @@ public class DiffusionModel implements DataSource, DataClient {
 
         switch (dataType) {
 
-            case DataTypes.BDI_STATE_UPDATES: { // update social states based on BDI reasoning
+            case PerceptList.BDI_STATE_UPDATES: { // update social states based on BDI reasoning
 
                 logger.debug("SNModel: received BDI state updates");
                 ICModel icModel = (ICModel) this.snManager.getDiffModel();
@@ -113,26 +95,31 @@ public class DiffusionModel implements DataSource, DataClient {
         return false;
     }
 
-    public DataServer getDataServer() {
-        return this.dataServer;
-    }
-
-    public TreeMap<Double,DiffusedContent> getAllStepsSpreadMap() {
-        return  this.allStepsInfoSpreadMap;
+    /**
+     * Sets the publish/subscribe data server
+     * @param dataServer the server to use
+     */
+    void setDataServer(DataServer dataServer) {
+        this.dataServer = dataServer;
     }
 
     /**
      * Set the time step unit for this model
-     *
      * @param unit the time step unit to use
      */
     void setTimestepUnit(Time.TimestepUnit unit) {
         timestepUnit = unit;
     }
 
-    //public void publishDiffusionDataUpdate() {
-//        this.dataServer.publish(DataTypes.DIFFUSION, "sn-data");
-//    }
+    /**
+     * Start publishing data
+     */
+    public void start(int[] hhmm) {
+        double startTimeInSeconds = Time.convertTime(hhmm[0], Time.TimestepUnit.HOURS, Time.TimestepUnit.SECONDS)
+                + Time.convertTime(hhmm[1], Time.TimestepUnit.MINUTES, Time.TimestepUnit.SECONDS);
+        dataServer.registerTimedUpdate(PerceptList.DIFFUSION, this, startTimeInSeconds);
+    }
+
 
     public void finish() {
         // cleaning
