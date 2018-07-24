@@ -12,10 +12,7 @@ import io.github.agentsoz.util.evac.PerceptList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.*;
 
 
 public class DiffusionModel implements DataSource, DataClient {
@@ -28,11 +25,14 @@ public class DiffusionModel implements DataSource, DataClient {
     private double lastUpdateTimeInMinutes = -1;
     private Time.TimestepUnit timestepUnit = Time.TimestepUnit.SECONDS;
 
+    Map<String, Set> contentFromAgents;
+
     private final Logger logger = LoggerFactory.getLogger("io.github.agentsoz.ees");
 
     public DiffusionModel(String configFile) {
         this.snManager = new SocialNetworkManager(configFile);
         this.allStepsInfoSpreadMap = new TreeMap<Double, DiffusedContent>();
+        this.contentFromAgents = new HashMap<>();
     }
 
     public void init(List<String> idList) {
@@ -42,7 +42,7 @@ public class DiffusionModel implements DataSource, DataClient {
         this.snManager.genNetworkAndDiffModels(); // setup configs, gen network and diffusion models
         this.snManager.printSNModelconfigs();
         //subscribe to BDI data updates
-        this.dataServer.subscribe(this, PerceptList.BDI_STATE_UPDATES);
+        this.dataServer.subscribe(this, PerceptList.SOCIAL_NETWORK_MSG);
     }
 
     private void stepDiffusionProcess() {
@@ -64,17 +64,35 @@ public class DiffusionModel implements DataSource, DataClient {
 
     @Override
     public Object getNewData(double timestep, Object parameters) {
-        double currentTime = Time.convertTime(timestep, timestepUnit, Time.TimestepUnit.MINUTES);
-        SortedMap<Double, DiffusedContent> periodicInfoSpread = allStepsInfoSpreadMap.subMap(lastUpdateTimeInMinutes, currentTime);
-        lastUpdateTimeInMinutes = currentTime;
         //Double nextTime = timestep + SNConfig.getDiffturn(); //allStepsInfoSpreadMap.higherKey(currentTime);
         Double nextTime = timestep; // FIXME: should be timestep + SNConfig.getDiffturn()
         if (nextTime != null) {
             dataServer.registerTimedUpdate(PerceptList.DIFFUSION, this, nextTime);
+            // update the model with any new messages form agents
+            ICModel icModel = (ICModel) this.snManager.getDiffModel();
+            if (!contentFromAgents.isEmpty()) {
+                // FIXME: remove below once diffusion model handles String[] for agents
+                Map<String, int[]> map = new HashMap<>();
+                for (String key : contentFromAgents.keySet()) {
+                    Object[] set = contentFromAgents.get(key).toArray(new String[0]);
+                    int[] newSet = new int[set.length];
+                    for (int i = 0; i < set.length; i++) {
+                        newSet[i] = Integer.parseInt((String)set[i]);
+                    }
+                    map.put(key,newSet);
+                }
+                icModel.updateSocialStatesFromBDIPercepts(map);
+            }
             // step the model before begin called again
             stepDiffusionProcess();
+            // clear the contents
+            contentFromAgents.clear();
         }
-        return periodicInfoSpread;
+        double currentTime = Time.convertTime(timestep, timestepUnit, Time.TimestepUnit.MINUTES);
+        SortedMap<Double, DiffusedContent> periodicInfoSpread = allStepsInfoSpreadMap.subMap(lastUpdateTimeInMinutes, currentTime);
+        lastUpdateTimeInMinutes = currentTime;
+
+        return (periodicInfoSpread.isEmpty()) ? null : periodicInfoSpread;
     }
 
 
@@ -83,11 +101,21 @@ public class DiffusionModel implements DataSource, DataClient {
 
         switch (dataType) {
 
-            case PerceptList.BDI_STATE_UPDATES: { // update social states based on BDI reasoning
+            case PerceptList.SOCIAL_NETWORK_MSG: { // update social states based on BDI reasoning
 
-                logger.debug("SNModel: received BDI state updates");
-                ICModel icModel = (ICModel) this.snManager.getDiffModel();
-                icModel.updateSocialStatesFromBDIPercepts(data);
+                // data from agent is of type [String,String] being [content,agentid]
+                if (!(data instanceof String[]) || ((String[])data).length != 2) {
+                    logger.error("received unknown data: " + data);
+                    return true;
+                }
+                String[] content = (String[]) data;
+                logger.debug("received content " + content);
+                String msg = content[0];
+                String agentId = content[1];
+                Set<String> agents = (contentFromAgents.containsKey(msg)) ? contentFromAgents.get(msg) :
+                        new HashSet<>();
+                agents.add(agentId);
+                contentFromAgents.put(msg,agents);
                 return true;
             }
 

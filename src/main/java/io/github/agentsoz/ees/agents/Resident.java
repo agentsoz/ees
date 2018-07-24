@@ -3,7 +3,9 @@ package io.github.agentsoz.ees.agents;
 import java.io.PrintStream;
 
 import io.github.agentsoz.bdiabm.QueryPerceptInterface;
+import io.github.agentsoz.dataInterface.DataServer;
 import io.github.agentsoz.util.EmergencyMessage;
+import io.github.agentsoz.util.Global;
 import io.github.agentsoz.util.evac.PerceptList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,7 +42,7 @@ import io.github.agentsoz.jill.lang.Agent;
 import io.github.agentsoz.jill.lang.AgentInfo;
 
 @AgentInfo(hasGoals={"io.github.agentsoz.ees.agents.RespondToFireAlert", "io.github.agentsoz.abmjill.genact.EnvironmentAction"})
-public class Resident extends Agent implements io.github.agentsoz.bdiabm.Agent {
+public class Resident extends Agent implements io.github.agentsoz.bdiabm.Agent{
 
 	private final Logger logger = LoggerFactory.getLogger("io.github.agentsoz.ees");
 
@@ -56,6 +58,7 @@ public class Resident extends Agent implements io.github.agentsoz.bdiabm.Agent {
 	private QueryPerceptInterface queryInterface;
 
 	private boolean isEvacuating = false;
+	private boolean postedBlockageInfoToSocialNetwork = false;
 
 	public Resident(String str) {
 		super(str);
@@ -104,6 +107,18 @@ public class Resident extends Agent implements io.github.agentsoz.bdiabm.Agent {
 			String status = perceptID.equals(PerceptList.BLOCKED) ? "is blocked" : "is in traffic congestion";
 			failedAttempts++;
 			writer.println(prefix + status + " at link " + parameters);
+
+			if (!postedBlockageInfoToSocialNetwork && perceptID.equals(PerceptList.BLOCKED)) {
+				// if this is the first time we got blocked then communicate with social network with some probability
+				double p = 0.2; // FIXME: read this from agent config
+				if (Global.getRandom().nextDouble() < p) {
+					writer.println(prefix + "will share disruption info on social network");
+					String[] msg = {PerceptList.BLOCKED + ":" + parameters, String.valueOf(getId())};
+					postedBlockageInfoToSocialNetwork = true;
+					DataServer.getServer("Bushfire").publish(PerceptList.SOCIAL_NETWORK_MSG, msg);
+				}
+			}
+
 			Location[] coords = (Location[])getQueryPerceptInterface().queryPercept(String.valueOf(getId()), PerceptList.REQUEST_LOCATION, parameters);
 			writer.println(prefix + "is currently between locations " + coords[0] + " and " + coords[1]);
 			double distanceToSafePlace = (double)getQueryPerceptInterface().queryPercept(String.valueOf(getId()),
@@ -133,6 +148,9 @@ public class Resident extends Agent implements io.github.agentsoz.bdiabm.Agent {
 					post(new RespondToFireAlert("RespondToFireAlert"));
 				}
 			}
+		} else if (perceptID.equals(PerceptList.SOCIAL_NETWORK_MSG)) {
+			writer.println(prefix + "received social network message: " + parameters);
+			// FIXME: drop current driveto action and then replan to destination using congestion router
 		}
 	}
 

@@ -1,11 +1,9 @@
 package io.github.agentsoz.ees;
 
-import java.util.Comparator;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.PriorityQueue;
+import java.util.*;
 
 import io.github.agentsoz.jill.core.GlobalState;
+import io.github.agentsoz.util.DiffusedContent;
 import io.github.agentsoz.util.evac.PerceptList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,8 +60,11 @@ public class JillBDIModel extends JillModel implements DataClient {
 	
 	// Map<Time,Agent> of scheduled fire alerts 
 	private PriorityQueue<TimedAlert> alerts;
-	
+
+	Map<Double, DiffusedContent> msgMap;
+
 	public JillBDIModel(String[] initArgs) {
+		msgMap = new TreeMap<>();
 		mapMATsimToJillIds = new LinkedHashMap<String,String>();
 		mapJillToMATsimIds = new LinkedHashMap<String,String>();
 		alerts = new PriorityQueue<TimedAlert>(SimpleConfig.getNumBDIAgents(), new Comparator<TimedAlert>() {
@@ -93,6 +94,7 @@ public class JillBDIModel extends JillModel implements DataClient {
 			Object[] params) 
 	{
 		dataServer.subscribe(this, PerceptList.FIRE_ALERT);
+		dataServer.subscribe(this, PerceptList.DIFFUSION);
 
 		// Initialise the Jill model
 		// params[] contains the list of agent names to create
@@ -117,6 +119,9 @@ public class JillBDIModel extends JillModel implements DataClient {
 		switch (dataType) {
 		case PerceptList.FIRE_ALERT:
 			fireAlertTime = time;
+			return true;
+		case PerceptList.DIFFUSION:
+			msgMap = (Map<Double, DiffusedContent>)data; // FIXME: unchecked cast
 			return true;
 		};
 		return false;
@@ -143,11 +148,26 @@ public class JillBDIModel extends JillModel implements DataClient {
 		}
 		translateToJillIds(adc);
 		adc.getOrCreate(PerceptList.BROADCAST).getPerceptContainer().put(PerceptList.TIME, timeInSecs);
+		sendSocialNetworkMessagesToAgents(adc);
 		super.takeControl(adc);
         translateToMATSimIds(adc);
 	}
-	
-  private void translateToJillIds(AgentDataContainer adc) {
+
+	private void sendSocialNetworkMessagesToAgents(AgentDataContainer adc) {
+		for (Double msgTime : msgMap.keySet()) {
+			DiffusedContent content = msgMap.get(msgTime);
+			Map<String, Integer[]> msgs = content.getcontentSpreadMap(); // FIXME: should be Map<String,String[]>
+			for (String msg : msgs.keySet()) {
+				Integer[] agents = msgs.get(msg);
+				for (Integer agent : agents) {
+					String id = String.valueOf(agent);
+					adc.getOrCreate(id).getPerceptContainer().put(PerceptList.SOCIAL_NETWORK_MSG, msg);
+				}
+			}
+		}
+	}
+
+	private void translateToJillIds(AgentDataContainer adc) {
     // FIXME: The incoming IDs need to be changed to Jill IDs before the next call
   }
 
