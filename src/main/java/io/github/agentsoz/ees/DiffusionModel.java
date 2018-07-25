@@ -68,19 +68,18 @@ public class DiffusionModel implements DataSource, DataClient {
     }
 
     private void stepDiffusionProcess() {
-        if (snManager.processDiffusion((long) dataServer.getTime())) {
-            if (snManager.getDiffModel() instanceof ICModel) {
-                ICModel icModel = (ICModel) snManager.getDiffModel();
-                HashMap<String, Integer[]> latestUpdate = icModel.getLatestDiffusionUpdates();
-                if (!latestUpdate.isEmpty()) {
-                    DiffusedContent dc = new DiffusedContent();
-                    dc.setContentSpreadMap(latestUpdate);
-                    this.allStepsInfoSpreadMap.put(dataServer.getTime(), dc);
-                    logger.debug("put timed diffusion updates for ICModel at {}", dataServer.getTime());
-                }
+        snManager.diffuseContent(); // step the diffusion model
+        if (snManager.getDiffModel() instanceof ICModel) {
+            ICModel icModel = (ICModel) snManager.getDiffModel();
+            HashMap<String, Integer[]> latestUpdate = icModel.getLatestDiffusionUpdates();
+            if (!latestUpdate.isEmpty()) {
+                DiffusedContent dc = new DiffusedContent();
+                dc.setContentSpreadMap(latestUpdate);
+                this.allStepsInfoSpreadMap.put(dataServer.getTime(), dc);
+                logger.debug("put timed diffusion updates for ICModel at {}", dataServer.getTime());
             }
-
         }
+
 
     }
 
