@@ -27,7 +27,7 @@ import io.github.agentsoz.dataInterface.DataServer;
 import io.github.agentsoz.dataInterface.DataSource;
 import io.github.agentsoz.socialnetwork.ICModel;
 import io.github.agentsoz.socialnetwork.SocialNetworkManager;
-import io.github.agentsoz.socialnetwork.util.DiffusedContent;
+import io.github.agentsoz.util.DiffusedContent;
 import io.github.agentsoz.util.Time;
 import io.github.agentsoz.util.evac.PerceptList;
 import org.slf4j.Logger;
@@ -92,7 +92,7 @@ public class DiffusionModel implements DataSource, DataClient {
             ICModel icModel = (ICModel) this.snManager.getDiffModel();
             if (!contentFromAgents.isEmpty()) {
                 // FIXME: remove below once diffusion model handles String[] for agents
-                // IC Model now handles String[] for agent ids:  Chaminda July 25th ,2018
+                // IC Model now handles String[] for agent ids (Chaminda July 25th ,2018)
                 Map<String, String[]> map = new HashMap<>();
                 for (String key : contentFromAgents.keySet()) {
                     Object[] set = contentFromAgents.get(key).toArray(new String[0]);

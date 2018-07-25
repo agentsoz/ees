@@ -1,12 +1,20 @@
 package io.github.agentsoz.ees;
 
-import java.util.*;
-
-import io.github.agentsoz.jill.core.GlobalState;
+import io.github.agentsoz.abmjill.JillModel;
+import io.github.agentsoz.bdiabm.ABMServerInterface;
+import io.github.agentsoz.bdiabm.data.AgentDataContainer;
+import io.github.agentsoz.bdiabm.data.AgentStateList;
+import io.github.agentsoz.dataInterface.DataClient;
+import io.github.agentsoz.dataInterface.DataServer;
+import io.github.agentsoz.jill.lang.Agent;
 import io.github.agentsoz.util.DiffusedContent;
+import io.github.agentsoz.util.Global;
+import io.github.agentsoz.util.Time;
 import io.github.agentsoz.util.evac.PerceptList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.*;
 
 /*
  * #%L
@@ -18,27 +26,17 @@ import org.slf4j.LoggerFactory;
  * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Lesser Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Lesser Public
  * License along with this program.  If not, see
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
  * #L%
  */
-
-import io.github.agentsoz.abmjill.JillModel;
-import io.github.agentsoz.bdiabm.ABMServerInterface;
-import io.github.agentsoz.bdiabm.data.AgentDataContainer;
-import io.github.agentsoz.bdiabm.data.AgentStateList;
-import io.github.agentsoz.util.Time;
-import io.github.agentsoz.dataInterface.DataClient;
-import io.github.agentsoz.dataInterface.DataServer;
-import io.github.agentsoz.jill.lang.Agent;
-import io.github.agentsoz.util.Global;
 
 public class JillBDIModel extends JillModel implements DataClient {
 
@@ -156,10 +154,12 @@ public class JillBDIModel extends JillModel implements DataClient {
 	private void sendSocialNetworkMessagesToAgents(AgentDataContainer adc) {
 		for (Double msgTime : msgMap.keySet()) {
 			DiffusedContent content = msgMap.get(msgTime);
-			Map<String, Integer[]> msgs = content.getcontentSpreadMap(); // FIXME: should be Map<String,String[]>
+			// FIXME: should be Map<String,String[]>
+			// FIXED (Chaminda 25th July, 2018)
+			Map<String, String[]> msgs = content.getcontentSpreadMap();
 			for (String msg : msgs.keySet()) {
-				Integer[] agents = msgs.get(msg);
-				for (Integer agent : agents) {
+				String[] agents = msgs.get(msg);
+				for (String agent : agents) {
 					String id = String.valueOf(agent);
 					adc.getOrCreate(id).getPerceptContainer().put(PerceptList.SOCIAL_NETWORK_MSG, msg);
 				}
