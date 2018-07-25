@@ -22,12 +22,11 @@ package io.github.agentsoz.ees;
  * #L%
  */
 
-import io.github.agentsoz.socialnetwork.ICModel;
-import io.github.agentsoz.socialnetwork.SNConfig;
-import io.github.agentsoz.socialnetwork.SocialNetworkManager;
 import io.github.agentsoz.dataInterface.DataClient;
 import io.github.agentsoz.dataInterface.DataServer;
 import io.github.agentsoz.dataInterface.DataSource;
+import io.github.agentsoz.socialnetwork.ICModel;
+import io.github.agentsoz.socialnetwork.SocialNetworkManager;
 import io.github.agentsoz.socialnetwork.util.DiffusedContent;
 import io.github.agentsoz.util.Time;
 import io.github.agentsoz.util.evac.PerceptList;
@@ -71,7 +70,7 @@ public class DiffusionModel implements DataSource, DataClient {
         snManager.diffuseContent(); // step the diffusion model
         if (snManager.getDiffModel() instanceof ICModel) {
             ICModel icModel = (ICModel) snManager.getDiffModel();
-            HashMap<String, Integer[]> latestUpdate = icModel.getLatestDiffusionUpdates();
+            HashMap<String, String[]> latestUpdate = icModel.getLatestDiffusionUpdates();
             if (!latestUpdate.isEmpty()) {
                 DiffusedContent dc = new DiffusedContent();
                 dc.setContentSpreadMap(latestUpdate);
@@ -93,12 +92,13 @@ public class DiffusionModel implements DataSource, DataClient {
             ICModel icModel = (ICModel) this.snManager.getDiffModel();
             if (!contentFromAgents.isEmpty()) {
                 // FIXME: remove below once diffusion model handles String[] for agents
-                Map<String, int[]> map = new HashMap<>();
+                // IC Model now handles String[] for agent ids:  Chaminda July 25th ,2018
+                Map<String, String[]> map = new HashMap<>();
                 for (String key : contentFromAgents.keySet()) {
                     Object[] set = contentFromAgents.get(key).toArray(new String[0]);
-                    int[] newSet = new int[set.length];
+                    String[] newSet = new String[set.length];
                     for (int i = 0; i < set.length; i++) {
-                        newSet[i] = Integer.parseInt((String)set[i]);
+                        newSet[i] = (String)set[i];
                     }
                     map.put(key,newSet);
                 }
