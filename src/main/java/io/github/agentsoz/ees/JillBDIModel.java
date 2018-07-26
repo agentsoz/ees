@@ -60,9 +60,11 @@ public class JillBDIModel extends JillModel implements DataClient {
 	private PriorityQueue<TimedAlert> alerts;
 
 	Map<Double, DiffusedContent> msgMap;
+	HashMap<String,Set<String>> informedAgents;
 
 	public JillBDIModel(String[] initArgs) {
 		msgMap = new TreeMap<>();
+		informedAgents = new HashMap<>();
 		mapMATsimToJillIds = new LinkedHashMap<String,String>();
 		mapJillToMATsimIds = new LinkedHashMap<String,String>();
 		alerts = new PriorityQueue<TimedAlert>(SimpleConfig.getNumBDIAgents(), new Comparator<TimedAlert>() {
@@ -154,17 +156,21 @@ public class JillBDIModel extends JillModel implements DataClient {
 	private void sendSocialNetworkMessagesToAgents(AgentDataContainer adc) {
 		for (Double msgTime : msgMap.keySet()) {
 			DiffusedContent content = msgMap.get(msgTime);
-			// FIXME: should be Map<String,String[]>
-			// FIXED (Chaminda 25th July, 2018)
 			Map<String, String[]> msgs = content.getcontentSpreadMap();
 			for (String msg : msgs.keySet()) {
+				Set<String> messagedAgents = informedAgents.containsKey(msg) ? informedAgents.get(msg) : new HashSet<>();
 				String[] agents = msgs.get(msg);
 				for (String agent : agents) {
-					String id = String.valueOf(agent);
-					adc.getOrCreate(id).getPerceptContainer().put(PerceptList.SOCIAL_NETWORK_MSG, msg);
+					if (!messagedAgents.contains(agent)) {
+						String id = String.valueOf(agent);
+						adc.getOrCreate(id).getPerceptContainer().put(PerceptList.SOCIAL_NETWORK_MSG, msg);
+						messagedAgents.add(agent);
+						informedAgents.put(msg,messagedAgents);
+					}
 				}
 			}
 		}
+		msgMap.clear();
 	}
 
 	private void translateToJillIds(AgentDataContainer adc) {

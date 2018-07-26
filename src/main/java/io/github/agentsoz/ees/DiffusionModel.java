@@ -26,6 +26,7 @@ import io.github.agentsoz.dataInterface.DataClient;
 import io.github.agentsoz.dataInterface.DataServer;
 import io.github.agentsoz.dataInterface.DataSource;
 import io.github.agentsoz.socialnetwork.ICModel;
+import io.github.agentsoz.socialnetwork.SNConfig;
 import io.github.agentsoz.socialnetwork.SocialNetworkManager;
 import io.github.agentsoz.util.DiffusedContent;
 import io.github.agentsoz.util.Time;
@@ -84,15 +85,12 @@ public class DiffusionModel implements DataSource, DataClient {
 
     @Override
     public Object getNewData(double timestep, Object parameters) {
-        //Double nextTime = timestep + SNConfig.getDiffturn(); //allStepsInfoSpreadMap.higherKey(currentTime);
-        Double nextTime = timestep; // FIXME: should be timestep + SNConfig.getDiffturn()
+        Double nextTime = timestep + SNConfig.getDiffturn();
         if (nextTime != null) {
             dataServer.registerTimedUpdate(PerceptList.DIFFUSION, this, nextTime);
             // update the model with any new messages form agents
             ICModel icModel = (ICModel) this.snManager.getDiffModel();
             if (!contentFromAgents.isEmpty()) {
-                // FIXME: remove below once diffusion model handles String[] for agents
-                // IC Model now handles String[] for agent ids (Chaminda July 25th ,2018)
                 Map<String, String[]> map = new HashMap<>();
                 for (String key : contentFromAgents.keySet()) {
                     Object[] set = contentFromAgents.get(key).toArray(new String[0]);

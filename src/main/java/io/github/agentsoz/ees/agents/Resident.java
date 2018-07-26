@@ -58,7 +58,8 @@ public class Resident extends Agent implements io.github.agentsoz.bdiabm.Agent{
 	private QueryPerceptInterface queryInterface;
 
 	private boolean isEvacuating = false;
-	private boolean postedBlockageInfoToSocialNetwork = false;
+	private Object postedBlockageInfoToSocialNetwork = null;
+	private final double messagePostingProbability = 0.2; // FIXME: read this from agent config
 
 	public Resident(String str) {
 		super(str);
@@ -108,15 +109,10 @@ public class Resident extends Agent implements io.github.agentsoz.bdiabm.Agent{
 			failedAttempts++;
 			writer.println(prefix + status + " at link " + parameters);
 
-			if (!postedBlockageInfoToSocialNetwork && perceptID.equals(PerceptList.BLOCKED)) {
+			if (postedBlockageInfoToSocialNetwork == null && perceptID.equals(PerceptList.BLOCKED)) {
 				// if this is the first time we got blocked then communicate with social network with some probability
-				double p = 0.2; // FIXME: read this from agent config
-				if (Global.getRandom().nextDouble() < p) {
-					writer.println(prefix + "will share disruption info on social network");
-					String[] msg = {PerceptList.BLOCKED + ":" + parameters, String.valueOf(getId())};
-					postedBlockageInfoToSocialNetwork = true;
-					DataServer.getServer("Bushfire").publish(PerceptList.SOCIAL_NETWORK_MSG, msg);
-				}
+				// Note, might have heard about it from the social network already
+				decideAndPostOnSocialMedia(PerceptList.BLOCKED + ":" + parameters);
 			}
 
 			Location[] coords = (Location[])getQueryPerceptInterface().queryPercept(String.valueOf(getId()), PerceptList.REQUEST_LOCATION, parameters);
@@ -149,8 +145,11 @@ public class Resident extends Agent implements io.github.agentsoz.bdiabm.Agent{
 				}
 			}
 		} else if (perceptID.equals(PerceptList.SOCIAL_NETWORK_MSG)) {
-			writer.println(prefix + "received social network message: " + parameters);
-			// FIXME: drop current driveto action and then replan to destination using congestion router
+			// Ignore social network messages that this agent itself posted earlier
+			if (postedBlockageInfoToSocialNetwork == null || !postedBlockageInfoToSocialNetwork.equals(parameters)) {
+				writer.println(prefix + "received social network message: " + parameters);
+				// FIXME: drop current driveto action and then replan to destination using congestion router
+			}
 		}
 	}
 
@@ -182,6 +181,15 @@ public class Resident extends Agent implements io.github.agentsoz.bdiabm.Agent{
 		}
 	}
 
+	private void decideAndPostOnSocialMedia(String content) {
+		if (Global.getRandom().nextDouble() < messagePostingProbability) {
+			writer.println(prefix + "will share disruption info on social network");
+			String[] msg = {content, String.valueOf(getId())};
+			postedBlockageInfoToSocialNetwork = msg[0];
+			DataServer.getServer("Bushfire").publish(PerceptList.SOCIAL_NETWORK_MSG, msg);
+		}
+
+	}
 	/**
 	 * BDI-ABM agent init function; Not used by Jill.
 	 * Use {@link #start(PrintStream, String[])} instead
