@@ -1,6 +1,6 @@
-<?xml version="1.0" ?>
-<!DOCTYPE plans SYSTEM "http://www.matsim.org/files/dtd/plans_v4.dtd">
-<plans>
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE population SYSTEM "http://www.matsim.org/files/dtd/population_v6.dtd">
+<population>
 <!-- ====================================================================== -->
 
 	<person id= "0" >
@@ -96413,4 +96413,4 @@
 
 <!-- ====================================================================== -->
 
-</plans>
+</population>
