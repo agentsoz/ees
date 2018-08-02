@@ -5,6 +5,7 @@ package io.github.agentsoz.ees;
 
 import io.github.agentsoz.util.TestUtils;
 import org.apache.log4j.Logger;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.matsim.core.utils.misc.CRCChecksum;
@@ -14,6 +15,7 @@ import org.matsim.testcases.MatsimTestUtils;
  * @author dsingh
  *
  */
+@Ignore
 public class Denmark1000Test {
 	// have tests in separate classes so that they run, at least under maven, in separate JVMs.  kai, nov'17
 	

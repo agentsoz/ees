@@ -13,7 +13,7 @@ import org.matsim.testcases.MatsimTestUtils;
  * @author dsingh
  *
  */
-//@Ignore
+@Ignore
 public class Anglesea12kTest {
     // have tests in separate classes so that they run, at least und    er maven, in separate JVMs.  kai, nov'17
 

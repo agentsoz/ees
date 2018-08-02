@@ -5,6 +5,7 @@ package io.github.agentsoz.ees;
 
 import io.github.agentsoz.util.TestUtils;
 import org.apache.log4j.Logger;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.matsim.api.core.v01.Id;
@@ -23,6 +24,7 @@ import org.matsim.testcases.MatsimTestUtils;
  * @author dsingh
  *
  */
+@Ignore
 public class AttributesInPopulationTest {
 	// have tests in separate classes so that they run, at least under maven, in separate JVMs.  kai, nov'17
 	
