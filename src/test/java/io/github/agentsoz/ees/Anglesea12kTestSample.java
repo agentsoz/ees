@@ -2,6 +2,7 @@ package io.github.agentsoz.ees;
 
 import io.github.agentsoz.bdimatsim.MATSimModel;
 import org.apache.log4j.Logger;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.matsim.core.utils.misc.CRCChecksum;
@@ -11,7 +12,7 @@ import org.matsim.testcases.MatsimTestUtils;
  * @author dsingh
  *
  */
-//@Ignore
+@Ignore
 public class Anglesea12kTestSample {
     // have tests in separate classes so that they run, at least und    er maven, in separate JVMs.  kai, nov'17
 

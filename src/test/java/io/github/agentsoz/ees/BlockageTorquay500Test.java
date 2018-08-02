@@ -14,6 +14,7 @@ package io.github.agentsoz.ees;
  * @author dsingh, Joel Robertson
  *
  */
+@Ignore
 public class BlockageTorquay500Test {
 
     // have tests in separate classes so that they run, at least under maven, in separate JVMs.  kai, nov'17

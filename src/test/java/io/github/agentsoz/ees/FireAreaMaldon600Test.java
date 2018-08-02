@@ -17,6 +17,7 @@ import org.matsim.testcases.MatsimTestUtils;
  * @author dsingh
  *
  */
+@Ignore
 public class FireAreaMaldon600Test {
 	// have tests in separate classes so that they run, at least under maven, in separate JVMs.  kai, nov'17
 	

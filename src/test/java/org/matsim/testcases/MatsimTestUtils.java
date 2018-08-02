@@ -108,7 +108,7 @@ public class MatsimTestUtils extends TestWatchman {
 	 */
 	public String getOutputDirectory() {
 		if (this.outputDirectory == null) {
-			this.outputDirectory = "test/output/" + this.testClass.getCanonicalName().replace('.', '/') + "/" + getMethodName() + "/";
+			this.outputDirectory = "test/output/" + this.testClass.getCanonicalName().replace('.', '/') + "/" + getMethodName() + "/" + "matsim" + "/";
 		}
 		createOutputDirectory();
 		return this.outputDirectory;

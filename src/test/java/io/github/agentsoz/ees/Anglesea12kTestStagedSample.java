@@ -11,9 +11,14 @@ import org.matsim.testcases.MatsimTestUtils;
  * @author dsingh
  *
  */
-//@Ignore
+
+/**
+ * Tests staged evacuation through messaging to zones (Surf Coast Shire).
+ * This is a 12k population, running at a ~4% sample with capacity on roads reduced accordingly.
+ * Congestion rerouting is enabled.
+ */
 public class Anglesea12kTestStagedSample {
-    // have tests in separate classes so that they run, at least und    er maven, in separate JVMs.  kai, nov'17
+    // have tests in separate classes so that they run, at least under maven, in separate JVMs.  kai, nov'17
 
     Logger log = Logger.getLogger(Anglesea12kTestStagedSample.class);
 
@@ -25,21 +30,21 @@ public class Anglesea12kTestStagedSample {
 
         String[] args = {
                 "--config", "scenarios/surf-coast-shire/anglesea-12k-sample/scenario_main_sample.xml",
-                "--logfile", "scenarios/surf-coast-shire/anglesea-12k-sample/scenario.log",
+                "--logfile", utils.getOutputDirectory() + "../scenario.log",
                 "--loglevel", "INFO",
                 //	                "--plan-selection-policy", "FIRST", // ensures it is deterministic, as default is RANDOM
                 "--seed", "12345",
-                "--safeline-output-file-pattern", "scenarios/surf-coast-shire/anglesea-12k-sample/safeline.%d%.out",
+                "--safeline-output-file-pattern", utils.getOutputDirectory() + "../safeline.%d%.out",
                 MATSimModel.MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR, utils.getOutputDirectory(),
                 "--jillconfig", "--config={" +
                 "agents:[{classname:io.github.agentsoz.ees.agents.Resident, args:null, count:482}]," +
                 "logLevel: WARN," +
-                "logFile: \"scenarios/surf-coast-shire/anglesea-12k-sample/jill.log\"," +
-                "programOutputFile: \"scenarios/surf-coast-shire/anglesea-12k-sample/jill.out\"," +
+                "logFile: \""+utils.getOutputDirectory()+"../jill.log\"," +
+                "programOutputFile: \""+utils.getOutputDirectory()+"../jill.out\"," +
                 "randomSeed: 12345," + // jill random seed
                 "numThreads: 1" + // run jill in single-threaded mode so logs are deterministic
                 "}",
-                "--x-congestion-config", "120:.8", // virtually disallow congestion re-routing (painfully slow otherwise!)
+                "--x-congestion-config", "120:0.8",
                 "--sendFireAlertOnFireStart", "false", // disable fire alert from fire model, instead will use messaging
                 "--x-messages-file", "scenarios/surf-coast-shire/anglesea-12k-sample/scenario_messages_staged.json", // specifies when to send evac now msg
                 "--x-zones-file", "scenarios/surf-coast-shire/anglesea-12k-sample/Anglesea_SA1s_WSG84.json", // map from zone (SA1) ids to shapes

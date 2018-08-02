@@ -4,6 +4,7 @@
 package io.github.agentsoz.ees;
 
 import org.apache.log4j.Logger;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.matsim.core.utils.misc.CRCChecksum;
@@ -15,6 +16,7 @@ import io.github.agentsoz.util.TestUtils;
  * @author dsingh
  *
  */
+@Ignore // Should remove this altogether, not added any value to existing tests [DS Aug/18]
 public class MainCampbellsCreek01Test {
 	
 	// have tests in separate classes so that they run, at least under maven, in separate JVMs.  kai, nov'17
