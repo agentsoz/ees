@@ -24,9 +24,52 @@ public class MainMaldon600Test {
 
 	@Rule public MatsimTestUtils utils = new MatsimTestUtils() ;
 
+	@SuppressWarnings("static-method")
+	@Test
+	public void testMaldon600Reduced() {
+
+		String [] args = {
+				"--config",  "scenarios/mount-alexander-shire/maldon-600/scenario_main_reduced.xml",
+				"--logfile", utils.getOutputDirectory()+"../scenario.log",
+				"--loglevel", "INFO",
+				"--seed", "12345",
+				"--safeline-output-file-pattern", utils.getOutputDirectory()+"../safeline.%d%.out",
+				"--matsim-output-directory", utils.getOutputDirectory(),
+				"--jillconfig", "--config={"+
+				"agents:[{classname:io.github.agentsoz.ees.agents.Resident, args:null, count:30}],"+
+				"logLevel: WARN,"+
+				"logFile: \""+utils.getOutputDirectory()+"../jill.log\","+
+				"programOutputFile: \""+utils.getOutputDirectory()+"../jill.out\","+
+				"randomSeed: 12345"+ // jill random seed
+				//"numThreads: 1"+ // run jill in single-threaded mode so logs are deterministic
+				"}"
+		};
+
+		Main.main(args);
+
+		final String actualEventsFilename = utils.getOutputDirectory() + "/output_events.xml.gz";
+		long actualEventsCRC = CRCChecksum.getCRCFromFile( actualEventsFilename ) ;
+		System.err.println("actual(events)="+actualEventsCRC) ;
+
+		long actualPlansCRC = CRCChecksum.getCRCFromFile( utils.getOutputDirectory() + "/output_plans.xml.gz" ) ;
+		System.err.println("actual(plans)="+actualPlansCRC) ;
+
+		// ---
+
+		final String primaryExpectedEventsFilename = utils.getInputDirectory() + "/output_events.xml.gz";
+
+		// ---
+
+		TestUtils.comparingDepartures(primaryExpectedEventsFilename,actualEventsFilename,1.);
+		TestUtils.comparingArrivals(primaryExpectedEventsFilename,actualEventsFilename,1.);
+		TestUtils.comparingActivityStarts(primaryExpectedEventsFilename,actualEventsFilename, 1.);
+		TestUtils.compareFullEvents(primaryExpectedEventsFilename,actualEventsFilename, true);
+	}
+
 
 	@SuppressWarnings("static-method")
 	@Test
+	@Ignore
 	public void testMaldon600() {
 
 		/*
