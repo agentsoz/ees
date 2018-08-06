@@ -67,6 +67,7 @@ public class SimpleConfig {
 	private static String zonesFile = null; // FIXME: should come from config XML
 	private static double congestionEvaluationInterval = 600; // secs between BDI agent evaluatiing if it is in congestion
 	private static double congestionToleranceThreshold = 0.5; // as a proportion of the congestionEvaluationInterval
+	private static double congestionReactionProbability = 1.0; // likelihood that an agent will react when in congestion
 
 	public static void setDisruptionsFile(String disruptionFile) {
 		SimpleConfig.disruptionsFile = disruptionFile;
@@ -434,5 +435,13 @@ public class SimpleConfig {
 
 	public static void setZonesFile(String zonesFile) {
         SimpleConfig.zonesFile = zonesFile;
+    }
+
+	public static double getCongestionReactionProbability() {
+		return congestionReactionProbability;
+	}
+
+	public static void setCongestionReactionProbability(double congestionReactionProbability) {
+        SimpleConfig.congestionReactionProbability = congestionReactionProbability;
     }
 }

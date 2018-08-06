@@ -131,7 +131,8 @@ public class Main {
 		evacConfig.setSetup(setup);
 		evacConfig.setCongestionEvaluationInterval(SimpleConfig.getCongestionEvaluationInterval());
 		evacConfig.setCongestionToleranceThreshold(SimpleConfig.getCongestionToleranceThreshold());
-		
+		evacConfig.setCongestionReactionProbability(SimpleConfig.getCongestionReactionProbability());
+
 		// --- do some things for which you need a handle to the matsim scenario:
 		Scenario scenario = matsimModel.loadAndPrepareScenario() ;
 		// move everything into the far future (yy maybe better repair input files?)
@@ -444,6 +445,7 @@ public class Main {
 						try {
 							SimpleConfig.setCongestionEvaluationInterval(Double.parseDouble(vals[0]));
 							SimpleConfig.setCongestionToleranceThreshold(Double.parseDouble(vals[1]));
+							SimpleConfig.setCongestionReactionProbability(Double.parseDouble(vals[2]));
 
 						} catch (Exception e) {
 							System.err.println("Could not parse congestion config '"

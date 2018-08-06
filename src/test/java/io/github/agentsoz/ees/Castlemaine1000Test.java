@@ -86,7 +86,7 @@ public class Castlemaine1000Test {
 						"randomSeed: 12345"+ // jill random seed
 						//"numThreads: 1"+ // run jill in single-threaded mode so logs are deterministic
 						"}",
-				"--x-congestion-config", "180:0.25"
+				"--x-congestion-config", "180:0.25:1.0"
 		};
 
 		Main.main(args);

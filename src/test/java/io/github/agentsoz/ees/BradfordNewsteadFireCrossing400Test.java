@@ -50,7 +50,7 @@ public class BradfordNewsteadFireCrossing400Test {
 				"randomSeed: 12345"+ // jill random seed
 				//"numThreads: 1"+ // run jill in single-threaded mode so logs are deterministic
 				"}",
-				"--x-congestion-config", "100000:100000", // disallow congestion re-routing
+				"--x-congestion-config", "100000:100000:0.0", // disallow congestion re-routing
 		};
 
 		Main.main(args);
