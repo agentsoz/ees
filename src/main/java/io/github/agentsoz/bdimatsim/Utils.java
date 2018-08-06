@@ -59,7 +59,38 @@ public final class Utils {
 	@SuppressWarnings("unused")
 	private static final Logger log = LoggerFactory.getLogger(Utils.class);
 
-	public static List<String> getBDIAgentIDs( Scenario scenario ) {
+    /**
+     * Returns a map of BDI agent types to agent IDs, read from the MATSim population file.
+     * Input should be of form given below:
+     * <pre>{@code
+     * <person id="2">
+     *   <attributes>
+     *     <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.Resident</attribute>
+     *   </attributes>
+     *   <plan selected="yes">
+     *     ...
+     *   </plan>
+     * </person>
+     * }</pre>
+     *
+     * @param scenario MATSim scenario reference
+     * @return the map or else an empty map if no BDI agent types were found
+     */
+    public static Map<String,String[]> getBDIAgentsFromMATSimPlansFile(Scenario scenario ) {
+        Map<String,String[]> map = new HashMap<>();
+        for (Person person : scenario.getPopulation().getPersons().values()) {
+            String bdiType = (String) person.getAttributes().getAttribute("BDIAgentType");
+			String initArgs = (String) person.getAttributes().getAttribute("BDIAgentInitArgs");
+            if (bdiType!=null) {
+            	String[] initInfo = new String[]{bdiType, initArgs};
+                map.put(person.getId().toString(), initInfo);
+            }
+        }
+        return map;
+    }
+
+
+    public static List<String> getBDIAgentIDs( Scenario scenario ) {
 		// this goes through all matsim agents, ignores the stub agents, and returns as many of those agent ids as the
 		// bdi module wants as bdi agents (the remaining agents will, I guess, remain normal matsim agents).  kai, mar'15
 
