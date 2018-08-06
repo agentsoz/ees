@@ -31,7 +31,7 @@ public class EvacConfig extends ReflectiveConfigGroup{
 	private Setup setup = Setup.standard ;
 	private double congestionEvaluationInterval; // secs between BDI agent evaluatiing if it is in congestion
 	private double congestionToleranceThreshold; // as a proportion of the congestionEvaluationInterval
-
+	private double congestionReactionProbability; // likelihood that agent will react to congestion
 
 
 	public EvacConfig() {
@@ -61,5 +61,13 @@ public class EvacConfig extends ReflectiveConfigGroup{
 
 	public void setCongestionToleranceThreshold(double congestionToleranceThreshold) {
 		this.congestionToleranceThreshold = congestionToleranceThreshold;
+	}
+
+	public double getCongestionReactionProbability() {
+		return congestionReactionProbability;
+	}
+
+	public void setCongestionReactionProbability(double congestionReactionProbability) {
+		this.congestionReactionProbability = congestionReactionProbability;
 	}
 }

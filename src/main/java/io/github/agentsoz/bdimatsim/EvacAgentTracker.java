@@ -22,6 +22,7 @@ package io.github.agentsoz.bdimatsim;
  * #L%
  */
 
+import io.github.agentsoz.util.Global;
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.events.*;
 import org.matsim.api.core.v01.events.handler.*;
@@ -121,8 +122,10 @@ public class EvacAgentTracker implements
 				// If the delay is greater than the agent's tolerance threshold, then the agent will
 				// now realise (or "believe" in the BDI sense) that it is in congestion
 				if(totalDelayInThisInterval > evacConfig.getCongestionEvaluationInterval() * evacConfig.getCongestionToleranceThreshold()) {
-					// ding ding!
-					this.events.processEvent( new AgentInCongestionEvent(event.getTime(), vehicleId, null, event.getLinkId()));
+					if(Global.getRandom().nextDouble() < evacConfig.getCongestionReactionProbability()) {
+						// ding ding!
+						this.events.processEvent(new AgentInCongestionEvent(event.getTime(), vehicleId, null, event.getLinkId()));
+					}
 				}
 				// remove this vehicle from the map so that we can start tracking it in the next interval afresh
 				linkEnterEventsMap.remove(vehicleId) ;
