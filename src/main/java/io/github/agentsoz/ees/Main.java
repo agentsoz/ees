@@ -3,12 +3,9 @@ package io.github.agentsoz.ees;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.TreeMap;
+import java.util.*;
 
+import com.google.gson.Gson;
 import io.github.agentsoz.bdiabm.ABMServerInterface;
 import io.github.agentsoz.bdiabm.QueryPerceptInterface;
 import io.github.agentsoz.bdiabm.data.AgentDataContainer;
@@ -75,8 +72,7 @@ public class Main {
 	private static String safelineOutputFilePattern = "./safeline.%d%.csv";
 	private static boolean sendFireAlertOnFireStart = true;
 
-
-	private static int blockedLinkId = -1; // FIXME: temp fix on 31/01/18; remove once #1 is in place
+	private static boolean loadBDIAgentsFromMATSimPlansFile = false;
 
 	// yyyyyy careful; the above all stay from one test to the next (if not in separate
 	// JVMs).  kai, dec'17
@@ -152,6 +148,17 @@ public class Main {
 		 */
 		
 		List<String> bdiAgentIDs = Utils.getBDIAgentIDs( scenario );
+		if (loadBDIAgentsFromMATSimPlansFile) {
+			Map<String, String[]> map = Utils.getBDIAgentsFromMATSimPlansFile(scenario);
+			if (map != null && !map.isEmpty()) {
+				for (int i = 0; jillInitArgs != null && i < jillInitArgs.length; i++) {
+					if ("--config".equals(jillInitArgs[i]) && i < (jillInitArgs.length-1)) {
+						String agentsArg = buildJillAgentsArgsFromAgentMap(map);
+						jillInitArgs[i+1] = jillInitArgs[i+1].replaceAll("agents:\\[]", agentsArg);
+					}
+				}
+			}
+		}
 
 		// --- initialize and start jill (need the bdiAgentIDs, for which we need the material from before)
 		JillBDIModel jillmodel = initializeAndStartJillModel(dataServer, bdiAgentIDs, matsimModel, matsimModel.getAgentManager().getAgentDataContainer());
@@ -190,7 +197,8 @@ public class Main {
 		// get rid of System.exit(...) so that tests run through ...
 		DataServer.cleanup() ;
 	}
-	
+
+
 	private static void setSimStartTimesRelativeToAlert(DataServer dataServer, Config config, int offset ) {
 		dataServer.setTime(getEvacuationStartTimeInSeconds(offset));
 		
@@ -198,7 +206,61 @@ public class Main {
 		config.qsim().setSimStarttimeInterpretation(StarttimeInterpretation.onlyUseStarttime);
 		// yy in the longer run, a "minOfStarttimeAndEarliestActivityEnd" would be good. kai, nov'17
 	}
-	
+
+	/**
+	 * Returns something like:
+	 * <pre>
+	 * agents:[
+	 *  {classname:io.github.agentsoz.ees.agents.Resident,
+	 *   args:null,
+	 *   count:10
+	 *  },
+	 *  {classname:io.github.agentsoz.ees.agents.Responder,
+	 *   args:[--respondToUTM, \"Tarrengower Prison,237100,5903400\"],
+	 *   count:3
+	 *  }
+	 * ]
+	 * </pre>
+	 *
+	 * @param map
+	 * @return
+	 */
+	private String buildJillAgentsArgsFromAgentMap(Map<String, String[]> map) {
+		if (map == null) {
+			return null;
+		}
+		Map<String,String> classArgs = new HashMap<>();
+		Map<String,Integer> counts = new HashMap<>();
+		for (String[] val : map.values()) {
+			// val[0] is classname, val[1] is class args
+			if (val != null && val.length == 2) {
+				if (!classArgs.containsKey(val[1])) {
+					classArgs.put(val[0], val[1]) ; // will overwrite previously specified class arg
+					int count = counts.containsKey(val[0]) ? counts.get(val[0]) : new Integer(0);
+					counts.put(val[0], count+1);
+				}
+			}
+		}
+
+		StringBuilder arg = new StringBuilder();
+		arg.append("agents:[");
+		if (map != null) {
+			Iterator<String> it = classArgs.keySet().iterator();
+			while(it.hasNext()) {
+				String key = it.next();
+				arg.append("{");
+				arg.append("classname:"); arg.append(key); arg.append(",");
+				arg.append("args:"); arg.append(classArgs.get(key)); arg.append(",");
+				arg.append("count:"); arg.append(counts.get(key));
+				arg.append("}");
+				if (it.hasNext()) arg.append(",");
+			}
+		}
+		arg.append("]");
+		return arg.toString();
+	}
+
+
 	private static JillBDIModel initializeAndStartJillModel(DataServer dataServer, List<String> bdiAgentIDs,
 															ABMServerInterface matsimModel, AgentDataContainer agentDataContainer) {
 		
@@ -454,7 +516,18 @@ public class Main {
 
 					}
 					break;
-			default:
+				case "--x-load-bdi-agents-from-matsim-plans-file":
+					if (i + 1 < args.length) {
+						i++;
+						try {
+							loadBDIAgentsFromMATSimPlansFile = Boolean.parseBoolean(args[i]);
+						} catch (Exception e) {
+							System.err.println("Could not parse boolean '"
+									+ args[i] + "' : " + e.getMessage());
+						}
+					}
+					break;
+				default:
 				throw new RuntimeException("unknown config option: " + args[i]) ;
 			}
 		}
