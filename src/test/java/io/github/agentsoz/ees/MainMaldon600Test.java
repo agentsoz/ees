@@ -30,24 +30,24 @@ public class MainMaldon600Test {
 	public void testMaldon600() {
 
 		/*
---config /var/www/data/user-data/2017-10-23-ds-maldon/scenario/scenario_main.xml 
---logfile /var/www/data/user-data/2017-10-23-ds-maldon/scenario/scenario.log 
---loglevel TRACE 
+--config /var/www/data/user-data/2017-10-23-ds-maldon/scenario/scenario_main.xml
+--logfile /var/www/data/user-data/2017-10-23-ds-maldon/scenario/scenario.log
+--loglevel TRACE
 --jillconfig "--config={agents:[{classname:Resident, args:null, count:600}],logLevel: WARN,logFile: \"/var/www/data/user-data/2017-10-23-ds-maldon/scenario/jill.log\",programOutputFile: \"/var/www/data/user-data/2017-10-23-ds-maldon/scenario/jill.out\"}"
 		 */
 		String [] args = {
 				"--config",  "scenarios/mount-alexander-shire/maldon-600/scenario_main.xml",
-				"--logfile", "scenarios/mount-alexander-shire/maldon-600/scenario.log",
+				"--logfile", utils.getOutputDirectory()+"../scenario.log",
 				"--loglevel", "INFO",
 				//				"--plan-selection-policy", "FIRST", // ensures it is deterministic, as default is RANDOM
 				"--seed", "12345",
-				"--safeline-output-file-pattern", "scenarios/mount-alexander-shire/maldon-600/safeline.%d%.out",
+				"--safeline-output-file-pattern", utils.getOutputDirectory()+"../safeline.%d%.out",
 				"--matsim-output-directory", utils.getOutputDirectory(),
 				"--jillconfig", "--config={"+
 						"agents:[{classname:io.github.agentsoz.ees.agents.Resident, args:null, count:600}],"+
 						"logLevel: WARN,"+
-						"logFile: \"scenarios/mount-alexander-shire/maldon-600/jill.log\","+
-						"programOutputFile: \"scenarios/mount-alexander-shire/maldon-600/jill.out\","+
+						"logFile: \""+utils.getOutputDirectory()+"../jill.log\","+
+						"programOutputFile: \""+utils.getOutputDirectory()+"../jill.out\","+
 						"randomSeed: 12345"+ // jill random seed
 						//"numThreads: 1"+ // run jill in single-threaded mode so logs are deterministic
 						"}"

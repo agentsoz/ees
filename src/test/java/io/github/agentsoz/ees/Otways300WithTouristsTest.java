@@ -29,19 +29,19 @@ public class Otways300WithTouristsTest {
 
         String[] args = {
                 "--config", "scenarios/surf-coast-shire/otways-300/scenario_main.xml",
-                "--logfile", "scenarios/surf-coast-shire/otways-300/scenario.log",
+                "--logfile", utils.getOutputDirectory()+"../scenario.log",
                 "--loglevel", "INFO",
                 //	                "--plan-selection-policy", "FIRST", // ensures it is deterministic, as default is RANDOM
                 "--seed", "12345",
-                "--safeline-output-file-pattern", "scenarios/surf-coast-shire/otways-300/safeline.%d%.out",
+                "--safeline-output-file-pattern", utils.getOutputDirectory()+"../safeline.%d%.out",
                 "--matsim-output-directory", utils.getOutputDirectory(),
                 "--jillconfig", "--config={" +
                 "agents:[{classname:io.github.agentsoz.ees.agents.Resident, args:null, count:290}," +
                     "{classname:io.github.agentsoz.ees.agents.Tourist, " +
                     "args:[--WayHome,\"MelbourneRoute,787484,5764290\",--CongestionBehaviour,1200,0.5], count:10}]," +
                 "logLevel: WARN," +
-                "logFile: \"scenarios/surf-coast-shire/otways-300/jill.log\"," +
-                "programOutputFile: \"scenarios/surf-coast-shire/otways-300/jill.out\"," +
+                "logFile: \""+utils.getOutputDirectory()+"../jill.log\"," +
+                "programOutputFile: \""+utils.getOutputDirectory()+"../jill.out\"," +
                 "randomSeed: 12345," + // jill random seed
                 "numThreads: 1"+ // run jill in single-threaded mode so logs are deterministic
                 "}"};
