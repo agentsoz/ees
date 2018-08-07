@@ -63,20 +63,6 @@ public class JillBDIModel extends JillModel implements DataClient {
 	public JillBDIModel(String[] initArgs) {
 		mapMATsimToJillIds = new LinkedHashMap<String,String>();
 		mapJillToMATsimIds = new LinkedHashMap<String,String>();
-		alerts = new PriorityQueue<TimedAlert>(SimpleConfig.getNumBDIAgents(), new Comparator<TimedAlert>() {
-			@Override
-			public int compare(TimedAlert o1, TimedAlert o2) {
-				double t1 = o1.getTime();
-				double t2 = o2.getTime();
-				if (t1 > t2) {
-					return 1;
-				} else if (t1 < t2) {
-					return -1;
-				} else {
-					return 0;
-				}
-			}
-		});
 		this.initArgs = initArgs;
 	}
 	public void registerDataServer(DataServer dataServer) {
@@ -94,6 +80,21 @@ public class JillBDIModel extends JillModel implements DataClient {
 		// Initialise the Jill model
 		// params[] contains the list of agent names to create
 		if (super.init(agentDataContainer, agentList, abmServer, initArgs)) {
+			// Initialise the alerts
+			alerts = new PriorityQueue<TimedAlert>(params.length, new Comparator<TimedAlert>() {
+				@Override
+				public int compare(TimedAlert o1, TimedAlert o2) {
+					double t1 = o1.getTime();
+					double t2 = o2.getTime();
+					if (t1 > t2) {
+						return 1;
+					} else if (t1 < t2) {
+						return -1;
+					} else {
+						return 0;
+					}
+				}
+			});
 			// Set the BDI query percept interface that the agents can use
 			for (int i=0; i<params.length; i++) {
 				getAgent(i).setQueryPerceptInterface(this.getQueryPerceptInterface());
