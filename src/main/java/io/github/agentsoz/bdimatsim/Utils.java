@@ -23,6 +23,8 @@ package io.github.agentsoz.bdimatsim;
  */
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
@@ -43,6 +45,7 @@ import org.matsim.core.scenario.ScenarioUtils;
 import org.matsim.core.utils.geometry.GeometryUtils;
 
 import com.vividsolutions.jts.geom.LineString;
+import org.matsim.utils.objectattributes.attributable.Attributes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,12 +63,12 @@ public final class Utils {
 	private static final Logger log = LoggerFactory.getLogger(Utils.class);
 
     /**
-     * Returns a map of BDI agent types to agent IDs, read from the MATSim population file.
+     * Returns a map of agent IDs to specified attributes
      * Input should be of form given below:
      * <pre>{@code
      * <person id="2">
      *   <attributes>
-     *     <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.Resident</attribute>
+     *     <attribute name="key" class="java.lang.String" >value</attribute>
      *   </attributes>
      *   <plan selected="yes">
      *     ...
@@ -76,15 +79,20 @@ public final class Utils {
      * @param scenario MATSim scenario reference
      * @return the map or else an empty map if no BDI agent types were found
      */
-    public static Map<String,String[]> getBDIAgentsFromMATSimPlansFile(Scenario scenario ) {
-        Map<String,String[]> map = new HashMap<>();
+    public static Map<String,List<String[]>> getBDIAgentsFromMATSimPlansFile(Scenario scenario ) {
+        Map<String,List<String[]>> map = new HashMap<>();
         for (Person person : scenario.getPopulation().getPersons().values()) {
-            String bdiType = (String) person.getAttributes().getAttribute("BDIAgentType");
-			String initArgs = (String) person.getAttributes().getAttribute("BDIAgentInitArgs");
-            if (bdiType!=null) {
-            	String[] initInfo = new String[]{bdiType, initArgs};
-                map.put(person.getId().toString(), initInfo);
-            }
+			String args = person.getAttributes().toString();
+			// Below seems the only ugly way to get attributes list out
+			List<String[]> initArgs = new ArrayList<>();
+			Pattern logEntry = Pattern.compile("\\{\\s*key\\s*=\\s*(.*?)\\s*;\\s*object\\s*=\\s*(.*?)\\s*\\}");
+			Matcher matchPattern = logEntry.matcher(args);
+			while(matchPattern.find()) {
+				String key = matchPattern.group(1);
+				String val = matchPattern.group(2);
+				initArgs.add(new String[]{key,val});
+			}
+			map.put(person.getId().toString(), initArgs);
         }
         return map;
     }
