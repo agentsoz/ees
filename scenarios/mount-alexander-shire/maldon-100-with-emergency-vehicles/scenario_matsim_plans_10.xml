@@ -181,7 +181,8 @@
 		<person id="10">
 			<attributes>
 		    <attribute name="BDIAgentType" class="java.lang.String">io.github.agentsoz.ees.agents.Responder</attribute>
-				<attribute name="BDIAgentInitArgs" class="java.lang.String">["--respondToUTM", "Tarrengower Prison,237100,5903400"]</attribute>
+				<!--<attribute name="BDIAgentInitArgs" class="java.lang.String">["respondToUTM", "Tarrengower Prison,237100,5903400"]</attribute>-->
+				<attribute name="--respondToUTM" class="java.lang.String">Tarrengower Prison,237100,5903400</attribute>
 		  </attributes>
 			<plan selected="yes">
 				<activity type="home" x="252145.230968" y="5894310.30443" end_time="06:00:00" >
@@ -196,7 +197,8 @@
 		<person id="11">
 			<attributes>
 		    <attribute name="BDIAgentType" class="java.lang.String">io.github.agentsoz.ees.agents.Responder</attribute>
-				<attribute name="BDIAgentInitArgs" class="java.lang.String">["--respondToUTM", "Tarrengower Prison,237100,5903400"]</attribute>
+				<!--<attribute name="BDIAgentInitArgs" class="java.lang.String">["respondToUTM", "Sandhills Lane,237600,5905400"]</attribute>-->
+				<attribute name="--respondToUTM" class="java.lang.String">Sandhills Lane,237600,5905400</attribute>
 		  </attributes>
 			<plan selected="yes">
 				<activity type="home" x="252145.230968" y="5894310.30443" end_time="06:00:00" >
@@ -211,7 +213,8 @@
 		<person id="12">
 			<attributes>
 		    <attribute name="BDIAgentType" class="java.lang.String">io.github.agentsoz.ees.agents.Responder</attribute>
-				<attribute name="BDIAgentInitArgs" class="java.lang.String">["--respondToUTM", "Tarrengower Prison,237100,5903400"]</attribute>
+				<!--<attribute name="BDIAgentInitArgs" class="java.lang.String">["respondToUTM", "Maldon Cemetary,237700,5904100"]</attribute>-->
+				<attribute name="--respondToUTM" class="java.lang.String">Maldon Cemetary,237700,5904100</attribute>
 		  </attributes>
 			<plan selected="yes">
 				<activity type="home" x="252145.230968" y="5894310.30443" end_time="06:00:00" >

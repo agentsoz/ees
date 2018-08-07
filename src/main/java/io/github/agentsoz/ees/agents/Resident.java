@@ -72,10 +72,17 @@ public class Resident extends Agent implements io.github.agentsoz.bdiabm.Agent {
 	 */
 	@Override
 	public void start(PrintStream writer, String[] params) {
+		parseArgs(params);
 		this.writer = writer;
         shelterLocation = SimpleConfig.getRandomEvacLocation();
 
 
+	}
+
+	private void parseArgs(String[] args) {
+		if (args != null && args.length != 0) {
+			logger.debug("{} ignoring received args: {}", prefix, args);
+		}
 	}
 
 	/**
@@ -171,7 +178,7 @@ public class Resident extends Agent implements io.github.agentsoz.bdiabm.Agent {
 	 */
 	@Override
 	public void init(String[] args) {
-		logger.warn("{} using a stub for io.github.agentsoz.bdiabm.Agent.init(...)", prefix);
+		parseArgs(args);
 	}
 
 	/**

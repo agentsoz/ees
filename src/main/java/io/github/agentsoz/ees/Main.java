@@ -5,10 +5,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
 
-import com.google.gson.Gson;
-import io.github.agentsoz.bdiabm.ABMServerInterface;
 import io.github.agentsoz.bdiabm.QueryPerceptInterface;
-import io.github.agentsoz.bdiabm.data.AgentDataContainer;
 import io.github.agentsoz.bdimatsim.EvacAgentTracker;
 import io.github.agentsoz.bdimatsim.EvacConfig;
 import io.github.agentsoz.bdimatsim.MATSimModel;
@@ -142,28 +139,28 @@ public class Main {
 				}
 			}
 		}
-		/* Dhirendra, it might be cleaner to do this in the input xml.  I have tried to remove the "fake" leg completely.
-		 * But then the agents don't have vehicles (yyyy although, on second thought, why??  we need to maintain
-		 * vehicles for mode choice).
-		 */
-		
-		List<String> bdiAgentIDs = Utils.getBDIAgentIDs( scenario );
-		if (loadBDIAgentsFromMATSimPlansFile) {
-			Map<String, String[]> map = Utils.getBDIAgentsFromMATSimPlansFile(scenario);
-			if (map != null && !map.isEmpty()) {
+
+        // --- initialize and start jill (need the bdiAgentIDs, for which we need the material from before)
+		List<String> bdiAgentIDs = null;
+        Map<String, List<String[]>> bdiMap = null;
+        if (!loadBDIAgentsFromMATSimPlansFile) {
+            bdiAgentIDs = Utils.getBDIAgentIDs( scenario );
+        } else {
+			bdiMap = Utils.getBDIAgentsFromMATSimPlansFile(scenario);
+			bdiAgentIDs = new ArrayList<>(bdiMap.keySet());
+			if (bdiMap != null && !bdiMap.isEmpty()) {
 				for (int i = 0; jillInitArgs != null && i < jillInitArgs.length; i++) {
 					if ("--config".equals(jillInitArgs[i]) && i < (jillInitArgs.length-1)) {
-						String agentsArg = buildJillAgentsArgsFromAgentMap(map);
+						String agentsArg = buildJillAgentsArgsFromAgentMap(bdiMap);
 						jillInitArgs[i+1] = jillInitArgs[i+1].replaceAll("agents:\\[]", agentsArg);
 					}
 				}
 			}
 		}
+		// --- initialize and start the Jill model
+		JillBDIModel jillmodel = initialiseAndStartJillModel(dataServer, matsimModel, bdiAgentIDs, bdiMap);
 
-		// --- initialize and start jill (need the bdiAgentIDs, for which we need the material from before)
-		JillBDIModel jillmodel = initializeAndStartJillModel(dataServer, bdiAgentIDs, matsimModel, matsimModel.getAgentManager().getAgentDataContainer());
-		// (matsimModel is passed in because of its query interface.  which is, however, never used.)
-		
+
 		// --- initialize and start matsim (maybe rename?):
 		matsimModel.init(bdiAgentIDs);
 		
@@ -198,7 +195,6 @@ public class Main {
 		DataServer.cleanup() ;
 	}
 
-
 	private static void setSimStartTimesRelativeToAlert(DataServer dataServer, Config config, int offset ) {
 		dataServer.setTime(getEvacuationStartTimeInSeconds(offset));
 		
@@ -225,32 +221,33 @@ public class Main {
 	 * @param map
 	 * @return
 	 */
-	private String buildJillAgentsArgsFromAgentMap(Map<String, String[]> map) {
+	private String buildJillAgentsArgsFromAgentMap(Map<String, List<String[]>> map) {
 		if (map == null) {
 			return null;
 		}
-		Map<String,String> classArgs = new HashMap<>();
+		// Count instances of each agent type
 		Map<String,Integer> counts = new HashMap<>();
-		for (String[] val : map.values()) {
-			// val[0] is classname, val[1] is class args
-			if (val != null && val.length == 2) {
-				if (!classArgs.containsKey(val[1])) {
-					classArgs.put(val[0], val[1]) ; // will overwrite previously specified class arg
-					int count = counts.containsKey(val[0]) ? counts.get(val[0]) : new Integer(0);
-					counts.put(val[0], count+1);
+		for (List<String[]> values: map.values()) {
+			for (String[] val : values) {
+				if ("BDIAgentType".equals(val[0])) {
+					String type = val[1];
+					int count = counts.containsKey(type) ? counts.get(type) : new Integer(0);
+					counts.put(type, count+1);
+
 				}
 			}
+
 		}
 
 		StringBuilder arg = new StringBuilder();
 		arg.append("agents:[");
 		if (map != null) {
-			Iterator<String> it = classArgs.keySet().iterator();
+			Iterator<String> it = counts.keySet().iterator();
 			while(it.hasNext()) {
 				String key = it.next();
 				arg.append("{");
 				arg.append("classname:"); arg.append(key); arg.append(",");
-				arg.append("args:"); arg.append(classArgs.get(key)); arg.append(",");
+				arg.append("args:[],"); // empty class args; per-instance args done later
 				arg.append("count:"); arg.append(counts.get(key));
 				arg.append("}");
 				if (it.hasNext()) arg.append(",");
@@ -260,25 +257,37 @@ public class Main {
 		return arg.toString();
 	}
 
-
-	private static JillBDIModel initializeAndStartJillModel(DataServer dataServer, List<String> bdiAgentIDs,
-															ABMServerInterface matsimModel, AgentDataContainer agentDataContainer) {
-		
+	private JillBDIModel initialiseAndStartJillModel(DataServer dataServer, MATSimModel matsimModel, List<String> bdiAgentIDs, Map<String, List<String[]>> bdiMap) {
 		// Create the Jill BDI model
 		JillBDIModel jillmodel = new JillBDIModel(jillInitArgs);
 		// Set the query percept interface to use
-		jillmodel.setQueryPerceptInterface((QueryPerceptInterface)matsimModel);
+		jillmodel.setQueryPerceptInterface((QueryPerceptInterface) matsimModel);
 		// register the server to use for transferring data between models
 		jillmodel.registerDataServer(dataServer);
 		// initialise and start
-		jillmodel.init(agentDataContainer,
+		jillmodel.init(matsimModel.getAgentManager().getAgentDataContainer(),
 				null, // agentList is not used
 				matsimModel,
 				bdiAgentIDs.toArray( new String[bdiAgentIDs.size()] ));
+		Map<String,List<String>> args = new HashMap<>();
+		if (bdiMap != null) {
+			for (String id : bdiMap.keySet()) {
+				List<String[]> values = bdiMap.get(id);
+				List<String> flatlist = new ArrayList<>();
+				for (String[] arr : values) {
+					for (String val : arr) {
+						flatlist.add(val);
+					}
+				}
+				args.put(id, flatlist);
+			}
+			jillmodel.initialiseAgentsWithArgs(args);
+		}
 		jillmodel.start();
-		return jillmodel ;
+		return jillmodel;
 	}
-	
+
+
 	private static void initializeAndStartFireModel(DataServer dataServer) throws IOException, ParseException, java.text.ParseException {
 		// Create fire module, load fire data, and register the fire module as
 		// an active data source

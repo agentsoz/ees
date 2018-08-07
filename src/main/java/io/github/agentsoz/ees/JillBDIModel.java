@@ -1,9 +1,6 @@
 package io.github.agentsoz.ees;
 
-import java.util.Comparator;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.PriorityQueue;
+import java.util.*;
 
 import io.github.agentsoz.jill.core.GlobalState;
 import io.github.agentsoz.util.evac.PerceptList;
@@ -176,6 +173,22 @@ public class JillBDIModel extends JillModel implements DataClient {
 			double secsOffset = Math.round(Time.convertTime(minsOffset, Time.TimestepUnit.MINUTES, Time.TimestepUnit.SECONDS));
 			double evacTimeInSeconds = evacStartInSeconds + secsOffset;
 			alerts.add(new TimedAlert(evacTimeInSeconds, matsimAgentId));
+		}
+	}
+
+	public void initialiseAgentsWithArgs(Map<String, List<String>> map) {
+		if(map == null) return;
+		for (String id : map.keySet()) {
+			try {
+				Integer idx = Integer.valueOf(id); // agent id must be an integer
+				List<String> args = map.get(id);
+				if (args != null && !args.isEmpty()) {
+					String[] vargs = args.toArray(new String[args.size()]);
+					getAgent(Integer.valueOf(id)).init(vargs);
+				}
+			} catch (NumberFormatException e) {
+				logger.warn("Jill agent IDs can only be integers; found `"+id+"`. " + e.getMessage());
+			}
 		}
 	}
 

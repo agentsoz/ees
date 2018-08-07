@@ -78,23 +78,27 @@ public class Tourist extends  Agent implements io.github.agentsoz.bdiabm.Agent {
     @Override
     public void start(PrintStream writer, String[] params) {
         this.writer = writer;
-        if (params != null) {
-            for (int i=0; i < params.length;i++) {
+        parseArgs(params);
+        SimpleConfig.setCongestionEvaluationInterval(CongestionEvaluationInterval);
+        SimpleConfig.setCongestionToleranceThreshold(CongestionToleranceThreshold);
+    }
 
-                 if("--WayHome".equals(params[i])) {
-                    String[] sCoords = params[i+1].split(",");
+    private void parseArgs(String[] args) {
+        if (args != null) {
+            for (int i = 0; i < args.length; i++) {
+
+                 if("--WayHome".equals(args[i])) {
+                    String[] sCoords = args[i+1].split(",");
                     FreewayEntraceLocation = new Location(sCoords[0], Double.parseDouble(sCoords[1]), Double.parseDouble(sCoords[2]));
 
                 }
 
-                if("--CongestionBehavior".equals(params[i])){
-                    CongestionEvaluationInterval = Double.parseDouble(params[i+1]);
-                    CongestionToleranceThreshold = Double.parseDouble(params[i+2]);
+                if("--CongestionBehavior".equals(args[i])){
+                    CongestionEvaluationInterval = Double.parseDouble(args[i+1]);
+                    CongestionToleranceThreshold = Double.parseDouble(args[i+2]);
                 }
             }
         }
-        SimpleConfig.setCongestionEvaluationInterval(CongestionEvaluationInterval);
-        SimpleConfig.setCongestionToleranceThreshold(CongestionToleranceThreshold);
     }
 
 
@@ -174,7 +178,7 @@ public class Tourist extends  Agent implements io.github.agentsoz.bdiabm.Agent {
      */
     @Override
     public void init(String[] args) {
-        logger.warn("{} using a stub for io.github.agentsoz.bdiabm.Agent.init(...)", prefix);
+        parseArgs(args);
     }
 
     /**
