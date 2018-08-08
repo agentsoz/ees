@@ -26,17 +26,17 @@ public class Generated10kTest {
 
         String[] args = {
                 "--config", "scenarios/surf-coast-shire/generated-10k/scenario_main.xml",
-                "--logfile", "scenarios/surf-coast-shire/generated-10k/scenario.log",
+                "--logfile", utils.getOutputDirectory()+"../scenario.log",
                 "--loglevel", "INFO",
                 //	                "--plan-selection-policy", "FIRST", // ensures it is deterministic, as default is RANDOM
                 "--seed", "12345",
-                "--safeline-output-file-pattern", "scenarios/surf-coast-shire/generated-10k/safeline.%d%.out",
+                "--safeline-output-file-pattern", utils.getOutputDirectory()+"../safeline.%d%.out",
                 MATSimModel.MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR, utils.getOutputDirectory(),
                 "--jillconfig", "--config={" +
                 "agents:[{classname:io.github.agentsoz.ees.agents.Resident, args:null, count:10000}]," +
                 "logLevel: WARN," +
-                "logFile: \"scenarios/surf-coast-shire/generated-10k/jill.log\"," +
-                "programOutputFile: \"scenarios/surf-coast-shire/generated-10k/jill.out\"," +
+                "logFile: \""+utils.getOutputDirectory()+"../jill.log\"," +
+                "programOutputFile: \""+utils.getOutputDirectory()+"../jill.out\"," +
                 "randomSeed: 12345," + // jill random seed
                 "numThreads: 1" + // run jill in single-threaded mode so logs are deterministic
                 "}",
