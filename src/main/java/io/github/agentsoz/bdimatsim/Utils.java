@@ -45,7 +45,6 @@ import org.matsim.core.scenario.ScenarioUtils;
 import org.matsim.core.utils.geometry.GeometryUtils;
 
 import com.vividsolutions.jts.geom.LineString;
-import org.matsim.utils.objectattributes.attributable.Attributes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -79,7 +78,7 @@ public final class Utils {
      * @param scenario MATSim scenario reference
      * @return the map or else an empty map if no BDI agent types were found
      */
-    public static Map<String,List<String[]>> getBDIAgentsFromMATSimPlansFile(Scenario scenario ) {
+    public static Map<String,List<String[]>> getAgentsFromMATSimPlansFile(Scenario scenario ) {
         Map<String,List<String[]>> map = new HashMap<>();
         for (Person person : scenario.getPopulation().getPersons().values()) {
 			String args = person.getAttributes().toString();
@@ -97,7 +96,13 @@ public final class Utils {
         return map;
     }
 
-
+	/**
+	 * Deprecated. Use {@link #getAgentsFromMATSimPlansFile} instead.
+	 * Example usage is in {@code examples/bushfire/scenarios/mount-alexander-shire/maldon-100-with-emergency-vehicles}
+	 * @param scenario
+	 * @return
+	 */
+	@Deprecated
     public static List<String> getBDIAgentIDs( Scenario scenario ) {
 		// this goes through all matsim agents, ignores the stub agents, and returns as many of those agent ids as the
 		// bdi module wants as bdi agents (the remaining agents will, I guess, remain normal matsim agents).  kai, mar'15
