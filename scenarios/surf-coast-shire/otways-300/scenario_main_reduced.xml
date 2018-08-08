@@ -41,7 +41,7 @@ Specifies the top level MATSim configuration file for this scenario
     bushfire root directory, e.g., ./sample_data/maldon.xml
 ============================================================================-->
 <matsimfile>
-scenarios/surf-coast-shire/otways-300/scenario_matsim_main.xml
+scenarios/surf-coast-shire/otways-300/scenario_matsim_main_reduced.xml
 </matsimfile>
 
 <!--===========================================================================

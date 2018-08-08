@@ -6,6 +6,7 @@ package io.github.agentsoz.ees;
 import io.github.agentsoz.bdimatsim.EvacConfig;
 import io.github.agentsoz.util.TestUtils;
 import org.apache.log4j.Logger;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.matsim.core.utils.misc.CRCChecksum;
@@ -24,6 +25,51 @@ public class Otways300WithTouristsTest {
     @Rule
     public MatsimTestUtils utils = new MatsimTestUtils();
 
+    @Test
+    public void testOtways300TouristReduced() {
+
+        String [] args = {
+                "--config", "scenarios/surf-coast-shire/otways-300/scenario_main_reduced.xml",
+                "--logfile", utils.getOutputDirectory()+"../scenario.log",
+                "--loglevel", "INFO",
+                //	                "--plan-selection-policy", "FIRST", // ensures it is deterministic, as default is RANDOM
+                "--seed", "12345",
+                "--safeline-output-file-pattern", utils.getOutputDirectory()+"../safeline.%d%.out",
+                "--matsim-output-directory", utils.getOutputDirectory(),
+                "--jillconfig", "--config={" +
+                "agents:[{classname:io.github.agentsoz.ees.agents.Resident, args:null, count:20}," +
+                "{classname:io.github.agentsoz.ees.agents.Tourist, " +
+                "args:[--WayHome,\"MelbourneRoute,787484,5764290\",--CongestionBehaviour,1200,0.5], count:10}]," +
+                "logLevel: WARN," +
+                "logFile: \""+utils.getOutputDirectory()+"../jill.log\"," +
+                "programOutputFile: \""+utils.getOutputDirectory()+"../jill.out\"," +
+                "randomSeed: 12345," + // jill random seed
+                "numThreads: 1"+ // run jill in single-threaded mode so logs are deterministic
+                "}"};
+
+        Main.main(args);
+
+        final String actualEventsFilename = utils.getOutputDirectory() + "/output_events.xml.gz";
+        long actualEventsCRC = CRCChecksum.getCRCFromFile( actualEventsFilename ) ;
+        System.err.println("actual(events)="+actualEventsCRC) ;
+
+        long actualPlansCRC = CRCChecksum.getCRCFromFile( utils.getOutputDirectory() + "/output_plans.xml.gz" ) ;
+        System.err.println("actual(plans)="+actualPlansCRC) ;
+
+        // ---
+
+        final String primaryExpectedEventsFilename = utils.getInputDirectory() + "/output_events.xml.gz";
+
+        // ---
+
+        TestUtils.comparingDepartures(primaryExpectedEventsFilename,actualEventsFilename,1.);
+        TestUtils.comparingArrivals(primaryExpectedEventsFilename,actualEventsFilename,1.);
+        TestUtils.comparingActivityStarts(primaryExpectedEventsFilename,actualEventsFilename, 1.);
+        TestUtils.compareFullEvents(primaryExpectedEventsFilename,actualEventsFilename, true);
+    }
+
+
+    @Ignore
     @Test
     public void testOtways300Tourist() {
 
