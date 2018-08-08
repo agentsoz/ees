@@ -34,7 +34,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.PrintStream;
 
-
+@AgentInfo(hasGoals={"io.github.agentsoz.ees.agents.bushfire.GoalDoNothing"})
 public class BushfireAgent extends  Agent implements io.github.agentsoz.bdiabm.Agent {
 
     private final Logger logger = LoggerFactory.getLogger("io.github.agentsoz.ees");
