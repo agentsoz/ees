@@ -157,6 +157,10 @@ public class MessagingModel implements DataSource {
 	 * Start publishing messages data
 	 */
 	public void start(int[] hhmm) {
+		if (messages.isEmpty()) {
+			return;
+		}
+
 		double startTimeInSeconds = Time.convertTime(hhmm[0], Time.TimestepUnit.HOURS, Time.TimestepUnit.SECONDS)
 				+ Time.convertTime(hhmm[1], Time.TimestepUnit.MINUTES, Time.TimestepUnit.SECONDS);
 		dataServer.registerTimedUpdate(PerceptList.EMERGENCY_MESSAGE, this, Time.convertTime(startTimeInSeconds, Time.TimestepUnit.SECONDS, timestepUnit));

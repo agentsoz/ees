@@ -69,6 +69,9 @@ public class SimpleConfig {
 	private static double congestionToleranceThreshold = 0.5; // as a proportion of the congestionEvaluationInterval
 	private static double congestionReactionProbability = 1.0; // likelihood that an agent will react when in congestion
 
+	private static String bdiAgentTagInMATSimPopulationFile = "BDIAgentType"; // FIXME: no way to set this yet
+	private static boolean loadBDIAgentsFromMATSimPlansFile = false;
+
 	public static void setDisruptionsFile(String disruptionFile) {
 		SimpleConfig.disruptionsFile = disruptionFile;
 	}
@@ -444,4 +447,20 @@ public class SimpleConfig {
 	public static void setCongestionReactionProbability(double congestionReactionProbability) {
         SimpleConfig.congestionReactionProbability = congestionReactionProbability;
     }
+
+	public static String getBdiAgentTagInMATSimPopulationFile() {
+		return bdiAgentTagInMATSimPopulationFile;
+	}
+
+	public static void setBdiAgentTagInMATSimPopulationFile(String bdiAgentTagInMATSimPopulationFile) {
+		SimpleConfig.bdiAgentTagInMATSimPopulationFile = bdiAgentTagInMATSimPopulationFile;
+	}
+
+	public static boolean isLoadBDIAgentsFromMATSimPlansFile() {
+		return loadBDIAgentsFromMATSimPlansFile;
+	}
+
+	public static void setLoadBDIAgentsFromMATSimPlansFile(boolean loadBDIAgentsFromMATSimPlansFile) {
+		SimpleConfig.loadBDIAgentsFromMATSimPlansFile = loadBDIAgentsFromMATSimPlansFile;
+	}
 }

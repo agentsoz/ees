@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE population SYSTEM "http://www.matsim.org/files/dtd/population_v6.dtd">
+  <population>
+
+  <!-- ====================================================================== -->
+  <person id= "0" >
+    <attributes>
+      <attribute name="zzzBDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.Resident</attribute>
+    </attributes>
+    <plan selected="yes">
+      <activity type="home" x="777487.95417" y="5742688.0183" end_time="09:58:00" />
+      <leg mode="car" />
+      <activity type="work" x="778210.63486" y="5744138.97464" end_time="20:47:00" />
+      <leg mode="car" />
+      <activity type="home" x="777487.95417" y="5742688.0183" />
+    </plan>
+  </person>
+
+  <!-- ====================================================================== -->
+  <person id= "1" >
+    <attributes>
+      <attribute name="zzzBDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.Resident</attribute>
+    </attributes>
+    <plan selected="yes">
+      <activity type="home" x="759897.29075" y="5753954.22426" end_time="07:13:00" />
+      <leg mode="car" />
+      <activity type="shops" x="759294.96025" y="5730628.35413" end_time="08:03:00" />
+      <leg mode="car" />
+      <activity type="home" x="759897.29075" y="5753954.22426" end_time="11:10:00" />
+      <leg mode="car" />
+      <activity type="beach" x="786255.54497" y="5747965.81546" end_time="13:33:00" />
+      <leg mode="car" />
+      <activity type="home" x="759897.29075" y="5753954.22426" end_time="15:11:00" />
+      <leg mode="car" />
+      <activity type="shops" x="789974.17245" y="5752810.54643" end_time="16:29:00" />
+      <leg mode="car" />
+      <activity type="home" x="759897.29075" y="5753954.22426" />
+    </plan>
+  </person>
+
+  <!-- ====================================================================== -->
+  <person id= "2" >
+    <attributes>
+      <attribute name="zzzBDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.Resident</attribute>
+    </attributes>
+    <plan selected="yes">
+      <activity type="home" x="777528.01183" y="5744592.20828" end_time="13:11:00" />
+      <leg mode="car" />
+      <activity type="beach" x="778406.90316" y="5743587.79637" end_time="17:41:00" />
+      <leg mode="car" />
+      <activity type="home" x="777528.01183" y="5744592.20828" end_time="18:37:00" />
+      <leg mode="car" />
+      <activity type="shops" x="778482.57737" y="5744462.75843" end_time="20:33:00" />
+      <leg mode="car" />
+      <activity type="home" x="777528.01183" y="5744592.20828" />
+    </plan>
+  </person>
+
+  <!-- ====================================================================== -->
+  <person id= "3" >
+    <attributes>
+      <attribute name="zzzBDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.Resident</attribute>
+    </attributes>
+    <plan selected="yes">
+      <activity type="home" x="771120.82582" y="5738818.00056" end_time="07:07:00" />
+      <leg mode="car" />
+      <activity type="other" x="777412.78017" y="5744008.09442" end_time="11:49:00" />
+      <leg mode="car" />
+      <activity type="beach" x="777498.11629" y="5741920.33946" end_time="17:54:00" />
+      <leg mode="car" />
+      <activity type="shops" x="770351.40111" y="5738001.92605" end_time="19:39:00" />
+      <leg mode="car" />
+      <activity type="home" x="771120.82582" y="5738818.00056" end_time="21:19:00" />
+      <leg mode="car" />
+      <activity type="other" x="778836.49665" y="5745094.30493" end_time="22:19:00" />
+      <leg mode="car" />
+      <activity type="home" x="771120.82582" y="5738818.00056" />
+    </plan>
+  </person>
+
+  <!-- ====================================================================== -->
+  <person id= "4" >
+    <attributes>
+      <attribute name="zzzBDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.Resident</attribute>
+    </attributes>
+    <plan selected="yes">
+      <activity type="home" x="725868.5478" y="5753291.5198" end_time="05:29:00" />
+      <leg mode="car" />
+      <activity type="other" x="778507.88547" y="5744455.63954" end_time="10:36:00" />
+      <leg mode="car" />
+      <activity type="shops" x="732598.98147" y="5756278.36455" end_time="13:38:00" />
+      <leg mode="car" />
+      <activity type="other" x="767533.87321" y="5747333.10942" end_time="15:09:00" />
+      <leg mode="car" />
+      <activity type="beach" x="778237.06886" y="5743964.79164" end_time="16:22:00" />
+      <leg mode="car" />
+      <activity type="shops" x="732598.98147" y="5756278.36455" end_time="21:37:00" />
+      <leg mode="car" />
+      <activity type="home" x="725868.5478" y="5753291.5198" />
+    </plan>
+  </person>
+
+<!-- ====================================================================== -->
+
+  </population>

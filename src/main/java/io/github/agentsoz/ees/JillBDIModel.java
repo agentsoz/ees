@@ -81,7 +81,8 @@ public class JillBDIModel extends JillModel implements DataClient {
 		// params[] contains the list of agent names to create
 		if (super.init(agentDataContainer, agentList, abmServer, initArgs)) {
 			// Initialise the alerts
-			alerts = new PriorityQueue<TimedAlert>(params.length, new Comparator<TimedAlert>() {
+			int capacity = (params.length<1) ? 1 : params.length;
+			alerts = new PriorityQueue<TimedAlert>(capacity, new Comparator<TimedAlert>() {
 				@Override
 				public int compare(TimedAlert o1, TimedAlert o2) {
 					double t1 = o1.getTime();
