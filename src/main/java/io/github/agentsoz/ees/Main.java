@@ -67,9 +67,7 @@ public class Main {
 	private static String[] jillInitArgs = null;
 	private static String matsimOutputDirectory;
 	private static String safelineOutputFilePattern = "./safeline.%d%.csv";
-	private static boolean sendFireAlertOnFireStart = true;
-
-	private static boolean loadBDIAgentsFromMATSimPlansFile = false;
+	private static boolean sendFireAlertOnFireStart = true; //FIXME: move to SimpleConfig
 
 	// yyyyyy careful; the above all stay from one test to the next (if not in separate
 	// JVMs).  kai, dec'17
@@ -143,16 +141,20 @@ public class Main {
         // --- initialize and start jill (need the bdiAgentIDs, for which we need the material from before)
 		List<String> bdiAgentIDs = null;
         Map<String, List<String[]>> bdiMap = null;
-        if (!loadBDIAgentsFromMATSimPlansFile) {
+        if (!SimpleConfig.isLoadBDIAgentsFromMATSimPlansFile()) {
             bdiAgentIDs = Utils.getBDIAgentIDs( scenario );
         } else {
-			bdiMap = Utils.getBDIAgentsFromMATSimPlansFile(scenario);
+			bdiMap = Utils.getAgentsFromMATSimPlansFile(scenario);
+			removeNonBdiAgentsFrom(bdiMap);
+
 			bdiAgentIDs = new ArrayList<>(bdiMap.keySet());
-			if (bdiMap != null && !bdiMap.isEmpty()) {
+			if (bdiMap != null) {
 				for (int i = 0; jillInitArgs != null && i < jillInitArgs.length; i++) {
 					if ("--config".equals(jillInitArgs[i]) && i < (jillInitArgs.length-1)) {
-						String agentsArg = buildJillAgentsArgsFromAgentMap(bdiMap);
-						jillInitArgs[i+1] = jillInitArgs[i+1].replaceAll("agents:\\[]", agentsArg);
+						String agentsArg = (!bdiMap.isEmpty()) ?
+							buildJillAgentsArgsFromAgentMap(bdiMap) :
+							"agents:[{classname:io.github.agentsoz.ees.agents.bushfire.BushfireAgent, args:null, count:0}]";
+						jillInitArgs[i + 1] = jillInitArgs[i + 1].replaceAll("agents:\\[]", agentsArg);
 					}
 				}
 			}
@@ -195,6 +197,29 @@ public class Main {
 		DataServer.cleanup() ;
 	}
 
+	/**
+	 * Filter out all but the BDI agents
+	 *
+	 * @param map
+	 */
+	private void removeNonBdiAgentsFrom(Map<String, List<String[]>> map) {
+		Iterator<Map.Entry<String, List<String[]>>> it = map.entrySet().iterator();
+		while(it.hasNext()) {
+            Map.Entry<String, List<String[]>> entry = it.next();
+            String id = entry.getKey();
+            boolean found = false;
+            for (String[] val : entry.getValue()) {
+                if (SimpleConfig.getBdiAgentTagInMATSimPopulationFile().equals(val[0])) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                it.remove();
+            }
+        }
+	}
+
 	private static void setSimStartTimesRelativeToAlert(DataServer dataServer, Config config, int offset ) {
 		dataServer.setTime(getEvacuationStartTimeInSeconds(offset));
 		
@@ -229,11 +254,10 @@ public class Main {
 		Map<String,Integer> counts = new HashMap<>();
 		for (List<String[]> values: map.values()) {
 			for (String[] val : values) {
-				if ("BDIAgentType".equals(val[0])) {
+				if (SimpleConfig.getBdiAgentTagInMATSimPopulationFile().equals(val[0])) {
 					String type = val[1];
 					int count = counts.containsKey(type) ? counts.get(type) : new Integer(0);
-					counts.put(type, count+1);
-
+					counts.put(type, count + 1);
 				}
 			}
 
@@ -529,7 +553,7 @@ public class Main {
 					if (i + 1 < args.length) {
 						i++;
 						try {
-							loadBDIAgentsFromMATSimPlansFile = Boolean.parseBoolean(args[i]);
+							SimpleConfig.setLoadBDIAgentsFromMATSimPlansFile(Boolean.parseBoolean(args[i]));
 						} catch (Exception e) {
 							System.err.println("Could not parse boolean '"
 									+ args[i] + "' : " + e.getMessage());
