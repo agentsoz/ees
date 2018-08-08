@@ -98,6 +98,9 @@ public class DisruptionModel implements DataSource {
 	 * Start publishing disruptions data
 	 */
 	public void start(int[] hhmm) {
+		if (disruptions.isEmpty()) {
+			return;
+		}
 		double startTimeInSeconds = Time.convertTime(hhmm[0], Time.TimestepUnit.HOURS, Time.TimestepUnit.SECONDS)
 				+ Time.convertTime(hhmm[1], Time.TimestepUnit.MINUTES, Time.TimestepUnit.SECONDS);
 		dataServer.registerTimedUpdate(PerceptList.DISRUPTION, this, Time.convertTime(startTimeInSeconds, Time.TimestepUnit.SECONDS, timestepUnit));
