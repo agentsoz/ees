@@ -126,17 +126,6 @@ public class Main {
 
 		// --- do some things for which you need a handle to the matsim scenario:
 		Scenario scenario = matsimModel.loadAndPrepareScenario() ;
-		// move everything into the far future (yy maybe better repair input files?)
-		for ( Person person : scenario.getPopulation().getPersons().values() ) {
-			List<PlanElement> planElements = person.getSelectedPlan().getPlanElements() ;
-			int offset = planElements.size();
-			for ( PlanElement pe : planElements ) {
-				if ( pe instanceof Activity) {
-					((Activity) pe).setEndTime( Double.MAX_VALUE - offset );
-					offset-- ;
-				}
-			}
-		}
 
         // --- initialize and start jill (need the bdiAgentIDs, for which we need the material from before)
 		List<String> bdiAgentIDs = null;

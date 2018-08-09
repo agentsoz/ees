@@ -9,7 +9,7 @@
 
 	<person id="0">
 		<plan selected="yes">
-			<activity type="home" x="252118.88127526935" y="5894289.412795321" end_time="06:00:00" >
+			<activity type="home" x="252118.88127526935" y="5894289.412795321" end_time="23:59:59" >
 			</activity>
 			<leg mode="car">
 			</leg>
@@ -23,7 +23,7 @@
 
 	<person id="1">
 		<plan selected="yes">
-			<activity type="home" x="252145.46020315224" y="5894173.617112414" end_time="06:00:00" >
+			<activity type="home" x="252145.46020315224" y="5894173.617112414" end_time="23:59:59" >
 			</activity>
 			<leg mode="car">
 			</leg>
@@ -37,7 +37,7 @@
 
 	<person id="2">
 		<plan selected="yes">
-			<activity type="home" x="252159.70948840454" y="5894381.039537378" end_time="06:00:00" >
+			<activity type="home" x="252159.70948840454" y="5894381.039537378" end_time="23:59:59" >
 			</activity>
 			<leg mode="car">
 			</leg>
@@ -51,7 +51,7 @@
 
 	<person id="3">
 		<plan selected="yes">
-			<activity type="home" x="252117.05989244365" y="5894090.438772795" end_time="06:00:00" >
+			<activity type="home" x="252117.05989244365" y="5894090.438772795" end_time="23:59:59" >
 			</activity>
 			<leg mode="car">
 			</leg>
@@ -65,7 +65,7 @@
 
 	<person id="4">
 		<plan selected="yes">
-			<activity type="home" x="252172.9210598573" y="5894381.630642153" end_time="06:00:00" >
+			<activity type="home" x="252172.9210598573" y="5894381.630642153" end_time="23:59:59" >
 			</activity>
 			<leg mode="car">
 			</leg>
@@ -79,7 +79,7 @@
 
 	<person id="5">
 		<plan selected="yes">
-			<activity type="home" x="252133.52656697028" y="5894341.555744359" end_time="06:00:00" >
+			<activity type="home" x="252133.52656697028" y="5894341.555744359" end_time="23:59:59" >
 			</activity>
 			<leg mode="car">
 			</leg>
@@ -93,7 +93,7 @@
 
 	<person id="6">
 		<plan selected="yes">
-			<activity type="home" x="252130.21832263283" y="5894220.468806417" end_time="06:00:00" >
+			<activity type="home" x="252130.21832263283" y="5894220.468806417" end_time="23:59:59" >
 			</activity>
 			<leg mode="car">
 			</leg>
@@ -107,7 +107,7 @@
 
 	<person id="7">
 		<plan selected="yes">
-			<activity type="home" x="252135.30799313777" y="5894196.662161164" end_time="06:00:00" >
+			<activity type="home" x="252135.30799313777" y="5894196.662161164" end_time="23:59:59" >
 			</activity>
 			<leg mode="car">
 			</leg>
@@ -121,7 +121,7 @@
 
 	<person id="8">
 		<plan selected="yes">
-			<activity type="home" x="252176.58593350276" y="5894388.608997249" end_time="06:00:00" >
+			<activity type="home" x="252176.58593350276" y="5894388.608997249" end_time="23:59:59" >
 			</activity>
 			<leg mode="car">
 			</leg>
@@ -135,7 +135,7 @@
 
 	<person id="9">
 		<plan selected="yes">
-			<activity type="home" x="252163.27789489806" y="5894315.037504095" end_time="06:00:00" >
+			<activity type="home" x="252163.27789489806" y="5894315.037504095" end_time="23:59:59" >
 			</activity>
 			<leg mode="car">
 			</leg>
