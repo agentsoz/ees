@@ -12,7 +12,7 @@
 			<attribute name="BDIAgentType" class="java.lang.String">io.github.agentsoz.ees.agents.Resident</attribute>
 		</attributes>
 		<plan selected="yes">
-			<activity type="home" x="238956.2162038625" y="5901816.901546365" end_time="06:00:00" >
+			<activity type="home" x="238956.2162038625" y="5901816.901546365" end_time="23:59:59" >
 			</activity>
 			<leg mode="car">
 			</leg>
@@ -29,7 +29,7 @@
 			<attribute name="BDIAgentType" class="java.lang.String">io.github.agentsoz.ees.agents.Resident</attribute>
 		</attributes>
 		<plan selected="yes">
-			<activity type="home" x="238482.39921723868" y="5902123.481657952" end_time="06:00:00" >
+			<activity type="home" x="238482.39921723868" y="5902123.481657952" end_time="23:59:59" >
 			</activity>
 			<leg mode="car">
 			</leg>
@@ -46,7 +46,7 @@
 			<attribute name="BDIAgentType" class="java.lang.String">io.github.agentsoz.ees.agents.Resident</attribute>
 		</attributes>
 		<plan selected="yes">
-			<activity type="home" x="238772.55604492364" y="5902448.727525847" end_time="06:00:00" >
+			<activity type="home" x="238772.55604492364" y="5902448.727525847" end_time="23:59:59" >
 			</activity>
 			<leg mode="car">
 			</leg>
@@ -63,7 +63,7 @@
 			<attribute name="BDIAgentType" class="java.lang.String">io.github.agentsoz.ees.agents.Resident</attribute>
 		</attributes>
 		<plan selected="yes">
-			<activity type="home" x="238884.78380957106" y="5901922.958459134" end_time="06:00:00" >
+			<activity type="home" x="238884.78380957106" y="5901922.958459134" end_time="23:59:59" >
 			</activity>
 			<leg mode="car">
 			</leg>
@@ -80,7 +80,7 @@
 			<attribute name="BDIAgentType" class="java.lang.String">io.github.agentsoz.ees.agents.Resident</attribute>
 		</attributes>
 		<plan selected="yes">
-			<activity type="home" x="239324.1525483274" y="5901759.231813932" end_time="06:00:00" >
+			<activity type="home" x="239324.1525483274" y="5901759.231813932" end_time="23:59:59" >
 			</activity>
 			<leg mode="car">
 			</leg>
@@ -97,7 +97,7 @@
 			<attribute name="BDIAgentType" class="java.lang.String">io.github.agentsoz.ees.agents.Resident</attribute>
 		</attributes>
 		<plan selected="yes">
-			<activity type="home" x="238367.52957137022" y="5902376.69434031" end_time="06:00:00" >
+			<activity type="home" x="238367.52957137022" y="5902376.69434031" end_time="23:59:59" >
 			</activity>
 			<leg mode="car">
 			</leg>
@@ -114,7 +114,7 @@
 			<attribute name="BDIAgentType" class="java.lang.String">io.github.agentsoz.ees.agents.Resident</attribute>
 		</attributes>
 		<plan selected="yes">
-			<activity type="home" x="238479.23170923995" y="5902110.446145875" end_time="06:00:00" >
+			<activity type="home" x="238479.23170923995" y="5902110.446145875" end_time="23:59:59" >
 			</activity>
 			<leg mode="car">
 			</leg>
@@ -131,7 +131,7 @@
 			<attribute name="BDIAgentType" class="java.lang.String">io.github.agentsoz.ees.agents.Resident</attribute>
 		</attributes>
 		<plan selected="yes">
-			<activity type="home" x="238742.88055319927" y="5902225.725117061" end_time="06:00:00" >
+			<activity type="home" x="238742.88055319927" y="5902225.725117061" end_time="23:59:59" >
 			</activity>
 			<leg mode="car">
 			</leg>
@@ -148,7 +148,7 @@
 			<attribute name="BDIAgentType" class="java.lang.String">io.github.agentsoz.ees.agents.Resident</attribute>
 		</attributes>
 		<plan selected="yes">
-			<activity type="home" x="238435.29758365548" y="5902146.469699723" end_time="06:00:00" >
+			<activity type="home" x="238435.29758365548" y="5902146.469699723" end_time="23:59:59" >
 			</activity>
 			<leg mode="car">
 			</leg>
@@ -165,7 +165,7 @@
 			<attribute name="BDIAgentType" class="java.lang.String">io.github.agentsoz.ees.agents.Resident</attribute>
 		</attributes>
 		<plan selected="yes">
-			<activity type="home" x="238615.28369127322" y="5902397.623948367" end_time="06:00:00" >
+			<activity type="home" x="238615.28369127322" y="5902397.623948367" end_time="23:59:59" >
 			</activity>
 			<leg mode="car">
 			</leg>
@@ -185,7 +185,7 @@
 				<attribute name="--respondToUTM" class="java.lang.String">Tarrengower Prison,237100,5903400</attribute>
 		  </attributes>
 			<plan selected="yes">
-				<activity type="home" x="252145.230968" y="5894310.30443" end_time="06:00:00" >
+				<activity type="home" x="252145.230968" y="5894310.30443" end_time="23:59:59" >
 				</activity>
 				<leg mode="car">
 				</leg>
@@ -201,7 +201,7 @@
 				<attribute name="--respondToUTM" class="java.lang.String">Sandhills Lane,237600,5905400</attribute>
 		  </attributes>
 			<plan selected="yes">
-				<activity type="home" x="252145.230968" y="5894310.30443" end_time="06:00:00" >
+				<activity type="home" x="252145.230968" y="5894310.30443" end_time="23:59:59" >
 				</activity>
 				<leg mode="car">
 				</leg>
@@ -217,7 +217,7 @@
 				<attribute name="--respondToUTM" class="java.lang.String">Maldon Cemetary,237700,5904100</attribute>
 		  </attributes>
 			<plan selected="yes">
-				<activity type="home" x="252145.230968" y="5894310.30443" end_time="06:00:00" >
+				<activity type="home" x="252145.230968" y="5894310.30443" end_time="23:59:59" >
 				</activity>
 				<leg mode="car">
 				</leg>

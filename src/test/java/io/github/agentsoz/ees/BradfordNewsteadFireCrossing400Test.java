@@ -70,13 +70,6 @@ public class BradfordNewsteadFireCrossing400Test {
 		TestUtils.comparingActivityStarts(primaryExpectedEventsFilename,actualEventsFilename, 1.);
 		TestUtils.compareFullEvents(primaryExpectedEventsFilename,actualEventsFilename, true);
 
-
-		long [] expectedPlans = new long [] {
-				CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/output_plans.xml.gz" )
-		} ;
-
-		TestUtils.checkSeveral(expectedPlans, actualPlansCRC);
-
 	}
 
 
