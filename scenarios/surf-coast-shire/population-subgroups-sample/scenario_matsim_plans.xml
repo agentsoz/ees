@@ -2,9 +2,25 @@
 <!DOCTYPE population SYSTEM "http://www.matsim.org/files/dtd/population_v6.dtd">
   <population>
   <!-- ====================================================================== -->
+  <!-- Regular MATSim agent can be convered to BDI agents
+       using the "BDIAgentType" tag that specifies the agent's type
+       i.e., the Jill agent's Java class.
+  -->
+  <!-- InitialResponseThreshold and FinalResponseThreshold are
+       threshold values (between 0.0 - 1.0) that control the
+       agent's two-stage response to an unfolding situation, with lower
+       values indicating a propensity to respond sooner to information
+       (i.e., evacuation messages, visibility of smoke/fire, and such).
+       Always InitialResponseThreshold =< FinalResponseThreshold.
+  -->
+  <!-- ====================================================================== -->
+
   <person id= "0" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.Resident</attribute>
+      <attribute name="hasDependents" class="java.lang.Boolean" >true</attribute>
+      <attribute name="InitialResponseThreshold" class="java.lang.Double" >-10.0 <!-- incorrect intentionally; should be treated as 0.0 --></attribute>
+      <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.0</attribute>
     </attributes>
     <plan selected="yes">
       <activity type="home" x="777487.95417" y="5742688.0183" end_time="09:58:00" />
@@ -18,6 +34,9 @@
   <person id= "1" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.Resident</attribute>
+      <attribute name="hasDependents" class="java.lang.Boolean" >true</attribute>
+      <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.2</attribute>
+      <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.5</attribute>
     </attributes>
     <plan selected="yes">
       <activity type="home" x="793533.93691" y="5770266.87819" end_time="09:46:00" />
@@ -35,6 +54,9 @@
   <person id= "2" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.Resident</attribute>
+      <attribute name="hasDependents" class="java.lang.Boolean" >true</attribute>
+      <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.4</attribute>
+      <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.7</attribute>
     </attributes>
     <plan selected="yes">
       <activity type="home" x="749728.40714" y="5771140.4626" end_time="06:21:00" />
@@ -54,6 +76,9 @@
   <person id= "3" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.Resident</attribute>
+      <attribute name="hasDependents" class="java.lang.Boolean" >false</attribute>
+      <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.6</attribute>
+      <attribute name="FinalResponseThreshold"   class="java.lang.Double" >1.8<!--incorrect intentionally; should be treated as 1.0--></attribute>
     </attributes>
     <plan selected="yes">
       <activity type="home" x="767518.31157" y="5773276.10213" end_time="06:29:00" />
@@ -77,19 +102,9 @@
   <person id= "4" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.Resident</attribute>
-    </attributes>
-    <plan selected="yes">
-      <activity type="home" x="778824.77616" y="5744728.18944" end_time="13:42:00" />
-      <leg mode="car" />
-      <activity type="work" x="779012.88562" y="5744520.34118" end_time="17:25:00" />
-      <leg mode="car" />
-      <activity type="home" x="778824.77616" y="5744728.18944" />
-    </plan>
-  </person>
-
-  <person id= "5" >
-    <attributes>
-      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.Resident</attribute>
+      <attribute name="hasDependents" class="java.lang.Boolean" >false</attribute>
+      <attribute name="InitialResponseThreshold" class="java.lang.Double" >1.1<!--incorrect intentionally; should be treated as 1.0--></attribute>
+      <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.9<!--lower than above intentionally; should be treated as equal to above, therefore 1.0--></attribute>
     </attributes>
     <plan selected="yes">
       <activity type="home" x="759084.76095" y="5730972.71061" end_time="10:10:00" />
@@ -104,79 +119,12 @@
     </plan>
   </person>
 
-  <person id= "6" >
-    <attributes>
-      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.Resident</attribute>
-    </attributes>
-    <plan selected="yes">
-      <activity type="home" x="785777.29384" y="5767335.61062" end_time="00:01:00" />
-      <leg mode="car" />
-      <activity type="work" x="789848.05453" y="5752795.44381" end_time="04:50:00" />
-      <leg mode="car" />
-      <activity type="home" x="785777.29384" y="5767335.61062" end_time="07:49:00" />
-      <leg mode="car" />
-      <activity type="work" x="786334.34808" y="5764005.76275" end_time="10:07:00" />
-      <leg mode="car" />
-      <activity type="home" x="785777.29384" y="5767335.61062" end_time="12:18:00" />
-      <leg mode="car" />
-      <activity type="work" x="786334.34808" y="5764005.76275" end_time="17:31:00" />
-      <leg mode="car" />
-      <activity type="other" x="792837.45553" y="5769972.52889" end_time="19:51:00" />
-      <leg mode="car" />
-      <activity type="home" x="785777.29384" y="5767335.61062" />
-    </plan>
-  </person>
-
-  <person id= "7" >
-    <attributes>
-      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.Resident</attribute>
-    </attributes>
-    <plan selected="yes">
-      <activity type="home" x="790378.41742" y="5753356.36182" end_time="08:57:00" />
-      <leg mode="car" />
-      <activity type="work" x="790098.62271" y="5754759.19639" end_time="12:06:00" />
-      <leg mode="car" />
-      <activity type="shops" x="790357.10312" y="5752184.65303" end_time="16:16:00" />
-      <leg mode="car" />
-      <activity type="work" x="789848.05453" y="5752795.44381" end_time="21:59:00" />
-      <leg mode="car" />
-      <activity type="home" x="790378.41742" y="5753356.36182" />
-    </plan>
-  </person>
-
-  <person id= "8" >
-    <attributes>
-      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.Resident</attribute>
-    </attributes>
-    <plan selected="yes">
-      <activity type="home" x="788696.08706" y="5751173.9917" end_time="10:09:00" />
-      <leg mode="car" />
-      <activity type="work" x="789434.99816" y="5751266.44194" end_time="15:15:00" />
-      <leg mode="car" />
-      <activity type="beach" x="788528.10978" y="5750214.98843" end_time="16:16:00" />
-      <leg mode="car" />
-      <activity type="work" x="789434.99816" y="5751266.44194" end_time="20:35:00" />
-      <leg mode="car" />
-      <activity type="home" x="788696.08706" y="5751173.9917" />
-    </plan>
-  </person>
-
-  <person id= "9" >
-    <attributes>
-      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.Resident</attribute>
-    </attributes>
-    <plan selected="yes">
-      <activity type="home" x="793417.98808" y="5754523.70157" end_time="08:37:00" />
-      <leg mode="car" />
-      <activity type="work" x="792919.68545" y="5754526.38383" end_time="21:48:00" />
-      <leg mode="car" />
-      <activity type="home" x="793417.98808" y="5754523.70157" />
-    </plan>
-  </person>
-
-  <person id= "10" >
+  <person id= "5" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.ResidentPartTime</attribute>
+      <attribute name="hasDependents" class="java.lang.Boolean" >true</attribute>
+      <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.0</attribute>
+      <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.5</attribute>
     </attributes>
     <plan selected="yes">
       <activity type="home" x="754643.36542" y="5733062.36498" end_time="11:23:00" />
@@ -195,9 +143,12 @@
     </plan>
   </person>
 
-  <person id= "11" >
+  <person id= "6" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.ResidentPartTime</attribute>
+      <attribute name="hasDependents" class="java.lang.Boolean" >false</attribute>
+      <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.2</attribute>
+      <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.8</attribute>
     </attributes>
     <plan selected="yes">
       <activity type="home" x="759897.29075" y="5753954.22426" end_time="07:13:00" />
@@ -216,9 +167,12 @@
     </plan>
   </person>
 
-  <person id= "12" >
+  <person id= "7" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.ResidentPartTime</attribute>
+      <attribute name="hasDependents" class="java.lang.Boolean" >false</attribute>
+      <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.4</attribute>
+      <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.7</attribute>
     </attributes>
     <plan selected="yes">
       <activity type="home" x="788325.71422" y="5750146.95933" end_time="07:18:00" />
@@ -237,9 +191,12 @@
     </plan>
   </person>
 
-  <person id= "13" >
+  <person id= "8" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.ResidentPartTime</attribute>
+      <attribute name="hasDependents" class="java.lang.Boolean" >true</attribute>
+      <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.5</attribute>
+      <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.5</attribute>
     </attributes>
     <plan selected="yes">
       <activity type="home" x="758838.77263" y="5730582.04375" end_time="06:20:00" />
@@ -256,9 +213,12 @@
     </plan>
   </person>
 
-  <person id= "14" >
+  <person id= "9" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.ResidentPartTime</attribute>
+      <attribute name="hasDependents" class="java.lang.Boolean" >false</attribute>
+      <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.6</attribute>
+      <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.9</attribute>
     </attributes>
     <plan selected="yes">
       <activity type="home" x="783473.54056" y="5752883.62806" end_time="07:24:00" />
@@ -273,102 +233,12 @@
     </plan>
   </person>
 
-  <person id= "15" >
-    <attributes>
-      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.ResidentPartTime</attribute>
-    </attributes>
-    <plan selected="yes">
-      <activity type="home" x="771567.16183" y="5740494.80258" end_time="09:40:00" />
-      <leg mode="car" />
-      <activity type="shops" x="778279.66613" y="5743500.15352" end_time="10:29:00" />
-      <leg mode="car" />
-      <activity type="work" x="771154.38036" y="5738979.16897" end_time="15:21:00" />
-      <leg mode="car" />
-      <activity type="beach" x="776580.38162" y="5741915.32936" end_time="16:04:00" />
-      <leg mode="car" />
-      <activity type="shops" x="770351.40111" y="5738001.92605" end_time="19:28:00" />
-      <leg mode="car" />
-      <activity type="home" x="771567.16183" y="5740494.80258" />
-    </plan>
-  </person>
-
-  <person id= "16" >
-    <attributes>
-      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.ResidentPartTime</attribute>
-    </attributes>
-    <plan selected="yes">
-      <activity type="home" x="780753.25428" y="5767013.16781" end_time="08:42:00" />
-      <leg mode="car" />
-      <activity type="beach" x="788528.10978" y="5750214.98843" end_time="11:59:00" />
-      <leg mode="car" />
-      <activity type="home" x="780753.25428" y="5767013.16781" end_time="12:45:00" />
-      <leg mode="car" />
-      <activity type="shops" x="789974.17245" y="5752810.54643" end_time="16:55:00" />
-      <leg mode="car" />
-      <activity type="other" x="793202.25852" y="5769898.53301" end_time="18:34:00" />
-      <leg mode="car" />
-      <activity type="home" x="780753.25428" y="5767013.16781" />
-    </plan>
-  </person>
-
-  <person id= "17" >
-    <attributes>
-      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.ResidentPartTime</attribute>
-    </attributes>
-    <plan selected="yes">
-      <activity type="home" x="770458.68409" y="5740337.03898" end_time="02:53:00" />
-      <leg mode="car" />
-      <activity type="other" x="771374.44073" y="5738835.66619" end_time="04:58:00" />
-      <leg mode="car" />
-      <activity type="home" x="770458.68409" y="5740337.03898" end_time="07:54:00" />
-      <leg mode="car" />
-      <activity type="shops" x="761647.31617" y="5762952.48569" end_time="08:07:00" />
-      <leg mode="car" />
-      <activity type="home" x="770458.68409" y="5740337.03898" end_time="11:07:00" />
-      <leg mode="car" />
-      <activity type="work" x="771120.82582" y="5738818.00056" end_time="15:21:00" />
-      <leg mode="car" />
-      <activity type="shops" x="778433.82508" y="5744429.17115" end_time="17:35:00" />
-      <leg mode="car" />
-      <activity type="other" x="771374.44073" y="5738835.66619" end_time="19:22:00" />
-      <leg mode="car" />
-      <activity type="home" x="770458.68409" y="5740337.03898" />
-    </plan>
-  </person>
-
-  <person id= "18" >
-    <attributes>
-      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.ResidentPartTime</attribute>
-    </attributes>
-    <plan selected="yes">
-      <activity type="home" x="743321.97342" y="5752746.13801" end_time="13:03:00" />
-      <leg mode="car" />
-      <activity type="beach" x="753128.71399" y="5720791.13233" end_time="14:29:00" />
-      <leg mode="car" />
-      <activity type="shops" x="743497.21054" y="5753100.09307" end_time="17:43:00" />
-      <leg mode="car" />
-      <activity type="other" x="733052.04408" y="5756331.45377" end_time="19:13:00" />
-      <leg mode="car" />
-      <activity type="home" x="743321.97342" y="5752746.13801" />
-    </plan>
-  </person>
-
-  <person id= "19" >
-    <attributes>
-      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.ResidentPartTime</attribute>
-    </attributes>
-    <plan selected="yes">
-      <activity type="home" x="770811.32212" y="5738891.55042" end_time="13:56:00" />
-      <leg mode="car" />
-      <activity type="work" x="770968.05532" y="5738364.60103" end_time="16:28:00" />
-      <leg mode="car" />
-      <activity type="home" x="770811.32212" y="5738891.55042" />
-    </plan>
-  </person>
-
-  <person id= "20" >
+  <person id= "10" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorRegular</attribute>
+      <attribute name="hasDependents" class="java.lang.Boolean" >false</attribute>
+      <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.0</attribute>
+      <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.0</attribute>
     </attributes>
     <plan selected="yes">
       <activity type="home" x="777528.01183" y="5744592.20828" end_time="13:11:00" />
@@ -383,9 +253,12 @@
     </plan>
   </person>
 
-  <person id= "21" >
+  <person id= "11" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorRegular</attribute>
+      <attribute name="hasDependents" class="java.lang.Boolean" >true</attribute>
+      <attribute name="InitialResponseThreshold" class="java.lang.Double" >1.0</attribute>
+      <attribute name="FinalResponseThreshold"   class="java.lang.Double" >1.0</attribute>
     </attributes>
     <plan selected="yes">
       <activity type="home" x="775483.2726" y="5780997.38201" end_time="06:58:00" />
@@ -406,9 +279,12 @@
     </plan>
   </person>
 
-  <person id= "22" >
+  <person id= "12" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorRegular</attribute>
+      <attribute name="hasDependents" class="java.lang.Boolean" >false</attribute>
+      <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.4</attribute>
+      <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.7</attribute>
     </attributes>
     <plan selected="yes">
       <activity type="home" x="775498.6485" y="5770984.14732" end_time="10:14:00" />
@@ -431,9 +307,12 @@
     </plan>
   </person>
 
-  <person id= "23" >
+  <person id= "13" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorRegular</attribute>
+      <attribute name="hasDependents" class="java.lang.Boolean" >false</attribute>
+      <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.3</attribute>
+      <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.8</attribute>
     </attributes>
     <plan selected="yes">
       <activity type="home" x="778998.95182" y="5744092.75721" end_time="00:01:00" />
@@ -450,9 +329,12 @@
     </plan>
   </person>
 
-  <person id= "24" >
+  <person id= "14" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorRegular</attribute>
+      <attribute name="hasDependents" class="java.lang.Boolean" >true</attribute>
+      <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.1</attribute>
+      <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.4</attribute>
     </attributes>
     <plan selected="yes">
       <activity type="home" x="746242.57298" y="5746659.62266" end_time="00:01:00" />
@@ -471,96 +353,12 @@
     </plan>
   </person>
 
-  <person id= "25" >
-    <attributes>
-      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorRegular</attribute>
-    </attributes>
-    <plan selected="yes">
-      <activity type="home" x="756381.81591" y="5750607.90978" end_time="12:29:00" />
-      <leg mode="car" />
-      <activity type="shops" x="761647.31617" y="5762952.48569" end_time="15:51:00" />
-      <leg mode="car" />
-      <activity type="beach" x="776580.38162" y="5741915.32936" end_time="16:40:00" />
-      <leg mode="car" />
-      <activity type="home" x="756381.81591" y="5750607.90978" end_time="18:10:00" />
-      <leg mode="car" />
-      <activity type="beach" x="803106.49192" y="5756854.63356" end_time="21:15:00" />
-      <leg mode="car" />
-      <activity type="home" x="756381.81591" y="5750607.90978" />
-    </plan>
-  </person>
-
-  <person id= "26" >
-    <attributes>
-      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorRegular</attribute>
-    </attributes>
-    <plan selected="yes">
-      <activity type="home" x="768173.37241" y="5779204.83658" end_time="16:05:00" />
-      <leg mode="car" />
-      <activity type="other" x="778948.04363" y="5744611.19874" end_time="19:50:00" />
-      <leg mode="car" />
-      <activity type="home" x="768173.37241" y="5779204.83658" />
-    </plan>
-  </person>
-
-  <person id= "27" >
-    <attributes>
-      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorRegular</attribute>
-    </attributes>
-    <plan selected="yes">
-      <activity type="home" x="759814.11891" y="5731412.6962" end_time="11:29:00" />
-      <leg mode="car" />
-      <activity type="beach" x="759551.54671" y="5730602.07326" end_time="12:12:00" />
-      <leg mode="car" />
-      <activity type="other" x="767533.87321" y="5747333.10942" end_time="15:57:00" />
-      <leg mode="car" />
-      <activity type="beach" x="759551.54671" y="5730602.07326" end_time="17:04:00" />
-      <leg mode="car" />
-      <activity type="shops" x="759317.42351" y="5729964.86105" end_time="18:43:00" />
-      <leg mode="car" />
-      <activity type="other" x="777412.78017" y="5744008.09442" end_time="20:24:00" />
-      <leg mode="car" />
-      <activity type="home" x="759814.11891" y="5731412.6962" />
-    </plan>
-  </person>
-
-  <person id= "28" >
-    <attributes>
-      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorRegular</attribute>
-    </attributes>
-    <plan selected="yes">
-      <activity type="home" x="775498.6485" y="5770984.14732" end_time="13:41:00" />
-      <leg mode="car" />
-      <activity type="beach" x="788528.10978" y="5750214.98843" end_time="15:54:00" />
-      <leg mode="car" />
-      <activity type="shops" x="777902.25512" y="5762634.6724" end_time="16:42:00" />
-      <leg mode="car" />
-      <activity type="other" x="778948.04363" y="5744611.19874" end_time="19:18:00" />
-      <leg mode="car" />
-      <activity type="shops" x="778482.57737" y="5744462.75843" end_time="23:44:00" />
-      <leg mode="car" />
-      <activity type="home" x="775498.6485" y="5770984.14732" />
-    </plan>
-  </person>
-
-  <person id= "29" >
-    <attributes>
-      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorRegular</attribute>
-    </attributes>
-    <plan selected="yes">
-      <activity type="home" x="787800.28023" y="5753848.22042" end_time="14:45:00" />
-      <leg mode="car" />
-      <activity type="beach" x="790861.74053" y="5752552.89152" end_time="18:35:00" />
-      <leg mode="car" />
-      <activity type="shops" x="789902.15203" y="5752276.48654" end_time="20:34:00" />
-      <leg mode="car" />
-      <activity type="home" x="787800.28023" y="5753848.22042" />
-    </plan>
-  </person>
-
-  <person id= "30" >
+  <person id= "15" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorOvernight</attribute>
+      <attribute name="hasDependents" class="java.lang.Boolean" >false</attribute>
+      <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.6</attribute>
+      <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.7</attribute>
     </attributes>
     <plan selected="yes">
       <activity type="home" x="771120.82582" y="5738818.00056" end_time="07:07:00" />
@@ -579,9 +377,12 @@
     </plan>
   </person>
 
-  <person id= "31" >
+  <person id= "16" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorOvernight</attribute>
+      <attribute name="hasDependents" class="java.lang.Boolean" >false</attribute>
+      <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.9</attribute>
+      <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.9</attribute>
     </attributes>
     <plan selected="yes">
       <activity type="home" x="771120.82582" y="5738818.00056" end_time="04:38:00" />
@@ -602,9 +403,12 @@
     </plan>
   </person>
 
-  <person id= "32" >
+  <person id= "17" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorOvernight</attribute>
+      <attribute name="hasDependents" class="java.lang.Boolean" >true</attribute>
+      <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.2</attribute>
+      <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.2</attribute>
     </attributes>
     <plan selected="yes">
       <activity type="home" x="756924.90574" y="5726253.79922" end_time="07:11:00" />
@@ -623,9 +427,12 @@
     </plan>
   </person>
 
-  <person id= "33" >
+  <person id= "18" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorOvernight</attribute>
+      <attribute name="hasDependents" class="java.lang.Boolean" >false</attribute>
+      <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.4</attribute>
+      <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.5</attribute>
     </attributes>
     <plan selected="yes">
       <activity type="home" x="777412.78017" y="5744008.09442" end_time="06:51:00" />
@@ -640,9 +447,12 @@
     </plan>
   </person>
 
-  <person id= "34" >
+  <person id= "19" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorOvernight</attribute>
+      <attribute name="hasDependents" class="java.lang.Boolean" >false</attribute>
+      <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.3</attribute>
+      <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.7</attribute>
     </attributes>
     <plan selected="yes">
       <activity type="home" x="759175.87554" y="5731742.96741" end_time="06:22:00" />
@@ -665,128 +475,12 @@
     </plan>
   </person>
 
-  <person id= "35" >
-    <attributes>
-      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorOvernight</attribute>
-    </attributes>
-    <plan selected="yes">
-      <activity type="home" x="778836.49665" y="5745094.30493" end_time="08:24:00" />
-      <leg mode="car" />
-      <activity type="beach" x="778406.90316" y="5743587.79637" end_time="15:49:00" />
-      <leg mode="car" />
-      <activity type="shops" x="778433.82508" y="5744429.17115" end_time="16:48:00" />
-      <leg mode="car" />
-      <activity type="other" x="778948.04363" y="5744611.19874" end_time="18:39:00" />
-      <leg mode="car" />
-      <activity type="home" x="778836.49665" y="5745094.30493" end_time="20:46:00" />
-      <leg mode="car" />
-      <activity type="shops" x="778279.66613" y="5743500.15352" end_time="22:14:00" />
-      <leg mode="car" />
-      <activity type="home" x="778836.49665" y="5745094.30493" />
-    </plan>
-  </person>
-
-  <person id= "36" >
-    <attributes>
-      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorOvernight</attribute>
-    </attributes>
-    <plan selected="yes">
-      <activity type="home" x="792919.68545" y="5754526.38383" end_time="02:07:00" />
-      <leg mode="car" />
-      <activity type="shops" x="790670.88255" y="5752085.50432" end_time="05:58:00" />
-      <leg mode="car" />
-      <activity type="home" x="792919.68545" y="5754526.38383" end_time="07:30:00" />
-      <leg mode="car" />
-      <activity type="shops" x="790505.64718" y="5752116.69154" end_time="09:26:00" />
-      <leg mode="car" />
-      <activity type="other" x="778948.04363" y="5744611.19874" end_time="11:32:00" />
-      <leg mode="car" />
-      <activity type="beach" x="794242.078" y="5754370.29551" end_time="15:12:00" />
-      <leg mode="car" />
-      <activity type="shops" x="789974.17245" y="5752810.54643" end_time="16:43:00" />
-      <leg mode="car" />
-      <activity type="other" x="777412.78017" y="5744008.09442" end_time="19:23:00" />
-      <leg mode="car" />
-      <activity type="home" x="792919.68545" y="5754526.38383" />
-    </plan>
-  </person>
-
-  <person id= "37" >
-    <attributes>
-      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorOvernight</attribute>
-    </attributes>
-    <plan selected="yes">
-      <activity type="home" x="759223.27599" y="5730566.26203" end_time="09:52:00" />
-      <leg mode="car" />
-      <activity type="other" x="778948.04363" y="5744611.19874" end_time="10:02:00" />
-      <leg mode="car" />
-      <activity type="beach" x="759551.54671" y="5730602.07326" end_time="12:27:00" />
-      <leg mode="car" />
-      <activity type="shops" x="759294.96025" y="5730628.35413" end_time="14:04:00" />
-      <leg mode="car" />
-      <activity type="beach" x="759326.8826" y="5729839.13291" end_time="16:52:00" />
-      <leg mode="car" />
-      <activity type="shops" x="759294.96025" y="5730628.35413" end_time="19:51:00" />
-      <leg mode="car" />
-      <activity type="home" x="759223.27599" y="5730566.26203" />
-    </plan>
-  </person>
-
-  <person id= "38" >
-    <attributes>
-      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorOvernight</attribute>
-    </attributes>
-    <plan selected="yes">
-      <activity type="home" x="730692.55336" y="5755530.02771" end_time="04:37:00" />
-      <leg mode="car" />
-      <activity type="other" x="777412.78017" y="5744008.09442" end_time="06:19:00" />
-      <leg mode="car" />
-      <activity type="home" x="730692.55336" y="5755530.02771" end_time="08:05:00" />
-      <leg mode="car" />
-      <activity type="other" x="767533.87321" y="5747333.10942" end_time="11:29:00" />
-      <leg mode="car" />
-      <activity type="shops" x="732598.98147" y="5756278.36455" end_time="12:51:00" />
-      <leg mode="car" />
-      <activity type="beach" x="759551.54671" y="5730602.07326" end_time="15:57:00" />
-      <leg mode="car" />
-      <activity type="shops" x="732598.98147" y="5756278.36455" end_time="19:22:00" />
-      <leg mode="car" />
-      <activity type="home" x="730692.55336" y="5755530.02771" end_time="20:21:00" />
-      <leg mode="car" />
-      <activity type="shops" x="732598.98147" y="5756278.36455" end_time="23:04:00" />
-      <leg mode="car" />
-      <activity type="home" x="730692.55336" y="5755530.02771" />
-    </plan>
-  </person>
-
-  <person id= "39" >
-    <attributes>
-      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorOvernight</attribute>
-    </attributes>
-    <plan selected="yes">
-      <activity type="home" x="777412.78017" y="5744008.09442" end_time="05:37:00" />
-      <leg mode="car" />
-      <activity type="beach" x="778237.06886" y="5743964.79164" end_time="07:24:00" />
-      <leg mode="car" />
-      <activity type="other" x="778507.88547" y="5744455.63954" end_time="09:52:00" />
-      <leg mode="car" />
-      <activity type="home" x="777412.78017" y="5744008.09442" end_time="11:04:00" />
-      <leg mode="car" />
-      <activity type="beach" x="778237.06886" y="5743964.79164" end_time="12:52:00" />
-      <leg mode="car" />
-      <activity type="other" x="778358.96582" y="5743692.86289" end_time="14:29:00" />
-      <leg mode="car" />
-      <activity type="beach" x="777498.11629" y="5741920.33946" end_time="16:32:00" />
-      <leg mode="car" />
-      <activity type="shops" x="778433.82508" y="5744429.17115" end_time="20:09:00" />
-      <leg mode="car" />
-      <activity type="home" x="777412.78017" y="5744008.09442" />
-    </plan>
-  </person>
-
-  <person id= "40" >
+  <person id= "20" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorDaytime</attribute>
+      <attribute name="hasDependents" class="java.lang.Boolean" >true</attribute>
+      <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.5</attribute>
+      <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.9</attribute>
     </attributes>
     <plan selected="yes">
       <activity type="home" x="725868.5478" y="5753291.5198" end_time="05:29:00" />
@@ -805,9 +499,12 @@
     </plan>
   </person>
 
-  <person id= "41" >
+  <person id= "21" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorDaytime</attribute>
+      <attribute name="hasDependents" class="java.lang.Boolean" >false</attribute>
+      <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.2</attribute>
+      <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.3</attribute>
     </attributes>
     <plan selected="yes">
       <activity type="home" x="793807.138" y="5772517.067" end_time="07:38:00" />
@@ -828,9 +525,12 @@
     </plan>
   </person>
 
-  <person id= "42" >
+  <person id= "22" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorDaytime</attribute>
+      <attribute name="hasDependents" class="java.lang.Boolean" >false</attribute>
+      <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.4</attribute>
+      <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.4</attribute>
     </attributes>
     <plan selected="yes">
       <activity type="home" x="725868.5478" y="5753291.5198" end_time="07:37:00" />
@@ -851,9 +551,12 @@
     </plan>
   </person>
 
-  <person id= "43" >
+  <person id= "23" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorDaytime</attribute>
+      <attribute name="hasDependents" class="java.lang.Boolean" >true</attribute>
+      <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.6</attribute>
+      <attribute name="FinalResponseThreshold"   class="java.lang.Double" >1.0</attribute>
     </attributes>
     <plan selected="yes">
       <activity type="home" x="793807.138" y="5772517.067" end_time="08:55:00" />
@@ -874,9 +577,12 @@
     </plan>
   </person>
 
-  <person id= "44" >
+  <person id= "24" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorDaytime</attribute>
+      <attribute name="hasDependents" class="java.lang.Boolean" >false</attribute>
+      <attribute name="InitialResponseThreshold" class="java.lang.Double" >1.0</attribute>
+      <attribute name="FinalResponseThreshold"   class="java.lang.Double" >1.0</attribute>
     </attributes>
     <plan selected="yes">
       <activity type="home" x="793807.138" y="5772517.067" end_time="09:08:00" />
@@ -888,115 +594,6 @@
       <activity type="home" x="793807.138" y="5772517.067" end_time="21:14:00" />
       <leg mode="car" />
       <activity type="other" x="767533.87321" y="5747333.10942" end_time="23:03:00" />
-      <leg mode="car" />
-      <activity type="home" x="793807.138" y="5772517.067" />
-    </plan>
-  </person>
-
-  <person id= "45" >
-    <attributes>
-      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorDaytime</attribute>
-    </attributes>
-    <plan selected="yes">
-      <activity type="home" x="725868.5478" y="5753291.5198" end_time="06:27:00" />
-      <leg mode="car" />
-      <activity type="other" x="778358.96582" y="5743692.86289" end_time="11:40:00" />
-      <leg mode="car" />
-      <activity type="shops" x="789902.15203" y="5752276.48654" end_time="13:56:00" />
-      <leg mode="car" />
-      <activity type="beach" x="753128.71399" y="5720791.13233" end_time="14:04:00" />
-      <leg mode="car" />
-      <activity type="shops" x="778279.66613" y="5743500.15352" end_time="20:28:00" />
-      <leg mode="car" />
-      <activity type="home" x="725868.5478" y="5753291.5198" />
-    </plan>
-  </person>
-
-  <person id= "46" >
-    <attributes>
-      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorDaytime</attribute>
-    </attributes>
-    <plan selected="yes">
-      <activity type="home" x="793807.138" y="5772517.067" end_time="06:05:00" />
-      <leg mode="car" />
-      <activity type="other" x="777412.78017" y="5744008.09442" end_time="09:15:00" />
-      <leg mode="car" />
-      <activity type="home" x="793807.138" y="5772517.067" end_time="11:33:00" />
-      <leg mode="car" />
-      <activity type="beach" x="794920.60169" y="5772690.71159" end_time="14:10:00" />
-      <leg mode="car" />
-      <activity type="home" x="793807.138" y="5772517.067" end_time="17:17:00" />
-      <leg mode="car" />
-      <activity type="shops" x="790357.10312" y="5752184.65303" end_time="18:23:00" />
-      <leg mode="car" />
-      <activity type="home" x="793807.138" y="5772517.067" />
-    </plan>
-  </person>
-
-  <person id= "47" >
-    <attributes>
-      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorDaytime</attribute>
-    </attributes>
-    <plan selected="yes">
-      <activity type="home" x="725868.5478" y="5753291.5198" end_time="09:13:00" />
-      <leg mode="car" />
-      <activity type="other" x="778836.49665" y="5745094.30493" end_time="10:38:00" />
-      <leg mode="car" />
-      <activity type="shops" x="743497.21054" y="5753100.09307" end_time="12:47:00" />
-      <leg mode="car" />
-      <activity type="other" x="777412.78017" y="5744008.09442" end_time="16:01:00" />
-      <leg mode="car" />
-      <activity type="shops" x="732598.98147" y="5756278.36455" end_time="20:36:00" />
-      <leg mode="car" />
-      <activity type="other" x="767533.87321" y="5747333.10942" end_time="22:17:00" />
-      <leg mode="car" />
-      <activity type="home" x="725868.5478" y="5753291.5198" />
-    </plan>
-  </person>
-
-  <person id= "48" >
-    <attributes>
-      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorDaytime</attribute>
-    </attributes>
-    <plan selected="yes">
-      <activity type="home" x="793807.138" y="5772517.067" end_time="09:14:00" />
-      <leg mode="car" />
-      <activity type="shops" x="792871.83966" y="5770473.28821" end_time="10:48:00" />
-      <leg mode="car" />
-      <activity type="other" x="767533.87321" y="5747333.10942" end_time="13:27:00" />
-      <leg mode="car" />
-      <activity type="shops" x="792871.83966" y="5770473.28821" end_time="15:42:00" />
-      <leg mode="car" />
-      <activity type="beach" x="794920.60169" y="5772690.71159" end_time="16:19:00" />
-      <leg mode="car" />
-      <activity type="other" x="777412.78017" y="5744008.09442" end_time="19:31:00" />
-      <leg mode="car" />
-      <activity type="shops" x="792871.83966" y="5770473.28821" end_time="20:27:00" />
-      <leg mode="car" />
-      <activity type="other" x="778358.96582" y="5743692.86289" end_time="22:44:00" />
-      <leg mode="car" />
-      <activity type="home" x="793807.138" y="5772517.067" />
-    </plan>
-  </person>
-
-  <person id= "49" >
-    <attributes>
-      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorDaytime</attribute>
-    </attributes>
-    <plan selected="yes">
-      <activity type="home" x="793807.138" y="5772517.067" end_time="04:36:00" />
-      <leg mode="car" />
-      <activity type="beach" x="786985.47082" y="5748372.83646" end_time="07:26:00" />
-      <leg mode="car" />
-      <activity type="other" x="778948.04363" y="5744611.19874" end_time="08:09:00" />
-      <leg mode="car" />
-      <activity type="beach" x="794920.60169" y="5772690.71159" end_time="10:28:00" />
-      <leg mode="car" />
-      <activity type="shops" x="792871.83966" y="5770473.28821" end_time="12:55:00" />
-      <leg mode="car" />
-      <activity type="beach" x="794920.60169" y="5772690.71159" end_time="16:12:00" />
-      <leg mode="car" />
-      <activity type="other" x="778507.88547" y="5744455.63954" end_time="20:54:00" />
       <leg mode="car" />
       <activity type="home" x="793807.138" y="5772517.067" />
     </plan>
