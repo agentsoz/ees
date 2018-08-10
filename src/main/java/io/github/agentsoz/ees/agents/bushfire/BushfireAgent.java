@@ -25,17 +25,26 @@ package io.github.agentsoz.ees.agents.bushfire;
 
 import io.github.agentsoz.bdiabm.QueryPerceptInterface;
 import io.github.agentsoz.bdiabm.data.ActionContent;
+import io.github.agentsoz.jill.core.beliefbase.Belief;
+import io.github.agentsoz.jill.core.beliefbase.BeliefBaseException;
+import io.github.agentsoz.jill.core.beliefbase.BeliefSetField;
 import io.github.agentsoz.jill.lang.Agent;
 import io.github.agentsoz.jill.lang.AgentInfo;
+import io.github.agentsoz.util.EmergencyMessage;
+import io.github.agentsoz.util.Location;
 import io.github.agentsoz.util.evac.ActionList;
 import io.github.agentsoz.util.evac.PerceptList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.PrintStream;
+import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.Set;
+import java.util.TreeSet;
 
 @AgentInfo(hasGoals={"io.github.agentsoz.ees.agents.bushfire.GoalDoNothing"})
-public class BushfireAgent extends  Agent implements io.github.agentsoz.bdiabm.Agent {
+public abstract class BushfireAgent extends  Agent implements io.github.agentsoz.bdiabm.Agent {
 
     private final Logger logger = LoggerFactory.getLogger("io.github.agentsoz.ees");
     PrintStream writer = null;
@@ -43,9 +52,58 @@ public class BushfireAgent extends  Agent implements io.github.agentsoz.bdiabm.A
     private double time = -1;
     private BushfireAgent.Prefix prefix = new BushfireAgent.Prefix();
 
+    // Defaults
+    private boolean hasDependents = false;
+    private double initialResponseThreshold = 0.5;
+    private double finalResponseThreshold = 0.5;
+    private double responseBarometerMessages = 0.0;
+    private double responseBarometerFieldOfView = 0.0;
+
+    private enum FieldOfViewPercept {
+        SMOKE_VISUAL(0.3),
+        FIRE_VISUAL(0.4),
+        NEIGHBOURS_LEAVING(0.5);
+
+        private final double value;
+
+        private FieldOfViewPercept(double value) {
+            this.value = value;
+        }
+
+        public double getValue() {
+            return value;
+        }
+    }
+
+    enum MemoryEventType {
+        RESPONSE_BAROMETER_MESSAGES_CHANGED,
+        RESPONSE_BAROMETER_FIELD_OF_VIEW_CHANGED,
+        PERCEIVED,
+        DECIDED,
+        ACTIONED
+    }
+
+    enum MemoryEventValue {
+        INITIAL_RESPONSE_THRESHOLD_BREACHED,
+        FINAL_RESPONSE_THRESHOLD_BREACHED,
+        VISIT_DEPENDENT
+    }
+
+    // Internal variables
+    private final String memory = "memory";
+
     public BushfireAgent(String id) {
         super(id);
     }
+
+    boolean isHasDependents() {
+        return hasDependents;
+    }
+
+    double getResponseBarometer() {
+        return responseBarometerMessages + responseBarometerFieldOfView;
+    }
+
 
     /**
      * Called by the Jill model when starting a new agent.
@@ -56,42 +114,144 @@ public class BushfireAgent extends  Agent implements io.github.agentsoz.bdiabm.A
     public void start(PrintStream writer, String[] params) {
         this.writer = writer;
         parseArgs(params);
-    }
-
-    private void parseArgs(String[] args) {
-        if (args != null) {
-            logger.warn("{} ignoring received args: {}", prefix, args);
+        // Create a new belief set to store memory
+        BeliefSetField[] fields = {
+                new BeliefSetField("time", String.class, true),
+                new BeliefSetField("event", String.class, false),
+                new BeliefSetField("value", String.class, false),
+        };
+        try {
+            // Attach this belief set to this agent
+            this.createBeliefSet(memory, fields);
+        } catch (BeliefBaseException e) {
+            throw new RuntimeException(e);
         }
     }
-
 
     /**
      * Called by the Jill model when terminating
      */
     @Override
     public void finish() {
-        logger.trace("{} is terminating", prefix);
+        writer.println(logPrefix() + "is terminating");
+        try {
+            if (eval("memory.event = *")) {
+                Set<String> memories = new TreeSet<>();
+                for (Belief belief : getLastResults()) {
+                    memories.add(logPrefix() + "memory : " + Arrays.toString(belief.getTuple()));
+                }
+                for (String belief : memories) {
+                    writer.println(belief);
+                }
+            }
+        } catch (BeliefBaseException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    /**
+        /**
      * Called by the Jill model with the status of a BDI percept
      * for this agent, coming from the ABM environment.
      */
     @Override
     public void handlePercept(String perceptID, Object parameters) {
+        if (perceptID == null || perceptID.isEmpty()) {
+            return;
+        }
         if (perceptID.equals(PerceptList.TIME)) {
             if (parameters instanceof Double) {
                 time = (double) parameters;
             }
+            return;
+        }
+
+        writer.println(logPrefix() + "received percept " + perceptID +  ":" + parameters);
+        // save it to memory
+        memorise(MemoryEventType.PERCEIVED.name(), perceptID + ":" +parameters.toString());
+
+        if (perceptID.equals(PerceptList.EMERGENCY_MESSAGE)) {
+            updateResponseBarometerMessages(parameters);
+        } else if (perceptID.equals(PerceptList.FIELD_OF_VIEW)) {
+            updateResponseBarometerFieldOfViewPercept(parameters);
         } else if (perceptID.equals(PerceptList.ARRIVED)) {
-            // Agent just arrived
-            writer.println(prefix + "arrived at " + parameters);
+            // do something
         } else if (perceptID.equals(PerceptList.BLOCKED)) {
-            // Something went wrong while driving and the road is blocked
-            writer.println(prefix + "is blocked (" + parameters + ")");
+            // do something
         } else if (perceptID.equals(PerceptList.FIRE_ALERT)) {
-            // Received a fire alert so act now
-            writer.println(prefix + "received fire alert");
+            // FIXME: using fire msg (global) as proxy for fire visual (localised)
+            updateResponseBarometerFieldOfViewPercept(FieldOfViewPercept.FIRE_VISUAL);
+        }
+
+        // Now trigger a response as needed
+        checkBarometersAndTriggerResponseAsNeeded();
+    }
+
+    protected void checkBarometersAndTriggerResponseAsNeeded() {
+        try {
+            if (!eval("memory.value = " + MemoryEventValue.INITIAL_RESPONSE_THRESHOLD_BREACHED.name())) {
+                // initial response threshold not breached yet
+                if (getResponseBarometer() >= initialResponseThreshold) {
+                    // initial response threshold breached for the first time
+                    memorise(MemoryEventType.DECIDED.name(), MemoryEventValue.INITIAL_RESPONSE_THRESHOLD_BREACHED.name());
+                    triggerResponse(MemoryEventValue.INITIAL_RESPONSE_THRESHOLD_BREACHED);
+                }
+            }
+            if (!eval("memory.value = " + MemoryEventValue.FINAL_RESPONSE_THRESHOLD_BREACHED.name())) {
+                // final response threshold not breached yet
+                if (getResponseBarometer() >= finalResponseThreshold) {
+                    // final response threshold breached for the first time
+                    memorise(MemoryEventType.DECIDED.name(), MemoryEventValue.FINAL_RESPONSE_THRESHOLD_BREACHED.name());
+                    triggerResponse(MemoryEventValue.FINAL_RESPONSE_THRESHOLD_BREACHED);
+                }
+            }
+        } catch (BeliefBaseException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void memorise(String event, String data) {
+        try {
+            addBelief(memory, Double.toString(time), event, data);
+        } catch (BeliefBaseException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Called after a new percept has been processed
+     * @param breach
+     */
+    abstract void triggerResponse(MemoryEventValue breach);
+
+    /**
+     * Overwrites {@link #responseBarometerFieldOfView} with the value of the incoming visual
+     * if the incoming value is higher.
+     * @param view the incoming visual percept
+     */
+    private void updateResponseBarometerFieldOfViewPercept(Object view) {
+        if (view == null || !(view instanceof  FieldOfViewPercept)) {
+            return;
+        }
+        double value = ((FieldOfViewPercept) view).getValue();
+        if (value > responseBarometerFieldOfView) {
+            responseBarometerFieldOfView = value;
+            memorise(MemoryEventType.RESPONSE_BAROMETER_FIELD_OF_VIEW_CHANGED.name(), Double.toString(value));
+        }
+    }
+
+    /**
+     * Overwrites {@link #responseBarometerMessages} with the value of the incoming message
+     * if the incoming value is higher.
+     * @param msg the incoming emergency message
+     */
+    private void updateResponseBarometerMessages(Object msg) {
+        if (msg == null || !(msg instanceof  EmergencyMessage.EmergencyMessageType)) {
+            return;
+        }
+        double value = ((EmergencyMessage.EmergencyMessageType) msg).getValue();
+        if (value > responseBarometerMessages) {
+            responseBarometerMessages = value;
+            memorise(MemoryEventType.RESPONSE_BAROMETER_MESSAGES_CHANGED.name(), Double.toString(value));
         }
     }
 
@@ -101,7 +261,7 @@ public class BushfireAgent extends  Agent implements io.github.agentsoz.bdiabm.A
      */
     @Override
     public void packageAction(String actionID, Object[] parameters) {
-        logger.warn("{} ignoring action {}", prefix, actionID);
+        logger.warn("{} ignoring action {}", logPrefix(), actionID);
     }
 
     /**
@@ -110,7 +270,7 @@ public class BushfireAgent extends  Agent implements io.github.agentsoz.bdiabm.A
      */
     @Override
     public void updateAction(String actionID, ActionContent content) {
-        logger.debug("{} received action update: {}", prefix, content);
+        logger.debug("{} received action update: {}", logPrefix(), content);
         if (content.getAction_type().equals(ActionList.DRIVETO)) {
             if (content.getState()== ActionContent.State.PASSED) {
                 // Wake up the agent that was waiting for external action to finish
@@ -141,7 +301,7 @@ public class BushfireAgent extends  Agent implements io.github.agentsoz.bdiabm.A
      */
     @Override
     public void start() {
-        logger.warn("{} using a stub for io.github.agentsoz.bdiabm.Agent.start()", prefix);
+        logger.warn("{} using a stub for io.github.agentsoz.bdiabm.Agent.start()", logPrefix());
     }
 
     /**
@@ -152,7 +312,7 @@ public class BushfireAgent extends  Agent implements io.github.agentsoz.bdiabm.A
 
     @Override
     public void kill() {
-        logger.warn("{} using a stub for io.github.agentsoz.bdiabm.Agent.kill()", prefix);
+        logger.warn("{} using a stub for io.github.agentsoz.bdiabm.Agent.kill()", logPrefix());
     }
 
     @Override
@@ -170,9 +330,71 @@ public class BushfireAgent extends  Agent implements io.github.agentsoz.bdiabm.A
         return time;
     }
 
+    private void parseArgs(String[] args) {
+        if (args != null) {
+            for (int i = 0; i < args.length; i++) {
+                switch (args[i]) {
+                    case "hasDependents":
+                        if (i + 1 < args.length) {
+                            i++;
+                            try {
+                                hasDependents = Boolean.parseBoolean(args[i]);
+                            } catch (Exception e) {
+                                logger.error("Could not parse boolean '"+ args[i] + "'", e);
+                            }
+                        }
+                        break;
+                    case "InitialResponseThreshold":
+                        if(i+1<args.length) {
+                            i++ ;
+                            try {
+                                initialResponseThreshold = Double.parseDouble(args[i]);
+                                // limit it to between 0 and 1
+                                initialResponseThreshold =
+                                        (initialResponseThreshold<0.0) ? 0.0 :
+                                                (initialResponseThreshold>1.0) ? 1.0 :
+                                                        initialResponseThreshold;
+                            } catch (Exception e) {
+                                logger.error("Could not parse double '"+ args[i] + "'", e);
+                            }
+                        }
+                        break;
+                    case "FinalResponseThreshold":
+                        if(i+1<args.length) {
+                            i++ ;
+                            try {
+                                finalResponseThreshold = Double.parseDouble(args[i]);
+                                // limit it to between 0 and 1
+                                finalResponseThreshold =
+                                        (finalResponseThreshold<0.0) ? 0.0 :
+                                                (finalResponseThreshold>1.0) ? 1.0 :
+                                                        finalResponseThreshold;
+                            } catch (Exception e) {
+                                logger.error("Could not parse double '"+ args[i] + "'", e);
+                            }
+
+                        }
+                        break;
+                    default:
+                        // ignore other options
+                        break;
+                }
+            }
+        }
+    }
+
     class Prefix{
         public String toString() {
             return String.format("Time %05.0f BushfireAgent %-4s : ", getTime(), getId());
         }
+    }
+
+    String logPrefix() {
+        return prefix.toString();
+    }
+
+    class Dependent {
+        private Location location;
+
     }
 }

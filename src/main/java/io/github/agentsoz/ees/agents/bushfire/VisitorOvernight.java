@@ -32,9 +32,21 @@ public class VisitorOvernight extends BushfireAgent {
     public VisitorOvernight(String id) {
         super(id);
     }
+
+    @Override
+    void triggerResponse(MemoryEventValue breach) {
+        writer.println(logPrefix() + "triggerResponse("+breach+") not implemented yet");
+    }
+
     class Prefix{
         public String toString() {
-            return String.format("Time %05.0f VisitorOvernight %-4s : ", getTime(), getId());
+            return String.format("Time %05.0f VisitorOvernight %-1s : ", getTime(), getId());
         }
     }
+
+    @Override
+    String logPrefix() {
+        return prefix.toString();
+    }
+
 }

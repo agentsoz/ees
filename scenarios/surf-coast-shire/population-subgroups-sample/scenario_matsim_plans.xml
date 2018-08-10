@@ -13,6 +13,11 @@
        (i.e., evacuation messages, visibility of smoke/fire, and such).
        Always InitialResponseThreshold =< FinalResponseThreshold.
   -->
+  <!-- IMPORTANT: KEEP ALL AGENTS OF THE SAME TYPE TOGETHER (CONSEQUTIVE)
+       otherwise the mapping in jill will be all messed up. At some point
+       Jill will allow more nuanced initialisation, but for now you can
+       only initialise types in "blocks" of agents. DS, Aug 10, 2018
+  -->
   <!-- ====================================================================== -->
 
   <person id= "0" >
@@ -407,7 +412,7 @@
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorOvernight</attribute>
       <attribute name="hasDependents" class="java.lang.Boolean" >true</attribute>
-      <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.2</attribute>
+      <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.1</attribute>
       <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.2</attribute>
     </attributes>
     <plan selected="yes">

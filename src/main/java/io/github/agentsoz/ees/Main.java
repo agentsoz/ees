@@ -240,7 +240,7 @@ public class Main {
 			return null;
 		}
 		// Count instances of each agent type
-		Map<String,Integer> counts = new HashMap<>();
+		Map<String,Integer> counts = new TreeMap<>();
 		for (List<String[]> values: map.values()) {
 			for (String[] val : values) {
 				if (SimpleConfig.getBdiAgentTagInMATSimPopulationFile().equals(val[0])) {

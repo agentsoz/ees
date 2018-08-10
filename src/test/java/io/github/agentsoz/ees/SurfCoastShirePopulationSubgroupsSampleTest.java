@@ -44,6 +44,8 @@ public class SurfCoastShirePopulationSubgroupsSampleTest {
                 "}",
                 "--x-congestion-config", "180:0.33:1.0",
                 "--x-load-bdi-agents-from-matsim-plans-file", "true", // Load agents from MATSim plans file
+                "--x-messages-file", "scenarios/surf-coast-shire/population-subgroups-sample/scenario_messages.json", // specifies when to send evac now msg
+                "--x-zones-file", "scenarios/surf-coast-shire/population-subgroups-sample/Anglesea_SA1s_WSG84.json", // map from zone (SA1) ids to shapes
         };
 
         Main.main(args);

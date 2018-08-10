@@ -32,9 +32,21 @@ public class VisitorDaytime extends BushfireAgent {
     public VisitorDaytime(String id) {
         super(id);
     }
+
+    @Override
+    void triggerResponse(MemoryEventValue breach) {
+        writer.println(logPrefix() + "triggerResponse("+breach+") not implemented yet");
+    }
+
     class Prefix{
         public String toString() {
-            return String.format("Time %05.0f VisitorDaytime %-4s : ", getTime(), getId());
+            return String.format("Time %05.0f VisitorDaytime %-3s : ", getTime(), getId());
         }
     }
+
+    @Override
+    String logPrefix() {
+        return prefix.toString();
+    }
+
 }
