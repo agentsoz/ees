@@ -13,6 +13,7 @@ import io.github.agentsoz.util.EmergencyMessage;
 import io.github.agentsoz.util.evac.ActionList;
 import io.github.agentsoz.util.evac.PerceptList;
 import io.github.agentsoz.util.Location;
+import org.geotools.geometry.jts.GeometryBuilder;
 import org.matsim.api.core.v01.Coord;
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.Scenario;
@@ -569,27 +570,38 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 
 		CoordinateTransformation transform = TransformationFactory.getCoordinateTransformation(
 				TransformationFactory.WGS84, scenario.getConfig().global().getCoordinateSystem());
-
-		final String json = new Gson().toJson(data);
-		log.debug(json);
+		
+		log.warn( new Gson().toJson(data) );
 
 		//			GeoJSONReader reader = new GeoJSONReader();
 		//			Geometry geometry = reader.read(json);
 		// unfortunately does not work since the incoming data is not typed accordingly. kai, dec'17
 
+		Geometry fire = null ;
 		Map<Double, Double[][]> map = (Map<Double, Double[][]>) data;
 		// the map key is time; we just take the superset of all polygons
-		Geometry fire = null ;
 		for ( Double[][] pairs : map.values() ) {
+			List<Polygon> polygons = new ArrayList<>() ;
 			List<Coord> coords = new ArrayList<>() ;
 			for (Double[] pair : pairs) {
-				coords.add(transform.transform(new Coord(pair[0], pair[1])));
+				final Coord newCoord = transform.transform( new Coord( pair[0], pair[1] ) );
+				coords.add( newCoord );
+				if ( coords.size()>1 && coords.get(0).equals( newCoord )) {
+					// (the size condition is necessary since otherwise the condition is fulfilled with just one coordinate added. kai, aug'18)
+					Polygon polygon = GeometryUtils.createGeotoolsPolygon( coords );
+					polygons.add(polygon) ;
+//					if ( polygons.size() >=2 ) {
+//						log.warn("just added a second polygon") ;
+//						System.exit(-1) ;
+//					}
+					coords.clear();
+				}
 			}
-			Polygon polygon = GeometryUtils.createGeotoolsPolygon(coords);
+			final MultiPolygon multi = new GeometryBuilder().multiPolygon( polygons.toArray( new Polygon[0] ) );
 			if ( fire==null ) {
-				fire = polygon ;
+				fire = multi ;
 			} else {
-				fire = fire.union(polygon);
+				fire = fire.union( multi ) ;
 			}
 		}
 
