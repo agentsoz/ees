@@ -115,7 +115,15 @@ public class PhoenixFireModule implements DataSource {
 			}
 			dataServer.publish(PerceptList.FIRE_DATA, shapes);
 		}
-		lastUpdateTimeInMinutes = time;
+
+		// Setting 'lastUpdateTimeInMinutes = time' below will mean that only the new fire shapes since the
+		// last update will be sent. However, this can cause problems for the model if the fire shapes are
+		// discontiguous. See https://github.com/agentsoz/bdi-abm-integration/issues/36.
+		// So instead, we send all the shapes up until now. This ensures that the state of the fire
+		// in the model will always be a union of all shapes from the start of fire.
+		// To send all shapes, just disable the lastUpdateTimeInMinutes update below
+		// lastUpdateTimeInMinutes = time;
+
 		Double nextTime = fire.higherKey(time);
 		if (nextTime != null) {
 			dataServer.registerTimedUpdate(PerceptList.FIRE, this, Time.convertTime(nextTime, Time.TimestepUnit.MINUTES, timestepUnit));
