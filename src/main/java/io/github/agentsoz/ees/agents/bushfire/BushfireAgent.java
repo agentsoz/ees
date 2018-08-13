@@ -38,7 +38,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.PrintStream;
-import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.TreeSet;
@@ -53,7 +52,7 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
     private BushfireAgent.Prefix prefix = new BushfireAgent.Prefix();
 
     // Defaults
-    private boolean hasDependents = false;
+    private DependentInfo dependentInfo = null;
     private double initialResponseThreshold = 0.5;
     private double finalResponseThreshold = 0.5;
     private double responseBarometerMessages = 0.0;
@@ -96,8 +95,8 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
         super(id);
     }
 
-    boolean isHasDependents() {
-        return hasDependents;
+    DependentInfo getDependentInfo() {
+        return dependentInfo;
     }
 
     double getResponseBarometer() {
@@ -334,13 +333,19 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
         if (args != null) {
             for (int i = 0; i < args.length; i++) {
                 switch (args[i]) {
-                    case "hasDependents":
+                    case "hasDependentsAtLocation":
                         if (i + 1 < args.length) {
                             i++;
-                            try {
-                                hasDependents = Boolean.parseBoolean(args[i]);
-                            } catch (Exception e) {
-                                logger.error("Could not parse boolean '"+ args[i] + "'", e);
+                            if (!args[i].isEmpty()) { // empty arg is ok, signifies no dependents
+                                String[] vals = args[i].split(",");
+                                try {
+                                    Location location = new Location("Dependent", Double.parseDouble(vals[0]), Double.parseDouble(vals[1]));
+                                    dependentInfo = new DependentInfo();
+                                    dependentInfo.setLocation(location);
+                                } catch (Exception e) {
+                                    System.err.println("Could not parse dependent's location '"
+                                            + args[i] + "' : " + e.getMessage());
+                                }
                             }
                         }
                         break;
@@ -393,8 +398,28 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
         return prefix.toString();
     }
 
-    class Dependent {
+    class DependentInfo {
         private Location location;
+        private double lastVisitedAtTime = -1;
 
+        public Location getLocation() {
+            return location;
+        }
+
+        public void setLocation(Location location) {
+            this.location = location;
+        }
+
+        public double getLastVisitedAtTime() {
+            return lastVisitedAtTime;
+        }
+
+        public void setLastVisitedAtTime(double lastVisitedAtTime) {
+            this.lastVisitedAtTime = lastVisitedAtTime;
+        }
+
+        public boolean isVisited() {
+            return getLastVisitedAtTime()==-1;
+        }
     }
 }

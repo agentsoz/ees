@@ -23,7 +23,7 @@
   <person id= "0" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.Resident</attribute>
-      <attribute name="hasDependents" class="java.lang.Boolean" >true</attribute>
+      <attribute name="hasDependentsAtLocation" class="java.lang.String" >732198.84,5743741.61</attribute>
       <attribute name="InitialResponseThreshold" class="java.lang.Double" >-10.0 <!-- incorrect intentionally; should be treated as 0.0 --></attribute>
       <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.0</attribute>
     </attributes>
@@ -39,7 +39,7 @@
   <person id= "1" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.Resident</attribute>
-      <attribute name="hasDependents" class="java.lang.Boolean" >true</attribute>
+      <attribute name="hasDependentsAtLocation" class="java.lang.String" >736328.84,5730787.61</attribute>
       <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.2</attribute>
       <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.5</attribute>
     </attributes>
@@ -59,7 +59,7 @@
   <person id= "2" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.Resident</attribute>
-      <attribute name="hasDependents" class="java.lang.Boolean" >true</attribute>
+      <attribute name="hasDependentsAtLocation" class="java.lang.String" >742083.84,5721225.61</attribute>
       <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.4</attribute>
       <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.7</attribute>
     </attributes>
@@ -81,7 +81,7 @@
   <person id= "3" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.Resident</attribute>
-      <attribute name="hasDependents" class="java.lang.Boolean" >false</attribute>
+      <attribute name="hasDependentsAtLocation" class="java.lang.String" ></attribute>
       <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.6</attribute>
       <attribute name="FinalResponseThreshold"   class="java.lang.Double" >1.8<!--incorrect intentionally; should be treated as 1.0--></attribute>
     </attributes>
@@ -107,7 +107,7 @@
   <person id= "4" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.Resident</attribute>
-      <attribute name="hasDependents" class="java.lang.Boolean" >false</attribute>
+      <attribute name="hasDependentsAtLocation" class="java.lang.String" ></attribute>
       <attribute name="InitialResponseThreshold" class="java.lang.Double" >1.1<!--incorrect intentionally; should be treated as 1.0--></attribute>
       <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.9<!--lower than above intentionally; should be treated as equal to above, therefore 1.0--></attribute>
     </attributes>
@@ -127,7 +127,7 @@
   <person id= "5" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.ResidentPartTime</attribute>
-      <attribute name="hasDependents" class="java.lang.Boolean" >true</attribute>
+      <attribute name="hasDependentsAtLocation" class="java.lang.String" >742494.84,5735235.61</attribute>
       <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.0</attribute>
       <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.5</attribute>
     </attributes>
@@ -151,7 +151,7 @@
   <person id= "6" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.ResidentPartTime</attribute>
-      <attribute name="hasDependents" class="java.lang.Boolean" >false</attribute>
+      <attribute name="hasDependentsAtLocation" class="java.lang.String" ></attribute>
       <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.2</attribute>
       <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.8</attribute>
     </attributes>
@@ -175,7 +175,7 @@
   <person id= "7" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.ResidentPartTime</attribute>
-      <attribute name="hasDependents" class="java.lang.Boolean" >false</attribute>
+      <attribute name="hasDependentsAtLocation" class="java.lang.String" ></attribute>
       <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.4</attribute>
       <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.7</attribute>
     </attributes>
@@ -199,7 +199,7 @@
   <person id= "8" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.ResidentPartTime</attribute>
-      <attribute name="hasDependents" class="java.lang.Boolean" >true</attribute>
+      <attribute name="hasDependentsAtLocation" class="java.lang.String" >744665.84,5727655.61</attribute>
       <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.5</attribute>
       <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.5</attribute>
     </attributes>
@@ -221,7 +221,7 @@
   <person id= "9" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.ResidentPartTime</attribute>
-      <attribute name="hasDependents" class="java.lang.Boolean" >false</attribute>
+      <attribute name="hasDependentsAtLocation" class="java.lang.String" ></attribute>
       <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.6</attribute>
       <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.9</attribute>
     </attributes>
@@ -241,7 +241,7 @@
   <person id= "10" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorRegular</attribute>
-      <attribute name="hasDependents" class="java.lang.Boolean" >false</attribute>
+      <attribute name="hasDependentsAtLocation" class="java.lang.String" ></attribute>
       <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.0</attribute>
       <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.0</attribute>
     </attributes>
@@ -261,7 +261,7 @@
   <person id= "11" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorRegular</attribute>
-      <attribute name="hasDependents" class="java.lang.Boolean" >true</attribute>
+      <attribute name="hasDependentsAtLocation" class="java.lang.String" >744961.84,5757017.61</attribute>
       <attribute name="InitialResponseThreshold" class="java.lang.Double" >1.0</attribute>
       <attribute name="FinalResponseThreshold"   class="java.lang.Double" >1.0</attribute>
     </attributes>
@@ -287,7 +287,7 @@
   <person id= "12" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorRegular</attribute>
-      <attribute name="hasDependents" class="java.lang.Boolean" >false</attribute>
+      <attribute name="hasDependentsAtLocation" class="java.lang.String" ></attribute>
       <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.4</attribute>
       <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.7</attribute>
     </attributes>
@@ -315,7 +315,7 @@
   <person id= "13" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorRegular</attribute>
-      <attribute name="hasDependents" class="java.lang.Boolean" >false</attribute>
+      <attribute name="hasDependentsAtLocation" class="java.lang.String" ></attribute>
       <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.3</attribute>
       <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.8</attribute>
     </attributes>
@@ -337,7 +337,7 @@
   <person id= "14" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorRegular</attribute>
-      <attribute name="hasDependents" class="java.lang.Boolean" >true</attribute>
+      <attribute name="hasDependentsAtLocation" class="java.lang.String" >749850.84,5732213.61</attribute>
       <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.1</attribute>
       <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.4</attribute>
     </attributes>
@@ -361,7 +361,7 @@
   <person id= "15" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorOvernight</attribute>
-      <attribute name="hasDependents" class="java.lang.Boolean" >false</attribute>
+      <attribute name="hasDependentsAtLocation" class="java.lang.String" ></attribute>
       <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.6</attribute>
       <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.7</attribute>
     </attributes>
@@ -385,7 +385,7 @@
   <person id= "16" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorOvernight</attribute>
-      <attribute name="hasDependents" class="java.lang.Boolean" >false</attribute>
+      <attribute name="hasDependentsAtLocation" class="java.lang.String" ></attribute>
       <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.9</attribute>
       <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.9</attribute>
     </attributes>
@@ -411,7 +411,7 @@
   <person id= "17" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorOvernight</attribute>
-      <attribute name="hasDependents" class="java.lang.Boolean" >true</attribute>
+      <attribute name="hasDependentsAtLocation" class="java.lang.String" >751687.84,5749930.61</attribute>
       <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.1</attribute>
       <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.2</attribute>
     </attributes>
@@ -435,7 +435,7 @@
   <person id= "18" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorOvernight</attribute>
-      <attribute name="hasDependents" class="java.lang.Boolean" >false</attribute>
+      <attribute name="hasDependentsAtLocation" class="java.lang.String" ></attribute>
       <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.4</attribute>
       <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.5</attribute>
     </attributes>
@@ -455,7 +455,7 @@
   <person id= "19" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorOvernight</attribute>
-      <attribute name="hasDependents" class="java.lang.Boolean" >false</attribute>
+      <attribute name="hasDependentsAtLocation" class="java.lang.String" ></attribute>
       <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.3</attribute>
       <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.7</attribute>
     </attributes>
@@ -483,7 +483,7 @@
   <person id= "20" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorDaytime</attribute>
-      <attribute name="hasDependents" class="java.lang.Boolean" >true</attribute>
+      <attribute name="hasDependentsAtLocation" class="java.lang.String" >754664.84,5734252.61</attribute>
       <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.5</attribute>
       <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.9</attribute>
     </attributes>
@@ -507,7 +507,7 @@
   <person id= "21" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorDaytime</attribute>
-      <attribute name="hasDependents" class="java.lang.Boolean" >false</attribute>
+      <attribute name="hasDependentsAtLocation" class="java.lang.String" ></attribute>
       <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.2</attribute>
       <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.3</attribute>
     </attributes>
@@ -533,7 +533,7 @@
   <person id= "22" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorDaytime</attribute>
-      <attribute name="hasDependents" class="java.lang.Boolean" >false</attribute>
+      <attribute name="hasDependentsAtLocation" class="java.lang.String" ></attribute>
       <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.4</attribute>
       <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.4</attribute>
     </attributes>
@@ -559,7 +559,7 @@
   <person id= "23" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorDaytime</attribute>
-      <attribute name="hasDependents" class="java.lang.Boolean" >true</attribute>
+      <attribute name="hasDependentsAtLocation" class="java.lang.String" >762278.84,5741167.61</attribute>
       <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.6</attribute>
       <attribute name="FinalResponseThreshold"   class="java.lang.Double" >1.0</attribute>
     </attributes>
@@ -585,7 +585,7 @@
   <person id= "24" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorDaytime</attribute>
-      <attribute name="hasDependents" class="java.lang.Boolean" >false</attribute>
+      <attribute name="hasDependentsAtLocation" class="java.lang.String" ></attribute>
       <attribute name="InitialResponseThreshold" class="java.lang.Double" >1.0</attribute>
       <attribute name="FinalResponseThreshold"   class="java.lang.Double" >1.0</attribute>
     </attributes>
