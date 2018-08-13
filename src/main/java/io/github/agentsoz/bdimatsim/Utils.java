@@ -28,15 +28,14 @@ import java.util.regex.Pattern;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
+import io.github.agentsoz.util.Location;
 import org.matsim.api.core.v01.Coord;
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.network.Link;
 import org.matsim.api.core.v01.network.Network;
 import org.matsim.api.core.v01.network.Node;
-import org.matsim.api.core.v01.population.Person;
-import org.matsim.api.core.v01.population.Population;
-import org.matsim.api.core.v01.population.PopulationFactory;
+import org.matsim.api.core.v01.population.*;
 import org.matsim.core.config.Config;
 import org.matsim.core.config.ConfigUtils;
 import org.matsim.core.network.NetworkUtils;
@@ -81,8 +80,10 @@ public final class Utils {
     public static Map<String,List<String[]>> getAgentsFromMATSimPlansFile(Scenario scenario ) {
         Map<String,List<String[]>> map = new HashMap<>();
         for (Person person : scenario.getPopulation().getPersons().values()) {
-			String args = person.getAttributes().toString();
+
+			// Get all person attributes
 			// Below seems the only ugly way to get attributes list out
+			String args = person.getAttributes().toString();
 			List<String[]> initArgs = new ArrayList<>();
 			Pattern logEntry = Pattern.compile("\\{\\s*key\\s*=\\s*(.*?)\\s*;\\s*object\\s*=\\s*(.*?)\\s*\\}");
 			Matcher matchPattern = logEntry.matcher(args);
@@ -91,8 +92,20 @@ public final class Utils {
 				String val = matchPattern.group(2);
 				initArgs.add(new String[]{key,val});
 			}
+
+			// Also get all activities and locations
+			for (PlanElement element : person.getSelectedPlan().getPlanElements()) {
+				if (element instanceof Activity) {
+					String type = ((Activity)element).getType();
+					String xy = String.format("%f,%f", ((Activity)element).getCoord().getX(), ((Activity)element).getCoord().getY());
+					initArgs.add(new String[]{type,xy});
+				}
+				element.toString();
+			}
+
 			map.put(person.getId().toString(), initArgs);
         }
+
         return map;
     }
 
