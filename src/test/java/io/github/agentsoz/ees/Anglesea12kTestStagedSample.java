@@ -1,6 +1,7 @@
 package io.github.agentsoz.ees;
 
 import io.github.agentsoz.bdimatsim.MATSimModel;
+import io.github.agentsoz.util.TestUtils;
 import org.apache.log4j.Logger;
 import org.junit.Rule;
 import org.junit.Test;
@@ -26,7 +27,7 @@ public class Anglesea12kTestStagedSample {
     public MatsimTestUtils utils = new MatsimTestUtils();
 
     @Test
-    public void testAnglesea12kStaged() {
+    public void testAnglesea12kStagedSample() {
 
         String[] args = {
                 "--config", "scenarios/surf-coast-shire/anglesea-12k-sample/scenario_main_sample.xml",
@@ -37,14 +38,14 @@ public class Anglesea12kTestStagedSample {
                 "--safeline-output-file-pattern", utils.getOutputDirectory() + "../safeline.%d%.out",
                 MATSimModel.MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR, utils.getOutputDirectory(),
                 "--jillconfig", "--config={" +
-                "agents:[{classname:io.github.agentsoz.ees.agents.Resident, args:null, count:482}]," +
+                "agents:[{classname:io.github.agentsoz.ees.agents.Resident, args:null, count:50}]," +
                 "logLevel: WARN," +
                 "logFile: \""+utils.getOutputDirectory()+"../jill.log\"," +
                 "programOutputFile: \""+utils.getOutputDirectory()+"../jill.out\"," +
                 "randomSeed: 12345," + // jill random seed
                 "numThreads: 1" + // run jill in single-threaded mode so logs are deterministic
                 "}",
-                "--x-congestion-config", "120:0.8",
+                "--x-congestion-config", "180:0.33:0.2", // if delay for 3min section is >1min, then 20% will replan
                 "--sendFireAlertOnFireStart", "false", // disable fire alert from fire model, instead will use messaging
                 "--x-messages-file", "scenarios/surf-coast-shire/anglesea-12k-sample/scenario_messages_staged.json", // specifies when to send evac now msg
                 "--x-zones-file", "scenarios/surf-coast-shire/anglesea-12k-sample/Anglesea_SA1s_WSG84.json", // map from zone (SA1) ids to shapes
@@ -52,23 +53,23 @@ public class Anglesea12kTestStagedSample {
 
         Main.main(args);
 
-//        final String actualEventsFilename = utils.getOutputDirectory() + "/output_events.xml.gz";
-//        long actualEventsCRC = CRCChecksum.getCRCFromFile( actualEventsFilename ) ;
-//        System.err.println("actual(events)="+actualEventsCRC) ;
-//
-//        long actualPlansCRC = CRCChecksum.getCRCFromFile( utils.getOutputDirectory() + "/output_plans.xml.gz" ) ;
-//        System.err.println("actual(plans)="+actualPlansCRC) ;
-//
-//        // ---
-//
-//        final String primaryExpectedEventsFilename = utils.getInputDirectory() + "/output_events.xml.gz";
-//
-//        // ---
+        final String actualEventsFilename = utils.getOutputDirectory() + "/output_events.xml.gz";
+        long actualEventsCRC = CRCChecksum.getCRCFromFile( actualEventsFilename ) ;
+        System.err.println("actual(events)="+actualEventsCRC) ;
 
-        //TestUtils.comparingDepartures(primaryExpectedEventsFilename,actualEventsFilename,300.);
-        //TestUtils.comparingArrivals(primaryExpectedEventsFilename,actualEventsFilename,300.);
-        //TestUtils.comparingActivityStarts(primaryExpectedEventsFilename,actualEventsFilename, 300.);
-        //TestUtils.compareFullEvents(primaryExpectedEventsFilename,actualEventsFilename, false);
+        long actualPlansCRC = CRCChecksum.getCRCFromFile( utils.getOutputDirectory() + "/output_plans.xml.gz" ) ;
+        System.err.println("actual(plans)="+actualPlansCRC) ;
+
+        // ---
+
+        final String primaryExpectedEventsFilename = utils.getInputDirectory() + "/output_events.xml.gz";
+
+        // ---
+
+        TestUtils.comparingDepartures(primaryExpectedEventsFilename,actualEventsFilename,10.);
+        TestUtils.comparingArrivals(primaryExpectedEventsFilename,actualEventsFilename,10.);
+        TestUtils.comparingActivityStarts(primaryExpectedEventsFilename,actualEventsFilename, 10.);
+        TestUtils.compareFullEvents(primaryExpectedEventsFilename,actualEventsFilename, false);
 
     }
 }

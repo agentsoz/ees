@@ -60,8 +60,8 @@
 
 		<param name = "snapshotperiod"	value = "00:00:20"/> <!-- 00:00:00 means NO snapshot writing, 00:00:30 means every 30 secs -->
 
-		<param name= "flowCapacityFactor" value= "0.04" />
-		<param name= "storageCapacityFactor" value= "0.04" />
+		<param name= "flowCapacityFactor" value= "0.00415" />
+		<param name= "storageCapacityFactor" value= "0.00415" />
 
 		<param name="numberOfThreads" value="1" />
 		<!--setting this to 1 for testing; could be set to a higher number for deployment.  kai, nov'17-->
@@ -83,7 +83,7 @@
 		<param name="activityTypicalDuration_0" value="12:00:00" />
 		<param name="activityMinimalDuration_0" value="08:00:00" />
 
-		<param name="activityType_3"            value="camp" />
+		<param name="activityType_3"            value="end" />
 		<param name="activityPriority_3"        value="1" />
 		<param name="activityTypicalDuration_3" value="12:00:00" />
 		<param name="activityMinimalDuration_3" value="08:00:00" />
