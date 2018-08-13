@@ -38,15 +38,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.PrintStream;
-import java.util.Arrays;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 @AgentInfo(hasGoals={"io.github.agentsoz.ees.agents.bushfire.GoalDoNothing"})
 public abstract class BushfireAgent extends  Agent implements io.github.agentsoz.bdiabm.Agent {
 
+    public static final String HOME_LOCATION = "home";
+
     private final Logger logger = LoggerFactory.getLogger("io.github.agentsoz.ees");
-    PrintStream writer = null;
+    private PrintStream writer = null;
     private QueryPerceptInterface queryInterface;
     private double time = -1;
     private BushfireAgent.Prefix prefix = new BushfireAgent.Prefix();
@@ -85,23 +85,40 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
     enum MemoryEventValue {
         INITIAL_RESPONSE_THRESHOLD_BREACHED,
         FINAL_RESPONSE_THRESHOLD_BREACHED,
-        VISIT_DEPENDENT
+        TRIGGER_INITIAL_RESPONSE_NOW,
+        TRIGGER_FINAL_RESPONSE_NOW,
+        VISIT_DEPENDENTS_NOW,
+        GO_HOME_NOW
     }
 
     // Internal variables
     private final String memory = "memory";
+    private Map<String,Location> locations;
+
+
 
     public BushfireAgent(String id) {
         super(id);
+        locations = new HashMap<>();
     }
 
     DependentInfo getDependentInfo() {
         return dependentInfo;
     }
 
+    public Map<String, Location> getLocations() {
+        return locations;
+    }
+
+    public void setLocations(Map<String, Location> locations) {
+        this.locations = locations;
+    }
+
     double getResponseBarometer() {
         return responseBarometerMessages + responseBarometerFieldOfView;
     }
+
+    public abstract double getProbHomeAfterDependents();
 
 
     /**
@@ -208,7 +225,7 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
         }
     }
 
-    private void memorise(String event, String data) {
+    void memorise(String event, String data) {
         try {
             addBelief(memory, Double.toString(time), event, data);
         } catch (BeliefBaseException e) {
@@ -337,8 +354,8 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
                         if (i + 1 < args.length) {
                             i++;
                             if (!args[i].isEmpty()) { // empty arg is ok, signifies no dependents
-                                String[] vals = args[i].split(",");
                                 try {
+                                    String[] vals = args[i].split(",");
                                     Location location = new Location("Dependent", Double.parseDouble(vals[0]), Double.parseDouble(vals[1]));
                                     dependentInfo = new DependentInfo();
                                     dependentInfo.setLocation(location);
@@ -380,6 +397,19 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
 
                         }
                         break;
+                    case HOME_LOCATION:
+                        if(i+1<args.length) {
+                            i++;
+                            try {
+                                String[] vals = args[i].split(",");
+                                Location location = new Location(HOME_LOCATION, Double.parseDouble(vals[0]), Double.parseDouble(vals[1]));
+                                locations.put(HOME_LOCATION, location);
+                            } catch (Exception e) {
+                                System.err.println("Could not parse dependent's location '"
+                                        + args[i] + "' : " + e.getMessage());
+                            }
+                        }
+                        break;
                     default:
                         // ignore other options
                         break;
@@ -396,6 +426,10 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
 
     String logPrefix() {
         return prefix.toString();
+    }
+
+    void log(String msg) {
+        writer.println(logPrefix()+msg);
     }
 
     class DependentInfo {

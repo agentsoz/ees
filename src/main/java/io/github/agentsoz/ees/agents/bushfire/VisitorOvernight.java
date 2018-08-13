@@ -24,7 +24,10 @@ package io.github.agentsoz.ees.agents.bushfire;
 
 import io.github.agentsoz.jill.lang.AgentInfo;
 
-@AgentInfo(hasGoals={"io.github.agentsoz.abmjill.genact.EnvironmentAction"})
+@AgentInfo(hasGoals={
+        "io.github.agentsoz.abmjill.genact.EnvironmentAction",
+        "io.github.agentsoz.ees.agents.bushfire.GoalInitialResponse",
+        "io.github.agentsoz.ees.agents.bushfire.GoalActNow"})
 public class VisitorOvernight extends BushfireAgent {
 
     private Prefix prefix = new VisitorOvernight.Prefix();
@@ -34,8 +37,13 @@ public class VisitorOvernight extends BushfireAgent {
     }
 
     @Override
+    public double getProbHomeAfterDependents() {
+        return 0;
+    }
+
+    @Override
     void triggerResponse(MemoryEventValue breach) {
-        writer.println(logPrefix() + "triggerResponse("+breach+") not implemented yet");
+        log("triggerResponse("+breach+") not implemented yet");
     }
 
     class Prefix{

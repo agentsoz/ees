@@ -37,8 +37,6 @@ import java.util.Map;
 
 public class PlanDoNothing extends Plan {
 
-	private PrintStream writer = null;
-
 	public PlanDoNothing(Agent agent, Goal goal, String name) {
 		super(agent, goal, name);
 		body = steps;
@@ -51,7 +49,7 @@ public class PlanDoNothing extends Plan {
 	PlanStep[] steps = {
 			new PlanStep() {
 				public void step() {
-					// All done, plan was to do nothing at all
+					((BushfireAgent)getAgent()).log("defaulted to doing nothing in response to " + getGoal());
 				}
 			},
 	};

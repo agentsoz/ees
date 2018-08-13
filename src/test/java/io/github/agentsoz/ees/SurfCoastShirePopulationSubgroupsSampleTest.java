@@ -34,7 +34,9 @@ public class SurfCoastShirePopulationSubgroupsSampleTest {
                 "--seed", "12345",
                 "--safeline-output-file-pattern", utils.getOutputDirectory()+"../safeline.%d%.out",
                 "--matsim-output-directory", utils.getOutputDirectory(),
-                "--jillconfig", "--config={" +
+                "--jillconfig",
+                "--plan-selection-policy=FIRST=" + // to allow fallback to last option PlanDoNothing
+                "--config={" +
                 "agents:[],"+ // must be this string; will be replaced based on MATSim plans file
                 "logLevel: WARN," +
                 "logFile: \""+utils.getOutputDirectory()+"../jill.log\"," +

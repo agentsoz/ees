@@ -24,7 +24,10 @@ package io.github.agentsoz.ees.agents.bushfire;
 
 import io.github.agentsoz.jill.lang.AgentInfo;
 
-@AgentInfo(hasGoals={"io.github.agentsoz.abmjill.genact.EnvironmentAction"})
+@AgentInfo(hasGoals={
+        "io.github.agentsoz.abmjill.genact.EnvironmentAction",
+        "io.github.agentsoz.ees.agents.bushfire.GoalInitialResponse",
+        "io.github.agentsoz.ees.agents.bushfire.GoalActNow"})
 public class Resident extends BushfireAgent {
 
     private Prefix prefix = new Resident.Prefix();
@@ -34,8 +37,20 @@ public class Resident extends BushfireAgent {
     }
 
     @Override
+    public double getProbHomeAfterDependents() {
+        return 0.5;
+    }
+
+    @Override
     void triggerResponse(MemoryEventValue breach) {
-        writer.println(logPrefix() + "triggerResponse("+breach+") not implemented yet");
+        if (breach == MemoryEventValue.INITIAL_RESPONSE_THRESHOLD_BREACHED) {
+            log("triggered initial response");
+            memorise(MemoryEventType.DECIDED.name(), MemoryEventValue.TRIGGER_INITIAL_RESPONSE_NOW.name());
+            post(new GoalInitialResponse("InitialResponse"));
+        } else {
+            memorise(MemoryEventType.DECIDED.name(), MemoryEventValue.TRIGGER_FINAL_RESPONSE_NOW.name());
+            log("triggerResponse("+breach+") not implemented yet");
+        }
     }
 
     class Prefix{
