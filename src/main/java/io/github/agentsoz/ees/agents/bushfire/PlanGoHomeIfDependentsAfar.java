@@ -11,6 +11,7 @@ import io.github.agentsoz.util.Location;
 import io.github.agentsoz.util.evac.ActionList;
 import io.github.agentsoz.util.evac.PerceptList;
 
+import java.util.Arrays;
 import java.util.Map;
 
 /*
@@ -51,40 +52,38 @@ public class PlanGoHomeIfDependentsAfar extends Plan {
 	 * @return
      */
 	public boolean context() {
-
-		if (agent.getDependentInfo() == null) {
-			return false;
+		boolean applicable = false;
+		if (agent.getDependentInfo() != null) {
+			Location homeLocation = agent.getLocations().get(agent.HOME_LOCATION);
+			Location dependentsLocation = agent.getDependentInfo().getLocation();
+			if (!(homeLocation == null || dependentsLocation == null)) {
+				double distanceToHome = (double) agent.getQueryPerceptInterface().queryPercept(
+						String.valueOf(agent.getId()),
+						PerceptList.REQUEST_DRIVING_DISTANCE_TO,
+						homeLocation.getCoordinates());
+				double distanceToDependents = (double) agent.getQueryPerceptInterface().queryPercept(
+						String.valueOf(agent.getId()),
+						PerceptList.REQUEST_DRIVING_DISTANCE_TO,
+						dependentsLocation.getCoordinates());
+				applicable = (distanceToDependents >= distanceToHome);
+			}
 		}
-
-		Location homeLocation = agent.getLocations().get(agent.HOME_LOCATION);
-		Location dependentsLocation = agent.getDependentInfo().getLocation();
-		if (homeLocation == null || dependentsLocation == null) {
-			return false;
-		}
-
-		double distanceToHome = (double)agent.getQueryPerceptInterface().queryPercept(
-				String.valueOf(agent.getId()),
-				PerceptList.REQUEST_DRIVING_DISTANCE_TO,
-				homeLocation.getCoordinates());
-		double distanceToDependents = (double)agent.getQueryPerceptInterface().queryPercept(
-				String.valueOf(agent.getId()),
-				PerceptList.REQUEST_DRIVING_DISTANCE_TO,
-				dependentsLocation.getCoordinates());
-		return (distanceToDependents >= distanceToHome);
+		agent.memorise(BushfireAgent.MemoryEventType.DECIDED.name(), BushfireAgent.MemoryEventValue.IS_PLAN_APPLICABLE.name()
+				+ ":" + this.getClass().getSimpleName() + "=" + applicable);
+		return applicable;
 	}
 
 	PlanStep[] steps = {
 			// 1. Go home (will visit dependents later)
 			new PlanStep() {
 				public void step() {
-					agent.log("will now go home and visit dependents later");
 					agent.memorise(BushfireAgent.MemoryEventType.DECIDED.name(), BushfireAgent.MemoryEventValue.GO_HOME_NOW.name());
-
 					Object[] params = new Object[4];
 					params[0] = ActionList.DRIVETO;
 					params[1] = agent.getLocations().get(agent.HOME_LOCATION).getCoordinates();
 					params[2] = agent.getTime() + 5.0; // five secs from now;
 					params[3] = MATSimModel.EvacRoutingMode.carFreespeed;
+					agent.memorise(BushfireAgent.MemoryEventType.ACTIONED.name(), ActionList.DRIVETO+"="+ agent.getLocations().get(agent.HOME_LOCATION));
 					post(new EnvironmentAction(Integer.toString(agent.getId()), ActionList.DRIVETO, params));
 				}
 			},
@@ -99,13 +98,14 @@ public class PlanGoHomeIfDependentsAfar extends Plan {
 			// 2. Arrived home, so go visits dependents now
 			new PlanStep() {
 				public void step() {
-					agent.log("arrived home and will go visit dependents now (**should spend some time here really first**)");
-					agent.memorise(BushfireAgent.MemoryEventType.DECIDED.name(), BushfireAgent.MemoryEventValue.VISIT_DEPENDENTS_NOW.name());
+					agent.memorise(BushfireAgent.MemoryEventType.BELIEVED.name(), BushfireAgent.MemoryEventValue.ARRIVED_HOME.name());
+					agent.memorise(BushfireAgent.MemoryEventType.DECIDED.name(), BushfireAgent.MemoryEventValue.GO_VISIT_DEPENDENTS_NOW.name());
 					Object[] params = new Object[4];
 					params[0] = ActionList.DRIVETO;
 					params[1] = agent.getDependentInfo().getLocation().getCoordinates();
 					params[2] = agent.getTime() + 5.0; // five secs from now;
 					params[3] = MATSimModel.EvacRoutingMode.carFreespeed;
+					agent.memorise(BushfireAgent.MemoryEventType.ACTIONED.name(), ActionList.DRIVETO+"="+agent.getDependentInfo().getLocation());
 					post(new EnvironmentAction(Integer.toString(agent.getId()), ActionList.DRIVETO, params));
 				}
 			},
@@ -120,8 +120,8 @@ public class PlanGoHomeIfDependentsAfar extends Plan {
 			// 3. Arrived at Dependents. Go home with some probability
 			new PlanStep() {
 				public void step() {
+					agent.memorise(BushfireAgent.MemoryEventType.BELIEVED.name(), BushfireAgent.MemoryEventValue.ARRIVED_AT_DEPENDENTS.name());
 					if (Global.getRandom().nextDouble() < agent.getProbHomeAfterDependents()) {
-						agent.log("arrived at dependents, will now go home (**should spend some time here really first**)");
 						agent.memorise(BushfireAgent.MemoryEventType.DECIDED.name(), BushfireAgent.MemoryEventValue.GO_HOME_NOW.name());
 						goingHomeAfterVisitingDependents =true;
 						Object[] params = new Object[4];
@@ -129,9 +129,10 @@ public class PlanGoHomeIfDependentsAfar extends Plan {
 						params[1] = agent.getLocations().get(agent.HOME_LOCATION).getCoordinates();
 						params[2] = agent.getTime() + 5.0; // five secs from now;
 						params[3] = MATSimModel.EvacRoutingMode.carFreespeed;
+						agent.memorise(BushfireAgent.MemoryEventType.ACTIONED.name(), ActionList.DRIVETO+"="+agent.getLocations().get(agent.HOME_LOCATION));
 						post(new EnvironmentAction(Integer.toString(agent.getId()), ActionList.DRIVETO, params));
 					} else {
-						agent.log("arrived at dependents, and will wait here");
+						agent.memorise(BushfireAgent.MemoryEventType.DECIDED.name(), BushfireAgent.MemoryEventValue.DONE_FOR_NOW.name());
 					}
 				}
 			},
@@ -142,6 +143,13 @@ public class PlanGoHomeIfDependentsAfar extends Plan {
 						// Must suspend the agent when waiting for external stimuli
 						agent.suspend(true);
 						// All done, when we return from the above call
+					}
+				}
+			},
+			new PlanStep() {
+				public void step() {
+					if (goingHomeAfterVisitingDependents) {
+						agent.memorise(BushfireAgent.MemoryEventType.BELIEVED.name(), BushfireAgent.MemoryEventValue.ARRIVED_HOME.name());
 					}
 				}
 			},

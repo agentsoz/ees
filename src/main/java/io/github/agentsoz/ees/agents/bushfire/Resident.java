@@ -44,7 +44,6 @@ public class Resident extends BushfireAgent {
     @Override
     void triggerResponse(MemoryEventValue breach) {
         if (breach == MemoryEventValue.INITIAL_RESPONSE_THRESHOLD_BREACHED) {
-            log("triggered initial response");
             memorise(MemoryEventType.DECIDED.name(), MemoryEventValue.TRIGGER_INITIAL_RESPONSE_NOW.name());
             post(new GoalInitialResponse("InitialResponse"));
         } else {

@@ -43,13 +43,15 @@ public class PlanDoNothing extends Plan {
 	}
 
 	public boolean context() {
+		((BushfireAgent)getAgent()).memorise(BushfireAgent.MemoryEventType.DECIDED.name(), BushfireAgent.MemoryEventValue.IS_PLAN_APPLICABLE.name()
+				+ ":" + this.getClass().getSimpleName() + "=" + true);
 		return true;
 	}
 
 	PlanStep[] steps = {
 			new PlanStep() {
 				public void step() {
-					((BushfireAgent)getAgent()).log("defaulted to doing nothing in response to " + getGoal());
+					((BushfireAgent)getAgent()).memorise(BushfireAgent.MemoryEventType.DECIDED.name(), BushfireAgent.MemoryEventValue.DONE_FOR_NOW.name());
 				}
 			},
 	};

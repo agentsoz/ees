@@ -75,20 +75,25 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
     }
 
     enum MemoryEventType {
-        RESPONSE_BAROMETER_MESSAGES_CHANGED,
-        RESPONSE_BAROMETER_FIELD_OF_VIEW_CHANGED,
+        BELIEVED,
         PERCEIVED,
         DECIDED,
         ACTIONED
     }
 
     enum MemoryEventValue {
+        DONE_FOR_NOW,
+        IS_PLAN_APPLICABLE,
+        RESPONSE_BAROMETER_MESSAGES_CHANGED,
+        RESPONSE_BAROMETER_FIELD_OF_VIEW_CHANGED,
         INITIAL_RESPONSE_THRESHOLD_BREACHED,
         FINAL_RESPONSE_THRESHOLD_BREACHED,
         TRIGGER_INITIAL_RESPONSE_NOW,
         TRIGGER_FINAL_RESPONSE_NOW,
-        VISIT_DEPENDENTS_NOW,
-        GO_HOME_NOW
+        GO_VISIT_DEPENDENTS_NOW,
+        GO_HOME_NOW,
+        ARRIVED_HOME,
+        ARRIVED_AT_DEPENDENTS,
     }
 
     // Internal variables
@@ -149,20 +154,20 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
      */
     @Override
     public void finish() {
-        writer.println(logPrefix() + "is terminating");
-        try {
-            if (eval("memory.event = *")) {
-                Set<String> memories = new TreeSet<>();
-                for (Belief belief : getLastResults()) {
-                    memories.add(logPrefix() + "memory : " + Arrays.toString(belief.getTuple()));
-                }
-                for (String belief : memories) {
-                    writer.println(belief);
-                }
-            }
-        } catch (BeliefBaseException e) {
-            throw new RuntimeException(e);
-        }
+//        writer.println(logPrefix() + "is terminating");
+//        try {
+//            if (eval("memory.event = *")) {
+//                Set<String> memories = new TreeSet<>();
+//                for (Belief belief : getLastResults()) {
+//                    memories.add(logPrefix() + "memory : " + Arrays.toString(belief.getTuple()));
+//                }
+//                for (String belief : memories) {
+//                    writer.println(belief);
+//                }
+//            }
+//        } catch (BeliefBaseException e) {
+//            throw new RuntimeException(e);
+//        }
     }
 
         /**
@@ -181,7 +186,6 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
             return;
         }
 
-        writer.println(logPrefix() + "received percept " + perceptID +  ":" + parameters);
         // save it to memory
         memorise(MemoryEventType.PERCEIVED.name(), perceptID + ":" +parameters.toString());
 
@@ -228,6 +232,7 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
     void memorise(String event, String data) {
         try {
             addBelief(memory, Double.toString(time), event, data);
+            log("memory:" + String.format("%.0f", time) + ":" + event + ":" + data);
         } catch (BeliefBaseException e) {
             throw new RuntimeException(e);
         }
@@ -251,7 +256,7 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
         double value = ((FieldOfViewPercept) view).getValue();
         if (value > responseBarometerFieldOfView) {
             responseBarometerFieldOfView = value;
-            memorise(MemoryEventType.RESPONSE_BAROMETER_FIELD_OF_VIEW_CHANGED.name(), Double.toString(value));
+            memorise(MemoryEventType.BELIEVED.name(), MemoryEventValue.RESPONSE_BAROMETER_FIELD_OF_VIEW_CHANGED.name() + "=" + Double.toString(value));
         }
     }
 
@@ -267,7 +272,7 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
         double value = ((EmergencyMessage.EmergencyMessageType) msg).getValue();
         if (value > responseBarometerMessages) {
             responseBarometerMessages = value;
-            memorise(MemoryEventType.RESPONSE_BAROMETER_MESSAGES_CHANGED.name(), Double.toString(value));
+            memorise(MemoryEventType.BELIEVED.name(), MemoryEventValue.RESPONSE_BAROMETER_MESSAGES_CHANGED.name() + "=" + Double.toString(value));
         }
     }
 
