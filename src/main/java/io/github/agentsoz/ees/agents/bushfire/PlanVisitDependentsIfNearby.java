@@ -99,6 +99,8 @@ public class PlanVisitDependentsIfNearby extends Plan {
 			new PlanStep() {
 				public void step() {
 					agent.memorise(BushfireAgent.MemoryEventType.BELIEVED.name(), BushfireAgent.MemoryEventValue.ARRIVED_AT_DEPENDENTS.name());
+					agent.getDependentInfo().setLastVisitedAtTime(agent.getTime());
+					agent.memorise(BushfireAgent.MemoryEventType.BELIEVED.name(), BushfireAgent.MemoryEventValue.DEPENDENTS_INFO.name() + ":" + agent.getDependentInfo() );
 					if (Global.getRandom().nextDouble() < agent.getProbHomeAfterDependents()) {
 						agent.memorise(BushfireAgent.MemoryEventType.DECIDED.name(), BushfireAgent.MemoryEventValue.GO_HOME_NOW.name());
 						goingHomeAfterVisitingDependents =true;
