@@ -38,7 +38,11 @@ public class VisitorRegular extends BushfireAgent {
 
     @Override
     public double getProbHomeAfterDependents() {
-        return 0;
+        return 0; // FIXME: should be configurable
+    }
+    @Override
+    public double getProbHomeBeforeLeaving() {
+        return 0; // FIXME: should be configurable
     }
 
     @Override

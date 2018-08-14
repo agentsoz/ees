@@ -25,7 +25,10 @@ package io.github.agentsoz.ees.agents.bushfire;
 import io.github.agentsoz.jill.lang.Goal;
 import io.github.agentsoz.jill.lang.GoalInfo;
 
-@GoalInfo(hasPlans={"io.github.agentsoz.ees.agents.bushfire.PlanDoNothing"})
+@GoalInfo(hasPlans={
+        "io.github.agentsoz.ees.agents.bushfire.PlanGoHomeThenLeave",
+        "io.github.agentsoz.ees.agents.bushfire.PlanLeaveNow",
+        "io.github.agentsoz.ees.agents.bushfire.PlanDoNothing"})
 public class GoalActNow extends Goal {
     public GoalActNow(String name) {
         super(name);

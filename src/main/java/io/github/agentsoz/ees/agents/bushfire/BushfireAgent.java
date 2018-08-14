@@ -94,6 +94,7 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
         TRIGGER_FINAL_RESPONSE_NOW,
         GO_VISIT_DEPENDENTS_NOW,
         GO_HOME_NOW,
+        LEAVE_NOW,
         ARRIVED_HOME,
         ARRIVED_AT_DEPENDENTS,
     }
@@ -126,6 +127,7 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
     }
 
     public abstract double getProbHomeAfterDependents();
+    public abstract double getProbHomeBeforeLeaving();
 
 
     /**

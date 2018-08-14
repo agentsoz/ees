@@ -40,6 +40,10 @@ public class Resident extends BushfireAgent {
     public double getProbHomeAfterDependents() {
         return 0.5; // FIXME: should be configurable
     }
+    @Override
+    public double getProbHomeBeforeLeaving() {
+        return 0.5; // FIXME: should be configurable
+    }
 
     @Override
     void triggerResponse(MemoryEventValue breach) {
