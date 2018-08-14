@@ -82,6 +82,7 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
     }
 
     enum MemoryEventValue {
+        DEPENDENTS_INFO,
         DONE_FOR_NOW,
         IS_PLAN_APPLICABLE,
         RESPONSE_BAROMETER_MESSAGES_CHANGED,
@@ -144,6 +145,10 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
         try {
             // Attach this belief set to this agent
             this.createBeliefSet(memory, fields);
+
+            memorise(BushfireAgent.MemoryEventType.BELIEVED.name(),
+                    MemoryEventValue.DEPENDENTS_INFO.name() + ":" + getDependentInfo() );
+
         } catch (BeliefBaseException e) {
             throw new RuntimeException(e);
         }
@@ -210,7 +215,7 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
         try {
             if (!eval("memory.value = " + MemoryEventValue.INITIAL_RESPONSE_THRESHOLD_BREACHED.name())) {
                 // initial response threshold not breached yet
-                if (getResponseBarometer() >= initialResponseThreshold) {
+                if (isInitialResponseThresholdBreached()) {
                     // initial response threshold breached for the first time
                     memorise(MemoryEventType.DECIDED.name(), MemoryEventValue.INITIAL_RESPONSE_THRESHOLD_BREACHED.name());
                     triggerResponse(MemoryEventValue.INITIAL_RESPONSE_THRESHOLD_BREACHED);
@@ -218,7 +223,7 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
             }
             if (!eval("memory.value = " + MemoryEventValue.FINAL_RESPONSE_THRESHOLD_BREACHED.name())) {
                 // final response threshold not breached yet
-                if (getResponseBarometer() >= finalResponseThreshold) {
+                if (isFinalResponseThresholdBreached()) {
                     // final response threshold breached for the first time
                     memorise(MemoryEventType.DECIDED.name(), MemoryEventValue.FINAL_RESPONSE_THRESHOLD_BREACHED.name());
                     triggerResponse(MemoryEventValue.FINAL_RESPONSE_THRESHOLD_BREACHED);
@@ -227,6 +232,14 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
         } catch (BeliefBaseException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    boolean isInitialResponseThresholdBreached() {
+        return (getResponseBarometer() >= initialResponseThreshold);
+    }
+
+    boolean isFinalResponseThresholdBreached() {
+        return (getResponseBarometer() >= finalResponseThreshold);
     }
 
     void memorise(String event, String data) {
@@ -459,6 +472,13 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
 
         public boolean isVisited() {
             return getLastVisitedAtTime()==-1;
+        }
+
+        @Override
+        public String toString() {
+            String s = (location==null) ? "null" : location.toString();
+            s += ", last visited at time="+ lastVisitedAtTime;
+            return s;
         }
     }
 }

@@ -28,6 +28,7 @@ import io.github.agentsoz.jill.lang.GoalInfo;
 @GoalInfo(hasPlans={
         "io.github.agentsoz.ees.agents.bushfire.PlanVisitDependentsIfNearby",
         "io.github.agentsoz.ees.agents.bushfire.PlanGoHomeIfDependentsAfar",
+        "io.github.agentsoz.ees.agents.bushfire.PlanInitialResponseWithoutDependents",
         "io.github.agentsoz.ees.agents.bushfire.PlanDoNothing"})
 public class GoalInitialResponse extends Goal {
     public GoalInitialResponse(String name) {

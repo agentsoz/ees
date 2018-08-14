@@ -53,7 +53,7 @@ public class PlanGoHomeIfDependentsAfar extends Plan {
      */
 	public boolean context() {
 		boolean applicable = false;
-		if (agent.getDependentInfo() != null) {
+		if (agent.isInitialResponseThresholdBreached() && agent.getDependentInfo() != null) {
 			Location homeLocation = agent.getLocations().get(agent.HOME_LOCATION);
 			Location dependentsLocation = agent.getDependentInfo().getLocation();
 			if (!(homeLocation == null || dependentsLocation == null)) {
