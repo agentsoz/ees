@@ -69,7 +69,7 @@ public class PlanVisitDependentsIfNearby extends Plan {
 			}
 		}
 		agent.memorise(BushfireAgent.MemoryEventType.DECIDED.name(), BushfireAgent.MemoryEventValue.IS_PLAN_APPLICABLE.name()
-				+ ":" + this.getClass().getSimpleName() + "=" + applicable);
+				+ ":" + getGoal() + "|" + this.getClass().getSimpleName() + "=" + applicable);
 		return applicable;
 	}
 

@@ -44,7 +44,7 @@ public class PlanDoNothing extends Plan {
 
 	public boolean context() {
 		((BushfireAgent)getAgent()).memorise(BushfireAgent.MemoryEventType.DECIDED.name(), BushfireAgent.MemoryEventValue.IS_PLAN_APPLICABLE.name()
-				+ ":" + this.getClass().getSimpleName() + "=" + true);
+				+ ":" + getGoal() + "|" + this.getClass().getSimpleName() + "=" + true);
 		return true;
 	}
 

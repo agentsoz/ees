@@ -46,7 +46,7 @@ public class PlanInitialResponseWithoutDependents extends Plan {
 		boolean applicable = (agent.isInitialResponseThresholdBreached() && agent.getDependentInfo() == null)
 				? true : false;
 		agent.memorise(BushfireAgent.MemoryEventType.DECIDED.name(), BushfireAgent.MemoryEventValue.IS_PLAN_APPLICABLE.name()
-				+ ":" + this.getClass().getSimpleName() + "=" + applicable);
+				+ ":" + getGoal() + "|" + this.getClass().getSimpleName() + "=" + applicable);
 		return applicable;
 	}
 

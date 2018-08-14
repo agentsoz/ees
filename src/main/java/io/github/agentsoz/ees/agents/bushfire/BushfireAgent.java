@@ -89,6 +89,7 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
         RESPONSE_BAROMETER_FIELD_OF_VIEW_CHANGED,
         INITIAL_RESPONSE_THRESHOLD_BREACHED,
         FINAL_RESPONSE_THRESHOLD_BREACHED,
+        INITIAL_AND_FINAL_RESPONSE_THRESHOLDS_BREACHED_TOGETHER,
         TRIGGER_INITIAL_RESPONSE_NOW,
         TRIGGER_FINAL_RESPONSE_NOW,
         GO_VISIT_DEPENDENTS_NOW,
@@ -213,12 +214,14 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
 
     protected void checkBarometersAndTriggerResponseAsNeeded() {
         try {
+            // Nothing to do if already triggered responses once
+            MemoryEventValue breach = null;
             if (!eval("memory.value = " + MemoryEventValue.INITIAL_RESPONSE_THRESHOLD_BREACHED.name())) {
                 // initial response threshold not breached yet
                 if (isInitialResponseThresholdBreached()) {
                     // initial response threshold breached for the first time
                     memorise(MemoryEventType.DECIDED.name(), MemoryEventValue.INITIAL_RESPONSE_THRESHOLD_BREACHED.name());
-                    triggerResponse(MemoryEventValue.INITIAL_RESPONSE_THRESHOLD_BREACHED);
+                    breach= MemoryEventValue.INITIAL_RESPONSE_THRESHOLD_BREACHED;
                 }
             }
             if (!eval("memory.value = " + MemoryEventValue.FINAL_RESPONSE_THRESHOLD_BREACHED.name())) {
@@ -226,9 +229,19 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
                 if (isFinalResponseThresholdBreached()) {
                     // final response threshold breached for the first time
                     memorise(MemoryEventType.DECIDED.name(), MemoryEventValue.FINAL_RESPONSE_THRESHOLD_BREACHED.name());
-                    triggerResponse(MemoryEventValue.FINAL_RESPONSE_THRESHOLD_BREACHED);
+                    if (breach==null) {
+                        breach = MemoryEventValue.FINAL_RESPONSE_THRESHOLD_BREACHED;
+                    } else {
+                        // both thresholds breached together
+                        memorise(MemoryEventType.DECIDED.name(), MemoryEventValue.INITIAL_AND_FINAL_RESPONSE_THRESHOLDS_BREACHED_TOGETHER.name());
+                        breach = MemoryEventValue.INITIAL_AND_FINAL_RESPONSE_THRESHOLDS_BREACHED_TOGETHER;
+                    }
                 }
             }
+            if (breach != null) {
+                triggerResponse(breach);
+            }
+
         } catch (BeliefBaseException e) {
             throw new RuntimeException(e);
         }
