@@ -108,8 +108,8 @@
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.Resident</attribute>
       <attribute name="hasDependentsAtLocation" class="java.lang.String" ></attribute>
-      <attribute name="InitialResponseThreshold" class="java.lang.Double" >1.1<!--incorrect intentionally; should be treated as 1.0--></attribute>
-      <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.9<!--lower than above intentionally; should be treated as equal to above, therefore 1.0--></attribute>
+      <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.4</attribute>
+      <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.3<!--lower than above intentionally; should be treated as equal to above, therefore 1.0--></attribute>
     </attributes>
     <plan selected="yes">
       <activity type="home" x="759084.76095" y="5730972.71061" end_time="10:10:00" />
