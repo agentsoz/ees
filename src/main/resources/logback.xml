@@ -12,23 +12,6 @@
 	</appender>
 
 
-	<appender name="STDERR" class="ch.qos.logback.core.ConsoleAppender">
-		<param name="target" value="System.err" />
-		<layout class="ch.qos.logback.classic.PatternLayout">
-			<Pattern>
-				%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %class{0}.%M\(%line\) - %msg%n
-			</Pattern>
-		</layout>
-		<!-- deny all events with a level below xxx -->
-		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-			<level>WARN</level>
-		</filter>
-	</appender>
-
-<!-- 	<logger name="com.mkyong.web" level="debug" additivity="false">
-		<appender-ref ref="STDOUT" />
-	</logger>
- -->
 	<root level="info">
 		<appender-ref ref="STDOUT" />
 		<appender-ref ref="STDERR" />
