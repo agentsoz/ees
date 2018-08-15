@@ -566,13 +566,11 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 		// Normally only one polygon per time step.  Might want to test for this, and get rid of multi-polygon code
 		// below.  On other hand, probably does not matter much.  kai, dec'17
 
-		log.warn("receiving fire data at time={}", now/3600. ) ;
-
 		CoordinateTransformation transform = TransformationFactory.getCoordinateTransformation(
 				TransformationFactory.WGS84, scenario.getConfig().global().getCoordinateSystem());
 
 		final String json = new Gson().toJson(data);
-		log.debug(json);
+		log.info(json);
 
 		//			GeoJSONReader reader = new GeoJSONReader();
 		//			Geometry geometry = reader.read(json);

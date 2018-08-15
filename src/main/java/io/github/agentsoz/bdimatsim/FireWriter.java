@@ -44,7 +44,7 @@ class FireWriter {
 	void write(double now, Geometry fire) {
 		if (fireWriter == null) {
 			final String filename = config.controler().getOutputDirectory() + "/output_fireCoords.txt.gz";
-			log.warn("writing fire data to " + filename);
+			log.info("writing fire data to " + filename);
 			fireWriter = IOUtils.getPrintStream(filename);
 			fireWriter.println("time\tx\ty");
 		}
