@@ -58,7 +58,7 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
     private double responseBarometerMessages = 0.0;
     private double responseBarometerFieldOfView = 0.0;
 
-    private enum FieldOfViewPercept {
+    private enum FieldOfViewPercept { // FIXME: move to config
         SMOKE_VISUAL(0.3),
         FIRE_VISUAL(0.4),
         NEIGHBOURS_LEAVING(0.5);
@@ -126,8 +126,12 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
         return responseBarometerMessages + responseBarometerFieldOfView;
     }
 
-    public abstract double getProbHomeAfterDependents();
-    public abstract double getProbHomeBeforeLeaving();
+    double getProbHomeAfterDependents() {
+        return 0.5; // FIXME: should be configurable
+    }
+    double getProbHomeBeforeLeaving() {
+        return 0.5; // FIXME: should be configurable
+    }
 
 
     /**
@@ -270,7 +274,24 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
      * Called after a new percept has been processed
      * @param breach
      */
-    abstract void triggerResponse(MemoryEventValue breach);
+    private void triggerResponse(MemoryEventValue breach) {
+        if (breach == MemoryEventValue.INITIAL_AND_FINAL_RESPONSE_THRESHOLDS_BREACHED_TOGETHER) {
+            memorise(MemoryEventType.DECIDED.name(), MemoryEventValue.TRIGGER_INITIAL_RESPONSE_NOW.name());
+            memorise(MemoryEventType.DECIDED.name(), MemoryEventValue.TRIGGER_FINAL_RESPONSE_NOW.name());
+            // CAREFUL: Must use LIFO when pushing multiple goals that should be executed sequentially
+            // onto the Jill stack
+            post(new GoalActNow("ActNow")); // 1. will execute second
+            post(new GoalInitialResponse("InitialResponse")); // 2. will execute first
+
+        } else if (breach == MemoryEventValue.INITIAL_RESPONSE_THRESHOLD_BREACHED) {
+            memorise(MemoryEventType.DECIDED.name(), MemoryEventValue.TRIGGER_INITIAL_RESPONSE_NOW.name());
+            post(new GoalInitialResponse("InitialResponse"));
+
+        } else if (breach == MemoryEventValue.FINAL_RESPONSE_THRESHOLD_BREACHED) {
+            memorise(MemoryEventType.DECIDED.name(), MemoryEventValue.TRIGGER_FINAL_RESPONSE_NOW.name());
+            post(new GoalActNow("ActNow"));
+        }
+    }
 
     /**
      * Overwrites {@link #responseBarometerFieldOfView} with the value of the incoming visual
@@ -298,10 +319,11 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
             return;
         }
         double value = ((EmergencyMessage.EmergencyMessageType) msg).getValue();
-        if (value > responseBarometerMessages) {
+        // Allow the barometer to go down as well if the intensity of the situation (message) is reduced
+        //if (value > responseBarometerMessages) {
             responseBarometerMessages = value;
             memorise(MemoryEventType.BELIEVED.name(), MemoryEventValue.RESPONSE_BAROMETER_MESSAGES_CHANGED.name() + "=" + Double.toString(value));
-        }
+        //}
     }
 
     /**

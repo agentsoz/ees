@@ -36,35 +36,6 @@ public class Resident extends BushfireAgent {
         super(id);
     }
 
-    @Override
-    public double getProbHomeAfterDependents() {
-        return 0.5; // FIXME: should be configurable
-    }
-    @Override
-    public double getProbHomeBeforeLeaving() {
-        return 0.5; // FIXME: should be configurable
-    }
-
-    @Override
-    void triggerResponse(MemoryEventValue breach) {
-        if (breach == MemoryEventValue.INITIAL_AND_FINAL_RESPONSE_THRESHOLDS_BREACHED_TOGETHER) {
-            memorise(MemoryEventType.DECIDED.name(), MemoryEventValue.TRIGGER_INITIAL_RESPONSE_NOW.name());
-            memorise(MemoryEventType.DECIDED.name(), MemoryEventValue.TRIGGER_FINAL_RESPONSE_NOW.name());
-            // CAREFUL: Must use LIFO when pushing multiple goals that should be executed sequentially
-            // onto the Jill stack
-            post(new GoalActNow("ActNow")); // 1. will execute second
-            post(new GoalInitialResponse("InitialResponse")); // 2. will execute first
-
-        } else if (breach == MemoryEventValue.INITIAL_RESPONSE_THRESHOLD_BREACHED) {
-            memorise(MemoryEventType.DECIDED.name(), MemoryEventValue.TRIGGER_INITIAL_RESPONSE_NOW.name());
-            post(new GoalInitialResponse("InitialResponse"));
-
-        } else if (breach == MemoryEventValue.FINAL_RESPONSE_THRESHOLD_BREACHED) {
-            memorise(MemoryEventType.DECIDED.name(), MemoryEventValue.TRIGGER_FINAL_RESPONSE_NOW.name());
-            post(new GoalActNow("ActNow"));
-        }
-    }
-
     class Prefix{
         public String toString() {
             return String.format("Time %05.0f Resident %-9s : ", getTime(), getId());
