@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--===========================================================================
+  #%L
+  BDI-ABM Integration Package
+  %%
+  Copyright (C) 2014 - 2016 by its authors. See AUTHORS file.
+  %%
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as
+  published by the Free Software Foundation, either version 3 of the
+  License, or (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Lesser Public License for more details.
+
+  You should have received a copy of the GNU General Lesser Public
+  License along with this program.  If not, see
+  <http://www.gnu.org/licenses/lgpl-3.0.html>.
+  #L%
+============================================================================-->
+
+<simulation
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="https://github.com/agentsoz/bdi-abm-integration"
+  xsi:schemaLocation="https://github.com/agentsoz/bdi-abm-integration ../../xsd/ees.xsd"
+  version="v2.0">
+
+<config>
+  <!-- random seed to be used for all models; set to -1 if not used -->
+  <opt id="randomSeed">12345"</opt>
+  <!-- coordinate reference system in EPSG format to be used for all models; see http://spatialreference.org -->
+  <opt id="crs">EPSG:4326</opt>
+  <!-- simulation start time in HH:MM format -->
+  <opt id="startHHMM">00:00</opt>
+</config>
+
+<models>
+
+  <model id="bdi">
+    <opt id=""></opt>
+  </model>
+
+  <model id="matsim">
+    <!-- MATSim XML config XML file relative to examples/bushfire directory -->
+    <opt id="configXml">scenarios/surf-coast-shire/population-subgroups-sample/scenario_matsim_main.xml</opt>
+    <!-- Maximum distance at which the fire can be seen (in metres)-->
+    <opt id="maxDistanceForFireVisual">1000</opt>
+    <!-- Maximum distance at which smoke can be seen (in metres)-->
+    <opt id="maxDistanceForSmokeVisual">5000</opt>
+    <!-- Fire avoidance buffer used for planning routes for regular vehicles (in metres)-->
+    <opt id="fireAvoidanceBufferForVehicles">5000</opt>
+    <!-- Fire avoidance buffer used for planning routes for emergency vehicles (in metres)-->
+    <opt id="fireAvoidanceBufferForEmergencyVehicles">1000</opt>
+  </model>
+
+  <model id="phoenix">
+    <!-- Phoenix fire GeoJSON file -->
+    <opt id="fireGeoJson"></opt>
+    <!-- Phoenix smoke (embers) GeoJSON file -->
+    <opt id="smokeGeoJson"></opt>
+  </model>
+
+  <model id="disruption">
+    <!-- Disruptions JSON file relative to examples/bushfire directory -->
+    <opt id="configJson"></opt>
+  </model>
+
+  <model id="messaging">
+    <!-- Messaging JSON file  -->
+    <opt id="configJson"></opt>
+    <!-- Zones GeoJSON file mapping zone IDs to polygon shapes -->
+    <opt id="zonesGeoJson"></opt>
+  </model>
+</models>
+
+</simulation>
