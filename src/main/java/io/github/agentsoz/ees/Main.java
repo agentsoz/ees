@@ -273,6 +273,8 @@ public class Main {
 	private JillBDIModel initialiseAndStartJillModel(DataServer dataServer, MATSimModel matsimModel, List<String> bdiAgentIDs, Map<String, List<String[]>> bdiMap) {
 		// Create the Jill BDI model
 		JillBDIModel jillmodel = new JillBDIModel(jillInitArgs);
+		// Set the evacuation timing
+		jillmodel.setEvacuationTiming(SimpleConfig.getEvacStartHHMM(), SimpleConfig.getEvacPeakMins());
 		// Set the query percept interface to use
 		jillmodel.setQueryPerceptInterface((QueryPerceptInterface) matsimModel);
 		// register the server to use for transferring data between models

@@ -59,7 +59,10 @@ public class JillBDIModel extends JillModel implements DataClient {
 	
 	// Map<Time,Agent> of scheduled fire alerts 
 	private PriorityQueue<TimedAlert> alerts;
-	
+
+	private int evacPeak = 0;
+	private int[] evacStartHHMM = {0,0};
+
 	public JillBDIModel(String[] initArgs) {
 		mapMATsimToJillIds = new LinkedHashMap<String,String>();
 		mapJillToMATsimIds = new LinkedHashMap<String,String>();
@@ -121,14 +124,18 @@ public class JillBDIModel extends JillModel implements DataClient {
 		return false;
 	}
 
+	public void setEvacuationTiming(int[] hhmm, int peak) {
+		evacStartHHMM = hhmm;
+		evacPeak = peak;
+	}
 
 	@Override
 	// send percepts to individual agents
 	public void takeControl(AgentDataContainer adc) {
 		// Schedul the fire alerts
 		if (!fireAlertsScheduled && fireAlertTime != -1) {
-			int[] hhmm = SimpleConfig.getEvacStartHHMM();
-			int peak = SimpleConfig.getEvacPeakMins();
+			int[] hhmm = evacStartHHMM;
+			int peak = evacPeak;
 			logger.info(String.format("Scheduling evacuation starting at %2d:%2d and peaking %d mins after start", hhmm[0], hhmm[1], peak));
 			scheduleFireAlertsToResidents(hhmm, peak);
 			fireAlertsScheduled = true;
