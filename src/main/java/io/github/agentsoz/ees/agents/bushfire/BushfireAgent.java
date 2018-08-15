@@ -58,7 +58,7 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
     private double responseBarometerMessages = 0.0;
     private double responseBarometerFieldOfView = 0.0;
 
-    private enum FieldOfViewPercept {
+    private enum FieldOfViewPercept { // FIXME: move to config
         SMOKE_VISUAL(0.3),
         FIRE_VISUAL(0.4),
         NEIGHBOURS_LEAVING(0.5);
@@ -298,10 +298,11 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
             return;
         }
         double value = ((EmergencyMessage.EmergencyMessageType) msg).getValue();
-        if (value > responseBarometerMessages) {
+        // Allow the barometer to go down as well if the intensity of the situation (message) is reduced
+        //if (value > responseBarometerMessages) {
             responseBarometerMessages = value;
             memorise(MemoryEventType.BELIEVED.name(), MemoryEventValue.RESPONSE_BAROMETER_MESSAGES_CHANGED.name() + "=" + Double.toString(value));
-        }
+        //}
     }
 
     /**
