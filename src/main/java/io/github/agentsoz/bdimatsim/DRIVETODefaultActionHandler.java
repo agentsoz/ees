@@ -25,8 +25,6 @@ package io.github.agentsoz.bdimatsim;
 import io.github.agentsoz.bdiabm.data.ActionContainer;
 import io.github.agentsoz.util.evac.ActionList;
 import io.github.agentsoz.util.evac.PerceptList;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 import org.matsim.api.core.v01.Coord;
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.network.Link;
@@ -44,9 +42,11 @@ import io.github.agentsoz.bdimatsim.EventsMonitorRegistry.MonitoredEventType;
 import io.github.agentsoz.nonmatsim.BDIActionHandler;
 import io.github.agentsoz.nonmatsim.BDIPerceptHandler;
 import io.github.agentsoz.nonmatsim.PAAgent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class DRIVETODefaultActionHandler implements BDIActionHandler {
-	private static final Logger log = Logger.getLogger( DRIVETODefaultActionHandler.class ) ;
+	private static final Logger log = LoggerFactory.getLogger(DRIVETODefaultActionHandler.class ) ;
 	
 	private final MATSimModel model;
 	public DRIVETODefaultActionHandler(MATSimModel model ) {

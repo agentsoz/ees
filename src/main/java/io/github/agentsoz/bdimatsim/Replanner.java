@@ -24,8 +24,8 @@ import javax.inject.Inject;
  * #L%
  */
 
+import ch.qos.logback.classic.Logger;
 import io.github.agentsoz.bdimatsim.MATSimModel.EvacRoutingMode;
-import org.apache.log4j.Logger;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.network.Link;
 import org.matsim.api.core.v01.population.Leg;
@@ -48,6 +48,7 @@ import org.matsim.withinday.trafficmonitoring.WithinDayTravelTime;
 import org.matsim.withinday.utils.EditPlans;
 import org.matsim.withinday.utils.EditRoutes;
 import org.matsim.withinday.utils.EditTrips;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
@@ -55,7 +56,7 @@ public final class Replanner {
 	// note that this is no longer meant to be extended for customization.  The "action recipes" now go directly into the classes
 	// that implement BDIActionHandler.  kai, nov'17
 	
-	private static final Logger logger = Logger.getLogger(Replanner.class) ;
+	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(Replanner.class) ;
 	private final Map<String, TravelTime> travelTimes;
 	
 	private EditRoutes editRoutes;

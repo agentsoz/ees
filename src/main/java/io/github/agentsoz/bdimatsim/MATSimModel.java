@@ -86,7 +86,6 @@ import javax.inject.Singleton;
  */
 public final class MATSimModel implements ABMServerInterface, QueryPerceptInterface, DataClient {
 	private static final Logger log = LoggerFactory.getLogger(MATSimModel.class);
-	//private static final Logger log = Logger..getLogger(MATSimModel.class) ;
 	public static final String MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR = "--matsim-output-directory";
 	private final EvacConfig evacConfig;
 	private final FireWriter fireWriter;

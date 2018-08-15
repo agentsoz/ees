@@ -42,7 +42,6 @@ package io.github.agentsoz.bdimatsim;
  * #L%
  */
 
-import org.apache.log4j.Logger;
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.network.Link;
 import org.matsim.api.core.v01.network.Network;
@@ -66,11 +65,13 @@ import org.matsim.core.router.TripStructureUtils.Trip;
 import org.matsim.facilities.Facility;
 import org.matsim.vehicles.Vehicle;
 import org.matsim.withinday.utils.EditTrips;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 class EvacAgent implements MobsimDriverAgent, HasPerson, PlanAgent, HasModifiablePlan {
 
 	@SuppressWarnings("unused")
-	private static final Logger log = Logger.getLogger(EvacAgent.class);
+	private static final Logger log = LoggerFactory.getLogger(EvacAgent.class);
 
 	private final BasicPlanAgentImpl basicAgentDelegate ;
 	private final PlanBasedDriverAgentImpl driverAgentDelegate ;

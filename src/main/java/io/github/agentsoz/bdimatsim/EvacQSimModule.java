@@ -30,8 +30,6 @@ import java.util.Collection;
 
 import javax.inject.Inject;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.network.Link;
 import org.matsim.api.core.v01.population.Person;
@@ -52,13 +50,15 @@ import com.google.inject.Module;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import org.matsim.vehicles.Vehicle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author kainagel
  *
  */
 public class EvacQSimModule extends AbstractModule {
-	private static final Logger log = Logger.getLogger(EvacQSimModule.class) ;
+	private static final Logger log = LoggerFactory.getLogger(EvacQSimModule.class) ;
 	
 	@Inject Config config ;
 
