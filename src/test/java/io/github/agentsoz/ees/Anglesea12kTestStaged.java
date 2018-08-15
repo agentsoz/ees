@@ -1,12 +1,13 @@
 package io.github.agentsoz.ees;
 
 import io.github.agentsoz.bdimatsim.MATSimModel;
-import org.apache.log4j.Logger;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.matsim.core.utils.misc.CRCChecksum;
 import org.matsim.testcases.MatsimTestUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author dsingh
@@ -16,7 +17,7 @@ import org.matsim.testcases.MatsimTestUtils;
 public class Anglesea12kTestStaged {
     // have tests in separate classes so that they run, at least und    er maven, in separate JVMs.  kai, nov'17
 
-    Logger log = Logger.getLogger(Anglesea12kTestStaged.class);
+    private static final Logger log = LoggerFactory.getLogger(Anglesea12kTestStaged.class);
 
     @Rule
     public MatsimTestUtils utils = new MatsimTestUtils();

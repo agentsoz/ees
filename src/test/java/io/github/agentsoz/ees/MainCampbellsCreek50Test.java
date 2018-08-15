@@ -3,7 +3,6 @@
  */
 package io.github.agentsoz.ees;
 
-import org.apache.log4j.Logger;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
@@ -11,6 +10,8 @@ import org.matsim.core.utils.misc.CRCChecksum;
 import org.matsim.testcases.MatsimTestUtils;
 
 import io.github.agentsoz.util.TestUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author dsingh
@@ -19,8 +20,8 @@ import io.github.agentsoz.util.TestUtils;
 @Ignore // Should remove this altogether, not added any value to existing tests [DS Aug/18]
 public class MainCampbellsCreek50Test {
 	// have tests in separate classes so that they run, at least under maven, in separate JVMs.  kai, nov'17
-	
-	Logger log = Logger.getLogger( MainCampbellsCreek50Test.class ) ;
+
+	private static final Logger log = LoggerFactory.getLogger(MainCampbellsCreek50Test.class ) ;
 
 	@Rule public MatsimTestUtils utils = new MatsimTestUtils() ;
 
