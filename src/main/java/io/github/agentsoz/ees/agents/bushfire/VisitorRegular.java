@@ -36,20 +36,6 @@ public class VisitorRegular extends BushfireAgent {
         super(id);
     }
 
-    @Override
-    public double getProbHomeAfterDependents() {
-        return 0; // FIXME: should be configurable
-    }
-    @Override
-    public double getProbHomeBeforeLeaving() {
-        return 0; // FIXME: should be configurable
-    }
-
-    @Override
-    void triggerResponse(MemoryEventValue breach) {
-        log("triggerResponse("+breach+") not implemented yet");
-    }
-
     class Prefix{
         public String toString() {
             return String.format("Time %05.0f VisitorRegular %-3s : ", getTime(), getId());
