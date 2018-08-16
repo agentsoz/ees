@@ -102,13 +102,13 @@ public class MainNew {
         {
             Map<String, List<String[]>> bdiMap = null;
             bdiMap = Utils.getAgentsFromMATSimPlansFile(scenario);
-            removeNonBdiAgentsFrom(bdiMap);
+            JillBDIModel.removeNonBdiAgentsFrom(bdiMap);
             bdiAgentIDs = new ArrayList<>(bdiMap.keySet());
             if (bdiMap != null) {
                 for (int i = 0; jillInitArgs != null && i < jillInitArgs.length; i++) {
                     if ("--config".equals(jillInitArgs[i]) && i < (jillInitArgs.length-1)) {
                         String agentsArg = (!bdiMap.isEmpty()) ?
-                                buildJillAgentsArgsFromAgentMap(bdiMap) :
+                                JillBDIModel.buildJillAgentsArgsFromAgentMap(bdiMap) :
                                 "agents:[{classname:io.github.agentsoz.ees.agents.bushfire.BushfireAgent, args:null, count:0}]";
                         jillInitArgs[i + 1] = jillInitArgs[i + 1].replaceAll("agents:\\[]", agentsArg);
                     }
@@ -151,59 +151,6 @@ public class MainNew {
         log.info("Finishing");
     }
 
-    /**
-     * Returns something like:
-     * <pre>
-     * agents:[
-     *  {classname:io.github.agentsoz.ees.agents.Resident,
-     *   args:null,
-     *   count:10
-     *  },
-     *  {classname:io.github.agentsoz.ees.agents.Responder,
-     *   args:[--respondToUTM, \"Tarrengower Prison,237100,5903400\"],
-     *   count:3
-     *  }
-     * ]
-     * </pre>
-     *
-     * @param map
-     * @return
-     */
-    private String buildJillAgentsArgsFromAgentMap(Map<String, List<String[]>> map) {
-        if (map == null) {
-            return null;
-        }
-        // Count instances of each agent type
-        Map<String,Integer> counts = new TreeMap<>();
-        for (List<String[]> values: map.values()) {
-            for (String[] val : values) {
-                if (SimpleConfig.getBdiAgentTagInMATSimPopulationFile().equals(val[0])) {
-                    String type = val[1];
-                    int count = counts.containsKey(type) ? counts.get(type) : new Integer(0);
-                    counts.put(type, count + 1);
-                }
-            }
-
-        }
-
-        StringBuilder arg = new StringBuilder();
-        arg.append("agents:[");
-        if (map != null) {
-            Iterator<String> it = counts.keySet().iterator();
-            while(it.hasNext()) {
-                String key = it.next();
-                arg.append("{");
-                arg.append("classname:"); arg.append(key); arg.append(",");
-                arg.append("args:[],"); // empty class args; per-instance args done later
-                arg.append("count:"); arg.append(counts.get(key));
-                arg.append("}");
-                if (it.hasNext()) arg.append(",");
-            }
-        }
-        arg.append("]");
-        return arg.toString();
-    }
-
     private JillBDIModel initialiseAndStartJillModel(String[] jillInitArgs, DataServer dataServer, MATSimModel matsimModel, List<String> bdiAgentIDs, Map<String, List<String[]>> bdiMap) {
         // Create the Jill BDI model
         JillBDIModel jillmodel = new JillBDIModel(jillInitArgs);
@@ -218,45 +165,12 @@ public class MainNew {
                 null, // agentList is not used
                 matsimModel,
                 bdiAgentIDs.toArray( new String[bdiAgentIDs.size()] ));
-        Map<String,List<String>> args = new HashMap<>();
         if (bdiMap != null) {
-            for (String id : bdiMap.keySet()) {
-                List<String[]> values = bdiMap.get(id);
-                List<String> flatlist = new ArrayList<>();
-                for (String[] arr : values) {
-                    for (String val : arr) {
-                        flatlist.add(val);
-                    }
-                }
-                args.put(id, flatlist);
-            }
+            Map<String, List<String>> args = JillBDIModel.getAgentArgsFromBDIMap(bdiMap, jillmodel);
             jillmodel.initialiseAgentsWithArgs(args);
         }
         jillmodel.start();
         return jillmodel;
-    }
-
-    /**
-     * Filter out all but the BDI agents
-     *
-     * @param map
-     */
-    private void removeNonBdiAgentsFrom(Map<String, List<String[]>> map) {
-        Iterator<Map.Entry<String, List<String[]>>> it = map.entrySet().iterator();
-        while(it.hasNext()) {
-            Map.Entry<String, List<String[]>> entry = it.next();
-            String id = entry.getKey();
-            boolean found = false;
-            for (String[] val : entry.getValue()) {
-                if (SimpleConfig.getBdiAgentTagInMATSimPopulationFile().equals(val[0])) {
-                    found = true;
-                    break;
-                }
-            }
-            if (!found) {
-                it.remove();
-            }
-        }
     }
 
     private static double hhMmToS(String HHMM) {
