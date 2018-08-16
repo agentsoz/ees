@@ -22,6 +22,7 @@ package io.github.agentsoz.ees;
  * #L%
  */
 
+import io.github.agentsoz.bdiabm.QueryPerceptInterface;
 import io.github.agentsoz.bdimatsim.EvacAgentTracker;
 import io.github.agentsoz.bdimatsim.EvacConfig;
 import io.github.agentsoz.bdimatsim.MATSimModel;
@@ -30,12 +31,14 @@ import io.github.agentsoz.dataInterface.DataServer;
 import io.github.agentsoz.util.Time;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.core.config.ConfigUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class MainNew {
+
+    private static final Logger log = LoggerFactory.getLogger(MainNew.class);
 
     public static void main(String[] args) {
         Config cfg = new Config();
@@ -47,58 +50,58 @@ public class MainNew {
     }
 
     private void start(Config cfg) {
-        // Create and initialise the data server used for passing
-        // several different types of data around the application
-        // using a publish/subscribe or pull mechanism
+        // initialise the data server bus for passing data around using a publish/subscribe or pull mechanism
         DataServer dataServer = DataServer.getServer("EES");
+        dataServer.setTime(hhMmToS(cfg.getGlobalConfig(Config.eGlobalStartHhMm)));
 
         // initialise the fire model and register it as an active data source
         {
+            log.info("Starting fire model");
             PhoenixFireModule model = new PhoenixFireModule(cfg.getModelConfig(Config.eModelFire), dataServer);
             model.setTimestepUnit(Time.TimestepUnit.SECONDS);
             model.start();
         }
         // initialise the disruptions model and register it as an active data source
         {
+            log.info("Starting disruptions model");
             DisruptionModel model = new DisruptionModel(cfg.getModelConfig(Config.eModelDisruption), dataServer);
             model.setTimestepUnit(Time.TimestepUnit.SECONDS);
             model.start();
         }
         // initialise the messaging model and register it as an active data source
         {
+            log.info("Starting messaging model");
             MessagingModel model = new MessagingModel(cfg.getModelConfig(Config.eModelMessaging), dataServer);
             model.setTimestepUnit(Time.TimestepUnit.SECONDS);
             model.start();
         }
         // initialise the MATSim model and register it as an active data source
-        {
-            MATSimModel model = new MATSimModel(cfg.getModelConfig(Config.eModelMatsim), dataServer);
-        }
-        /*
-
-        List<SafeLineMonitor> monitors = registerSafeLineMonitors(SimpleConfig.getSafeLines(), matsimModel);
-
-        // --- do some things for which you need access to the matsim config:
+        log.info("Starting MATSim model");
+        MATSimModel matsimModel = new MATSimModel(cfg.getModelConfig(Config.eModelMatsim), dataServer);
+        log.info("Loading MATSim config");
         org.matsim.core.config.Config config = matsimModel.loadAndPrepareConfig() ;
-        setSimStartTimesRelativeToAlert(dataServer, config, -10*60 );
         EvacConfig evacConfig = ConfigUtils.addOrGetModule(config, EvacConfig.class);
-        evacConfig.setSetup(setup);
-        evacConfig.setCongestionEvaluationInterval(SimpleConfig.getCongestionEvaluationInterval());
-        evacConfig.setCongestionToleranceThreshold(SimpleConfig.getCongestionToleranceThreshold());
-        evacConfig.setCongestionReactionProbability(SimpleConfig.getCongestionReactionProbability());
-
-        // --- do some things for which you need a handle to the matsim scenario:
+        evacConfig.setSetup(EvacConfig.Setup.standard);
+        evacConfig.setCongestionEvaluationInterval(matsimModel.getOptCongestionEvaluationInterval());
+        evacConfig.setCongestionToleranceThreshold(matsimModel.getOptCongestionToleranceThreshold());
+        evacConfig.setCongestionReactionProbability(matsimModel.getOptCongestionReactionProbability());
+        log.info("Loading MATSim scenario");
         Scenario scenario = matsimModel.loadAndPrepareScenario() ;
 
-        // --- initialize and start jill (need the bdiAgentIDs, for which we need the material from before)
+        //List<SafeLineMonitor> monitors = registerSafeLineMonitors(SimpleConfig.getSafeLines(), matsimModel);
+        // Write safe line statistics to file
+        //writeSafeLineMonitors(monitors, safelineOutputFilePattern);
+
+        // initialise the Jill model and register it as an active data source
+        // FIXME: move jill stuff to jill model
+        log.info("Starting Jill BDI model");
+        JillBDIModel jillmodel = null;
         List<String> bdiAgentIDs = null;
-        Map<String, List<String[]>> bdiMap = null;
-        if (!SimpleConfig.isLoadBDIAgentsFromMATSimPlansFile()) {
-            bdiAgentIDs = Utils.getBDIAgentIDs( scenario );
-        } else {
+        String[] jillInitArgs = cfg.getModelConfig(Config.eModelBdi).get("jillconfig").split("\\|");
+        {
+            Map<String, List<String[]>> bdiMap = null;
             bdiMap = Utils.getAgentsFromMATSimPlansFile(scenario);
             removeNonBdiAgentsFrom(bdiMap);
-
             bdiAgentIDs = new ArrayList<>(bdiMap.keySet());
             if (bdiMap != null) {
                 for (int i = 0; jillInitArgs != null && i < jillInitArgs.length; i++) {
@@ -110,10 +113,8 @@ public class MainNew {
                     }
                 }
             }
+            jillmodel = initialiseAndStartJillModel(jillInitArgs, dataServer, matsimModel, bdiAgentIDs, bdiMap);
         }
-        // --- initialize and start the Jill model
-        JillBDIModel jillmodel = initialiseAndStartJillModel(dataServer, matsimModel, bdiAgentIDs, bdiMap);
-
 
         // --- initialize and start matsim (maybe rename?):
         matsimModel.init(bdiAgentIDs);
@@ -138,8 +139,6 @@ public class MainNew {
             // firemodel is updated elsewhere
         }
 
-        // Write safe line statistics to file
-        writeSafeLineMonitors(monitors, safelineOutputFilePattern);
 
         // All done, so terminate now
         jillmodel.finish();
@@ -147,8 +146,125 @@ public class MainNew {
         //		System.exit(0);
         // get rid of System.exit(...) so that tests run through ...
         DataServer.cleanup() ;
-        */
 
+        log.info("Finishing");
     }
+
+    /**
+     * Returns something like:
+     * <pre>
+     * agents:[
+     *  {classname:io.github.agentsoz.ees.agents.Resident,
+     *   args:null,
+     *   count:10
+     *  },
+     *  {classname:io.github.agentsoz.ees.agents.Responder,
+     *   args:[--respondToUTM, \"Tarrengower Prison,237100,5903400\"],
+     *   count:3
+     *  }
+     * ]
+     * </pre>
+     *
+     * @param map
+     * @return
+     */
+    private String buildJillAgentsArgsFromAgentMap(Map<String, List<String[]>> map) {
+        if (map == null) {
+            return null;
+        }
+        // Count instances of each agent type
+        Map<String,Integer> counts = new TreeMap<>();
+        for (List<String[]> values: map.values()) {
+            for (String[] val : values) {
+                if (SimpleConfig.getBdiAgentTagInMATSimPopulationFile().equals(val[0])) {
+                    String type = val[1];
+                    int count = counts.containsKey(type) ? counts.get(type) : new Integer(0);
+                    counts.put(type, count + 1);
+                }
+            }
+
+        }
+
+        StringBuilder arg = new StringBuilder();
+        arg.append("agents:[");
+        if (map != null) {
+            Iterator<String> it = counts.keySet().iterator();
+            while(it.hasNext()) {
+                String key = it.next();
+                arg.append("{");
+                arg.append("classname:"); arg.append(key); arg.append(",");
+                arg.append("args:[],"); // empty class args; per-instance args done later
+                arg.append("count:"); arg.append(counts.get(key));
+                arg.append("}");
+                if (it.hasNext()) arg.append(",");
+            }
+        }
+        arg.append("]");
+        return arg.toString();
+    }
+
+    private JillBDIModel initialiseAndStartJillModel(String[] jillInitArgs, DataServer dataServer, MATSimModel matsimModel, List<String> bdiAgentIDs, Map<String, List<String[]>> bdiMap) {
+        // Create the Jill BDI model
+        JillBDIModel jillmodel = new JillBDIModel(jillInitArgs);
+        // Set the evacuation timing
+        jillmodel.setEvacuationTiming(SimpleConfig.getEvacStartHHMM(), SimpleConfig.getEvacPeakMins());
+        // Set the query percept interface to use
+        jillmodel.setQueryPerceptInterface((QueryPerceptInterface) matsimModel);
+        // register the server to use for transferring data between models
+        jillmodel.registerDataServer(dataServer);
+        // initialise and start
+        jillmodel.init(matsimModel.getAgentManager().getAgentDataContainer(),
+                null, // agentList is not used
+                matsimModel,
+                bdiAgentIDs.toArray( new String[bdiAgentIDs.size()] ));
+        Map<String,List<String>> args = new HashMap<>();
+        if (bdiMap != null) {
+            for (String id : bdiMap.keySet()) {
+                List<String[]> values = bdiMap.get(id);
+                List<String> flatlist = new ArrayList<>();
+                for (String[] arr : values) {
+                    for (String val : arr) {
+                        flatlist.add(val);
+                    }
+                }
+                args.put(id, flatlist);
+            }
+            jillmodel.initialiseAgentsWithArgs(args);
+        }
+        jillmodel.start();
+        return jillmodel;
+    }
+
+    /**
+     * Filter out all but the BDI agents
+     *
+     * @param map
+     */
+    private void removeNonBdiAgentsFrom(Map<String, List<String[]>> map) {
+        Iterator<Map.Entry<String, List<String[]>>> it = map.entrySet().iterator();
+        while(it.hasNext()) {
+            Map.Entry<String, List<String[]>> entry = it.next();
+            String id = entry.getKey();
+            boolean found = false;
+            for (String[] val : entry.getValue()) {
+                if (SimpleConfig.getBdiAgentTagInMATSimPopulationFile().equals(val[0])) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                it.remove();
+            }
+        }
+    }
+
+    private static double hhMmToS(String HHMM) {
+        String[] tokens = HHMM.split(":");
+        int[] hhmm = new int[]{Integer.parseInt(tokens[0]),Integer.parseInt(tokens[1])};
+        double secs = Time.convertTime(hhmm[0], Time.TimestepUnit.HOURS, Time.TimestepUnit.SECONDS)
+                + Time.convertTime(hhmm[1], Time.TimestepUnit.MINUTES, Time.TimestepUnit.SECONDS);
+        return secs;
+    }
+
 
 }

@@ -69,6 +69,7 @@ public class Config {
 	static final String eModelDisruption = "disruption";
 	static final String eModelMessaging = "messaging";
 	static final String eModelMatsim = "matsim";
+	static final String eModelBdi = "bdi";
 
 
 	private Map<String, String> config;
@@ -88,6 +89,10 @@ public class Config {
 		Map<String, String> map = new HashMap<>(config);
 		map.putAll(models.get(model));
 		return map;
+	}
+
+	public String getGlobalConfig(String opt) {
+		return config.get(opt);
 	}
 
 	/**
@@ -168,4 +173,5 @@ public class Config {
 			throw new RuntimeException(e) ;
 		}
 	}
+
 }
