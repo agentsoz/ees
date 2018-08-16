@@ -36,6 +36,11 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
+/**
+ * Emergency Evacuation Simulator (EES) main program.
+ * Uses input config v2. For legacy config use {@link Main}.
+ * @author Dhirendra Singh
+ */
 public class Run {
 
     private static final Logger log = LoggerFactory.getLogger(Run.class);
@@ -44,7 +49,6 @@ public class Run {
         Config cfg = new Config();
         Map<String,String> opts = cfg.parse(args);
         cfg.loadFromFile(opts.get(Config.OPT_CONFIG));
-
         Run sim = new Run();
         sim.start(cfg);
     }
@@ -80,42 +84,22 @@ public class Run {
         log.info("Starting MATSim model");
         MATSimModel matsimModel = new MATSimModel(cfg.getModelConfig(Config.eModelMatsim), dataServer);
         log.info("Loading MATSim config");
-        org.matsim.core.config.Config config = matsimModel.loadAndPrepareConfig() ;
-        EvacConfig evacConfig = ConfigUtils.addOrGetModule(config, EvacConfig.class);
-        evacConfig.setSetup(EvacConfig.Setup.standard);
-        evacConfig.setCongestionEvaluationInterval(matsimModel.getOptCongestionEvaluationInterval());
-        evacConfig.setCongestionToleranceThreshold(matsimModel.getOptCongestionToleranceThreshold());
-        evacConfig.setCongestionReactionProbability(matsimModel.getOptCongestionReactionProbability());
+        org.matsim.core.config.Config config = matsimModel.loadAndPrepareConfig();
+        EvacConfig evacConfig = initialiseMATSimEvacConfig(matsimModel, config);
         log.info("Loading MATSim scenario");
         Scenario scenario = matsimModel.loadAndPrepareScenario() ;
 
-        //List<SafeLineMonitor> monitors = registerSafeLineMonitors(SimpleConfig.getSafeLines(), matsimModel);
-        // Write safe line statistics to file
-        //writeSafeLineMonitors(monitors, safelineOutputFilePattern);
+        // get BDI agents map from the MATSim population file
+        log.info("Reading BDI agents from MATSim population file");
+        Map<String, List<String[]>> bdiMap = Utils.getAgentsFromMATSimPlansFile(scenario);
+        JillBDIModel.removeNonBdiAgentsFrom(bdiMap);
+        List<String> bdiAgentIDs = new ArrayList<>(bdiMap.keySet());
 
         // initialise the Jill model and register it as an active data source
-        // FIXME: move jill stuff to jill model
         log.info("Starting Jill BDI model");
-        JillBDIModel jillmodel = null;
-        List<String> bdiAgentIDs = null;
-        String[] jillInitArgs = cfg.getModelConfig(Config.eModelBdi).get("jillconfig").split("\\|");
-        {
-            Map<String, List<String[]>> bdiMap = null;
-            bdiMap = Utils.getAgentsFromMATSimPlansFile(scenario);
-            JillBDIModel.removeNonBdiAgentsFrom(bdiMap);
-            bdiAgentIDs = new ArrayList<>(bdiMap.keySet());
-            if (bdiMap != null) {
-                for (int i = 0; jillInitArgs != null && i < jillInitArgs.length; i++) {
-                    if ("--config".equals(jillInitArgs[i]) && i < (jillInitArgs.length-1)) {
-                        String agentsArg = (!bdiMap.isEmpty()) ?
-                                JillBDIModel.buildJillAgentsArgsFromAgentMap(bdiMap) :
-                                "agents:[{classname:io.github.agentsoz.ees.agents.bushfire.BushfireAgent, args:null, count:0}]";
-                        jillInitArgs[i + 1] = jillInitArgs[i + 1].replaceAll("agents:\\[]", agentsArg);
-                    }
-                }
-            }
-            jillmodel = initialiseAndStartJillModel(jillInitArgs, dataServer, matsimModel, bdiAgentIDs, bdiMap);
-        }
+        String[] jillInitArgs = cfg.getModelConfig(Config.eModelBdi).get(JillBDIModel.eConfig).split("\\|");
+        updateJillConfigFromAgentsMap(jillInitArgs, bdiMap);
+        JillBDIModel jillmodel = initialiseAndStartJillModel(jillInitArgs, dataServer, matsimModel, bdiAgentIDs, bdiMap);
 
         // --- initialize and start matsim (maybe rename?):
         matsimModel.init(bdiAgentIDs);
@@ -125,30 +109,57 @@ public class Run {
         // yyyy try to replace this by injection. because otherwise it again needs to be added "late enough", which we
         // wanted to get rid of.  kai, dec'17
 
-        while ( true ) {
-
+        // Main simulation loop
+        log.info("Starting the simulation now");
+        while (true) {
             jillmodel.takeControl( matsimModel.getAgentManager().getAgentDataContainer() );
             if( matsimModel.isFinished() ) {
                 break;
             }
-            //matsimModel.takeControl(matsimModel.getAgentManager().getAgentDataContainer());
             matsimModel.runUntil((long)dataServer.getTime(), matsimModel.getAgentManager().getAgentDataContainer());
-
-            // increment time
             dataServer.stepTime();
-
-            // firemodel is updated elsewhere
         }
 
-
         // All done, so terminate now
+        log.info("Finishing up");
         jillmodel.finish();
         matsimModel.finish() ;
-        //		System.exit(0);
-        // get rid of System.exit(...) so that tests run through ...
         DataServer.cleanup() ;
 
-        log.info("Finishing");
+        log.info("All done");
+    }
+
+    private EvacConfig initialiseMATSimEvacConfig(MATSimModel matsimModel, org.matsim.core.config.Config matsimConfig) {
+        EvacConfig evacConfig = ConfigUtils.addOrGetModule(matsimConfig, EvacConfig.class);
+        evacConfig.setSetup(EvacConfig.Setup.standard);
+        evacConfig.setCongestionEvaluationInterval(matsimModel.getOptCongestionEvaluationInterval());
+        evacConfig.setCongestionToleranceThreshold(matsimModel.getOptCongestionToleranceThreshold());
+        evacConfig.setCongestionReactionProbability(matsimModel.getOptCongestionReactionProbability());
+        return evacConfig;
+    }
+
+    /**
+     * Replaces an empty jill agents config arg ie {@code agents:[]} with the appropriate
+     * config calculated using the given agents map. The result is an updated agents
+     * config arg like
+     * <pre>
+     * agents:[{classname:package.agentclass1, args:[...], count:n},...]
+     * </pre>
+     *
+     * @param jillargs
+     * @param map map of agent id to list of its init args
+     */
+    private static void updateJillConfigFromAgentsMap(String[] jillargs, Map<String, List<String[]>> map) {
+        if (map != null) {
+            for (int i = 0; jillargs != null && i < jillargs.length; i++) {
+                if (JillBDIModel.OPT_JILL_CONFIG.equals(jillargs[i]) && i < (jillargs.length-1)) {
+                    String agentsArg = (!map.isEmpty()) ?
+                            JillBDIModel.buildJillAgentsArgsFromAgentMap(map) :
+                            "agents:[{classname:io.github.agentsoz.ees.agents.bushfire.BushfireAgent, args:null, count:0}]";
+                    jillargs[i + 1] = jillargs[i + 1].replaceAll("agents:\\[]", agentsArg);
+                }
+            }
+        }
     }
 
     private JillBDIModel initialiseAndStartJillModel(String[] jillInitArgs, DataServer dataServer, MATSimModel matsimModel, List<String> bdiAgentIDs, Map<String, List<String[]>> bdiMap) {

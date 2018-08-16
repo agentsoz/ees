@@ -43,6 +43,11 @@ public class JillBDIModel extends JillModel implements DataClient {
 
 	private final Logger logger = LoggerFactory.getLogger("io.github.agentsoz.ees");
 
+	// Model options in Config XML
+	static final String eConfig = "jillconfig";
+	// Jill options
+	static final String OPT_JILL_CONFIG = "--config";
+
 	private DataServer dataServer;
 	
 	// Records the simulation step at which the fire alert was received
