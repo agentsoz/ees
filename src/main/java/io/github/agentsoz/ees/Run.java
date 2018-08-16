@@ -36,16 +36,16 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
-public class MainNew {
+public class Run {
 
-    private static final Logger log = LoggerFactory.getLogger(MainNew.class);
+    private static final Logger log = LoggerFactory.getLogger(Run.class);
 
     public static void main(String[] args) {
         Config cfg = new Config();
         Map<String,String> opts = cfg.parse(args);
         cfg.loadFromFile(opts.get(Config.OPT_CONFIG));
 
-        MainNew sim = new MainNew();
+        Run sim = new Run();
         sim.start(cfg);
     }
 
