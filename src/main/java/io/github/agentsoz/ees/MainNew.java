@@ -50,6 +50,7 @@ public class MainNew {
     }
 
     private void start(Config cfg) {
+        log.info("Starting");
         // initialise the data server bus for passing data around using a publish/subscribe or pull mechanism
         DataServer dataServer = DataServer.getServer("EES");
         dataServer.setTime(hhMmToS(cfg.getGlobalConfig(Config.eGlobalStartHhMm)));
