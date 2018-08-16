@@ -27,12 +27,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.Locale;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.*;
 
 import io.github.agentsoz.util.Time;
 import io.github.agentsoz.util.evac.PerceptList;
@@ -48,7 +43,14 @@ import io.github.agentsoz.dataInterface.DataSource;
 
 public class PhoenixFireModule implements DataSource {
 
-	private final Logger logger = LoggerFactory.getLogger("io.github.agentsoz.ees");
+	private final Logger logger = LoggerFactory.getLogger(PhoenixFireModule.class);
+
+	private final String eSendFireAlertOnFireStart = "sendFireAlertOnFireStart";
+	private final String eFireGeoJson = "fireGeoJson";
+	private final String eSmokeGeoJson = "smokeGeoJson";
+
+	private String optFireShapefile = null;
+	private String optSmokeShapefile = null;
 
 	private DataServer dataServer = null;
 	private JSONObject json = null;
@@ -62,6 +64,42 @@ public class PhoenixFireModule implements DataSource {
 
 		fire = new TreeMap<Double, Double[][]>();
 		fireAlertSent = !sendFireAlertOnFireStart;
+	}
+
+    public PhoenixFireModule(Map<String, String> opts, DataServer dataServer) {
+		fire = new TreeMap<Double, Double[][]>();
+		this.dataServer = dataServer;
+		parse(opts);
+    }
+
+	private void parse(Map<String, String> opts) {
+		if (opts == null) {
+			return;
+		}
+		for (String opt : opts.keySet()) {
+			logger.info("Found option: {}={}", opt, opts.get(opt));
+			switch(opt) {
+				case eSendFireAlertOnFireStart:
+					try {
+						fireAlertSent = !Boolean.parseBoolean(opts.get(opt));
+					} catch (Exception e) {
+						throw new RuntimeException("Could not parse option " + opt + "=" + opts.get(opt), e);
+					}
+					break;
+				case eFireGeoJson:
+					optFireShapefile  = opts.get(opt);
+					break;
+				case eSmokeGeoJson:
+					optSmokeShapefile = opts.get(opt);
+					break;
+				case Config.eGlobalStartHhMm:
+					String[] tokens = opts.get(opt).split(":");
+					setEvacStartHHMM(new int[]{Integer.parseInt(tokens[0]),Integer.parseInt(tokens[1])});
+					break;
+				default:
+					logger.warn("Ignoring option: " + opt + "=" + opts.get(opt));
+			}
+		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -128,6 +166,7 @@ public class PhoenixFireModule implements DataSource {
 		if (nextTime != null) {
 			dataServer.registerTimedUpdate(PerceptList.FIRE, this, Time.convertTime(nextTime, Time.TimestepUnit.MINUTES, timestepUnit));
 		}
+		logger.info("sending {} data: {}", PerceptList.FIRE, shapes);
 		return shapes;
 	}
 
@@ -139,12 +178,16 @@ public class PhoenixFireModule implements DataSource {
 	 * Start publishing fire data
 	 */
 	public void start() {
-		//if (fire.isEmpty()) {
-		//	logger.warn("Fire module started, but has no data to publish, so will do nothing");
-		//	return;
-		//}
+		if (optFireShapefile != null && !optFireShapefile.isEmpty()) {
+			try {
+				loadGeoJson(optFireShapefile);
+			} catch (Exception e) {
+				throw new RuntimeException("Could not load fire shapes from [" + optFireShapefile + "]", e);
+			}
+		} else if (json==null) {
+			logger.warn("started but will be idle forever!!");
+		}
 		dataServer.registerTimedUpdate(PerceptList.FIRE, this, evacStartInSeconds);
-				//convertTime(fire.firstKey(), TimestepUnit.MINUTES, timestepUnit));
 	}
 
 	public void convertLatLongToUtm() {

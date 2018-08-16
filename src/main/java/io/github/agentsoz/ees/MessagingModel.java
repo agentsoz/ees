@@ -43,8 +43,15 @@ import java.util.*;
 
 public class MessagingModel implements DataSource {
 
-	private final Logger logger = LoggerFactory.getLogger("io.github.agentsoz.ees");
+	private final Logger logger = LoggerFactory.getLogger(MessagingModel.class);
 
+	private static final String eJsonFile = "fileJson";
+	private static final String eZonesFile = "fileZonesGeoJson";
+
+	private String optJsonFile = null;
+	private String optGeoJsonZonesFile = null;
+
+	private double startTimeInSeconds = -1;
 	private DataServer dataServer = null;
 	private double lastUpdateTimeInMinutes = -1;
 	private TreeMap<Double, EmergencyMessage> messages;
@@ -57,6 +64,40 @@ public class MessagingModel implements DataSource {
 		messages = new TreeMap<>();
 		zones = new TreeMap<>();
 
+	}
+
+    public MessagingModel(Map<String, String> opts, DataServer dataServer) {
+		this();
+		this.dataServer = dataServer;
+		parse(opts);
+	}
+
+	private void parse(Map<String, String> opts) {
+		if (opts == null) {
+			return;
+		}
+		for (String opt : opts.keySet()) {
+			logger.info("Found option: {}={}", opt, opts.get(opt));
+			switch(opt) {
+				case eJsonFile:
+					optJsonFile = opts.get(opt);
+					break;
+				case eZonesFile:
+					optGeoJsonZonesFile = opts.get(opt);
+					break;
+				case Config.eGlobalStartHhMm:
+					String[] tokens = opts.get(opt).split(":");
+					setStartHHMM(new int[]{Integer.parseInt(tokens[0]),Integer.parseInt(tokens[1])});
+					break;
+				default:
+					logger.warn("Ignoring option: " + opt + "=" + opts.get(opt));
+			}
+		}
+	}
+
+	public void setStartHHMM(int[] hhmm) {
+		startTimeInSeconds = Time.convertTime(hhmm[0], Time.TimestepUnit.HOURS, timestepUnit)
+				+ Time.convertTime(hhmm[1], Time.TimestepUnit.MINUTES, timestepUnit);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -164,6 +205,19 @@ public class MessagingModel implements DataSource {
 		double startTimeInSeconds = Time.convertTime(hhmm[0], Time.TimestepUnit.HOURS, Time.TimestepUnit.SECONDS)
 				+ Time.convertTime(hhmm[1], Time.TimestepUnit.MINUTES, Time.TimestepUnit.SECONDS);
 		dataServer.registerTimedUpdate(PerceptList.EMERGENCY_MESSAGE, this, Time.convertTime(startTimeInSeconds, Time.TimestepUnit.SECONDS, timestepUnit));
+	}
+
+	public void start() {
+		if (optGeoJsonZonesFile !=null && !optGeoJsonZonesFile.isEmpty() && optJsonFile != null && !optJsonFile.isEmpty()) {
+			try {
+				loadJsonMessagesForZones(optJsonFile, optGeoJsonZonesFile);
+				dataServer.registerTimedUpdate(PerceptList.EMERGENCY_MESSAGE, this, Time.convertTime(startTimeInSeconds, Time.TimestepUnit.SECONDS, timestepUnit));
+			} catch (Exception e) {
+				throw new RuntimeException("Could not load json from [" + optJsonFile + "]", e);
+			}
+		} else {
+			logger.warn("started but will be idle forever!!");
+		}
 	}
 
 	/**

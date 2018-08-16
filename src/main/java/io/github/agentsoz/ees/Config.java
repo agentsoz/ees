@@ -1,9 +1,5 @@
 package io.github.agentsoz.ees;
 
-import io.github.agentsoz.util.Global;
-import io.github.agentsoz.util.Location;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -20,8 +16,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
-import java.util.TreeMap;
 
 /*
  * #%L
@@ -53,12 +47,29 @@ import java.util.TreeMap;
  */
 public class Config {
 
+	// EES command line options
+	static final String OPT_CONFIG = "--config";
+	// EES Command line usage
+	private static final String USAGE = "usage:\n"
+            + String.format("%10s %-6s %s\n", OPT_CONFIG, "FILE", "EES config file (v2)")
+            ;
+	// XML structure tags
 	private final String eSimulation = "simulation";
 	private final String eConfig = "config";
 	private final String eModels = "models";
 	private final String eModel = "model";
 	private final String eOption = "opt";
 	private final String eId = "id";
+	// Global options in XML
+	static final String eGlobalRandomSeed= "randomSeed";
+	static final String eGlobalCoordinateSystem= "crs";
+	static final String eGlobalStartHhMm = "startHHMM";
+	// Model IDs in XML
+	static final String eModelFire = "phoenix";
+	static final String eModelDisruption = "disruption";
+	static final String eModelMessaging = "messaging";
+	static final String eModelMatsim = "matsim";
+
 
 	private Map<String, String> config;
 	private Map<String, Map<String,String>> models;
@@ -67,6 +78,42 @@ public class Config {
 		config = new HashMap<>();
 		models = new HashMap<>();
 	}
+
+	/**
+	 * Returns all global and local config options for the named model
+	 * @param model the named model
+	 * @return map of all applicable config options
+	 */
+	public Map<String, String> getModelConfig(String model) {
+		Map<String, String> map = new HashMap<>(config);
+		map.putAll(models.get(model));
+		return map;
+	}
+
+	/**
+     * Parse the command line options
+     * @param args command line options
+     * @return key value pairs of known options
+     */
+	Map<String,String> parse(String[] args) {
+        Map<String,String> opts = new HashMap<>();
+        for (int i = 0; i < args.length; i++) {
+            switch (args[i]) {
+                case OPT_CONFIG:
+                    if (i + 1 < args.length) {
+                        i++;
+                        opts.put(args[i-1],args[i]);
+                    }
+                    break;
+                default:
+                    throw new RuntimeException("unknown config option: " + args[i]) ;
+            }
+        }
+        if (opts.isEmpty() || !opts.containsKey(OPT_CONFIG)) {
+            throw new RuntimeException(USAGE);
+        }
+        return opts;
+    }
 
 	public void loadFromFile(String file) {
 		try {

@@ -21,8 +21,15 @@
 		</filter>
 	</appender>
 
+	<logger name="org.matsim.core.mobsim.qsim.QSim">
+		<level value="info"/>
+	</logger>
+	<logger name="org.matsim.core.mobsim.qsim.qnetsimengine.QNetsimEngine">
+		<level value="info"/>
+	</logger>
+
 	<root>
-		<priority value="warn"></priority>
+		<priority value="fatal"></priority>
 		<appender-ref ref="stdout"/>
 		<appender-ref ref="stderr"/>
 	</root>

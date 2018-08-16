@@ -45,6 +45,11 @@ public class DisruptionModel implements DataSource {
 
 	private final Logger logger = LoggerFactory.getLogger("io.github.agentsoz.ees");
 
+	private static final String eJsonFile = "fileJson";
+
+	private String optJsonFile = null;
+
+	private double startTimeInSeconds = -1;
 	private DataServer dataServer = null;
 	private double lastUpdateTimeInMinutes = -1;
 	private TreeMap<Double, Disruption> disruptions;
@@ -53,6 +58,38 @@ public class DisruptionModel implements DataSource {
 	public DisruptionModel() {
 		disruptions = new TreeMap<>();
 	}
+
+    public DisruptionModel(Map<String, String> opts, DataServer dataServer) {
+		this();
+		this.dataServer = dataServer;
+		parse(opts);
+    }
+
+	private void parse(Map<String, String> opts) {
+		if (opts == null) {
+			return;
+		}
+		for (String opt : opts.keySet()) {
+			logger.info("Found option: {}={}", opt, opts.get(opt));
+			switch(opt) {
+				case eJsonFile:
+					optJsonFile = opts.get(opt);
+					break;
+				case Config.eGlobalStartHhMm:
+					String[] tokens = opts.get(opt).split(":");
+					setStartHHMM(new int[]{Integer.parseInt(tokens[0]),Integer.parseInt(tokens[1])});
+					break;
+				default:
+					logger.warn("Ignoring option: " + opt + "=" + opts.get(opt));
+			}
+		}
+	}
+
+	public void setStartHHMM(int[] hhmm) {
+		startTimeInSeconds = Time.convertTime(hhmm[0], Time.TimestepUnit.HOURS, timestepUnit)
+				+ Time.convertTime(hhmm[1], Time.TimestepUnit.MINUTES, timestepUnit);
+	}
+
 
 	void loadJson(String file) throws IOException, ParseException, java.text.ParseException {
 		Gson gson = new Gson();
@@ -106,6 +143,19 @@ public class DisruptionModel implements DataSource {
 		dataServer.registerTimedUpdate(PerceptList.DISRUPTION, this, Time.convertTime(startTimeInSeconds, Time.TimestepUnit.SECONDS, timestepUnit));
 	}
 
+	public void start() {
+		if (optJsonFile != null && !optJsonFile.isEmpty()) {
+			try {
+				loadJson(optJsonFile);
+				dataServer.registerTimedUpdate(PerceptList.DISRUPTION, this, Time.convertTime(startTimeInSeconds, Time.TimestepUnit.SECONDS, timestepUnit));
+			} catch (Exception e) {
+				throw new RuntimeException("Could not load json from [" + optJsonFile + "]", e);
+			}
+		} else {
+			logger.warn("started but will be idle forever!!");
+		}
+	}
+
 	/**
 	 * Set the time step unit for this model
 	 * @param unit the time step unit to use
@@ -113,5 +163,6 @@ public class DisruptionModel implements DataSource {
 	void setTimestepUnit(Time.TimestepUnit unit) {
 		timestepUnit = unit;
 	}
+
 }
 
