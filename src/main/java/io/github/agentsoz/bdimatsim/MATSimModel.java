@@ -95,6 +95,9 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 	private static final String eMaxDistanceForSmokeVisual = "maxDistanceForSmokeVisual";
 	private static final String eFireAvoidanceBufferForVehicles = "fireAvoidanceBufferForVehicles";
 	private static final String eFireAvoidanceBufferForEmergencyVehicles = "fireAvoidanceBufferForEmergencyVehicles";
+	private static final String eCongestionEvaluationInterval = "congestionEvaluationInterval";
+	private static final String eCongestionToleranceThreshold = "congestionToleranceThreshold";
+	private static final String eCongestionReactionProbability = "congestionReactionProbability";
 
 	// Defaults
 	private String optConfigFile = null;
@@ -104,6 +107,9 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 	private double optFireAvoidanceBufferForVehicles = 10000;
 	private double optFireAvoidanceBufferForEmergencyVehicles = 1000;
 	private double optStartTimeInSeconds = 1.0;
+	private double optCongestionEvaluationInterval = 180;
+	private double optCongestionToleranceThreshold = 0.25;
+	private double optCongestionReactionProbability = 0.10;
 
 
 	private EvacConfig evacConfig = null;
@@ -175,6 +181,15 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 				case eFireAvoidanceBufferForEmergencyVehicles:
 					optFireAvoidanceBufferForVehicles = Double.parseDouble(opts.get(opt));
 					break;
+				case eCongestionEvaluationInterval:
+					optCongestionEvaluationInterval= Double.parseDouble(opts.get(opt));
+					break;
+				case eCongestionToleranceThreshold:
+					optCongestionToleranceThreshold= Double.parseDouble(opts.get(opt));
+					break;
+				case eCongestionReactionProbability:
+					optCongestionReactionProbability= Double.parseDouble(opts.get(opt));
+					break;
 				default:
 					log.warn("Ignoring option: " + opt + "=" + opts.get(opt));
 			}
@@ -203,7 +218,7 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 
 		config.plans().setActivityDurationInterpretation(ActivityDurationInterpretation.tryEndTimeThenDuration);
 
-		config.qsim().setStartTime( optStartTimeInSeconds );
+		config.qsim().setStartTime( (optStartTimeInSeconds) > 3600 ? optStartTimeInSeconds-3600 : optStartTimeInSeconds  );
 		config.qsim().setSimStarttimeInterpretation( StarttimeInterpretation.onlyUseStarttime );
 
 		config.controler().setWritePlansInterval(1);
@@ -626,8 +641,6 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 
 		log.info("receiving fire data at time={}", now);
 		log.info( "{}", new Gson().toJson(data) ) ;
-		final String json = new Gson().toJson(data);
-		log.info(json);
 
 		//			GeoJSONReader reader = new GeoJSONReader();
 		//			Geometry geometry = reader.read(json);
@@ -733,4 +746,15 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 		return config;
 	}
 
+	public double getOptCongestionEvaluationInterval() {
+		return optCongestionEvaluationInterval;
+	}
+
+	public double getOptCongestionToleranceThreshold() {
+		return optCongestionToleranceThreshold;
+	}
+
+	public double getOptCongestionReactionProbability() {
+		return optCongestionReactionProbability;
+	}
 }
