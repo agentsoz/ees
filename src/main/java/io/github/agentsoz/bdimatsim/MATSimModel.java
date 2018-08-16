@@ -87,21 +87,40 @@ import javax.inject.Singleton;
 public final class MATSimModel implements ABMServerInterface, QueryPerceptInterface, DataClient {
 	private static final Logger log = LoggerFactory.getLogger(MATSimModel.class);
 	public static final String MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR = "--matsim-output-directory";
-	private final EvacConfig evacConfig;
-	private final FireWriter fireWriter;
-	private final DisruptionWriter disruptionWriter;
-	private final Config config;
-	private boolean configLoaded = false ;
+
+	private static final String eGlobalStartHhMm = "startHHMM";
+	private static final String eConfigFile = "configXml";
+	private static final String eOutputDir = "outputDir";
+	private static final String eMaxDistanceForFireVisual = "maxDistanceForFireVisual";
+	private static final String eMaxDistanceForSmokeVisual = "maxDistanceForSmokeVisual";
+	private static final String eFireAvoidanceBufferForVehicles = "fireAvoidanceBufferForVehicles";
+	private static final String eFireAvoidanceBufferForEmergencyVehicles = "fireAvoidanceBufferForEmergencyVehicles";
+
+	// Defaults
+	private String optConfigFile = null;
+	private String optOutputDir = null;
+	private double optMaxDistanceForFireVisual = 1000;
+	private double optMaxDistanceForSmokeVisual = 3000;
+	private double optFireAvoidanceBufferForVehicles = 10000;
+	private double optFireAvoidanceBufferForEmergencyVehicles = 1000;
+	private double optStartTimeInSeconds = 1.0;
+
+
+	private EvacConfig evacConfig = null;
+	private FireWriter fireWriter = null;
+	private DisruptionWriter disruptionWriter = null;
+	private Config config = null;
+	private boolean configLoaded = false;
 
 	public enum EvacRoutingMode {carFreespeed, carGlobalInformation, emergencyVehicle}
 
-	private final Scenario scenario ;
+	private Scenario scenario = null;
 
 	/**
 	 * A helper class essentially provided by the framework, used here.  The only direct connection to matsim are the event
 	 * monitors, which need to be registered, via the events monitor registry, as a matsim events handler.
 	 */
-	private final PAAgentManager agentManager ;
+	private PAAgentManager agentManager = null;
 
 	/**
 	 * This is in fact a MATSim class that provides a view onto the QSim.
@@ -125,6 +144,44 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 	private final Map<Id<Link>,Double> penaltyFactorsOfLinks = new HashMap<>() ;
 	private final Map<Id<Link>,Double> penaltyFactorsOfLinksForEmergencyVehicles = new HashMap<>() ;
 
+
+	public MATSimModel(Map<String, String> opts, DataServer dataServer) {
+		this(opts.get(eConfigFile), opts.get(eOutputDir));
+		registerDataServer(dataServer);
+		if (opts == null) {
+			return;
+		}
+		for (String opt : opts.keySet()) {
+			log.info("Found option: {}={}", opt, opts.get(opt));
+			switch(opt) {
+				case eGlobalStartHhMm:
+					optStartTimeInSeconds = convertTimeToSeconds(opts.get(opt).replace(":", ""));
+					break;
+				case eConfigFile:
+					optConfigFile = opts.get(opt);
+					break;
+				case eOutputDir:
+					optOutputDir = opts.get(opt);
+					break;
+				case eMaxDistanceForFireVisual:
+					optMaxDistanceForFireVisual = Double.parseDouble(opts.get(opt));
+					break;
+				case eMaxDistanceForSmokeVisual:
+					optMaxDistanceForSmokeVisual = Double.parseDouble(opts.get(opt));
+					break;
+				case eFireAvoidanceBufferForVehicles:
+					optFireAvoidanceBufferForVehicles = Double.parseDouble(opts.get(opt));
+					break;
+				case eFireAvoidanceBufferForEmergencyVehicles:
+					optFireAvoidanceBufferForVehicles = Double.parseDouble(opts.get(opt));
+					break;
+				default:
+					log.warn("Ignoring option: " + opt + "=" + opts.get(opt));
+			}
+		}
+	}
+
+
 	public MATSimModel(String matSimFile, String matsimOutputDirectory) {
 		// not the most elegant way of doing this ...
 		// yy maybe just pass the whole string from above and take apart ourselves?
@@ -146,7 +203,7 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 
 		config.plans().setActivityDurationInterpretation(ActivityDurationInterpretation.tryEndTimeThenDuration);
 
-		config.qsim().setStartTime( 1.00 );
+		config.qsim().setStartTime( optStartTimeInSeconds );
 		config.qsim().setSimStarttimeInterpretation( StarttimeInterpretation.onlyUseStarttime );
 
 		config.controler().setWritePlansInterval(1);
@@ -435,9 +492,8 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 	}
 
 	private boolean processDisruptionData( Object data, double now, Scenario scenario, DisruptionWriter disruptionWriter ) {
-		log.info("receiving disruption data at time={}", (now/3600) ); ;
-
-		log.info( new Gson().toJson(data) ) ;
+		log.info("receiving disruption data at time={}", now); ;
+		log.info( "{}", new Gson().toJson(data) ) ;
 
 		Map<Double,Disruption> timeMapOfDisruptions = (Map<Double,Disruption>)data;
 
@@ -484,9 +540,8 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 	}
 
 	private boolean processEmergencyMessageData(Object data, double now, Scenario scenario) {
-		log.info("receiving emergency message data at time={}", (now/3600) ); ;
-
-		log.info( new Gson().toJson(data) ) ;
+		log.info("receiving emergency message data at time={}", now);
+		log.info( "{}", new Gson().toJson(data) ) ;
 
 		Map<Double,EmergencyMessage> timeMapOfEmergencyMessages = (Map<Double,EmergencyMessage>)data;
 
@@ -554,11 +609,11 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 		int hours = Integer.parseInt(startHHMM.substring(0, 2));
 		int minutes = Integer.parseInt(startHHMM.substring(2, 4));
 		double startTime = hours * 3600 + minutes * 60;
-		log.info("orig={}, hours={}, min={}, sTime={}", startHHMM, hours, minutes, startTime);
+		log.debug("orig={}, hours={}, min={}, sTime={}", startHHMM, hours, minutes, startTime);
 		return startTime;
 	}
 	
-	private static boolean processFireData(Object data, double now, Map<Id<Link>, Double> penaltyFactorsOfLinks,
+	private boolean processFireData(Object data, double now, Map<Id<Link>, Double> penaltyFactorsOfLinks,
 										   Scenario scenario, Map<Id<Link>, Double> penaltyFactorsOfLinksForEmergencyVehicles,
 										   FireWriter fireWriter) {
 		// Is this called in every time step, or just every 5 min or so?  kai, dec'17
@@ -569,6 +624,8 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 		CoordinateTransformation transform = TransformationFactory.getCoordinateTransformation(
 				TransformationFactory.WGS84, scenario.getConfig().global().getCoordinateSystem());
 
+		log.info("receiving fire data at time={}", now);
+		log.info( "{}", new Gson().toJson(data) ) ;
 		final String json = new Gson().toJson(data);
 		log.info(json);
 
@@ -594,8 +651,7 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 
 //		https://stackoverflow.com/questions/38404095/how-to-calculate-the-distance-in-meters-between-a-geographic-point-and-a-given-p
 		{
-			// FIXME: Using a hardwired 10km buffer for vehicles; move to config
-			final double bufferWidth = 10000.;
+			final double bufferWidth = optFireAvoidanceBufferForVehicles;
 			Geometry buffer = fire.buffer(bufferWidth);
 			penaltyFactorsOfLinks.clear();
 //		Utils.penaltyMethod1(fire, buffer, penaltyFactorsOfLinks, scenario );
@@ -605,8 +661,7 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 			// seems sufficient.  kai, jan'18
 		}
 		{
-			// FIXME: Using a hardwired 1km buffer for emergency services; move to config
-			final double bufferWidth = 1000. ;
+			final double bufferWidth = optFireAvoidanceBufferForEmergencyVehicles;
 			Geometry buffer = fire.buffer(bufferWidth);
 			penaltyFactorsOfLinksForEmergencyVehicles.clear();
 			Utils.penaltyMethod2(fire, buffer, bufferWidth, penaltyFactorsOfLinksForEmergencyVehicles, scenario);
