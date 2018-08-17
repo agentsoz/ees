@@ -43,12 +43,27 @@ public class JillBDIModel extends JillModel implements DataClient {
 
 	private final Logger logger = LoggerFactory.getLogger("io.github.agentsoz.ees");
 
-	// Model options in Config XML
-	static final String eConfig = "jillconfig";
-	static final String eEvacPeakMins = "evacPeakMins";
-
 	// Jill options
 	static final String OPT_JILL_CONFIG = "--config";
+	static final String OPT_JILL_PLAN_SELECTION_POLICY = "--plan-selection-policy";
+	// Model options in EES config XML
+	static final String eConfig = "jillconfig";
+	static final String eEvacPeakMins = "evacPeakMins";
+	static final String ePlanSelectionPolicy = "jPlanSelectionPolicy";
+	static final String eAgents = "jAgents";
+	static final String eLogLevel = "jLogLevel";
+	static final String eLogFile = "jLogFile";
+	static final String eOutFile = "jOutFile";
+	static final String eNumThreads = "jNumThreads";
+	// Model option defaults
+	private String oRandomSeed = null;
+	private String oPlanSelectionPolicy = null;
+	private String oAgents = null;
+	private String oLogLevel = null;
+	private String oLogFile = null;
+	private String oOutFile = null;
+	private String oNumThreads = null;
+
 
 	private DataServer dataServer;
 	
@@ -79,30 +94,63 @@ public class JillBDIModel extends JillModel implements DataClient {
 	}
 
 	public JillBDIModel(Map<String, String> opts, DataServer dataServer, QueryPerceptInterface qpi, Map<String, List<String[]>> agentsInitMap) {
-//		    // Replaces the following code:
-//  OK      String[] jillInitArgs = cfg.getModelConfig(Config.eModelBdi).get(JillBDIModel.eConfig).split("\\|");
-//  OK      updateJillConfigFromAgentsMap(jillInitArgs, bdiMap);
-//  OK      JillBDIModel jillmodel = new JillBDIModel(jillInitArgs);
-//  OK      jillmodel.setEvacuationTiming(SimpleConfig.getEvacStartHHMM(), SimpleConfig.getEvacPeakMins());
-//  OK      jillmodel.setQueryPerceptInterface((QueryPerceptInterface) matsimModel);
-//  OK      jillmodel.registerDataServer(dataServer);
-//        jillmodel.init(matsimModel.getAgentManager().getAgentDataContainer(),
-//                null,
-//                null,
-//                bdiAgentIDs.toArray( new String[bdiAgentIDs.size()] ));
-//  OK      if (agentsInitMap != null) {
-//  OK         Map<String, List<String>> args = JillBDIModel.getFlattenedArgsFromAgentsInitMap(bdiMap, jillmodel);
-//  OK          jillmodel.initialiseAgentsWithArgs(args);
-//  OK      }
-
 		this(null);
 		parse(opts);
 		this.dataServer = dataServer;
 		this.agentsInitMap = agentsInitMap;
 		this.setQueryPerceptInterface(qpi);
-		if (agentsInitMap != null) {
-			updateJillConfigFromAgentsMap(initArgs, agentsInitMap);
+		initArgs = buildJillConfig(agentsInitMap);
+	}
+
+	private String[] buildJillConfig(Map<String, List<String[]>> agentsInitMap) {
+		List<String> args = new ArrayList<>();
+		if (oPlanSelectionPolicy != null && !oPlanSelectionPolicy.isEmpty()) {
+			args.add(OPT_JILL_PLAN_SELECTION_POLICY);
+			args.add(oPlanSelectionPolicy);
 		}
+
+		args.add(OPT_JILL_CONFIG);
+		StringBuilder cfg = new StringBuilder();
+		cfg.append(cfg.toString().isEmpty() ? "" : ",");
+		cfg.append("agents:");
+		if (oAgents != null && !oAgents.isEmpty()) {
+			cfg.append(oAgents);
+		} else {
+			cfg.append(buildJillAgentsArgsFromAgentMap(agentsInitMap));
+		}
+		if (oRandomSeed != null && !oRandomSeed.isEmpty()) {
+			cfg.append(cfg.toString().isEmpty() ? "" : ",");
+			cfg.append("randomSeed:");
+			cfg.append(oRandomSeed);
+		}
+		if (oNumThreads != null && !oNumThreads.isEmpty()) {
+			cfg.append(cfg.toString().isEmpty() ? "" : ",");
+			cfg.append("numThreads:");
+			cfg.append(oNumThreads);
+		}
+		if (oLogLevel != null && !oLogLevel.isEmpty()) {
+			cfg.append(cfg.toString().isEmpty() ? "" : ",");
+			cfg.append("logLevel:");
+			cfg.append(oLogLevel);
+		}
+		if (oLogFile != null && !oLogFile.isEmpty()) {
+			cfg.append(cfg.toString().isEmpty() ? "" : ",");
+			cfg.append("logFile:");
+			cfg.append(oLogFile.startsWith("\"") ? "" : "\"");
+			cfg.append(oLogFile);
+			cfg.append(oLogFile.endsWith("\"") ? "" : "\"");
+		}
+		if (oOutFile != null && !oOutFile.isEmpty()) {
+			cfg.append(cfg.toString().isEmpty() ? "" : ",");
+			cfg.append("programOutputFile:");
+			cfg.append(oOutFile.startsWith("\"") ? "" : "\"");
+			cfg.append(oOutFile);
+			cfg.append(oOutFile.endsWith("\"") ? "" : "\"");
+		}
+		cfg.insert(0,"{");
+		cfg.append("}");
+		args.add(cfg.toString());
+		return args.toArray(new String[args.size()]);
 	}
 
 	private void parse(Map<String, String> opts) {
@@ -121,6 +169,27 @@ public class JillBDIModel extends JillModel implements DataClient {
 				case Config.eGlobalStartHhMm:
 					String[] tokens = opts.get(opt).split(":");
 					evacStartHHMM = new int[]{Integer.parseInt(tokens[0]),Integer.parseInt(tokens[1])};
+					break;
+				case Config.eGlobalRandomSeed:
+					oRandomSeed = opts.get(opt);
+					break;
+				case ePlanSelectionPolicy:
+					oPlanSelectionPolicy = opts.get(opt);
+					break;
+				case eAgents:
+					oAgents = opts.get(opt);
+					break;
+				case eLogLevel:
+					oLogLevel = opts.get(opt);
+					break;
+				case eLogFile:
+					oLogFile = opts.get(opt);
+					break;
+				case eOutFile:
+					oOutFile = opts.get(opt);
+					break;
+				case eNumThreads:
+					oNumThreads = opts.get(opt);
 					break;
 				default:
 					logger.warn("Ignoring option: " + opt + "=" + opts.get(opt));
@@ -189,7 +258,7 @@ public class JillBDIModel extends JillModel implements DataClient {
         }
 
         StringBuilder arg = new StringBuilder();
-        arg.append("agents:[");
+        arg.append("[");
         if (map != null) {
             Iterator<String> it = counts.keySet().iterator();
             while(it.hasNext()) {
