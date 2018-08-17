@@ -295,6 +295,15 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 		return scenario ;
 	}
 
+	public EvacConfig initialiseEvacConfig(Config config) {
+		EvacConfig evacConfig = ConfigUtils.addOrGetModule(config, EvacConfig.class);
+		evacConfig.setSetup(EvacConfig.Setup.standard);
+		evacConfig.setCongestionEvaluationInterval(getOptCongestionEvaluationInterval());
+		evacConfig.setCongestionToleranceThreshold(getOptCongestionToleranceThreshold());
+		evacConfig.setCongestionReactionProbability(getOptCongestionReactionProbability());
+		return evacConfig;
+	}
+
 	public final void init(List<String> bdiAgentIDs) {
 		if ( !scenarioLoaded ) {
 			loadAndPrepareScenario() ;
