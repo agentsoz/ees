@@ -40,7 +40,11 @@
 <models>
 
   <model id="bdi">
+    <!-- Jill BDI engine confguration arguments (| separated) -->
     <opt id="jillconfig">--plan-selection-policy|FIRST|--config|{agents:[],logLevel: WARN,logFile: "test/output/io/github/agentsoz/ees/SurfCoastShirePopulationSubgroupsSampleTest/testSurfCoastShirePopulationSubgroupsSample/matsim/../jill.log",programOutputFile: "test/output/io/github/agentsoz/ees/SurfCoastShirePopulationSubgroupsSampleTest/testSurfCoastShirePopulationSubgroupsSample/matsim/../jill.out",randomSeed: 12345,numThreads: 1}</opt>
+    <!-- Legacy option to control the peak of vehicles leaving once the FIRE_ALERT is issued by the phoenix model;
+         Only applies if the phoenix model option sendFireAlertOnFireStart=true -->
+    <opt id="evacPeakMins">60</opt>
   </model>
 
   <model id="matsim">

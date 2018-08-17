@@ -81,12 +81,9 @@ public class Run {
             model.start();
         }
         // initialise the MATSim model and register it as an active data source
-        log.info("Starting MATSim model");
+        log.info("Creating MATSim model");
         MATSimModel matsimModel = new MATSimModel(cfg.getModelConfig(Config.eModelMatsim), dataServer);
-        log.info("Loading MATSim config");
-        org.matsim.core.config.Config config = matsimModel.loadAndPrepareConfig();
-        EvacConfig evacConfig = initialiseMATSimEvacConfig(matsimModel, config);
-        log.info("Loading MATSim scenario");
+        EvacConfig evacConfig = matsimModel.initialiseEvacConfig(matsimModel.loadAndPrepareConfig());
         Scenario scenario = matsimModel.loadAndPrepareScenario() ;
 
         // get BDI agents map from the MATSim population file
@@ -97,20 +94,23 @@ public class Run {
 
         // initialise the Jill model and register it as an active data source
         log.info("Starting Jill BDI model");
-        String[] jillInitArgs = cfg.getModelConfig(Config.eModelBdi).get(JillBDIModel.eConfig).split("\\|");
-        updateJillConfigFromAgentsMap(jillInitArgs, bdiMap);
-        JillBDIModel jillmodel = initialiseAndStartJillModel(jillInitArgs, dataServer, matsimModel, bdiAgentIDs, bdiMap);
+        //String[] jillInitArgs = cfg.getModelConfig(Config.eModelBdi).get(JillBDIModel.eConfig).split("\\|");
+        //updateJillConfigFromAgentsMap(jillInitArgs, bdiMap);
+        //JillBDIModel jillmodel = initialiseAndStartJillModel(jillInitArgs, dataServer, matsimModel, bdiAgentIDs, bdiMap);
+        JillBDIModel jillmodel = new JillBDIModel(cfg.getModelConfig(Config.eModelBdi), dataServer, (QueryPerceptInterface)matsimModel, bdiMap);
+        jillmodel.init(matsimModel.getAgentManager().getAgentDataContainer(), null, null, bdiAgentIDs.toArray( new String[bdiAgentIDs.size()] ));
+        jillmodel.start();
 
         // --- initialize and start matsim (maybe rename?):
+        log.info("Starting MATSim model");
         matsimModel.init(bdiAgentIDs);
-
         EvacAgentTracker tracker = new EvacAgentTracker(evacConfig, matsimModel.getScenario().getNetwork(), matsimModel.getEvents() ) ;
         matsimModel.getEvents().addHandler( tracker );
         // yyyy try to replace this by injection. because otherwise it again needs to be added "late enough", which we
         // wanted to get rid of.  kai, dec'17
 
         // Main simulation loop
-        log.info("Starting the simulation now");
+        log.info("Starting the simulation loop");
         while (true) {
             jillmodel.takeControl( matsimModel.getAgentManager().getAgentDataContainer() );
             if( matsimModel.isFinished() ) {
@@ -125,43 +125,11 @@ public class Run {
         jillmodel.finish();
         matsimModel.finish() ;
         DataServer.cleanup() ;
-
         log.info("All done");
     }
 
-    private EvacConfig initialiseMATSimEvacConfig(MATSimModel matsimModel, org.matsim.core.config.Config matsimConfig) {
-        EvacConfig evacConfig = ConfigUtils.addOrGetModule(matsimConfig, EvacConfig.class);
-        evacConfig.setSetup(EvacConfig.Setup.standard);
-        evacConfig.setCongestionEvaluationInterval(matsimModel.getOptCongestionEvaluationInterval());
-        evacConfig.setCongestionToleranceThreshold(matsimModel.getOptCongestionToleranceThreshold());
-        evacConfig.setCongestionReactionProbability(matsimModel.getOptCongestionReactionProbability());
-        return evacConfig;
-    }
 
-    /**
-     * Replaces an empty jill agents config arg ie {@code agents:[]} with the appropriate
-     * config calculated using the given agents map. The result is an updated agents
-     * config arg like
-     * <pre>
-     * agents:[{classname:package.agentclass1, args:[...], count:n},...]
-     * </pre>
-     *
-     * @param jillargs
-     * @param map map of agent id to list of its init args
-     */
-    private static void updateJillConfigFromAgentsMap(String[] jillargs, Map<String, List<String[]>> map) {
-        if (map != null) {
-            for (int i = 0; jillargs != null && i < jillargs.length; i++) {
-                if (JillBDIModel.OPT_JILL_CONFIG.equals(jillargs[i]) && i < (jillargs.length-1)) {
-                    String agentsArg = (!map.isEmpty()) ?
-                            JillBDIModel.buildJillAgentsArgsFromAgentMap(map) :
-                            "agents:[{classname:io.github.agentsoz.ees.agents.bushfire.BushfireAgent, args:null, count:0}]";
-                    jillargs[i + 1] = jillargs[i + 1].replaceAll("agents:\\[]", agentsArg);
-                }
-            }
-        }
-    }
-
+    /*
     private JillBDIModel initialiseAndStartJillModel(String[] jillInitArgs, DataServer dataServer, MATSimModel matsimModel, List<String> bdiAgentIDs, Map<String, List<String[]>> bdiMap) {
         // Create the Jill BDI model
         JillBDIModel jillmodel = new JillBDIModel(jillInitArgs);
@@ -177,12 +145,13 @@ public class Run {
                 matsimModel,
                 bdiAgentIDs.toArray( new String[bdiAgentIDs.size()] ));
         if (bdiMap != null) {
-            Map<String, List<String>> args = JillBDIModel.getAgentArgsFromBDIMap(bdiMap, jillmodel);
+            Map<String, List<String>> args = JillBDIModel.getFlattenedArgsFromAgentsInitMap(bdiMap, jillmodel);
             jillmodel.initialiseAgentsWithArgs(args);
         }
         jillmodel.start();
         return jillmodel;
     }
+    */
 
     private static double hhMmToS(String HHMM) {
         String[] tokens = HHMM.split(":");

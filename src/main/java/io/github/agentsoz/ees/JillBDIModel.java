@@ -2,7 +2,7 @@ package io.github.agentsoz.ees;
 
 import java.util.*;
 
-import io.github.agentsoz.jill.core.GlobalState;
+import io.github.agentsoz.bdiabm.QueryPerceptInterface;
 import io.github.agentsoz.util.evac.PerceptList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,6 +45,8 @@ public class JillBDIModel extends JillModel implements DataClient {
 
 	// Model options in Config XML
 	static final String eConfig = "jillconfig";
+	static final String eEvacPeakMins = "evacPeakMins";
+
 	// Jill options
 	static final String OPT_JILL_CONFIG = "--config";
 
@@ -52,29 +54,106 @@ public class JillBDIModel extends JillModel implements DataClient {
 	
 	// Records the simulation step at which the fire alert was received
 	private double fireAlertTime = -1;
-	private boolean fireAlertsScheduled = false;
+	private boolean fireAlertPerceptsScheduled = false;
 
 	// Jill initialisation args
 	private String[] initArgs = null;
+	private Map<String, List<String[]>> agentsInitMap = null;
 	
 	// Map of MATSim agent IDs to jill agent IDs
 	private Map<String,String> mapMATsimToJillIds;
     // Reverse map of Jill agent IDs to MATSim agent IDs (for convinience)
     private Map<String,String> mapJillToMATsimIds;
 	
-	// Map<Time,Agent> of scheduled fire alerts 
-	private PriorityQueue<TimedAlert> alerts;
+	// Map<Time,Agent> of scheduled fire alertPercepts
+	private PriorityQueue<TimedAlert> alertPercepts;
 
 	private int evacPeak = 0;
 	private int[] evacStartHHMM = {0,0};
 
 	public JillBDIModel(String[] initArgs) {
+		super();
 		mapMATsimToJillIds = new LinkedHashMap<String,String>();
 		mapJillToMATsimIds = new LinkedHashMap<String,String>();
 		this.initArgs = initArgs;
 	}
 
-    /**
+	public JillBDIModel(Map<String, String> opts, DataServer dataServer, QueryPerceptInterface qpi, Map<String, List<String[]>> agentsInitMap) {
+//		    // Replaces the following code:
+//  OK      String[] jillInitArgs = cfg.getModelConfig(Config.eModelBdi).get(JillBDIModel.eConfig).split("\\|");
+//  OK      updateJillConfigFromAgentsMap(jillInitArgs, bdiMap);
+//  OK      JillBDIModel jillmodel = new JillBDIModel(jillInitArgs);
+//  OK      jillmodel.setEvacuationTiming(SimpleConfig.getEvacStartHHMM(), SimpleConfig.getEvacPeakMins());
+//  OK      jillmodel.setQueryPerceptInterface((QueryPerceptInterface) matsimModel);
+//  OK      jillmodel.registerDataServer(dataServer);
+//        jillmodel.init(matsimModel.getAgentManager().getAgentDataContainer(),
+//                null,
+//                null,
+//                bdiAgentIDs.toArray( new String[bdiAgentIDs.size()] ));
+//  OK      if (agentsInitMap != null) {
+//  OK         Map<String, List<String>> args = JillBDIModel.getFlattenedArgsFromAgentsInitMap(bdiMap, jillmodel);
+//  OK          jillmodel.initialiseAgentsWithArgs(args);
+//  OK      }
+
+		this(null);
+		parse(opts);
+		this.dataServer = dataServer;
+		this.agentsInitMap = agentsInitMap;
+		this.setQueryPerceptInterface(qpi);
+		if (agentsInitMap != null) {
+			updateJillConfigFromAgentsMap(initArgs, agentsInitMap);
+		}
+	}
+
+	private void parse(Map<String, String> opts) {
+		if (opts == null) {
+			return;
+		}
+		for (String opt : opts.keySet()) {
+			logger.info("Found option: {}={}", opt, opts.get(opt));
+			switch(opt) {
+				case eConfig:
+					initArgs = opts.get(opt).split("\\|");
+					break;
+				case eEvacPeakMins:
+					evacPeak = Integer.parseInt(opts.get(opt));
+					break;
+				case Config.eGlobalStartHhMm:
+					String[] tokens = opts.get(opt).split(":");
+					evacStartHHMM = new int[]{Integer.parseInt(tokens[0]),Integer.parseInt(tokens[1])};
+					break;
+				default:
+					logger.warn("Ignoring option: " + opt + "=" + opts.get(opt));
+			}
+		}
+	}
+
+	/**
+	 * Replaces an empty jill agents config arg ie {@code agents:[]} with the appropriate
+	 * config calculated using the given agents map. The result is an updated agents
+	 * config arg like
+	 * <pre>
+	 * agents:[{classname:package.agentclass1, args:[...], count:n},...]
+	 * </pre>
+	 *
+	 * @param jillargs
+	 * @param map map of agent id to list of its init args
+	 */
+	private static void updateJillConfigFromAgentsMap(String[] jillargs, Map<String, List<String[]>> map) {
+		if (map != null) {
+			for (int i = 0; jillargs != null && i < jillargs.length; i++) {
+				if (JillBDIModel.OPT_JILL_CONFIG.equals(jillargs[i]) && i < (jillargs.length-1)) {
+					String agentsArg = (!map.isEmpty()) ?
+							JillBDIModel.buildJillAgentsArgsFromAgentMap(map) :
+							"agents:[{classname:io.github.agentsoz.ees.agents.bushfire.BushfireAgent, args:null, count:0}]";
+					jillargs[i + 1] = jillargs[i + 1].replaceAll("agents:\\[]", agentsArg);
+				}
+			}
+		}
+	}
+
+
+	/**
      * Returns something like:
      * <pre>
      * agents:[
@@ -150,10 +229,10 @@ public class JillBDIModel extends JillModel implements DataClient {
         }
     }
 
-	static Map<String, List<String>> getAgentArgsFromBDIMap(Map<String, List<String[]>> bdiMap, JillBDIModel jillmodel) {
+	static Map<String, List<String>> getFlattenedArgsFromAgentsInitMap(Map<String, List<String[]>> agentsInitMap) {
         Map<String,List<String>> args = new HashMap<>();
-        for (String id : bdiMap.keySet()) {
-            List<String[]> values = bdiMap.get(id);
+        for (String id : agentsInitMap.keySet()) {
+            List<String[]> values = agentsInitMap.get(id);
             List<String> flatlist = new ArrayList<>();
             for (String[] arr : values) {
                 for (String val : arr) {
@@ -180,9 +259,9 @@ public class JillBDIModel extends JillModel implements DataClient {
 		// Initialise the Jill model
 		// params[] contains the list of agent names to create
 		if (super.init(agentDataContainer, agentList, abmServer, initArgs)) {
-			// Initialise the alerts
+			// Initialise the alertPercepts
 			int capacity = (params.length<1) ? 1 : params.length;
-			alerts = new PriorityQueue<TimedAlert>(capacity, new Comparator<TimedAlert>() {
+			alertPercepts = new PriorityQueue<TimedAlert>(capacity, new Comparator<TimedAlert>() {
 				@Override
 				public int compare(TimedAlert o1, TimedAlert o2) {
 					double t1 = o1.getTime();
@@ -199,6 +278,11 @@ public class JillBDIModel extends JillModel implements DataClient {
 			// Set the BDI query percept interface that the agents can use
 			for (int i=0; i<params.length; i++) {
 				getAgent(i).setQueryPerceptInterface(this.getQueryPerceptInterface());
+			}
+			// Initialise agents with per-given args if available
+			if (agentsInitMap != null) {
+				Map<String, List<String>> args = JillBDIModel.getFlattenedArgsFromAgentsInitMap(agentsInitMap);
+				initialiseAgentsWithArgs(args);
 			}
 			// Now create the given map to jill agent ids
 			for (int i=0; i<params.length; i++) {
@@ -229,18 +313,18 @@ public class JillBDIModel extends JillModel implements DataClient {
 	@Override
 	// send percepts to individual agents
 	public void takeControl(AgentDataContainer adc) {
-		// Schedul the fire alerts
-		if (!fireAlertsScheduled && fireAlertTime != -1) {
+		// Schedul the fire alertPercepts
+		if (!fireAlertPerceptsScheduled && fireAlertTime != -1) {
 			int[] hhmm = evacStartHHMM;
 			int peak = evacPeak;
 			logger.info(String.format("Scheduling evacuation starting at %2d:%2d and peaking %d mins after start", hhmm[0], hhmm[1], peak));
-			scheduleFireAlertsToResidents(hhmm, peak);
-			fireAlertsScheduled = true;
+			scheduleFireAlertPerceptsToResidents(hhmm, peak);
+			fireAlertPerceptsScheduled = true;
 		}
 		double timeInSecs = dataServer.getTime();
-		// Send fire alerts to all agents scheduled for this time step (or earlier)
-		while (!alerts.isEmpty() && alerts.peek().getTime() <= timeInSecs) {
-			TimedAlert alert = alerts.poll();
+		// Send fire alertPercepts to all agents scheduled for this time step (or earlier)
+		while (!alertPercepts.isEmpty() && alertPercepts.peek().getTime() <= timeInSecs) {
+			TimedAlert alert = alertPercepts.poll();
 			String matsimAgentId = alert.getAgent();
 			adc.getOrCreate(matsimAgentId).getPerceptContainer().put(PerceptList.FIRE_ALERT, new Double(timeInSecs));
 		}
@@ -259,7 +343,7 @@ public class JillBDIModel extends JillModel implements DataClient {
   }
 
   /**
-	 * Schedules fire alerts to be send to residents starting at time 
+	 * Schedules fire alertPercepts to be send to residents starting at time
 	 * {@link SimpleConfig#getEvacStartHHMM()} and with a normal peak at
 	 * {@link SimpleConfig#getEvacPeakMins()} minutes after start.
 	 * 
@@ -267,9 +351,9 @@ public class JillBDIModel extends JillModel implements DataClient {
 	 * all receive a fire alert at {@link SimpleConfig#getEvacStartHHMM()} and
 	 * then they should individually decide how to react to that alert.
 	 * Here we are forcing a pattern of vehicles leaving, by spreading the
-	 * alerts over a normal distribution.
+	 * alertPercepts over a normal distribution.
 	 */
-	public void scheduleFireAlertsToResidents(int[] hhmm, int mins3Sigma) {
+	public void scheduleFireAlertPerceptsToResidents(int[] hhmm, int mins3Sigma) {
 		double minsSigma = mins3Sigma/3.0;
 		double minsMean = mins3Sigma;
 		double evacStartInSeconds = Time.convertTime(hhmm[0], Time.TimestepUnit.HOURS, Time.TimestepUnit.SECONDS) 
@@ -278,7 +362,7 @@ public class JillBDIModel extends JillModel implements DataClient {
 			double minsOffset = Global.getRandom().nextGaussian() * minsSigma + minsMean;
 			double secsOffset = Math.round(Time.convertTime(minsOffset, Time.TimestepUnit.MINUTES, Time.TimestepUnit.SECONDS));
 			double evacTimeInSeconds = evacStartInSeconds + secsOffset;
-			alerts.add(new TimedAlert(evacTimeInSeconds, matsimAgentId));
+			alertPercepts.add(new TimedAlert(evacTimeInSeconds, matsimAgentId));
 		}
 	}
 
