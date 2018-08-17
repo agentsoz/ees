@@ -26,6 +26,7 @@ public class SurfCoastShirePopulationSubgroupsSampleTest {
     public MatsimTestUtils utils = new MatsimTestUtils();
 
     @Test
+    @Ignore
     public void testSurfCoastShirePopulationSubgroupsSample() {
 
         String[] args = {
