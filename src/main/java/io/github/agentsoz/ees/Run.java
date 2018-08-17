@@ -66,6 +66,12 @@ public class Run {
             model.setTimestepUnit(Time.TimestepUnit.SECONDS);
             model.start();
         }
+        {
+            log.info("Starting smoke model");
+            PhoenixGridModel model = new PhoenixGridModel(cfg.getModelConfig(Config.eModelFire), dataServer);
+            model.setTimestepUnit(Time.TimestepUnit.SECONDS);
+            model.start();
+        }
         // initialise the disruptions model and register it as an active data source
         {
             log.info("Starting disruptions model");

@@ -78,6 +78,8 @@
     </model>
 
     <model id="phoenix">
+      <!-- Phoenix start time in HH:MM format; used to calculate absolute values for hour_spot and hour_burnt -->
+      <opt id="ignitionHHMM">14:00</opt>
       <!-- Phoenix fire GeoJSON file -->
       <opt id="fireGeoJson">scenarios/surf-coast-shire/population-subgroups-sample/scenario_fire.json</opt>
       <!-- Phoenix smoke (embers) GeoJSON file -->
