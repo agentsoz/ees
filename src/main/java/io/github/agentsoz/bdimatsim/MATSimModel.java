@@ -490,6 +490,7 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 	public final void registerDataServer( DataServer server ) {
 		// some blackboardy thing that sits between ABM and BDI
 		server.subscribe(this, PerceptList.FIRE_DATA);
+		server.subscribe(this, PerceptList.EMBERS_DATA);
 		server.subscribe(this, PerceptList.DISRUPTION);
 		server.subscribe(this, PerceptList.EMERGENCY_MESSAGE);
 	}
@@ -506,6 +507,8 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 			case PerceptList.FIRE_DATA:
 				return processFireData(data, now, penaltyFactorsOfLinks, scenario,
 						penaltyFactorsOfLinksForEmergencyVehicles, fireWriter);
+			case PerceptList.EMBERS_DATA:
+				return processEmbersData(data, now, scenario, disruptionWriter);
 			case PerceptList.DISRUPTION:
 				return processDisruptionData(data, now, scenario, disruptionWriter);
 			case PerceptList.EMERGENCY_MESSAGE:
@@ -513,6 +516,14 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 			default:
 				throw new RuntimeException("not implemented") ;
 		}
+	}
+
+	private boolean processEmbersData(Object data, double now, Scenario scenario, DisruptionWriter disruptionWriter) {
+		log.info("receiving embers data at time={}", now);
+		log.info( "{}{}", new Gson().toJson(data).substring(0,Math.min(new Gson().toJson(data).length(),100)),
+				"... use DEBUG to see full coordinates list") ;
+		log.debug( "{}", new Gson().toJson(data)) ;
+		return true;
 	}
 
 	private boolean processDisruptionData( Object data, double now, Scenario scenario, DisruptionWriter disruptionWriter ) {
