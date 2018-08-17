@@ -523,6 +523,21 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 		log.info( "{}{}", new Gson().toJson(data).substring(0,Math.min(new Gson().toJson(data).length(),100)),
 				"... use DEBUG to see full coordinates list") ;
 		log.debug( "{}", new Gson().toJson(data)) ;
+		Geometry embers = getGeometry((Map<Double, Double[][]>) data, scenario);
+		if (embers == null) {
+			return true;
+		}
+		embers = embers.buffer(optMaxDistanceForSmokeVisual);
+		List<Id<Person>> personsMatched = getPersonsWithin(scenario, embers);
+		log.info("Embers/smoke seen by " +  personsMatched.size()+" persons");
+		// package the messages up to send to the BDI side
+		for (Id<Person> personId : personsMatched) {
+			PAAgent agent = this.getAgentManager().getAgent(personId.toString());
+			if (agent != null) { // only do this if this is a BDI-like agent
+				agent.getPerceptContainer().put(PerceptList.FIELD_OF_VIEW, PerceptList.SIGHTED_EMBERS);
+			}
+		}
+
 		return true;
 	}
 
@@ -590,7 +605,6 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 			List<Id<Person>> personsInZones = new ArrayList<>();
 
 			for (String zoneId : msg.getBroadcastZones().keySet()) {
-				int personsMatched = 0;
 				Double[][] pairs = msg.getBroadcastZones().get(zoneId);
 				List<Coord> coords = new ArrayList<>() ;
 				for (Double[] pair : pairs) {
@@ -599,17 +613,9 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 				// Create a polygon for this zone
 				Polygon polygon = GeometryUtils.createGeotoolsPolygon(coords);
 				// And find everyone inside it
-				for(Id<Person> personId : scenario.getPopulation().getPersons().keySet()) {
-					final Id<Link> linkId = this.getMobsimDataProvider().getAgent(personId).getCurrentLinkId();
-					final Link link = scenario.getNetwork().getLinks().get(linkId);
-					Point fromPoint = GeometryUtils.createGeotoolsPoint(link.getFromNode().getCoord());
-					if (polygon.contains(fromPoint)) { // coming from polygon area
-						// this agent is in (or has potentially just exited) the messaging area
-						personsMatched++;
-						personsInZones.add(personId);
-					}
-				}
-				log.info("For zone " + zoneId + ", found "+personsMatched+" persons currently within it");
+				List<Id<Person>> personsMatched = getPersonsWithin(scenario, polygon);
+				personsInZones.addAll(personsMatched);
+				log.info("For zone " + zoneId + ", found "+personsMatched.size()+" persons currently within it");
 			}
 			log.info("Message " + msg.getType() + " will be sent to " + personsInZones.size() + " persons in zones " + msg.getBroadcastZones().keySet());
 			// package the messages up to send to the BDI side
@@ -622,6 +628,20 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 
 		}
 		return true ;
+	}
+
+	private List<Id<Person>> getPersonsWithin(Scenario scenario, Geometry shape) {
+		List<Id<Person>> personsWithin = new ArrayList<>();
+		for(Id<Person> personId : scenario.getPopulation().getPersons().keySet()) {
+            final Id<Link> linkId = this.getMobsimDataProvider().getAgent(personId).getCurrentLinkId();
+            final Link link = scenario.getNetwork().getLinks().get(linkId);
+            Point fromPoint = GeometryUtils.createGeotoolsPoint(link.getFromNode().getCoord());
+            if (shape.contains(fromPoint)) { // coming from polygon area
+                // this agent is in (or has potentially just exited) the messaging area
+                personsWithin.add(personId);
+            }
+        }
+		return personsWithin;
 	}
 
 	private void addNetworkChangeEvent(double speedInMpS, Link link, double startTime) {
@@ -651,39 +671,26 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 	private boolean processFireData(Object data, double now, Map<Id<Link>, Double> penaltyFactorsOfLinks,
 										   Scenario scenario, Map<Id<Link>, Double> penaltyFactorsOfLinksForEmergencyVehicles,
 										   FireWriter fireWriter) {
-		// Is this called in every time step, or just every 5 min or so?  kai, dec'17
-
-		// Normally only one polygon per time step.  Might want to test for this, and get rid of multi-polygon code
-		// below.  On other hand, probably does not matter much.  kai, dec'17
-
-		CoordinateTransformation transform = TransformationFactory.getCoordinateTransformation(
-				TransformationFactory.WGS84, scenario.getConfig().global().getCoordinateSystem());
 
 		log.info("receiving fire data at time={}", now);
 		log.info( "{}{}", new Gson().toJson(data).substring(0,Math.min(new Gson().toJson(data).length(),100)),
 				"... use DEBUG to see full coordinates list") ;
 		log.debug( "{}", new Gson().toJson(data)) ;
 
-		//			GeoJSONReader reader = new GeoJSONReader();
-		//			Geometry geometry = reader.read(json);
-		// unfortunately does not work since the incoming data is not typed accordingly. kai, dec'17
+		Geometry fire = getGeometry((Map<Double, Double[][]>) data, scenario);
 
-		Map<Double, Double[][]> map = (Map<Double, Double[][]>) data;
-		// the map key is time; we just take the superset of all polygons
-		Geometry fire = null ;
-		for ( Double[][] pairs : map.values() ) {
-			List<Coord> coords = new ArrayList<>() ;
-			for (Double[] pair : pairs) {
-				coords.add(transform.transform(new Coord(pair[0], pair[1])));
-			}
-			Polygon polygon = GeometryUtils.createGeotoolsPolygon(coords);
-			if ( fire==null ) {
-				fire = polygon ;
-			} else {
-				fire = fire.union(polygon);
+		{
+			Geometry buffer = fire.buffer(optMaxDistanceForFireVisual);
+			List<Id<Person>> personsMatched = getPersonsWithin(scenario, buffer);
+			log.info("Fire seen by " +  personsMatched.size()+" persons");
+			// package the messages up to send to the BDI side
+			for (Id<Person> personId : personsMatched) {
+				PAAgent agent = this.getAgentManager().getAgent(personId.toString());
+				if (agent != null) { // only do this if this is a BDI-like agent
+					agent.getPerceptContainer().put(PerceptList.FIELD_OF_VIEW, PerceptList.SIGHTED_FIRE);
+				}
 			}
 		}
-
 //		https://stackoverflow.com/questions/38404095/how-to-calculate-the-distance-in-meters-between-a-geographic-point-and-a-given-p
 		{
 			final double bufferWidth = optFireAvoidanceBufferForVehicles;
@@ -704,6 +711,28 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 
 		fireWriter.write( now, fire);
 		return true;
+	}
+
+	private Geometry getGeometry(Map<Double, Double[][]> data, Scenario scenario) {
+		CoordinateTransformation transform = TransformationFactory.getCoordinateTransformation(
+				TransformationFactory.WGS84, scenario.getConfig().global().getCoordinateSystem());
+
+		Map<Double, Double[][]> map = data;
+		// the map key is time; we just take the superset of all polygons
+		Geometry shape = null ;
+		for ( Double[][] pairs : map.values() ) {
+			List<Coord> coords = new ArrayList<>() ;
+			for (Double[] pair : pairs) {
+				coords.add(transform.transform(new Coord(pair[0], pair[1])));
+			}
+			Polygon polygon = GeometryUtils.createGeotoolsPolygon(coords);
+			if ( shape==null ) {
+				shape = polygon ;
+			} else {
+				shape = shape.union(polygon);
+			}
+		}
+		return shape;
 	}
 
 	public final double getTime() {
