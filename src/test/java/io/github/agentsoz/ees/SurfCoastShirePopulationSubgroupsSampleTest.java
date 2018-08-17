@@ -29,6 +29,16 @@ public class SurfCoastShirePopulationSubgroupsSampleTest {
     public void testSurfCoastShirePopulationSubgroupsSample() {
 
         String[] args = {
+                "--config", "scenarios/surf-coast-shire/population-subgroups-sample/ees.xml",
+        };
+        Run.main(args);
+    }
+
+    @Test
+    @Ignore
+    public void testSurfCoastShirePopulationSubgroupsSampleLegacyConfig() {
+
+        String[] args = {
                 "--config", "scenarios/surf-coast-shire/population-subgroups-sample/scenario_main.xml",
                 "--logfile", utils.getOutputDirectory()+"../scenario.log",
                 "--loglevel", "INFO",

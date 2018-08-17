@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- This config file is used by MATSim only. It exists here so that we can
+     overwrite the log4j.xml config that ships with the MATSim jar and
+     that clutters the EES logging (which in turn is configured using logback.xml).
+     To change the MATSim logging level adjust settings below where indicated.
+-->
 <!DOCTYPE log4j:configuration SYSTEM "log4j.dtd" >
 <log4j:configuration>
 	<appender name="stdout" class="org.apache.log4j.ConsoleAppender">
@@ -22,14 +27,14 @@
 	</appender>
 
 	<logger name="org.matsim.core.mobsim.qsim.QSim">
-		<level value="info"/>
+		<level value="info"/> <!-- Adjust if needed -->
 	</logger>
 	<logger name="org.matsim.core.mobsim.qsim.qnetsimengine.QNetsimEngine">
-		<level value="info"/>
+		<level value="info"/> <!-- Adjust if needed -->
 	</logger>
 
 	<root>
-		<priority value="fatal"></priority>
+		<priority value="fatal"></priority> <!-- Adjust if needed -->
 		<appender-ref ref="stdout"/>
 		<appender-ref ref="stderr"/>
 	</root>

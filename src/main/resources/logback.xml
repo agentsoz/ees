@@ -3,18 +3,19 @@
 
 	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
 		<param name="target" value="System.out" />
-		<layout class="ch.qos.logback.classic.PatternLayout">
-			<Pattern>
+		<encoder>
+			<pattern>
 				<!--%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36}.%M\(%line\) - %msg%n-->
-				%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %class{0}.%M\(%line\) - %msg%n
-			</Pattern>
-		</layout>
+				%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %class{0}.%M\(L%line\) - %msg%n
+			</pattern>
+		</encoder>
 	</appender>
 
 
-	<root level="info">
+	<logger name="io.github.agentsoz" level="info" />
+
+	<root level="error">
 		<appender-ref ref="STDOUT" />
-		<appender-ref ref="STDERR" />
 	</root>
 
 </configuration>

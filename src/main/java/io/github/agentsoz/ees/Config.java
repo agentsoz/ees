@@ -55,7 +55,7 @@ public class Config {
             ;
 	// XML structure tags
 	private final String eSimulation = "simulation";
-	private final String eConfig = "config";
+	private final String eGlobal = "global";
 	private final String eModels = "models";
 	private final String eModel = "model";
 	private final String eOption = "opt";
@@ -69,6 +69,7 @@ public class Config {
 	static final String eModelDisruption = "disruption";
 	static final String eModelMessaging = "messaging";
 	static final String eModelMatsim = "matsim";
+	static final String eModelBdi = "bdi";
 
 
 	private Map<String, String> config;
@@ -88,6 +89,10 @@ public class Config {
 		Map<String, String> map = new HashMap<>(config);
 		map.putAll(models.get(model));
 		return map;
+	}
+
+	public String getGlobalConfig(String opt) {
+		return config.get(opt);
 	}
 
 	/**
@@ -137,7 +142,7 @@ public class Config {
 			Element root = (Element)doc.getElementsByTagName(eSimulation).item(0);
 
 			// Get the config options
-			NodeList opts = root.getElementsByTagName(eConfig).item(0).getChildNodes();
+			NodeList opts = root.getElementsByTagName(eGlobal).item(0).getChildNodes();
 			for(int i=0; i < opts.getLength(); i++) {
 				Node node = opts.item(i);
 				if (node.getNodeType() == Node.ELEMENT_NODE) {
@@ -168,4 +173,5 @@ public class Config {
 			throw new RuntimeException(e) ;
 		}
 	}
+
 }
