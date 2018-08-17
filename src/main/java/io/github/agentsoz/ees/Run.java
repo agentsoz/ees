@@ -54,7 +54,7 @@ public class Run {
     }
 
     private void start(Config cfg) {
-        log.info("Starting");
+        log.info("Starting the data server");
         // initialise the data server bus for passing data around using a publish/subscribe or pull mechanism
         DataServer dataServer = DataServer.getServer("EES");
         dataServer.setTime(hhMmToS(cfg.getGlobalConfig(Config.eGlobalStartHhMm)));
@@ -92,24 +92,23 @@ public class Run {
         JillBDIModel.removeNonBdiAgentsFrom(bdiMap);
         List<String> bdiAgentIDs = new ArrayList<>(bdiMap.keySet());
 
-        // initialise the Jill model and register it as an active data source
+        // initialise the Jill model, register it as an active data source, and start it
         log.info("Starting Jill BDI model");
-        //String[] jillInitArgs = cfg.getModelConfig(Config.eModelBdi).get(JillBDIModel.eConfig).split("\\|");
-        //updateJillConfigFromAgentsMap(jillInitArgs, bdiMap);
-        //JillBDIModel jillmodel = initialiseAndStartJillModel(jillInitArgs, dataServer, matsimModel, bdiAgentIDs, bdiMap);
         JillBDIModel jillmodel = new JillBDIModel(cfg.getModelConfig(Config.eModelBdi), dataServer, (QueryPerceptInterface)matsimModel, bdiMap);
         jillmodel.init(matsimModel.getAgentManager().getAgentDataContainer(), null, null, bdiAgentIDs.toArray( new String[bdiAgentIDs.size()] ));
         jillmodel.start();
 
-        // --- initialize and start matsim (maybe rename?):
+        // --- initialize and start MATSim
         log.info("Starting MATSim model");
         matsimModel.init(bdiAgentIDs);
-        EvacAgentTracker tracker = new EvacAgentTracker(evacConfig, matsimModel.getScenario().getNetwork(), matsimModel.getEvents() ) ;
-        matsimModel.getEvents().addHandler( tracker );
-        // yyyy try to replace this by injection. because otherwise it again needs to be added "late enough", which we
-        // wanted to get rid of.  kai, dec'17
+        {
+            // yyyy try to replace this by injection. because otherwise it again needs to be added "late enough", which we
+            // wanted to get rid of.  kai, dec'17
+            EvacAgentTracker tracker = new EvacAgentTracker(evacConfig, matsimModel.getScenario().getNetwork(), matsimModel.getEvents());
+            matsimModel.getEvents().addHandler(tracker);
+        }
 
-        // Main simulation loop
+        // start the main simulation loop
         log.info("Starting the simulation loop");
         while (true) {
             jillmodel.takeControl( matsimModel.getAgentManager().getAgentDataContainer() );
@@ -120,7 +119,7 @@ public class Run {
             dataServer.stepTime();
         }
 
-        // All done, so terminate now
+        // finish up
         log.info("Finishing up");
         jillmodel.finish();
         matsimModel.finish() ;
@@ -128,30 +127,6 @@ public class Run {
         log.info("All done");
     }
 
-
-    /*
-    private JillBDIModel initialiseAndStartJillModel(String[] jillInitArgs, DataServer dataServer, MATSimModel matsimModel, List<String> bdiAgentIDs, Map<String, List<String[]>> bdiMap) {
-        // Create the Jill BDI model
-        JillBDIModel jillmodel = new JillBDIModel(jillInitArgs);
-        // Set the evacuation timing
-        jillmodel.setEvacuationTiming(SimpleConfig.getEvacStartHHMM(), SimpleConfig.getEvacPeakMins());
-        // Set the query percept interface to use
-        jillmodel.setQueryPerceptInterface((QueryPerceptInterface) matsimModel);
-        // register the server to use for transferring data between models
-        jillmodel.registerDataServer(dataServer);
-        // initialise and start
-        jillmodel.init(matsimModel.getAgentManager().getAgentDataContainer(),
-                null, // agentList is not used
-                matsimModel,
-                bdiAgentIDs.toArray( new String[bdiAgentIDs.size()] ));
-        if (bdiMap != null) {
-            Map<String, List<String>> args = JillBDIModel.getFlattenedArgsFromAgentsInitMap(bdiMap, jillmodel);
-            jillmodel.initialiseAgentsWithArgs(args);
-        }
-        jillmodel.start();
-        return jillmodel;
-    }
-    */
 
     private static double hhMmToS(String HHMM) {
         String[] tokens = HHMM.split(":");
