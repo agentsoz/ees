@@ -649,7 +649,9 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 				TransformationFactory.WGS84, scenario.getConfig().global().getCoordinateSystem());
 
 		log.info("receiving fire data at time={}", now);
-		log.info( "{}", new Gson().toJson(data) ) ;
+		log.info( "{}{}", new Gson().toJson(data).substring(0,Math.min(new Gson().toJson(data).length(),100)),
+				"... use DEBUG to see full coordinates list") ;
+		log.debug( "{}", new Gson().toJson(data)) ;
 
 		//			GeoJSONReader reader = new GeoJSONReader();
 		//			Geometry geometry = reader.read(json);
