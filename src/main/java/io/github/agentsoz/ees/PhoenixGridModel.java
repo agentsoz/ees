@@ -36,8 +36,6 @@ import org.slf4j.LoggerFactory;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class PhoenixGridModel implements DataSource {
@@ -106,8 +104,8 @@ public class PhoenixGridModel implements DataSource {
 
 
 	@SuppressWarnings("unchecked")
-	public void loadEmbersGeoJson(String file) throws FileNotFoundException, IOException, ParseException, java.text.ParseException {
-		logger.info("Loading GeoJSON embers file: " + file);
+	public void loadPhoenixGeoJson(String file) throws FileNotFoundException, IOException, ParseException, java.text.ParseException {
+		logger.info("Loading GeoJSON file: " + file);
 		// Create the JSON parsor
 		JSONParser parser = new JSONParser();
 		// Read in the JSON file
@@ -123,18 +121,19 @@ public class PhoenixGridModel implements DataSource {
 			String type = (String) geometry.get("type");
 			JSONArray jcoords = (JSONArray) geometry.get("coordinates");
 			Double[][] coordinates = new Double[0][2];
+			double hourOffset = (Double)properties.get("hour_spot");
+			double minutes = ignitionTimeInMins + Time.convertTime(hourOffset, Time.TimestepUnit.HOURS, Time.TimestepUnit.MINUTES);
 			if ("Polygon".equalsIgnoreCase(type)) {
 				coordinates = getPolygonCoordinates(jcoords);
+				embers.put(minutes, coordinates);
 			} else if ("MultiPolygon".equalsIgnoreCase(type))  {
 				Iterator<JSONArray> it = jcoords.iterator();
 				while (it.hasNext()) {
-					coordinates = concat(coordinates, getPolygonCoordinates(it.next()));
+					coordinates = getPolygonCoordinates(it.next());
+					embers.put(minutes, coordinates);
 				}
 
 			}
-			double hourOffset = (Double)properties.get("hour_spot");
-			double minutes = ignitionTimeInMins + Time.convertTime(hourOffset, Time.TimestepUnit.HOURS, Time.TimestepUnit.MINUTES);
-			embers.put(minutes, coordinates);
 		}
 	}
 
@@ -185,7 +184,7 @@ public class PhoenixGridModel implements DataSource {
 	public void start() {
 		if (optEmbersShapefile != null && !optEmbersShapefile.isEmpty()) {
 			try {
-				loadEmbersGeoJson(optEmbersShapefile);
+				loadPhoenixGeoJson(optEmbersShapefile);
 				dataServer.registerTimedUpdate(PerceptList.EMBERS_DATA, this, startTimeInSeconds);
 			} catch (Exception e) {
 				throw new RuntimeException("Could not load embers shapes from [" + optEmbersShapefile + "]", e);

@@ -299,10 +299,19 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
      * @param view the incoming visual percept
      */
     private void updateResponseBarometerFieldOfViewPercept(Object view) {
-        if (view == null || !(view instanceof  FieldOfViewPercept)) {
+        if (view == null) {
             return;
         }
-        double value = ((FieldOfViewPercept) view).getValue();
+        FieldOfViewPercept percept = null;
+        if (PerceptList.SIGHTED_EMBERS.equalsIgnoreCase(view.toString())) {
+            percept = FieldOfViewPercept.SMOKE_VISUAL;
+        } else if (PerceptList.SIGHTED_FIRE.equalsIgnoreCase(view.toString())) {
+            percept = FieldOfViewPercept.FIRE_VISUAL;
+        } else {
+            logger.warn("{} ignoring field of view percept: {}", logPrefix(), view);
+            return;
+        }
+        double value = percept.getValue();
         if (value > responseBarometerFieldOfView) {
             responseBarometerFieldOfView = value;
             memorise(MemoryEventType.BELIEVED.name(), MemoryEventValue.RESPONSE_BAROMETER_FIELD_OF_VIEW_CHANGED.name() + "=" + Double.toString(value));
