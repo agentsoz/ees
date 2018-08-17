@@ -28,66 +28,69 @@
   xsi:schemaLocation="https://github.com/agentsoz/bdi-abm-integration ../../xsd/ees.xsd"
   version="v2.0">
 
-<config>
-  <!-- random seed to be used for all models; set to -1 if not used -->
-  <opt id="randomSeed">12345</opt>
-  <!-- coordinate reference system in EPSG format to be used for all models; see http://spatialreference.org -->
-  <opt id="crs">EPSG:4326</opt>
-  <!-- simulation start time in HH:MM format -->
-  <opt id="startHHMM">01:05</opt>
-</config>
+  <!-- global configuration sent to all models -->
+  <global>
+    <!-- random seed to be used for all models; set to -1 if not used -->
+    <opt id="randomSeed">12345</opt>
+    <!-- coordinate reference system in EPSG format to be used for all models; see http://spatialreference.org -->
+    <opt id="crs">EPSG:4326</opt>
+    <!-- simulation start time in HH:MM format -->
+    <opt id="startHHMM">01:05</opt>
+  </global>
 
-<models>
+  <!-- model specific configuration -->
+  <models>
 
-  <model id="bdi">
-    <!-- Jill BDI engine confguration arguments (| separated) -->
-    <opt id="jillconfig">--plan-selection-policy|FIRST|--config|{agents:[],logLevel: WARN,logFile: "test/output/io/github/agentsoz/ees/SurfCoastShirePopulationSubgroupsSampleTest/testSurfCoastShirePopulationSubgroupsSample/matsim/../jill.log",programOutputFile: "test/output/io/github/agentsoz/ees/SurfCoastShirePopulationSubgroupsSampleTest/testSurfCoastShirePopulationSubgroupsSample/matsim/../jill.out",randomSeed: 12345,numThreads: 1}</opt>
-    <!-- Legacy option to control the peak of vehicles leaving once the FIRE_ALERT is issued by the phoenix model;
-         Only applies if the phoenix model option sendFireAlertOnFireStart=true -->
-    <opt id="evacPeakMins">60</opt>
-  </model>
+    <model id="bdi">
+      <!-- Jill BDI engine confguration arguments (| separated); will get split into several opts in future versions -->
+      <opt id="jillconfig">--plan-selection-policy|FIRST|--config|{agents:[],logLevel: WARN,logFile: "test/output/io/github/agentsoz/ees/SurfCoastShirePopulationSubgroupsSampleTest/testSurfCoastShirePopulationSubgroupsSample/matsim/../jill.log",programOutputFile: "test/output/io/github/agentsoz/ees/SurfCoastShirePopulationSubgroupsSampleTest/testSurfCoastShirePopulationSubgroupsSample/matsim/../jill.out",randomSeed: 12345,numThreads: 1}</opt>
+      <!-- Legacy option to control the peak of vehicles leaving once the FIRE_ALERT is issued by the phoenix model;
+           Only applies if the phoenix model option sendFireAlertOnFireStart=true -->
+      <opt id="evacPeakMins">60</opt>
+    </model>
 
-  <model id="matsim">
-    <!-- MATSim output directory relative to examples/bushfire directory (will overrule the setting in MATSim config) -->
-    <opt id="outputDir">test/output/io/github/agentsoz/ees/SurfCoastShirePopulationSubgroupsSampleTest/testSurfCoastShirePopulationSubgroupsSample/matsim</opt>
-    <!-- MATSim XML config XML file relative to examples/bushfire directory -->
-    <opt id="configXml">scenarios/surf-coast-shire/population-subgroups-sample/scenario_matsim_main.xml</opt>
-    <!-- Maximum distance at which the fire can be seen (in metres)-->
-    <opt id="maxDistanceForFireVisual">1000</opt>
-    <!-- Maximum distance at which smoke can be seen (in metres)-->
-    <opt id="maxDistanceForSmokeVisual">5000</opt>
-    <!-- Fire avoidance buffer used for planning routes for regular vehicles (in metres)-->
-    <opt id="fireAvoidanceBufferForVehicles">5000</opt>
-    <!-- Fire avoidance buffer used for planning routes for emergency vehicles (in metres)-->
-    <opt id="fireAvoidanceBufferForEmergencyVehicles">1000</opt>
-    <!-- Congestion parameters used by vehicles to decide if they are stuck in congestion. See issues
-         https://github.com/agentsoz/bdi-abm-integration/issues/8 and
-         https://github.com/agentsoz/bdi-abm-integration/issues/35 -->
-    <opt id="congestionEvaluationInterval">180</opt>
-    <opt id="congestionToleranceThreshold">0.33</opt>
-    <opt id="congestionReactionProbability">0.5</opt>
-  </model>
+    <model id="matsim">
+      <!-- MATSim output directory relative to examples/bushfire directory (will overrule the setting in MATSim config) -->
+      <opt id="outputDir">test/output/io/github/agentsoz/ees/SurfCoastShirePopulationSubgroupsSampleTest/testSurfCoastShirePopulationSubgroupsSample/matsim</opt>
+      <!-- MATSim XML config XML file relative to examples/bushfire directory -->
+      <opt id="configXml">scenarios/surf-coast-shire/population-subgroups-sample/scenario_matsim_main.xml</opt>
+      <!-- Maximum distance at which the fire can be seen (in metres)-->
+      <opt id="maxDistanceForFireVisual">1000</opt>
+      <!-- Maximum distance at which smoke can be seen (in metres)-->
+      <opt id="maxDistanceForSmokeVisual">5000</opt>
+      <!-- Fire avoidance buffer used for planning routes for regular vehicles (in metres)-->
+      <opt id="fireAvoidanceBufferForVehicles">5000</opt>
+      <!-- Fire avoidance buffer used for planning routes for emergency vehicles (in metres)-->
+      <opt id="fireAvoidanceBufferForEmergencyVehicles">1000</opt>
+      <!-- Congestion parameters used by vehicles to decide if they are stuck in congestion. See issues
+           https://github.com/agentsoz/bdi-abm-integration/issues/8 and
+           https://github.com/agentsoz/bdi-abm-integration/issues/35 -->
+      <opt id="congestionEvaluationInterval">180</opt>
+      <opt id="congestionToleranceThreshold">0.33</opt>
+      <opt id="congestionReactionProbability">0.5</opt>
+    </model>
 
-  <model id="phoenix">
-    <!-- Phoenix fire GeoJSON file -->
-    <opt id="fireGeoJson">scenarios/surf-coast-shire/population-subgroups-sample/scenario_fire.json</opt>
-    <!-- Phoenix smoke (embers) GeoJSON file -->
-    <opt id="smokeGeoJson">scenarios/surf-coast-shire/population-subgroups-sample/scenario_smoke.json</opt>
-    <!-- Enables/disables legacy option to broadcast FIRE_ALERT as soon as the fire starts -->
-    <opt id="sendFireAlertOnFireStart">false</opt>
-  </model>
+    <model id="phoenix">
+      <!-- Phoenix fire GeoJSON file -->
+      <opt id="fireGeoJson">scenarios/surf-coast-shire/population-subgroups-sample/scenario_fire.json</opt>
+      <!-- Phoenix smoke (embers) GeoJSON file -->
+      <opt id="smokeGeoJson">scenarios/surf-coast-shire/population-subgroups-sample/scenario_smoke.json</opt>
+      <!-- Enables/disables legacy option to broadcast FIRE_ALERT as soon as the fire starts -->
+      <opt id="sendFireAlertOnFireStart">false</opt>
+    </model>
 
-  <model id="disruption">
-    <!-- Disruptions JSON file relative to examples/bushfire directory -->
-    <opt id="fileJson"></opt>
-  </model>
+    <model id="disruption">
+      <!-- Disruptions JSON file relative to examples/bushfire directory -->
+      <opt id="fileJson"></opt>
+    </model>
 
-  <model id="messaging">
-    <!-- Messaging JSON file  -->
-    <opt id="fileJson">scenarios/surf-coast-shire/population-subgroups-sample/scenario_messages.json</opt>
-    <!-- Zones GeoJSON file mapping zone IDs to polygon shapes -->
-    <opt id="fileZonesGeoJson">scenarios/surf-coast-shire/population-subgroups-sample/Anglesea_SA1s_WSG84.json</opt>
-  </model>
-</models>
+    <model id="messaging">
+      <!-- Messaging JSON file  -->
+      <opt id="fileJson">scenarios/surf-coast-shire/population-subgroups-sample/scenario_messages.json</opt>
+      <!-- Zones GeoJSON file mapping zone IDs to polygon shapes -->
+      <opt id="fileZonesGeoJson">scenarios/surf-coast-shire/population-subgroups-sample/Anglesea_SA1s_WSG84.json</opt>
+    </model>
 
+  </models>
+  
 </simulation>

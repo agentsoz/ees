@@ -55,7 +55,7 @@ public class Config {
             ;
 	// XML structure tags
 	private final String eSimulation = "simulation";
-	private final String eConfig = "config";
+	private final String eGlobal = "global";
 	private final String eModels = "models";
 	private final String eModel = "model";
 	private final String eOption = "opt";
@@ -142,7 +142,7 @@ public class Config {
 			Element root = (Element)doc.getElementsByTagName(eSimulation).item(0);
 
 			// Get the config options
-			NodeList opts = root.getElementsByTagName(eConfig).item(0).getChildNodes();
+			NodeList opts = root.getElementsByTagName(eGlobal).item(0).getChildNodes();
 			for(int i=0; i < opts.getLength(); i++) {
 				Node node = opts.item(i);
 				if (node.getNodeType() == Node.ELEMENT_NODE) {
