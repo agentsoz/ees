@@ -130,7 +130,8 @@ public class Resident extends Agent implements io.github.agentsoz.bdiabm.Agent {
 			writer.println(prefix + "received fire alert");
 			post(new RespondToFireAlert("RespondToFireAlert"));
 		} else if (perceptID.equals(PerceptList.EMERGENCY_MESSAGE)) {
-			EmergencyMessage.EmergencyMessageType type = (EmergencyMessage.EmergencyMessageType)parameters;
+			String[] tokens = ((String) parameters).split(",");
+			EmergencyMessage.EmergencyMessageType type = EmergencyMessage.EmergencyMessageType.valueOf(tokens[0]);
 			writer.println(prefix + "received emergency message " + type);
 			if (type==EmergencyMessage.EmergencyMessageType.EVACUATE_NOW) {
 				if (isEvacuating) {
