@@ -529,7 +529,7 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 		}
 		embers = embers.buffer(optMaxDistanceForSmokeVisual);
 		List<Id<Person>> personsMatched = getPersonsWithin(scenario, embers);
-		log.info("Embers/smoke seen by " +  personsMatched.size()+" persons");
+		log.info("Embers/smoke seen by {} persons: {} ", personsMatched.size(), Arrays.toString(personsMatched.toArray()));
 		// package the messages up to send to the BDI side
 		for (Id<Person> personId : personsMatched) {
 			PAAgent agent = this.getAgentManager().getAgent(personId.toString());
@@ -618,9 +618,9 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 				// And find everyone inside it
 				List<Id<Person>> personsMatched = getPersonsWithin(scenario, polygon);
 				personsInZones.addAll(personsMatched);
-				log.info("For zone " + zoneId + ", found "+personsMatched.size()+" persons currently within it");
+				log.info("Zone {} has persons: {} ", zoneId, Arrays.toString(personsMatched.toArray()));
 			}
-			log.info("Message " + msg.getType() + " will be sent to " + personsInZones.size() + " persons in zones " + msg.getBroadcastZones().keySet());
+			log.info("Message " + msg.getType() + " will be sent to total " + personsInZones.size() + " persons in zones " + msg.getBroadcastZones().keySet());
 			// package the messages up to send to the BDI side
 			for (Id<Person> personId : personsInZones) {
 				PAAgent agent = this.getAgentManager().getAgent(personId.toString());
@@ -685,7 +685,7 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 		{
 			Geometry buffer = fire.buffer(optMaxDistanceForFireVisual);
 			List<Id<Person>> personsMatched = getPersonsWithin(scenario, buffer);
-			log.info("Fire seen by " +  personsMatched.size()+" persons");
+			log.info("Fire seen by {} persons: {} ", personsMatched.size(), Arrays.toString(personsMatched.toArray()));
 			// package the messages up to send to the BDI side
 			for (Id<Person> personId : personsMatched) {
 				PAAgent agent = this.getAgentManager().getAgent(personId.toString());
