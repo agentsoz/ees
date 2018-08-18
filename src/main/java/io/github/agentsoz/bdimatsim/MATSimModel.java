@@ -520,7 +520,7 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 
 	private boolean processEmbersData(Object data, double now, Scenario scenario, DisruptionWriter disruptionWriter) {
 		log.info("receiving embers data at time={}", now);
-		log.info( "{}{}", new Gson().toJson(data).substring(0,Math.min(new Gson().toJson(data).length(),100)),
+		log.info( "{}{}", new Gson().toJson(data).substring(0,Math.min(new Gson().toJson(data).length(),200)),
 				"... use DEBUG to see full coordinates list") ;
 		log.debug( "{}", new Gson().toJson(data)) ;
 		Geometry embers = getGeometry((Map<Double, Double[][]>) data, scenario);
@@ -591,7 +591,10 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 
 	private boolean processEmergencyMessageData(Object data, double now, Scenario scenario) {
 		log.info("receiving emergency message data at time={}", now);
-		log.info( "{}", new Gson().toJson(data) ) ;
+		log.info( "{}{}", new Gson().toJson(data).substring(0,Math.min(new Gson().toJson(data).length(),200)),
+				"... use DEBUG to see full coordinates list") ;
+		log.debug( "{}", new Gson().toJson(data)) ;
+
 
 		Map<Double,EmergencyMessage> timeMapOfEmergencyMessages = (Map<Double,EmergencyMessage>)data;
 
@@ -673,7 +676,7 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 										   FireWriter fireWriter) {
 
 		log.info("receiving fire data at time={}", now);
-		log.info( "{}{}", new Gson().toJson(data).substring(0,Math.min(new Gson().toJson(data).length(),100)),
+		log.info( "{}{}", new Gson().toJson(data).substring(0,Math.min(new Gson().toJson(data).length(),200)),
 				"... use DEBUG to see full coordinates list") ;
 		log.debug( "{}", new Gson().toJson(data)) ;
 
