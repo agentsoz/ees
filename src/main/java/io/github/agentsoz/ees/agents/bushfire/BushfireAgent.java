@@ -37,7 +37,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.PrintStream;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 @AgentInfo(hasGoals={"io.github.agentsoz.ees.agents.bushfire.GoalDoNothing"})
 public abstract class BushfireAgent extends  Agent implements io.github.agentsoz.bdiabm.Agent {
@@ -107,6 +108,7 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
     // Internal variables
     private final String memory = "memory";
     private Map<String,Location> locations;
+    private boolean driving = false;
 
 
 
@@ -138,6 +140,13 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
         return 0.5; // FIXME: should be configurable
     }
 
+    boolean isDriving() {
+        return driving;
+    }
+
+    void setDriving(boolean driving) {
+        this.driving = driving;
+    }
 
     /**
      * Called by the Jill model when starting a new agent.
