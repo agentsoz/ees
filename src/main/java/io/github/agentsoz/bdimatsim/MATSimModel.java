@@ -622,7 +622,7 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 			for (Id<Person> personId : personsInZones) {
 				PAAgent agent = this.getAgentManager().getAgent(personId.toString());
 				if (agent != null) { // only do this if this is a BDI-like agent
-					agent.getPerceptContainer().put(PerceptList.EMERGENCY_MESSAGE, msg.getType());
+					agent.getPerceptContainer().put(PerceptList.EMERGENCY_MESSAGE, msg.getType() + "," + msg.getContent());
 				}
 			}
 
