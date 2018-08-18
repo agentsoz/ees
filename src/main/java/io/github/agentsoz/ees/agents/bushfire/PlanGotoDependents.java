@@ -6,7 +6,6 @@ import io.github.agentsoz.jill.lang.Agent;
 import io.github.agentsoz.jill.lang.Goal;
 import io.github.agentsoz.jill.lang.Plan;
 import io.github.agentsoz.jill.lang.PlanStep;
-import io.github.agentsoz.util.Global;
 import io.github.agentsoz.util.evac.ActionList;
 
 import java.util.Map;
@@ -33,22 +32,18 @@ import java.util.Map;
  * #L%
  */
 
-public class PlanGoHomeThenLeave extends Plan {
+public class PlanGotoDependents extends Plan {
 
 	BushfireAgent agent = null;
-	public boolean goingHomeBeforeLeaving = false;
 
-	public PlanGoHomeThenLeave(Agent agent, Goal goal, String name) {
+	public PlanGotoDependents(Agent agent, Goal goal, String name) {
 		super(agent, goal, name);
 		this.agent = (BushfireAgent)agent;
 		body = steps;
 	}
 
 	public boolean context() {
-		boolean applicable = false;
-		if (agent.isFinalResponseThresholdBreached() && agent.getDependentInfo() == null) {
-			applicable = true;
-		}
+		boolean applicable = true;
 		agent.memorise(BushfireAgent.MemoryEventType.DECIDED.name(), BushfireAgent.MemoryEventValue.IS_PLAN_APPLICABLE.name()
 				+ ":" + getGoal() + "|" + this.getClass().getSimpleName() + "=" + true);
 		return applicable;
@@ -57,22 +52,29 @@ public class PlanGoHomeThenLeave extends Plan {
 	PlanStep[] steps = {
 			new PlanStep() {
 				public void step() {
-					if (Global.getRandom().nextDouble() < agent.getProbHomeBeforeLeaving()) {
-						goingHomeBeforeLeaving =true;
-						post(new GoalGoHome("GoalGoHome"));
-						// Now wait till the next step for this goal to finish
-					}
+					agent.memorise(BushfireAgent.MemoryEventType.DECIDED.name(), BushfireAgent.MemoryEventValue.GO_VISIT_DEPENDENTS_NOW.name());
+					Object[] params = new Object[4];
+					params[0] = ActionList.DRIVETO;
+					params[1] = agent.getDependentInfo().getLocation().getCoordinates();
+					params[2] = agent.getTime() + 5.0; // five secs from now;
+					params[3] = MATSimModel.EvacRoutingMode.carFreespeed;
+					agent.memorise(BushfireAgent.MemoryEventType.ACTIONED.name(), ActionList.DRIVETO+"="+agent.getDependentInfo().getLocation());
+					post(new EnvironmentAction(Integer.toString(agent.getId()), ActionList.DRIVETO, params));
+				}
+			},
+			// Now wait till it is finished
+			new PlanStep() {
+				public void step() {
+					// Must suspend the agent when waiting for external stimuli
+					agent.suspend(true);
+					// All done, when we return from the above call
 				}
 			},
 			new PlanStep() {
 				public void step() {
-					post(new GoalLeave("GoalLeave"));
-					// Now wait till the next step for this goal to finish
-				}
-			},
-			new PlanStep() {
-				public void step() {
-					agent.memorise(BushfireAgent.MemoryEventType.BELIEVED.name(), BushfireAgent.MemoryEventValue.SAFE.name());
+					agent.memorise(BushfireAgent.MemoryEventType.BELIEVED.name(), BushfireAgent.MemoryEventValue.ARRIVED_LOCATION_DEPENDENTS.name());
+					agent.getDependentInfo().setLastVisitedAtTime(agent.getTime());
+					agent.memorise(BushfireAgent.MemoryEventType.BELIEVED.name(), BushfireAgent.MemoryEventValue.DEPENDENTS_INFO.name() + ":" + agent.getDependentInfo() );
 				}
 			},
 	};

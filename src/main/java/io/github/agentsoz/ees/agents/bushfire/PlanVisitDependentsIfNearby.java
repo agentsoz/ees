@@ -76,70 +76,29 @@ public class PlanVisitDependentsIfNearby extends Plan {
 			// Go visits dependents now
 			new PlanStep() {
 				public void step() {
-					agent.memorise(BushfireAgent.MemoryEventType.DECIDED.name(), BushfireAgent.MemoryEventValue.GO_VISIT_DEPENDENTS_NOW.name());
-					Object[] params = new Object[4];
-					params[0] = ActionList.DRIVETO;
-					params[1] = agent.getDependentInfo().getLocation().getCoordinates();
-					params[2] = agent.getTime() + 5.0; // five secs from now;
-					params[3] = MATSimModel.EvacRoutingMode.carFreespeed;
-					agent.memorise(BushfireAgent.MemoryEventType.ACTIONED.name(), ActionList.DRIVETO+"="+agent.getDependentInfo().getLocation());
-					post(new EnvironmentAction(Integer.toString(agent.getId()), ActionList.DRIVETO, params));
-				}
-			},
-			// Now wait till it is finished
-			new PlanStep() {
-				public void step() {
-					// Must suspend the agent when waiting for external stimuli
-					agent.suspend(true);
-					// All done, when we return from the above call
+					post(new GoalGotoDependents("GoalGotoDependents"));
+					// Now wait till the next step for this goal to finish
 				}
 			},
 			// Arrived at Dependents. Go home with some probability
 			new PlanStep() {
 				public void step() {
-					agent.memorise(BushfireAgent.MemoryEventType.BELIEVED.name(), BushfireAgent.MemoryEventValue.ARRIVED_LOCATION_DEPENDENTS.name());
-					agent.getDependentInfo().setLastVisitedAtTime(agent.getTime());
 					agent.memorise(BushfireAgent.MemoryEventType.BELIEVED.name(), BushfireAgent.MemoryEventValue.DEPENDENTS_INFO.name() + ":" + agent.getDependentInfo() );
 					if (Global.getRandom().nextDouble() < agent.getProbHomeAfterDependents()) {
-						agent.memorise(BushfireAgent.MemoryEventType.DECIDED.name(), BushfireAgent.MemoryEventValue.GO_HOME_NOW.name());
-						goingHomeAfterVisitingDependents =true;
-						Object[] params = new Object[4];
-						params[0] = ActionList.DRIVETO;
-						params[1] = agent.getLocations().get(agent.LOCATION_HOME).getCoordinates();
-						params[2] = agent.getTime() + 5.0; // five secs from now;
-						params[3] = MATSimModel.EvacRoutingMode.carFreespeed;
-						agent.memorise(BushfireAgent.MemoryEventType.ACTIONED.name(), ActionList.DRIVETO+"="+agent.getLocations().get(agent.LOCATION_HOME));
-						post(new EnvironmentAction(Integer.toString(agent.getId()), ActionList.DRIVETO, params));
+						post(new GoalGoHome("GoalGoHome"));
+						// Now wait till the next step for this goal to finish
 					} else {
 						agent.memorise(BushfireAgent.MemoryEventType.DECIDED.name(), BushfireAgent.MemoryEventValue.DONE_FOR_NOW.name());
 					}
 				}
 			},
-			// Now wait till it is finished
 			new PlanStep() {
 				public void step() {
 					if (goingHomeAfterVisitingDependents) {
-						// Must suspend the agent when waiting for external stimuli
-						agent.suspend(true);
-						// All done, when we return from the above call
+						// Arrived home
 					}
 				}
 			},
-			new PlanStep() {
-				public void step() {
-					if (goingHomeAfterVisitingDependents) {
-						agent.memorise(BushfireAgent.MemoryEventType.BELIEVED.name(), BushfireAgent.MemoryEventValue.ARRIVED_LOCATION_HOME.name());
-					}
-				}
-			},
-			// NOTE:
-			// Since Jill does not support multiple intentions yet, any repeated postings of the
-			// RespondToFireAlert goal (if the agent gets a blocked percept and retries) will end up being treated as
-			// sub-goals of this plan, i.e., recursive sub-goals.
-			// Therefore any plan steps below this point will be executed AFTER returning from the recursive call,
-			// and is probably not what we want/expect from the execution engine. For now, avoid adding anything
-			// beyond this point.
-			// dsingh, 5/dec/17
 	};
 
 	@Override

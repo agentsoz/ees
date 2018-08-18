@@ -58,31 +58,15 @@ public class PlanInitialResponseWithoutDependents extends Plan {
 						agent.memorise(BushfireAgent.MemoryEventType.DECIDED.name(), BushfireAgent.MemoryEventValue.DONE_FOR_NOW.name());
 					} else {
 						goingHomeFirst = true;
-						agent.memorise(BushfireAgent.MemoryEventType.DECIDED.name(), BushfireAgent.MemoryEventValue.GO_HOME_NOW.name());
-						Object[] params = new Object[4];
-						params[0] = ActionList.DRIVETO;
-						params[1] = agent.getLocations().get(agent.LOCATION_HOME).getCoordinates();
-						params[2] = agent.getTime() + 5.0; // five secs from now;
-						params[3] = MATSimModel.EvacRoutingMode.carFreespeed;
-						agent.memorise(BushfireAgent.MemoryEventType.ACTIONED.name(), ActionList.DRIVETO + "=" + agent.getLocations().get(agent.LOCATION_HOME));
-						post(new EnvironmentAction(Integer.toString(agent.getId()), ActionList.DRIVETO, params));
-					}
-				}
-			},
-			// Now wait till it is finished
-			new PlanStep() {
-				public void step() {
-					if (goingHomeFirst) {
-						// Must suspend the agent when waiting for external stimuli
-						agent.suspend(true);
-						// All done, when we return from the above call
+						post(new GoalGoHome("GoalGoHome"));
+						// Now wait till the next step for this goal to finish
 					}
 				}
 			},
 			new PlanStep() {
 				public void step() {
 					if (goingHomeFirst) {
-						agent.memorise(BushfireAgent.MemoryEventType.BELIEVED.name(), BushfireAgent.MemoryEventValue.ARRIVED_LOCATION_HOME.name());
+						// arrived home
 					}
 				}
 			},

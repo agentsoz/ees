@@ -28,6 +28,8 @@ import io.github.agentsoz.jill.lang.AgentInfo;
         "io.github.agentsoz.abmjill.genact.EnvironmentAction",
         "io.github.agentsoz.ees.agents.bushfire.GoalInitialResponse",
         "io.github.agentsoz.ees.agents.bushfire.GoalActNow",
+        "io.github.agentsoz.ees.agents.bushfire.GoalGoHome",
+        "io.github.agentsoz.ees.agents.bushfire.GoalGotoDependents",
         "io.github.agentsoz.ees.agents.bushfire.GoalLeave"})
 public class VisitorOvernight extends BushfireAgent {
 
