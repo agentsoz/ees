@@ -118,7 +118,7 @@ public final class PAAgentManager {
 					 */
 					//actionContainer.remove(action);
 				} else if (actionContainer.get(action).getState() == ActionContent.State.DROPPED) {
-					dropAction(agent, action);
+					dropAction(agent, action, actionContainer.get(action));
 				}
 			}
 		}
@@ -170,9 +170,13 @@ public final class PAAgentManager {
 	/*
 	 * BDI side wants to drop an action
 	 */
-	private final void dropAction(String agentID, String actionID) {
+	private final void dropAction(String agentID, String actionID, ActionContent action) {
 		if (agentsWithPerceptsAndActions.containsKey(agentID)) {
-
+			PAAgent agent = getAgent(agentID);
+			agent.getActionHandler().deregisterBDIAction(actionID);
+			agent.getActionContainer().register(actionID, action.getParameters());
+			agent.getActionContainer().get(actionID).setState(ActionContent.State.DROPPED);
+			log.info("agent {} dropped BDI action {}; MATSim leg is running detached now", agentID, actionID);
 		}
 	}
 }

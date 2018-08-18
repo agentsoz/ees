@@ -77,4 +77,8 @@ public final class ActionHandler {
 		}
 		return false;
 	}
+
+	public void deregisterBDIAction(String actionID) {
+		registeredActions.remove(actionID);
+	}
 }
