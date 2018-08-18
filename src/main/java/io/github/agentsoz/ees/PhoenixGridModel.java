@@ -22,6 +22,7 @@ package io.github.agentsoz.ees;
  * #L%
  */
 
+import com.google.gson.Gson;
 import io.github.agentsoz.dataInterface.DataServer;
 import io.github.agentsoz.dataInterface.DataSource;
 import io.github.agentsoz.util.Time;
@@ -174,7 +175,11 @@ public class PhoenixGridModel implements DataSource {
 		if (nextTime != null) {
 			dataServer.registerTimedUpdate(PerceptList.EMBERS_DATA, this, Time.convertTime(nextTime, Time.TimestepUnit.MINUTES, timestepUnit));
 		}
-		logger.info("sending {} data: {}", PerceptList.EMBERS_DATA, shapes);
+		logger.info("sending embers data at time={}", timestep);
+		logger.info( "{}{}", new Gson().toJson(shapes).substring(0,Math.min(new Gson().toJson(shapes).length(),200)),
+				"... use DEBUG to see full coordinates list") ;
+		logger.debug( "{}", new Gson().toJson(shapes)) ;
+
 		return shapes;
 	}
 
