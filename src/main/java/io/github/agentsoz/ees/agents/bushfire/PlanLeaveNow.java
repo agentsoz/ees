@@ -1,12 +1,9 @@
 package io.github.agentsoz.ees.agents.bushfire;
 
-import io.github.agentsoz.abmjill.genact.EnvironmentAction;
-import io.github.agentsoz.bdimatsim.MATSimModel;
 import io.github.agentsoz.jill.lang.Agent;
 import io.github.agentsoz.jill.lang.Goal;
 import io.github.agentsoz.jill.lang.Plan;
 import io.github.agentsoz.jill.lang.PlanStep;
-import io.github.agentsoz.util.evac.ActionList;
 
 import java.util.Map;
 
@@ -55,7 +52,7 @@ public class PlanLeaveNow extends Plan {
 	PlanStep[] steps = {
 			new PlanStep() {
 				public void step() {
-					post(new GoalLeave("GoalLeave"));
+					post(new GoalGotoEvacPlace("GoalGotoEvacPlace"));
 					// Now wait till the next step for this goal to finish
 				}
 			},

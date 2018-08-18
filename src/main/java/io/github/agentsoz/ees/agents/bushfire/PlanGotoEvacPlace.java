@@ -32,11 +32,11 @@ import java.util.Map;
  * #L%
  */
 
-public class PlanLeave extends Plan {
+public class PlanGotoEvacPlace extends Plan {
 
 	BushfireAgent agent = null;
 
-	public PlanLeave(Agent agent, Goal goal, String name) {
+	public PlanGotoEvacPlace(Agent agent, Goal goal, String name) {
 		super(agent, goal, name);
 		this.agent = (BushfireAgent)agent;
 		body = steps;

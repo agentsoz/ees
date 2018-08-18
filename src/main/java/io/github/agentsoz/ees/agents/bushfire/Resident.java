@@ -30,7 +30,8 @@ import io.github.agentsoz.jill.lang.AgentInfo;
         "io.github.agentsoz.ees.agents.bushfire.GoalActNow",
         "io.github.agentsoz.ees.agents.bushfire.GoalGoHome",
         "io.github.agentsoz.ees.agents.bushfire.GoalGotoDependents",
-        "io.github.agentsoz.ees.agents.bushfire.GoalLeave"})
+        "io.github.agentsoz.ees.agents.bushfire.GoalGotoInvacPlace",
+        "io.github.agentsoz.ees.agents.bushfire.GoalGotoEvacPlace"})
 public class Resident extends BushfireAgent {
 
     private Prefix prefix = new Resident.Prefix();

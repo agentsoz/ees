@@ -26,10 +26,10 @@ import io.github.agentsoz.jill.lang.Goal;
 import io.github.agentsoz.jill.lang.GoalInfo;
 
 @GoalInfo(hasPlans={
-        "io.github.agentsoz.ees.agents.bushfire.PlanLeave",
+        "io.github.agentsoz.ees.agents.bushfire.PlanGotoInvacPlace",
         })
-public class GoalLeave extends Goal {
-    public GoalLeave(String name) {
+public class GoalGotoInvacPlace extends Goal {
+    public GoalGotoInvacPlace(String name) {
         super(name);
     }
 }
