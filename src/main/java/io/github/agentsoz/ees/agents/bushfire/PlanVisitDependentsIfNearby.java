@@ -11,7 +11,6 @@ import io.github.agentsoz.util.Location;
 import io.github.agentsoz.util.evac.ActionList;
 import io.github.agentsoz.util.evac.PerceptList;
 
-import java.util.Arrays;
 import java.util.Map;
 
 /*
@@ -54,7 +53,7 @@ public class PlanVisitDependentsIfNearby extends Plan {
 	public boolean context() {
 		boolean applicable = false;
 		if (agent.isInitialResponseThresholdBreached() && agent.getDependentInfo() != null) {
-			Location homeLocation = agent.getLocations().get(agent.HOME_LOCATION);
+			Location homeLocation = agent.getLocations().get(agent.LOCATION_HOME);
 			Location dependentsLocation = agent.getDependentInfo().getLocation();
 			if (!(homeLocation == null || dependentsLocation == null)) {
 				double distanceToHome = (double) agent.getQueryPerceptInterface().queryPercept(
@@ -98,7 +97,7 @@ public class PlanVisitDependentsIfNearby extends Plan {
 			// Arrived at Dependents. Go home with some probability
 			new PlanStep() {
 				public void step() {
-					agent.memorise(BushfireAgent.MemoryEventType.BELIEVED.name(), BushfireAgent.MemoryEventValue.ARRIVED_AT_DEPENDENTS.name());
+					agent.memorise(BushfireAgent.MemoryEventType.BELIEVED.name(), BushfireAgent.MemoryEventValue.ARRIVED_LOCATION_DEPENDENTS.name());
 					agent.getDependentInfo().setLastVisitedAtTime(agent.getTime());
 					agent.memorise(BushfireAgent.MemoryEventType.BELIEVED.name(), BushfireAgent.MemoryEventValue.DEPENDENTS_INFO.name() + ":" + agent.getDependentInfo() );
 					if (Global.getRandom().nextDouble() < agent.getProbHomeAfterDependents()) {
@@ -106,10 +105,10 @@ public class PlanVisitDependentsIfNearby extends Plan {
 						goingHomeAfterVisitingDependents =true;
 						Object[] params = new Object[4];
 						params[0] = ActionList.DRIVETO;
-						params[1] = agent.getLocations().get(agent.HOME_LOCATION).getCoordinates();
+						params[1] = agent.getLocations().get(agent.LOCATION_HOME).getCoordinates();
 						params[2] = agent.getTime() + 5.0; // five secs from now;
 						params[3] = MATSimModel.EvacRoutingMode.carFreespeed;
-						agent.memorise(BushfireAgent.MemoryEventType.ACTIONED.name(), ActionList.DRIVETO+"="+agent.getLocations().get(agent.HOME_LOCATION));
+						agent.memorise(BushfireAgent.MemoryEventType.ACTIONED.name(), ActionList.DRIVETO+"="+agent.getLocations().get(agent.LOCATION_HOME));
 						post(new EnvironmentAction(Integer.toString(agent.getId()), ActionList.DRIVETO, params));
 					} else {
 						agent.memorise(BushfireAgent.MemoryEventType.DECIDED.name(), BushfireAgent.MemoryEventValue.DONE_FOR_NOW.name());
@@ -129,7 +128,7 @@ public class PlanVisitDependentsIfNearby extends Plan {
 			new PlanStep() {
 				public void step() {
 					if (goingHomeAfterVisitingDependents) {
-						agent.memorise(BushfireAgent.MemoryEventType.BELIEVED.name(), BushfireAgent.MemoryEventValue.ARRIVED_HOME.name());
+						agent.memorise(BushfireAgent.MemoryEventType.BELIEVED.name(), BushfireAgent.MemoryEventValue.ARRIVED_LOCATION_HOME.name());
 					}
 				}
 			},

@@ -25,7 +25,6 @@ package io.github.agentsoz.ees.agents.bushfire;
 
 import io.github.agentsoz.bdiabm.QueryPerceptInterface;
 import io.github.agentsoz.bdiabm.data.ActionContent;
-import io.github.agentsoz.jill.core.beliefbase.Belief;
 import io.github.agentsoz.jill.core.beliefbase.BeliefBaseException;
 import io.github.agentsoz.jill.core.beliefbase.BeliefSetField;
 import io.github.agentsoz.jill.lang.Agent;
@@ -43,9 +42,12 @@ import java.util.*;
 @AgentInfo(hasGoals={"io.github.agentsoz.ees.agents.bushfire.GoalDoNothing"})
 public abstract class BushfireAgent extends  Agent implements io.github.agentsoz.bdiabm.Agent {
 
-    public static final String HOME_LOCATION = "home";
-
     private final Logger logger = LoggerFactory.getLogger("io.github.agentsoz.ees");
+
+    static final String LOCATION_HOME = "home";
+    static final String LOCATION_EVAC_PREFERRED = "evac";
+    static final String LOCATION_INVAC_PREFERRED = "invac";
+
     private PrintStream writer = null;
     private QueryPerceptInterface queryInterface;
     private double time = -1;
@@ -85,6 +87,7 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
         DEPENDENTS_INFO,
         DONE_FOR_NOW,
         IS_PLAN_APPLICABLE,
+        STATE_CHANGED,
         RESPONSE_BAROMETER_MESSAGES_CHANGED,
         RESPONSE_BAROMETER_FIELD_OF_VIEW_CHANGED,
         INITIAL_RESPONSE_THRESHOLD_BREACHED,
@@ -95,8 +98,9 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
         GO_VISIT_DEPENDENTS_NOW,
         GO_HOME_NOW,
         LEAVE_NOW,
-        ARRIVED_HOME,
-        ARRIVED_AT_DEPENDENTS,
+        ARRIVED_LOCATION_HOME,
+        ARRIVED_LOCATION_DEPENDENTS,
+        ARRIVED_LOCATION_EVAC,
     }
 
     // Internal variables
@@ -324,10 +328,18 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
      * @param msg the incoming emergency message
      */
     private void updateResponseBarometerMessages(Object msg) {
-        if (msg == null || !(msg instanceof  EmergencyMessage.EmergencyMessageType)) {
+        if (msg == null || !(msg instanceof String)) {
             return;
         }
-        double value = ((EmergencyMessage.EmergencyMessageType) msg).getValue();
+        String[] tokens = ((String) msg).split(",");
+        EmergencyMessage.EmergencyMessageType type = EmergencyMessage.EmergencyMessageType.valueOf(tokens[0]);
+        try {
+            String loc= tokens[1];
+            double [] coords = new double[]{Double.parseDouble(tokens[2]), Double.parseDouble(tokens[3])};
+            locations.put(LOCATION_EVAC_PREFERRED, new Location(loc,coords[0], coords[1]));
+            memorise(MemoryEventType.BELIEVED.name(), LOCATION_EVAC_PREFERRED + "=" + locations.get(LOCATION_EVAC_PREFERRED));
+        } catch (Exception e) {}
+        double value = type.getValue();
         // Allow the barometer to go down as well if the intensity of the situation (message) is reduced
         //if (value > responseBarometerMessages) {
             responseBarometerMessages = value;
@@ -461,15 +473,31 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
 
                         }
                         break;
-                    case HOME_LOCATION:
+                    case LOCATION_HOME:
                         if(i+1<args.length) {
                             i++;
                             try {
                                 String[] vals = args[i].split(",");
-                                Location location = new Location(HOME_LOCATION, Double.parseDouble(vals[0]), Double.parseDouble(vals[1]));
-                                locations.put(HOME_LOCATION, location);
+                                Location location = new Location(LOCATION_HOME, Double.parseDouble(vals[0]), Double.parseDouble(vals[1]));
+                                locations.put(LOCATION_HOME, location);
                             } catch (Exception e) {
                                 System.err.println("Could not parse dependent's location '"
+                                        + args[i] + "' : " + e.getMessage());
+                            }
+                        }
+                        break;
+                    case "EvacLocationPreference":
+                    case "InvacLocationPreference":
+                        if(i+1<args.length) {
+                            i++;
+                            try {
+                                String[] vals = args[i].split(",");
+                                Location location = new Location(vals[0], Double.parseDouble(vals[1]), Double.parseDouble(vals[2]));
+                                String loc = args[i-1].equals("EvacLocationPreference") ?
+                                        LOCATION_EVAC_PREFERRED : LOCATION_INVAC_PREFERRED;
+                                locations.put(loc, location);
+                            } catch (Exception e) {
+                                System.err.println("Could not parse location '"
                                         + args[i] + "' : " + e.getMessage());
                             }
                         }

@@ -1,9 +1,12 @@
 package io.github.agentsoz.ees.agents.bushfire;
 
+import io.github.agentsoz.abmjill.genact.EnvironmentAction;
+import io.github.agentsoz.bdimatsim.MATSimModel;
 import io.github.agentsoz.jill.lang.Agent;
 import io.github.agentsoz.jill.lang.Goal;
 import io.github.agentsoz.jill.lang.Plan;
 import io.github.agentsoz.jill.lang.PlanStep;
+import io.github.agentsoz.util.evac.ActionList;
 
 import java.util.Map;
 
@@ -53,8 +56,27 @@ public class PlanLeaveNow extends Plan {
 			new PlanStep() {
 				public void step() {
 					agent.memorise(BushfireAgent.MemoryEventType.DECIDED.name(),
-							BushfireAgent.MemoryEventValue.LEAVE_NOW.name()
-									+ ", but has no logic yet to decide where to go!!!");
+							BushfireAgent.MemoryEventValue.LEAVE_NOW.name());
+					Object[] params = new Object[4];
+					params[0] = ActionList.DRIVETO;
+					params[1] = agent.getLocations().get(agent.LOCATION_EVAC_PREFERRED).getCoordinates();
+					params[2] = agent.getTime() + 5.0; // five secs from now;
+					params[3] = MATSimModel.EvacRoutingMode.carFreespeed;
+					agent.memorise(BushfireAgent.MemoryEventType.ACTIONED.name(), ActionList.DRIVETO+"="+agent.getLocations().get(agent.LOCATION_EVAC_PREFERRED));
+					post(new EnvironmentAction(Integer.toString(agent.getId()), ActionList.DRIVETO, params));
+				}
+			},
+			// Now wait till it is finished
+			new PlanStep() {
+				public void step() {
+					// Must suspend the agent when waiting for external stimuli
+					agent.suspend(true);
+					// All done, when we return from the above call
+				}
+			},
+			new PlanStep() {
+				public void step() {
+					agent.memorise(BushfireAgent.MemoryEventType.BELIEVED.name(), BushfireAgent.MemoryEventValue.ARRIVED_LOCATION_EVAC.name());
 				}
 			},
 	};
