@@ -32,21 +32,18 @@ import java.util.Map;
  * #L%
  */
 
-public class PlanLeaveNow extends Plan {
+public class PlanLeave extends Plan {
 
 	BushfireAgent agent = null;
 
-	public PlanLeaveNow(Agent agent, Goal goal, String name) {
+	public PlanLeave(Agent agent, Goal goal, String name) {
 		super(agent, goal, name);
 		this.agent = (BushfireAgent)agent;
 		body = steps;
 	}
 
 	public boolean context() {
-		boolean applicable = false;
-		if (agent.isFinalResponseThresholdBreached() && agent.getDependentInfo() != null) {
-			applicable = true;
-		}
+		boolean applicable = true;
 		agent.memorise(BushfireAgent.MemoryEventType.DECIDED.name(), BushfireAgent.MemoryEventValue.IS_PLAN_APPLICABLE.name()
 				+ ":" + getGoal() + "|" + this.getClass().getSimpleName() + "=" + true);
 		return applicable;
@@ -55,13 +52,28 @@ public class PlanLeaveNow extends Plan {
 	PlanStep[] steps = {
 			new PlanStep() {
 				public void step() {
-					post(new GoalLeave("GoalLeave"));
-					// Now wait till the next step for this goal to finish
+					agent.memorise(BushfireAgent.MemoryEventType.DECIDED.name(),
+							BushfireAgent.MemoryEventValue.LEAVE_NOW.name());
+					Object[] params = new Object[4];
+					params[0] = ActionList.DRIVETO;
+					params[1] = agent.getLocations().get(agent.LOCATION_EVAC_PREFERRED).getCoordinates();
+					params[2] = agent.getTime() + 5.0; // five secs from now;
+					params[3] = MATSimModel.EvacRoutingMode.carFreespeed;
+					agent.memorise(BushfireAgent.MemoryEventType.ACTIONED.name(), ActionList.DRIVETO+"="+agent.getLocations().get(agent.LOCATION_EVAC_PREFERRED));
+					post(new EnvironmentAction(Integer.toString(agent.getId()), ActionList.DRIVETO, params));
+				}
+			},
+			// Now wait till it is finished
+			new PlanStep() {
+				public void step() {
+					// Must suspend the agent when waiting for external stimuli
+					agent.suspend(true);
+					// All done, when we return from the above call
 				}
 			},
 			new PlanStep() {
 				public void step() {
-					agent.memorise(BushfireAgent.MemoryEventType.BELIEVED.name(), BushfireAgent.MemoryEventValue.SAFE.name());
+					agent.memorise(BushfireAgent.MemoryEventType.BELIEVED.name(), BushfireAgent.MemoryEventValue.ARRIVED_LOCATION_EVAC.name());
 				}
 			},
 	};

@@ -101,6 +101,7 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
         ARRIVED_LOCATION_HOME,
         ARRIVED_LOCATION_DEPENDENTS,
         ARRIVED_LOCATION_EVAC,
+        SAFE
     }
 
     // Internal variables

@@ -83,9 +83,13 @@ public class PlanGoHomeThenLeave extends Plan {
 			new PlanStep() {
 				public void step() {
 					agent.memorise(BushfireAgent.MemoryEventType.BELIEVED.name(), BushfireAgent.MemoryEventValue.ARRIVED_LOCATION_HOME.name());
-					agent.memorise(BushfireAgent.MemoryEventType.DECIDED.name(),
-							BushfireAgent.MemoryEventValue.LEAVE_NOW.name()
-									+ ", but has no logic yet to decide where to go!!!");
+					post(new GoalLeave("GoalLeave"));
+					// Now wait till the next step for this goal to finish
+				}
+			},
+			new PlanStep() {
+				public void step() {
+					agent.memorise(BushfireAgent.MemoryEventType.BELIEVED.name(), BushfireAgent.MemoryEventValue.SAFE.name());
 				}
 			},
 	};
