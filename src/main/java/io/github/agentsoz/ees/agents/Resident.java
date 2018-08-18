@@ -160,11 +160,8 @@ public class Resident extends Agent implements io.github.agentsoz.bdiabm.Agent {
 	public void updateAction(String actionID, ActionContent content) {
 		logger.debug("{} received action update: {}", prefix, content);
 		if (content.getAction_type().equals(ActionList.DRIVETO)) {
-			if (content.getState()==State.PASSED) {
-				// Wake up the agent that was waiting for external action to finish
-				// FIXME: BDI actions put agent in suspend, which won't work for multiple intention stacks
-				suspend(false);
-			} else if (content.getState()==State.FAILED) {
+			State actionState = content.getState();
+			if (actionState==State.PASSED || actionState==State.FAILED || actionState==State.DROPPED) {
 				// Wake up the agent that was waiting for external action to finish
 				// FIXME: BDI actions put agent in suspend, which won't work for multiple intention stacks
 				suspend(false);

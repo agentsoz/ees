@@ -365,11 +365,10 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
     public void updateAction(String actionID, ActionContent content) {
         logger.debug("{} received action update: {}", logPrefix(), content);
         if (content.getAction_type().equals(ActionList.DRIVETO)) {
-            if (content.getState()== ActionContent.State.PASSED) {
-                // Wake up the agent that was waiting for external action to finish
-                // FIXME: BDI actions put agent in suspend, which won't work for multiple intention stacks
-                suspend(false);
-            } else if (content.getState()== ActionContent.State.FAILED) {
+            ActionContent.State actionState = content.getState();
+            if (actionState== ActionContent.State.PASSED ||
+                actionState== ActionContent.State.FAILED ||
+                actionState== ActionContent.State.DROPPED) {
                 // Wake up the agent that was waiting for external action to finish
                 // FIXME: BDI actions put agent in suspend, which won't work for multiple intention stacks
                 suspend(false);
