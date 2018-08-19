@@ -97,14 +97,15 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
         INITIAL_AND_FINAL_RESPONSE_THRESHOLDS_BREACHED_TOGETHER,
         TRIGGER_INITIAL_RESPONSE_NOW,
         TRIGGER_FINAL_RESPONSE_NOW,
-        GO_VISIT_DEPENDENTS_NOW,
-        GO_HOME_NOW,
-        LEAVE_NOW,
+        GOTO_DEPENDENTS_NOW,
+        GOTO_HOME_NOW,
+        GOTO_EVAC_PLACE_NOW,
         ARRIVED_LOCATION_HOME,
         ARRIVED_LOCATION_DEPENDENTS,
         ARRIVED_LOCATION_EVAC,
         ARRIVED_LOCATION_INVAC,
-        SAFE
+        SAFE,
+        LAST_ENV_ACTION_STATE
     }
 
     // Internal variables
@@ -384,12 +385,14 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
     @Override
     public void updateAction(String actionID, ActionContent content) {
         logger.debug("{} received action update: {}", logPrefix(), content);
+        setLastEnvironmentActionState(content.getState()); // save the finish state of the action
         if (content.getAction_type().equals(ActionList.DRIVETO)) {
             ActionContent.State actionState = content.getState();
             if (actionState == ActionContent.State.PASSED ||
                     actionState == ActionContent.State.FAILED ||
                     actionState == ActionContent.State.DROPPED) {
-                setLastEnvironmentActionState(actionState);
+                memorise(BushfireAgent.MemoryEventType.BELIEVED.name(), BushfireAgent.MemoryEventValue.LAST_ENV_ACTION_STATE.name() + "=" + actionState.name());
+                setActiveEnvironmentAction(null); // remove the action
                 // Wake up the agent that was waiting for external action to finish
                 // FIXME: BDI actions put agent in suspend, which won't work for multiple intention stacks
                 suspend(false);
