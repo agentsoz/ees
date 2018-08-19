@@ -23,6 +23,7 @@ package io.github.agentsoz.ees.agents.bushfire;
  * #L%
  */
 
+import io.github.agentsoz.abmjill.genact.EnvironmentAction;
 import io.github.agentsoz.bdiabm.QueryPerceptInterface;
 import io.github.agentsoz.bdiabm.data.ActionContent;
 import io.github.agentsoz.jill.core.beliefbase.BeliefBaseException;
@@ -109,7 +110,8 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
     // Internal variables
     private final String memory = "memory";
     private Map<String,Location> locations;
-    private boolean driving = false;
+    private EnvironmentAction activeEnvironmentAction;
+    private ActionContent.State lastEnvironmentActionStatus;
 
 
 
@@ -142,11 +144,19 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
     }
 
     boolean isDriving() {
-        return driving;
+        return activeEnvironmentAction != null && activeEnvironmentAction.getActionID().equals(ActionList.DRIVETO);
     }
 
-    void setDriving(boolean driving) {
-        this.driving = driving;
+    void setActiveEnvironmentAction(EnvironmentAction activeEnvironmentAction) {
+        this.activeEnvironmentAction = activeEnvironmentAction;
+    }
+
+    public void setLastEnvironmentActionState(ActionContent.State lastEnvironmentActionStatus) {
+        this.lastEnvironmentActionStatus = lastEnvironmentActionStatus;
+    }
+
+    public ActionContent.State getLastEnvironmentActionState() {
+        return lastEnvironmentActionStatus;
     }
 
     /**
@@ -376,9 +386,10 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
         logger.debug("{} received action update: {}", logPrefix(), content);
         if (content.getAction_type().equals(ActionList.DRIVETO)) {
             ActionContent.State actionState = content.getState();
-            if (actionState== ActionContent.State.PASSED ||
-                actionState== ActionContent.State.FAILED ||
-                actionState== ActionContent.State.DROPPED) {
+            if (actionState == ActionContent.State.PASSED ||
+                    actionState == ActionContent.State.FAILED ||
+                    actionState == ActionContent.State.DROPPED) {
+                setLastEnvironmentActionState(actionState);
                 // Wake up the agent that was waiting for external action to finish
                 // FIXME: BDI actions put agent in suspend, which won't work for multiple intention stacks
                 suspend(false);

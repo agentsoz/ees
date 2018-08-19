@@ -59,8 +59,9 @@ public class PlanGotoDependents extends Plan {
 					params[2] = agent.getTime() + 5.0; // five secs from now;
 					params[3] = MATSimModel.EvacRoutingMode.carFreespeed;
 					agent.memorise(BushfireAgent.MemoryEventType.ACTIONED.name(), ActionList.DRIVETO+"="+agent.getDependentInfo().getLocation());
-					agent.setDriving(true);
-					post(new EnvironmentAction(Integer.toString(agent.getId()), ActionList.DRIVETO, params));
+					EnvironmentAction action = new EnvironmentAction(Integer.toString(agent.getId()), ActionList.DRIVETO, params);
+					agent.setActiveEnvironmentAction(action);
+					post(action);
 				}
 			},
 			// Now wait till it is finished
@@ -69,11 +70,7 @@ public class PlanGotoDependents extends Plan {
 					// Must suspend the agent when waiting for external stimuli
 					agent.suspend(true);
 					// All done, when we return from the above call
-					agent.setDriving(false);
-				}
-			},
-			new PlanStep() {
-				public void step() {
+					agent.setActiveEnvironmentAction(null);
 					agent.memorise(BushfireAgent.MemoryEventType.BELIEVED.name(), BushfireAgent.MemoryEventValue.ARRIVED_LOCATION_DEPENDENTS.name());
 					agent.getDependentInfo().setLastVisitedAtTime(agent.getTime());
 					agent.memorise(BushfireAgent.MemoryEventType.BELIEVED.name(), BushfireAgent.MemoryEventValue.DEPENDENTS_INFO.name() + ":" + agent.getDependentInfo() );
