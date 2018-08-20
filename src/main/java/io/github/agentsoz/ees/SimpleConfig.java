@@ -29,12 +29,12 @@ import org.w3c.dom.NodeList;
  * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Lesser Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Lesser Public
  * License along with this program.  If not, see
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
@@ -68,6 +68,10 @@ public class SimpleConfig {
 	private static double congestionEvaluationInterval = 600; // secs between BDI agent evaluatiing if it is in congestion
 	private static double congestionToleranceThreshold = 0.5; // as a proportion of the congestionEvaluationInterval
 	private static String diffusionConfig = null; // FIXME: should come from config XML
+	private static double congestionReactionProbability = 1.0; // likelihood that an agent will react when in congestion
+
+	private static String bdiAgentTagInMATSimPopulationFile = "BDIAgentType"; // FIXME: no way to set this yet
+	private static boolean loadBDIAgentsFromMATSimPlansFile = false;
 
 	public static void setDisruptionsFile(String disruptionFile) {
 		SimpleConfig.disruptionsFile = disruptionFile;
@@ -437,10 +441,33 @@ public class SimpleConfig {
         SimpleConfig.zonesFile = zonesFile;
     }
 
-    public static String getDiffusionConfig() { return diffusionConfig;  }
+	public static String getDiffusionConfig() { return diffusionConfig;  }
 
 	public static void setDiffusionConfig(String config) {
 		SimpleConfig.diffusionConfig = config;
 	}
 
+	public static double getCongestionReactionProbability() {
+		return congestionReactionProbability;
+	}
+
+	public static void setCongestionReactionProbability(double congestionReactionProbability) {
+        SimpleConfig.congestionReactionProbability = congestionReactionProbability;
+    }
+
+	public static String getBdiAgentTagInMATSimPopulationFile() {
+		return bdiAgentTagInMATSimPopulationFile;
+	}
+
+	public static void setBdiAgentTagInMATSimPopulationFile(String bdiAgentTagInMATSimPopulationFile) {
+		SimpleConfig.bdiAgentTagInMATSimPopulationFile = bdiAgentTagInMATSimPopulationFile;
+	}
+
+	public static boolean isLoadBDIAgentsFromMATSimPlansFile() {
+		return loadBDIAgentsFromMATSimPlansFile;
+	}
+
+	public static void setLoadBDIAgentsFromMATSimPlansFile(boolean loadBDIAgentsFromMATSimPlansFile) {
+		SimpleConfig.loadBDIAgentsFromMATSimPlansFile = loadBDIAgentsFromMATSimPlansFile;
+	}
 }

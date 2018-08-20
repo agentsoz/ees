@@ -1,0 +1,146 @@
+package io.github.agentsoz.ees;
+
+/*-
+ * #%L
+ * BDI-ABM Integration Package
+ * %%
+ * Copyright (C) 2014 - 2018 by its authors. See AUTHORS file.
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Lesser Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Lesser Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/lgpl-3.0.html>.
+ * #L%
+ */
+
+import io.github.agentsoz.bdiabm.QueryPerceptInterface;
+import io.github.agentsoz.bdimatsim.EvacAgentTracker;
+import io.github.agentsoz.bdimatsim.EvacConfig;
+import io.github.agentsoz.bdimatsim.MATSimModel;
+import io.github.agentsoz.bdimatsim.Utils;
+import io.github.agentsoz.dataInterface.DataServer;
+import io.github.agentsoz.util.Time;
+import org.matsim.api.core.v01.Scenario;
+import org.matsim.core.config.ConfigUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.*;
+
+/**
+ * Emergency Evacuation Simulator (EES) main program.
+ * Uses input config v2. For legacy config use {@link Main}.
+ * @author Dhirendra Singh
+ */
+public class Run {
+
+    private static final Logger log = LoggerFactory.getLogger(Run.class);
+
+    public static void main(String[] args) {
+        Config cfg = new Config();
+        Map<String,String> opts = cfg.parse(args);
+        cfg.loadFromFile(opts.get(Config.OPT_CONFIG));
+        Run sim = new Run();
+        sim.start(cfg);
+    }
+
+    private void start(Config cfg) {
+        log.info("Starting the data server");
+        // initialise the data server bus for passing data around using a publish/subscribe or pull mechanism
+        DataServer dataServer = DataServer.getServer("EES");
+        dataServer.setTime(hhMmToS(cfg.getGlobalConfig(Config.eGlobalStartHhMm)));
+
+        // initialise the fire model and register it as an active data source
+        {
+            log.info("Starting fire model");
+            PhoenixFireModule model = new PhoenixFireModule(cfg.getModelConfig(Config.eModelFire), dataServer);
+            model.setTimestepUnit(Time.TimestepUnit.SECONDS);
+            model.start();
+        }
+        {
+            log.info("Starting smoke model");
+            PhoenixGridModel model = new PhoenixGridModel(cfg.getModelConfig(Config.eModelFire), dataServer);
+            model.setTimestepUnit(Time.TimestepUnit.SECONDS);
+            model.start();
+        }
+        // initialise the disruptions model and register it as an active data source
+        {
+            log.info("Starting disruptions model");
+            DisruptionModel model = new DisruptionModel(cfg.getModelConfig(Config.eModelDisruption), dataServer);
+            model.setTimestepUnit(Time.TimestepUnit.SECONDS);
+            model.start();
+        }
+        // initialise the messaging model and register it as an active data source
+        {
+            log.info("Starting messaging model");
+            MessagingModel model = new MessagingModel(cfg.getModelConfig(Config.eModelMessaging), dataServer);
+            model.setTimestepUnit(Time.TimestepUnit.SECONDS);
+            model.start();
+        }
+        // initialise the MATSim model and register it as an active data source
+        log.info("Creating MATSim model");
+        MATSimModel matsimModel = new MATSimModel(cfg.getModelConfig(Config.eModelMatsim), dataServer);
+        EvacConfig evacConfig = matsimModel.initialiseEvacConfig(matsimModel.loadAndPrepareConfig());
+        Scenario scenario = matsimModel.loadAndPrepareScenario() ;
+
+        // get BDI agents map from the MATSim population file
+        log.info("Reading BDI agents from MATSim population file");
+        Map<String, List<String[]>> bdiMap = Utils.getAgentsFromMATSimPlansFile(scenario);
+        JillBDIModel.removeNonBdiAgentsFrom(bdiMap);
+        List<String> bdiAgentIDs = new ArrayList<>(bdiMap.keySet());
+
+        // initialise the Jill model, register it as an active data source, and start it
+        log.info("Starting Jill BDI model");
+        JillBDIModel jillmodel = new JillBDIModel(cfg.getModelConfig(Config.eModelBdi), dataServer, (QueryPerceptInterface)matsimModel, bdiMap);
+        jillmodel.init(matsimModel.getAgentManager().getAgentDataContainer(), null, null, bdiAgentIDs.toArray( new String[bdiAgentIDs.size()] ));
+        jillmodel.start();
+
+        // --- initialize and start MATSim
+        log.info("Starting MATSim model");
+        matsimModel.init(bdiAgentIDs);
+        {
+            // yyyy try to replace this by injection. because otherwise it again needs to be added "late enough", which we
+            // wanted to get rid of.  kai, dec'17
+            EvacAgentTracker tracker = new EvacAgentTracker(evacConfig, matsimModel.getScenario().getNetwork(), matsimModel.getEvents());
+            matsimModel.getEvents().addHandler(tracker);
+        }
+
+        // start the main simulation loop
+        log.info("Starting the simulation loop");
+        while (true) {
+            jillmodel.takeControl( matsimModel.getAgentManager().getAgentDataContainer() );
+            if( matsimModel.isFinished() ) {
+                break;
+            }
+            matsimModel.runUntil((long)dataServer.getTime(), matsimModel.getAgentManager().getAgentDataContainer());
+            dataServer.stepTime();
+        }
+
+        // finish up
+        log.info("Finishing up");
+        jillmodel.finish();
+        matsimModel.finish() ;
+        DataServer.cleanup() ;
+        log.info("All done");
+    }
+
+
+    private static double hhMmToS(String HHMM) {
+        String[] tokens = HHMM.split(":");
+        int[] hhmm = new int[]{Integer.parseInt(tokens[0]),Integer.parseInt(tokens[1])};
+        double secs = Time.convertTime(hhmm[0], Time.TimestepUnit.HOURS, Time.TimestepUnit.SECONDS)
+                + Time.convertTime(hhmm[1], Time.TimestepUnit.MINUTES, Time.TimestepUnit.SECONDS);
+        return secs;
+    }
+
+
+}

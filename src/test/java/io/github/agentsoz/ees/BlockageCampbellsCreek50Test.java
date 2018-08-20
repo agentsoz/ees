@@ -3,14 +3,14 @@
  */
 package io.github.agentsoz.ees;
 
-import io.github.agentsoz.bdimatsim.EvacConfig;
 import io.github.agentsoz.bdimatsim.MATSimModel;
 import io.github.agentsoz.util.TestUtils;
-import org.apache.log4j.Logger;
 import org.junit.Rule;
 import org.junit.Test;
 import org.matsim.core.utils.misc.CRCChecksum;
 import org.matsim.testcases.MatsimTestUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author dsingh
@@ -18,8 +18,8 @@ import org.matsim.testcases.MatsimTestUtils;
  */
 public class BlockageCampbellsCreek50Test {
 	// have tests in separate classes so that they run, at least under maven, in separate JVMs.  kai, nov'17
-	
-	Logger log = Logger.getLogger( BlockageCampbellsCreek50Test.class ) ;
+
+	private static final Logger log = LoggerFactory.getLogger(BlockageCampbellsCreek50Test.class ) ;
 
 	@Rule public MatsimTestUtils utils = new MatsimTestUtils() ;
 

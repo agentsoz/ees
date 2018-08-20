@@ -1,13 +1,12 @@
 package io.github.agentsoz.ees;
 
 import io.github.agentsoz.bdimatsim.MATSimModel;
-import io.github.agentsoz.util.TestUtils;
-import org.apache.log4j.Logger;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
-import org.matsim.core.utils.misc.CRCChecksum;
 import org.matsim.testcases.MatsimTestUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author dsingh
@@ -17,7 +16,7 @@ import org.matsim.testcases.MatsimTestUtils;
 public class Anglesea12kTest {
     // have tests in separate classes so that they run, at least und    er maven, in separate JVMs.  kai, nov'17
 
-    Logger log = Logger.getLogger(Anglesea12kTest.class);
+    private static final Logger log = LoggerFactory.getLogger(Anglesea12kTest.class);
 
     @Rule
     public MatsimTestUtils utils = new MatsimTestUtils();
@@ -41,7 +40,7 @@ public class Anglesea12kTest {
                 "randomSeed: 12345," + // jill random seed
                 "numThreads: 1" + // run jill in single-threaded mode so logs are deterministic
                 "}",
-                "--x-congestion-config", "100000:100000", // virtually disallow congestion re-routing (painfully slow otherwise!)
+                "--x-congestion-config", "600:2:0.01", // virtually disallow congestion re-routing (painfully slow otherwise!)
                 "--sendFireAlertOnFireStart", "false", // disable fire alert from fire model, instead will use messaging
                 "--x-messages-file", "scenarios/surf-coast-shire/anglesea-12k/scenario_messages.json", // specifies when to send evac now msg
                 "--x-zones-file", "scenarios/surf-coast-shire/anglesea-12k/Anglesea_SA1s_WSG84.json", // map from zone (SA1) ids to shapes
@@ -49,12 +48,12 @@ public class Anglesea12kTest {
 
         Main.main(args);
 
-        final String actualEventsFilename = utils.getOutputDirectory() + "/output_events.xml.gz";
-        long actualEventsCRC = CRCChecksum.getCRCFromFile( actualEventsFilename ) ;
-        System.err.println("actual(events)="+actualEventsCRC) ;
-
-        long actualPlansCRC = CRCChecksum.getCRCFromFile( utils.getOutputDirectory() + "/output_plans.xml.gz" ) ;
-        System.err.println("actual(plans)="+actualPlansCRC) ;
+//        final String actualEventsFilename = utils.getOutputDirectory() + "/output_events.xml.gz";
+//        long actualEventsCRC = CRCChecksum.getCRCFromFile( actualEventsFilename ) ;
+//        System.err.println("actual(events)="+actualEventsCRC) ;
+//
+//        long actualPlansCRC = CRCChecksum.getCRCFromFile( utils.getOutputDirectory() + "/output_plans.xml.gz" ) ;
+//        System.err.println("actual(plans)="+actualPlansCRC) ;
 
         // ---
 

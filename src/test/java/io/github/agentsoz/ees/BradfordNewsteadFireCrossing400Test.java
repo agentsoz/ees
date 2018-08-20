@@ -6,12 +6,13 @@ package io.github.agentsoz.ees;
 import io.github.agentsoz.bdimatsim.EvacConfig;
 import io.github.agentsoz.bdimatsim.MATSimModel;
 import io.github.agentsoz.util.TestUtils;
-import org.apache.log4j.Logger;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.matsim.core.utils.misc.CRCChecksum;
 import org.matsim.testcases.MatsimTestUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author dsingh
@@ -24,7 +25,7 @@ import org.matsim.testcases.MatsimTestUtils;
 public class BradfordNewsteadFireCrossing400Test {
 	// have tests in separate classes so that they run, at least under maven, in separate JVMs.  kai, nov'17
 	
-	private static final Logger log = Logger.getLogger(BradfordNewsteadFireCrossing400Test.class) ;
+	private static final Logger log = LoggerFactory.getLogger(BradfordNewsteadFireCrossing400Test.class) ;
 
 	@Rule public MatsimTestUtils utils = new MatsimTestUtils() ;
 
@@ -50,7 +51,7 @@ public class BradfordNewsteadFireCrossing400Test {
 				"randomSeed: 12345"+ // jill random seed
 				//"numThreads: 1"+ // run jill in single-threaded mode so logs are deterministic
 				"}",
-				"--x-congestion-config", "100000:100000", // disallow congestion re-routing
+				"--x-congestion-config", "100000:100000:0.0", // disallow congestion re-routing
 		};
 
 		Main.main(args);
@@ -69,13 +70,6 @@ public class BradfordNewsteadFireCrossing400Test {
 		TestUtils.comparingArrivals(primaryExpectedEventsFilename,actualEventsFilename,1.);
 		TestUtils.comparingActivityStarts(primaryExpectedEventsFilename,actualEventsFilename, 1.);
 		TestUtils.compareFullEvents(primaryExpectedEventsFilename,actualEventsFilename, true);
-
-
-		long [] expectedPlans = new long [] {
-				CRCChecksum.getCRCFromFile( utils.getInputDirectory() + "/output_plans.xml.gz" )
-		} ;
-
-		TestUtils.checkSeveral(expectedPlans, actualPlansCRC);
 
 	}
 

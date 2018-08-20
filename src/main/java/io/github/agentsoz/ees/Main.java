@@ -3,15 +3,9 @@ package io.github.agentsoz.ees;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.TreeMap;
+import java.util.*;
 
-import io.github.agentsoz.bdiabm.ABMServerInterface;
 import io.github.agentsoz.bdiabm.QueryPerceptInterface;
-import io.github.agentsoz.bdiabm.data.AgentDataContainer;
 import io.github.agentsoz.bdimatsim.EvacAgentTracker;
 import io.github.agentsoz.bdimatsim.EvacConfig;
 import io.github.agentsoz.bdimatsim.MATSimModel;
@@ -44,12 +38,12 @@ import ch.qos.logback.core.FileAppender;
  * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Lesser Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Lesser Public
  * License along with this program.  If not, see
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
@@ -64,7 +58,7 @@ import io.github.agentsoz.util.Global;
 public class Main {
 
 	private static Logger logger;
-	
+
 	private static EvacConfig.Setup setup = EvacConfig.Setup.standard ;
 
 	// Defaults
@@ -73,10 +67,7 @@ public class Main {
 	private static String[] jillInitArgs = null;
 	private static String matsimOutputDirectory;
 	private static String safelineOutputFilePattern = "./safeline.%d%.csv";
-	private static boolean sendFireAlertOnFireStart = true;
-
-
-	private static int blockedLinkId = -1; // FIXME: temp fix on 31/01/18; remove once #1 is in place
+	private static boolean sendFireAlertOnFireStart = true; //FIXME: move to SimpleConfig
 
 	// yyyyyy careful; the above all stay from one test to the next (if not in separate
 	// JVMs).  kai, dec'17
@@ -92,20 +83,20 @@ public class Main {
 
 		// Create the logger
 		logger = createLogger();
-		
+
 		logger.info("setup=" + setup ) ;
 		// (I need this "setup" switch to switch between the test cases.  Some other
 		// config design would clearly be ok, but I don't want to impose some config
 		// design on you. kai, dec'17)
-		
+
 		// Read in the configuration
 		SimpleConfig.readConfig();
-			
+
 		// Create and initialise the data server used for passing
-		// several different types of data around the application 
+		// several different types of data around the application
 		// using a publish/subscribe or pull mechanism
 		DataServer dataServer = DataServer.getServer("Bushfire");
-		
+
 		// get the fire model out of the way:
 		initializeAndStartFireModel(dataServer);
 
@@ -121,9 +112,9 @@ public class Main {
 		matsimModel.registerDataServer(dataServer);
 		// (yyyy this syntax indicates that there might be use cases without dataServer.  Is that the case?
 		// If not, I would rather pass it as a "forced" argument in matsimModel.init(...).  kai, dec'17)
-		
+
 		List<SafeLineMonitor> monitors = registerSafeLineMonitors(SimpleConfig.getSafeLines(), matsimModel);
-		
+
 		// --- do some things for which you need access to the matsim config:
 		Config config = matsimModel.loadAndPrepareConfig() ;
 		setSimStartTimesRelativeToAlert(dataServer, config, -10*60 );
@@ -131,45 +122,50 @@ public class Main {
 		evacConfig.setSetup(setup);
 		evacConfig.setCongestionEvaluationInterval(SimpleConfig.getCongestionEvaluationInterval());
 		evacConfig.setCongestionToleranceThreshold(SimpleConfig.getCongestionToleranceThreshold());
-		
+		evacConfig.setCongestionReactionProbability(SimpleConfig.getCongestionReactionProbability());
+
 		// --- do some things for which you need a handle to the matsim scenario:
 		Scenario scenario = matsimModel.loadAndPrepareScenario() ;
-		// move everything into the far future (yy maybe better repair input files?)
-		for ( Person person : scenario.getPopulation().getPersons().values() ) {
-			List<PlanElement> planElements = person.getSelectedPlan().getPlanElements() ;
-			int offset = planElements.size();
-			for ( PlanElement pe : planElements ) {
-				if ( pe instanceof Activity) {
-					((Activity) pe).setEndTime( Double.MAX_VALUE - offset );
-					offset-- ;
+
+        // --- initialize and start jill (need the bdiAgentIDs, for which we need the material from before)
+		List<String> bdiAgentIDs = null;
+        Map<String, List<String[]>> bdiMap = null;
+        if (!SimpleConfig.isLoadBDIAgentsFromMATSimPlansFile()) {
+            bdiAgentIDs = Utils.getBDIAgentIDs( scenario );
+        } else {
+			bdiMap = Utils.getAgentsFromMATSimPlansFile(scenario);
+			removeNonBdiAgentsFrom(bdiMap);
+
+			bdiAgentIDs = new ArrayList<>(bdiMap.keySet());
+			if (bdiMap != null) {
+				for (int i = 0; jillInitArgs != null && i < jillInitArgs.length; i++) {
+					if ("--config".equals(jillInitArgs[i]) && i < (jillInitArgs.length-1)) {
+						String agentsArg = (!bdiMap.isEmpty()) ?
+							buildJillAgentsArgsFromAgentMap(bdiMap) :
+							"agents:[{classname:io.github.agentsoz.ees.agents.bushfire.BushfireAgent, args:null, count:0}]";
+						jillInitArgs[i + 1] = jillInitArgs[i + 1].replaceAll("agents:\\[]", agentsArg);
+					}
 				}
 			}
 		}
-		/* Dhirendra, it might be cleaner to do this in the input xml.  I have tried to remove the "fake" leg completely.
-		 * But then the agents don't have vehicles (yyyy although, on second thought, why??  we need to maintain
-		 * vehicles for mode choice).
-		 */
-		
-		List<String> bdiAgentIDs = Utils.getBDIAgentIDs( scenario );
+		// --- initialize and start the Jill model
+		JillBDIModel jillmodel = initialiseAndStartJillModel(dataServer, matsimModel, bdiAgentIDs, bdiMap);
+
 
 
 		// initialise the diffusionmodule
 		initializeAndStartDiffusionModel(dataServer, bdiAgentIDs);
 
-		// --- initialize and start jill (need the bdiAgentIDs, for which we need the material from before)
-		JillBDIModel jillmodel = initializeAndStartJillModel(dataServer, bdiAgentIDs, matsimModel, matsimModel.getAgentManager().getAgentDataContainer());
-		// (matsimModel is passed in because of its query interface.  which is, however, never used.)
-		
 		// --- initialize and start matsim (maybe rename?):
 		matsimModel.init(bdiAgentIDs);
-		
+
 		EvacAgentTracker tracker = new EvacAgentTracker(evacConfig, matsimModel.getScenario().getNetwork(), matsimModel.getEvents() ) ;
 		matsimModel.getEvents().addHandler( tracker );
 		// yyyy try to replace this by injection. because otherwise it again needs to be added "late enough", which we
 		// wanted to get rid of.  kai, dec'17
-		
+
 		while ( true ) {
-			
+
 			jillmodel.takeControl( matsimModel.getAgentManager().getAgentDataContainer() );
 			if( matsimModel.isFinished() ) {
 				break;
@@ -179,7 +175,7 @@ public class Main {
 
 			// increment time
 			dataServer.stepTime();
-			
+
 			// firemodel is updated elsewhere
 		}
 
@@ -193,33 +189,124 @@ public class Main {
 		// get rid of System.exit(...) so that tests run through ...
 		DataServer.cleanup() ;
 	}
-	
+
+	/**
+	 * Filter out all but the BDI agents
+	 *
+	 * @param map
+	 */
+	private void removeNonBdiAgentsFrom(Map<String, List<String[]>> map) {
+		Iterator<Map.Entry<String, List<String[]>>> it = map.entrySet().iterator();
+		while(it.hasNext()) {
+            Map.Entry<String, List<String[]>> entry = it.next();
+            String id = entry.getKey();
+            boolean found = false;
+            for (String[] val : entry.getValue()) {
+                if (SimpleConfig.getBdiAgentTagInMATSimPopulationFile().equals(val[0])) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                it.remove();
+            }
+        }
+	}
+
 	private static void setSimStartTimesRelativeToAlert(DataServer dataServer, Config config, int offset ) {
 		dataServer.setTime(getEvacuationStartTimeInSeconds(offset));
-		
+
 		config.qsim().setStartTime(getEvacuationStartTimeInSeconds(offset)) ;
 		config.qsim().setSimStarttimeInterpretation(StarttimeInterpretation.onlyUseStarttime);
 		// yy in the longer run, a "minOfStarttimeAndEarliestActivityEnd" would be good. kai, nov'17
 	}
-	
-	private static JillBDIModel initializeAndStartJillModel(DataServer dataServer, List<String> bdiAgentIDs,
-															ABMServerInterface matsimModel, AgentDataContainer agentDataContainer) {
-		
+
+	/**
+	 * Returns something like:
+	 * <pre>
+	 * agents:[
+	 *  {classname:io.github.agentsoz.ees.agents.Resident,
+	 *   args:null,
+	 *   count:10
+	 *  },
+	 *  {classname:io.github.agentsoz.ees.agents.Responder,
+	 *   args:[--respondToUTM, \"Tarrengower Prison,237100,5903400\"],
+	 *   count:3
+	 *  }
+	 * ]
+	 * </pre>
+	 *
+	 * @param map
+	 * @return
+	 */
+	private String buildJillAgentsArgsFromAgentMap(Map<String, List<String[]>> map) {
+		if (map == null) {
+			return null;
+		}
+		// Count instances of each agent type
+		Map<String,Integer> counts = new TreeMap<>();
+		for (List<String[]> values: map.values()) {
+			for (String[] val : values) {
+				if (SimpleConfig.getBdiAgentTagInMATSimPopulationFile().equals(val[0])) {
+					String type = val[1];
+					int count = counts.containsKey(type) ? counts.get(type) : new Integer(0);
+					counts.put(type, count + 1);
+				}
+			}
+
+		}
+
+		StringBuilder arg = new StringBuilder();
+		arg.append("agents:[");
+		if (map != null) {
+			Iterator<String> it = counts.keySet().iterator();
+			while(it.hasNext()) {
+				String key = it.next();
+				arg.append("{");
+				arg.append("classname:"); arg.append(key); arg.append(",");
+				arg.append("args:[],"); // empty class args; per-instance args done later
+				arg.append("count:"); arg.append(counts.get(key));
+				arg.append("}");
+				if (it.hasNext()) arg.append(",");
+			}
+		}
+		arg.append("]");
+		return arg.toString();
+	}
+
+	private JillBDIModel initialiseAndStartJillModel(DataServer dataServer, MATSimModel matsimModel, List<String> bdiAgentIDs, Map<String, List<String[]>> bdiMap) {
 		// Create the Jill BDI model
 		JillBDIModel jillmodel = new JillBDIModel(jillInitArgs);
+		// Set the evacuation timing
+		jillmodel.setEvacuationTiming(SimpleConfig.getEvacStartHHMM(), SimpleConfig.getEvacPeakMins());
 		// Set the query percept interface to use
-		jillmodel.setQueryPerceptInterface((QueryPerceptInterface)matsimModel);
+		jillmodel.setQueryPerceptInterface((QueryPerceptInterface) matsimModel);
 		// register the server to use for transferring data between models
 		jillmodel.registerDataServer(dataServer);
 		// initialise and start
-		jillmodel.init(agentDataContainer,
+		jillmodel.init(matsimModel.getAgentManager().getAgentDataContainer(),
 				null, // agentList is not used
 				matsimModel,
 				bdiAgentIDs.toArray( new String[bdiAgentIDs.size()] ));
+		Map<String,List<String>> args = new HashMap<>();
+		if (bdiMap != null) {
+			for (String id : bdiMap.keySet()) {
+				List<String[]> values = bdiMap.get(id);
+				List<String> flatlist = new ArrayList<>();
+				for (String[] arr : values) {
+					for (String val : arr) {
+						flatlist.add(val);
+					}
+				}
+				args.put(id, flatlist);
+			}
+			jillmodel.initialiseAgentsWithArgs(args);
+		}
 		jillmodel.start();
-		return jillmodel ;
+		return jillmodel;
 	}
-	
+
+
 	private static void initializeAndStartFireModel(DataServer dataServer) throws IOException, ParseException, java.text.ParseException {
 		// Create fire module, load fire data, and register the fire module as
 		// an active data source
@@ -309,7 +396,7 @@ public class Main {
 
 	/**
 	 * Registers a {@link SafeLineMonitor} per safe line with MATSim
-	 * 
+	 *
 	 * @param safeLines the map of safelines to register for monitoring
 	 * @param matsimModel the model to register with
 	 */
@@ -334,7 +421,7 @@ public class Main {
 
 	/**
 	 * Writes the safe lines statistics to file
-	 * 
+	 *
 	 * @param monitors to write, one per file
 	 * @param pattern output file pattern, something like "/path/to/file.%d%.out" where %d% is
 	 *        replaced by the monitor index number i.e., 0,1,...
@@ -465,6 +552,7 @@ public class Main {
 						try {
 							SimpleConfig.setCongestionEvaluationInterval(Double.parseDouble(vals[0]));
 							SimpleConfig.setCongestionToleranceThreshold(Double.parseDouble(vals[1]));
+							SimpleConfig.setCongestionReactionProbability(Double.parseDouble(vals[2]));
 
 						} catch (Exception e) {
 							System.err.println("Could not parse congestion config '"
@@ -479,7 +567,18 @@ public class Main {
 						SimpleConfig.setDiffusionConfig(args[i]);
 					}
 					break;
-			default:
+				case "--x-load-bdi-agents-from-matsim-plans-file":
+					if (i + 1 < args.length) {
+						i++;
+						try {
+							SimpleConfig.setLoadBDIAgentsFromMATSimPlansFile(Boolean.parseBoolean(args[i]));
+						} catch (Exception e) {
+							System.err.println("Could not parse boolean '"
+									+ args[i] + "' : " + e.getMessage());
+						}
+					}
+					break;
+				default:
 				throw new RuntimeException("unknown config option: " + args[i]) ;
 			}
 		}

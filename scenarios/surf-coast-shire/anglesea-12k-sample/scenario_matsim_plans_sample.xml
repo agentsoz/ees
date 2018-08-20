@@ -402,7 +402,7 @@
 			<activity type="end" x="790772" y="5752462" />
  		</plan>
  	</person>
-
+<!--
 	<person id= "50" >
 		<plan selected="yes">
 			<activity type="home" x="777046" y="5742407" end_time="06:00:00" />
@@ -3858,6 +3858,7 @@
 			<activity type="end" x="790772" y="5752462" />
  		</plan>
  	</person>
+-->
 <!-- ====================================================================== -->
 
 </population>

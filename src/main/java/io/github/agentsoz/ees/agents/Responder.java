@@ -62,13 +62,19 @@ public class Responder extends Agent implements io.github.agentsoz.bdiabm.Agent 
 	@Override
 	public void start(PrintStream writer, String[] params) {
 		this.writer = writer;
-		if (params != null && params.length == 2 && "--respondToUTM".equals(params[0])) {
-			String[] sCoords = params[1].split(",");
-			locationUnderFireThreat= new Location(sCoords[0], Double.parseDouble(sCoords[1]), Double.parseDouble(sCoords[2]));
+		parseArgs(params);
+	}
 
+	private void parseArgs(String[] args) {
+		if (args == null) return;
+		for (int i = 0; i < args.length; i++) {
+			if (args[i] != null && "--respondToUTM".equals(args[i]) && (i+1 <args.length)) {
+				String[] sCoords = args[i+1].split(",");
+				locationUnderFireThreat = new Location(sCoords[0], Double.parseDouble(sCoords[1]), Double.parseDouble(sCoords[2]));
+			}
 		}
 	}
-	
+
 	/**
 	 * Called by the Jill model when terminating
 	 */
@@ -132,7 +138,7 @@ public class Responder extends Agent implements io.github.agentsoz.bdiabm.Agent 
 	 */
 	@Override
 	public void init(String[] args) {
-		logger.warn("{} using a stub for io.github.agentsoz.bdiabm.Agent.init(...)", prefix);
+		parseArgs(args);
 	}
 
 	/**

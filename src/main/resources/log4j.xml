@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- This config file is used by MATSim only. It exists here so that we can
+     overwrite the log4j.xml config that ships with the MATSim jar and
+     that clutters the EES logging (which in turn is configured using logback.xml).
+     To change the MATSim logging level adjust settings below where indicated.
+-->
 <!DOCTYPE log4j:configuration SYSTEM "log4j.dtd" >
 <log4j:configuration>
 	<appender name="stdout" class="org.apache.log4j.ConsoleAppender">
@@ -21,34 +26,15 @@
 		</filter>
 	</appender>
 
-<!--    <appender name="file" class="org.apache.log4j.RollingFileAppender">
-    <param name="file" value="matsim.log"/>
-    <param name="MaxFileSize" value="10000KB"/>
-    <param name="MaxBackupIndex" value="1"/>
-    <layout class="org.apache.log4j.PatternLayout">
-			<param name="ConversionPattern" value="%d{ISO8601} %5p %C{1}:%L %m%n"/>
-    </layout>
-  </appender>-->
+	<logger name="org.matsim.core.mobsim.qsim.QSim">
+		<level value="info"/> <!-- Adjust if needed -->
+	</logger>
+	<logger name="org.matsim.core.mobsim.qsim.qnetsimengine.QNetsimEngine">
+		<level value="info"/> <!-- Adjust if needed -->
+	</logger>
 
-	 <!-- Print only messages of level warn or above in the package com.foo -->
-	<!--<logger name="org.matsim.mobsim">
-      <level value="ERROR"/>
-  </logger>--><!-- -->
-<!-- 	<logger name="org.matsim.gbl">
-      <level value="ERROR"/>
-  </logger>
-  <logger name="org.matsim.events.Events">
-      <level value="ERROR"/>
-  </logger>
-  <logger name="org.matsim.replanning.PlanStrategy">
-      <level value="ERROR"/>
-  </logger>
-  <logger name="org.matsim.replanning">
-      <level value="ERROR"/>
-  </logger> -->
-  
 	<root>
-		<priority value="info"></priority>
+		<priority value="fatal"></priority> <!-- Adjust if needed -->
 		<appender-ref ref="stdout"/>
 		<appender-ref ref="stderr"/>
 	</root>

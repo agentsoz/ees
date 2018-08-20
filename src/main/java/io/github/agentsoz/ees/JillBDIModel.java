@@ -2,6 +2,7 @@ package io.github.agentsoz.ees;
 
 import io.github.agentsoz.abmjill.JillModel;
 import io.github.agentsoz.bdiabm.ABMServerInterface;
+import io.github.agentsoz.bdiabm.QueryPerceptInterface;
 import io.github.agentsoz.bdiabm.data.AgentDataContainer;
 import io.github.agentsoz.bdiabm.data.AgentStateList;
 import io.github.agentsoz.dataInterface.DataClient;
@@ -42,47 +43,281 @@ public class JillBDIModel extends JillModel implements DataClient {
 
 	private final Logger logger = LoggerFactory.getLogger("io.github.agentsoz.ees");
 
+	// Jill options
+	static final String OPT_JILL_CONFIG = "--config";
+	static final String OPT_JILL_PLAN_SELECTION_POLICY = "--plan-selection-policy";
+	// Model options in EES config XML
+	static final String eConfig = "jillconfig";
+	static final String eEvacPeakMins = "evacPeakMins";
+	static final String ePlanSelectionPolicy = "jPlanSelectionPolicy";
+	static final String eAgents = "jAgents";
+	static final String eLogLevel = "jLogLevel";
+	static final String eLogFile = "jLogFile";
+	static final String eOutFile = "jOutFile";
+	static final String eNumThreads = "jNumThreads";
+	// Model option defaults
+	private String oRandomSeed = null;
+	private String oPlanSelectionPolicy = null;
+	private String oAgents = null;
+	private String oLogLevel = null;
+	private String oLogFile = null;
+	private String oOutFile = null;
+	private String oNumThreads = null;
+
+
 	private DataServer dataServer;
-	
+
 	// Records the simulation step at which the fire alert was received
 	private double fireAlertTime = -1;
-	private boolean fireAlertsScheduled = false;
+	private boolean fireAlertPerceptsScheduled = false;
 
 	// Jill initialisation args
 	private String[] initArgs = null;
-	
+	private Map<String, List<String[]>> agentsInitMap = null;
+
 	// Map of MATSim agent IDs to jill agent IDs
 	private Map<String,String> mapMATsimToJillIds;
     // Reverse map of Jill agent IDs to MATSim agent IDs (for convinience)
     private Map<String,String> mapJillToMATsimIds;
-	
-	// Map<Time,Agent> of scheduled fire alerts 
-	private PriorityQueue<TimedAlert> alerts;
+
+	// Map<Time,Agent> of scheduled fire alertPercepts
+	private PriorityQueue<TimedAlert> alertPercepts;
 
 	Map<Double, DiffusedContent> msgMap;
 	HashMap<String,Set<String>> informedAgents;
 
+	private int evacPeak = 0;
+	private int[] evacStartHHMM = {0,0};
+
 	public JillBDIModel(String[] initArgs) {
+		super();
 		msgMap = new TreeMap<>();
 		informedAgents = new HashMap<>();
 		mapMATsimToJillIds = new LinkedHashMap<String,String>();
 		mapJillToMATsimIds = new LinkedHashMap<String,String>();
-		alerts = new PriorityQueue<TimedAlert>(SimpleConfig.getNumBDIAgents(), new Comparator<TimedAlert>() {
-			@Override
-			public int compare(TimedAlert o1, TimedAlert o2) {
-				double t1 = o1.getTime();
-				double t2 = o2.getTime();
-				if (t1 > t2) {
-					return 1;
-				} else if (t1 < t2) {
-					return -1;
-				} else {
-					return 0;
-				}
-			}
-		});
 		this.initArgs = initArgs;
 	}
+
+	public JillBDIModel(Map<String, String> opts, DataServer dataServer, QueryPerceptInterface qpi, Map<String, List<String[]>> agentsInitMap) {
+		this(null);
+		parse(opts);
+		this.dataServer = dataServer;
+		this.agentsInitMap = agentsInitMap;
+		this.setQueryPerceptInterface(qpi);
+		initArgs = buildJillConfig(agentsInitMap);
+	}
+
+	private String[] buildJillConfig(Map<String, List<String[]>> agentsInitMap) {
+		List<String> args = new ArrayList<>();
+		if (oPlanSelectionPolicy != null && !oPlanSelectionPolicy.isEmpty()) {
+			args.add(OPT_JILL_PLAN_SELECTION_POLICY);
+			args.add(oPlanSelectionPolicy);
+		}
+
+		args.add(OPT_JILL_CONFIG);
+		StringBuilder cfg = new StringBuilder();
+		cfg.append(cfg.toString().isEmpty() ? "" : ",");
+		cfg.append("agents:");
+		if (oAgents != null && !oAgents.isEmpty()) {
+			cfg.append(oAgents);
+		} else {
+			cfg.append(buildJillAgentsArgsFromAgentMap(agentsInitMap));
+		}
+		if (oRandomSeed != null && !oRandomSeed.isEmpty()) {
+			cfg.append(cfg.toString().isEmpty() ? "" : ",");
+			cfg.append("randomSeed:");
+			cfg.append(oRandomSeed);
+		}
+		if (oNumThreads != null && !oNumThreads.isEmpty()) {
+			cfg.append(cfg.toString().isEmpty() ? "" : ",");
+			cfg.append("numThreads:");
+			cfg.append(oNumThreads);
+		}
+		if (oLogLevel != null && !oLogLevel.isEmpty()) {
+			cfg.append(cfg.toString().isEmpty() ? "" : ",");
+			cfg.append("logLevel:");
+			cfg.append(oLogLevel);
+		}
+		if (oLogFile != null && !oLogFile.isEmpty()) {
+			cfg.append(cfg.toString().isEmpty() ? "" : ",");
+			cfg.append("logFile:");
+			cfg.append(oLogFile.startsWith("\"") ? "" : "\"");
+			cfg.append(oLogFile);
+			cfg.append(oLogFile.endsWith("\"") ? "" : "\"");
+		}
+		if (oOutFile != null && !oOutFile.isEmpty()) {
+			cfg.append(cfg.toString().isEmpty() ? "" : ",");
+			cfg.append("programOutputFile:");
+			cfg.append(oOutFile.startsWith("\"") ? "" : "\"");
+			cfg.append(oOutFile);
+			cfg.append(oOutFile.endsWith("\"") ? "" : "\"");
+		}
+		cfg.insert(0,"{");
+		cfg.append("}");
+		args.add(cfg.toString());
+		return args.toArray(new String[args.size()]);
+	}
+
+	private void parse(Map<String, String> opts) {
+		if (opts == null) {
+			return;
+		}
+		for (String opt : opts.keySet()) {
+			logger.info("Found option: {}={}", opt, opts.get(opt));
+			switch(opt) {
+				case eConfig:
+					initArgs = opts.get(opt).split("\\|");
+					break;
+				case eEvacPeakMins:
+					evacPeak = Integer.parseInt(opts.get(opt));
+					break;
+				case Config.eGlobalStartHhMm:
+					String[] tokens = opts.get(opt).split(":");
+					evacStartHHMM = new int[]{Integer.parseInt(tokens[0]),Integer.parseInt(tokens[1])};
+					break;
+				case Config.eGlobalRandomSeed:
+					oRandomSeed = opts.get(opt);
+					break;
+				case ePlanSelectionPolicy:
+					oPlanSelectionPolicy = opts.get(opt);
+					break;
+				case eAgents:
+					oAgents = opts.get(opt);
+					break;
+				case eLogLevel:
+					oLogLevel = opts.get(opt);
+					break;
+				case eLogFile:
+					oLogFile = opts.get(opt);
+					break;
+				case eOutFile:
+					oOutFile = opts.get(opt);
+					break;
+				case eNumThreads:
+					oNumThreads = opts.get(opt);
+					break;
+				default:
+					logger.warn("Ignoring option: " + opt + "=" + opts.get(opt));
+			}
+		}
+	}
+
+	/**
+	 * Replaces an empty jill agents config arg ie {@code agents:[]} with the appropriate
+	 * config calculated using the given agents map. The result is an updated agents
+	 * config arg like
+	 * <pre>
+	 * agents:[{classname:package.agentclass1, args:[...], count:n},...]
+	 * </pre>
+	 *
+	 * @param jillargs
+	 * @param map map of agent id to list of its init args
+	 */
+	private static void updateJillConfigFromAgentsMap(String[] jillargs, Map<String, List<String[]>> map) {
+		if (map != null) {
+			for (int i = 0; jillargs != null && i < jillargs.length; i++) {
+				if (JillBDIModel.OPT_JILL_CONFIG.equals(jillargs[i]) && i < (jillargs.length-1)) {
+					String agentsArg = (!map.isEmpty()) ?
+							JillBDIModel.buildJillAgentsArgsFromAgentMap(map) :
+							"agents:[{classname:io.github.agentsoz.ees.agents.bushfire.BushfireAgent, args:null, count:0}]";
+					jillargs[i + 1] = jillargs[i + 1].replaceAll("agents:\\[]", agentsArg);
+				}
+			}
+		}
+	}
+
+
+	/**
+     * Returns something like:
+     * <pre>
+     * agents:[
+     *  {classname:io.github.agentsoz.ees.agents.Resident,
+     *   args:null,
+     *   count:10
+     *  },
+     *  {classname:io.github.agentsoz.ees.agents.Responder,
+     *   args:[--respondToUTM, \"Tarrengower Prison,237100,5903400\"],
+     *   count:3
+     *  }
+     * ]
+     * </pre>
+     *
+     * @param map
+     * @return
+     */
+    static String buildJillAgentsArgsFromAgentMap(Map<String, List<String[]>> map) {
+        if (map == null) {
+            return null;
+        }
+        // Count instances of each agent type
+        Map<String,Integer> counts = new TreeMap<>();
+        for (List<String[]> values: map.values()) {
+            for (String[] val : values) {
+                if (SimpleConfig.getBdiAgentTagInMATSimPopulationFile().equals(val[0])) {
+                    String type = val[1];
+                    int count = counts.containsKey(type) ? counts.get(type) : new Integer(0);
+                    counts.put(type, count + 1);
+                }
+            }
+
+        }
+
+        StringBuilder arg = new StringBuilder();
+        arg.append("[");
+        if (map != null) {
+            Iterator<String> it = counts.keySet().iterator();
+            while(it.hasNext()) {
+                String key = it.next();
+                arg.append("{");
+                arg.append("classname:"); arg.append(key); arg.append(",");
+                arg.append("args:[],"); // empty class args; per-instance args done later
+                arg.append("count:"); arg.append(counts.get(key));
+                arg.append("}");
+                if (it.hasNext()) arg.append(",");
+            }
+        }
+        arg.append("]");
+        return arg.toString();
+    }
+
+	/**
+     * Filter out all but the BDI agents
+     *
+     * @param map
+     */
+    static void removeNonBdiAgentsFrom(Map<String, List<String[]>> map) {
+        Iterator<Map.Entry<String, List<String[]>>> it = map.entrySet().iterator();
+        while(it.hasNext()) {
+            Map.Entry<String, List<String[]>> entry = it.next();
+            String id = entry.getKey();
+            boolean found = false;
+            for (String[] val : entry.getValue()) {
+                if (SimpleConfig.getBdiAgentTagInMATSimPopulationFile().equals(val[0])) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                it.remove();
+            }
+        }
+    }
+
+	static Map<String, List<String>> getFlattenedArgsFromAgentsInitMap(Map<String, List<String[]>> agentsInitMap) {
+        Map<String,List<String>> args = new HashMap<>();
+        for (String id : agentsInitMap.keySet()) {
+            List<String[]> values = agentsInitMap.get(id);
+            List<String> flatlist = new ArrayList<>();
+            for (String[] arr : values) {
+                for (String val : arr) {
+                    flatlist.add(val);
+                }
+            }
+            args.put(id, flatlist);
+        }
+        return args;
+    }
+
 	public void registerDataServer(DataServer dataServer) {
 		this.dataServer = dataServer;
 	}
@@ -91,7 +326,7 @@ public class JillBDIModel extends JillModel implements DataClient {
 	public boolean init(AgentDataContainer agentDataContainer,
 			AgentStateList agentList,
 			ABMServerInterface abmServer,
-			Object[] params) 
+			Object[] params)
 	{
 		dataServer.subscribe(this, PerceptList.FIRE_ALERT);
 		dataServer.subscribe(this, PerceptList.DIFFUSION);
@@ -99,9 +334,30 @@ public class JillBDIModel extends JillModel implements DataClient {
 		// Initialise the Jill model
 		// params[] contains the list of agent names to create
 		if (super.init(agentDataContainer, agentList, abmServer, initArgs)) {
+			// Initialise the alertPercepts
+			int capacity = (params.length<1) ? 1 : params.length;
+			alertPercepts = new PriorityQueue<TimedAlert>(capacity, new Comparator<TimedAlert>() {
+				@Override
+				public int compare(TimedAlert o1, TimedAlert o2) {
+					double t1 = o1.getTime();
+					double t2 = o2.getTime();
+					if (t1 > t2) {
+						return 1;
+					} else if (t1 < t2) {
+						return -1;
+					} else {
+						return 0;
+					}
+				}
+			});
 			// Set the BDI query percept interface that the agents can use
 			for (int i=0; i<params.length; i++) {
 				getAgent(i).setQueryPerceptInterface(this.getQueryPerceptInterface());
+			}
+			// Initialise agents with per-given args if available
+			if (agentsInitMap != null) {
+				Map<String, List<String>> args = JillBDIModel.getFlattenedArgsFromAgentsInitMap(agentsInitMap);
+				initialiseAgentsWithArgs(args);
 			}
 			// Now create the given map to jill agent ids
 			for (int i=0; i<params.length; i++) {
@@ -127,22 +383,26 @@ public class JillBDIModel extends JillModel implements DataClient {
 		return false;
 	}
 
+	public void setEvacuationTiming(int[] hhmm, int peak) {
+		evacStartHHMM = hhmm;
+		evacPeak = peak;
+	}
 
 	@Override
 	// send percepts to individual agents
 	public void takeControl(AgentDataContainer adc) {
-		// Schedul the fire alerts
-		if (!fireAlertsScheduled && fireAlertTime != -1) {
-			int[] hhmm = SimpleConfig.getEvacStartHHMM();
-			int peak = SimpleConfig.getEvacPeakMins();
+		// Schedul the fire alertPercepts
+		if (!fireAlertPerceptsScheduled && fireAlertTime != -1) {
+			int[] hhmm = evacStartHHMM;
+			int peak = evacPeak;
 			logger.info(String.format("Scheduling evacuation starting at %2d:%2d and peaking %d mins after start", hhmm[0], hhmm[1], peak));
-			scheduleFireAlertsToResidents(hhmm, peak);
-			fireAlertsScheduled = true;
+			scheduleFireAlertPerceptsToResidents(hhmm, peak);
+			fireAlertPerceptsScheduled = true;
 		}
 		double timeInSecs = dataServer.getTime();
-		// Send fire alerts to all agents scheduled for this time step (or earlier)
-		while (!alerts.isEmpty() && alerts.peek().getTime() <= timeInSecs) {
-			TimedAlert alert = alerts.poll();
+		// Send fire alertPercepts to all agents scheduled for this time step (or earlier)
+		while (!alertPercepts.isEmpty() && alertPercepts.peek().getTime() <= timeInSecs) {
+			TimedAlert alert = alertPercepts.poll();
 			String matsimAgentId = alert.getAgent();
 			adc.getOrCreate(matsimAgentId).getPerceptContainer().put(PerceptList.FIRE_ALERT, new Double(timeInSecs));
 		}
@@ -182,26 +442,42 @@ public class JillBDIModel extends JillModel implements DataClient {
   }
 
   /**
-	 * Schedules fire alerts to be send to residents starting at time 
+	 * Schedules fire alertPercepts to be send to residents starting at time
 	 * {@link SimpleConfig#getEvacStartHHMM()} and with a normal peak at
 	 * {@link SimpleConfig#getEvacPeakMins()} minutes after start.
-	 * 
-	 * Ideally this decision should be made by the agents, i.e., they should 
+	 *
+	 * Ideally this decision should be made by the agents, i.e., they should
 	 * all receive a fire alert at {@link SimpleConfig#getEvacStartHHMM()} and
 	 * then they should individually decide how to react to that alert.
 	 * Here we are forcing a pattern of vehicles leaving, by spreading the
-	 * alerts over a normal distribution.
+	 * alertPercepts over a normal distribution.
 	 */
-	public void scheduleFireAlertsToResidents(int[] hhmm, int mins3Sigma) {
+	public void scheduleFireAlertPerceptsToResidents(int[] hhmm, int mins3Sigma) {
 		double minsSigma = mins3Sigma/3.0;
 		double minsMean = mins3Sigma;
-		double evacStartInSeconds = Time.convertTime(hhmm[0], Time.TimestepUnit.HOURS, Time.TimestepUnit.SECONDS) 
+		double evacStartInSeconds = Time.convertTime(hhmm[0], Time.TimestepUnit.HOURS, Time.TimestepUnit.SECONDS)
 				+ Time.convertTime(hhmm[1], Time.TimestepUnit.MINUTES, Time.TimestepUnit.SECONDS);
 		for (String matsimAgentId: mapMATsimToJillIds.keySet()) {
 			double minsOffset = Global.getRandom().nextGaussian() * minsSigma + minsMean;
 			double secsOffset = Math.round(Time.convertTime(minsOffset, Time.TimestepUnit.MINUTES, Time.TimestepUnit.SECONDS));
 			double evacTimeInSeconds = evacStartInSeconds + secsOffset;
-			alerts.add(new TimedAlert(evacTimeInSeconds, matsimAgentId));
+			alertPercepts.add(new TimedAlert(evacTimeInSeconds, matsimAgentId));
+		}
+	}
+
+	public void initialiseAgentsWithArgs(Map<String, List<String>> map) {
+		if(map == null) return;
+		for (String id : map.keySet()) {
+			try {
+				Integer idx = Integer.valueOf(id); // agent id must be an integer
+				List<String> args = map.get(id);
+				if (args != null && !args.isEmpty()) {
+					String[] vargs = args.toArray(new String[args.size()]);
+					getAgent(Integer.valueOf(id)).init(vargs);
+				}
+			} catch (NumberFormatException e) {
+				logger.warn("Jill agent IDs can only be integers; found `"+id+"`. " + e.getMessage());
+			}
 		}
 	}
 
@@ -213,7 +489,7 @@ public class JillBDIModel extends JillModel implements DataClient {
 			this.time = time;
 			this.agent = agent;
 		}
-		
+
 		private double getTime() {
 			return time;
 		}
