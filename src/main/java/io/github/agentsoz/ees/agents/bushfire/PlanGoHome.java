@@ -74,6 +74,9 @@ public class PlanGoHome extends Plan {
                 // Out of suspend here thanks to updateAction(), now safe to check sat
                 if (agent.getLastEnvironmentActionState()== ActionContent.State.PASSED) {
                     agent.memorise(BushfireAgent.MemoryEventType.BELIEVED.name(), BushfireAgent.MemoryEventValue.ARRIVED_LOCATION_HOME.name());
+				} else {
+					agent.memorise(BushfireAgent.MemoryEventType.BELIEVED.name(),
+							BushfireAgent.MemoryEventValue.DID_NOT_REACH_DESTINATION.name());
                 }
             },
 	};

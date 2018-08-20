@@ -75,6 +75,9 @@ public class PlanGotoInvacPlace extends Plan {
                 // Out of suspend here thanks to updateAction(), so now check what happened
                 if (agent.getLastEnvironmentActionState()== ActionContent.State.PASSED) {
                     agent.memorise(BushfireAgent.MemoryEventType.BELIEVED.name(), BushfireAgent.MemoryEventValue.ARRIVED_LOCATION_INVAC.name());
+				} else {
+					agent.memorise(BushfireAgent.MemoryEventType.BELIEVED.name(),
+							BushfireAgent.MemoryEventValue.DID_NOT_REACH_DESTINATION.name());
                 }
             },
 	};

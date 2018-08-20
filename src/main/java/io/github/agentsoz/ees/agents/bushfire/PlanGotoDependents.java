@@ -76,6 +76,9 @@ public class PlanGotoDependents extends Plan {
 					agent.memorise(BushfireAgent.MemoryEventType.BELIEVED.name(), BushfireAgent.MemoryEventValue.ARRIVED_LOCATION_DEPENDENTS.name());
 					agent.getDependentInfo().setLastVisitedAtTime(agent.getTime());
 					agent.memorise(BushfireAgent.MemoryEventType.BELIEVED.name(), BushfireAgent.MemoryEventValue.DEPENDENTS_INFO.name() + ":" + agent.getDependentInfo() );
+				} else {
+					agent.memorise(BushfireAgent.MemoryEventType.BELIEVED.name(),
+							BushfireAgent.MemoryEventValue.DID_NOT_REACH_DESTINATION.name());
 				}
 			},
 	};
