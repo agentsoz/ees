@@ -35,12 +35,12 @@ import java.util.Map;
  * #L%
  */
 
-public class PlanVisitDependentsIfNearby extends Plan {
+public class PlanGotoDependentsIfNearby extends Plan {
 
 	BushfireAgent agent = null;
 	boolean goingHomeAfterVisitingDependents;
 
-	public PlanVisitDependentsIfNearby(Agent agent, Goal goal, String name) {
+	public PlanGotoDependentsIfNearby(Agent agent, Goal goal, String name) {
 		super(agent, goal, name);
 		this.agent = (BushfireAgent)agent;
 		body = steps;
@@ -74,29 +74,23 @@ public class PlanVisitDependentsIfNearby extends Plan {
 
 	PlanStep[] steps = {
 			// Go visits dependents now
-			new PlanStep() {
-				public void step() {
-					post(new GoalGotoDependents("GoalGotoDependents"));
-					// Now wait till the next step for this goal to finish
-				}
-			},
+			() -> {
+                post(new GoalGotoDependents("GoalGotoDependents"));
+                // Now wait till the next step for this goal to finish
+            },
 			// Arrived at Dependents. Go home with some probability
-			new PlanStep() {
-				public void step() {
-					agent.memorise(BushfireAgent.MemoryEventType.BELIEVED.name(), BushfireAgent.MemoryEventValue.DEPENDENTS_INFO.name() + ":" + agent.getDependentInfo() );
-					if (Global.getRandom().nextDouble() < agent.getProbHomeAfterDependents()) {
-						post(new GoalGoHome("GoalGoHome"));
-						// Now wait till the next step for this goal to finish
-					} else {
-						agent.memorise(BushfireAgent.MemoryEventType.DECIDED.name(), BushfireAgent.MemoryEventValue.DONE_FOR_NOW.name());
-					}
-				}
-			},
-			new PlanStep() {
-				public void step() {
-					if (goingHomeAfterVisitingDependents) {
-						// Arrived home
-					}
+			() -> {
+                agent.memorise(BushfireAgent.MemoryEventType.BELIEVED.name(), BushfireAgent.MemoryEventValue.DEPENDENTS_INFO.name() + ":" + agent.getDependentInfo() );
+                if (Global.getRandom().nextDouble() < agent.getProbHomeAfterDependents()) {
+                    post(new GoalGoHome("GoalGoHome"));
+                    // Now wait till the next step for this goal to finish
+                } else {
+                    agent.memorise(BushfireAgent.MemoryEventType.DECIDED.name(), BushfireAgent.MemoryEventValue.DONE_FOR_NOW.name());
+                }
+            },
+			() -> {
+				if (goingHomeAfterVisitingDependents) {
+					// Arrived home
 				}
 			},
 	};

@@ -50,16 +50,13 @@ public class PlanLeaveNow extends Plan {
 	}
 
 	PlanStep[] steps = {
-			new PlanStep() {
-				public void step() {
-					post(new GoalGotoEvacPlace("GoalGotoEvacPlace"));
-					// Now wait till the next step for this goal to finish
-				}
+			() -> {
+				post(new GoalGotoEvacPlace("GoalGotoEvacPlace"));
+				// Now wait till the next step for this goal to finish
 			},
-			new PlanStep() {
-				public void step() {
-					agent.memorise(BushfireAgent.MemoryEventType.BELIEVED.name(), BushfireAgent.MemoryEventValue.SAFE.name());
-				}
+			() -> {
+				// Arrived at the evac location
+				agent.memorise(BushfireAgent.MemoryEventType.BELIEVED.name(), BushfireAgent.MemoryEventValue.SAFE.name());
 			},
 	};
 

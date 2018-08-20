@@ -26,7 +26,7 @@ import io.github.agentsoz.jill.lang.Goal;
 import io.github.agentsoz.jill.lang.GoalInfo;
 
 @GoalInfo(hasPlans={
-        "io.github.agentsoz.ees.agents.bushfire.PlanVisitDependentsIfNearby",
+        "io.github.agentsoz.ees.agents.bushfire.PlanGotoDependentsIfNearby",
         "io.github.agentsoz.ees.agents.bushfire.PlanGoHomeIfDependentsAfar",
         "io.github.agentsoz.ees.agents.bushfire.PlanInitialResponseWithoutDependents",
         "io.github.agentsoz.ees.agents.bushfire.PlanDoNothing"})

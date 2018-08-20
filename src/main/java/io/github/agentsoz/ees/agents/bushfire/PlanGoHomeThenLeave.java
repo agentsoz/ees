@@ -52,25 +52,20 @@ public class PlanGoHomeThenLeave extends Plan {
 	}
 
 	PlanStep[] steps = {
-			new PlanStep() {
-				public void step() {
-					if (Global.getRandom().nextDouble() < agent.getProbHomeBeforeLeaving()) {
-						goingHomeBeforeLeaving =true;
-						post(new GoalGoHome("GoalGoHome"));
-						// Now wait till the next step for this goal to finish
-					}
-				}
-			},
-			new PlanStep() {
-				public void step() {
-					post(new GoalGotoEvacPlace("GoalGotoEvacPlace"));
+			() -> {
+				if (Global.getRandom().nextDouble() < agent.getProbHomeBeforeLeaving()) {
+					goingHomeBeforeLeaving =true;
+					post(new GoalGoHome("GoalGoHome"));
 					// Now wait till the next step for this goal to finish
 				}
 			},
-			new PlanStep() {
-				public void step() {
-					agent.memorise(BushfireAgent.MemoryEventType.BELIEVED.name(), BushfireAgent.MemoryEventValue.SAFE.name());
-				}
+			() -> {
+				post(new GoalGotoEvacPlace("GoalGotoEvacPlace"));
+				// Now wait till the next step for this goal to finish
+			},
+			() -> {
+				// Arrived at evac location
+				agent.memorise(BushfireAgent.MemoryEventType.BELIEVED.name(), BushfireAgent.MemoryEventValue.SAFE.name());
 			},
 	};
 

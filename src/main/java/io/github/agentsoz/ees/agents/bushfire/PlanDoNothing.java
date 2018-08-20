@@ -49,10 +49,8 @@ public class PlanDoNothing extends Plan {
 	}
 
 	PlanStep[] steps = {
-			new PlanStep() {
-				public void step() {
-					((BushfireAgent)getAgent()).memorise(BushfireAgent.MemoryEventType.DECIDED.name(), BushfireAgent.MemoryEventValue.DONE_FOR_NOW.name());
-				}
+			() -> {
+				((BushfireAgent)getAgent()).memorise(BushfireAgent.MemoryEventType.DECIDED.name(), BushfireAgent.MemoryEventValue.DONE_FOR_NOW.name());
 			},
 	};
 

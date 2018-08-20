@@ -74,36 +74,28 @@ public class PlanGoHomeIfDependentsAfar extends Plan {
 
 	PlanStep[] steps = {
 			// 1. Go home (will visit dependents later)
-			new PlanStep() {
-				public void step() {
-					post(new GoalGoHome("GoalGoHome"));
-					// Now wait till the next step for this goal to finish
-				}
+			() -> {
+				post(new GoalGoHome("GoalGoHome"));
+				// Now wait till the next step for this goal to finish
 			},
-			// 2. Arrived home, so go visits dependents now
-			new PlanStep() {
-				public void step() {
-					post(new GoalGotoDependents("GoalGotoDependents"));
-					// Now wait till the next step for this goal to finish
-				}
+			// 2. Arrived home, so go visit dependents now
+			() -> {
+				post(new GoalGotoDependents("GoalGotoDependents"));
+				// Now wait till the next step for this goal to finish
 			},
 			// 3. Arrived at Dependents. Go home with some probability
-			new PlanStep() {
-				public void step() {
-					if (Global.getRandom().nextDouble() < agent.getProbHomeAfterDependents()) {
-						goingHomeAfterVisitingDependents =true;
-						post(new GoalGoHome("GoalGoHome"));
-						// Now wait till the next step for this goal to finish
-					} else {
-						agent.memorise(BushfireAgent.MemoryEventType.DECIDED.name(), BushfireAgent.MemoryEventValue.DONE_FOR_NOW.name());
-					}
+			() -> {
+				if (Global.getRandom().nextDouble() < agent.getProbHomeAfterDependents()) {
+					goingHomeAfterVisitingDependents =true;
+					post(new GoalGoHome("GoalGoHome"));
+					// Now wait till the next step for this goal to finish
+				} else {
+					agent.memorise(BushfireAgent.MemoryEventType.DECIDED.name(), BushfireAgent.MemoryEventValue.DONE_FOR_NOW.name());
 				}
 			},
-			new PlanStep() {
-				public void step() {
-					if (goingHomeAfterVisitingDependents) {
-						// Arrived home
-					}
+			() -> {
+				if (goingHomeAfterVisitingDependents) {
+					// Arrived home
 				}
 			},
 	};

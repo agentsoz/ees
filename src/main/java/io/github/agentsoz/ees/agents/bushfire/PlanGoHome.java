@@ -51,37 +51,31 @@ public class PlanGoHome extends Plan {
 	}
 
 	PlanStep[] steps = {
-			new PlanStep() {
-				public void step() {
-					agent.memorise(BushfireAgent.MemoryEventType.DECIDED.name(), BushfireAgent.MemoryEventValue.GOTO_HOME_NOW.name());
-					Object[] params = new Object[4];
-					params[0] = ActionList.DRIVETO;
-					params[1] = agent.getLocations().get(agent.LOCATION_HOME).getCoordinates();
-					params[2] = agent.getTime() + 5.0; // five secs from now;
-					params[3] = MATSimModel.EvacRoutingMode.carFreespeed;
-					agent.memorise(BushfireAgent.MemoryEventType.ACTIONED.name(), ActionList.DRIVETO+"="+ agent.getLocations().get(agent.LOCATION_HOME));
-					EnvironmentAction action = new EnvironmentAction(Integer.toString(agent.getId()), ActionList.DRIVETO, params);
-					agent.setActiveEnvironmentAction(action); // will be reset by updateAction()
-					post(action); // post should be last call in plan step
-				}
-			},
-			new PlanStep() {
-				public void step() {
-					// Step subsequent to post must suspend agent when waiting for external stimuli
-					// Will be reset by updateAction()
-					agent.suspend(true);
-					// Do not add any checks here since the above call is non-blocking
-					// Suspend will happen once this step is finished
-				}
-			},
-			new PlanStep() {
-				public void step() {
-					// Out of suspend here thanks to updateAction(), so now check what happened
-					if (agent.getLastEnvironmentActionState()== ActionContent.State.PASSED) {
-						agent.memorise(BushfireAgent.MemoryEventType.BELIEVED.name(), BushfireAgent.MemoryEventValue.ARRIVED_LOCATION_HOME.name());
-					}
-				}
-			},
+			() -> {
+                agent.memorise(BushfireAgent.MemoryEventType.DECIDED.name(), BushfireAgent.MemoryEventValue.GOTO_HOME_NOW.name());
+                Object[] params = new Object[4];
+                params[0] = ActionList.DRIVETO;
+                params[1] = agent.getLocations().get(agent.LOCATION_HOME).getCoordinates();
+                params[2] = agent.getTime() + 5.0; // five secs from now;
+                params[3] = MATSimModel.EvacRoutingMode.carFreespeed;
+                agent.memorise(BushfireAgent.MemoryEventType.ACTIONED.name(), ActionList.DRIVETO+"="+ agent.getLocations().get(agent.LOCATION_HOME));
+                EnvironmentAction action = new EnvironmentAction(Integer.toString(agent.getId()), ActionList.DRIVETO, params);
+                agent.setActiveEnvironmentAction(action); // will be reset by updateAction()
+                post(action); // post should be last call in plan step
+            },
+			() -> {
+                // Step subsequent to post must suspend agent when waiting for external stimuli
+                // Will be reset by updateAction()
+                agent.suspend(true);
+                // Do not add any checks here since the above call is non-blocking
+                // Suspend will happen once this step is finished
+            },
+			() -> {
+                // Out of suspend here thanks to updateAction(), now safe to check sat
+                if (agent.getLastEnvironmentActionState()== ActionContent.State.PASSED) {
+                    agent.memorise(BushfireAgent.MemoryEventType.BELIEVED.name(), BushfireAgent.MemoryEventValue.ARRIVED_LOCATION_HOME.name());
+                }
+            },
 	};
 
 	@Override

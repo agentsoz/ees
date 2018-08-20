@@ -52,22 +52,18 @@ public class PlanInitialResponseWithoutDependents extends Plan {
 	}
 
 	PlanStep[] steps = {
-			new PlanStep() {
-				public void step() {
-					if (agent.isFinalResponseThresholdBreached()) {
-						agent.memorise(BushfireAgent.MemoryEventType.DECIDED.name(), BushfireAgent.MemoryEventValue.DONE_FOR_NOW.name());
-					} else {
-						goingHomeFirst = true;
-						post(new GoalGoHome("GoalGoHome"));
-						// Now wait till the next step for this goal to finish
-					}
+			() -> {
+				if (agent.isFinalResponseThresholdBreached()) {
+					agent.memorise(BushfireAgent.MemoryEventType.DECIDED.name(), BushfireAgent.MemoryEventValue.DONE_FOR_NOW.name());
+				} else {
+					goingHomeFirst = true;
+					post(new GoalGoHome("GoalGoHome"));
+					// Now wait till the next step for this goal to finish
 				}
 			},
-			new PlanStep() {
-				public void step() {
-					if (goingHomeFirst) {
-						// arrived home
-					}
+			() -> {
+				if (goingHomeFirst) {
+					// arrived home
 				}
 			},
 	};
