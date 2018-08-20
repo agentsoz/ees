@@ -20,12 +20,15 @@
   -->
   <!-- ====================================================================== -->
 
+  <!--cccc=DHI_to_CHECK-->
+
+<!-- Ignores all warnings and continues with daily plan. cccc are they driving home from work through the fire? -->
   <person id= "0" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.Resident</attribute>
-      <attribute name="hasDependentsAtLocation" class="java.lang.String" >732198.84,5743741.61</attribute>
-      <attribute name="InitialResponseThreshold" class="java.lang.Double" >-10.0 <!-- incorrect intentionally; should be treated as 0.0 --></attribute>
-      <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.0</attribute>
+      <attribute name="hasDependentsAtLocation" class="java.lang.String" ></attribute>
+      <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.8</attribute>
+      <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.8</attribute>
       <attribute name="EvacLocationPreference" class="java.lang.String">Torquay Foreshore,790771,5752462</attribute>
       <attribute name="InvacLocationPreference" class="java.lang.String">Anglesea Shops,777471,5742412</attribute>
     </attributes>
@@ -38,10 +41,13 @@
     </plan>
   </person>
 
+  <!-- cccc Lives in Geelong and does not receive any warnings, so no response is triggered. However, has a dependent
+   in Anglesea who is under threat. Do we need some method of having them respond to their dependent's threat? Seems
+   like what Pete was talking about last meeting. Could be solved with Social network maybe-->
   <person id= "1" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.Resident</attribute>
-      <attribute name="hasDependentsAtLocation" class="java.lang.String" >736328.84,5730787.61</attribute>
+      <attribute name="hasDependentsAtLocation" class="java.lang.String" >776562.41,5743690.74</attribute>
       <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.2</attribute>
       <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.5</attribute>
       <attribute name="EvacLocationPreference" class="java.lang.String">Torquay Foreshore,790771,5752462</attribute>
@@ -64,8 +70,8 @@
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.Resident</attribute>
       <attribute name="hasDependentsAtLocation" class="java.lang.String" >742083.84,5721225.61</attribute>
-      <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.4</attribute>
-      <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.7</attribute>
+      <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.8</attribute>
+      <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.8</attribute>
       <attribute name="EvacLocationPreference" class="java.lang.String">Torquay Foreshore,790771,5752462</attribute>
       <attribute name="InvacLocationPreference" class="java.lang.String">Anglesea Shops,777471,5742412</attribute>
     </attributes>
@@ -89,7 +95,7 @@
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.Resident</attribute>
       <attribute name="hasDependentsAtLocation" class="java.lang.String" ></attribute>
       <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.6</attribute>
-      <attribute name="FinalResponseThreshold"   class="java.lang.Double" >1.8<!--incorrect intentionally; should be treated as 1.0--></attribute>
+      <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.8</attribute>
       <attribute name="EvacLocationPreference" class="java.lang.String">Torquay Foreshore,790771,5752462</attribute>
       <attribute name="InvacLocationPreference" class="java.lang.String">Anglesea Shops,777471,5742412</attribute>
     </attributes>
