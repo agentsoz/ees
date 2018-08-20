@@ -24,21 +24,21 @@ public class Anglesea12kTestDiffusionSample {
 
         String[] args = {
                 "--config", "scenarios/surf-coast-shire/anglesea-12k-sample/scenario_main_sample.xml",
-                "--logfile", "scenarios/surf-coast-shire/anglesea-12k-sample/scenario.log",
+                "--logfile", utils.getOutputDirectory()+"../scenario.log",
                 "--loglevel", "INFO",
                 //	                "--plan-selection-policy", "FIRST", // ensures it is deterministic, as default is RANDOM
                 "--seed", "12345",
-                "--safeline-output-file-pattern", "scenarios/surf-coast-shire/anglesea-12k-sample/safeline.%d%.out",
-                MATSimModel.MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR, utils.getOutputDirectory(),
+                "--safeline-output-file-pattern", utils.getOutputDirectory()+"../safeline.%d%.out",
+                "--matsim-output-directory", utils.getOutputDirectory(),
                 "--jillconfig", "--config={" +
                 "agents:[{classname:io.github.agentsoz.ees.agents.Resident, args:null, count:482}]," +
                 "logLevel: WARN," +
-                "logFile: \"scenarios/surf-coast-shire/anglesea-12k-sample/jill.log\"," +
-                "programOutputFile: \"scenarios/surf-coast-shire/anglesea-12k-sample/jill.out\"," +
+                "logFile: \""+utils.getOutputDirectory()+"../jill.log\"," +
+                "programOutputFile: \""+utils.getOutputDirectory()+"../jill.out\"," +
                 "randomSeed: 12345," + // jill random seed
                 "numThreads: 1" + // run jill in single-threaded mode so logs are deterministic
                 "}",
-                "--x-congestion-config", "10000:10000", // disable congestion rerouting
+                "--x-congestion-config", "180:0.33:0.0", // disable congestion rerouting
                 //"--sendFireAlertOnFireStart", "false", // disable fire alert from fire model, instead will use messaging
                 //"--x-messages-file", "scenarios/surf-coast-shire/anglesea-12k-sample/scenario_messages.json", // specifies when to send evac now msg
                 //"--x-zones-file", "scenarios/surf-coast-shire/anglesea-12k-sample/Anglesea_SA1s_WSG84.json", // map from zone (SA1) ids to shapes
