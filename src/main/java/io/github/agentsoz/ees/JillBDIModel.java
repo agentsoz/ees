@@ -330,6 +330,7 @@ public class JillBDIModel extends JillModel implements DataClient {
 	{
 		dataServer.subscribe(this, PerceptList.FIRE_ALERT);
 		dataServer.subscribe(this, PerceptList.DIFFUSION);
+		dataServer.subscribe(this, PerceptList.SOCIAL_NETWORK_MSG);
 
 		// Initialise the Jill model
 		// params[] contains the list of agent names to create
@@ -379,6 +380,8 @@ public class JillBDIModel extends JillModel implements DataClient {
 		case PerceptList.DIFFUSION:
 			msgMap = (Map<Double, DiffusedContent>)data; // FIXME: unchecked cast
 			return true;
+		case PerceptList.SOCIAL_NETWORK_MSG:
+				break;
 		};
 		return false;
 	}
@@ -428,6 +431,10 @@ public class JillBDIModel extends JillModel implements DataClient {
 						informedAgents.put(msg,messagedAgents);
 					}
 				}
+				logger.info("Total "+messagedAgents.size()+" agents received this message from social network:" + msg);
+				logger.info("Agents receiving message from social network are: {}",
+						Arrays.toString(messagedAgents.toArray()));
+
 			}
 		}
 		msgMap.clear();

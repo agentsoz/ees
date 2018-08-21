@@ -137,6 +137,8 @@ public class DiffusionModel implements DataSource, DataClient {
                         newSet[i] = (String)set[i];
                     }
                     map.put(key,newSet);
+                    logger.info(String.format("At time %.0f, total %d agents will spread new message: %s", timestep, newSet.length, key));
+                    logger.info("Agents spreading new message are: {}", Arrays.toString(newSet));
                 }
                 icModel.updateSocialStatesFromBDIPercepts(map);
             }
@@ -200,6 +202,7 @@ public class DiffusionModel implements DataSource, DataClient {
     public void start() {
         if (snManager != null) {
             init(agentsIds);
+            setTimestepUnit(Time.TimestepUnit.MINUTES);
             dataServer.registerTimedUpdate(PerceptList.DIFFUSION, this, Time.convertTime(startTimeInSeconds, Time.TimestepUnit.SECONDS, timestepUnit));
         } else {
             logger.warn("started but will be idle forever!!");

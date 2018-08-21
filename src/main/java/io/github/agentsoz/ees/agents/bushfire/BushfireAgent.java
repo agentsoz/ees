@@ -27,11 +27,14 @@ import io.github.agentsoz.abmjill.genact.EnvironmentAction;
 import io.github.agentsoz.bdiabm.QueryPerceptInterface;
 import io.github.agentsoz.bdiabm.data.ActionContent;
 import io.github.agentsoz.bdimatsim.MATSimModel;
+import io.github.agentsoz.dataInterface.DataServer;
+import io.github.agentsoz.ees.Run;
 import io.github.agentsoz.jill.core.beliefbase.BeliefBaseException;
 import io.github.agentsoz.jill.core.beliefbase.BeliefSetField;
 import io.github.agentsoz.jill.lang.Agent;
 import io.github.agentsoz.jill.lang.AgentInfo;
 import io.github.agentsoz.util.EmergencyMessage;
+import io.github.agentsoz.util.Global;
 import io.github.agentsoz.util.Location;
 import io.github.agentsoz.util.evac.ActionList;
 import io.github.agentsoz.util.evac.PerceptList;
@@ -62,6 +65,7 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
     private double finalResponseThreshold = 0.5;
     private double responseBarometerMessages = 0.0;
     private double responseBarometerFieldOfView = 0.0;
+    private double messagePostingProbability = 0.1;
 
     private enum FieldOfViewPercept { // FIXME: move to config
         SMOKE_VISUAL(0.3),
@@ -101,7 +105,8 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
         GOTO_LOCATION,
         DISTANCE_TO_LOCATION,
         SAFE,
-        LAST_ENV_ACTION_STATE
+        LAST_ENV_ACTION_STATE,
+        SOCIAL_NETWORK_MESSAGE,
     }
 
     // Internal variables
@@ -225,6 +230,11 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
 
         if (perceptID.equals(PerceptList.EMERGENCY_MESSAGE)) {
             updateResponseBarometerMessages(parameters);
+            if (getEmergencyMessageType(parameters) == EmergencyMessage.EmergencyMessageType.EVACUATE_NOW &&
+                    (parameters instanceof String) &&
+                    Global.getRandom().nextDouble() < messagePostingProbability) {
+                shareWithSocialNetwork((String)parameters);
+            }
         } else if (perceptID.equals(PerceptList.FIELD_OF_VIEW)) {
             updateResponseBarometerFieldOfViewPercept(parameters);
         } else if (perceptID.equals(PerceptList.ARRIVED)) {
@@ -399,6 +409,22 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
                     location.getCoordinates());
     }
 
+    private EmergencyMessage.EmergencyMessageType getEmergencyMessageType(Object msg) {
+        if (msg == null || !(msg instanceof String)) {
+            return null;
+        }
+        String[] tokens = ((String) msg).split(",");
+        EmergencyMessage.EmergencyMessageType type = EmergencyMessage.EmergencyMessageType.valueOf(tokens[0]);
+        return type;
+    }
+
+    private void shareWithSocialNetwork(String content) {
+        String[] msg = {content, String.valueOf(getId())};
+        memorise(MemoryEventType.ACTIONED.name(), PerceptList.SOCIAL_NETWORK_MSG
+                + ":" + content);
+        DataServer.getServer(Run.DATASERVER).publish(PerceptList.SOCIAL_NETWORK_MSG, msg);
+    }
+
     /**
      * Called by the Jill model when this agent posts a new BDI action
      * to the ABM environment
@@ -552,6 +578,17 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
                                 locations.put(loc, location);
                             } catch (Exception e) {
                                 System.err.println("Could not parse location '"
+                                        + args[i] + "' : " + e.getMessage());
+                            }
+                        }
+                        break;
+                    case "InfoSharingLikelihood":
+                        if(i+1<args.length) {
+                            i++;
+                            try {
+                                messagePostingProbability = Double.parseDouble(args[i]);
+                            } catch (Exception e) {
+                                System.err.println("Could not parse double '"
                                         + args[i] + "' : " + e.getMessage());
                             }
                         }

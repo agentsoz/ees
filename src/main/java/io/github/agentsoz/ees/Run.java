@@ -45,6 +45,7 @@ import java.util.*;
 public class Run {
 
     private static final Logger log = LoggerFactory.getLogger(Run.class);
+    public static final String DATASERVER = "ees";
 
     public static void main(String[] args) {
         Config cfg = new Config();
@@ -59,7 +60,7 @@ public class Run {
 
         log.info("Starting the data server");
         // initialise the data server bus for passing data around using a publish/subscribe or pull mechanism
-        DataServer dataServer = DataServer.getServer("EES");
+        DataServer dataServer = DataServer.getServer(DATASERVER);
         dataServer.setTime(hhMmToS(cfg.getGlobalConfig(Config.eGlobalStartHhMm)));
 
         // initialise the fire model and register it as an active data source

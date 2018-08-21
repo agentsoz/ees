@@ -60,7 +60,6 @@ public class Resident extends Agent implements io.github.agentsoz.bdiabm.Agent{
 	private boolean isEvacuating = false;
 	private Object postedBlockageInfoToSocialNetwork = null;
 	private final double messagePostingProbability = 0.2; // FIXME: read this from agent config
-
 	public Resident(String str) {
 		super(str);
 	}
