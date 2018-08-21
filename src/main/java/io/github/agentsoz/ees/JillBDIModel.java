@@ -245,7 +245,7 @@ public class JillBDIModel extends JillModel implements DataClient {
             return null;
         }
         // Count instances of each agent type
-        Map<String,Integer> counts = new TreeMap<>();
+        Map<String,Integer> counts = new LinkedHashMap<>();
         for (List<String[]> values: map.values()) {
             for (String[] val : values) {
                 if (SimpleConfig.getBdiAgentTagInMATSimPopulationFile().equals(val[0])) {
@@ -325,6 +325,7 @@ public class JillBDIModel extends JillModel implements DataClient {
 	{
 		dataServer.subscribe(this, PerceptList.FIRE_ALERT);
 
+		logger.info("Initialising jill with args: " + Arrays.toString(initArgs));
 		// Initialise the Jill model
 		// params[] contains the list of agent names to create
 		if (super.init(agentDataContainer, agentList, abmServer, initArgs)) {

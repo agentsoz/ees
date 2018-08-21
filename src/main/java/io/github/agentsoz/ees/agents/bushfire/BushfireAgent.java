@@ -405,7 +405,7 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
      */
     @Override
     public void packageAction(String actionID, Object[] parameters) {
-        logger.warn("{} ignoring action {}", logPrefix(), actionID);
+        //logger.warn("{} ignoring action {}", logPrefix(), actionID);
     }
 
     /**
