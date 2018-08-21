@@ -70,6 +70,7 @@ public class Config {
 	static final String eModelMessaging = "messaging";
 	static final String eModelMatsim = "matsim";
 	static final String eModelBdi = "bdi";
+	static final String eModelDiffusion = "diffusion";
 
 
 	private Map<String, String> config;

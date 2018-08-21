@@ -93,6 +93,12 @@
       <opt id="fileJson"></opt>
     </model>
 
+    <model id="diffusion">
+      <!-- Diffusion model config file relative to examples/bushfire directory;
+           see: https://github.com/agentsoz/diffusion-model -->
+      <opt id="configFile">scenarios/surf-coast-shire/population-subgroups-sample/scenario_diffusion_config.xml</opt>
+    </model>
+
     <model id="messaging">
       <!-- Messaging JSON file  -->
       <opt id="fileJson">scenarios/surf-coast-shire/population-subgroups-sample/scenario_messages.json</opt>

@@ -39,23 +39,61 @@ import java.util.*;
 
 public class DiffusionModel implements DataSource, DataClient {
 
+    private final Logger logger = LoggerFactory.getLogger(DiffusionModel.class);
 
+    private static final String eConfigFile = "configFile";
 
     private DataServer dataServer;
+    private double startTimeInSeconds = -1;
     private SocialNetworkManager snManager;
     private TreeMap<Double, DiffusedContent> allStepsInfoSpreadMap;
     private double lastUpdateTimeInMinutes = -1;
     private Time.TimestepUnit timestepUnit = Time.TimestepUnit.SECONDS;
+    private String configFile = null;
+    private List<String> agentsIds = null;
 
     Map<String, Set> contentFromAgents;
 
-    private final Logger logger = LoggerFactory.getLogger("io.github.agentsoz.ees");
-
     public DiffusionModel(String configFile) {
-        this.snManager = new SocialNetworkManager(configFile);
-        this.allStepsInfoSpreadMap = new TreeMap<Double, DiffusedContent>();
+        this.snManager = (configFile==null) ? null : new SocialNetworkManager(configFile);
+        this.allStepsInfoSpreadMap = new TreeMap<>();
         this.contentFromAgents = new HashMap<>();
     }
+
+    public DiffusionModel(Map<String, String> opts, DataServer dataServer, List<String> agentsIds) {
+        parse(opts);
+        this.snManager = (configFile==null) ? null : new SocialNetworkManager(configFile);
+        this.allStepsInfoSpreadMap = new TreeMap<>();
+        this.contentFromAgents = new HashMap<>();
+        this.dataServer = dataServer;
+        this.agentsIds = agentsIds;
+    }
+
+    private void parse(Map<String, String> opts) {
+        if (opts == null) {
+            return;
+        }
+        for (String opt : opts.keySet()) {
+            logger.info("Found option: {}={}", opt, opts.get(opt));
+            switch(opt) {
+                case Config.eGlobalStartHhMm:
+                    String[] tokens = opts.get(opt).split(":");
+                    setStartHHMM(new int[]{Integer.parseInt(tokens[0]),Integer.parseInt(tokens[1])});
+                    break;
+                case eConfigFile:
+                    configFile = opts.get(opt);
+                    break;
+                default:
+                    logger.warn("Ignoring option: " + opt + "=" + opts.get(opt));
+            }
+        }
+    }
+
+    public void setStartHHMM(int[] hhmm) {
+        startTimeInSeconds = Time.convertTime(hhmm[0], Time.TimestepUnit.HOURS, timestepUnit)
+                + Time.convertTime(hhmm[1], Time.TimestepUnit.MINUTES, timestepUnit);
+    }
+
 
     public void init(List<String> idList) {
         for (String id : idList) {
@@ -156,6 +194,16 @@ public class DiffusionModel implements DataSource, DataClient {
      */
     void setTimestepUnit(Time.TimestepUnit unit) {
         timestepUnit = unit;
+    }
+
+
+    public void start() {
+        if (snManager != null) {
+            init(agentsIds);
+            dataServer.registerTimedUpdate(PerceptList.DIFFUSION, this, Time.convertTime(startTimeInSeconds, Time.TimestepUnit.SECONDS, timestepUnit));
+        } else {
+            logger.warn("started but will be idle forever!!");
+        }
     }
 
     /**

@@ -101,6 +101,14 @@ public class Run {
         JillBDIModel.removeNonBdiAgentsFrom(bdiMap);
         List<String> bdiAgentIDs = new ArrayList<>(bdiMap.keySet());
 
+        // initialise the diffusion model and register it as an active data source
+        {
+            log.info("Starting information diffusion model");
+            DiffusionModel model = new DiffusionModel(cfg.getModelConfig(Config.eModelDiffusion), dataServer, bdiAgentIDs);
+            model.setTimestepUnit(Time.TimestepUnit.SECONDS);
+            model.start();
+        }
+
         // initialise the Jill model, register it as an active data source, and start it
         log.info("Starting Jill BDI model");
         JillBDIModel jillmodel = new JillBDIModel(cfg.getModelConfig(Config.eModelBdi), dataServer, (QueryPerceptInterface)matsimModel, bdiMap);
