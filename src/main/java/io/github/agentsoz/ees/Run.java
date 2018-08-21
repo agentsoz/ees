@@ -28,6 +28,7 @@ import io.github.agentsoz.bdimatsim.EvacConfig;
 import io.github.agentsoz.bdimatsim.MATSimModel;
 import io.github.agentsoz.bdimatsim.Utils;
 import io.github.agentsoz.dataInterface.DataServer;
+import io.github.agentsoz.util.Global;
 import io.github.agentsoz.util.Time;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.core.config.ConfigUtils;
@@ -54,6 +55,8 @@ public class Run {
     }
 
     private void start(Config cfg) {
+        parse(cfg.getModelConfig(""));
+
         log.info("Starting the data server");
         // initialise the data server bus for passing data around using a publish/subscribe or pull mechanism
         DataServer dataServer = DataServer.getServer("EES");
@@ -131,6 +134,22 @@ public class Run {
         matsimModel.finish() ;
         DataServer.cleanup() ;
         log.info("All done");
+    }
+
+    private void parse(Map<String, String> opts) {
+        if (opts == null) {
+            return;
+        }
+        for (String opt : opts.keySet()) {
+            log.info("Found option: {}={}", opt, opts.get(opt));
+            switch(opt) {
+                case Config.eGlobalRandomSeed:
+                    Global.setRandomSeed(Long.parseLong(opts.get(opt)));
+                    break;
+                default:
+                    log.warn("Ignoring option: " + opt + "=" + opts.get(opt));
+            }
+        }
     }
 
 

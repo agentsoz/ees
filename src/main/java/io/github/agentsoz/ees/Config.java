@@ -87,7 +87,10 @@ public class Config {
 	 */
 	public Map<String, String> getModelConfig(String model) {
 		Map<String, String> map = new HashMap<>(config);
-		map.putAll(models.get(model));
+		Map<String, String> modelMap = models.get(model);
+		if (modelMap != null) {
+			map.putAll(models.get(model));
+		}
 		return map;
 	}
 
