@@ -99,8 +99,7 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
         TRIGGER_INITIAL_RESPONSE_NOW,
         TRIGGER_FINAL_RESPONSE_NOW,
         GOTO_LOCATION,
-        IS_AT_LOCATION,
-        DID_NOT_REACH_DESTINATION,
+        DISTANCE_TO_LOCATION,
         SAFE,
         LAST_ENV_ACTION_STATE
     }
@@ -392,22 +391,6 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
         post(action); // post should be last call in any plan step
         return true;
     }
-
-    void checkIfReachedLocation(boolean startedDriving, Location destination) {
-        // Out of suspend here thanks to updateAction(), or never suspended, so check status now
-        if (!startedDriving || getLastEnvironmentActionState()== ActionContent.State.PASSED) {
-            memorise(MemoryEventType.BELIEVED.name(),
-                    MemoryEventValue.IS_AT_LOCATION.name() +"="+ destination);
-        } else {
-            memorise(MemoryEventType.BELIEVED.name(),
-                    MemoryEventValue.DID_NOT_REACH_DESTINATION.name()
-                            +":"+ destination
-                            + ":" + String.format("%.0f", getTravelDistanceTo(destination))
-                            + "m away still");
-        }
-    }
-
-
 
     double getTravelDistanceTo(Location location) {
         return (double) getQueryPerceptInterface().queryPercept(
