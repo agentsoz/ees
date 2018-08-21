@@ -22,7 +22,12 @@
 
   <!--cccc=DHI_to_CHECK-->
 
-<!-- Ignores all warnings and continues with daily plan. cccc are they driving home from work through the fire? -->
+  <!--
+  Ignores all warnings and continues with daily plan. cccc are they driving home from work through the fire?
+  DS: Confirmed that agent drives through fire front on the way back.
+  This seems to be because no threshold is breached and therefore the agent
+  is just going about its day undeterred.
+  -->
   <person id= "0" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.Resident</attribute>
@@ -41,10 +46,13 @@
     </plan>
   </person>
 
-  <!-- cccc Lives in Geelong and does not receive any warnings, so no response is triggered. However, has a dependent
-   in Anglesea who is under threat. Do we need some method of having them respond to their dependent's threat? Seems
-   like what Pete was talking about last meeting. Could be solved with Social network maybe, or by a more thorough SA1
-   json file.-->
+  <!--
+  cccc Lives in Geelong and does not receive any warnings, so no response is triggered. However, has a dependent
+  in Anglesea who is under threat. Do we need some method of having them respond to their dependent's threat? Seems
+  like what Pete was talking about last meeting. Could be solved with Social network maybe, or by a more thorough SA1
+  json file.
+  DS: Waiting on #49 to be implemented so we can see if social network messaging helps here
+  -->
   <person id= "1" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.Resident</attribute>
@@ -67,7 +75,10 @@
     </plan>
   </person>
 
-  <!-- (R1) Resident sees smoke and decides to go home and prepare. Does not receieve any further warnings, so remains there. -->
+  <!--
+  (R1) Resident sees smoke and decides to go home and prepare. Does not receieve any further warnings, so remains there.
+  DS: verified
+  -->
   <person id= "2" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.Resident</attribute>
@@ -91,13 +102,25 @@
   </person>
 
 
-<!--(R3) Resident has dependent (child) at a school. Breaks initial threshold at work, goes home, and then goes to school,
-waits there until receiving EVACUATE_NOW message, and evacuates. cccc Do we want the INITIAL_RESPONSE option of "stay at
+  <!--
+  (R3) Resident has dependent (child) at a school. Breaks initial threshold at work, goes home, and then goes to school,
+  waits there until receiving EVACUATE_NOW message, and evacuates.
+  DS: Verify above described behaviour
+
+  cccc Do we want the INITIAL_RESPONSE option of "stay at
   dependent_location" to be context-based i.e. would not stay at a school but would at a residence? Or specifically in this case,
   when home is very close by. Part of a bigger issue (see below)
+  DS: We are not distinguishing between types of dependents at this stage (kids at school vs horses for instance).
+  Behaviour of parents is likely to be different but at this stage we will treat them all the same.
+
   cccc Also, is there a parameter that determines the choice between staying at dep_location or going home? (see below)
+  DS: getProbHomeAfterDependents() and getProbHomeBeforeLeaving() are both hardcoded at 0.5. Can be pulled
+  out as per-agent attribute if we want, just haven't done it yet.
+
   cccc Thirdly, I notice that when completing FINAL_RESPONSE, some of the applicable plans include going home first.
-  These wouldn't be possible for someone who has already collected dependents right? Just checking-->
+  These wouldn't be possible for someone who has already collected dependents right? Just checking
+  DS: That was a bug in the logging sorry (fixed in a20c855), PlanGoHomeThenLeave is not applicable just logging was wrong.
+  -->
   <person id= "3" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.Resident</attribute>
@@ -120,14 +143,25 @@ waits there until receiving EVACUATE_NOW message, and evacuates. cccc Do we want
     </plan>
   </person>
 
-  <!--(R4) Is at work when INITIAL_RESPONSE is triggered, and goes to dependent at school (same school as above). Then
-   takes kids home and waits until receiving EVACUATE_NOW message, and evacuates. cccc Compare to person 3... lives further
-    away from school, but does go home after attending to dependents, whereas person 3 does not. Not necessarily a
-    problem, but how is this decision made?
-    PS I think the decision should depend on whether the FINAL_RESPONSE threshold has already been breached as well.
-    Otherwise you can get somewhat strange behaviour where a person who has both thresholds triggered can
-    GOHOME->GOTO_DEP->GOHOME->EVACUATE.
-    PPS Strange things (i'm guessing slight shifts in the seed) change the decision, which might not be ideal -->
+  <!--
+  (R4) Is at work when INITIAL_RESPONSE is triggered, and goes to dependent at school (same school as above). Then
+  takes kids home and waits until receiving EVACUATE_NOW message, and evacuates.
+  DS: verified
+
+  cccc Compare to person 3... lives further
+  away from school, but does go home after attending to dependents, whereas person 3 does not. Not necessarily a
+  problem, but how is this decision made?
+  DS: getProbHomeAfterDependents() and getProbHomeBeforeLeaving() are both hardcoded at 0.5. Can be pulled
+  out as per-agent attribute if we want, just haven't done it yet.
+
+  PS I think the decision should depend on whether the FINAL_RESPONSE threshold has already been breached as well.
+  Otherwise you can get somewhat strange behaviour where a person who has both thresholds triggered can
+  GOHOME->GOTO_DEP->GOHOME->EVACUATE.
+  DS: Yes good point, fixed in 852e920.
+
+  PPS Strange things (i'm guessing slight shifts in the seed) change the decision, which might not be ideal
+  DS: Global random seed was not being used sorry. Fixed in 3a71369
+  -->
   <person id= "4" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.Resident</attribute>
@@ -147,8 +181,11 @@ waits there until receiving EVACUATE_NOW message, and evacuates. cccc Do we want
   </person>
 
 
-  <!--(R2) Resident is at work, INITIAL_RESPONSE is triggered, goes home, goes to dependents, and then takes them back
-  home. Upon seeing fire, the agent evacuates family to Waurn Ponds.-->
+  <!--
+  (R2) Resident is at work, INITIAL_RESPONSE is triggered, goes home, goes to dependents, and then takes them back
+  home. Upon seeing fire, the agent evacuates family to Waurn Ponds.
+  DS: Verified
+  -->
   <person id= "5" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.Resident</attribute>
@@ -167,12 +204,21 @@ waits there until receiving EVACUATE_NOW message, and evacuates. cccc Do we want
     </plan>
   </person>
 
-  <!--cccc Interesting issue I had when trying to create R2: For some reason with a lower threshold, the agent gets stuck
-    trying to get dependent, (it receives a congestion percept) and ultimately fails the plan of attending to dependent.
-    Thus it apparently evacuates without fetching dependent (not good!). Might be tied in with what you were talking
-     about re having 3 attempts at all plans. But also it is weird that there is congestion there with seemingly no other
-      vehicles around.
-      PS this happened with a number of different resident plans.-->
+  <!--
+  cccc Interesting issue I had when trying to create R2: For some reason with a lower threshold, the agent gets stuck
+  trying to get dependent, (it receives a congestion percept) and ultimately fails the plan of attending to dependent.
+  Thus it apparently evacuates without fetching dependent (not good!). Might be tied in with what you were talking
+  about re having 3 attempts at all plans.
+  DS: Try-three-times-before-giving-up is now implemented since f48f22c. We should discuss what should happen
+  at the higher level plan though when all tries fail which will be context dependent (so keep trying if
+  getting dependents but maybe give up if just going home). At the moment there is no difference, three tries
+  and the agent gives up on that plan and moves on to whatever else is in the pipeline.
+
+  But also it is weird that there is congestion there with seemingly no other
+  vehicles around. PS this happened with a number of different resident plans.
+  DS: This is expected since we are running the network at 1% capacity. You don't "see" the 99% other cars
+  that are causing the congestion.
+  -->
   <person id= "6" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.Resident</attribute>
@@ -192,7 +238,11 @@ waits there until receiving EVACUATE_NOW message, and evacuates. cccc Do we want
   </person>
 
 
-<!--(R5) Resident has dependents and does not go home before or after picking them up. Later evacuates from school.-->
+  <!--
+  (R5) Resident has dependents and does not go home before or after picking them up. Later evacuates from school.
+  DS: Verified, but behaviour has changed here and probably for others now that random seed is actually getting
+  used since 3a71369. Sghould not change between runs anymore though.
+  -->
   <person id= "7" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.Resident</attribute>
@@ -239,7 +289,9 @@ waits there until receiving EVACUATE_NOW message, and evacuates. cccc Do we want
 <!--After a day of shops and beach within the local Anglesea area, the sight of smoke causes this part time resident
  to head home. A few hours later, the sight of fire means that they evacuate. cccc Note another case of congestion
  causing a fail, but this time it seems it was resolved (compare to person 6:perhaps going home vs going to
- dependents?.)-->
+ dependents?.)
+ DS: Seems fine now as driveto is tried three times.
+ -->
   <person id= "9" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.ResidentPartTime</attribute>
@@ -268,8 +320,14 @@ waits there until receiving EVACUATE_NOW message, and evacuates. cccc Do we want
     </plan>
   </person>
 
-  <!--Does not respond to any fire threats despite being in danger zone (as expected). Does show some issue with
-  plans bouncing in and out of region. cccc seems to go right through fire at 4.30pm. -->
+  <!--
+  Does not respond to any fire threats despite being in danger zone (as expected). Does show some issue with
+  plans bouncing in and out of region.
+  DS: Don't see any issues in the log anymore maybe from above fixes.
+
+  cccc seems to go right through fire at 4.30pm.
+  DS: Is ok, fire wasn't there yet
+  -->
   <person id= "10" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorDaytime</attribute>
@@ -301,7 +359,11 @@ waits there until receiving EVACUATE_NOW message, and evacuates. cccc Do we want
   the visitor selects ActNow|PlanGoHomeThenLeave. This sees the visitor go home (to Geelong),
   and then the LeaveNow part sees them come back to Torquay foreshore! This will be solved when the LeaveNow plan
   is fully operational, but does highlight why visitors "going home" to outside the region could be problematic.
-  Just need the LeaveNow to check if the person is already safe (believes themselves to now be safe)-->
+  Just need the LeaveNow to check if the person is already safe (believes themselves to now be safe)
+  DS: Not fixed yet, somehow the agent needs to know that home is safer (further from fire) than evac place.
+  TODO: could you raise a ticket for this?
+
+  -->
   <person id= "11" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorDaytime</attribute>
@@ -331,7 +393,10 @@ waits there until receiving EVACUATE_NOW message, and evacuates. cccc Do we want
   </person>
 
 
-  <!--cccc this agent seems to be going through the burnt area at around 9.15pm -->
+  <!--
+  cccc this agent seems to be going through the burnt area at around 9.15pm
+  DS: yes this definitely seems to go through the fire.
+  TODO: verify again and reopen ticket #36 -->
   <person id= "12" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorDaytime</attribute>
@@ -356,9 +421,12 @@ waits there until receiving EVACUATE_NOW message, and evacuates. cccc Do we want
     </plan>
   </person>
 
-<!--cccc A good example of how the LeaveNow plan/better messaging can improve things. Visitor goes back to accommodation in
-Airey's inlet before evacuating back through Anglesea. In practice you would think that the message should indicate
-to the agent that if they are out of the danger area, do not go through it (and congestion) to evacuate.-->
+  <!--
+  cccc A good example of how the LeaveNow plan/better messaging can improve things. Visitor goes back to accommodation in
+  Airey's inlet before evacuating back through Anglesea. In practice you would think that the message should indicate
+  to the agent that if they are out of the danger area, do not go through it (and congestion) to evacuate.
+  DS: related to above TODO, need a way to check that evac dest is further away from fire than current location.
+  -->
   <person id= "13" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorOvernight</attribute>
@@ -385,11 +453,13 @@ to the agent that if they are out of the danger area, do not go through it (and 
     </plan>
   </person>
 
-<!--This visitor is staying in Airey's inlet, but visits places all along the Great Ocean Road during the day. Does
-not act upon any warnings. cccc Do we want people outside of danger area going into danger area places
-(in this case, the shops)? Could have some message level to the wider area (with no threshold) that allows people
-outside of danger area to change plans accordingly. Could also helps with person 1, who would act on dependent despite
-not having threshold broken. -->
+  <!--This visitor is staying in Airey's inlet, but visits places all along the Great Ocean Road during the day. Does
+  not act upon any warnings. cccc Do we want people outside of danger area going into danger area places
+  (in this case, the shops)? Could have some message level to the wider area (with no threshold) that allows people
+  outside of danger area to change plans accordingly. Could also helps with person 1, who would act on dependent despite
+  not having threshold broken.
+  DS: Yes TODO maybe raise a ticket for this suggestion
+  -->
   <person id= "14" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorOvernight</attribute>
@@ -447,8 +517,11 @@ not having threshold broken. -->
     </plan>
   </person>
 
-  <!--cccc this visitor fails due to congestion, but still believes they are safe? I think I am misinterpreting the
-  meaning of the DID_NOT_REACH_DESTINATION log.-->
+  <!--
+  cccc this visitor fails due to congestion, but still believes they are safe? I think I am misinterpreting the
+  meaning of the DID_NOT_REACH_DESTINATION log.
+  DS: behaviour has changed since new commits, seems ok now.
+  -->
   <person id= "16" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorOvernight</attribute>
@@ -470,7 +543,11 @@ not having threshold broken. -->
       <activity type="home" x="777412.78017" y="5744008.09442" />
     </plan>
   </person>
-<!--cccc as with 13, 15, it seems silly for this person to evacuate, especially toward danger.-->
+
+  <!--
+  cccc as with 13, 15, it seems silly for this person to evacuate, especially toward danger.
+  DS: ok definitely need a ticket for this, seems to happen a fair bit
+  -->
   <person id= "17" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorOvernight</attribute>

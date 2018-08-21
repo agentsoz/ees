@@ -26,6 +26,7 @@ package io.github.agentsoz.ees.agents.bushfire;
 import io.github.agentsoz.abmjill.genact.EnvironmentAction;
 import io.github.agentsoz.bdiabm.QueryPerceptInterface;
 import io.github.agentsoz.bdiabm.data.ActionContent;
+import io.github.agentsoz.bdimatsim.MATSimModel;
 import io.github.agentsoz.jill.core.beliefbase.BeliefBaseException;
 import io.github.agentsoz.jill.core.beliefbase.BeliefSetField;
 import io.github.agentsoz.jill.lang.Agent;
@@ -97,14 +98,8 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
         INITIAL_AND_FINAL_RESPONSE_THRESHOLDS_BREACHED_TOGETHER,
         TRIGGER_INITIAL_RESPONSE_NOW,
         TRIGGER_FINAL_RESPONSE_NOW,
-        GOTO_DEPENDENTS_NOW,
-        GOTO_HOME_NOW,
-        GOTO_EVAC_PLACE_NOW,
-        ARRIVED_LOCATION_HOME,
-        ARRIVED_LOCATION_DEPENDENTS,
-        ARRIVED_LOCATION_EVAC,
-        ARRIVED_LOCATION_INVAC,
-        DID_NOT_REACH_DESTINATION,
+        GOTO_LOCATION,
+        DISTANCE_TO_LOCATION,
         SAFE,
         LAST_ENV_ACTION_STATE
     }
@@ -374,6 +369,34 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
             responseBarometerMessages = value;
             memorise(MemoryEventType.BELIEVED.name(), MemoryEventValue.RESPONSE_BAROMETER_MESSAGES_CHANGED.name() + "=" + Double.toString(value));
         //}
+    }
+
+    boolean startDrivingTo(Location location) {
+        if (location == null) return false;
+        memorise(MemoryEventType.DECIDED.name(), MemoryEventValue.GOTO_LOCATION.name() + ":" + location.toString());
+        double distToTravel = getTravelDistanceTo(location);
+        if (distToTravel == 0.0) {
+            // already there, so no need to drive
+            return false;
+        }
+        Object[] params = new Object[4];
+        params[0] = ActionList.DRIVETO;
+        params[1] = location.getCoordinates();
+        params[2] = getTime() + 5.0; // five secs from now;
+        params[3] = MATSimModel.EvacRoutingMode.carFreespeed;
+        memorise(MemoryEventType.ACTIONED.name(), ActionList.DRIVETO
+                + ":"+ location + ":" + String.format("%.0f", distToTravel) + "m away");
+        EnvironmentAction action = new EnvironmentAction(Integer.toString(getId()), ActionList.DRIVETO, params);
+        setActiveEnvironmentAction(action); // will be reset by updateAction()
+        post(action); // post should be last call in any plan step
+        return true;
+    }
+
+    double getTravelDistanceTo(Location location) {
+        return (double) getQueryPerceptInterface().queryPercept(
+                    String.valueOf(getId()),
+                    PerceptList.REQUEST_DRIVING_DISTANCE_TO,
+                    location.getCoordinates());
     }
 
     /**

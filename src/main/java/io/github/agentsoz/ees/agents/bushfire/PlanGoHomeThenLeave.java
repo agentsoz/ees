@@ -47,7 +47,7 @@ public class PlanGoHomeThenLeave extends Plan {
 			applicable = true;
 		}
 		agent.memorise(BushfireAgent.MemoryEventType.DECIDED.name(), BushfireAgent.MemoryEventValue.IS_PLAN_APPLICABLE.name()
-				+ ":" + getGoal() + "|" + this.getClass().getSimpleName() + "=" + true);
+				+ ":" + getGoal() + "|" + this.getClass().getSimpleName() + "=" + applicable);
 		return applicable;
 	}
 

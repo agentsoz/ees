@@ -1,13 +1,11 @@
 package io.github.agentsoz.ees.agents.bushfire;
 
-import io.github.agentsoz.abmjill.genact.EnvironmentAction;
 import io.github.agentsoz.bdiabm.data.ActionContent;
-import io.github.agentsoz.bdimatsim.MATSimModel;
 import io.github.agentsoz.jill.lang.Agent;
 import io.github.agentsoz.jill.lang.Goal;
 import io.github.agentsoz.jill.lang.Plan;
 import io.github.agentsoz.jill.lang.PlanStep;
-import io.github.agentsoz.util.evac.ActionList;
+import io.github.agentsoz.util.Location;
 
 import java.util.Map;
 
@@ -36,6 +34,8 @@ import java.util.Map;
 public class PlanGotoDependents extends Plan {
 
 	BushfireAgent agent = null;
+	private Location destination = null;
+	boolean startedDriving = false;
 
 	public PlanGotoDependents(Agent agent, Goal goal, String name) {
 		super(agent, goal, name);
@@ -46,40 +46,64 @@ public class PlanGotoDependents extends Plan {
 	public boolean context() {
 		boolean applicable = true;
 		agent.memorise(BushfireAgent.MemoryEventType.DECIDED.name(), BushfireAgent.MemoryEventValue.IS_PLAN_APPLICABLE.name()
-				+ ":" + getGoal() + "|" + this.getClass().getSimpleName() + "=" + true);
+				+ ":" + getGoal() + "|" + this.getClass().getSimpleName() + "=" + applicable);
 		return applicable;
 	}
 
 	PlanStep[] steps = {
 			() -> {
-				agent.memorise(BushfireAgent.MemoryEventType.DECIDED.name(), BushfireAgent.MemoryEventValue.GOTO_DEPENDENTS_NOW.name());
-				Object[] params = new Object[4];
-				params[0] = ActionList.DRIVETO;
-				params[1] = agent.getDependentInfo().getLocation().getCoordinates();
-				params[2] = agent.getTime() + 5.0; // five secs from now;
-				params[3] = MATSimModel.EvacRoutingMode.carFreespeed;
-				agent.memorise(BushfireAgent.MemoryEventType.ACTIONED.name(), ActionList.DRIVETO+"="+agent.getDependentInfo().getLocation());
-				EnvironmentAction action = new EnvironmentAction(Integer.toString(agent.getId()), ActionList.DRIVETO, params);
-				agent.setActiveEnvironmentAction(action);
-				post(action); // post should be last call in plan step
+				// start driving to destination, or do nothing if already there
+				destination = agent.getDependentInfo().getLocation();
+				startedDriving = agent.startDrivingTo(destination);
 			},
 			() -> {
-				// Step subsequent to post must suspend agent when waiting for external stimuli
-				// Will be reset by updateAction()
-				agent.suspend(true);
-				// Do not add any checks here since the above call is non-blocking
-				// Suspend will happen once this step is finished
-			},
-			() -> {
-				// Out of suspend here thanks to updateAction(), so now check what happened
-				if (agent.getLastEnvironmentActionState()== ActionContent.State.PASSED) {
-					agent.memorise(BushfireAgent.MemoryEventType.BELIEVED.name(), BushfireAgent.MemoryEventValue.ARRIVED_LOCATION_DEPENDENTS.name());
-					agent.getDependentInfo().setLastVisitedAtTime(agent.getTime());
-					agent.memorise(BushfireAgent.MemoryEventType.BELIEVED.name(), BushfireAgent.MemoryEventValue.DEPENDENTS_INFO.name() + ":" + agent.getDependentInfo() );
-				} else {
-					agent.memorise(BushfireAgent.MemoryEventType.BELIEVED.name(),
-							BushfireAgent.MemoryEventValue.DID_NOT_REACH_DESTINATION.name());
+				if (startedDriving) {
+					// Step subsequent to post must suspend agent when waiting for external stimuli
+					// Will be reset by updateAction()
+					agent.suspend(true);
+					// Do not add any checks here since the above call is non-blocking
+					// Suspend will happen once this step is finished
 				}
+			},
+			() -> {
+				// Try a second time
+				startedDriving = false;
+				if (agent.getLastEnvironmentActionState() != ActionContent.State.DROPPED && agent.getTravelDistanceTo(destination)  > 0.0) {
+					startedDriving = agent.startDrivingTo(destination);
+				}
+			},
+			() -> {
+				if (startedDriving) {
+					// Step subsequent to post must suspend agent when waiting for external stimuli
+					// Will be reset by updateAction()
+					agent.suspend(true);
+					// Do not add any checks here since the above call is non-blocking
+					// Suspend will happen once this step is finished
+				}
+			},
+			() -> {
+				// Try a third time
+				startedDriving = false;
+				if (agent.getLastEnvironmentActionState() != ActionContent.State.DROPPED && agent.getTravelDistanceTo(destination)  > 0.0) {
+					startedDriving = agent.startDrivingTo(destination);
+				}
+			},
+			() -> {
+				if (startedDriving) {
+					// Step subsequent to post must suspend agent when waiting for external stimuli
+					// Will be reset by updateAction()
+					agent.suspend(true);
+					// Do not add any checks here since the above call is non-blocking
+					// Suspend will happen once this step is finished
+				}
+			},
+			() -> {
+				// Hopefully we are there, else we will give up now after three tries
+				agent.getTravelDistanceTo(destination);
+				agent.memorise(BushfireAgent.MemoryEventType.BELIEVED.name(),
+						BushfireAgent.MemoryEventValue.DISTANCE_TO_LOCATION.name()
+								+ ":"+ destination
+								+ ":" + String.format("%.0f", agent.getTravelDistanceTo(destination)) + "m");
 			},
 	};
 
