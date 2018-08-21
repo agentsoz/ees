@@ -7,7 +7,9 @@ import io.github.agentsoz.jill.lang.Agent;
 import io.github.agentsoz.jill.lang.Goal;
 import io.github.agentsoz.jill.lang.Plan;
 import io.github.agentsoz.jill.lang.PlanStep;
+import io.github.agentsoz.util.Location;
 import io.github.agentsoz.util.evac.ActionList;
+import io.github.agentsoz.util.evac.PerceptList;
 
 import java.util.Map;
 
@@ -36,6 +38,8 @@ import java.util.Map;
 public class PlanGotoEvacPlace extends Plan {
 
 	BushfireAgent agent = null;
+	private Location destination = null;
+	boolean startedDriving = false;
 
 	public PlanGotoEvacPlace(Agent agent, Goal goal, String name) {
 		super(agent, goal, name);
@@ -52,34 +56,22 @@ public class PlanGotoEvacPlace extends Plan {
 
 	PlanStep[] steps = {
 			() -> {
-                agent.memorise(BushfireAgent.MemoryEventType.DECIDED.name(),
-                        BushfireAgent.MemoryEventValue.GOTO_EVAC_PLACE_NOW.name());
-                Object[] params = new Object[4];
-                params[0] = ActionList.DRIVETO;
-                params[1] = agent.getLocations().get(agent.LOCATION_EVAC_PREFERRED).getCoordinates();
-                params[2] = agent.getTime() + 5.0; // five secs from now;
-                params[3] = MATSimModel.EvacRoutingMode.carFreespeed;
-                agent.memorise(BushfireAgent.MemoryEventType.ACTIONED.name(), ActionList.DRIVETO+"="+agent.getLocations().get(agent.LOCATION_EVAC_PREFERRED));
-                EnvironmentAction action = new EnvironmentAction(Integer.toString(agent.getId()), ActionList.DRIVETO, params);
-                agent.setActiveEnvironmentAction(action);
-                post(action); // post should be last call in plan step
-            },
+				destination = agent.getLocations().get(agent.LOCATION_EVAC_PREFERRED);
+				startedDriving = agent.startDrivingTo(destination);
+			},
 			() -> {
-                // Step subsequent to post must suspend agent when waiting for external stimuli
-                // Will be reset by updateAction()
-                agent.suspend(true);
-                // Do not add any checks here since the above call is non-blocking
-                // Suspend will happen once this step is finished
-            },
-			() -> {
-                // Out of suspend here thanks to updateAction(), so now check what happened
-                if (agent.getLastEnvironmentActionState()== ActionContent.State.PASSED) {
-                    agent.memorise(BushfireAgent.MemoryEventType.BELIEVED.name(), BushfireAgent.MemoryEventValue.ARRIVED_LOCATION_EVAC.name());
-                } else {
-					agent.memorise(BushfireAgent.MemoryEventType.BELIEVED.name(),
-							BushfireAgent.MemoryEventValue.DID_NOT_REACH_DESTINATION.name());
+				if (startedDriving) {
+					// Step subsequent to post must suspend agent when waiting for external stimuli
+					// Will be reset by updateAction()
+					agent.suspend(true);
+					// Do not add any checks here since the above call is non-blocking
+					// Suspend will happen once this step is finished
 				}
-            },
+			},
+			() -> {
+				agent.checkIfReachedLocation(startedDriving, destination);
+
+			},
 	};
 
 	@Override
