@@ -114,6 +114,7 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 
 	private EvacConfig evacConfig = null;
 	private FireWriter fireWriter = null;
+	private EmberWriter emberWriter = null;
 	private DisruptionWriter disruptionWriter = null;
 	private Config config = null;
 	private boolean configLoaded = false;
@@ -259,6 +260,7 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 		this.agentManager = new PAAgentManager(eventsMonitors) ;
 
 		this.fireWriter = new FireWriter( config ) ;
+		this.emberWriter = new EmberWriter( config ) ;
 		this.disruptionWriter = new DisruptionWriter( config ) ;
 
 	}
@@ -456,6 +458,9 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 		if ( fireWriter!=null ) {
 			fireWriter.close();
 		}
+		if ( emberWriter !=null ) {
+			emberWriter.close();
+		}
 		if ( disruptionWriter!=null ) {
 			disruptionWriter.finish(this.getTime());
 		}
@@ -508,7 +513,7 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 				return processFireData(data, now, penaltyFactorsOfLinks, scenario,
 						penaltyFactorsOfLinksForEmergencyVehicles, fireWriter);
 			case PerceptList.EMBERS_DATA:
-				return processEmbersData(data, now, scenario, disruptionWriter);
+				return processEmbersData(data, now, scenario, emberWriter);
 			case PerceptList.DISRUPTION:
 				return processDisruptionData(data, now, scenario, disruptionWriter);
 			case PerceptList.EMERGENCY_MESSAGE:
@@ -518,7 +523,7 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 		}
 	}
 
-	private boolean processEmbersData(Object data, double now, Scenario scenario, DisruptionWriter disruptionWriter) {
+	private boolean processEmbersData(Object data, double now, Scenario scenario, EmberWriter emberWriter) {
 		log.info("receiving embers data at time={}", now);
 		log.info( "{}{}", new Gson().toJson(data).substring(0,Math.min(new Gson().toJson(data).length(),200)),
 				"... use DEBUG to see full coordinates list") ;
@@ -527,8 +532,8 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 		if (embers == null) {
 			return true;
 		}
-		embers = embers.buffer(optMaxDistanceForSmokeVisual);
-		List<Id<Person>> personsMatched = getPersonsWithin(scenario, embers);
+		Geometry embersBuffer = embers.buffer(optMaxDistanceForSmokeVisual);
+		List<Id<Person>> personsMatched = getPersonsWithin(scenario, embersBuffer);
 		log.info("Embers/smoke seen by {} persons: {} ", personsMatched.size(), Arrays.toString(personsMatched.toArray()));
 		// package the messages up to send to the BDI side
 		for (Id<Person> personId : personsMatched) {
@@ -538,6 +543,7 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 			}
 		}
 
+		emberWriter.write( now, embers);
 		return true;
 	}
 

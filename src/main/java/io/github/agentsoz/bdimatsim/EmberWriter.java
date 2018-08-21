@@ -33,31 +33,31 @@ import org.slf4j.LoggerFactory;
 
 import java.io.PrintStream;
 
-class FireWriter {
-	private static final Logger log = LoggerFactory.getLogger(FireWriter.class);
-	
+class EmberWriter {
+	private static final Logger log = LoggerFactory.getLogger(EmberWriter.class);
+
 	private final Config config;
-	private PrintStream fireWriter ;
-	FireWriter(Config config1 ) {
+	private PrintStream writer;
+	EmberWriter(Config config1 ) {
 		config = config1 ;
 	}
-	void write(double now, Geometry fire) {
-		if (fireWriter == null) {
-			final String filename = config.controler().getOutputDirectory() + "/output_fireCoords.txt.gz";
-			log.info("writing fire data to " + filename);
-			fireWriter = IOUtils.getPrintStream(filename);
-			fireWriter.println("time\tx\ty");
+	void write(double now, Geometry shape) {
+		if (writer == null) {
+			final String filename = config.controler().getOutputDirectory() + "/output_emberCoords.txt.gz";
+			log.info("writing ember data to " + filename);
+			writer = IOUtils.getPrintStream(filename);
+			writer.println("time\tx\ty");
 		}
 		// can't do this earlier since the output directories are not yet prepared by the controler.  kai, dec'17
 		
 		Envelope env = new Envelope();
-		env.expandToInclude(fire.getEnvelopeInternal());
-		double gridsize = 200.;
+		env.expandToInclude(shape.getEnvelopeInternal());
+		double gridsize = 400.;
 		boolean atLeastOnePixel = false;
 		StringBuilder str = new StringBuilder();
 		for (double yy = env.getMinY(); yy <= env.getMaxY(); yy += gridsize) {
 			for (double xx = env.getMinX(); xx <= env.getMaxX(); xx += gridsize) {
-				if (fire.contains(new GeometryFactory().createPoint(new Coordinate(xx, yy)))) {
+				if (shape.contains(new GeometryFactory().createPoint(new Coordinate(xx, yy)))) {
 					str.append(now);
 					str.append("\t");
 					str.append(xx);
@@ -69,17 +69,18 @@ class FireWriter {
 				}
 			}
 		}
-		if(atLeastOnePixel) {
-			fireWriter.print(str);
+		if (atLeastOnePixel) {
+			writer.print(str);
+
 		} else {
-			final String strn = now + "\t" + fire.getCentroid().getX() + "\t" + fire.getCentroid().getY();
-			fireWriter.println(strn);
+			final String strn = now + "\t" + shape.getCentroid().getX() + "\t" + shape.getCentroid().getY();
+			writer.println(strn);
 		}
 	}
 	
 	public void close() {
-		if ( fireWriter != null ) {
-			fireWriter.close();
+		if ( writer != null ) {
+			writer.close();
 		}
 	}
 }
