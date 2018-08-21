@@ -23,7 +23,7 @@ public class SurfCoastShirePopulationSubgroupsTest {
     @Rule
     public MatsimTestUtils utils = new MatsimTestUtils();
 
-    @Ignore
+
     @Test
     public void testSurfCoastShirePopulationSubgroups() {
 

@@ -50,8 +50,8 @@
       <opt id="jPlanSelectionPolicy">FIRST</opt>
       <opt id="jAgents"></opt>
       <opt id="jLogLevel">WARN</opt>
-      <opt id="jLogFile">test/output/io/github/agentsoz/ees/SurfCoastShirePopulationSubgroupsSampleTest/testSurfCoastShirePopulationSubgroupsSample/jill.log</opt>
-      <opt id="jOutFile">test/output/io/github/agentsoz/ees/SurfCoastShirePopulationSubgroupsSampleTest/testSurfCoastShirePopulationSubgroupsSample/jill.out</opt>
+      <opt id="jLogFile">test/output/io/github/agentsoz/ees/SurfCoastShirePopulationSubgroupsTest/testSurfCoastShirePopulationSubgroups/jill.log</opt>
+      <opt id="jOutFile">test/output/io/github/agentsoz/ees/SurfCoastShirePopulationSubgroupsTest/testSurfCoastShirePopulationSubgroups/jill.out</opt>
       <opt id="jNumThreads">1</opt>
 
     </model>
@@ -81,9 +81,9 @@
       <!-- Phoenix start time in HH:MM format; used to calculate absolute values for hour_spot and hour_burnt -->
       <opt id="ignitionHHMM">14:00</opt>
       <!-- Phoenix fire GeoJSON file -->
-      <opt id="fireGeoJson">scenarios/surf-coast-shire/population-subgroups-sample/scenario_fire.json</opt>
+      <opt id="fireGeoJson">scenarios/surf-coast-shire/population-subgroups/scenario_fire.json</opt>
       <!-- Phoenix smoke (embers) GeoJSON file -->
-      <opt id="smokeGeoJson">scenarios/surf-coast-shire/population-subgroups-sample/scenario_smoke.json</opt>
+      <opt id="smokeGeoJson">scenarios/surf-coast-shire/population-subgroups/scenario_smoke.json</opt>
       <!-- Enables/disables legacy option to broadcast FIRE_ALERT as soon as the fire starts -->
       <opt id="sendFireAlertOnFireStart">false</opt>
     </model>
@@ -95,9 +95,9 @@
 
     <model id="messaging">
       <!-- Messaging JSON file  -->
-      <opt id="fileJson">scenarios/surf-coast-shire/population-subgroups-sample/scenario_messages.json</opt>
+      <opt id="fileJson">scenarios/surf-coast-shire/population-subgroups/scenario_messages.json</opt>
       <!-- Zones GeoJSON file mapping zone IDs to polygon shapes -->
-      <opt id="fileZonesGeoJson">scenarios/surf-coast-shire/population-subgroups-sample/Anglesea_SA1s_WSG84.json</opt>
+      <opt id="fileZonesGeoJson">scenarios/surf-coast-shire/population-subgroups/Anglesea_SA1s_WSG84.json</opt>
     </model>
 
   </models>
