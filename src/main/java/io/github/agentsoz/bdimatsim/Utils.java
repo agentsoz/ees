@@ -78,7 +78,7 @@ public final class Utils {
      * @return the map or else an empty map if no BDI agent types were found
      */
     public static Map<String,List<String[]>> getAgentsFromMATSimPlansFile(Scenario scenario ) {
-        Map<String,List<String[]>> map = new HashMap<>();
+        Map<String,List<String[]>> map = new LinkedHashMap<>();
         for (Person person : scenario.getPopulation().getPersons().values()) {
 
 			// Get all person attributes
