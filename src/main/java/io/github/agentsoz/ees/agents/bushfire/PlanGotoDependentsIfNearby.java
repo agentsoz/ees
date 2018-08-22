@@ -81,7 +81,7 @@ public class PlanGotoDependentsIfNearby extends Plan {
 			// Arrived at Dependents. Go home with some probability
 			() -> {
                 agent.memorise(BushfireAgent.MemoryEventType.BELIEVED.name(), BushfireAgent.MemoryEventValue.DEPENDENTS_INFO.name() + ":" + agent.getDependentInfo() );
-                if (!agent.isFinalResponseThresholdBreached() && Global.getRandom().nextDouble() < agent.getProbHomeAfterDependents()) {
+                if (Global.getRandom().nextDouble() < agent.getProbHomeAfterDependents()) {
                     post(new GoalGoHome("GoalGoHome"));
                     // Now wait till the next step for this goal to finish
                 } else {
