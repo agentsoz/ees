@@ -259,7 +259,7 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
                     memorise(MemoryEventType.DECIDED.name(), MemoryEventValue.FINAL_RESPONSE_THRESHOLD_BREACHED.name());
                     if (!isInitialResponseThresholdBreached()) {
                         // final breached bu not initial, so force initial breach now as well
-                        logger.warn("{} had final threshold breached but not initial; will assume both have breached");
+                        logger.warn("{} had final threshold breached but not initial; will assume both have breached", logPrefix());
                         memorise(MemoryEventType.DECIDED.name(), MemoryEventValue.INITIAL_AND_FINAL_RESPONSE_THRESHOLDS_BREACHED_TOGETHER.name());
                         breach = MemoryEventValue.INITIAL_AND_FINAL_RESPONSE_THRESHOLDS_BREACHED_TOGETHER;
                     } else if (breach==null) {
