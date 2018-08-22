@@ -23,11 +23,15 @@
   <!--cccc=DHI_to_CHECK-->
 
   <!--
-  Ignores all warnings and continues with daily plan. cccc are they driving home from work through the fire?
+  Lives in Anglesea, ignores all warnings and continues with daily plan. Drives through burnt/burning zone on way home
+  from work, so seems determined to not change their life around the fire.
+
   DS: Confirmed that agent drives through fire front on the way back.
   This seems to be because no threshold is breached and therefore the agent
   is just going about its day undeterred.
- TODO Check that penalties are applying properly to plan formed at 20:47. Add failsafe fire front disruption in case where fire hits post plan.
+ TODO Check that penalties are applying properly to plan formed at 20:47. see issue #36
+ TODO Add failsafe fire front disruption in case where fire hits post plan. see issue #63
+ JR: verified
  -->
 
   <person id= "0" >
@@ -50,11 +54,9 @@
   </person>
 
   <!--
-  cccc Lives in Geelong and does not receive any warnings, so no response is triggered. However, has a dependent
-  in Anglesea who is under threat. Do we need some method of having them respond to their dependent's threat? Seems
-  like what Pete was talking about last meeting. Could be solved with Social network maybe, or by a more thorough SA1
-  json file.
-  DS: Waiting on #49 to be implemented so we can see if social network messaging helps here
+  Lives in Geelong and does not receive any warnings, so no response is triggered. However, has a dependent
+  in Anglesea who is under threat. A good example of why the social network model will be beneficial (see issue #49).
+  JR: verified.
   -->
   <person id= "1" >
     <attributes>
@@ -80,8 +82,9 @@
   </person>
 
   <!--
-  (R1) Resident sees smoke and decides to go home and prepare. Does not receieve any further warnings, so remains there.
-  DS: verified
+  (R1) Resident lives, works and shops in Torquay. Whilst at shops after work, they see smoke and decide to go home and
+  prepare. Does not receive any further warnings, so remains there.
+  JR: verified
   -->
   <person id= "2" >
     <attributes>
@@ -108,23 +111,10 @@
 
 
   <!--
-  (R3) Resident has dependent (child) at a school. Breaks initial threshold at work, goes home, and then goes to school,
-  waits there until receiving EVACUATE_NOW message, and evacuates.
-  DS: Verify above described behaviour
+  (R3) Anglesea resident has dependent (child) at a school. Breaks initial threshold at work, goes home, and then goes
+  to school, waits there until receiving EVACUATE_NOW message, and evacuates to advised location.
+  JR: verified
 
-  cccc Do we want the INITIAL_RESPONSE option of "stay at
-  dependent_location" to be context-based i.e. would not stay at a school but would at a residence? Or specifically in this case,
-  when home is very close by. Part of a bigger issue (see below)
-  DS: We are not distinguishing between types of dependents at this stage (kids at school vs horses for instance).
-  Behaviour of parents is likely to be different but at this stage we will treat them all the same.
-
-  cccc Also, is there a parameter that determines the choice between staying at dep_location or going home? (see below)
-  DS: getProbHomeAfterDependents() and getProbHomeBeforeLeaving() are both hardcoded at 0.5. Can be pulled
-  out as per-agent attribute if we want, just haven't done it yet.
-TODO pull getProbHomeAfterDependents() and getProbHomeBeforeLeaving() out into person atributes
-  cccc Thirdly, I notice that when completing FINAL_RESPONSE, some of the applicable plans include going home first.
-  These wouldn't be possible for someone who has already collected dependents right? Just checking
-  DS: That was a bug in the logging sorry (fixed in a20c855), PlanGoHomeThenLeave is not applicable just logging was wrong.
   -->
   <person id= "3" >
     <attributes>
@@ -150,23 +140,11 @@ TODO pull getProbHomeAfterDependents() and getProbHomeBeforeLeaving() out into p
   </person>
 
   <!--
-  (R4) Is at work when INITIAL_RESPONSE is triggered, and goes to dependent at school (same school as above). Then
-  takes kids home and waits until receiving EVACUATE_NOW message, and evacuates.
-  DS: verified
+  (R4) Anglesea resident is at work when INITIAL_RESPONSE is triggered, and goes to dependent at school (same work and
+  school as above). Then takes kids home and waits until receiving EVACUATE_NOW message. Evacuates to advised
+  location.
+  JR: verified
 
-  cccc Compare to person 3... lives further
-  away from school, but does go home after attending to dependents, whereas person 3 does not. Not necessarily a
-  problem, but how is this decision made?
-  DS: getProbHomeAfterDependents() and getProbHomeBeforeLeaving() are both hardcoded at 0.5. Can be pulled
-  out as per-agent attribute if we want, just haven't done it yet.
-
-  PS I think the decision should depend on whether the FINAL_RESPONSE threshold has already been breached as well.
-  Otherwise you can get somewhat strange behaviour where a person who has both thresholds triggered can
-  GOHOME->GOTO_DEP->GOHOME->EVACUATE. ASSUMPTION
-  DS: Yes good point, fixed in 852e920.
-
-  PPS Strange things (i'm guessing slight shifts in the seed) change the decision, which might not be ideal
-  DS: Global random seed was not being used sorry. Fixed in 3a71369
   -->
   <person id= "4" >
     <attributes>
@@ -189,9 +167,10 @@ TODO pull getProbHomeAfterDependents() and getProbHomeBeforeLeaving() out into p
 
 
   <!--
-  (R2) Resident is at work, INITIAL_RESPONSE is triggered, goes home, goes to dependents, and then takes them back
-  home. Upon seeing fire, the agent evacuates family to Waurn Ponds.
-  DS: Verified
+  (R2) Anglesea resident is at work, INITIAL_RESPONSE is triggered, goes home, goes to dependents,, getting stuck in
+   congestion and replanning on the way. They then take them back home. Upon seeing fire, the agent evacuates family to
+   advised location.
+  JR: NOT verified
   -->
   <person id= "5" >
     <attributes>
@@ -204,55 +183,21 @@ TODO pull getProbHomeAfterDependents() and getProbHomeBeforeLeaving() out into p
       <attribute name="InfoSharingLikelihood" class="java.lang.Double">0.2</attribute>
     </attributes>
     <plan selected="yes">
-      <activity type="home" x="777417.6549732379" y="5744641.285256961" end_time="08:33:00" />
+      <activity type="home" x="777222.2149925517" y="5744702.686600856" end_time="08:33:00" />
       <leg mode="car" />
       <activity type="work" x="777405.3574812234" y="5743656.7993866345" end_time="17:54:00" />
       <leg mode="car" />
-      <activity type="home" x="777417.6549732379" y="5744641.285256961" />
+      <activity type="home" x="777222.2149925517" y="5744702.686600856" />
     </plan>
   </person>
 
-  <!--
-  cccc Interesting issue I had when trying to create R2: For some reason with a lower threshold, the agent gets stuck
-  trying to get dependent, (it receives a congestion percept) and ultimately fails the plan of attending to dependent.
-  Thus it apparently evacuates without fetching dependent (not good!). Might be tied in with what you were talking
-  about re having 3 attempts at all plans.
-  DS: Try-three-times-before-giving-up is now implemented since f48f22c. We should discuss what should happen
-  at the higher level plan though when all tries fail which will be context dependent (so keep trying if
-  getting dependents but maybe give up if just going home). At the moment there is no difference, three tries
-  and the agent gives up on that plan and moves on to whatever else is in the pipeline.
 
-  But also it is weird that there is congestion there with seemingly no other
-  vehicles around. PS this happened with a number of different resident plans.
-  DS: This is expected since we are running the network at 1% capacity. You don't "see" the 99% other cars
-  that are causing the congestion.
+  <!--
+  (R5) Anglesea resident has dependents and is at the shops when INITIAL_RESPONSE is triggered.
+  Does not go home before or after picking them up. Later evacuates from school to advised location.
+ JR: NOT verified
   -->
   <person id= "6" >
-    <attributes>
-      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.Resident</attribute>
-      <attribute name="hasDependentsAtLocation" class="java.lang.String" >778707.91,5745384.49</attribute>
-      <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.2</attribute>
-      <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.5</attribute>
-      <attribute name="EvacLocationPreference" class="java.lang.String">Torquay Foreshore,790771,5752462</attribute>
-      <attribute name="InvacLocationPreference" class="java.lang.String">Anglesea Shops,777471,5742412</attribute>
-      <attribute name="InfoSharingLikelihood" class="java.lang.Double">0.2</attribute>
-    </attributes>
-    <plan selected="yes">
-      <activity type="home" x="777417.6549732379" y="5744641.285256961" end_time="08:33:00" />
-      <leg mode="car" />
-      <activity type="work" x="777405.3574812234" y="5743656.7993866345" end_time="17:54:00" />
-      <leg mode="car" />
-      <activity type="home" x="777417.6549732379" y="5744641.285256961" />
-    </plan>
-  </person>
-
-
-  <!--
-  (R5) Resident has dependents and does not go home before or after picking them up. Later evacuates from school.
-  DS: Verified, but behaviour has changed here and probably for others now that random seed is actually getting
-  used since 3a71369. Sghould not change between runs anymore though.
-  -->
-  <person id= "7" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.Resident</attribute>
       <attribute name="hasDependentsAtLocation" class="java.lang.String" >778707.91,5745384.49</attribute>
@@ -271,8 +216,11 @@ TODO pull getProbHomeAfterDependents() and getProbHomeBeforeLeaving() out into p
     </plan>
   </person>
 
-  <!--(R6/R7) Has no dependents, and goes to FINAL_RESPONSE at the same time as INITIAL RESPONSE-->
-  <person id= "8" >
+  <!--(R6/R7) Lives north of the fire and works just south of Anglesea. Has no dependents, and goes to FINAL_RESPONSE
+  at the same time as INITIAL RESPONSE. Chooses to evacuate straight away rather than going all the way home first.
+  JR: verified-->
+
+  <person id= "7" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.Resident</attribute>
       <attribute name="hasDependentsAtLocation" class="java.lang.String" ></attribute>
@@ -283,27 +231,23 @@ TODO pull getProbHomeAfterDependents() and getProbHomeBeforeLeaving() out into p
       <attribute name="InfoSharingLikelihood" class="java.lang.Double">0.2</attribute>
     </attributes>
     <plan selected="yes">
-      <activity type="home" x="758838.77263" y="5730582.04375" end_time="06:20:00" />
+      <activity type="home" x="768838.77263" y="5780582.04375" end_time="06:20:00" />
       <leg mode="car" />
-      <activity type="work" x="759310.02792" y="5730461.39643" end_time="15:48:00" />
+      <activity type="work" x="772310.02792" y="5740461.39643" end_time="15:48:00" />
       <leg mode="car" />
       <activity type="other" x="759074.12513" y="5730215.34091" end_time="16:17:00" />
       <leg mode="car" />
-      <activity type="home" x="758838.77263" y="5730582.04375" end_time="18:01:00" />
+      <activity type="home" x="768838.77263" y="5780582.04375" end_time="18:01:00" />
       <leg mode="car" />
-      <activity type="work" x="759163.59908" y="5730338.60707" end_time="23:53:00" />
-      <leg mode="car" />
-      <activity type="home" x="758838.77263" y="5730582.04375" />
+      <activity type="home" x="768838.77263" y="5780582.04375" />
     </plan>
   </person>
 
 <!--After a day of shops and beach within the local Anglesea area, the sight of smoke causes this part time resident
- to head home. A few hours later, the sight of fire means that they evacuate. cccc Note another case of congestion
- causing a fail, but this time it seems it was resolved (compare to person 6:perhaps going home vs going to
- dependents?.)
- DS: Seems fine now as driveto is tried three times.
+ to head home despite the congestion. A few hours later, the sight of fire means that they evacuate.
+JR: verified
  -->
-  <person id= "9" >
+  <person id= "8" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.ResidentPartTime</attribute>
       <attribute name="hasDependentsAtLocation" class="java.lang.String" ></attribute>
@@ -333,19 +277,16 @@ TODO pull getProbHomeAfterDependents() and getProbHomeBeforeLeaving() out into p
   </person>
 
   <!--
-  Does not respond to any fire threats despite being in danger zone (as expected). Does show some issue with
-  plans bouncing in and out of region.
-  DS: Don't see any issues in the log anymore maybe from above fixes.
-
-  cccc seems to go right through fire at 4.30pm.
-  DS: Is ok, fire wasn't there yet
+  Day visitor comes in to Anglesea from the west (Colac) does not respond to any fire threats despite being in danger
+  zone (as expected- they are determined to enjoy their holiday).
+  JR:verified
   -->
-  <person id= "10" >
+  <person id= "9" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorDaytime</attribute>
       <attribute name="hasDependentsAtLocation" class="java.lang.String" ></attribute>
-      <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.5</attribute>
-      <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.5</attribute>
+      <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.7</attribute>
+      <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.7</attribute>
       <attribute name="EvacLocationPreference" class="java.lang.String">Torquay Foreshore,790771,5752462</attribute>
       <attribute name="InvacLocationPreference" class="java.lang.String">Anglesea Shops,777471,5742412</attribute>
       <attribute name="InfoSharingLikelihood" class="java.lang.Double">0.2</attribute>
@@ -355,7 +296,7 @@ TODO pull getProbHomeAfterDependents() and getProbHomeBeforeLeaving() out into p
       <leg mode="car" />
       <activity type="other" x="778507.88547" y="5744455.63954" end_time="10:36:00" />
       <leg mode="car" />
-      <activity type="shops" x="732598.98147" y="5756278.36455" end_time="13:38:00" />
+      <activity type="shops" x="778190.084385339" y="5744106.22590521" end_time="13:38:00" />
       <leg mode="car" />
       <activity type="other" x="767533.87321" y="5747333.10942" end_time="15:09:00" />
       <leg mode="car" />
@@ -367,118 +308,44 @@ TODO pull getProbHomeAfterDependents() and getProbHomeBeforeLeaving() out into p
     </plan>
   </person>
 
-  <!--cccc this visitor does respond to fire threats, but in a problematic way. Again, we see the bounce in and out, but then
-  once the evacuation process starts things get worse. The INITIAL_RESPONSE part is ignored (as it should be), but then
-  the visitor selects ActNow|PlanGoHomeThenLeave. This sees the visitor go home (to Geelong),
-  and then the LeaveNow part sees them come back to Torquay foreshore! This will be solved when the LeaveNow plan
-  is fully operational, but does highlight why visitors "going home" to outside the region could be problematic.
-  Just need the LeaveNow to check if the person is already safe (believes themselves to now be safe)
-  DS: Not fixed yet, somehow the agent needs to know that home is safer (further from fire) than evac place.
-  TODO: a) People evacuating to places closer to fire. DistanceFromFire needed (smoke also a factor- do not evac towards)
-  TODO: b) List full range of Known evacuation options (evacPref is a list instead of single value
-  TODO: c) LeaveTo choice (based on distance, preferences, message) needs to be fleshed out, both initially, and when replanning.
-
+  <!--
+     This day visitor comes in from the east (Melbourne), and similarly spends the day in Anglesea. However, around 1pm,
+     they receive the evacuate now message, which sees both thresholds triggered and them leave to the advised
+     evacuation point.
+     JR: NOT verified
   -->
-  <person id= "11" >
+  <person id= "10" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorDaytime</attribute>
       <attribute name="hasDependentsAtLocation" class="java.lang.String" ></attribute>
       <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.3</attribute>
       <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.3</attribute>
-      <attribute name="EvacLocationPreference" class="java.lang.String">Torquay Foreshore,790771,5752462</attribute>
+      <attribute name="EvacLocationPreference" class="java.lang.String">Melbourne,841924.6,5808324.9</attribute>
       <attribute name="InvacLocationPreference" class="java.lang.String">Anglesea Shops,777471,5742412</attribute>
       <attribute name="InfoSharingLikelihood" class="java.lang.Double">0.2</attribute>
     </attributes>
     <plan selected="yes">
-      <activity type="home" x="793807.138" y="5772517.067" end_time="07:38:00" />
+      <activity type="home" x="841924.6" y="5808324.9" end_time="07:38:00" />
       <leg mode="car" />
       <activity type="other" x="778948.04363" y="5744611.19874" end_time="10:37:00" />
       <leg mode="car" />
-      <activity type="shops" x="792871.83966" y="5770473.28821" end_time="12:02:00" />
+      <activity type="shops" x="778625.507483276" y="5744460.79582655" end_time="12:02:00" />
       <leg mode="car" />
-      <activity type="beach" x="794920.60169" y="5772690.71159" end_time="17:58:00" />
+      <activity type="beach" x="778247.725118489" y="5743352.11543371" end_time="17:58:00" />
       <leg mode="car" />
       <activity type="other" x="778836.49665" y="5745094.30493" end_time="18:34:00" />
       <leg mode="car" />
-      <activity type="home" x="793807.138" y="5772517.067" end_time="20:26:00" />
-      <leg mode="car" />
-      <activity type="beach" x="794920.60169" y="5772690.71159" end_time="22:54:00" />
-      <leg mode="car" />
-      <activity type="home" x="793807.138" y="5772517.067" />
-    </plan>
-  </person>
-
-
-  <!--
-  cccc this agent seems to be going through the burnt area at around 9.15pm
-  DS: yes this definitely seems to go through the fire.
-  TODO: verify again and reopen ticket #36 -->
-  <person id= "12" >
-    <attributes>
-      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorDaytime</attribute>
-      <attribute name="hasDependentsAtLocation" class="java.lang.String" ></attribute>
-      <attribute name="InitialResponseThreshold" class="java.lang.Double" >1.0</attribute>
-      <attribute name="FinalResponseThreshold"   class="java.lang.Double" >1.0</attribute>
-      <attribute name="EvacLocationPreference" class="java.lang.String">Torquay Foreshore,790771,5752462</attribute>
-      <attribute name="InvacLocationPreference" class="java.lang.String">Anglesea Shops,777471,5742412</attribute>
-      <attribute name="InfoSharingLikelihood" class="java.lang.Double">0.2</attribute>
-    </attributes>
-    <plan selected="yes">
-      <activity type="home" x="793807.138" y="5772517.067" end_time="09:08:00" />
-      <leg mode="car" />
-      <activity type="other" x="778948.04363" y="5744611.19874" end_time="12:18:00" />
-      <leg mode="car" />
-      <activity type="beach" x="794920.60169" y="5772690.71159" end_time="19:43:00" />
-      <leg mode="car" />
-      <activity type="home" x="793807.138" y="5772517.067" end_time="21:14:00" />
-      <leg mode="car" />
-      <activity type="other" x="767533.87321" y="5747333.10942" end_time="23:03:00" />
-      <leg mode="car" />
-      <activity type="home" x="793807.138" y="5772517.067" />
-    </plan>
-  </person>
-
-  <!--
-  cccc A good example of how the LeaveNow plan/better messaging can improve things. Visitor goes back to accommodation in
-  Airey's inlet before evacuating back through Anglesea. In practice you would think that the message should indicate
-  to the agent that if they are out of the danger area, do not go through it (and congestion) to evacuate.
-  DS: related to above TODO, SEE ABOVE need a way to check that evac dest is further away from fire than current location.
-  -->
-  <person id= "13" >
-    <attributes>
-      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorOvernight</attribute>
-      <attribute name="hasDependentsAtLocation" class="java.lang.String" ></attribute>
-      <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.6</attribute>
-      <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.6</attribute>
-      <attribute name="EvacLocationPreference" class="java.lang.String">Torquay Foreshore,790771,5752462</attribute>
-      <attribute name="InvacLocationPreference" class="java.lang.String">Anglesea Shops,777471,5742412</attribute>
-      <attribute name="InfoSharingLikelihood" class="java.lang.Double">0.2</attribute>
-    </attributes>
-    <plan selected="yes">
-      <activity type="home" x="771120.82582" y="5738818.00056" end_time="07:07:00" />
-      <leg mode="car" />
-      <activity type="other" x="777412.78017" y="5744008.09442" end_time="11:49:00" />
-      <leg mode="car" />
-      <activity type="beach" x="777498.11629" y="5741920.33946" end_time="17:54:00" />
-      <leg mode="car" />
-      <activity type="shops" x="770351.40111" y="5738001.92605" end_time="19:39:00" />
-      <leg mode="car" />
-      <activity type="home" x="771120.82582" y="5738818.00056" end_time="21:19:00" />
-      <leg mode="car" />
-      <activity type="other" x="778836.49665" y="5745094.30493" end_time="22:19:00" />
-      <leg mode="car" />
-      <activity type="home" x="771120.82582" y="5738818.00056" />
+      <activity type="home" x="841924.6" y="5808324.9" />
     </plan>
   </person>
 
   <!--This visitor is staying in Airey's inlet, but visits places all along the Great Ocean Road during the day. Does
-  not act upon any warnings. cccc Do we want people outside of danger area going into danger area places
-  (in this case, the shops)? Could have some message level to the wider area (with no threshold) that allows people
-  outside of danger area to change plans accordingly. Could also helps with person 1, who would act on dependent despite
-  not having threshold broken.
-  DS: Yes TODO maybe raise a ticket for this suggestion SEE ABOVE
-  -->
-  <person id= "14" >
+    not act upon any warnings, and for the most part avoids the danger area.
+  JR: verified
+    -->
+
+
+  <person id= "11" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorOvernight</attribute>
       <attribute name="hasDependentsAtLocation" class="java.lang.String" ></attribute>
@@ -499,24 +366,25 @@ TODO pull getProbHomeAfterDependents() and getProbHomeBeforeLeaving() out into p
       <leg mode="car" />
       <activity type="shops" x="770351.40111" y="5738001.92605" end_time="16:50:00" />
       <leg mode="car" />
-      <activity type="other" x="778507.88547" y="5744455.63954" end_time="19:22:00" />
-      <leg mode="car" />
       <activity type="shops" x="759317.42351" y="5729964.86105" end_time="20:34:00" />
       <leg mode="car" />
       <activity type="home" x="771120.82582" y="5738818.00056" />
     </plan>
   </person>
 
-  <!--a similar story to 13, but at least this visitor gets out a bit earlier. I guess this also shows the importance
-  of authorities being able to block roads (the disruption model), to prevent people coming into the danger zone
-   unecessarily TODO add a minor blockage to disruptions file-->
-  <person id= "15" >
+  <!--This visitor is staying in Lorne well south of the fire. Visits the national park north of Anglesea and receives
+  the ADVICE message. On the way back to accommodation receives WATCH AND ACT message, which sees them turn around and
+  head straight to Melbourne. This is a panicked move and actually takes them into congestion and potential danger,
+  although it is still early.
+   TODO add a minor blockage to disruptions file
+   JR: NOT verified. Disruption added, still need to test it. Will also affect 11 and maybe 9-->
+  <person id= "12" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorOvernight</attribute>
       <attribute name="hasDependentsAtLocation" class="java.lang.String" ></attribute>
       <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.2</attribute>
       <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.2</attribute>
-      <attribute name="EvacLocationPreference" class="java.lang.String">Torquay Foreshore,790771,5752462</attribute>
+      <attribute name="EvacLocationPreference" class="java.lang.String">Melbourne,841924.6,5808324.9</attribute>
       <attribute name="InvacLocationPreference" class="java.lang.String">Anglesea Shops,777471,5742412</attribute>
       <attribute name="InfoSharingLikelihood" class="java.lang.Double">0.2</attribute>
     </attributes>
@@ -537,72 +405,10 @@ TODO pull getProbHomeAfterDependents() and getProbHomeBeforeLeaving() out into p
     </plan>
   </person>
 
-  <!--
-  cccc this visitor fails due to congestion, but still believes they are safe? I think I am misinterpreting the
-  meaning of the DID_NOT_REACH_DESTINATION log.
-  DS: behaviour has changed since new commits, seems ok now.
-  -->
-  <person id= "16" >
-    <attributes>
-      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorOvernight</attribute>
-      <attribute name="hasDependentsAtLocation" class="java.lang.String" ></attribute>
-      <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.5</attribute>
-      <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.5</attribute>
-      <attribute name="EvacLocationPreference" class="java.lang.String">Torquay Foreshore,790771,5752462</attribute>
-      <attribute name="InvacLocationPreference" class="java.lang.String">Anglesea Shops,777471,5742412</attribute>
-      <attribute name="InfoSharingLikelihood" class="java.lang.Double">0.2</attribute>
-    </attributes>
-    <plan selected="yes">
-      <activity type="home" x="777412.78017" y="5744008.09442" end_time="06:51:00" />
-      <leg mode="car" />
-      <activity type="other" x="778358.96582" y="5743692.86289" end_time="11:26:00" />
-      <leg mode="car" />
-      <activity type="beach" x="778237.06886" y="5743964.79164" end_time="16:31:00" />
-      <leg mode="car" />
-      <activity type="shops" x="778279.66613" y="5743500.15352" end_time="23:16:00" />
-      <leg mode="car" />
-      <activity type="home" x="777412.78017" y="5744008.09442" />
-    </plan>
-  </person>
 
-  <!--
-  cccc as with 13, 15, it seems silly for this person to evacuate, especially toward danger.
-  DS: ok definitely need a ticket for this, seems to happen a fair bit
-  -->
-  <person id= "17" >
-    <attributes>
-      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorOvernight</attribute>
-      <attribute name="hasDependentsAtLocation" class="java.lang.String" ></attribute>
-      <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.3</attribute>
-      <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.3</attribute>
-      <attribute name="EvacLocationPreference" class="java.lang.String">Torquay Foreshore,790771,5752462</attribute>
-      <attribute name="InvacLocationPreference" class="java.lang.String">Anglesea Shops,777471,5742412</attribute>
-      <attribute name="InfoSharingLikelihood" class="java.lang.Double">0.2</attribute>
-    </attributes>
-    <plan selected="yes">
-      <activity type="home" x="759175.87554" y="5731742.96741" end_time="06:22:00" />
-      <leg mode="car" />
-      <activity type="beach" x="759551.54671" y="5730602.07326" end_time="08:54:00" />
-      <leg mode="car" />
-      <activity type="shops" x="759294.96025" y="5730628.35413" end_time="11:41:00" />
-      <leg mode="car" />
-      <activity type="beach" x="759326.8826" y="5729839.13291" end_time="13:44:00" />
-      <leg mode="car" />
-      <activity type="shops" x="759294.96025" y="5730628.35413" end_time="14:24:00" />
-      <leg mode="car" />
-      <activity type="beach" x="759551.54671" y="5730602.07326" end_time="16:13:00" />
-      <leg mode="car" />
-      <activity type="other" x="777412.78017" y="5744008.09442" end_time="19:08:00" />
-      <leg mode="car" />
-      <activity type="shops" x="759294.96025" y="5730628.35413" end_time="21:33:00" />
-      <leg mode="car" />
-      <activity type="home" x="759175.87554" y="5731742.96741" />
-    </plan>
-  </person>
-
-
-  <!-- Regular visitor evacuates from home immediately upon hearing about the fire-->
-  <person id= "18" >
+  <!-- Regular visitor evacuates from Anglesea home immediately upon hearing about the fire.
+  JR:verified-->
+  <person id= "13" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorRegular</attribute>
       <attribute name="hasDependentsAtLocation" class="java.lang.String" ></attribute>
@@ -626,8 +432,9 @@ TODO pull getProbHomeAfterDependents() and getProbHomeBeforeLeaving() out into p
   </person>
 
 
-  <!--Regular visitor is at home when INITIAL_RESPONSE threshold breached, and shelters there for duration of fire.-->
-  <person id= "19" >
+  <!--Regular visitor is at home when INITIAL_RESPONSE threshold breached, and shelters there for duration of fire.
+  JR:verified-->
+  <person id= "14" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorRegular</attribute>
       <attribute name="hasDependentsAtLocation" class="java.lang.String" ></attribute>
@@ -653,6 +460,138 @@ TODO pull getProbHomeAfterDependents() and getProbHomeBeforeLeaving() out into p
   </person>
 
 
+<!--INTERESTING PROBLEM SITUATIONSvvvvvvvvvvv-->
+
+  <!--&lt;!&ndash;skip-->
+  <!--cccc this agent seems to be going through the burnt area at around 9.15pm&ndash;&gt;-->
+  <!--&lt;!&ndash;DS: yes this definitely seems to go through the fire.&ndash;&gt;-->
+  <!--&lt;!&ndash;TODO: verify again and reopen ticket #36 &ndash;&gt;&ndash;&gt;-->
+  <!--<person id= "11" >-->
+  <!--<attributes>-->
+  <!--<attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorDaytime</attribute>-->
+  <!--<attribute name="hasDependentsAtLocation" class="java.lang.String" ></attribute>-->
+  <!--<attribute name="InitialResponseThreshold" class="java.lang.Double" >1.0</attribute>-->
+  <!--<attribute name="FinalResponseThreshold"   class="java.lang.Double" >1.0</attribute>-->
+  <!--<attribute name="EvacLocationPreference" class="java.lang.String">Torquay Foreshore,790771,5752462</attribute>-->
+  <!--<attribute name="InvacLocationPreference" class="java.lang.String">Anglesea Shops,777471,5742412</attribute>-->
+  <!--</attributes>-->
+  <!--<plan selected="yes">-->
+  <!--<activity type="home" x="793807.138" y="5772517.067" end_time="09:08:00" />-->
+  <!--<leg mode="car" />-->
+  <!--<activity type="other" x="778948.04363" y="5744611.19874" end_time="12:18:00" />-->
+  <!--<leg mode="car" />-->
+  <!--<activity type="beach" x="794920.60169" y="5772690.71159" end_time="19:43:00" />-->
+  <!--<leg mode="car" />-->
+  <!--<activity type="home" x="793807.138" y="5772517.067" end_time="21:14:00" />-->
+  <!--<leg mode="car" />-->
+  <!--<activity type="other" x="767533.87321" y="5747333.10942" end_time="23:03:00" />-->
+  <!--<leg mode="car" />-->
+  <!--<activity type="home" x="793807.138" y="5772517.067" />-->
+  <!--</plan>-->
+  <!--</person>-->
+
+  <!--&lt;!&ndash;skip-->
+  <!--cccc A good example of how the LeaveNow plan/better messaging can improve things. Visitor goes back to accommodation in-->
+  <!--Airey's inlet before evacuating back through Anglesea. In practice you would think that the message should indicate-->
+  <!--to the agent that if they are out of the danger area, do not go through it (and congestion) to evacuate.-->
+  <!--DS: related to above TODO, SEE ABOVE need a way to check that evac dest is further away from fire than current location.-->
+  <!--DS: Not fixed yet, somehow the agent needs to know that home is safer (further from fire) than evac place.-->
+  <!--TODO: a) People evacuating to places closer to fire. DistanceFromFire needed (smoke also a factor- do not evac towards)-->
+  <!--TODO: b) List full range of Known evacuation options (evacPref is a list instead of single value-->
+  <!--TODO: c) LeaveTo choice (based on distance, preferences, message) needs to be fleshed out, both initially, and when replanning.-->
+  <!--&ndash;&gt;-->
+
+  <!--<person id= "12" >-->
+  <!--<attributes>-->
+  <!--<attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorOvernight</attribute>-->
+  <!--<attribute name="hasDependentsAtLocation" class="java.lang.String" ></attribute>-->
+  <!--<attribute name="InitialResponseThreshold" class="java.lang.Double" >0.6</attribute>-->
+  <!--<attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.6</attribute>-->
+  <!--<attribute name="EvacLocationPreference" class="java.lang.String">Torquay Foreshore,790771,5752462</attribute>-->
+  <!--<attribute name="InvacLocationPreference" class="java.lang.String">Anglesea Shops,777471,5742412</attribute>-->
+  <!--</attributes>-->
+  <!--<plan selected="yes">-->
+  <!--<activity type="home" x="771120.82582" y="5738818.00056" end_time="07:07:00" />-->
+  <!--<leg mode="car" />-->
+  <!--<activity type="other" x="777412.78017" y="5744008.09442" end_time="11:49:00" />-->
+  <!--<leg mode="car" />-->
+  <!--<activity type="beach" x="777498.11629" y="5741920.33946" end_time="17:54:00" />-->
+  <!--<leg mode="car" />-->
+  <!--<activity type="shops" x="770351.40111" y="5738001.92605" end_time="19:39:00" />-->
+  <!--<leg mode="car" />-->
+  <!--<activity type="home" x="771120.82582" y="5738818.00056" end_time="21:19:00" />-->
+  <!--<leg mode="car" />-->
+  <!--<activity type="other" x="778836.49665" y="5745094.30493" end_time="22:19:00" />-->
+  <!--<leg mode="car" />-->
+  <!--<activity type="home" x="771120.82582" y="5738818.00056" />-->
+  <!--</plan>-->
+  <!--</person>-->
+
+  <!--This visitor is staying in Airey's inlet, but visits places all along the Great Ocean Road during the day. Does
+  not act upon any warnings, and for the most part avoids the danger area.
+  -->
+
+
+  <!--&lt;!&ndash;skip-->
+  <!--cccc this visitor fails due to congestion, but still believes they are safe? I think I am misinterpreting the-->
+  <!--meaning of the DID_NOT_REACH_DESTINATION log.-->
+  <!--DS: behaviour has changed since new commits, seems ok now.-->
+  <!--&ndash;&gt;-->
+  <!--<person id= "15" >-->
+  <!--<attributes>-->
+  <!--<attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorOvernight</attribute>-->
+  <!--<attribute name="hasDependentsAtLocation" class="java.lang.String" ></attribute>-->
+  <!--<attribute name="InitialResponseThreshold" class="java.lang.Double" >0.5</attribute>-->
+  <!--<attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.5</attribute>-->
+  <!--<attribute name="EvacLocationPreference" class="java.lang.String">Torquay Foreshore,790771,5752462</attribute>-->
+  <!--<attribute name="InvacLocationPreference" class="java.lang.String">Anglesea Shops,777471,5742412</attribute>-->
+  <!--</attributes>-->
+  <!--<plan selected="yes">-->
+  <!--<activity type="home" x="777412.78017" y="5744008.09442" end_time="06:51:00" />-->
+  <!--<leg mode="car" />-->
+  <!--<activity type="other" x="778358.96582" y="5743692.86289" end_time="11:26:00" />-->
+  <!--<leg mode="car" />-->
+  <!--<activity type="beach" x="778237.06886" y="5743964.79164" end_time="16:31:00" />-->
+  <!--<leg mode="car" />-->
+  <!--<activity type="shops" x="778279.66613" y="5743500.15352" end_time="23:16:00" />-->
+  <!--<leg mode="car" />-->
+  <!--<activity type="home" x="777412.78017" y="5744008.09442" />-->
+  <!--</plan>-->
+  <!--</person>-->
+
+  <!--&lt;!&ndash;skip-->
+  <!--cccc as with 13, 15, it seems silly for this person to evacuate, especially toward danger.-->
+  <!--DS: ok definitely need a ticket for this, seems to happen a fair bit-->
+  <!--&ndash;&gt;-->
+  <!--<person id= "16" >-->
+  <!--<attributes>-->
+  <!--<attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorOvernight</attribute>-->
+  <!--<attribute name="hasDependentsAtLocation" class="java.lang.String" ></attribute>-->
+  <!--<attribute name="InitialResponseThreshold" class="java.lang.Double" >0.3</attribute>-->
+  <!--<attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.3</attribute>-->
+  <!--<attribute name="EvacLocationPreference" class="java.lang.String">Torquay Foreshore,790771,5752462</attribute>-->
+  <!--<attribute name="InvacLocationPreference" class="java.lang.String">Anglesea Shops,777471,5742412</attribute>-->
+  <!--</attributes>-->
+  <!--<plan selected="yes">-->
+  <!--<activity type="home" x="759175.87554" y="5731742.96741" end_time="06:22:00" />-->
+  <!--<leg mode="car" />-->
+  <!--<activity type="beach" x="759551.54671" y="5730602.07326" end_time="08:54:00" />-->
+  <!--<leg mode="car" />-->
+  <!--<activity type="shops" x="759294.96025" y="5730628.35413" end_time="11:41:00" />-->
+  <!--<leg mode="car" />-->
+  <!--<activity type="beach" x="759326.8826" y="5729839.13291" end_time="13:44:00" />-->
+  <!--<leg mode="car" />-->
+  <!--<activity type="shops" x="759294.96025" y="5730628.35413" end_time="14:24:00" />-->
+  <!--<leg mode="car" />-->
+  <!--<activity type="beach" x="759551.54671" y="5730602.07326" end_time="16:13:00" />-->
+  <!--<leg mode="car" />-->
+  <!--<activity type="other" x="777412.78017" y="5744008.09442" end_time="19:08:00" />-->
+  <!--<leg mode="car" />-->
+  <!--<activity type="shops" x="759294.96025" y="5730628.35413" end_time="21:33:00" />-->
+  <!--<leg mode="car" />-->
+  <!--<activity type="home" x="759175.87554" y="5731742.96741" />-->
+  <!--</plan>-->
+  <!--</person>-->
 <!-- ====================================================================== -->
 
   </population>
