@@ -85,7 +85,7 @@ public class PlanGoHomeIfDependentsAfar extends Plan {
 			},
 			// 3. Arrived at Dependents. Go home with some probability
 			() -> {
-				if (Global.getRandom().nextDouble() < agent.getProbHomeAfterDependents()) {
+				if (!agent.isFinalResponseThresholdBreached() && Global.getRandom().nextDouble() < agent.getProbHomeAfterDependents()) {
 					goingHomeAfterVisitingDependents =true;
 					post(new GoalGoHome("GoalGoHome"));
 					// Now wait till the next step for this goal to finish
