@@ -40,8 +40,8 @@
       <attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>
       <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.8</attribute>
       <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.8</attribute>
-      <attribute name="ProbHomeAfterDependents"   class="java.lang.Double" >0</attribute>
-      <attribute name="ProbHomeBeforeLeaving"   class="java.lang.Double" >0</attribute>
+      <attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.Boolean" >false</attribute>
+      <attribute name="WillGoHomeBeforeLeaving" class="java.lang.Boolean" >false</attribute>
       <attribute name="EvacLocationPreference" class="java.lang.String">Torquay Foreshore,790771,5752462</attribute>
       <attribute name="InvacLocationPreference" class="java.lang.String">Anglesea Shops,777471,5742412</attribute>
       <attribute name="sharesInfoWithSocialNetwork" class="java.lang.Boolean">true</attribute>
@@ -66,8 +66,8 @@
       <attribute name="HasDependentsAtLocation" class="java.lang.String" >776562.41,5743690.74</attribute>
       <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.2</attribute>
       <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.5</attribute>
-      <attribute name="ProbHomeAfterDependents"   class="java.lang.Double" >1</attribute>
-      <attribute name="ProbHomeBeforeLeaving"   class="java.lang.Double" >0</attribute>
+      <attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.Boolean" >true</attribute>
+      <attribute name="WillGoHomeBeforeLeaving" class="java.lang.Boolean" >false</attribute>
       <attribute name="EvacLocationPreference" class="java.lang.String">Torquay Foreshore,790771,5752462</attribute>
       <attribute name="InvacLocationPreference" class="java.lang.String">Anglesea Shops,777471,5742412</attribute>
       <attribute name="sharesInfoWithSocialNetwork" class="java.lang.Boolean">true</attribute>
@@ -96,8 +96,8 @@
       <attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>
       <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.2</attribute>
       <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.5</attribute>
-      <attribute name="ProbHomeAfterDependents"   class="java.lang.Double" >0</attribute>
-      <attribute name="ProbHomeBeforeLeaving"   class="java.lang.Double" >1</attribute>
+      <attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.Boolean" >false</attribute>
+      <attribute name="WillGoHomeBeforeLeaving" class="java.lang.Boolean" >true</attribute>
       <attribute name="EvacLocationPreference" class="java.lang.String">Torquay Foreshore,790771,5752462</attribute>
       <attribute name="InvacLocationPreference" class="java.lang.String">Anglesea Shops,777471,5742412</attribute>
       <attribute name="sharesInfoWithSocialNetwork" class="java.lang.Boolean">true</attribute>
@@ -128,8 +128,8 @@
       <attribute name="HasDependentsAtLocation" class="java.lang.String" >778707.91,5745384.49</attribute>
       <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.2</attribute>
       <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.3</attribute>
-      <attribute name="ProbHomeAfterDependents"   class="java.lang.Double" >0</attribute>
-      <attribute name="ProbHomeBeforeLeaving"   class="java.lang.Double" >0</attribute>
+      <attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.Boolean" >false</attribute>
+      <attribute name="WillGoHomeBeforeLeaving" class="java.lang.Boolean" >false</attribute>
       <attribute name="EvacLocationPreference" class="java.lang.String">Torquay Foreshore,790771,5752462</attribute>
       <attribute name="InvacLocationPreference" class="java.lang.String">Anglesea Shops,777471,5742412</attribute>
       <attribute name="sharesInfoWithSocialNetwork" class="java.lang.Boolean">true</attribute>
@@ -159,8 +159,8 @@
       <attribute name="HasDependentsAtLocation" class="java.lang.String" >778707.91,5745384.49</attribute>
       <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.2</attribute>
       <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.3</attribute>
-      <attribute name="ProbHomeAfterDependents"   class="java.lang.Double" >1</attribute>
-      <attribute name="ProbHomeBeforeLeaving"   class="java.lang.Double" >0</attribute>
+      <attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.Boolean" >true</attribute>
+      <attribute name="WillGoHomeBeforeLeaving" class="java.lang.Boolean" >false</attribute>
       <attribute name="EvacLocationPreference" class="java.lang.String">Torquay Foreshore,790771,5752462</attribute>
       <attribute name="InvacLocationPreference" class="java.lang.String">Anglesea Shops,777471,5742412</attribute>
       <attribute name="sharesInfoWithSocialNetwork" class="java.lang.Boolean">true</attribute>
@@ -188,8 +188,8 @@
       <attribute name="HasDependentsAtLocation" class="java.lang.String" >778707.91,5745384.49</attribute>
       <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.2</attribute>
       <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.7</attribute>
-      <attribute name="ProbHomeAfterDependents"   class="java.lang.Double" >1</attribute>
-      <attribute name="ProbHomeBeforeLeaving"   class="java.lang.Double" >0</attribute>
+      <attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.Boolean" >true</attribute>
+      <attribute name="WillGoHomeBeforeLeaving" class="java.lang.Boolean" >false</attribute>
       <attribute name="EvacLocationPreference" class="java.lang.String">Torquay Foreshore,790771,5752462</attribute>
       <attribute name="InvacLocationPreference" class="java.lang.String">Anglesea Shops,777471,5742412</attribute>
       <attribute name="sharesInfoWithSocialNetwork" class="java.lang.Boolean">true</attribute>
@@ -215,8 +215,8 @@
       <attribute name="HasDependentsAtLocation" class="java.lang.String" >778707.91,5745384.49</attribute>
       <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.2</attribute>
       <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.3</attribute>
-      <attribute name="ProbHomeAfterDependents"   class="java.lang.Double" >0</attribute>
-      <attribute name="ProbHomeBeforeLeaving"   class="java.lang.Double" >1</attribute>
+      <attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.Boolean" >false</attribute>
+      <attribute name="WillGoHomeBeforeLeaving" class="java.lang.Boolean" >true</attribute>
       <attribute name="EvacLocationPreference" class="java.lang.String">Torquay Foreshore,790771,5752462</attribute>
       <attribute name="InvacLocationPreference" class="java.lang.String">Anglesea Shops,777471,5742412</attribute>
       <attribute name="sharesInfoWithSocialNetwork" class="java.lang.Boolean">true</attribute>
@@ -240,8 +240,8 @@
       <attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>
       <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.3</attribute>
       <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.6</attribute>
-      <attribute name="ProbHomeAfterDependents"   class="java.lang.Double" >0</attribute>
-      <attribute name="ProbHomeBeforeLeaving"   class="java.lang.Double" >0</attribute>
+      <attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.Boolean" >false</attribute>
+      <attribute name="WillGoHomeBeforeLeaving" class="java.lang.Boolean" >false</attribute>
       <attribute name="EvacLocationPreference" class="java.lang.String">Torquay Foreshore,790771,5752462</attribute>
       <attribute name="InvacLocationPreference" class="java.lang.String">Anglesea Shops,777471,5742412</attribute>
       <attribute name="sharesInfoWithSocialNetwork" class="java.lang.Boolean">true</attribute>
@@ -269,8 +269,8 @@ JR: NOT verified
       <attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>
       <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.4</attribute>
       <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.7</attribute>
-      <attribute name="ProbHomeAfterDependents"   class="java.lang.Double" >0</attribute>
-      <attribute name="ProbHomeBeforeLeaving"   class="java.lang.Double" >1</attribute>
+      <attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.Boolean" >false</attribute>
+      <attribute name="WillGoHomeBeforeLeaving" class="java.lang.Boolean" >true</attribute>
       <attribute name="EvacLocationPreference" class="java.lang.String">Lorne 30,758783.204945714,5730096.01981458</attribute>
       <attribute name="InvacLocationPreference" class="java.lang.String">Anglesea Shops,777471,5742412</attribute>
       <attribute name="sharesInfoWithSocialNetwork" class="java.lang.Boolean">true</attribute>
@@ -305,8 +305,8 @@ JR: NOT verified
       <attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>
       <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.7</attribute>
       <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.7</attribute>
-      <attribute name="ProbHomeAfterDependents"   class="java.lang.Double" >0</attribute>
-      <attribute name="ProbHomeBeforeLeaving"   class="java.lang.Double" >0</attribute>
+      <attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.Boolean" >false</attribute>
+      <attribute name="WillGoHomeBeforeLeaving" class="java.lang.Boolean" >false</attribute>
       <attribute name="EvacLocationPreference" class="java.lang.String">Torquay Foreshore,790771,5752462</attribute>
       <attribute name="InvacLocationPreference" class="java.lang.String">Anglesea Shops,777471,5742412</attribute>
       <attribute name="sharesInfoWithSocialNetwork" class="java.lang.Boolean">true</attribute>
@@ -340,8 +340,8 @@ JR: NOT verified
       <attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>
       <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.3</attribute>
       <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.3</attribute>
-      <attribute name="ProbHomeAfterDependents"   class="java.lang.Double" >0</attribute>
-      <attribute name="ProbHomeBeforeLeaving"   class="java.lang.Double" >0</attribute>
+      <attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.Boolean" >false</attribute>
+      <attribute name="WillGoHomeBeforeLeaving" class="java.lang.Boolean" >false</attribute>
       <attribute name="EvacLocationPreference" class="java.lang.String">Melbourne,841924.6,5808324.9</attribute>
       <attribute name="InvacLocationPreference" class="java.lang.String">Anglesea Shops,777471,5742412</attribute>
       <attribute name="sharesInfoWithSocialNetwork" class="java.lang.Boolean">true</attribute>
@@ -373,8 +373,8 @@ JR: NOT verified
       <attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>
       <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.5</attribute>
       <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.5</attribute>
-      <attribute name="ProbHomeAfterDependents"   class="java.lang.Double" >0</attribute>
-      <attribute name="ProbHomeBeforeLeaving"   class="java.lang.Double" >1</attribute>
+      <attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.Boolean" >false</attribute>
+      <attribute name="WillGoHomeBeforeLeaving" class="java.lang.Boolean" >true</attribute>
       <attribute name="EvacLocationPreference" class="java.lang.String">Torquay Foreshore,790771,5752462</attribute>
       <attribute name="InvacLocationPreference" class="java.lang.String">Anglesea Shops,777471,5742412</attribute>
       <attribute name="sharesInfoWithSocialNetwork" class="java.lang.Boolean">true</attribute>
@@ -408,8 +408,8 @@ JR: NOT verified
       <attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>
       <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.2</attribute>
       <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.2</attribute>
-      <attribute name="ProbHomeAfterDependents"   class="java.lang.Double" >0</attribute>
-      <attribute name="ProbHomeBeforeLeaving"   class="java.lang.Double" >1</attribute>
+      <attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.Boolean" >false</attribute>
+      <attribute name="WillGoHomeBeforeLeaving" class="java.lang.Boolean" >true</attribute>
       <attribute name="EvacLocationPreference" class="java.lang.String">Melbourne,841924.6,5808324.9</attribute>
       <attribute name="InvacLocationPreference" class="java.lang.String">Anglesea Shops,777471,5742412</attribute>
       <attribute name="sharesInfoWithSocialNetwork" class="java.lang.Boolean">true</attribute>
@@ -440,8 +440,8 @@ JR: NOT verified
       <attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>
       <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.0</attribute>
       <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.0</attribute>
-      <attribute name="ProbHomeAfterDependents"   class="java.lang.Double" >0</attribute>
-      <attribute name="ProbHomeBeforeLeaving"   class="java.lang.Double" >0</attribute>
+      <attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.Boolean" >false</attribute>
+      <attribute name="WillGoHomeBeforeLeaving" class="java.lang.Boolean" >false</attribute>
       <attribute name="EvacLocationPreference" class="java.lang.String">Torquay Foreshore,790771,5752462</attribute>
       <attribute name="InvacLocationPreference" class="java.lang.String">Anglesea Shops,777471,5742412</attribute>
       <attribute name="sharesInfoWithSocialNetwork" class="java.lang.Boolean">true</attribute>
@@ -468,8 +468,8 @@ JR: NOT verified
       <attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>
       <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.3</attribute>
       <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.7</attribute>
-      <attribute name="ProbHomeAfterDependents"   class="java.lang.Double" >0</attribute>
-      <attribute name="ProbHomeBeforeLeaving"   class="java.lang.Double" >1</attribute>
+      <attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.Boolean" >false</attribute>
+      <attribute name="WillGoHomeBeforeLeaving" class="java.lang.Boolean" >true</attribute>
       <attribute name="EvacLocationPreference" class="java.lang.String">Torquay Foreshore,790771,5752462</attribute>
       <attribute name="InvacLocationPreference" class="java.lang.String">Anglesea Shops,777471,5742412</attribute>
       <attribute name="sharesInfoWithSocialNetwork" class="java.lang.Boolean">true</attribute>

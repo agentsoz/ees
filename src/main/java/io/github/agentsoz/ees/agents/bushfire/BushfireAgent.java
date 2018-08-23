@@ -68,8 +68,8 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
     private double responseBarometerFieldOfView = 0.0;
     private double responseBarometerSocialMessage = 0.0;
     private boolean sharesInfoWithSocialNetwork = false;
-    private double probHomeAfterDependents = 0.5;
-    private double probHomeBeforeLeaving = 0.5;
+    private boolean willGoHomeAfterVisitingDependents = false;
+    private boolean willGoHomeBeforeLeaving = false;
     private double smokeVisualValue = 0.3;
     private double fireVisualValue = 0.4;
     private double socialMessageEvacNowValue = 0.3;
@@ -133,13 +133,13 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
         return responseBarometerMessages + responseBarometerFieldOfView + responseBarometerSocialMessage;
     }
 
-    double getProbHomeAfterDependents()
+    boolean getWillGoHomeAfterVisitingDependents()
     {
-        return probHomeAfterDependents;
+        return willGoHomeAfterVisitingDependents;
     }
-    double getProbHomeBeforeLeaving()
+    boolean getWillGoHomeBeforeLeaving()
     {
-        return probHomeBeforeLeaving;
+        return willGoHomeBeforeLeaving;
     }
 
     boolean isDriving() {
@@ -593,24 +593,24 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
                             }
                         }
                         break;
-                    case "ProbHomeAfterDependents":
+                    case "WillGoHomeAfterVisitingDependents":
                         if(i+1<args.length) {
                             i++;
                             try {
-                                probHomeAfterDependents = Double.parseDouble(args[i]);
+                                willGoHomeAfterVisitingDependents = Boolean.parseBoolean(args[i]);
                             } catch (Exception e) {
-                                System.err.println("Could not parse double '"
+                                System.err.println("Could not parse boolean '"
                                         + args[i] + "' : " + e.getMessage());
                             }
                         }
                         break;
-                    case "ProbHomeBeforeLeaving":
+                    case "WillGoHomeBeforeLeaving":
                         if(i+1<args.length) {
                             i++;
                             try {
-                                probHomeBeforeLeaving = Double.parseDouble(args[i]);
+                                willGoHomeBeforeLeaving = Boolean.parseBoolean(args[i]);
                             } catch (Exception e) {
-                                System.err.println("Could not parse double '"
+                                System.err.println("Could not parse boolean '"
                                         + args[i] + "' : " + e.getMessage());
                             }
                         }
