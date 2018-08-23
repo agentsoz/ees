@@ -62,6 +62,8 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
     private double finalResponseThreshold = 0.5;
     private double responseBarometerMessages = 0.0;
     private double responseBarometerFieldOfView = 0.0;
+    private double probHomeAfterDependents = 0.5;
+    private double probHomeBeforeLeaving = 0.5;
 
     private enum FieldOfViewPercept { // FIXME: move to config
         SMOKE_VISUAL(0.3),
@@ -133,11 +135,13 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
         return responseBarometerMessages + responseBarometerFieldOfView;
     }
 
-    double getProbHomeAfterDependents() {
-        return 0.5; // FIXME: should be configurable
+    double getProbHomeAfterDependents()
+    {
+        return probHomeAfterDependents;
     }
-    double getProbHomeBeforeLeaving() {
-        return 0.5; // FIXME: should be configurable
+    double getProbHomeBeforeLeaving()
+    {
+        return probHomeBeforeLeaving;
     }
 
     boolean isDriving() {
@@ -480,7 +484,7 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
         if (args != null) {
             for (int i = 0; i < args.length; i++) {
                 switch (args[i]) {
-                    case "hasDependentsAtLocation":
+                    case "HasDependentsAtLocation":
                         if (i + 1 < args.length) {
                             i++;
                             if (!args[i].isEmpty()) { // empty arg is ok, signifies no dependents
@@ -552,6 +556,28 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
                                 locations.put(loc, location);
                             } catch (Exception e) {
                                 System.err.println("Could not parse location '"
+                                        + args[i] + "' : " + e.getMessage());
+                            }
+                        }
+                        break;
+                    case "ProbHomeAfterDependents":
+                        if(i+1<args.length) {
+                            i++;
+                            try {
+                                probHomeAfterDependents = Double.parseDouble(args[i]);
+                            } catch (Exception e) {
+                                System.err.println("Could not parse double '"
+                                        + args[i] + "' : " + e.getMessage());
+                            }
+                        }
+                        break;
+                    case "ProbHomeBeforeLeaving":
+                        if(i+1<args.length) {
+                            i++;
+                            try {
+                                probHomeBeforeLeaving = Double.parseDouble(args[i]);
+                            } catch (Exception e) {
+                                System.err.println("Could not parse double '"
                                         + args[i] + "' : " + e.getMessage());
                             }
                         }
