@@ -34,7 +34,6 @@ import io.github.agentsoz.jill.core.beliefbase.BeliefSetField;
 import io.github.agentsoz.jill.lang.Agent;
 import io.github.agentsoz.jill.lang.AgentInfo;
 import io.github.agentsoz.util.EmergencyMessage;
-import io.github.agentsoz.util.Global;
 import io.github.agentsoz.util.Location;
 import io.github.agentsoz.util.evac.ActionList;
 import io.github.agentsoz.util.evac.PerceptList;
@@ -43,7 +42,9 @@ import org.slf4j.LoggerFactory;
 
 import java.io.PrintStream;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 @AgentInfo(hasGoals={"io.github.agentsoz.ees.agents.bushfire.GoalDoNothing"})
 public abstract class BushfireAgent extends  Agent implements io.github.agentsoz.bdiabm.Agent {
@@ -65,25 +66,14 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
     private double finalResponseThreshold = 0.5;
     private double responseBarometerMessages = 0.0;
     private double responseBarometerFieldOfView = 0.0;
-    private double messagePostingProbability = 0.1;
+    private double responseBarometerSocialMessage = 0.0;
+    private boolean sharesInfoWithSocialNetwork = false;
     private double probHomeAfterDependents = 0.5;
     private double probHomeBeforeLeaving = 0.5;
+    private double smokeVisualValue = 0.3;
+    private double fireVisualValue = 0.4;
+    private double socialMessageEvacNowValue = 0.3;
 
-    private enum FieldOfViewPercept { // FIXME: move to config
-        SMOKE_VISUAL(0.3),
-        FIRE_VISUAL(0.4),
-        NEIGHBOURS_LEAVING(0.5);
-
-        private final double value;
-
-        private FieldOfViewPercept(double value) {
-            this.value = value;
-        }
-
-        public double getValue() {
-            return value;
-        }
-    }
 
     enum MemoryEventType {
         BELIEVED,
@@ -99,6 +89,7 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
         STATE_CHANGED,
         RESPONSE_BAROMETER_MESSAGES_CHANGED,
         RESPONSE_BAROMETER_FIELD_OF_VIEW_CHANGED,
+        RESPONSE_BAROMETER_SOCIAL_MESSAGE_CHANGED,
         INITIAL_RESPONSE_THRESHOLD_BREACHED,
         FINAL_RESPONSE_THRESHOLD_BREACHED,
         INITIAL_AND_FINAL_RESPONSE_THRESHOLDS_BREACHED_TOGETHER,
@@ -116,12 +107,14 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
     private Map<String,Location> locations;
     private EnvironmentAction activeEnvironmentAction;
     private ActionContent.State lastEnvironmentActionStatus;
-
+    private Set<String> messagesShared;
 
 
     public BushfireAgent(String id) {
         super(id);
         locations = new HashMap<>();
+        messagesShared = new HashSet<>();
+
     }
 
     DependentInfo getDependentInfo() {
@@ -137,7 +130,7 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
     }
 
     double getResponseBarometer() {
-        return responseBarometerMessages + responseBarometerFieldOfView;
+        return responseBarometerMessages + responseBarometerFieldOfView + responseBarometerSocialMessage;
     }
 
     double getProbHomeAfterDependents()
@@ -197,20 +190,6 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
      */
     @Override
     public void finish() {
-//        writer.println(logPrefix() + "is terminating");
-//        try {
-//            if (eval("memory.event = *")) {
-//                Set<String> memories = new TreeSet<>();
-//                for (Belief belief : getLastResults()) {
-//                    memories.add(logPrefix() + "memory : " + Arrays.toString(belief.getTuple()));
-//                }
-//                for (String belief : memories) {
-//                    writer.println(belief);
-//                }
-//            }
-//        } catch (BeliefBaseException e) {
-//            throw new RuntimeException(e);
-//        }
     }
 
         /**
@@ -234,20 +213,21 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
 
         if (perceptID.equals(PerceptList.EMERGENCY_MESSAGE)) {
             updateResponseBarometerMessages(parameters);
-            if (getEmergencyMessageType(parameters) == EmergencyMessage.EmergencyMessageType.EVACUATE_NOW &&
-                    (parameters instanceof String) &&
-                    Global.getRandom().nextDouble() < messagePostingProbability) {
-                shareWithSocialNetwork((String)parameters);
+            if (sharesInfoWithSocialNetwork &&
+                    !messagesShared.contains(EmergencyMessage.EmergencyMessageType.EVACUATE_NOW.name()) &&
+                    parameters instanceof String &&
+                    getEmergencyMessageType(parameters) == EmergencyMessage.EmergencyMessageType.EVACUATE_NOW) {
+                shareWithSocialNetwork((String) parameters);
+                messagesShared.add(EmergencyMessage.EmergencyMessageType.EVACUATE_NOW.name());
             }
+        } else if (perceptID.equals(PerceptList.SOCIAL_NETWORK_MSG)) {
+            updateResponseBarometerSocialMessage(parameters);
         } else if (perceptID.equals(PerceptList.FIELD_OF_VIEW)) {
             updateResponseBarometerFieldOfViewPercept(parameters);
         } else if (perceptID.equals(PerceptList.ARRIVED)) {
             // do something
         } else if (perceptID.equals(PerceptList.BLOCKED)) {
             // do something
-        } else if (perceptID.equals(PerceptList.FIRE_ALERT)) {
-            // FIXME: using fire msg (global) as proxy for fire visual (localised)
-            updateResponseBarometerFieldOfViewPercept(FieldOfViewPercept.FIRE_VISUAL);
         }
 
         // Now trigger a response as needed
@@ -336,6 +316,23 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
     }
 
     /**
+     * Writes {@link #responseBarometerSocialMessage} with value of the incoming msg
+     * @param msg the incoming social network message
+     */
+    private void updateResponseBarometerSocialMessage(Object msg) {
+        double value = 0.0;
+        if (!messagesShared.contains(EmergencyMessage.EmergencyMessageType.EVACUATE_NOW.name())
+                && getEmergencyMessageType(msg) == EmergencyMessage.EmergencyMessageType.EVACUATE_NOW) {
+            // The EVAC_NOW message has value if we haven't shared it before
+            value = socialMessageEvacNowValue;
+        } // else if (...) {}
+        if (value > responseBarometerSocialMessage) {
+            responseBarometerSocialMessage = value;
+            memorise(MemoryEventType.BELIEVED.name(), MemoryEventValue.RESPONSE_BAROMETER_SOCIAL_MESSAGE_CHANGED.name() + "=" + Double.toString(value));
+        }
+    }
+
+    /**
      * Overwrites {@link #responseBarometerFieldOfView} with the value of the incoming visual
      * if the incoming value is higher.
      * @param view the incoming visual percept
@@ -344,16 +341,15 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
         if (view == null) {
             return;
         }
-        FieldOfViewPercept percept = null;
+        double value = 0.0;
         if (PerceptList.SIGHTED_EMBERS.equalsIgnoreCase(view.toString())) {
-            percept = FieldOfViewPercept.SMOKE_VISUAL;
+            value = smokeVisualValue;
         } else if (PerceptList.SIGHTED_FIRE.equalsIgnoreCase(view.toString())) {
-            percept = FieldOfViewPercept.FIRE_VISUAL;
+            value = fireVisualValue;
         } else {
             logger.warn("{} ignoring field of view percept: {}", logPrefix(), view);
             return;
         }
-        double value = percept.getValue();
         if (value > responseBarometerFieldOfView) {
             responseBarometerFieldOfView = value;
             memorise(MemoryEventType.BELIEVED.name(), MemoryEventValue.RESPONSE_BAROMETER_FIELD_OF_VIEW_CHANGED.name() + "=" + Double.toString(value));
@@ -586,11 +582,11 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
                             }
                         }
                         break;
-                    case "InfoSharingLikelihood":
+                    case "sharesInfoWithSocialNetwork":
                         if(i+1<args.length) {
                             i++;
                             try {
-                                messagePostingProbability = Double.parseDouble(args[i]);
+                                sharesInfoWithSocialNetwork = Boolean.parseBoolean(args[i]);
                             } catch (Exception e) {
                                 System.err.println("Could not parse double '"
                                         + args[i] + "' : " + e.getMessage());

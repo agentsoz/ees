@@ -44,7 +44,7 @@
       <attribute name="ProbHomeBeforeLeaving"   class="java.lang.Double" >0</attribute>
       <attribute name="EvacLocationPreference" class="java.lang.String">Torquay Foreshore,790771,5752462</attribute>
       <attribute name="InvacLocationPreference" class="java.lang.String">Anglesea Shops,777471,5742412</attribute>
-      <attribute name="InfoSharingLikelihood" class="java.lang.Double">0.2</attribute>
+      <attribute name="sharesInfoWithSocialNetwork" class="java.lang.Boolean">true</attribute>
     </attributes>
     <plan selected="yes">
       <activity type="home" x="777487.95417" y="5742688.0183" end_time="09:58:00" />
@@ -70,7 +70,7 @@
       <attribute name="ProbHomeBeforeLeaving"   class="java.lang.Double" >0</attribute>
       <attribute name="EvacLocationPreference" class="java.lang.String">Torquay Foreshore,790771,5752462</attribute>
       <attribute name="InvacLocationPreference" class="java.lang.String">Anglesea Shops,777471,5742412</attribute>
-      <attribute name="InfoSharingLikelihood" class="java.lang.Double">0.2</attribute>
+      <attribute name="sharesInfoWithSocialNetwork" class="java.lang.Boolean">true</attribute>
     </attributes>
     <plan selected="yes">
       <activity type="home" x="793533.93691" y="5770266.87819" end_time="09:46:00" />
@@ -100,7 +100,7 @@
       <attribute name="ProbHomeBeforeLeaving"   class="java.lang.Double" >1</attribute>
       <attribute name="EvacLocationPreference" class="java.lang.String">Torquay Foreshore,790771,5752462</attribute>
       <attribute name="InvacLocationPreference" class="java.lang.String">Anglesea Shops,777471,5742412</attribute>
-      <attribute name="InfoSharingLikelihood" class="java.lang.Double">0.2</attribute>
+      <attribute name="sharesInfoWithSocialNetwork" class="java.lang.Boolean">true</attribute>
     </attributes>
     <plan selected="yes">
       <activity type="home" x="788726.02049816" y="5750836.993334165" end_time="11:57:00" />
@@ -132,7 +132,7 @@
       <attribute name="ProbHomeBeforeLeaving"   class="java.lang.Double" >0</attribute>
       <attribute name="EvacLocationPreference" class="java.lang.String">Torquay Foreshore,790771,5752462</attribute>
       <attribute name="InvacLocationPreference" class="java.lang.String">Anglesea Shops,777471,5742412</attribute>
-      <attribute name="InfoSharingLikelihood" class="java.lang.Double">0.2</attribute>
+      <attribute name="sharesInfoWithSocialNetwork" class="java.lang.Boolean">true</attribute>
     </attributes>
     <plan selected="yes">
       <activity type="home" x="778989.314775467" y="5744242.6394108" end_time="08:23:00" />
@@ -163,7 +163,7 @@
       <attribute name="ProbHomeBeforeLeaving"   class="java.lang.Double" >0</attribute>
       <attribute name="EvacLocationPreference" class="java.lang.String">Torquay Foreshore,790771,5752462</attribute>
       <attribute name="InvacLocationPreference" class="java.lang.String">Anglesea Shops,777471,5742412</attribute>
-      <attribute name="InfoSharingLikelihood" class="java.lang.Double">0.2</attribute>
+      <attribute name="sharesInfoWithSocialNetwork" class="java.lang.Boolean">true</attribute>
     </attributes>
     <plan selected="yes">
       <activity type="home" x="776910.4144516076" y="5742220.4645896815" end_time="08:46:00" />
@@ -192,7 +192,7 @@
       <attribute name="ProbHomeBeforeLeaving"   class="java.lang.Double" >0</attribute>
       <attribute name="EvacLocationPreference" class="java.lang.String">Torquay Foreshore,790771,5752462</attribute>
       <attribute name="InvacLocationPreference" class="java.lang.String">Anglesea Shops,777471,5742412</attribute>
-      <attribute name="InfoSharingLikelihood" class="java.lang.Double">0.2</attribute>
+      <attribute name="sharesInfoWithSocialNetwork" class="java.lang.Boolean">true</attribute>
     </attributes>
     <plan selected="yes">
       <activity type="home" x="777222.2149925517" y="5744702.686600856" end_time="08:33:00" />
@@ -219,7 +219,7 @@
       <attribute name="ProbHomeBeforeLeaving"   class="java.lang.Double" >1</attribute>
       <attribute name="EvacLocationPreference" class="java.lang.String">Torquay Foreshore,790771,5752462</attribute>
       <attribute name="InvacLocationPreference" class="java.lang.String">Anglesea Shops,777471,5742412</attribute>
-      <attribute name="InfoSharingLikelihood" class="java.lang.Double">0.2</attribute>
+      <attribute name="sharesInfoWithSocialNetwork" class="java.lang.Boolean">true</attribute>
     </attributes>
     <plan selected="yes">
       <activity type="home" x="771761.716285717" y="5753230.123211579" end_time="11:37:00" />
@@ -244,7 +244,7 @@
       <attribute name="ProbHomeBeforeLeaving"   class="java.lang.Double" >0</attribute>
       <attribute name="EvacLocationPreference" class="java.lang.String">Torquay Foreshore,790771,5752462</attribute>
       <attribute name="InvacLocationPreference" class="java.lang.String">Anglesea Shops,777471,5742412</attribute>
-      <attribute name="InfoSharingLikelihood" class="java.lang.Double">0.2</attribute>
+      <attribute name="sharesInfoWithSocialNetwork" class="java.lang.Boolean">true</attribute>
     </attributes>
     <plan selected="yes">
       <activity type="home" x="768838.77263" y="5780582.04375" end_time="06:20:00" />
@@ -273,7 +273,7 @@ JR: NOT verified
       <attribute name="ProbHomeBeforeLeaving"   class="java.lang.Double" >1</attribute>
       <attribute name="EvacLocationPreference" class="java.lang.String">Lorne 30,758783.204945714,5730096.01981458</attribute>
       <attribute name="InvacLocationPreference" class="java.lang.String">Anglesea Shops,777471,5742412</attribute>
-      <attribute name="InfoSharingLikelihood" class="java.lang.Double">0.2</attribute>
+      <attribute name="sharesInfoWithSocialNetwork" class="java.lang.Boolean">true</attribute>
     </attributes>
     <plan selected="yes">
       <activity type="home" x="777234.180895096" y="5743832.89478358" end_time="07:13:00" />
@@ -309,7 +309,7 @@ JR: NOT verified
       <attribute name="ProbHomeBeforeLeaving"   class="java.lang.Double" >0</attribute>
       <attribute name="EvacLocationPreference" class="java.lang.String">Torquay Foreshore,790771,5752462</attribute>
       <attribute name="InvacLocationPreference" class="java.lang.String">Anglesea Shops,777471,5742412</attribute>
-      <attribute name="InfoSharingLikelihood" class="java.lang.Double">0.2</attribute>
+      <attribute name="sharesInfoWithSocialNetwork" class="java.lang.Boolean">true</attribute>
     </attributes>
     <plan selected="yes">
       <activity type="home" x="725868.5478" y="5753291.5198" end_time="05:29:00" />
@@ -344,7 +344,7 @@ JR: NOT verified
       <attribute name="ProbHomeBeforeLeaving"   class="java.lang.Double" >0</attribute>
       <attribute name="EvacLocationPreference" class="java.lang.String">Melbourne,841924.6,5808324.9</attribute>
       <attribute name="InvacLocationPreference" class="java.lang.String">Anglesea Shops,777471,5742412</attribute>
-      <attribute name="InfoSharingLikelihood" class="java.lang.Double">0.2</attribute>
+      <attribute name="sharesInfoWithSocialNetwork" class="java.lang.Boolean">true</attribute>
     </attributes>
     <plan selected="yes">
       <activity type="home" x="841924.6" y="5808324.9" end_time="07:38:00" />
@@ -377,7 +377,7 @@ JR: NOT verified
       <attribute name="ProbHomeBeforeLeaving"   class="java.lang.Double" >1</attribute>
       <attribute name="EvacLocationPreference" class="java.lang.String">Torquay Foreshore,790771,5752462</attribute>
       <attribute name="InvacLocationPreference" class="java.lang.String">Anglesea Shops,777471,5742412</attribute>
-      <attribute name="InfoSharingLikelihood" class="java.lang.Double">0.2</attribute>
+      <attribute name="sharesInfoWithSocialNetwork" class="java.lang.Boolean">true</attribute>
     </attributes>
     <plan selected="yes">
       <activity type="home" x="771120.82582" y="5738818.00056" end_time="04:38:00" />
@@ -412,7 +412,7 @@ JR: NOT verified
       <attribute name="ProbHomeBeforeLeaving"   class="java.lang.Double" >1</attribute>
       <attribute name="EvacLocationPreference" class="java.lang.String">Melbourne,841924.6,5808324.9</attribute>
       <attribute name="InvacLocationPreference" class="java.lang.String">Anglesea Shops,777471,5742412</attribute>
-      <attribute name="InfoSharingLikelihood" class="java.lang.Double">0.2</attribute>
+      <attribute name="sharesInfoWithSocialNetwork" class="java.lang.Boolean">true</attribute>
     </attributes>
     <plan selected="yes">
       <activity type="home" x="756924.90574" y="5726253.79922" end_time="07:11:00" />
@@ -444,7 +444,7 @@ JR: NOT verified
       <attribute name="ProbHomeBeforeLeaving"   class="java.lang.Double" >0</attribute>
       <attribute name="EvacLocationPreference" class="java.lang.String">Torquay Foreshore,790771,5752462</attribute>
       <attribute name="InvacLocationPreference" class="java.lang.String">Anglesea Shops,777471,5742412</attribute>
-      <attribute name="InfoSharingLikelihood" class="java.lang.Double">0.2</attribute>
+      <attribute name="sharesInfoWithSocialNetwork" class="java.lang.Boolean">true</attribute>
     </attributes>
     <plan selected="yes">
       <activity type="home" x="777528.01183" y="5744592.20828" end_time="13:11:00" />
@@ -472,7 +472,7 @@ JR: NOT verified
       <attribute name="ProbHomeBeforeLeaving"   class="java.lang.Double" >1</attribute>
       <attribute name="EvacLocationPreference" class="java.lang.String">Torquay Foreshore,790771,5752462</attribute>
       <attribute name="InvacLocationPreference" class="java.lang.String">Anglesea Shops,777471,5742412</attribute>
-      <attribute name="InfoSharingLikelihood" class="java.lang.Double">0.2</attribute>
+      <attribute name="sharesInfoWithSocialNetwork" class="java.lang.Boolean">true</attribute>
     </attributes>
     <plan selected="yes">
       <activity type="home" x="778998.95182" y="5744092.75721" end_time="00:01:00" />
