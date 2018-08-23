@@ -47,8 +47,9 @@ public class JillBDIModel extends JillModel implements DataClient {
 	static final String OPT_JILL_CONFIG = "--config";
 	static final String OPT_JILL_PLAN_SELECTION_POLICY = "--plan-selection-policy";
 	// Model options in EES config XML
-	static final String eConfig = "jillconfig";
+	private static String eBDIAgentType = "BDIAgentType";
 	static final String eEvacPeakMins = "evacPeakMins";
+	static final String eConfig = "jillconfig";
 	static final String ePlanSelectionPolicy = "jPlanSelectionPolicy";
 	static final String eAgents = "jAgents";
 	static final String eLogLevel = "jLogLevel";
@@ -248,7 +249,7 @@ public class JillBDIModel extends JillModel implements DataClient {
         Map<String,Integer> counts = new LinkedHashMap<>();
         for (List<String[]> values: map.values()) {
             for (String[] val : values) {
-                if (SimpleConfig.getBdiAgentTagInMATSimPopulationFile().equals(val[0])) {
+                if (eBDIAgentType.equals(val[0])) {
                     String type = val[1];
                     int count = counts.containsKey(type) ? counts.get(type) : new Integer(0);
                     counts.put(type, count + 1);
@@ -287,7 +288,7 @@ public class JillBDIModel extends JillModel implements DataClient {
             String id = entry.getKey();
             boolean found = false;
             for (String[] val : entry.getValue()) {
-                if (SimpleConfig.getBdiAgentTagInMATSimPopulationFile().equals(val[0])) {
+                if (eBDIAgentType.equals(val[0])) {
                     found = true;
                     break;
                 }
