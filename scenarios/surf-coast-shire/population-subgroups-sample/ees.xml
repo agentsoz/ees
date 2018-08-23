@@ -90,7 +90,7 @@
 
     <model id="disruption">
       <!-- Disruptions JSON file relative to examples/bushfire directory -->
-      <opt id="fileJson"><!--scenarios/surf-coast-shire/population-subgroups-sample/scenario_disruptions.json--></opt>
+      <opt id="fileJson">scenarios/surf-coast-shire/population-subgroups-sample/scenario_disruptions.json</opt>
     </model>
 
     <model id="messaging">
