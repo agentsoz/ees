@@ -381,7 +381,7 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
         //}
     }
 
-    boolean startDrivingTo(Location location) {
+    boolean startDrivingTo(Location location, MATSimModel.EvacRoutingMode routingMode) {
         if (location == null) return false;
         memorise(MemoryEventType.DECIDED.name(), MemoryEventValue.GOTO_LOCATION.name() + ":" + location.toString());
         double distToTravel = getTravelDistanceTo(location);
@@ -393,7 +393,7 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
         params[0] = ActionList.DRIVETO;
         params[1] = location.getCoordinates();
         params[2] = getTime() + 5.0; // five secs from now;
-        params[3] = MATSimModel.EvacRoutingMode.carFreespeed;
+        params[3] = routingMode;
         memorise(MemoryEventType.ACTIONED.name(), ActionList.DRIVETO
                 + ":"+ location + ":" + String.format("%.0f", distToTravel) + "m away");
         EnvironmentAction action = new EnvironmentAction(Integer.toString(getId()), ActionList.DRIVETO, params);
