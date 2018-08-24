@@ -52,7 +52,7 @@
       <opt id="jLogLevel">WARN</opt>
       <opt id="jLogFile">test/output/io/github/agentsoz/ees/SurfCoastShirePopulationSubgroupsTest/testSurfCoastShirePopulationSubgroups/jill.log</opt>
       <opt id="jOutFile">test/output/io/github/agentsoz/ees/SurfCoastShirePopulationSubgroupsTest/testSurfCoastShirePopulationSubgroups/jill.out</opt>
-      <opt id="jNumThreads">1</opt>
+      <!--<opt id="jNumThreads">1</opt>-->
 
     </model>
 
