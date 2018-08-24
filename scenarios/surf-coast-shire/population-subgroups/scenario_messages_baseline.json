@@ -14,7 +14,7 @@
     {
       "type" : "ADVICE",
       "content" : "Emergency services are attending to a fire north of Anglesea",
-      "broadcastHHMM" : "1000",
+      "broadcastHHMM" : "1230",
       "broadcastZones" : {
         "20303104904": null,
         "20303104905": null,
@@ -26,7 +26,7 @@
     {
       "type" : "ADVICE",
       "content" : "13 vehicles are attending to the fire north of Anglesea",
-      "broadcastHHMM" : "1100",
+      "broadcastHHMM" : "1400",
       "broadcastZones" : {
         "20303104904": null,
         "20303104905": null,
@@ -38,7 +38,7 @@
     {
       "type" : "WATCH_AND_ACT",
       "content" : "Bushfire north of Anglesea not under control yet",
-      "broadcastHHMM" : "1200",
+      "broadcastHHMM" : "1500",
       "broadcastZones" : {
         "20303104904": null,
         "20303104905": null,
@@ -49,8 +49,8 @@
     },
     {
       "type" : "EVACUATE_NOW",
-      "content" : "Waurn Ponds,789654,5764865,Evacuate now towards Waurn Ponds if safe to do so,Bushfire north of Anglesea is not contained",
-      "broadcastHHMM" : "1300",
+      "content" : "Evacuate now if safe to do so, Bushfire north of Anglesea is not contained",
+      "broadcastHHMM" : "1600",
       "broadcastZones" : {
         "20303104904": null,
         "20303104905": null,

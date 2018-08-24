@@ -4,7 +4,6 @@ import io.github.agentsoz.jill.lang.Agent;
 import io.github.agentsoz.jill.lang.Goal;
 import io.github.agentsoz.jill.lang.Plan;
 import io.github.agentsoz.jill.lang.PlanStep;
-import io.github.agentsoz.util.Global;
 
 import java.util.Map;
 
@@ -53,7 +52,7 @@ public class PlanGoHomeThenLeave extends Plan {
 
 	PlanStep[] steps = {
 			() -> {
-				if (Global.getRandom().nextDouble() < agent.getProbHomeBeforeLeaving()) {
+				if (agent.getWillGoHomeBeforeLeaving()) {
 					goingHomeBeforeLeaving =true;
 					post(new GoalGoHome("GoalGoHome"));
 					// Now wait till the next step for this goal to finish

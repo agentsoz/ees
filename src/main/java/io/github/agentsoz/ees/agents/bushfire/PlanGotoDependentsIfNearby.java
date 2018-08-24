@@ -1,14 +1,10 @@
 package io.github.agentsoz.ees.agents.bushfire;
 
-import io.github.agentsoz.abmjill.genact.EnvironmentAction;
-import io.github.agentsoz.bdimatsim.MATSimModel;
 import io.github.agentsoz.jill.lang.Agent;
 import io.github.agentsoz.jill.lang.Goal;
 import io.github.agentsoz.jill.lang.Plan;
 import io.github.agentsoz.jill.lang.PlanStep;
-import io.github.agentsoz.util.Global;
 import io.github.agentsoz.util.Location;
-import io.github.agentsoz.util.evac.ActionList;
 import io.github.agentsoz.util.evac.PerceptList;
 
 import java.util.Map;
@@ -81,7 +77,7 @@ public class PlanGotoDependentsIfNearby extends Plan {
 			// Arrived at Dependents. Go home with some probability
 			() -> {
                 agent.memorise(BushfireAgent.MemoryEventType.BELIEVED.name(), BushfireAgent.MemoryEventValue.DEPENDENTS_INFO.name() + ":" + agent.getDependentInfo() );
-                if (Global.getRandom().nextDouble() < agent.getProbHomeAfterDependents()) {
+                if (agent.getWillGoHomeAfterVisitingDependents()) {
                     post(new GoalGoHome("GoalGoHome"));
                     // Now wait till the next step for this goal to finish
                 } else {
