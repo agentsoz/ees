@@ -642,7 +642,12 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 	private List<Id<Person>> getPersonsWithin(Scenario scenario, Geometry shape) {
 		List<Id<Person>> personsWithin = new ArrayList<>();
 		for(Id<Person> personId : scenario.getPopulation().getPersons().keySet()) {
-            final Id<Link> linkId = this.getMobsimDataProvider().getAgent(personId).getCurrentLinkId();
+			MobsimAgent agent = this.getMobsimDataProvider().getAgent(personId);
+			if (agent == null) {
+				log.error("MobsimAgent {} not found, should never happen!!", personId);
+				continue;
+			}
+            final Id<Link> linkId = agent.getCurrentLinkId();
             final Link link = scenario.getNetwork().getLinks().get(linkId);
             Point fromPoint = GeometryUtils.createGeotoolsPoint(link.getFromNode().getCoord());
             if (shape.contains(fromPoint)) { // coming from polygon area
@@ -776,10 +781,14 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 				final Link currentLink = scenario.getNetwork().getLinks().get( this.getMobsimAgentFromIdString(agentID).getCurrentLinkId() );
 				final double now = getTime();
 				//final Person person = scenario.getPopulation().getPersons().get(agentID);
-				LeastCostPathCalculator.Path result = this.replanner.editRoutes(EvacRoutingMode.carFreespeed).getPathCalculator().calcLeastCostPath(
-						currentLink.getFromNode(), destLink.getFromNode(), now, null, null
-				);
-				return RouteUtils.calcDistance(result);
+				double res = 0.0;
+				synchronized (this.replanner) {
+					LeastCostPathCalculator.Path result = this.replanner.editRoutes(EvacRoutingMode.carFreespeed).getPathCalculator().calcLeastCostPath(
+							currentLink.getFromNode(), destLink.getFromNode(), now, null, null
+					);
+					res = RouteUtils.calcDistance(result);
+				}
+				return res;
 			default:
 				throw new RuntimeException("Unknown query percept '"+perceptID+"' received from agent "+agentID+" with args " + args);
 		}

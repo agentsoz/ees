@@ -23,6 +23,7 @@ package io.github.agentsoz.bdimatsim;
  */
 
 import io.github.agentsoz.bdiabm.data.ActionContainer;
+import io.github.agentsoz.bdiabm.data.PerceptContainer;
 import io.github.agentsoz.util.evac.ActionList;
 import io.github.agentsoz.util.evac.PerceptList;
 import org.matsim.api.core.v01.Coord;
@@ -139,6 +140,7 @@ public final class DRIVETODefaultActionHandler implements BDIActionHandler {
 								}
 							}
 						}
+						PerceptContainer pc = agent.getPerceptContainer();
 						agent.getPerceptContainer().put(PerceptList.ARRIVED, params[0]);
 						return true;
 					}
@@ -154,8 +156,12 @@ public final class DRIVETODefaultActionHandler implements BDIActionHandler {
 										   currentLinkId ) ;
 						PAAgent agent = model.getAgentManager().getAgent( agentId.toString() );
 						Object[] params = { currentLinkId.toString() };
-						agent.getActionContainer().register(ActionList.DRIVETO, params);
-						agent.getActionContainer().get(ActionList.DRIVETO).setState(ActionContent.State.FAILED);
+						ActionContainer ac = agent.getActionContainer();
+						synchronized (ac) {
+							ac.register(ActionList.DRIVETO, params);
+							ac.get(ActionList.DRIVETO).setState(ActionContent.State.FAILED);
+						}
+						PerceptContainer pc = agent.getPerceptContainer();
 						agent.getPerceptContainer().put(PerceptList.BLOCKED, params[0]);
 						return true;
 					}
@@ -175,9 +181,13 @@ public final class DRIVETODefaultActionHandler implements BDIActionHandler {
 						// but let the BDI agent decide to abort the action if it so decides. However, while
 						// abortion is not supported in Jill we will have to live with failing the action for
 						// the time being; dsingh 1/2/18
-						agent.getActionContainer().register(ActionList.DRIVETO, params);
-						agent.getActionContainer().get(ActionList.DRIVETO).setState(ActionContent.State.FAILED);
-						agent.getPerceptContainer().put(PerceptList.CONGESTION, params[0]);
+						ActionContainer ac = agent.getActionContainer();
+						synchronized (ac) {
+							ac.register(ActionList.DRIVETO, params);
+							ac.get(ActionList.DRIVETO).setState(ActionContent.State.FAILED);
+						}
+						PerceptContainer pc = agent.getPerceptContainer();
+						pc.put(PerceptList.CONGESTION, params[0]);
 						return true;
 					}
 				}
