@@ -119,7 +119,7 @@
   <!--
   (R3) Anglesea resident has dependent (child) at a school. Breaks initial threshold at work, goes home, and then goes
   to school, waits there until receiving EVACUATE_NOW message, and evacuates to advised location.
-  JR: NOT verified TODO BUG: Resident ignores dependent! Seems to skip Initial response and go straight to LeaveNow
+  JR: verified
 
   -->
   <person id= "3" >
@@ -232,14 +232,14 @@
 
   <!--(R6/R7) Lives north of the fire and works just south of Anglesea. Has no dependents, and goes to FINAL_RESPONSE
   at the same time as INITIAL RESPONSE. Chooses to evacuate straight away rather than going all the way home first.
-  JR: NOT verified trying to get them to change mid drive-->
+  JR: verified-->
 
   <person id= "7" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.Resident</attribute>
       <attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>
       <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.3</attribute>
-      <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.6</attribute>
+      <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.4</attribute>
       <attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.Boolean" >false</attribute>
       <attribute name="WillGoHomeBeforeLeaving" class="java.lang.Boolean" >false</attribute>
       <attribute name="EvacLocationPreference" class="java.lang.String">Torquay Foreshore,790771,5752462</attribute>
@@ -261,7 +261,7 @@
 
 <!--After a day of shops and beach within the local Anglesea area, the sight of smoke causes this part time resident
  to head home despite the congestion. A few hours later, the sight of fire means that they evacuate south.
-JR: NOT verified
+JR: verified
  -->
   <person id= "8" >
     <attributes>
@@ -396,12 +396,11 @@ JR: NOT verified
     </plan>
   </person>
 
-  <!--This visitor is staying in Lorne well south of the fire. Visits the national park north of Anglesea and receives
-  the ADVICE message. On the way back to accommodation receives WATCH AND ACT message, which sees them turn around and
-  head straight to Melbourne. This is a panicked move and actually takes them into congestion and potential danger,
-  although it is still early.
-   TODO add a minor blockage to disruptions file
-   JR: NOT verified. Disruption added, still need to test it. Will also affect 11 and maybe 9-->
+  <!--This visitor is staying in Lorne well south of the fire. Visits the national park north of Anglesea and whilst
+  there sees smoke. After going back to accommodation, they leave to go beck to Melbourne.
+  This is a panicked move and actually takes them into congestion and potential danger, although it is still early.
+
+   JR: verified. Disruption added, still need to test it. Will also affect 11 and maybe 9-->
   <person id= "12" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorOvernight</attribute>
@@ -417,9 +416,9 @@ JR: NOT verified
     <plan selected="yes">
       <activity type="home" x="756924.90574" y="5726253.79922" end_time="07:11:00" />
       <leg mode="car" />
-      <activity type="other" x="767533.87321" y="5747333.10942" end_time="11:37:00" />
+      <activity type="other" x="767533.87321" y="5747333.10942" end_time="13:37:00" />
       <leg mode="car" />
-      <activity type="shops" x="759317.42351" y="5729964.86105" end_time="12:39:00" />
+      <activity type="shops" x="759317.42351" y="5729964.86105" end_time="14:39:00" />
       <leg mode="car" />
       <activity type="beach" x="753128.71399" y="5720791.13233" end_time="15:16:00" />
       <leg mode="car" />
@@ -479,11 +478,11 @@ JR: NOT verified
       <leg mode="car" />
       <activity type="other" x="778948.04363" y="5744611.19874" end_time="02:08:00" />
       <leg mode="car" />
-      <activity type="home" x="778998.95182" y="5744092.75721" end_time="13:48:00" />
+      <activity type="home" x="778998.95182" y="5744092.75721" end_time="15:48:00" />
       <leg mode="car" />
-      <activity type="shops" x="778482.57737" y="5744462.75843" end_time="14:33:00" />
+      <activity type="shops" x="778482.57737" y="5744462.75843" end_time="16:33:00" />
       <leg mode="car" />
-      <activity type="beach" x="778237.06886" y="5743964.79164" end_time="17:21:00" />
+      <activity type="beach" x="778237.06886" y="5743964.79164" end_time="18:21:00" />
       <leg mode="car" />
       <activity type="home" x="778998.95182" y="5744092.75721" />
     </plan>

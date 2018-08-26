@@ -20,8 +20,8 @@
       "endHHMM" : "2200",
       "effectiveSpeed" : "0",
       "effectiveSpeedUnit" : "KMPH",
-      "impactedLinks" : ["23885-23883-23881-23879-23877-23875-23873-23871"],
-      "comment" : "leave other way open because it is only concerned with keeping people out of Anglesea: 23870-23872-23874-23876-23878-23880-23882-23884",
+      "impactedLinks" : ["23885-23883-23881-23879-23877-23875-23873-23871","6563-6561-6559","42159-42157","52309-52311-52313-52315"],
+      "comment" : "leave other way open because it is only concerned with keeping people out of Anglesea: 23870-23872-23874-23876-23878-23880-23882-23884"
     }
   ]
 }
