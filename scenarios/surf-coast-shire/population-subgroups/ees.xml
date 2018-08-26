@@ -79,7 +79,7 @@
 
     <model id="phoenix">
       <!-- Phoenix start time in HH:MM format; used to calculate absolute values for hour_spot and hour_burnt -->
-      <opt id="ignitionHHMM">14:00</opt>
+      <opt id="ignitionHHMM">12:00</opt>
       <!-- Phoenix fire GeoJSON file -->
       <opt id="fireGeoJson">scenarios/surf-coast-shire/population-subgroups/scenario_fire.json</opt>
       <!-- Phoenix smoke (embers) GeoJSON file -->
@@ -95,7 +95,7 @@
 
     <model id="messaging">
       <!-- Messaging JSON file  -->
-      <opt id="fileJson">scenarios/surf-coast-shire/population-subgroups/scenario_messages.json</opt>
+      <opt id="fileJson">scenarios/surf-coast-shire/population-subgroups/scenario_messages_baseline.json</opt>
       <!-- Zones GeoJSON file mapping zone IDs to polygon shapes -->
       <opt id="fileZonesGeoJson">scenarios/surf-coast-shire/population-subgroups/Anglesea_SA1s_WSG84.json</opt>
     </model>

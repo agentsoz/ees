@@ -1,6 +1,7 @@
 package io.github.agentsoz.ees.agents.bushfire;
 
 import io.github.agentsoz.bdiabm.data.ActionContent;
+import io.github.agentsoz.bdimatsim.MATSimModel;
 import io.github.agentsoz.jill.lang.Agent;
 import io.github.agentsoz.jill.lang.Goal;
 import io.github.agentsoz.jill.lang.Plan;
@@ -53,7 +54,7 @@ public class PlanGotoEvacPlace extends Plan {
 	PlanStep[] steps = {
 			() -> {
 				destination = agent.getLocations().get(agent.LOCATION_EVAC_PREFERRED);
-				startedDriving = agent.startDrivingTo(destination);
+				startedDriving = agent.startDrivingTo(destination, MATSimModel.EvacRoutingMode.carFreespeed);
 			},
 			() -> {
 				if (startedDriving) {
@@ -68,7 +69,7 @@ public class PlanGotoEvacPlace extends Plan {
 				// Try a second time
 				startedDriving = false;
 				if (agent.getLastEnvironmentActionState() != ActionContent.State.DROPPED && agent.getTravelDistanceTo(destination)  > 0.0) {
-					startedDriving = agent.startDrivingTo(destination);
+					startedDriving = agent.startDrivingTo(destination, MATSimModel.EvacRoutingMode.carGlobalInformation);
 				}
 			},
 			() -> {
@@ -84,7 +85,7 @@ public class PlanGotoEvacPlace extends Plan {
 				// Try a third time
 				startedDriving = false;
 				if (agent.getLastEnvironmentActionState() != ActionContent.State.DROPPED && agent.getTravelDistanceTo(destination)  > 0.0) {
-					startedDriving = agent.startDrivingTo(destination);
+					startedDriving = agent.startDrivingTo(destination, MATSimModel.EvacRoutingMode.carGlobalInformation);
 				}
 			},
 			() -> {
