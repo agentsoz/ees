@@ -25,6 +25,7 @@ public class SurfCoastShirePopulationSubgroupsTest {
 
 
     @Test
+    @Ignore
     public void testSurfCoastShirePopulationSubgroups() {
 
         String[] args = {
