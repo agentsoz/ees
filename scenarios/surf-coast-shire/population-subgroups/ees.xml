@@ -74,7 +74,7 @@
            https://github.com/agentsoz/bdi-abm-integration/issues/35 -->
       <opt id="congestionEvaluationInterval">180</opt>
       <opt id="congestionToleranceThreshold">0.33</opt>
-      <opt id="congestionReactionProbability">0.05</opt>
+      <opt id="congestionReactionProbability">0.25</opt>
     </model>
 
     <model id="phoenix">
