@@ -122,7 +122,7 @@ public class DiffusionModel implements DataSource, DataClient {
     }
 
     @Override
-    public Object getNewData(double timestep, Object parameters) {
+    public Object sendData(double timestep, String dataType) {
         Double nextTime = timestep + SNConfig.getDiffturn();
         if (nextTime != null) {
             dataServer.registerTimedUpdate(PerceptList.DIFFUSION, this, nextTime);
@@ -156,16 +156,14 @@ public class DiffusionModel implements DataSource, DataClient {
 
 
     @Override
-    public boolean dataUpdate(double time, String dataType, Object data) { // data package from the BDI side
+    public void receiveData(double time, String dataType, Object data) { // data package from the BDI side
 
         switch (dataType) {
-
-            case PerceptList.SOCIAL_NETWORK_MSG: { // update social states based on BDI reasoning
-
+            case PerceptList.SOCIAL_NETWORK_MSG: // update social states based on BDI reasoning
                 // data from agent is of type [String,String] being [content,agentid]
-                if (!(data instanceof String[]) || ((String[])data).length != 2) {
+                if (!(data instanceof String[]) || ((String[]) data).length != 2) {
                     logger.error("received unknown data: " + data);
-                    return true;
+                    break;
                 }
                 String[] content = (String[]) data;
                 logger.debug("received content " + content);
@@ -174,12 +172,11 @@ public class DiffusionModel implements DataSource, DataClient {
                 Set<String> agents = (contentFromAgents.containsKey(msg)) ? contentFromAgents.get(msg) :
                         new HashSet<>();
                 agents.add(agentId);
-                contentFromAgents.put(msg,agents);
-                return true;
-            }
-
+                contentFromAgents.put(msg, agents);
+                break;
+            default:
+                throw new RuntimeException("Unknonw data type received: " + dataType);
         }
-        return false;
     }
 
     /**

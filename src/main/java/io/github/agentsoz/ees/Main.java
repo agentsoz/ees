@@ -12,9 +12,6 @@ import io.github.agentsoz.bdimatsim.MATSimModel;
 import io.github.agentsoz.bdimatsim.Utils;
 import org.json.simple.parser.ParseException;
 import org.matsim.api.core.v01.Scenario;
-import org.matsim.api.core.v01.population.Activity;
-import org.matsim.api.core.v01.population.Person;
-import org.matsim.api.core.v01.population.PlanElement;
 import org.matsim.core.config.Config;
 import org.matsim.core.config.ConfigUtils;
 import org.matsim.core.config.groups.QSimConfigGroup.StarttimeInterpretation;
@@ -95,7 +92,7 @@ public class Main {
 		// Create and initialise the data server used for passing
 		// several different types of data around the application
 		// using a publish/subscribe or pull mechanism
-		DataServer dataServer = DataServer.getServer("Bushfire");
+		DataServer dataServer = DataServer.getInstance("Bushfire");
 
 		// get the fire model out of the way:
 		initializeAndStartFireModel(dataServer);

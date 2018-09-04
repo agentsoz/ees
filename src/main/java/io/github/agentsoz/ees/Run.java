@@ -31,7 +31,6 @@ import io.github.agentsoz.dataInterface.DataServer;
 import io.github.agentsoz.util.Global;
 import io.github.agentsoz.util.Time;
 import org.matsim.api.core.v01.Scenario;
-import org.matsim.core.config.ConfigUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,7 +59,7 @@ public class Run {
 
         log.info("Starting the data server");
         // initialise the data server bus for passing data around using a publish/subscribe or pull mechanism
-        DataServer dataServer = DataServer.getServer(DATASERVER);
+        DataServer dataServer = DataServer.getInstance(DATASERVER);
         dataServer.setTime(hhMmToS(cfg.getGlobalConfig(Config.eGlobalStartHhMm)));
 
         // initialise the fire model and register it as an active data source

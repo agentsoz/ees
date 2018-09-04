@@ -190,7 +190,7 @@ public class Resident extends Agent implements io.github.agentsoz.bdiabm.Agent{
 			writer.println(prefix + "will share disruption info on social network");
 			String[] msg = {content, String.valueOf(getId())};
 			postedBlockageInfoToSocialNetwork = msg[0];
-			DataServer.getServer("Bushfire").publish(PerceptList.SOCIAL_NETWORK_MSG, msg);
+			DataServer.getInstance("Bushfire").publish(PerceptList.SOCIAL_NETWORK_MSG, msg);
 		}
 
 	}

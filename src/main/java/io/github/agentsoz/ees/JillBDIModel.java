@@ -374,18 +374,19 @@ public class JillBDIModel extends JillModel implements DataClient {
 	}
 
 	@Override
-	public boolean dataUpdate(double time, String dataType, Object data) {
+	public void receiveData(double time, String dataType, Object data) {
 		switch (dataType) {
-		case PerceptList.FIRE_ALERT:
-			fireAlertTime = time;
-			return true;
-		case PerceptList.DIFFUSION:
-			msgMap = (Map<Double, DiffusedContent>)data; // FIXME: unchecked cast
-			return true;
-		case PerceptList.SOCIAL_NETWORK_MSG:
+			case PerceptList.FIRE_ALERT:
+				fireAlertTime = time;
 				break;
-		};
-		return false;
+			case PerceptList.DIFFUSION:
+				msgMap = (Map<Double, DiffusedContent>) data; // FIXME: unchecked cast
+				break;
+			case PerceptList.SOCIAL_NETWORK_MSG:
+				break;
+			default:
+				throw new RuntimeException("Unknonw data type received: " + dataType);
+		}
 	}
 
 	public void setEvacuationTiming(int[] hhmm, int peak) {

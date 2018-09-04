@@ -175,7 +175,7 @@ public class MessagingModel implements DataSource {
 	}
 
 	@Override
-	public Object getNewData(double timestep, Object parameters) {
+	public Object sendData(double timestep, String dataType) {
 		double time = Time.convertTime(timestep, timestepUnit, Time.TimestepUnit.MINUTES);
 		SortedMap<Double, EmergencyMessage> effectiveMessages = messages.subMap(lastUpdateTimeInMinutes, time);
 		lastUpdateTimeInMinutes = time;

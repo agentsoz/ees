@@ -422,7 +422,7 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
         String[] msg = {content, String.valueOf(getId())};
         memorise(MemoryEventType.ACTIONED.name(), PerceptList.SOCIAL_NETWORK_MSG
                 + ":" + content);
-        DataServer.getServer(Run.DATASERVER).publish(PerceptList.SOCIAL_NETWORK_MSG, msg);
+        DataServer.getInstance(Run.DATASERVER).publish(PerceptList.SOCIAL_NETWORK_MSG, msg);
     }
 
     /**

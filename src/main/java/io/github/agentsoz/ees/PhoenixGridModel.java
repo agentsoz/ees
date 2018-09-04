@@ -161,7 +161,7 @@ public class PhoenixGridModel implements DataSource {
 		return result;
 	}
 	@Override
-	public Object getNewData(double timestep, Object parameters) {
+	public Object sendData(double timestep, String dataType) {
 		double time = Time.convertTime(timestep, timestepUnit, Time.TimestepUnit.MINUTES);
 		SortedMap<Double, Double[][]> shapes = embers.subMap(lastUpdateTimeInMinutes, time);
 		// Setting 'lastUpdateTimeInMinutes = time' below will mean that only the new embers shapes since the
