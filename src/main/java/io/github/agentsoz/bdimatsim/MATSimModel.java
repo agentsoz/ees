@@ -5,7 +5,6 @@ import java.util.*;
 import com.google.gson.Gson;
 import com.vividsolutions.jts.geom.*;
 import io.github.agentsoz.bdiabm.QueryPerceptInterface;
-import io.github.agentsoz.bdiabm.data.ActionContent;
 import io.github.agentsoz.dataInterface.DataClient;
 import io.github.agentsoz.nonmatsim.PAAgent;
 import io.github.agentsoz.util.Disruption;
@@ -500,9 +499,9 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 		server.subscribe(this, PerceptList.EMERGENCY_MESSAGE);
 	}
 
-	@Override public boolean dataUpdate(double time, String dataType, Object data) {
+	@Override public void receiveData(double time, String dataType, Object data) {
 		if ( time+1 < getTime() || time-1 > getTime() ) {
-			log.error( "given time in dataUpdate is {}, simulation time is {}.  " +
+			log.error( "given time in receiveData is {}, simulation time is {}.  " +
 							   "Don't know what that means.  Will use simulation time.",
 					time, getTime() );
 		}
@@ -510,16 +509,20 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 
 		switch( dataType ) {
 			case PerceptList.FIRE_DATA:
-				return processFireData(data, now, penaltyFactorsOfLinks, scenario,
+				processFireData(data, now, penaltyFactorsOfLinks, scenario,
 						penaltyFactorsOfLinksForEmergencyVehicles, fireWriter);
+				break;
 			case PerceptList.EMBERS_DATA:
-				return processEmbersData(data, now, scenario, emberWriter);
+				processEmbersData(data, now, scenario, emberWriter);
+				break;
 			case PerceptList.DISRUPTION:
-				return processDisruptionData(data, now, scenario, disruptionWriter);
+				processDisruptionData(data, now, scenario, disruptionWriter);
+                break;
 			case PerceptList.EMERGENCY_MESSAGE:
-				return processEmergencyMessageData(data, now, scenario);
+				processEmergencyMessageData(data, now, scenario);
+                break;
 			default:
-				throw new RuntimeException("not implemented") ;
+				throw new RuntimeException("Unknown data type received: " + dataType) ;
 		}
 	}
 
