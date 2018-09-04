@@ -150,6 +150,8 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 	private final Map<Id<Link>,Double> penaltyFactorsOfLinks = new HashMap<>() ;
 	private final Map<Id<Link>,Double> penaltyFactorsOfLinksForEmergencyVehicles = new HashMap<>() ;
 
+	private final Map<String, DataClient> dataListeners = createDataListeners();
+
 
 	public MATSimModel(Map<String, String> opts, DataServer dataServer) {
 		this(opts.get(eConfigFile), opts.get(eOutputDir));
@@ -509,31 +511,51 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 
 		switch( dataType ) {
 			case PerceptList.FIRE_DATA:
-				processFireData(data, now, penaltyFactorsOfLinks, scenario,
-						penaltyFactorsOfLinksForEmergencyVehicles, fireWriter);
-				break;
 			case PerceptList.EMBERS_DATA:
-				processEmbersData(data, now, scenario, emberWriter);
-				break;
 			case PerceptList.DISRUPTION:
-				processDisruptionData(data, now, scenario, disruptionWriter);
-                break;
 			case PerceptList.EMERGENCY_MESSAGE:
-				processEmergencyMessageData(data, now, scenario);
-                break;
+				dataListeners.get(dataType).receiveData(now, dataType, data);
+				break;
 			default:
 				throw new RuntimeException("Unknown data type received: " + dataType) ;
 		}
 	}
 
-	private boolean processEmbersData(Object data, double now, Scenario scenario, EmberWriter emberWriter) {
+	/**
+	 * Creates a listener for each type of message we expect from the DataServer
+	 * @return
+	 */
+	private Map<String, DataClient> createDataListeners() {
+		Map<String, DataClient> listeners = new  HashMap<>();
+
+		listeners.put(PerceptList.FIRE_DATA, (DataClient<Map<Double, Double[][]>>) (time, dataType, data) -> {
+			processFireData(data, time, penaltyFactorsOfLinks, scenario,
+					penaltyFactorsOfLinksForEmergencyVehicles, fireWriter);
+		});
+
+		listeners.put(PerceptList.EMBERS_DATA, (DataClient<Map<Double, Double[][]>>) (time, dataType, data) -> {
+			processEmbersData(data, time, scenario, emberWriter);
+		});
+
+		listeners.put(PerceptList.DISRUPTION, (DataClient<Map<Double,Disruption>>) (time, dataType, data) -> {
+			processDisruptionData(data, time, scenario, disruptionWriter);
+		});
+
+		listeners.put(PerceptList.EMERGENCY_MESSAGE, (DataClient<Map<Double,EmergencyMessage>>) (time, dataType, data) -> {
+			processEmergencyMessageData(data, time, scenario);
+		});
+
+		return listeners;
+	}
+
+	private void processEmbersData(Map<Double, Double[][]> data, double now, Scenario scenario, EmberWriter emberWriter) {
 		log.info("receiving embers data at time={}", now);
 		log.info( "{}{}", new Gson().toJson(data).substring(0,Math.min(new Gson().toJson(data).length(),200)),
 				"... use DEBUG to see full coordinates list") ;
 		log.debug( "{}", new Gson().toJson(data)) ;
-		Geometry embers = getGeometry((Map<Double, Double[][]>) data, scenario);
+		Geometry embers = getGeometry(data, scenario);
 		if (embers == null) {
-			return true;
+			return;
 		}
 		Geometry embersBuffer = embers.buffer(optMaxDistanceForSmokeVisual);
 		List<Id<Person>> personsMatched = getPersonsWithin(scenario, embersBuffer);
@@ -545,16 +567,14 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 				agent.getPerceptContainer().put(PerceptList.FIELD_OF_VIEW, PerceptList.SIGHTED_EMBERS);
 			}
 		}
-
 		emberWriter.write( now, embers);
-		return true;
 	}
 
-	private boolean processDisruptionData( Object data, double now, Scenario scenario, DisruptionWriter disruptionWriter ) {
+	private void processDisruptionData( Map<Double,Disruption> data, double now, Scenario scenario, DisruptionWriter disruptionWriter ) {
 		log.info("receiving disruption data at time={}", now); ;
 		log.info( "{}", new Gson().toJson(data) ) ;
 
-		Map<Double,Disruption> timeMapOfDisruptions = (Map<Double,Disruption>)data;
+		Map<Double,Disruption> timeMapOfDisruptions = data;
 
 		for (Disruption dd : timeMapOfDisruptions.values()) {
 
@@ -595,17 +615,16 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 				}
 			}
 		}
-		return true ;
 	}
 
-	private boolean processEmergencyMessageData(Object data, double now, Scenario scenario) {
+	private void processEmergencyMessageData(Map<Double,EmergencyMessage> data, double now, Scenario scenario) {
 		log.info("receiving emergency message data at time={}", now);
 		log.info( "{}{}", new Gson().toJson(data).substring(0,Math.min(new Gson().toJson(data).length(),200)),
 				"... use DEBUG to see full coordinates list") ;
 		log.debug( "{}", new Gson().toJson(data)) ;
 
 
-		Map<Double,EmergencyMessage> timeMapOfEmergencyMessages = (Map<Double,EmergencyMessage>)data;
+		Map<Double,EmergencyMessage> timeMapOfEmergencyMessages = data;
 
 		// FIXME: Assumes incoming is WSG84 format. See https://github.com/agentsoz/bdi-abm-integration/issues/34
 		CoordinateTransformation transform = TransformationFactory.getCoordinateTransformation(
@@ -639,7 +658,6 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 			}
 
 		}
-		return true ;
 	}
 
 	private List<Id<Person>> getPersonsWithin(Scenario scenario, Geometry shape) {
@@ -685,7 +703,7 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 		return startTime;
 	}
 	
-	private boolean processFireData(Object data, double now, Map<Id<Link>, Double> penaltyFactorsOfLinks,
+	private void processFireData(Map<Double, Double[][]> data, double now, Map<Id<Link>, Double> penaltyFactorsOfLinks,
 										   Scenario scenario, Map<Id<Link>, Double> penaltyFactorsOfLinksForEmergencyVehicles,
 										   FireWriter fireWriter) {
 
@@ -694,7 +712,7 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 				"... use DEBUG to see full coordinates list") ;
 		log.debug( "{}", new Gson().toJson(data)) ;
 
-		Geometry fire = getGeometry((Map<Double, Double[][]>) data, scenario);
+		Geometry fire = getGeometry(data, scenario);
 
 		{
 			Geometry buffer = fire.buffer(optMaxDistanceForFireVisual);
@@ -725,9 +743,7 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 			penaltyFactorsOfLinksForEmergencyVehicles.clear();
 			Utils.penaltyMethod2(fire, buffer, bufferWidth, penaltyFactorsOfLinksForEmergencyVehicles, scenario);
 		}
-
 		fireWriter.write( now, fire);
-		return true;
 	}
 
 	private Geometry getGeometry(Map<Double, Double[][]> data, Scenario scenario) {
