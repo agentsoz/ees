@@ -41,7 +41,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class DisruptionModel implements DataSource {
+public class DisruptionModel implements DataSource<SortedMap<Double, Disruption>> {
 
 	private final Logger logger = LoggerFactory.getLogger("io.github.agentsoz.ees");
 
@@ -112,7 +112,7 @@ public class DisruptionModel implements DataSource {
 	}
 
 	@Override
-	public Object sendData(double timestep, String dataType) {
+	public SortedMap<Double, Disruption> sendData(double timestep, String dataType) {
 		double time = Time.convertTime(timestep, timestepUnit, Time.TimestepUnit.MINUTES);
 		SortedMap<Double, Disruption> effectiveDisruptions = disruptions.subMap(lastUpdateTimeInMinutes, time);
 		lastUpdateTimeInMinutes = time;

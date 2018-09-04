@@ -41,7 +41,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class MessagingModel implements DataSource {
+public class MessagingModel implements DataSource<SortedMap<Double, EmergencyMessage>> {
 
 	private final Logger logger = LoggerFactory.getLogger(MessagingModel.class);
 
@@ -175,7 +175,7 @@ public class MessagingModel implements DataSource {
 	}
 
 	@Override
-	public Object sendData(double timestep, String dataType) {
+	public SortedMap<Double, EmergencyMessage> sendData(double timestep, String dataType) {
 		double time = Time.convertTime(timestep, timestepUnit, Time.TimestepUnit.MINUTES);
 		SortedMap<Double, EmergencyMessage> effectiveMessages = messages.subMap(lastUpdateTimeInMinutes, time);
 		lastUpdateTimeInMinutes = time;

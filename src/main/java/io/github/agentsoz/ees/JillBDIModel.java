@@ -90,6 +90,8 @@ public class JillBDIModel extends JillModel implements DataClient {
 	private int evacPeak = 0;
 	private int[] evacStartHHMM = {0,0};
 
+	private final Map<String, DataClient> dataListeners = createDataListeners();
+
 	public JillBDIModel(String[] initArgs) {
 		super();
 		msgMap = new TreeMap<>();
@@ -377,15 +379,12 @@ public class JillBDIModel extends JillModel implements DataClient {
 	public void receiveData(double time, String dataType, Object data) {
 		switch (dataType) {
 			case PerceptList.FIRE_ALERT:
-				fireAlertTime = time;
-				break;
 			case PerceptList.DIFFUSION:
-				msgMap = (Map<Double, DiffusedContent>) data; // FIXME: unchecked cast
-				break;
 			case PerceptList.SOCIAL_NETWORK_MSG:
+				dataListeners.get(dataType).receiveData(time, dataType, data);
 				break;
 			default:
-				throw new RuntimeException("Unknonw data type received: " + dataType);
+				throw new RuntimeException("Unknown data type received: " + dataType);
 		}
 	}
 
@@ -507,5 +506,27 @@ public class JillBDIModel extends JillModel implements DataClient {
 		private String getAgent() {
 			return agent;
 		}
+	}
+
+	/**
+	 * Creates a listener for each type of message we expect from the DataServer
+	 * @return
+	 */
+	private Map<String, DataClient> createDataListeners() {
+		Map<String, DataClient> listeners = new  HashMap<>();
+
+		listeners.put(PerceptList.FIRE_ALERT, (DataClient<Double>) (time, dataType, data) -> {
+			fireAlertTime = time;
+		});
+
+		listeners.put(PerceptList.DIFFUSION, (DataClient<Map<Double, DiffusedContent>>) (time, dataType, data) -> {
+			msgMap = data;
+		});
+
+		listeners.put(PerceptList.SOCIAL_NETWORK_MSG, (DataClient<String[]>) (time, dataType, data) -> {
+			logger.warn("Ignoring received data of type {}", dataType);
+		});
+
+		return listeners;
 	}
 }

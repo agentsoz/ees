@@ -37,7 +37,7 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 
 
-public class DiffusionModel implements DataSource, DataClient {
+public class DiffusionModel implements DataSource<SortedMap<Double, DiffusedContent>>, DataClient<String[]> {
 
     private final Logger logger = LoggerFactory.getLogger(DiffusionModel.class);
 
@@ -122,7 +122,7 @@ public class DiffusionModel implements DataSource, DataClient {
     }
 
     @Override
-    public Object sendData(double timestep, String dataType) {
+    public SortedMap<Double, DiffusedContent> sendData(double timestep, String dataType) {
         Double nextTime = timestep + SNConfig.getDiffturn();
         if (nextTime != null) {
             dataServer.registerTimedUpdate(PerceptList.DIFFUSION, this, nextTime);
@@ -156,7 +156,7 @@ public class DiffusionModel implements DataSource, DataClient {
 
 
     @Override
-    public void receiveData(double time, String dataType, Object data) { // data package from the BDI side
+    public void receiveData(double time, String dataType, String[] data) { // data package from the BDI side
 
         switch (dataType) {
             case PerceptList.SOCIAL_NETWORK_MSG: // update social states based on BDI reasoning
@@ -175,7 +175,7 @@ public class DiffusionModel implements DataSource, DataClient {
                 contentFromAgents.put(msg, agents);
                 break;
             default:
-                throw new RuntimeException("Unknonw data type received: " + dataType);
+                throw new RuntimeException("Unknown data type received: " + dataType);
         }
     }
 

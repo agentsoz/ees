@@ -41,7 +41,7 @@ import org.slf4j.LoggerFactory;
 import io.github.agentsoz.dataInterface.DataServer;
 import io.github.agentsoz.dataInterface.DataSource;
 
-public class PhoenixFireModule implements DataSource {
+public class PhoenixFireModule implements DataSource<SortedMap<Double, Double[][]>> {
 
 	private final Logger logger = LoggerFactory.getLogger(PhoenixFireModule.class);
 
@@ -135,7 +135,7 @@ public class PhoenixFireModule implements DataSource {
 	}
 
 	@Override
-	public Object sendData(double timestep, String dataType) {
+	public SortedMap<Double, Double[][]> sendData(double timestep, String dataType) {
 		double time = Time.convertTime(timestep, timestepUnit, Time.TimestepUnit.MINUTES);
 		SortedMap<Double, Double[][]> shapes = fire.subMap(lastUpdateTimeInMinutes, time);
 		// if evac start time was explicitly set, then send alert at that time

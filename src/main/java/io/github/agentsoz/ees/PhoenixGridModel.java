@@ -39,7 +39,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 
-public class PhoenixGridModel implements DataSource {
+public class PhoenixGridModel implements DataSource<SortedMap<Double, Double[][]>> {
 
 	private final Logger logger = LoggerFactory.getLogger(PhoenixGridModel.class);
 
@@ -161,7 +161,7 @@ public class PhoenixGridModel implements DataSource {
 		return result;
 	}
 	@Override
-	public Object sendData(double timestep, String dataType) {
+	public SortedMap<Double, Double[][]> sendData(double timestep, String dataType) {
 		double time = Time.convertTime(timestep, timestepUnit, Time.TimestepUnit.MINUTES);
 		SortedMap<Double, Double[][]> shapes = embers.subMap(lastUpdateTimeInMinutes, time);
 		// Setting 'lastUpdateTimeInMinutes = time' below will mean that only the new embers shapes since the
