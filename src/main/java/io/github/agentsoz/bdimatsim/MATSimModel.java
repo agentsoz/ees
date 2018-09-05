@@ -494,7 +494,7 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 	}
 
 	public final void registerDataServer( DataServer server ) {
-		// some blackboardy thing that sits between ABM and BDI
+		server.subscribe(this, PerceptList.TAKE_CONTROL_ABM);
 		server.subscribe(this, PerceptList.FIRE_DATA);
 		server.subscribe(this, PerceptList.EMBERS_DATA);
 		server.subscribe(this, PerceptList.DISRUPTION);
@@ -504,12 +504,13 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 	@Override public void receiveData(double time, String dataType, Object data) {
 		if ( time+1 < getTime() || time-1 > getTime() ) {
 			log.error( "given time in receiveData is {}, simulation time is {}.  " +
-							   "Don't know what that means.  Will use simulation time.",
+							   "Don't know what that means.  Will use given time.",
 					time, getTime() );
 		}
-		double now = getTime() ;
+		double now = time; //getTime() ;
 
 		switch( dataType ) {
+			case PerceptList.TAKE_CONTROL_ABM:
 			case PerceptList.FIRE_DATA:
 			case PerceptList.EMBERS_DATA:
 			case PerceptList.DISRUPTION:
@@ -527,6 +528,10 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 	 */
 	private Map<String, DataClient> createDataListeners() {
 		Map<String, DataClient> listeners = new  HashMap<>();
+
+		listeners.put(PerceptList.TAKE_CONTROL_ABM, (DataClient<AgentDataContainer>) (time, dataType, data) -> {
+			runUntil((long)time, getAgentManager().getAgentDataContainer());
+		});
 
 		listeners.put(PerceptList.FIRE_DATA, (DataClient<Map<Double, Double[][]>>) (time, dataType, data) -> {
 			processFireData(data, time, penaltyFactorsOfLinks, scenario,
