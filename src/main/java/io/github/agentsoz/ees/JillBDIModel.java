@@ -41,7 +41,7 @@ import java.util.*;
 
 public class JillBDIModel extends JillModel implements DataClient {
 
-	private final Logger logger = LoggerFactory.getLogger("io.github.agentsoz.ees");
+	private final Logger logger = LoggerFactory.getLogger(JillBDIModel.class);
 
 	// Jill options
 	static final String OPT_JILL_CONFIG = "--config";
@@ -331,6 +331,7 @@ public class JillBDIModel extends JillModel implements DataClient {
 			ABMServerInterface abmServer,
 			Object[] params)
 	{
+		dataServer.subscribe(this, PerceptList.TAKE_CONTROL_BDI);
 		dataServer.subscribe(this, PerceptList.FIRE_ALERT);
 		dataServer.subscribe(this, PerceptList.DIFFUSION);
 		dataServer.subscribe(this, PerceptList.SOCIAL_NETWORK_MSG);
@@ -378,6 +379,7 @@ public class JillBDIModel extends JillModel implements DataClient {
 	@Override
 	public void receiveData(double time, String dataType, Object data) {
 		switch (dataType) {
+			case PerceptList.TAKE_CONTROL_BDI:
 			case PerceptList.FIRE_ALERT:
 			case PerceptList.DIFFUSION:
 			case PerceptList.SOCIAL_NETWORK_MSG:
@@ -514,6 +516,10 @@ public class JillBDIModel extends JillModel implements DataClient {
 	 */
 	private Map<String, DataClient> createDataListeners() {
 		Map<String, DataClient> listeners = new  HashMap<>();
+
+		listeners.put(PerceptList.TAKE_CONTROL_BDI, (DataClient<AgentDataContainer>) (time, dataType, data) -> {
+			takeControl(data);
+		});
 
 		listeners.put(PerceptList.FIRE_ALERT, (DataClient<Double>) (time, dataType, data) -> {
 			fireAlertTime = time;

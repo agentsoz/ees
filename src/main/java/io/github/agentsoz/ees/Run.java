@@ -27,9 +27,12 @@ import io.github.agentsoz.bdimatsim.EvacAgentTracker;
 import io.github.agentsoz.bdimatsim.EvacConfig;
 import io.github.agentsoz.bdimatsim.MATSimModel;
 import io.github.agentsoz.bdimatsim.Utils;
+import io.github.agentsoz.dataInterface.DataClient;
 import io.github.agentsoz.dataInterface.DataServer;
+import io.github.agentsoz.dataInterface.DataSource;
 import io.github.agentsoz.util.Global;
 import io.github.agentsoz.util.Time;
+import io.github.agentsoz.util.evac.PerceptList;
 import org.matsim.api.core.v01.Scenario;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,6 +48,11 @@ public class Run {
 
     private static final Logger log = LoggerFactory.getLogger(Run.class);
     public static final String DATASERVER = "ees";
+    private final Map<String, DataSource> controllers = createDataProducers();
+    private final Map<String, DataClient> dataListeners = createDataListeners();
+    private Object adc_from_bdi = null;
+    private Object adc_from_abm = null;
+
 
     public static void main(String[] args) {
         Config cfg = new Config();
@@ -128,11 +136,13 @@ public class Run {
         // start the main simulation loop
         log.info("Starting the simulation loop");
         while (true) {
-            jillmodel.takeControl( matsimModel.getAgentManager().getAgentDataContainer() );
+            //TODO: dataServer.publish(PerceptList.TAKE_CONTROL_BDI, adc_from_abm);
+            dataServer.publish(PerceptList.TAKE_CONTROL_BDI, matsimModel.getAgentManager().getAgentDataContainer());
             if( matsimModel.isFinished() ) {
                 break;
             }
-            matsimModel.runUntil((long)dataServer.getTime(), matsimModel.getAgentManager().getAgentDataContainer());
+            //TODO: dataServer.publish(PerceptList.TAKE_CONTROL_ABM, adc_from_bdi);
+            dataServer.publish(PerceptList.TAKE_CONTROL_ABM, matsimModel.getAgentManager().getAgentDataContainer());
             dataServer.stepTime();
         }
 
@@ -169,5 +179,39 @@ public class Run {
         return secs;
     }
 
+    private Map<String, DataSource> createDataProducers() {
+        Map<String, DataSource> producers = new  HashMap<>();
+
+        // Asks BDI to take control and sends it the last agent data container from the ABM
+        producers.put(PerceptList.TAKE_CONTROL_BDI, (DataSource<Object>) (time, dataType) -> {
+            Object adc = adc_from_abm;
+            adc_from_abm = null;
+            return adc;
+        });
+
+        // Asks the ABM to take control and sends it the last agent data container from BDI
+        producers.put(PerceptList.TAKE_CONTROL_ABM, (DataSource<Object>) (time, dataType) -> {
+            Object adc = adc_from_bdi;
+            adc_from_bdi = null;
+            return adc;
+        });
+
+        return producers;
+    }
+
+    private Map<String, DataClient> createDataListeners() {
+        Map<String, DataClient> listeners = new  HashMap<>();
+
+        // Saves the incoming agent data container from BDI
+        listeners.put(PerceptList.AGENT_DATA_CONTAINER_FROM_BDI, (DataClient<Object>) (time, dataType, data) -> {
+            adc_from_bdi = data;
+        });
+
+        // Saves the incoming agent data container from the ABM
+        listeners.put(PerceptList.AGENT_DATA_CONTAINER_FROM_ABM, (DataClient<Object>) (time, dataType, data) -> {
+            adc_from_abm = data;
+        });
+        return listeners;
+    }
 
 }
