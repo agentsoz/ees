@@ -150,8 +150,9 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 	private final Map<Id<Link>,Double> penaltyFactorsOfLinks = new HashMap<>() ;
 	private final Map<Id<Link>,Double> penaltyFactorsOfLinksForEmergencyVehicles = new HashMap<>() ;
 
+	private DataServer dataServer;
 	private final Map<String, DataClient> dataListeners = createDataListeners();
-
+	private io.github.agentsoz.bdiabm.v2.AgentDataContainer adc = new io.github.agentsoz.bdiabm.v2.AgentDataContainer();
 
 	public MATSimModel(Map<String, String> opts, DataServer dataServer) {
 		this(opts.get(eConfigFile), opts.get(eOutputDir));
@@ -443,6 +444,20 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 			agentManager.transferActionsPerceptsToDataContainer(); // send back BDI actions/percepts/status'
 	}
 
+	public final void runUntilV2( long newTime , io.github.agentsoz.bdiabm.v2.AgentDataContainer inAdc) {
+		log.trace("Received {} ", inAdc);
+		//agentManager.updateActions(); // handle incoming BDI actions
+		agentManager.updateActions(inAdc, adc);
+		playPause.doStep( (int) (newTime) );
+		//agentManager.transferActionsPerceptsToDataContainer(); // send back BDI actions/percepts/status'
+	}
+
+	public void setAgentDataContainer(io.github.agentsoz.bdiabm.v2.AgentDataContainer adc) {
+		this.adc = adc;
+	}
+
+
+
 	public final boolean isFinished() {
 		return playPause.isFinished() ;
 	}
@@ -494,6 +509,7 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 	}
 
 	public final void registerDataServer( DataServer server ) {
+		this.dataServer = server;
 		server.subscribe(this, PerceptList.TAKE_CONTROL_ABM);
 		server.subscribe(this, PerceptList.FIRE_DATA);
 		server.subscribe(this, PerceptList.EMBERS_DATA);
@@ -529,9 +545,17 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 	private Map<String, DataClient> createDataListeners() {
 		Map<String, DataClient> listeners = new  HashMap<>();
 
-		listeners.put(PerceptList.TAKE_CONTROL_ABM, (DataClient<AgentDataContainer>) (time, dataType, data) -> {
-			runUntil((long)time, getAgentManager().getAgentDataContainer());
+		listeners.put(PerceptList.TAKE_CONTROL_ABM, (DataClient<io.github.agentsoz.bdiabm.v2.AgentDataContainer>) (time, dataType, data) -> {
+			synchronized (adc) {
+				adc.clear();
+				runUntilV2((long) time, data);
+				dataServer.publish(PerceptList.AGENT_DATA_CONTAINER_FROM_ABM, adc);
+			}
 		});
+
+//		listeners.put(PerceptList.TAKE_CONTROL_ABM, (DataClient<AgentDataContainer>) (time, dataType, data) -> {
+//			runUntil((long)time, getAgentManager().getAgentDataContainer());
+//		});
 
 		listeners.put(PerceptList.FIRE_DATA, (DataClient<Map<Double, Double[][]>>) (time, dataType, data) -> {
 			processFireData(data, time, penaltyFactorsOfLinks, scenario,

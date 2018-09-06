@@ -3,6 +3,7 @@ package io.github.agentsoz.nonmatsim;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 /*
  * #%L
@@ -177,6 +178,40 @@ public final class PAAgentManager {
 			agent.getActionContainer().register(actionID, action.getParameters());
 			agent.getActionContainer().get(actionID).setState(ActionContent.State.DROPPED);
 			log.info("agent {} dropped BDI action {}; MATSim leg is running detached now", agentID, actionID);
+		}
+	}
+
+	public void updateActions(io.github.agentsoz.bdiabm.v2.AgentDataContainer inAdc, io.github.agentsoz.bdiabm.v2.AgentDataContainer outAdc) {
+		if (inAdc != null) {
+			Iterator<String> it = inAdc.getAgentIdIterator();
+			while (it.hasNext()) {
+				String agentId = it.next();
+				// Process the incoming action updates
+				Map<String, ActionContent> actions = inAdc.getAllActionsCopy(agentId);
+				for (String actionId : actions.keySet()) {
+					ActionContent content = actions.get(actionId);
+					if (content.getState()== ActionContent.State.INITIATED) {
+						if (agentsWithPerceptsAndActions.containsKey(agentId)) {
+							PAAgent agent = getAgent(agentId);
+							Object[] parameters = content.getParameters();
+							if (agent.getActionHandler().processAction(agentId, actionId, parameters)) {
+								content.setState(ActionContent.State.RUNNING);
+							} else {
+								content.setState(ActionContent.State.FAILED);
+							}
+							outAdc.putAction(agentId, actionId, content);
+						}
+					} else if (content.getState()== ActionContent.State.DROPPED) {
+						if (agentsWithPerceptsAndActions.containsKey(agentId)) {
+							PAAgent agent = getAgent(agentId);
+							agent.getActionHandler().deregisterBDIAction(actionId);
+							content.setState(ActionContent.State.DROPPED);
+							outAdc.putAction(agentId, actionId, content);
+							log.info("agent {} dropped BDI action {}; MATSim leg is running detached now", agentId, actionId);
+						}
+					}
+				}
+			}
 		}
 	}
 }
