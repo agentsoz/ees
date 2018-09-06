@@ -519,7 +519,7 @@ public class JillBDIModel extends JillModel implements DataClient {
 
 		listeners.put(PerceptList.TAKE_CONTROL_BDI, (DataClient<io.github.agentsoz.bdiabm.v2.AgentDataContainer>) (time, dataType, data) -> {
 			//takeControl(data);
-			synchronized (getAgentDataContainer()) {
+			synchronized (super.getSequenceLock()) {
 				getAgentDataContainer().clear();
 				takeControlV2(data);
 				dataServer.publish(PerceptList.AGENT_DATA_CONTAINER_FROM_BDI, getAgentDataContainer());
