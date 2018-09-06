@@ -23,6 +23,8 @@ package io.github.agentsoz.ees;
  */
 
 import io.github.agentsoz.bdiabm.QueryPerceptInterface;
+import io.github.agentsoz.bdiabm.data.PerceptContent;
+import io.github.agentsoz.bdiabm.v2.AgentDataContainer;
 import io.github.agentsoz.bdimatsim.EvacAgentTracker;
 import io.github.agentsoz.bdimatsim.EvacConfig;
 import io.github.agentsoz.bdimatsim.MATSimModel;
@@ -44,14 +46,13 @@ import java.util.*;
  * Uses input config v2. For legacy config use {@link Main}.
  * @author Dhirendra Singh
  */
-public class Run {
+public class Run implements DataClient {
 
     private static final Logger log = LoggerFactory.getLogger(Run.class);
     public static final String DATASERVER = "ees";
-    private final Map<String, DataSource> controllers = createDataProducers();
     private final Map<String, DataClient> dataListeners = createDataListeners();
-    private Object adc_from_bdi = null;
-    private Object adc_from_abm = null;
+    private AgentDataContainer adc_from_bdi = new AgentDataContainer();
+    private AgentDataContainer adc_from_abm = new AgentDataContainer();
 
 
     public static void main(String[] args) {
@@ -65,10 +66,18 @@ public class Run {
     private void start(Config cfg) {
         parse(cfg.getModelConfig(""));
 
+        // TESTING ONLY
+        {
+            adc_from_abm.putPercept("5", "1", new PerceptContent(PerceptList.FIELD_OF_VIEW, PerceptList.SIGHTED_FIRE));
+            adc_from_abm.putPercept("3", "1", new PerceptContent(PerceptList.FIELD_OF_VIEW, PerceptList.SIGHTED_EMBERS));
+            adc_from_abm.putPercept("1", "1", new PerceptContent(PerceptList.FIELD_OF_VIEW, PerceptList.SIGHTED_EMBERS));
+        }
+
         log.info("Starting the data server");
         // initialise the data server bus for passing data around using a publish/subscribe or pull mechanism
         DataServer dataServer = DataServer.getInstance(DATASERVER);
         dataServer.setTime(hhMmToS(cfg.getGlobalConfig(Config.eGlobalStartHhMm)));
+        dataServer.subscribe(this, PerceptList.AGENT_DATA_CONTAINER_FROM_BDI);
 
         // initialise the fire model and register it as an active data source
         {
@@ -135,15 +144,30 @@ public class Run {
 
         // start the main simulation loop
         log.info("Starting the simulation loop");
+        jillmodel.setAgentDataContainer(adc_from_bdi);
+        matsimModel.setAgentDataContainer(adc_from_abm);
         while (true) {
-            //TODO: dataServer.publish(PerceptList.TAKE_CONTROL_BDI, adc_from_abm);
-            dataServer.publish(PerceptList.TAKE_CONTROL_BDI, matsimModel.getAgentManager().getAgentDataContainer());
-            if( matsimModel.isFinished() ) {
-                break;
+            // BDI to take control; the BDI thread should synchronize on adc_from_bdi
+            //dataServer.publish(PerceptList.TAKE_CONTROL_BDI, matsimModel.getAgentManager().getAgentDataContainer());
+            dataServer.publish(PerceptList.TAKE_CONTROL_BDI, adc_from_abm);
+            // Wait till both models are done before checking for termination condition
+            synchronized (adc_from_abm) {
+                synchronized (adc_from_bdi) {
+                    if (matsimModel.isFinished()) {
+                        break;
+                    }
+                }
             }
-            //TODO: dataServer.publish(PerceptList.TAKE_CONTROL_ABM, adc_from_bdi);
-            dataServer.publish(PerceptList.TAKE_CONTROL_ABM, matsimModel.getAgentManager().getAgentDataContainer());
-            dataServer.stepTime();
+            // ABM to take control; the ABM thread should synchronize on adc_from_abm
+            //dataServer.publish(PerceptList.TAKE_CONTROL_ABM, matsimModel.getAgentManager().getAgentDataContainer());
+            dataServer.publish(PerceptList.TAKE_CONTROL_ABM, adc_from_bdi);
+
+            // Wait till both models are done before incrementing time
+            synchronized (adc_from_abm) {
+                synchronized (adc_from_bdi) {
+                    dataServer.stepTime();
+                }
+            }
         }
 
         // finish up
@@ -179,39 +203,52 @@ public class Run {
         return secs;
     }
 
-    private Map<String, DataSource> createDataProducers() {
-        Map<String, DataSource> producers = new  HashMap<>();
-
-        // Asks BDI to take control and sends it the last agent data container from the ABM
-        producers.put(PerceptList.TAKE_CONTROL_BDI, (DataSource<Object>) (time, dataType) -> {
-            Object adc = adc_from_abm;
-            adc_from_abm = null;
-            return adc;
-        });
-
-        // Asks the ABM to take control and sends it the last agent data container from BDI
-        producers.put(PerceptList.TAKE_CONTROL_ABM, (DataSource<Object>) (time, dataType) -> {
-            Object adc = adc_from_bdi;
-            adc_from_bdi = null;
-            return adc;
-        });
-
-        return producers;
-    }
+//    private Map<String, DataSource> createDataProducers() {
+//        Map<String, DataSource> producers = new  HashMap<>();
+//
+//        // Asks BDI to take control and sends it the last agent data container from the ABM
+//        producers.put(PerceptList.TAKE_CONTROL_BDI, (DataSource<Object>) (time, dataType) -> {
+//            Object adc = adc_from_abm;
+//            adc_from_abm = null;
+//            return adc;
+//        });
+//
+//        // Asks the ABM to take control and sends it the last agent data container from BDI
+//        producers.put(PerceptList.TAKE_CONTROL_ABM, (DataSource<Object>) (time, dataType) -> {
+//            Object adc = adc_from_bdi;
+//            adc_from_bdi = null;
+//            return adc;
+//        });
+//
+//        return producers;
+//    }
 
     private Map<String, DataClient> createDataListeners() {
         Map<String, DataClient> listeners = new  HashMap<>();
 
         // Saves the incoming agent data container from BDI
-        listeners.put(PerceptList.AGENT_DATA_CONTAINER_FROM_BDI, (DataClient<Object>) (time, dataType, data) -> {
+        listeners.put(PerceptList.AGENT_DATA_CONTAINER_FROM_BDI, (DataClient<AgentDataContainer>) (time, dataType, data) -> {
             adc_from_bdi = data;
         });
 
         // Saves the incoming agent data container from the ABM
-        listeners.put(PerceptList.AGENT_DATA_CONTAINER_FROM_ABM, (DataClient<Object>) (time, dataType, data) -> {
+        listeners.put(PerceptList.AGENT_DATA_CONTAINER_FROM_ABM, (DataClient<AgentDataContainer>) (time, dataType, data) -> {
             adc_from_abm = data;
         });
         return listeners;
     }
+
+    @Override
+    public void receiveData(double time, String dataType, Object data) {
+        switch (dataType) {
+            case PerceptList.AGENT_DATA_CONTAINER_FROM_BDI:
+            case PerceptList.AGENT_DATA_CONTAINER_FROM_ABM:
+                dataListeners.get(dataType).receiveData(time, dataType, data);
+                break;
+            default:
+                throw new RuntimeException("Unknown data type received: " + dataType);
+        }
+    }
+
 
 }

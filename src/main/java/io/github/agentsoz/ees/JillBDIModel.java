@@ -517,8 +517,13 @@ public class JillBDIModel extends JillModel implements DataClient {
 	private Map<String, DataClient> createDataListeners() {
 		Map<String, DataClient> listeners = new  HashMap<>();
 
-		listeners.put(PerceptList.TAKE_CONTROL_BDI, (DataClient<AgentDataContainer>) (time, dataType, data) -> {
-			takeControl(data);
+		listeners.put(PerceptList.TAKE_CONTROL_BDI, (DataClient<io.github.agentsoz.bdiabm.v2.AgentDataContainer>) (time, dataType, data) -> {
+			//takeControl(data);
+			synchronized (getAgentDataContainer()) {
+				getAgentDataContainer().clear();
+				takeControlV2(data);
+				dataServer.publish(PerceptList.AGENT_DATA_CONTAINER_FROM_BDI, getAgentDataContainer());
+			}
 		});
 
 		listeners.put(PerceptList.FIRE_ALERT, (DataClient<Double>) (time, dataType, data) -> {
