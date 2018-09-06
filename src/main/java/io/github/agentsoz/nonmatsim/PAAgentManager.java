@@ -57,6 +57,12 @@ public final class PAAgentManager {
 
 	private final EventsMonitorRegistry eventsMonitors;
 
+	private final io.github.agentsoz.bdiabm.v2.AgentDataContainer adc = new io.github.agentsoz.bdiabm.v2.AgentDataContainer();
+
+	public final io.github.agentsoz.bdiabm.v2.AgentDataContainer getAgentDataContainerV2() {
+		return adc;
+	}
+
 	public PAAgentManager(EventsMonitorRegistry eventsMonitors) {
 		this.eventsMonitors = eventsMonitors;
 

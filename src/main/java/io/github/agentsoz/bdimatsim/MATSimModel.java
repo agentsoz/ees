@@ -5,6 +5,8 @@ import java.util.*;
 import com.google.gson.Gson;
 import com.vividsolutions.jts.geom.*;
 import io.github.agentsoz.bdiabm.QueryPerceptInterface;
+import io.github.agentsoz.bdiabm.data.ActionContent;
+import io.github.agentsoz.bdiabm.data.PerceptContent;
 import io.github.agentsoz.dataInterface.DataClient;
 import io.github.agentsoz.nonmatsim.PAAgent;
 import io.github.agentsoz.util.Disruption;
@@ -117,8 +119,9 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 	private DisruptionWriter disruptionWriter = null;
 	private Config config = null;
 	private boolean configLoaded = false;
+    private Object sequenceLock;
 
-	public enum EvacRoutingMode {carFreespeed, carGlobalInformation, emergencyVehicle}
+    public enum EvacRoutingMode {carFreespeed, carGlobalInformation, emergencyVehicle}
 
 	private Scenario scenario = null;
 
@@ -319,7 +322,7 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 
 			// default action:
 			agentManager.getAgent(agentId).getActionHandler().registerBDIAction(
-					ActionList.DRIVETO, new DRIVETODefaultActionHandler(this) );
+					ActionList.DRIVETO, new DRIVETODefaultActionHandlerV2(this) );
 		}
 		{
 			ActivityParams params = new ActivityParams("driveTo");
@@ -546,16 +549,16 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 		Map<String, DataClient> listeners = new  HashMap<>();
 
 		listeners.put(PerceptList.TAKE_CONTROL_ABM, (DataClient<io.github.agentsoz.bdiabm.v2.AgentDataContainer>) (time, dataType, data) -> {
-			synchronized (adc) {
+			synchronized (sequenceLock) {
 				adc.clear();
 				runUntilV2((long) time, data);
+				synchronized (this.getAgentManager().getAgentDataContainerV2()) {
+					copy(this.getAgentManager().getAgentDataContainerV2(), adc);
+					this.getAgentManager().getAgentDataContainerV2().clear();
+				}
 				dataServer.publish(PerceptList.AGENT_DATA_CONTAINER_FROM_ABM, adc);
 			}
 		});
-
-//		listeners.put(PerceptList.TAKE_CONTROL_ABM, (DataClient<AgentDataContainer>) (time, dataType, data) -> {
-//			runUntil((long)time, getAgentManager().getAgentDataContainer());
-//		});
 
 		listeners.put(PerceptList.FIRE_DATA, (DataClient<Map<Double, Double[][]>>) (time, dataType, data) -> {
 			processFireData(data, time, penaltyFactorsOfLinks, scenario,
@@ -577,6 +580,27 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 		return listeners;
 	}
 
+	private void copy(io.github.agentsoz.bdiabm.v2.AgentDataContainer from, io.github.agentsoz.bdiabm.v2.AgentDataContainer to) {
+		if (from != null) {
+			Iterator<String> it = from.getAgentIdIterator();
+			while (it.hasNext()) {
+				String agentId = it.next();
+				// Copy percepts
+				Map<String, PerceptContent> percepts = from.getAllPerceptsCopy(agentId);
+				for (String perceptId : percepts.keySet()) {
+					PerceptContent content = percepts.get(perceptId);
+					to.putPercept(agentId, perceptId, content);
+				}
+				// Copy actions
+				Map<String, ActionContent> actions = from.getAllActionsCopy(agentId);
+				for (String actionId : actions.keySet()) {
+					ActionContent content = actions.get(actionId);
+					to.putAction(agentId, actionId, content);
+				}
+			}
+		}
+	}
+
 	private void processEmbersData(Map<Double, Double[][]> data, double now, Scenario scenario, EmberWriter emberWriter) {
 		log.info("receiving embers data at time={}", now);
 		log.info( "{}{}", new Gson().toJson(data).substring(0,Math.min(new Gson().toJson(data).length(),200)),
@@ -593,7 +617,8 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 		for (Id<Person> personId : personsMatched) {
 			PAAgent agent = this.getAgentManager().getAgent(personId.toString());
 			if (agent != null) { // only do this if this is a BDI-like agent
-				agent.getPerceptContainer().put(PerceptList.FIELD_OF_VIEW, PerceptList.SIGHTED_EMBERS);
+				PerceptContent pc = new PerceptContent(PerceptList.FIELD_OF_VIEW, PerceptList.SIGHTED_EMBERS);
+				getAgentManager().getAgentDataContainerV2().putPercept(agent.getAgentID(), PerceptList.FIELD_OF_VIEW, pc);
 			}
 		}
 		emberWriter.write( now, embers);
@@ -682,7 +707,8 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 			for (Id<Person> personId : personsInZones) {
 				PAAgent agent = this.getAgentManager().getAgent(personId.toString());
 				if (agent != null) { // only do this if this is a BDI-like agent
-					agent.getPerceptContainer().put(PerceptList.EMERGENCY_MESSAGE, msg.getType() + "," + msg.getContent());
+					PerceptContent pc = new PerceptContent(PerceptList.EMERGENCY_MESSAGE, msg.getType() + "," + msg.getContent());
+					getAgentManager().getAgentDataContainerV2().putPercept(agent.getAgentID(), PerceptList.EMERGENCY_MESSAGE, pc);
 				}
 			}
 
@@ -751,7 +777,8 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 			for (Id<Person> personId : personsMatched) {
 				PAAgent agent = this.getAgentManager().getAgent(personId.toString());
 				if (agent != null) { // only do this if this is a BDI-like agent
-					agent.getPerceptContainer().put(PerceptList.FIELD_OF_VIEW, PerceptList.SIGHTED_FIRE);
+					PerceptContent pc = new PerceptContent(PerceptList.FIELD_OF_VIEW, PerceptList.SIGHTED_FIRE);
+					getAgentManager().getAgentDataContainerV2().putPercept(agent.getAgentID(), PerceptList.FIELD_OF_VIEW, pc);
 				}
 			}
 		}
@@ -874,4 +901,9 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 	public double getOptCongestionReactionProbability() {
 		return optCongestionReactionProbability;
 	}
+
+    public void useSequenceLock(Object sequenceLock) {
+	    this.sequenceLock = sequenceLock;
+    }
+
 }
