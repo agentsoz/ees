@@ -10,7 +10,9 @@
 
   <person id= "0" >
     <attributes>
-      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.Resident</attribute>
+      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.Resident</attribute>
+      <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.0</attribute>
+      <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.0</attribute>
     </attributes>
     <plan selected="yes">
       <activity type="home" x="777487.95417" y="5742688.0183" end_time="09:58:00" />
@@ -24,7 +26,9 @@
   <!-- ====================================================================== -->
   <person id= "1" >
     <attributes>
-      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.Resident</attribute>
+      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.Resident</attribute>
+      <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.0</attribute>
+      <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.0</attribute>
     </attributes>
     <plan selected="yes">
       <activity type="home" x="759897.29075" y="5753954.22426" end_time="07:13:00" />
@@ -46,7 +50,9 @@
   <!-- ====================================================================== -->
   <person id= "2" >
     <attributes>
-      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.Resident</attribute>
+      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.Resident</attribute>
+      <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.0</attribute>
+      <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.0</attribute>
     </attributes>
     <plan selected="yes">
       <activity type="home" x="777528.01183" y="5744592.20828" end_time="13:11:00" />
@@ -64,7 +70,9 @@
   <!-- ====================================================================== -->
   <person id= "3" >
     <attributes>
-      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.Resident</attribute>
+      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.Resident</attribute>
+      <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.0</attribute>
+      <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.0</attribute>
     </attributes>
     <plan selected="yes">
       <activity type="home" x="771120.82582" y="5738818.00056" end_time="07:07:00" />
@@ -86,7 +94,9 @@
   <!-- ====================================================================== -->
   <person id= "4" >
     <attributes>
-      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.Resident</attribute>
+      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.Resident</attribute>
+      <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.0</attribute>
+      <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.0</attribute>
     </attributes>
     <plan selected="yes">
       <activity type="home" x="725868.5478" y="5753291.5198" end_time="05:29:00" />

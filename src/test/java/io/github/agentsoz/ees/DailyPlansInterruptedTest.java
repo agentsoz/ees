@@ -26,6 +26,24 @@ public class DailyPlansInterruptedTest {
     public MatsimTestUtils utils = new MatsimTestUtils();
 
     @Test
+    public void testDailyPlansInterruptedV2() {
+
+        utils.getOutputDirectory(); // creates a clean one so need to call this first
+        String[] args = {
+                "--config", "scenarios/surf-coast-shire/plan-interrupted/ees.xml",
+        };
+        Run.main(args);
+
+        final String actualEventsFilename = utils.getOutputDirectory() + "/output_events.xml.gz";
+        final String primaryExpectedEventsFilename = utils.getInputDirectory() + "/output_events.xml.gz";
+        TestUtils.comparingDepartures(primaryExpectedEventsFilename,actualEventsFilename,5.);
+        TestUtils.comparingArrivals(primaryExpectedEventsFilename,actualEventsFilename,5.);
+        TestUtils.comparingActivityStarts(primaryExpectedEventsFilename,actualEventsFilename, 5.);
+        TestUtils.compareFullEvents(primaryExpectedEventsFilename,actualEventsFilename, false);
+    }
+
+    @Test
+    @Ignore
     public void testDailyPlansInterrupted() {
 
         String[] args = {

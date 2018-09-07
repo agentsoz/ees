@@ -13,7 +13,7 @@
   "messages" : [
     {
       "type" : "EVACUATE_NOW",
-      "content" : "Evacuate now if safe to do so",
+      "content" : "Waurn Ponds,789654,5764865,Evacuate now if safe to do so",
       "broadcastHHMM" : "1530",
       "broadcastZones" : {
         "20303104905": null,
