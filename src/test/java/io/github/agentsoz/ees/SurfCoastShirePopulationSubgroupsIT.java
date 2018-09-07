@@ -14,18 +14,17 @@ import org.slf4j.LoggerFactory;
  * @author dsingh, Joel Robertson
  *
  */
-public class SurfCoastShirePopulationSubgroupsTest {
+public class SurfCoastShirePopulationSubgroupsIT {
 
     // have tests in separate classes so that they run, at least under maven, in separate JVMs.  kai, nov'17
 
-    private static final Logger log = LoggerFactory.getLogger(SurfCoastShirePopulationSubgroupsTest.class);
+    private static final Logger log = LoggerFactory.getLogger(SurfCoastShirePopulationSubgroupsIT.class);
 
     @Rule
     public MatsimTestUtils utils = new MatsimTestUtils();
 
 
     @Test
-    @Ignore
     public void testSurfCoastShirePopulationSubgroups() {
 
         String[] args = {
