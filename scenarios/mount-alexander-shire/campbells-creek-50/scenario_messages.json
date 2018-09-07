@@ -13,7 +13,7 @@
   "messages" : [
     {
       "type" : "EVACUATE_NOW",
-      "content" : "Castlemaine,252145,5894310,Evacuate now towards Waurn Ponds if safe to do so",
+      "content" : "Castlemaine,252145,5894310,Evacuate now if safe to do so",
       "broadcastHHMM" : "0015",
       "broadcastZones" : {
         "20202102701" : null,
