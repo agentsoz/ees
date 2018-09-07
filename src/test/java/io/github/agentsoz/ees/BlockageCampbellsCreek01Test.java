@@ -18,7 +18,6 @@ import org.slf4j.LoggerFactory;
  * @author dsingh
  *
  */
-@Ignore // Should remove this altogether, not added any value to existing tests [DS Aug/18]
 public class BlockageCampbellsCreek01Test {
 	// have tests in separate classes so that they run, at least under maven, in separate JVMs.  kai, nov'17
 
@@ -48,10 +47,10 @@ public class BlockageCampbellsCreek01Test {
 
 		// ---
 
-		TestUtils.comparingDepartures(primaryExpectedEventsFilename,actualEventsFilename,0.);
-		TestUtils.comparingArrivals(primaryExpectedEventsFilename,actualEventsFilename,0.);
-		TestUtils.comparingActivityStarts(primaryExpectedEventsFilename,actualEventsFilename, 0.);
-		TestUtils.compareFullEvents(primaryExpectedEventsFilename,actualEventsFilename, true);
+		TestUtils.comparingDepartures(primaryExpectedEventsFilename,actualEventsFilename,5.);
+		TestUtils.comparingArrivals(primaryExpectedEventsFilename,actualEventsFilename,5.);
+		TestUtils.comparingActivityStarts(primaryExpectedEventsFilename,actualEventsFilename, 5.);
+		TestUtils.compareFullEvents(primaryExpectedEventsFilename,actualEventsFilename, false);
 
 	}
 
