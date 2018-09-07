@@ -103,7 +103,7 @@ public class Main {
 		// initialise the messaging module
 		initializeAndStartMessagingModel(dataServer);
 
-		MATSimModel matsimModel = new MATSimModel( SimpleConfig.getMatSimFile(), matsimOutputDirectory );
+		MATSimModel matsimModel = new MATSimModel( SimpleConfig.getMatSimFile(), matsimOutputDirectory, null );
 
 		// --- do some things for which you need a handle to matsim:
 		matsimModel.registerDataServer(dataServer);
