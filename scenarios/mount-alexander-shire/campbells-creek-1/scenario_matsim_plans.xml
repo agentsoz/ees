@@ -8,8 +8,13 @@
 <!-- ====================================================================== -->
 
 	<person id="0">
+		<attributes>
+			<attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.Resident</attribute>
+			<attribute name="InitialResponseThreshold" class="java.lang.Double" >0.0</attribute>
+			<attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.0</attribute>
+		</attributes>
 		<plan selected="yes">
-			<activity type="home" x="251571.1921738536" y="5891005.042528489" end_time="00:00:10" >
+			<activity type="home" x="251571.1921738536" y="5891005.042528489" end_time="00:10:00" >
 			</activity>
 			<leg mode="car">
 			</leg>
