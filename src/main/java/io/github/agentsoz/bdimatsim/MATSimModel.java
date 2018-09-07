@@ -830,14 +830,7 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 		log.debug("received query from agent {} for percept {} with args {}", agentID, perceptID, args);
 		switch(perceptID) {
 			case PerceptList.REQUEST_LOCATION:
-				if (args == null || !(args instanceof String)) {
-					throw new RuntimeException("Query percept '"+perceptID+"' expecting String argument, but found: " + args);
-				}
-				Link link = scenario.getNetwork().getLinks().get( Id.createLinkId( (String)args ));
-				if(link == null) {
-					log.warn(perceptID + " argument '"+args+"' is not a valid link id");
-					break;
-				}
+				final Link link = scenario.getNetwork().getLinks().get( this.getMobsimAgentFromIdString(agentID).getCurrentLinkId() );
 				Location[] coords = {
 						new Location(link.getFromNode().getId().toString(), link.getFromNode().getCoord().getX(), link.getFromNode().getCoord().getY()),
 						new Location(link.getToNode().getId().toString(), link.getToNode().getCoord().getX(), link.getToNode().getCoord().getY())
@@ -865,7 +858,6 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 			default:
 				throw new RuntimeException("Unknown query percept '"+perceptID+"' received from agent "+agentID+" with args " + args);
 		}
-		return null;
 	}
 
 	public PAAgentManager getAgentManager() {
