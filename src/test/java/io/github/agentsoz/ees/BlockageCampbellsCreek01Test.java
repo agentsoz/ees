@@ -27,6 +27,15 @@ public class BlockageCampbellsCreek01Test {
 	@Rule public MatsimTestUtils utils = new MatsimTestUtils() ;
 
 	@Test
+	public void testBlockage01V2() {
+
+		String[] args = {
+				"--config", "scenarios/mount-alexander-shire/campbells-creek-1/ees.xml",
+		};
+		Run.main(args);
+	}
+
+	@Test
 	public void testBlockage01() {
 
 		String [] args = {

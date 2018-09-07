@@ -158,6 +158,7 @@ public class Run implements DataClient {
             synchronized (sequenceLock) {
                 dataServer.stepTime();
             }
+            dataServer.publish(PerceptList.TIME, dataServer.getTime());
         }
 
         // finish up

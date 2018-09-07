@@ -160,6 +160,13 @@ public class MessagingModel implements DataSource<SortedMap<Double, EmergencyMes
 		JSONArray features = (JSONArray) json.get("features");
 		for (JSONObject feature : (Iterable<JSONObject>) features) {
 			JSONObject properties = (JSONObject) feature.get("properties");
+			String zoneId = (properties.get("SA1_MAIN11") != null) ?
+					(String) properties.get("SA1_MAIN11") :
+					(String) properties.get("SA1_MAIN16");
+			if (zoneId == null) {
+				logger.warn("Feature has no property named SA1_MAIN11 or SA1_MAIN16; discarding");
+				continue;
+			}
 			JSONObject geometry = (JSONObject) feature.get("geometry");
 			JSONArray jcoords = (JSONArray) geometry.get("coordinates");
 			JSONArray coords = (JSONArray) jcoords.get(0);
@@ -169,7 +176,6 @@ public class MessagingModel implements DataSource<SortedMap<Double, EmergencyMes
 			while (it.hasNext()) {
 				polygon[i++] = (Double[]) it.next().toArray(new Double[2]);
 			}
-			String zoneId = (String) properties.get("SA1_MAIN11");
 			zones.put(zoneId, polygon);
 		}
 	}

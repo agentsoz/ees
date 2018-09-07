@@ -58,7 +58,7 @@ public class PhoenixFireModule implements DataSource<SortedMap<Double, Double[][
 	private TreeMap<Double, Double[][]> fire;
 	private Time.TimestepUnit timestepUnit = Time.TimestepUnit.SECONDS;
 	private double evacStartInSeconds = 0.0;
-	private boolean fireAlertSent = false;
+	private boolean fireAlertSent = true;
 
 	public PhoenixFireModule(boolean sendFireAlertOnFireStart) {
 
