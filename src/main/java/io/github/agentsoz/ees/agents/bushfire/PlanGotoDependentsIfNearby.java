@@ -52,14 +52,11 @@ public class PlanGotoDependentsIfNearby extends Plan {
 			Location homeLocation = agent.getLocations().get(agent.LOCATION_HOME);
 			Location dependentsLocation = agent.getDependentInfo().getLocation();
 			if (!(homeLocation == null || dependentsLocation == null)) {
-				double distanceToHome = (double) agent.getQueryPerceptInterface().queryPercept(
-						String.valueOf(agent.getId()),
-						PerceptList.REQUEST_DRIVING_DISTANCE_TO,
-						homeLocation.getCoordinates());
-				double distanceToDependents = (double) agent.getQueryPerceptInterface().queryPercept(
-						String.valueOf(agent.getId()),
-						PerceptList.REQUEST_DRIVING_DISTANCE_TO,
-						dependentsLocation.getCoordinates());
+				Location from = ((Location[])agent.getQueryPerceptInterface().queryPercept(
+						String.valueOf(agent.getId()), PerceptList.REQUEST_LOCATION, null))[0];
+				// Using beeline distance which is more natural and not computationally expensive
+				double distanceToHome = Location.distanceBetween(from,homeLocation);
+				double distanceToDependents = Location.distanceBetween(from,dependentsLocation);
 				applicable = (distanceToDependents < distanceToHome);
 			}
 		}
