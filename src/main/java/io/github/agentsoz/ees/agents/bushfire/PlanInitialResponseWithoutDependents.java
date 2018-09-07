@@ -53,6 +53,7 @@ public class PlanInitialResponseWithoutDependents extends Plan {
 
 	PlanStep[] steps = {
 			() -> {
+				agent.memorise(BushfireAgent.MemoryEventType.ACTIONED.name(), getGoal() + "|" + this.getClass().getSimpleName());
 				if (agent.isFinalResponseThresholdBreached()) {
 					agent.memorise(BushfireAgent.MemoryEventType.DECIDED.name(), BushfireAgent.MemoryEventValue.DONE_FOR_NOW.name());
 				} else {

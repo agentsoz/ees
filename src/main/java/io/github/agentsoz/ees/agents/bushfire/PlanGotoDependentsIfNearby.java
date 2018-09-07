@@ -71,6 +71,7 @@ public class PlanGotoDependentsIfNearby extends Plan {
 	PlanStep[] steps = {
 			// Go visits dependents now
 			() -> {
+				agent.memorise(BushfireAgent.MemoryEventType.ACTIONED.name(), getGoal() + "|" + this.getClass().getSimpleName());
                 post(new GoalGotoDependents("GoalGotoDependents"));
                 // Now wait till the next step for this goal to finish
             },

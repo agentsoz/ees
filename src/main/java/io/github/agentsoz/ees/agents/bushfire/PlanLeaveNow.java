@@ -51,6 +51,7 @@ public class PlanLeaveNow extends Plan {
 
 	PlanStep[] steps = {
 			() -> {
+				agent.memorise(BushfireAgent.MemoryEventType.ACTIONED.name(), getGoal() + "|" + this.getClass().getSimpleName());
 				post(new GoalGotoEvacPlace("GoalGotoEvacPlace"));
 				// Now wait till the next step for this goal to finish
 			},

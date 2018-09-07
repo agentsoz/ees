@@ -53,6 +53,7 @@ public class PlanGotoEvacPlace extends Plan {
 
 	PlanStep[] steps = {
 			() -> {
+				agent.memorise(BushfireAgent.MemoryEventType.ACTIONED.name(), getGoal() + "|" + this.getClass().getSimpleName());
 				destination = agent.getLocations().get(agent.LOCATION_EVAC_PREFERRED);
 				startedDriving = agent.startDrivingTo(destination, MATSimModel.EvacRoutingMode.carFreespeed);
 			},

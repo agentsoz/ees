@@ -54,6 +54,7 @@ public class PlanGoHome extends Plan {
 
 	PlanStep[] steps = {
 			() -> {
+				agent.memorise(BushfireAgent.MemoryEventType.ACTIONED.name(), getGoal() + "|" + this.getClass().getSimpleName());
 				// start driving to destination, or do nothing if already there
 				destination = agent.getLocations().get(agent.LOCATION_HOME);
 				startedDriving = agent.startDrivingTo(destination, MATSimModel.EvacRoutingMode.carFreespeed);

@@ -71,6 +71,7 @@ public class PlanGoHomeIfDependentsAfar extends Plan {
 	PlanStep[] steps = {
 			// 1. Go home (will visit dependents later)
 			() -> {
+				agent.memorise(BushfireAgent.MemoryEventType.ACTIONED.name(), getGoal() + "|" + this.getClass().getSimpleName());
 				post(new GoalGoHome("GoalGoHome"));
 				// Now wait till the next step for this goal to finish
 			},
