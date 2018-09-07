@@ -238,16 +238,24 @@ public final class Utils {
 	static void parseAdditionalArguments(String[] args, Config config) {
 		for (int i = 1; i < args.length; i++) {
 			switch (args[i]) {
-			case MATSimModel.MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR:
-				if (i + 1 < args.length) {
-					i++;
-					log.info("setting matsim output directory to " + args[i] );
-					config.controler().setOutputDirectory( args[i] );
-				}
-				break;
-			default:
-				throw new RuntimeException("unknown config option") ;
-			}
+				case MATSimModel.MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR:
+					if (i + 1 < args.length) {
+						i++;
+						log.info("setting matsim output directory to " + args[i] );
+						config.controler().setOutputDirectory( args[i] );
+					}
+					break;
+				case MATSimModel.eGlobalStartHhMm:
+					if (i + 1 < args.length) {
+						i++;
+						double secs = MATSimModel.convertTimeToSeconds(args[i].replace(":", ""));
+						config.qsim().setStartTime( (secs) > 3600 ? secs-3600 : secs  );
+						log.info("setting matsim start time to " + args[i]);
+					}
+						break;
+				default:
+							throw new RuntimeException("unknown config option") ;
+					}
 		}
 	}
 	

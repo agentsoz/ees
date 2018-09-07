@@ -89,7 +89,7 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 	private static final Logger log = LoggerFactory.getLogger(MATSimModel.class);
 	public static final String MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR = "--matsim-output-directory";
 
-	private static final String eGlobalStartHhMm = "startHHMM";
+	public static final String eGlobalStartHhMm = "startHHMM";
 	private static final String eConfigFile = "configXml";
 	private static final String eOutputDir = "outputDir";
 	private static final String eMaxDistanceForFireVisual = "maxDistanceForFireVisual";
@@ -158,7 +158,7 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 	private io.github.agentsoz.bdiabm.v2.AgentDataContainer adc = new io.github.agentsoz.bdiabm.v2.AgentDataContainer();
 
 	public MATSimModel(Map<String, String> opts, DataServer dataServer) {
-		this(opts.get(eConfigFile), opts.get(eOutputDir));
+		this(opts.get(eConfigFile), opts.get(eOutputDir), opts.get(eGlobalStartHhMm));
 		registerDataServer(dataServer);
 		if (opts == null) {
 			return;
@@ -202,14 +202,13 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 		}
 	}
 
-
-	public MATSimModel(String matSimFile, String matsimOutputDirectory) {
+	public MATSimModel(String matSimFile, String matsimOutputDirectory, String startHHMM) {
 		// not the most elegant way of doing this ...
 		// yy maybe just pass the whole string from above and take apart ourselves?
 		this(
 		matsimOutputDirectory==null ?
 				new String[]{matSimFile} :
-				new String[]{ matSimFile, MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR, matsimOutputDirectory }
+				new String[]{ matSimFile, MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR, matsimOutputDirectory, eGlobalStartHhMm, startHHMM }
 		);
 	}
 
@@ -224,7 +223,6 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 
 		config.plans().setActivityDurationInterpretation(ActivityDurationInterpretation.tryEndTimeThenDuration);
 
-		config.qsim().setStartTime( (optStartTimeInSeconds) > 3600 ? optStartTimeInSeconds-3600 : optStartTimeInSeconds  );
 		config.qsim().setSimStarttimeInterpretation( StarttimeInterpretation.onlyUseStarttime );
 
 		config.controler().setWritePlansInterval(1);
@@ -750,7 +748,7 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 
 	}
 	
-	private double convertTimeToSeconds(String startHHMM) {
+	public static double convertTimeToSeconds(String startHHMM) {
 		int hours = Integer.parseInt(startHHMM.substring(0, 2));
 		int minutes = Integer.parseInt(startHHMM.substring(2, 4));
 		double startTime = hours * 3600 + minutes * 60;
