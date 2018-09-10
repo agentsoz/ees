@@ -23,9 +23,29 @@ public class Maldon100WithEmergencyVehiclesTest {
 
 	@Rule public MatsimTestUtils utils = new MatsimTestUtils() ;
 
+	@Test
+	public void testMaldon10WithEmergencyVehiclesV2() {
+
+		utils.getOutputDirectory(); // creates a clean one so need to call this first
+		String[] args = {
+				"--config", "scenarios/mount-alexander-shire/maldon-100-with-emergency-vehicles/ees.xml",
+		};
+		// FIXME: io.github.agentsoz.ees.agents.Responder does not work as it does not react to fire/messaging
+		// As a result, all three emergency responders in the test do not move. Accepting for now.
+		Run.main(args);
+
+		final String actualEventsFilename = utils.getOutputDirectory() + "/output_events.xml.gz";
+		final String primaryExpectedEventsFilename = utils.getInputDirectory() + "/output_events.xml.gz";
+		TestUtils.comparingDepartures(primaryExpectedEventsFilename,actualEventsFilename,10.);
+		TestUtils.comparingArrivals(primaryExpectedEventsFilename,actualEventsFilename,10.);
+		TestUtils.comparingActivityStarts(primaryExpectedEventsFilename,actualEventsFilename, 10.);
+		TestUtils.compareFullEvents(primaryExpectedEventsFilename,actualEventsFilename, false);
+
+	}
 
 	@SuppressWarnings("static-method")
 	@Test
+	@Ignore
 	public void testMaldon10WithEmergencyVehicles() {
 		String [] args = {
 				"--config",  "scenarios/mount-alexander-shire/maldon-100-with-emergency-vehicles/scenario_main.xml",
