@@ -4,6 +4,7 @@
 package io.github.agentsoz.ees;
 
 import io.github.agentsoz.util.TestUtils;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.matsim.core.utils.misc.CRCChecksum;
@@ -25,6 +26,24 @@ public class Torquay3000CongestionTest {
     public MatsimTestUtils utils = new MatsimTestUtils();
 
     @Test
+    public void testTorquay3000CongestionReducedV2() {
+
+        utils.getOutputDirectory(); // creates a clean one so need to call this first
+        String[] args = {
+                "--config", "scenarios/surf-coast-shire/torquay-3000/ees.xml",
+        };
+        Run.main(args);
+
+        final String actualEventsFilename = utils.getOutputDirectory() + "/output_events.xml.gz";
+        final String primaryExpectedEventsFilename = utils.getInputDirectory() + "/output_events.xml.gz";
+        TestUtils.comparingDepartures(primaryExpectedEventsFilename,actualEventsFilename,10.);
+        TestUtils.comparingArrivals(primaryExpectedEventsFilename,actualEventsFilename,10.);
+        TestUtils.comparingActivityStarts(primaryExpectedEventsFilename,actualEventsFilename, 10.);
+        TestUtils.compareFullEvents(primaryExpectedEventsFilename,actualEventsFilename, false);
+    }
+
+    @Test
+    @Ignore
     public void testTorquay3000CongestionReduced() {
 
         String[] args = {
@@ -69,6 +88,7 @@ public class Torquay3000CongestionTest {
     }
 
     @Test
+    @Ignore
     public void testTorquay3000CongestionReducedLowReaction() {
 
         String[] args = {
