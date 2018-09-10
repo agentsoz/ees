@@ -23,9 +23,28 @@ public class Castlemaine1000Test {
 
 	@Rule public MatsimTestUtils utils = new MatsimTestUtils() ;
 
+	@Test
+	public void testCastlemaine1000ReducedV2() {
+
+		utils.getOutputDirectory(); // creates a clean one so need to call this first
+		String[] args = {
+				"--config", "scenarios/mount-alexander-shire/castlemaine-1000/ees.xml",
+		};
+		Run.main(args);
+
+		final String actualEventsFilename = utils.getOutputDirectory() + "/output_events.xml.gz";
+		final String primaryExpectedEventsFilename = utils.getInputDirectory() + "/output_events.xml.gz";
+		TestUtils.comparingDepartures(primaryExpectedEventsFilename,actualEventsFilename,10.);
+		TestUtils.comparingArrivals(primaryExpectedEventsFilename,actualEventsFilename,10.);
+		TestUtils.comparingActivityStarts(primaryExpectedEventsFilename,actualEventsFilename, 10.);
+		TestUtils.compareFullEvents(primaryExpectedEventsFilename,actualEventsFilename, false);
+
+	}
+
 
 	@SuppressWarnings("static-method")
 	@Test
+	@Ignore
 	public void testCastlemaine1000Reduced() {
 		String [] args = {
 				"--config",  "scenarios/mount-alexander-shire/castlemaine-1000/scenario_main_reduced.xml",
