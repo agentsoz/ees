@@ -4,6 +4,7 @@ import java.util.*;
 
 import com.google.gson.Gson;
 import com.vividsolutions.jts.geom.*;
+import com.vividsolutions.jts.precision.GeometryPrecisionReducer;
 import io.github.agentsoz.bdiabm.QueryPerceptInterface;
 import io.github.agentsoz.bdiabm.data.ActionContent;
 import io.github.agentsoz.bdiabm.data.PerceptContent;
@@ -812,9 +813,13 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 			for (Double[] pair : pairs) {
 				coords.add(transform.transform(new Coord(pair[0], pair[1])));
 			}
-			Polygon polygon = GeometryUtils.createGeotoolsPolygon(coords);
+			// Fix for JTS #288 requires reduction to floating.
+			// https://github.com/locationtech/jts/issues/288#issuecomment-396647804
+			Geometry polygon = GeometryPrecisionReducer.reduce(
+					GeometryUtils.createGeotoolsPolygon(coords),
+					new PrecisionModel(PrecisionModel.FLOATING));
 			if ( shape==null ) {
-				shape = polygon ;
+				shape = polygon;
 			} else {
 				shape = shape.union(polygon);
 			}
