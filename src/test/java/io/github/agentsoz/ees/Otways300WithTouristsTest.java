@@ -26,6 +26,24 @@ public class Otways300WithTouristsTest {
     public MatsimTestUtils utils = new MatsimTestUtils();
 
     @Test
+    public void testOtways300TouristReducedV2() {
+
+        utils.getOutputDirectory(); // creates a clean one so need to call this first
+        String[] args = {
+                "--config", "scenarios/surf-coast-shire/otways-300/ees.xml",
+        };
+        Run.main(args);
+
+        final String actualEventsFilename = utils.getOutputDirectory() + "/output_events.xml.gz";
+        final String primaryExpectedEventsFilename = utils.getInputDirectory() + "/output_events.xml.gz";
+        TestUtils.comparingDepartures(primaryExpectedEventsFilename,actualEventsFilename,10.);
+        TestUtils.comparingArrivals(primaryExpectedEventsFilename,actualEventsFilename,10.);
+        TestUtils.comparingActivityStarts(primaryExpectedEventsFilename,actualEventsFilename, 10.);
+        TestUtils.compareFullEvents(primaryExpectedEventsFilename,actualEventsFilename, false);
+    }
+
+    @Test
+    @Ignore
     public void testOtways300TouristReduced() {
 
         String [] args = {
