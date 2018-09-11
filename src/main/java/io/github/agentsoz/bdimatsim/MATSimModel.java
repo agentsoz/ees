@@ -611,7 +611,9 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 		}
 		Geometry embersBuffer = embers.buffer(optMaxDistanceForSmokeVisual);
 		List<Id<Person>> personsMatched = getPersonsWithin(scenario, embersBuffer);
-		log.info("Embers/smoke seen by {} persons: {} ", personsMatched.size(), Arrays.toString(personsMatched.toArray()));
+		log.info("Embers/smoke seen by {} persons {} ", personsMatched.size(),
+				"... use DEBUG to see full list");
+		log.debug("Embers/smoke seen by {} persons: {} ", personsMatched.size(), Arrays.toString(personsMatched.toArray()));
 		// package the messages up to send to the BDI side
 		for (Id<Person> personId : personsMatched) {
 			PAAgent agent = this.getAgentManager().getAgent(personId.toString());
