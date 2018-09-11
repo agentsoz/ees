@@ -23,6 +23,7 @@ package io.github.agentsoz.bdimatsim;
  */
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.matsim.api.core.v01.Id;
@@ -72,9 +73,9 @@ public final class EventsMonitorRegistry implements LinkEnterEventHandler, LinkL
 	
 	private static final Logger log = LoggerFactory.getLogger(EventsMonitorRegistry.class ) ;
 
-	private Map<MonitoredEventType, List<Monitor>> monitors = Collections.synchronizedMap(new LinkedHashMap<>());
+	private Map<MonitoredEventType, Map<Id<Person>,Monitor>> monitors = Collections.synchronizedMap(new LinkedHashMap<>());
 
-    private List<Monitor> toAdd = new ArrayList<>();
+    private Map<MonitoredEventType, Map<Id<Person>,Monitor>> toAdd = Collections.synchronizedMap(new LinkedHashMap<>());
     
     public EventsMonitorRegistry() {
     	// supposedly works like this:
@@ -142,11 +143,23 @@ public final class EventsMonitorRegistry implements LinkEnterEventHandler, LinkL
 		// Register any new monitors waiting to be added
 		// Synchronise on toAdd which is allowed to be updated by other threads
 		synchronized (toAdd) {
-			for(Monitor monitor : toAdd) {
-				if (!monitors.containsKey(monitor.getEvent())) {
-					monitors.put(monitor.getEvent(), new CopyOnWriteArrayList<>());
+//			for(Id<Person> agentId : toAdd.keySet()) {
+//				Monitor monitor = toAdd.get(agentId);
+//				if (!monitors.containsKey(monitor.getEvent())) {
+//					monitors.put(monitor.getEvent(), new ConcurrentHashMap<>());
+//				}
+//				monitors.get(monitor.getEvent()).put(agentId,monitor);
+//			}
+//			toAdd.clear();
+			for(MonitoredEventType eventType : toAdd.keySet()) {
+				if (!monitors.containsKey(eventType)) {
+					monitors.put(eventType, new ConcurrentHashMap<>());
 				}
-				monitors.get(monitor.getEvent()).add(monitor);
+				Map<Id<Person>, Monitor> map = toAdd.get(eventType);
+				for (Id<Person> agentId : map.keySet()) {
+					Monitor monitor = map.get(agentId);
+					monitors.get(eventType).put(agentId,monitor);
+				}
 			}
 			toAdd.clear();
 		}
@@ -175,116 +188,128 @@ public final class EventsMonitorRegistry implements LinkEnterEventHandler, LinkL
 	}
 
 	private void handleAgentInCongestionEvent(AgentInCongestionEvent ev) {
-		List<Monitor> toRemove = new ArrayList<>();
-		for (Monitor monitor : monitors.get(AgentInCongestion)) {
-			AgentInCongestionEvent event = ev;
-			Id<Person> driverId = this.getDriverOfVehicle(event.getVehicleId());
-			Gbl.assertNotNull(driverId);
+		Map<Id<Person>, Monitor> toRemove = new HashMap<>();
+		AgentInCongestionEvent event = ev;
+		Id<Person> driverId = this.getDriverOfVehicle(event.getVehicleId());
+		Gbl.assertNotNull(driverId);
+		Monitor monitor = monitors.get(AgentInCongestion).get(driverId);
+		if (monitor != null) {
 			log.debug("handling AgentInCongestion event");
 			if (monitor.getAgentId().equals(driverId)) {
 				if (monitor.getHandler().handle(monitor.getAgentId(), event.getCurrentLinkId(), monitor.getEvent())) {
-					toRemove.add(monitor);
-					Monitor arrivedMonitor = findMonitor(monitor.getAgentId(), MonitoredEventType.ArrivedAtDestination);
+					toRemove.put(driverId, monitor);
+					Monitor arrivedMonitor = monitors.get(ArrivedAtDestination).get(driverId);
 					if (arrivedMonitor != null) {
-						toRemove.add(arrivedMonitor);
+						toRemove.put(driverId,arrivedMonitor);
 					}
 				}
 			}
-			monitors.get(AgentInCongestion).removeAll(toRemove);
+			monitors.get(AgentInCongestion).entrySet().removeAll(toRemove.entrySet());
 		}
 	}
 
 	private void handleNextLinkBlockedEvent(NextLinkBlockedEvent ev) {
-		List<Monitor> toRemove = new ArrayList<>();
-		for (Monitor monitor : monitors.get(NextLinkBlocked)) {
+		Map<Id<Person>, Monitor>  toRemove = new HashMap<>();
+		NextLinkBlockedEvent event = ev;
+		Id<Person> driverId = event.getDriverId();
+		Monitor monitor = monitors.get(NextLinkBlocked).get(driverId);
+		if (monitor != null) {
 			log.debug("catching a nextLinkBlocked event");
-			NextLinkBlockedEvent event = ev;
 			if (monitor.getAgentId().equals(event.getDriverId())) {
 				if (monitor.getHandler().handle(monitor.getAgentId(), event.currentLinkId(), monitor.getEvent())) {
-					toRemove.add(monitor);
-					Monitor arrivedMonitor = findMonitor(monitor.getAgentId(), MonitoredEventType.ArrivedAtDestination);
+					toRemove.put(driverId,monitor);
+					Monitor arrivedMonitor = monitors.get(ArrivedAtDestination).get(driverId);
 					if (arrivedMonitor != null) {
-						toRemove.add(arrivedMonitor);
+						toRemove.put(driverId,arrivedMonitor);
 					}
 				}
 			}
-			monitors.get(NextLinkBlocked).removeAll(toRemove);
+			monitors.get(NextLinkBlocked).entrySet().removeAll(toRemove.entrySet());
 		}
 	}
 
 	private void handleLinkEnterEvent(LinkEnterEvent ev) {
-		List<Monitor> toRemove = new ArrayList<>();
-		for (Monitor monitor : monitors.get(EnteredNode)) {
-			LinkEnterEvent event = ev;
-			Id<Person> driverId = this.getDriverOfVehicle(event.getVehicleId());
-			Gbl.assertNotNull(driverId);
+		Map<Id<Person>, Monitor>  toRemove = new HashMap<>();
+		LinkEnterEvent event = ev;
+		Id<Person> driverId = this.getDriverOfVehicle(event.getVehicleId());
+		Gbl.assertNotNull(driverId);
+		Monitor monitor = monitors.get(EnteredNode).get(driverId);
+		if (monitor != null) {
 			if (monitor.getAgentId().equals(driverId) && event.getLinkId().equals(monitor.getLinkId())) {
 				if (monitor.getHandler().handle(monitor.getAgentId(), monitor.getLinkId(), monitor.getEvent())) {
-					toRemove.add(monitor);
+					toRemove.put(driverId,monitor);
 				}
 			}
 		}
-		monitors.get(EnteredNode).removeAll(toRemove);
+		monitors.get(EnteredNode).entrySet().removeAll(toRemove.entrySet());
 	}
 
 	private void handleLinkLeaveEvent(LinkLeaveEvent ev) {
-		List<Monitor> toRemove = new ArrayList<>();
-		for (Monitor monitor : monitors.get(ExitedNode)) {
-			LinkLeaveEvent event = ev;
-//					if (monitor.getAgentId() == event.getDriverId() && monitor.getLinkId() == event.getLinkId()) {
+		Map<Id<Person>, Monitor> toRemove = new HashMap<>();
+		LinkLeaveEvent event = ev;
+		Id<Person> driverId = this.getDriverOfVehicle(event.getVehicleId());
+		Gbl.assertNotNull(driverId);
+		Monitor monitor = monitors.get(ExitedNode).get(driverId);
+		if (monitor != null) {
 			if (monitor.getAgentId().equals(event.getDriverId()) && monitor.getLinkId().equals(event.getLinkId())) {
 				if (monitor.getHandler().handle(monitor.getAgentId(), monitor.getLinkId(), monitor.getEvent())) {
-					toRemove.add(monitor);
+					toRemove.put(driverId,monitor);
 				}
 			}
 		}
-		monitors.get(ExitedNode).removeAll(toRemove);
+		monitors.get(ExitedNode).entrySet().removeAll(toRemove.entrySet());
 	}
 
 	private void handlePersonArrivalEvent(PersonArrivalEvent ev) {
-		List<Monitor> toRemove = new ArrayList<>();
-		for (Monitor monitor : monitors.get(ArrivedAtDestination)) {
-			PersonArrivalEvent event = ev;
-//					if (monitor.getAgentId() == event.getPersonId() && monitor.getLinkId() == event.getLinkId()) {
+		Map<Id<Person>, Monitor> toRemove = new HashMap<>();
+		PersonArrivalEvent event = ev;
+		Id<Person> driverId = event.getPersonId();
+		Gbl.assertNotNull(driverId);
+		Monitor monitor = monitors.get(ArrivedAtDestination).get(driverId);
+		if (monitor != null) {
 			if (monitor.getAgentId().equals(event.getPersonId()) && monitor.getLinkId().equals(event.getLinkId())) {
 				if (monitor.getHandler().handle(monitor.getAgentId(), monitor.getLinkId(), monitor.getEvent())) {
-					toRemove.add(monitor);
+					toRemove.put(driverId,monitor);
 				}
-				Monitor blockedMonitor = findMonitor(monitor.getAgentId(), MonitoredEventType.NextLinkBlocked);
+				Monitor blockedMonitor = monitors.get(NextLinkBlocked).get(driverId);
 				if (blockedMonitor != null) {
-					toRemove.add(blockedMonitor);
+					toRemove.put(driverId,blockedMonitor);
 				}
 			}
 		}
-		monitors.get(ArrivedAtDestination).removeAll(toRemove);
+		monitors.get(ArrivedAtDestination).entrySet().removeAll(toRemove.entrySet());
 	}
 
 	private void handlePersonDepartureEvent(PersonDepartureEvent ev) {
-		List<Monitor> toRemove = new ArrayList<>();
-		for (Monitor monitor : monitors.get(DepartedDestination)) {
-			PersonDepartureEvent event = ev;
-//					if (monitor.getAgentId() == event.getPersonId() && monitor.getLinkId() == event.getLinkId()) {
+		Map<Id<Person>, Monitor> toRemove = new HashMap<>();
+		PersonDepartureEvent event = ev;
+		Id<Person> driverId = event.getPersonId();
+		Gbl.assertNotNull(driverId);
+		Monitor monitor = monitors.get(DepartedDestination).get(driverId);
+		if (monitor != null) {
 			if (monitor.getAgentId().equals(event.getPersonId()) && monitor.getLinkId().equals(event.getLinkId())) {
 				if (monitor.getHandler().handle(monitor.getAgentId(), monitor.getLinkId(), monitor.getEvent())) {
-					toRemove.add(monitor);
+					toRemove.put(driverId,monitor);
 				}
 			}
 		}
-		monitors.get(DepartedDestination).removeAll(toRemove);
+		monitors.get(DepartedDestination).entrySet().removeAll(toRemove.entrySet());
 	}
 
 	private void handleActivityEndEvent(ActivityEndEvent ev) {
-		List<Monitor> toRemove = new ArrayList<>();
-		for (Monitor monitor : monitors.get(EndedActivity)) {
-			ActivityEndEvent event = ev;
-//					if (monitor.getAgentId() == event.getPersonId() && monitor.getLinkId() == event.getLinkId()) {
+		Map<Id<Person>, Monitor> toRemove = new HashMap<>();
+		ActivityEndEvent event = ev;
+		Id<Person> driverId = event.getPersonId();
+		Gbl.assertNotNull(driverId);
+		Monitor monitor = monitors.get(EndedActivity).get(driverId);
+		if (monitor != null) {
 			if (monitor.getAgentId().equals(event.getPersonId()) && monitor.getLinkId().equals(event.getLinkId())) {
 				if (monitor.getHandler().handle(monitor.getAgentId(), monitor.getLinkId(), monitor.getEvent())) {
-					toRemove.add(monitor);
+					toRemove.put(driverId,monitor);
 				}
 			}
 		}
-		monitors.get(EndedActivity).removeAll(toRemove);
+		monitors.get(EndedActivity).entrySet().removeAll(toRemove.entrySet());
 	}
 
 	/**
@@ -299,28 +324,17 @@ public final class EventsMonitorRegistry implements LinkEnterEventHandler, LinkL
 	 */
 	public int registerMonitor(String agentId, MonitoredEventType event,String linkId, BDIPerceptHandler handler) {
 		synchronized (toAdd) {
-			toAdd.add(new Monitor(agentId, linkId, event, handler));
+			if (!toAdd.containsKey(event)) {
+				toAdd.put(event, new ConcurrentHashMap<>());
+			}
+			Map<Id<Person>, Monitor> map = toAdd.get(event);
+
+			map.put(Id.createPersonId(agentId), new Monitor(agentId, linkId, event, handler));
+			toAdd.put(event, map);
 			return toAdd.size();
 		}
 	}
 
-	/**
-	 * Returns a matching monitor for the given parameters
-	 * @param agentId
-	 * @param event
-	 * @return
-	 */
-	private Monitor findMonitor(Id<Person> agentId, MonitoredEventType event) {
-		if (!monitors.containsKey(event)) {
-			return null;
-		}
-		for (Monitor monitor : monitors.get(event)) {
-			if (monitor.getAgentId().equals(agentId) && monitor.getEvent() == event) {
-				return monitor;
-			}
-		}
-		return null;
-	}
 	/**
 	 * Internal structure used to store information about MATSim events to monitor
 	 * @author dsingh
