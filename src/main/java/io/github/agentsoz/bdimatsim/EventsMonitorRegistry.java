@@ -22,10 +22,7 @@ package io.github.agentsoz.bdimatsim;
  * #L%
  */
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.matsim.api.core.v01.Id;
@@ -75,7 +72,7 @@ public final class EventsMonitorRegistry implements LinkEnterEventHandler, LinkL
 	
 	private static final Logger log = LoggerFactory.getLogger(EventsMonitorRegistry.class ) ;
 
-	private LinkedHashMap<MonitoredEventType, List<Monitor>> monitors = new LinkedHashMap<>();
+	private Map<MonitoredEventType, List<Monitor>> monitors = Collections.synchronizedMap(new LinkedHashMap<>());
 
     private List<Monitor> toAdd = new ArrayList<>();
     
@@ -153,35 +150,32 @@ public final class EventsMonitorRegistry implements LinkEnterEventHandler, LinkL
 			}
 			toAdd.clear();
 		}
-     
-		List<Monitor> toRemove = new ArrayList<>();
-  
-		// yyyyyy in the following, monitor.getLinkId can now be null.  Need to hedge against it!  kai, nov'17
-  
+
 		if (ev instanceof AgentInCongestionEvent && monitors.containsKey(AgentInCongestion)) {
-			handleAgentInCongestionEvent((AgentInCongestionEvent) ev, toRemove);
+			handleAgentInCongestionEvent((AgentInCongestionEvent) ev);
 
 		} else if (ev instanceof NextLinkBlockedEvent && monitors.containsKey(NextLinkBlocked)) {
-			handleNextLinkBlockedEvent((NextLinkBlockedEvent) ev, toRemove);
+			handleNextLinkBlockedEvent((NextLinkBlockedEvent) ev);
 
 		} else if (ev instanceof LinkEnterEvent && monitors.containsKey(EnteredNode)) {
-			handleLinkEnterEvent((LinkEnterEvent) ev, toRemove);
+			handleLinkEnterEvent((LinkEnterEvent) ev);
 
 		} else if (ev instanceof LinkLeaveEvent && monitors.containsKey(ExitedNode)) {
-			handleLinkLeaveEvent((LinkLeaveEvent) ev, toRemove);
+			handleLinkLeaveEvent((LinkLeaveEvent) ev);
 
 		} else if (ev instanceof PersonArrivalEvent && monitors.containsKey(ArrivedAtDestination)) {
-			handlePersonArrivalEvent((PersonArrivalEvent) ev, toRemove);
+			handlePersonArrivalEvent((PersonArrivalEvent) ev);
 
 		} else if (ev instanceof PersonDepartureEvent && monitors.containsKey(DepartedDestination)) {
-			handlePersonDepartureEvent((PersonDepartureEvent) ev, toRemove);
+			handlePersonDepartureEvent((PersonDepartureEvent) ev);
 
 		} else if (ev instanceof ActivityEndEvent && monitors.containsKey(EndedActivity)) {
-			handleActivityEndEvent((ActivityEndEvent) ev, toRemove);
+			handleActivityEndEvent((ActivityEndEvent) ev);
 		}
 	}
 
-	private void handleAgentInCongestionEvent(AgentInCongestionEvent ev, List<Monitor> toRemove) {
+	private void handleAgentInCongestionEvent(AgentInCongestionEvent ev) {
+		List<Monitor> toRemove = new ArrayList<>();
 		for (Monitor monitor : monitors.get(AgentInCongestion)) {
 			AgentInCongestionEvent event = ev;
 			Id<Person> driverId = this.getDriverOfVehicle(event.getVehicleId());
@@ -200,10 +194,10 @@ public final class EventsMonitorRegistry implements LinkEnterEventHandler, LinkL
 		}
 	}
 
-	private void handleNextLinkBlockedEvent(NextLinkBlockedEvent ev, List<Monitor> toRemove) {
+	private void handleNextLinkBlockedEvent(NextLinkBlockedEvent ev) {
+		List<Monitor> toRemove = new ArrayList<>();
 		for (Monitor monitor : monitors.get(NextLinkBlocked)) {
 			log.debug("catching a nextLinkBlocked event");
-			;
 			NextLinkBlockedEvent event = ev;
 			if (monitor.getAgentId().equals(event.getDriverId())) {
 				if (monitor.getHandler().handle(monitor.getAgentId(), event.currentLinkId(), monitor.getEvent())) {
@@ -218,7 +212,8 @@ public final class EventsMonitorRegistry implements LinkEnterEventHandler, LinkL
 		}
 	}
 
-	private void handleLinkEnterEvent(LinkEnterEvent ev, List<Monitor> toRemove) {
+	private void handleLinkEnterEvent(LinkEnterEvent ev) {
+		List<Monitor> toRemove = new ArrayList<>();
 		for (Monitor monitor : monitors.get(EnteredNode)) {
 			LinkEnterEvent event = ev;
 			Id<Person> driverId = this.getDriverOfVehicle(event.getVehicleId());
@@ -232,7 +227,8 @@ public final class EventsMonitorRegistry implements LinkEnterEventHandler, LinkL
 		monitors.get(EnteredNode).removeAll(toRemove);
 	}
 
-	private void handleLinkLeaveEvent(LinkLeaveEvent ev, List<Monitor> toRemove) {
+	private void handleLinkLeaveEvent(LinkLeaveEvent ev) {
+		List<Monitor> toRemove = new ArrayList<>();
 		for (Monitor monitor : monitors.get(ExitedNode)) {
 			LinkLeaveEvent event = ev;
 //					if (monitor.getAgentId() == event.getDriverId() && monitor.getLinkId() == event.getLinkId()) {
@@ -245,7 +241,8 @@ public final class EventsMonitorRegistry implements LinkEnterEventHandler, LinkL
 		monitors.get(ExitedNode).removeAll(toRemove);
 	}
 
-	private void handlePersonArrivalEvent(PersonArrivalEvent ev, List<Monitor> toRemove) {
+	private void handlePersonArrivalEvent(PersonArrivalEvent ev) {
+		List<Monitor> toRemove = new ArrayList<>();
 		for (Monitor monitor : monitors.get(ArrivedAtDestination)) {
 			PersonArrivalEvent event = ev;
 //					if (monitor.getAgentId() == event.getPersonId() && monitor.getLinkId() == event.getLinkId()) {
@@ -262,7 +259,8 @@ public final class EventsMonitorRegistry implements LinkEnterEventHandler, LinkL
 		monitors.get(ArrivedAtDestination).removeAll(toRemove);
 	}
 
-	private void handlePersonDepartureEvent(PersonDepartureEvent ev, List<Monitor> toRemove) {
+	private void handlePersonDepartureEvent(PersonDepartureEvent ev) {
+		List<Monitor> toRemove = new ArrayList<>();
 		for (Monitor monitor : monitors.get(DepartedDestination)) {
 			PersonDepartureEvent event = ev;
 //					if (monitor.getAgentId() == event.getPersonId() && monitor.getLinkId() == event.getLinkId()) {
@@ -275,7 +273,8 @@ public final class EventsMonitorRegistry implements LinkEnterEventHandler, LinkL
 		monitors.get(DepartedDestination).removeAll(toRemove);
 	}
 
-	private void handleActivityEndEvent(ActivityEndEvent ev, List<Monitor> toRemove) {
+	private void handleActivityEndEvent(ActivityEndEvent ev) {
+		List<Monitor> toRemove = new ArrayList<>();
 		for (Monitor monitor : monitors.get(EndedActivity)) {
 			ActivityEndEvent event = ev;
 //					if (monitor.getAgentId() == event.getPersonId() && monitor.getLinkId() == event.getLinkId()) {
