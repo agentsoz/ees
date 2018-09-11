@@ -204,7 +204,9 @@ public final class EventsMonitorRegistry implements LinkEnterEventHandler, LinkL
 					}
 				}
 			}
-			monitors.get(AgentInCongestion).entrySet().removeAll(toRemove.entrySet());
+			synchronized (monitors.get(AgentInCongestion)) {
+				monitors.get(AgentInCongestion).entrySet().removeAll(toRemove.entrySet());
+			}
 		}
 	}
 
@@ -224,7 +226,9 @@ public final class EventsMonitorRegistry implements LinkEnterEventHandler, LinkL
 					}
 				}
 			}
-			monitors.get(NextLinkBlocked).entrySet().removeAll(toRemove.entrySet());
+			synchronized (monitors.get(NextLinkBlocked)) {
+				monitors.get(NextLinkBlocked).entrySet().removeAll(toRemove.entrySet());
+			}
 		}
 	}
 
@@ -241,7 +245,9 @@ public final class EventsMonitorRegistry implements LinkEnterEventHandler, LinkL
 				}
 			}
 		}
-		monitors.get(EnteredNode).entrySet().removeAll(toRemove.entrySet());
+		synchronized (monitors.get(EnteredNode)) {
+			monitors.get(EnteredNode).entrySet().removeAll(toRemove.entrySet());
+		}
 	}
 
 	private void handleLinkLeaveEvent(LinkLeaveEvent ev) {
@@ -257,7 +263,9 @@ public final class EventsMonitorRegistry implements LinkEnterEventHandler, LinkL
 				}
 			}
 		}
-		monitors.get(ExitedNode).entrySet().removeAll(toRemove.entrySet());
+		synchronized (monitors.get(ExitedNode)) {
+			monitors.get(ExitedNode).entrySet().removeAll(toRemove.entrySet());
+		}
 	}
 
 	private void handlePersonArrivalEvent(PersonArrivalEvent ev) {
@@ -277,7 +285,9 @@ public final class EventsMonitorRegistry implements LinkEnterEventHandler, LinkL
 				}
 			}
 		}
-		monitors.get(ArrivedAtDestination).entrySet().removeAll(toRemove.entrySet());
+		synchronized (monitors.get(ArrivedAtDestination)) {
+			monitors.get(ArrivedAtDestination).entrySet().removeAll(toRemove.entrySet());
+		}
 	}
 
 	private void handlePersonDepartureEvent(PersonDepartureEvent ev) {
@@ -293,7 +303,9 @@ public final class EventsMonitorRegistry implements LinkEnterEventHandler, LinkL
 				}
 			}
 		}
-		monitors.get(DepartedDestination).entrySet().removeAll(toRemove.entrySet());
+		synchronized (monitors.get(DepartedDestination)) {
+			monitors.get(DepartedDestination).entrySet().removeAll(toRemove.entrySet());
+		}
 	}
 
 	private void handleActivityEndEvent(ActivityEndEvent ev) {
@@ -309,7 +321,9 @@ public final class EventsMonitorRegistry implements LinkEnterEventHandler, LinkL
 				}
 			}
 		}
-		monitors.get(EndedActivity).entrySet().removeAll(toRemove.entrySet());
+		synchronized (monitors.get(EndedActivity)) {
+			monitors.get(EndedActivity).entrySet().removeAll(toRemove.entrySet());
+		}
 	}
 
 	/**
