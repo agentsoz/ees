@@ -57,6 +57,7 @@ public class Run implements DataClient {
 
 
     public static void main(String[] args) {
+        Thread.currentThread().setName("ees");
         Config cfg = new Config();
         Map<String,String> opts = cfg.parse(args);
         cfg.loadFromFile(opts.get(Config.OPT_CONFIG));
