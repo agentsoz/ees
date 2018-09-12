@@ -418,6 +418,7 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 
 		// wrap the controller into a thread and start it:
 		this.matsimThread = new Thread( controller ) ;
+		this.matsimThread.setName("matsim");
 		matsimThread.start();
 
 		// wait until the thread has initialized before returning:
