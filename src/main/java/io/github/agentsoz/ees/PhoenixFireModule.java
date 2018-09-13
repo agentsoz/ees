@@ -29,8 +29,12 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.PrecisionModel;
+import com.vividsolutions.jts.precision.GeometryPrecisionReducer;
 import io.github.agentsoz.util.Time;
 import io.github.agentsoz.util.evac.PerceptList;
+import org.geotools.geometry.jts.GeometryBuilder;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -41,7 +45,7 @@ import org.slf4j.LoggerFactory;
 import io.github.agentsoz.dataInterface.DataServer;
 import io.github.agentsoz.dataInterface.DataSource;
 
-public class PhoenixFireModule implements DataSource<SortedMap<Double, Double[][]>> {
+public class PhoenixFireModule implements DataSource<Geometry> {
 
 	private final Logger logger = LoggerFactory.getLogger(PhoenixFireModule.class);
 
@@ -55,19 +59,19 @@ public class PhoenixFireModule implements DataSource<SortedMap<Double, Double[][
 	private DataServer dataServer = null;
 	private JSONObject json = null;
 	private double lastUpdateTimeInMinutes = -1;
-	private TreeMap<Double, Double[][]> fire;
+	private TreeMap<Double, Geometry> fire;
 	private Time.TimestepUnit timestepUnit = Time.TimestepUnit.SECONDS;
 	private double evacStartInSeconds = 0.0;
 	private boolean fireAlertSent = true;
 
 	public PhoenixFireModule(boolean sendFireAlertOnFireStart) {
 
-		fire = new TreeMap<Double, Double[][]>();
+		fire = new TreeMap<>();
 		fireAlertSent = !sendFireAlertOnFireStart;
 	}
 
     public PhoenixFireModule(Map<String, String> opts, DataServer dataServer) {
-		fire = new TreeMap<Double, Double[][]>();
+		fire = new TreeMap<>();
 		this.dataServer = dataServer;
 		parse(opts);
     }
@@ -130,14 +134,16 @@ public class PhoenixFireModule implements DataSource<SortedMap<Double, Double[][
 			cal.setTime(date);  
 			double minutes = 60*cal.get(Calendar.HOUR_OF_DAY) + cal.get(Calendar.MINUTE);
 			//double minutes = (double) properties.get("MINUTES");
-			fire.put(minutes, coordinates);
+			fire.put(minutes, getGeometryFromCoords(coordinates));
 		}
 	}
 
 	@Override
-	public SortedMap<Double, Double[][]> sendData(double timestep, String dataType) {
+
+	public Geometry sendData(double timestep, String dataType) {
+		Geometry geometry = null;
 		double time = Time.convertTime(timestep, timestepUnit, Time.TimestepUnit.MINUTES);
-		SortedMap<Double, Double[][]> shapes = fire.subMap(lastUpdateTimeInMinutes, time);
+		SortedMap<Double, Geometry> shapes = fire.subMap(lastUpdateTimeInMinutes, time);
 		// if evac start time was explicitly set, then send alert at that time
 		// irrespective of when the fire actually starts
 		if (!fireAlertSent && evacStartInSeconds > 0.0 && timestep >= evacStartInSeconds) { 
@@ -151,7 +157,9 @@ public class PhoenixFireModule implements DataSource<SortedMap<Double, Double[][
 				logger.info("step {} ({} mins): sending fire alert!!", String.format("%.0f", timestep), String.format("%.0f", time));
 				dataServer.publish(PerceptList.FIRE_ALERT, null);
 			}
-			dataServer.publish(PerceptList.FIRE_DATA, shapes);
+			geometry = getGeometry(shapes);
+			logger.info("sending {} : {}", PerceptList.FIRE_DATA, geometry);
+			dataServer.publish(PerceptList.FIRE_DATA, geometry);
 		}
 
 		// Setting 'lastUpdateTimeInMinutes = time' below will mean that only the new fire shapes since the
@@ -160,14 +168,38 @@ public class PhoenixFireModule implements DataSource<SortedMap<Double, Double[][
 		// So instead, we send all the shapes up until now. This ensures that the state of the fire
 		// in the model will always be a union of all shapes from the start of fire.
 		// To send all shapes, just disable the lastUpdateTimeInMinutes update below
-		// lastUpdateTimeInMinutes = time;
+		lastUpdateTimeInMinutes = time;
 
 		Double nextTime = fire.higherKey(time);
 		if (nextTime != null) {
 			dataServer.registerTimedUpdate(PerceptList.FIRE, this, Time.convertTime(nextTime, Time.TimestepUnit.MINUTES, timestepUnit));
 		}
-		logger.info("sending {} data: {}", PerceptList.FIRE, shapes);
-		return shapes;
+		return geometry;
+	}
+
+	private Geometry getGeometry(SortedMap<Double, Geometry> shapes) {
+		Geometry polygon = null;
+		if (shapes != null && !shapes.isEmpty()) {
+			for (Geometry shape : shapes.values()) {
+				// Fix for JTS #288 requires reduction to floating.
+				// https://github.com/locationtech/jts/issues/288#issuecomment-396647804
+				polygon = (polygon==null) ?
+						shape :
+						GeometryPrecisionReducer.reduce(polygon.union(shape),new PrecisionModel(PrecisionModel.FLOATING));
+			}
+		}
+		return polygon;
+	}
+
+	private Geometry getGeometryFromCoords(Double[][] pairs) {
+		int i = 0;
+		double[] flatarray = new double[pairs.length*2];
+		int o = 0;
+		for (Double[] pair : pairs) {
+			flatarray[i++] = pair[0];
+			flatarray[i++] = pair[1];
+		}
+		return new GeometryBuilder().polygon(flatarray);
 	}
 
 	public void setDataServer(DataServer dataServer) {

@@ -76,7 +76,7 @@
       <!-- Phoenix start time in HH:MM format; used to calculate absolute values for hour_spot and hour_burnt -->
       <opt id="ignitionHHMM">00:00</opt>
       <!-- Phoenix fire GeoJSON file -->
-      <opt id="fireGeoJson">scenarios/surf-coast-shire/otways-300/scenario_fire.json</opt>
+      <opt id="fireGeoJson">scenarios/surf-coast-shire/otways-300/Anglesea_evac_test_ffdi104_phx5_2016data_minsup_fh2017_Iso_epsg32754.json</opt>
       <!-- Phoenix smoke (embers) GeoJSON file -->
       <opt id="smokeGeoJson"></opt>
     </model>
