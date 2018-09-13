@@ -602,16 +602,18 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 	}
 
 	private void processEmbersData(Geometry data, double now, Scenario scenario, EmberWriter emberWriter) {
-		log.info("receiving embers data at time {}: {}", now, data);
+		log.debug("received embers data: {}", data);
 		Geometry embers = data;
 		if (embers == null) {
 			return;
 		}
 		Geometry embersBuffer = embers.buffer(optMaxDistanceForSmokeVisual);
 		List<Id<Person>> personsMatched = getPersonsWithin(scenario, embersBuffer);
-		log.info("Embers/smoke seen by {} persons {} ", personsMatched.size(),
-				"... use DEBUG to see full list");
-		log.debug("Embers/smoke seen by {} persons: {} ", personsMatched.size(), Arrays.toString(personsMatched.toArray()));
+		if (!personsMatched.isEmpty()) {
+			log.info("Embers/smoke seen by {} persons {} ", personsMatched.size(),
+					"... use DEBUG to see full list");
+			log.debug("Embers/smoke seen by {} persons: {} ", personsMatched.size(), Arrays.toString(personsMatched.toArray()));
+		}
 		// package the messages up to send to the BDI side
 		for (Id<Person> personId : personsMatched) {
 			PAAgent agent = this.getAgentManager().getAgent(personId.toString());
@@ -761,13 +763,17 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 										   Scenario scenario, Map<Id<Link>, Double> penaltyFactorsOfLinksForEmergencyVehicles,
 										   FireWriter fireWriter) {
 
-		log.info("receiving fire data at time {}: {}", now, data);
+		log.debug("received fire data: {}", data);
 		Geometry fire = data;
 
 		{
 			Geometry buffer = fire.buffer(optMaxDistanceForFireVisual);
 			List<Id<Person>> personsMatched = getPersonsWithin(scenario, buffer);
-			log.info("Fire seen by {} persons: {} ", personsMatched.size(), Arrays.toString(personsMatched.toArray()));
+			if (!personsMatched.isEmpty()) {
+				log.info("Fire seen by {} persons {} ", personsMatched.size(),
+						"... use DEBUG to see full list");
+				log.debug("Fire seen by {} persons: {} ", personsMatched.size(), Arrays.toString(personsMatched.toArray()));
+			}
 			// package the messages up to send to the BDI side
 			for (Id<Person> personId : personsMatched) {
 				PAAgent agent = this.getAgentManager().getAgent(personId.toString());
