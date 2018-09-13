@@ -610,8 +610,8 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 		Geometry embersBuffer = embers.buffer(optMaxDistanceForSmokeVisual);
 		List<Id<Person>> personsMatched = getPersonsWithin(scenario, embersBuffer);
 		if (!personsMatched.isEmpty()) {
-			log.info("Embers/smoke seen by {} persons {} ", personsMatched.size(),
-					"... use DEBUG to see full list");
+			log.info("Embers/smoke seen at time {} by {} persons ... use DEBUG to see full list",
+					now, personsMatched.size());
 			log.debug("Embers/smoke seen by {} persons: {} ", personsMatched.size(), Arrays.toString(personsMatched.toArray()));
 		}
 		// package the messages up to send to the BDI side
@@ -770,8 +770,8 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 			Geometry buffer = fire.buffer(optMaxDistanceForFireVisual);
 			List<Id<Person>> personsMatched = getPersonsWithin(scenario, buffer);
 			if (!personsMatched.isEmpty()) {
-				log.info("Fire seen by {} persons {} ", personsMatched.size(),
-						"... use DEBUG to see full list");
+				log.info("Fire seen at time {} by {} persons ... use DEBUG to see full list",
+						now, personsMatched.size());
 				log.debug("Fire seen by {} persons: {} ", personsMatched.size(), Arrays.toString(personsMatched.toArray()));
 			}
 			// package the messages up to send to the BDI side
