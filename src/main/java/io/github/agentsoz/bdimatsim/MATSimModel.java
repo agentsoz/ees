@@ -560,12 +560,12 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 			}
 		});
 
-		listeners.put(PerceptList.FIRE_DATA, (DataClient<Map<Double, Double[][]>>) (time, dataType, data) -> {
+		listeners.put(PerceptList.FIRE_DATA, (DataClient<Geometry>) (time, dataType, data) -> {
 			processFireData(data, time, penaltyFactorsOfLinks, scenario,
 					penaltyFactorsOfLinksForEmergencyVehicles, fireWriter);
 		});
 
-		listeners.put(PerceptList.EMBERS_DATA, (DataClient<Map<Double, Double[][]>>) (time, dataType, data) -> {
+		listeners.put(PerceptList.EMBERS_DATA, (DataClient<Geometry>) (time, dataType, data) -> {
 			processEmbersData(data, time, scenario, emberWriter);
 		});
 
@@ -601,12 +601,9 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 		}
 	}
 
-	private void processEmbersData(Map<Double, Double[][]> data, double now, Scenario scenario, EmberWriter emberWriter) {
-		log.info("receiving embers data at time={}", now);
-		log.info( "{}{}", new Gson().toJson(data).substring(0,Math.min(new Gson().toJson(data).length(),200)),
-				"... use DEBUG to see full coordinates list") ;
-		log.debug( "{}", new Gson().toJson(data)) ;
-		Geometry embers = getGeometry(data, scenario);
+	private void processEmbersData(Geometry data, double now, Scenario scenario, EmberWriter emberWriter) {
+		log.info("receiving embers data at time {}: {}", now, data);
+		Geometry embers = data;
 		if (embers == null) {
 			return;
 		}
@@ -760,16 +757,12 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 		return startTime;
 	}
 	
-	private void processFireData(Map<Double, Double[][]> data, double now, Map<Id<Link>, Double> penaltyFactorsOfLinks,
+	private void processFireData(Geometry data, double now, Map<Id<Link>, Double> penaltyFactorsOfLinks,
 										   Scenario scenario, Map<Id<Link>, Double> penaltyFactorsOfLinksForEmergencyVehicles,
 										   FireWriter fireWriter) {
 
-		log.info("receiving fire data at time={}", now);
-		log.info( "{}{}", new Gson().toJson(data).substring(0,Math.min(new Gson().toJson(data).length(),200)),
-				"... use DEBUG to see full coordinates list") ;
-		log.debug( "{}", new Gson().toJson(data)) ;
-
-		Geometry fire = getGeometry(data, scenario);
+		log.info("receiving fire data at time {}: {}", now, data);
+		Geometry fire = data;
 
 		{
 			Geometry buffer = fire.buffer(optMaxDistanceForFireVisual);
@@ -802,32 +795,6 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 			Utils.penaltyMethod2(fire, buffer, bufferWidth, penaltyFactorsOfLinksForEmergencyVehicles, scenario);
 		}
 		fireWriter.write( now, fire);
-	}
-
-	private Geometry getGeometry(Map<Double, Double[][]> data, Scenario scenario) {
-		CoordinateTransformation transform = TransformationFactory.getCoordinateTransformation(
-				TransformationFactory.WGS84, scenario.getConfig().global().getCoordinateSystem());
-
-		Map<Double, Double[][]> map = data;
-		// the map key is time; we just take the superset of all polygons
-		Geometry shape = null ;
-		for ( Double[][] pairs : map.values() ) {
-			List<Coord> coords = new ArrayList<>() ;
-			for (Double[] pair : pairs) {
-				coords.add(transform.transform(new Coord(pair[0], pair[1])));
-			}
-			// Fix for JTS #288 requires reduction to floating.
-			// https://github.com/locationtech/jts/issues/288#issuecomment-396647804
-			Geometry polygon = GeometryPrecisionReducer.reduce(
-					GeometryUtils.createGeotoolsPolygon(coords),
-					new PrecisionModel(PrecisionModel.FLOATING));
-			if ( shape==null ) {
-				shape = polygon;
-			} else {
-				shape = shape.union(polygon);
-			}
-		}
-		return shape;
 	}
 
 	public final double getTime() {
