@@ -185,8 +185,10 @@ public class PhoenixGridModel implements DataSource<Geometry> {
 			if (nextTime != null) {
 				dataServer.registerTimedUpdate(PerceptList.EMBERS_DATA, this, Time.convertTime(nextTime, Time.TimestepUnit.SECONDS, timestepUnit));
 			}
-			logger.info("sending embers data at time {} : {}", timestep, shape);
+			logger.info("sending embers data at time {}", timestep);
+			logger.debug("sending embers data: {}", shape);
  			return shape;
+
 		} else if (PerceptList.FIRE_DATA.equals(dataType)) {
 			SortedMap<Double, Geometry> shapes = fire.subMap(0.0, time);
 			Geometry shape = getGeometry(shapes);
@@ -198,7 +200,8 @@ public class PhoenixGridModel implements DataSource<Geometry> {
 			if (nextTime != null) {
 				dataServer.registerTimedUpdate(PerceptList.FIRE_DATA, this, Time.convertTime(nextTime, Time.TimestepUnit.SECONDS, timestepUnit));
 			}
-			logger.info("sending fire data at time {} : {}", timestep, shape);
+			logger.info("sending fire data at time {}", timestep);
+			logger.debug("sending fire data: {}", shape);
  			return shape;
 
 		}
