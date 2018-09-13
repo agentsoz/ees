@@ -22,11 +22,14 @@ package io.github.agentsoz.ees;
  * #L%
  */
 
-import com.google.gson.Gson;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.PrecisionModel;
+import com.vividsolutions.jts.precision.GeometryPrecisionReducer;
 import io.github.agentsoz.dataInterface.DataServer;
 import io.github.agentsoz.dataInterface.DataSource;
 import io.github.agentsoz.util.Time;
 import io.github.agentsoz.util.evac.PerceptList;
+import org.geotools.geometry.jts.GeometryBuilder;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -39,33 +42,36 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 
-public class PhoenixGridModel implements DataSource<SortedMap<Double, Double[][]>> {
+public class PhoenixGridModel implements DataSource<Geometry> {
 
 	private final Logger logger = LoggerFactory.getLogger(PhoenixGridModel.class);
 
 	// Model options ni ESS config XML
+	private final String eGridGeoJson = "gridGeoJson";
 	private final String eFireGeoJson = "fireGeoJson";
 	private final String eEmbersGeoJson = "smokeGeoJson";
 	private final String eIgnitionHHMM = "ignitionHHMM";
 	// Model options' values
-	private String optFireShapefile = null;
-	private String optEmbersShapefile = null;
+	private String optGridGeoJsonFile = null;
 
 	private DataServer dataServer = null;
 	private Time.TimestepUnit timestepUnit = Time.TimestepUnit.SECONDS;
 	private double startTimeInSeconds = -1;
-	private double ignitionTimeInMins = 0;
+	private double ignitionTimeInSecs = 0;
 	private JSONObject json = null;
-	private double lastUpdateTimeInMinutes = -1;
+	private double lastFireUpdateInSecs = -1;
+	private double lastEmbersUpdateInSecs = -1;
+	private TreeMap<Double, Double[][]> fire;
 	private TreeMap<Double, Double[][]> embers;
 
 	public PhoenixGridModel() {
-
-		embers = new TreeMap<Double, Double[][]>();
+		fire = new TreeMap<>();
+		embers = new TreeMap<>();
 	}
 
     public PhoenixGridModel(Map<String, String> opts, DataServer dataServer) {
-		embers = new TreeMap<Double, Double[][]>();
+		fire = new TreeMap<>();
+		embers = new TreeMap<>();
 		this.dataServer = dataServer;
 		parse(opts);
     }
@@ -77,11 +83,14 @@ public class PhoenixGridModel implements DataSource<SortedMap<Double, Double[][]
 		for (String opt : opts.keySet()) {
 			logger.info("Found option: {}={}", opt, opts.get(opt));
 			switch(opt) {
+				case eGridGeoJson:
+					optGridGeoJsonFile = opts.get(opt);
+					break;
 				case eFireGeoJson:
-					optFireShapefile  = opts.get(opt);
+					logger.warn("Deprecated option {}, please use {} instead", eFireGeoJson, eGridGeoJson);
 					break;
 				case eEmbersGeoJson:
-					optEmbersShapefile = opts.get(opt);
+					logger.warn("Deprecated option {}, please use {} instead", eEmbersGeoJson, eGridGeoJson);
 					break;
 				case Config.eGlobalStartHhMm:
 					String[] tokens = opts.get(opt).split(":");
@@ -89,8 +98,8 @@ public class PhoenixGridModel implements DataSource<SortedMap<Double, Double[][]
 					break;
 				case eIgnitionHHMM:
 					String[] hhmm = opts.get(opt).split(":");
-					ignitionTimeInMins = Time.convertTime(Integer.parseInt(hhmm[0]), Time.TimestepUnit.HOURS, Time.TimestepUnit.MINUTES)
-							+ Time.convertTime(Integer.parseInt(hhmm[1]), Time.TimestepUnit.MINUTES, Time.TimestepUnit.MINUTES);
+					ignitionTimeInSecs = Time.convertTime(Integer.parseInt(hhmm[0]), Time.TimestepUnit.HOURS, Time.TimestepUnit.SECONDS)
+							+ Time.convertTime(Integer.parseInt(hhmm[1]), Time.TimestepUnit.MINUTES, Time.TimestepUnit.SECONDS);
 					break;
 				default:
 					logger.warn("Ignoring option: " + opt + "=" + opts.get(opt));
@@ -105,7 +114,7 @@ public class PhoenixGridModel implements DataSource<SortedMap<Double, Double[][]
 
 
 	@SuppressWarnings("unchecked")
-	public void loadPhoenixGeoJson(String file) throws FileNotFoundException, IOException, ParseException, java.text.ParseException {
+	public void loadPhoenixGridGeoJson(String file) throws FileNotFoundException, IOException, ParseException, java.text.ParseException {
 		logger.info("Loading GeoJSON file: " + file);
 		// Create the JSON parsor
 		JSONParser parser = new JSONParser();
@@ -119,21 +128,19 @@ public class PhoenixGridModel implements DataSource<SortedMap<Double, Double[][]
 			JSONObject feature = iterator.next();
 			JSONObject properties = (JSONObject) feature.get("properties");
 			JSONObject geometry = (JSONObject) feature.get("geometry");
-			String type = (String) geometry.get("type");
 			JSONArray jcoords = (JSONArray) geometry.get("coordinates");
-			Double[][] coordinates = new Double[0][2];
-			double hourOffset = (Double)properties.get("hour_spot");
-			double minutes = ignitionTimeInMins + Time.convertTime(hourOffset, Time.TimestepUnit.HOURS, Time.TimestepUnit.MINUTES);
-			if ("Polygon".equalsIgnoreCase(type)) {
+			Double[][] coordinates;
+			Double hourSpotOffset = (Double)properties.get("HOUR_SPOT");
+			Double hourBurntOffset = (Double)properties.get("HOUR_BURNT");
+			if (hourBurntOffset != null) {
+				double secs = Math.floor(ignitionTimeInSecs + Time.convertTime(hourBurntOffset, Time.TimestepUnit.HOURS, Time.TimestepUnit.SECONDS));
 				coordinates = getPolygonCoordinates(jcoords);
-				embers.put(minutes, coordinates);
-			} else if ("MultiPolygon".equalsIgnoreCase(type))  {
-				Iterator<JSONArray> it = jcoords.iterator();
-				while (it.hasNext()) {
-					coordinates = getPolygonCoordinates(it.next());
-					embers.put(minutes, coordinates);
-				}
-
+				fire.put(secs, coordinates);
+			}
+			if (hourSpotOffset != null) {
+				double secs = Math.floor(ignitionTimeInSecs + Time.convertTime(hourSpotOffset, Time.TimestepUnit.HOURS, Time.TimestepUnit.SECONDS));
+				coordinates = getPolygonCoordinates(jcoords);
+				embers.put(secs, coordinates);
 			}
 		}
 	}
@@ -161,38 +168,71 @@ public class PhoenixGridModel implements DataSource<SortedMap<Double, Double[][]
 		return result;
 	}
 	@Override
-	public SortedMap<Double, Double[][]> sendData(double timestep, String dataType) {
-		double time = Time.convertTime(timestep, timestepUnit, Time.TimestepUnit.MINUTES);
-		SortedMap<Double, Double[][]> shapes = embers.subMap(lastUpdateTimeInMinutes, time);
-		// Setting 'lastUpdateTimeInMinutes = time' below will mean that only the new embers shapes since the
-		// last update will be sent. However, this can cause problems for the model if the embers shapes are
-		// discontiguous. See https://github.com/agentsoz/bdi-abm-integration/issues/36.
-		// So instead, we send all the shapes up until now. This ensures that the state of the embers
-		// in the model will always be a union of all shapes from the start of embers.
-		// To send all shapes, just disable the lastUpdateTimeInMinutes update below
-		// lastUpdateTimeInMinutes = time;
-		Double nextTime = embers.higherKey(time);
-		if (nextTime != null) {
-			dataServer.registerTimedUpdate(PerceptList.EMBERS_DATA, this, Time.convertTime(nextTime, Time.TimestepUnit.MINUTES, timestepUnit));
-		}
-		logger.info("sending embers data at time={}", timestep);
-		logger.info( "{}{}", new Gson().toJson(shapes).substring(0,Math.min(new Gson().toJson(shapes).length(),200)),
-				"... use DEBUG to see full coordinates list") ;
-		logger.debug( "{}", new Gson().toJson(shapes)) ;
+	public Geometry sendData(double timestep, String dataType) {
+		double time = Time.convertTime(timestep, timestepUnit, Time.TimestepUnit.SECONDS);
+		if (PerceptList.EMBERS_DATA.equals(dataType)) {
+			Double lastTime = (embers.lowerKey(time) == null) ? -1.0 : embers.lowerKey(time);
+			SortedMap<Double, Double[][]> shapes = embers.subMap(lastTime, time+1); // +1 since toKey is exclusive and we want 'time' included
+			Geometry shape = getGeometry(shapes);
+			if (lastTime != -1.0) {
+				embers.remove(lastTime);
+			}
+			Double nextTime = embers.higherKey(time);
+			if (nextTime != null) {
+				dataServer.registerTimedUpdate(PerceptList.EMBERS_DATA, this, Time.convertTime(nextTime, Time.TimestepUnit.SECONDS, timestepUnit));
+			}
+			logger.info("sending embers data at time {} : {}", timestep, shape);
+			return shape;
+		} else if (PerceptList.FIRE_DATA.equals(dataType)) {
+			Double lastTime = (fire.lowerKey(time) == null) ? -1.0 : fire.lowerKey(time);
+			SortedMap<Double, Double[][]> shapes = fire.subMap(lastTime, time+1); // +1 since toKey is exclusive and we want 'time' included
+			Geometry shape = getGeometry(shapes);
+			if (lastTime != -1.0) {
+				fire.remove(lastTime);
+			}
+			Double nextTime = fire.higherKey(time);
+			if (nextTime != null) {
+				dataServer.registerTimedUpdate(PerceptList.FIRE_DATA, this, Time.convertTime(nextTime, Time.TimestepUnit.SECONDS, timestepUnit));
+			}
+			logger.info("sending fire data at time {} : {}", timestep, shape);
+			return shape;
 
-		return shapes;
+		}
+		return null;
+	}
+
+	private Geometry getGeometry(SortedMap<Double, Double[][]> shapes) {
+		Geometry shape = null ;
+		if (shapes != null && !shapes.isEmpty()) {
+			for (Double[][] pairs : shapes.values()) {
+				double[] flatArray = new double[pairs.length*2];
+				int i = 0;
+				for (Double[] pair : pairs) {
+					flatArray[i++] = pair[0];
+					flatArray[i++] = pair[1];
+				}
+				// Fix for JTS #288 requires reduction to floating.
+				// https://github.com/locationtech/jts/issues/288#issuecomment-396647804
+				Geometry polygon = GeometryPrecisionReducer.reduce(
+						new GeometryBuilder().polygon( flatArray ),
+						new PrecisionModel(PrecisionModel.FLOATING));
+				shape = (shape==null) ? polygon : shape.union(polygon);
+			}
+		}
+		return shape;
 	}
 
 	/**
 	 * Start publishing embers data
 	 */
 	public void start() {
-		if (optEmbersShapefile != null && !optEmbersShapefile.isEmpty()) {
+		if (optGridGeoJsonFile != null && !optGridGeoJsonFile.isEmpty()) {
 			try {
-				loadPhoenixGeoJson(optEmbersShapefile);
+				loadPhoenixGridGeoJson(optGridGeoJsonFile);
 				dataServer.registerTimedUpdate(PerceptList.EMBERS_DATA, this, startTimeInSeconds);
+				dataServer.registerTimedUpdate(PerceptList.FIRE_DATA, this, startTimeInSeconds);
 			} catch (Exception e) {
-				throw new RuntimeException("Could not load embers shapes from [" + optEmbersShapefile + "]", e);
+				throw new RuntimeException("Could not load phoenix grid shapes from [" + optGridGeoJsonFile + "]", e);
 			}
 		} else if (json==null) {
 			logger.warn("started but will be idle forever!!");

@@ -76,13 +76,13 @@ public class Run implements DataClient {
 
         // initialise the fire model and register it as an active data source
         {
-            log.info("Starting fire model");
+            log.info("Starting phoenix fire model (ISO)");
             PhoenixFireModule model = new PhoenixFireModule(cfg.getModelConfig(Config.eModelFire), dataServer);
             model.setTimestepUnit(Time.TimestepUnit.SECONDS);
             model.start();
         }
         {
-            log.info("Starting smoke model");
+            log.info("Starting phoenix fire model (GRID)");
             PhoenixGridModel model = new PhoenixGridModel(cfg.getModelConfig(Config.eModelFire), dataServer);
             model.setTimestepUnit(Time.TimestepUnit.SECONDS);
             model.start();
