@@ -169,7 +169,6 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
         parseArgs(params);
         // Create a new belief set to store memory
         BeliefSetField[] fields = {
-                new BeliefSetField("time", String.class, true),
                 new BeliefSetField("event", String.class, false),
                 new BeliefSetField("value", String.class, false),
         };
@@ -285,8 +284,8 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
 
     void memorise(String event, String data) {
         try {
-            addBelief(memory, Double.toString(time), event, data);
-            log("memory:" + String.format("%.0f", time) + ":" + event + ":" + data);
+            addBelief(memory, event, data);
+            log("memory:" + event + ":" + data);
         } catch (BeliefBaseException e) {
             throw new RuntimeException(e);
         }
