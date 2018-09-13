@@ -22,6 +22,7 @@ package io.github.agentsoz.ees;
  * #L%
  */
 
+import com.vividsolutions.jts.algorithm.ConvexHull;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.PrecisionModel;
 import com.vividsolutions.jts.precision.GeometryPrecisionReducer;
@@ -176,6 +177,7 @@ public class PhoenixGridModel implements DataSource<Geometry> {
 		if (PerceptList.EMBERS_DATA.equals(dataType)) {
 			SortedMap<Double, Geometry> shapes = embers.subMap(0.0, time);
 			Geometry shape = getGeometry(shapes);
+			shape = (shape==null) ? null : new ConvexHull(shape).getConvexHull();
 			while (shapes.size() > 1) {
 				embers.remove(embers.firstKey());
 			}
@@ -188,6 +190,7 @@ public class PhoenixGridModel implements DataSource<Geometry> {
 		} else if (PerceptList.FIRE_DATA.equals(dataType)) {
 			SortedMap<Double, Geometry> shapes = fire.subMap(0.0, time);
 			Geometry shape = getGeometry(shapes);
+			shape = (shape==null) ? null : new ConvexHull(shape).getConvexHull();
 			while (shapes.size() > 1) {
 				fire.remove(fire.firstKey());
 			}
@@ -196,7 +199,7 @@ public class PhoenixGridModel implements DataSource<Geometry> {
 				dataServer.registerTimedUpdate(PerceptList.FIRE_DATA, this, Time.convertTime(nextTime, Time.TimestepUnit.SECONDS, timestepUnit));
 			}
 			logger.info("sending fire data at time {} : {}", timestep, shape);
-			return shape;
+ 			return shape;
 
 		}
 		return null;
@@ -206,12 +209,11 @@ public class PhoenixGridModel implements DataSource<Geometry> {
 		Geometry polygon = null;
 		if (shapes != null && !shapes.isEmpty()) {
 			for (Geometry shape : shapes.values()) {
-				polygon = (polygon==null) ? shape : polygon.union(shape);
 				// Fix for JTS #288 requires reduction to floating.
 				// https://github.com/locationtech/jts/issues/288#issuecomment-396647804
-				polygon = GeometryPrecisionReducer.reduce(
-						polygon,
-						new PrecisionModel(PrecisionModel.FLOATING));
+				polygon = (polygon==null) ?
+						shape :
+						GeometryPrecisionReducer.reduce(polygon.union(shape),new PrecisionModel(PrecisionModel.FLOATING));
 			}
 		}
 		return polygon;
@@ -219,14 +221,18 @@ public class PhoenixGridModel implements DataSource<Geometry> {
 
 	private Geometry getGeometryFromSquareCentroids(Double[][] pairs, double squareSideInMetres) {
 		Geometry shape = null ;
-		double[] flatArray = new double[pairs.length*2];
 		int i = 0;
 		for (Double[] pair : pairs) {
-			flatArray[i++] = pair[0];
-			flatArray[i++] = pair[1];
+			double delta = squareSideInMetres/2;
+			Geometry gridCell = new GeometryBuilder().box(
+					pair[0]-delta, pair[1]-delta,
+					pair[0]+delta, pair[1]+delta);
+			// Fix for JTS #288 requires reduction to floating.
+			// https://github.com/locationtech/jts/issues/288#issuecomment-396647804
+			shape = (shape==null) ?
+					gridCell :
+					GeometryPrecisionReducer.reduce(shape.union(gridCell),new PrecisionModel(PrecisionModel.FLOATING));
 		}
-		Geometry polygon = new GeometryBuilder().polygon(flatArray);
-		shape = (shape==null) ? polygon : shape.union(polygon);
 		return shape;
 	}
 
