@@ -48,12 +48,13 @@ public class PhoenixGridModel implements DataSource<Geometry> {
 
 	// Model options ni ESS config XML
 	private final String eGridGeoJson = "gridGeoJson";
+	private final String eGridSquareSideInMetres = "gridSquareSideInMetres";
 	private final String eFireGeoJson = "fireGeoJson";
 	private final String eEmbersGeoJson = "smokeGeoJson";
 	private final String eIgnitionHHMM = "ignitionHHMM";
 	// Model options' values
 	private String optGridGeoJsonFile = null;
-
+	private double optGridSquareSideInMetres = 180;
 	private DataServer dataServer = null;
 	private Time.TimestepUnit timestepUnit = Time.TimestepUnit.SECONDS;
 	private double startTimeInSeconds = -1;
@@ -61,8 +62,8 @@ public class PhoenixGridModel implements DataSource<Geometry> {
 	private JSONObject json = null;
 	private double lastFireUpdateInSecs = -1;
 	private double lastEmbersUpdateInSecs = -1;
-	private TreeMap<Double, Double[][]> fire;
-	private TreeMap<Double, Double[][]> embers;
+	private TreeMap<Double, Geometry> fire;
+	private TreeMap<Double, Geometry> embers;
 
 	public PhoenixGridModel() {
 		fire = new TreeMap<>();
@@ -85,6 +86,9 @@ public class PhoenixGridModel implements DataSource<Geometry> {
 			switch(opt) {
 				case eGridGeoJson:
 					optGridGeoJsonFile = opts.get(opt);
+					break;
+				case eGridSquareSideInMetres:
+					optGridSquareSideInMetres = Double.parseDouble(opts.get(opt));
 					break;
 				case eFireGeoJson:
 					logger.warn("Deprecated option {}, please use {} instead", eFireGeoJson, eGridGeoJson);
@@ -129,18 +133,17 @@ public class PhoenixGridModel implements DataSource<Geometry> {
 			JSONObject properties = (JSONObject) feature.get("properties");
 			JSONObject geometry = (JSONObject) feature.get("geometry");
 			JSONArray jcoords = (JSONArray) geometry.get("coordinates");
-			Double[][] coordinates;
 			Double hourSpotOffset = (Double)properties.get("HOUR_SPOT");
 			Double hourBurntOffset = (Double)properties.get("HOUR_BURNT");
 			if (hourBurntOffset != null) {
+				Geometry shape = getGeometryFromSquareCentroids(getPolygonCoordinates(jcoords), optGridSquareSideInMetres);
 				double secs = Math.floor(ignitionTimeInSecs + Time.convertTime(hourBurntOffset, Time.TimestepUnit.HOURS, Time.TimestepUnit.SECONDS));
-				coordinates = getPolygonCoordinates(jcoords);
-				fire.put(secs, coordinates);
+				fire.put(secs, shape);
 			}
 			if (hourSpotOffset != null) {
+				Geometry shape = getGeometryFromSquareCentroids(getPolygonCoordinates(jcoords), optGridSquareSideInMetres);
 				double secs = Math.floor(ignitionTimeInSecs + Time.convertTime(hourSpotOffset, Time.TimestepUnit.HOURS, Time.TimestepUnit.SECONDS));
-				coordinates = getPolygonCoordinates(jcoords);
-				embers.put(secs, coordinates);
+				embers.put(secs, shape);
 			}
 		}
 	}
@@ -171,24 +174,22 @@ public class PhoenixGridModel implements DataSource<Geometry> {
 	public Geometry sendData(double timestep, String dataType) {
 		double time = Time.convertTime(timestep, timestepUnit, Time.TimestepUnit.SECONDS);
 		if (PerceptList.EMBERS_DATA.equals(dataType)) {
-			Double lastTime = (embers.lowerKey(time) == null) ? -1.0 : embers.lowerKey(time);
-			SortedMap<Double, Double[][]> shapes = embers.subMap(lastTime, time+1); // +1 since toKey is exclusive and we want 'time' included
+			SortedMap<Double, Geometry> shapes = embers.subMap(0.0, time);
 			Geometry shape = getGeometry(shapes);
-			if (lastTime != -1.0) {
-				embers.remove(lastTime);
+			while (shapes.size() > 1) {
+				embers.remove(embers.firstKey());
 			}
 			Double nextTime = embers.higherKey(time);
 			if (nextTime != null) {
 				dataServer.registerTimedUpdate(PerceptList.EMBERS_DATA, this, Time.convertTime(nextTime, Time.TimestepUnit.SECONDS, timestepUnit));
 			}
 			logger.info("sending embers data at time {} : {}", timestep, shape);
-			return shape;
+ 			return shape;
 		} else if (PerceptList.FIRE_DATA.equals(dataType)) {
-			Double lastTime = (fire.lowerKey(time) == null) ? -1.0 : fire.lowerKey(time);
-			SortedMap<Double, Double[][]> shapes = fire.subMap(lastTime, time+1); // +1 since toKey is exclusive and we want 'time' included
+			SortedMap<Double, Geometry> shapes = fire.subMap(0.0, time);
 			Geometry shape = getGeometry(shapes);
-			if (lastTime != -1.0) {
-				fire.remove(lastTime);
+			while (shapes.size() > 1) {
+				fire.remove(fire.firstKey());
 			}
 			Double nextTime = fire.higherKey(time);
 			if (nextTime != null) {
@@ -201,24 +202,31 @@ public class PhoenixGridModel implements DataSource<Geometry> {
 		return null;
 	}
 
-	private Geometry getGeometry(SortedMap<Double, Double[][]> shapes) {
-		Geometry shape = null ;
+	private Geometry getGeometry(SortedMap<Double, Geometry> shapes) {
+		Geometry polygon = null;
 		if (shapes != null && !shapes.isEmpty()) {
-			for (Double[][] pairs : shapes.values()) {
-				double[] flatArray = new double[pairs.length*2];
-				int i = 0;
-				for (Double[] pair : pairs) {
-					flatArray[i++] = pair[0];
-					flatArray[i++] = pair[1];
-				}
+			for (Geometry shape : shapes.values()) {
+				polygon = (polygon==null) ? shape : polygon.union(shape);
 				// Fix for JTS #288 requires reduction to floating.
 				// https://github.com/locationtech/jts/issues/288#issuecomment-396647804
-				Geometry polygon = GeometryPrecisionReducer.reduce(
-						new GeometryBuilder().polygon( flatArray ),
+				polygon = GeometryPrecisionReducer.reduce(
+						polygon,
 						new PrecisionModel(PrecisionModel.FLOATING));
-				shape = (shape==null) ? polygon : shape.union(polygon);
 			}
 		}
+		return polygon;
+	}
+
+	private Geometry getGeometryFromSquareCentroids(Double[][] pairs, double squareSideInMetres) {
+		Geometry shape = null ;
+		double[] flatArray = new double[pairs.length*2];
+		int i = 0;
+		for (Double[] pair : pairs) {
+			flatArray[i++] = pair[0];
+			flatArray[i++] = pair[1];
+		}
+		Geometry polygon = new GeometryBuilder().polygon(flatArray);
+		shape = (shape==null) ? polygon : shape.union(polygon);
 		return shape;
 	}
 
