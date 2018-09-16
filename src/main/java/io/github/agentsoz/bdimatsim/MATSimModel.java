@@ -347,6 +347,10 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 				setupCarGlobalInformationRouting();
 				setupCarFreespeedRouting();
 
+				// analysis:
+				this.addControlerListenerBinding().to( OutputEvents2TravelDiaries.class );
+
+
 				install( new EvacQSimModule(MATSimModel.this, controller.getEvents()) ) ;
 
 				this.addMobsimListenerBinding().toInstance((MobsimInitializedListener) e -> {

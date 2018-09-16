@@ -38,6 +38,11 @@
 			<version>0.10.0</version>
 		</dependency>
 		<dependency>
+			<groupId>org.matsim.contrib</groupId>
+			<artifactId>travelsummary</artifactId>
+			<version>0.10.0</version>
+		</dependency>
+		<dependency>
 			<groupId>io.github.agentsoz</groupId>
 			<artifactId>bdi-abm</artifactId>
 			<version>2.0.2-SNAPSHOT</version>
