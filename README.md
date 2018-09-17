@@ -3,17 +3,12 @@
 
 ## Dependencies
 
-This program depends on the following libraries:
-
-*  BDI-ABM-Integration (`../../integrations/bdi-abm`)
-*  BDI-MATSIM-Integration (`../../integrations/bdi-matsim`)
-*  ABM-JILL-Integration (`http://agentsoz.github.io/jill`)
-*  UTIL `../../util`
+This program depends on the BDI-ABM integration framework: https://github.com/agentsoz/bdi-abm-integration.
 
 
 ## How to build
 
-In the `examples/bushfire` directory, do:
+To build, first clone the BDI-ABM repository alongside this repository. Then do:
 ```
 make
 ```
@@ -22,6 +17,10 @@ This will produce the executable JAR in `target/ees-x.y.z-SNAPSHOT.jar`.
 
 ## How to run
 
+To run an example scenario do:
+```concept
+make run
+```
 A scenario is a simulation configuration, specified in a XML file. To run a different scenario, you specify a different configuration file at startup.
 
 The package includes several scenarios:
@@ -31,13 +30,13 @@ The package includes several scenarios:
 
 ## Known Issues
 
-*   See https://github.com/agentsoz/bdi-abm-integration/issues.
+*   See https://github.com/agentsoz/ees/issues.
 
 
 ## License
 
-BDI-ABM Integration Library
-Copyright (C) 2014, 2015 by its authors. See AUTHORS file.
+Emergency Evacuation Simulator
+Copyright (C) 2014-2018 by its authors. See AUTHORS file.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License as published by
