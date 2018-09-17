@@ -214,11 +214,27 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>license-maven-plugin</artifactId>
+        <version>1.14</version>
         <configuration>
+          <organizationName>AgentsOZ</organizationName>
+          <copyrightOwners>by its authors. See AUTHORS file.</copyrightOwners>
+          <projectName>Emergency Evacuation Simulator</projectName>
+          <inceptionYear>2014</inceptionYear>
+          <licenseName>lgpl_v3</licenseName>
           <roots>
            <root>src/main/java</root>
           </roots>
         </configuration>
+        <executions>
+          <execution>
+            <id>first</id>
+            <goals>
+              <goal>update-project-license</goal>
+              <goal>update-file-header</goal>
+            </goals>
+            <phase>process-sources</phase>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
