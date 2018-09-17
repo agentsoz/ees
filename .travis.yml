@@ -13,8 +13,8 @@ before_install:
   #- cd $HOME/matsim/matsim && mvn clean install -DskipTests -Dmaven.test.skip -Dmaven.javadoc.skip -Dsource.skip -Dassembly.skipAssembly=true
   #
   # BDI-ABM Integration config
-  # 
-  - cd $HOME && git clone --depth=50 --branch=dev https://github.com/agentsoz/bdi-abm-integration.git
+  #
+  - cd $HOME && git clone --depth=1 --branch=master https://github.com/agentsoz/bdi-abm-integration.git
   - cd $HOME/bdi-abm-integration && git checkout ees && git log -1
   - cd $HOME/bdi-abm-integration && mvn clean install -N
   - cd $HOME/bdi-abm-integration/util && mvn clean install -DskipTests
@@ -24,7 +24,7 @@ before_install:
   #
   # Jill config
   #
-  - cd $HOME && git clone --depth=50 --branch=dev https://github.com/agentsoz/jill.git
+  - cd $HOME && git clone --depth=1 --branch=dev https://github.com/agentsoz/jill.git
   - cd $HOME/jill && git checkout dev && git log -1
   #- cd $HOME/jill && git reset --hard 2510bed0037cc44520f2627ef85a4fee369e74a9 # fix commit to use
   - cd $HOME/jill && mvn clean install -N
@@ -32,7 +32,7 @@ before_install:
   #
   # Diffusion Model config
   #
-  - cd $HOME && git clone --depth=50 --branch=master https://github.com/agentsoz/diffusion-model.git
+  - cd $HOME && git clone --depth=1 --branch=master https://github.com/agentsoz/diffusion-model.git
   - cd $HOME/diffusion-model && git log -1
   - cd $HOME/diffusion-model && mvn clean install -DskipTests
 
