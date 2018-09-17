@@ -15,7 +15,7 @@ before_install:
   # BDI-ABM Integration config
   #
   - cd $HOME && git clone --depth=1 --branch=master https://github.com/agentsoz/bdi-abm-integration.git
-  - cd $HOME/bdi-abm-integration && git checkout ees && git log -1
+  - cd $HOME/bdi-abm-integration && git log -1
   - cd $HOME/bdi-abm-integration && mvn clean install -N
   - cd $HOME/bdi-abm-integration/util && mvn clean install -DskipTests
   - cd $HOME/bdi-abm-integration/integrations/bdi-abm && mvn clean install -DskipTests
