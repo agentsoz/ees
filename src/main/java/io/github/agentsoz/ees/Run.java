@@ -2,7 +2,7 @@ package io.github.agentsoz.ees;
 
 /*-
  * #%L
- * BDI-ABM Integration Package
+ * Emergency Evacuation Simulator
  * %%
  * Copyright (C) 2014 - 2018 by its authors. See AUTHORS file.
  * %%
@@ -21,6 +21,7 @@ package io.github.agentsoz.ees;
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
  * #L%
  */
+
 
 import io.github.agentsoz.bdiabm.QueryPerceptInterface;
 import io.github.agentsoz.bdiabm.data.PerceptContent;

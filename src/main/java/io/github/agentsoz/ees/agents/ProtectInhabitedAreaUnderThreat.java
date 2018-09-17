@@ -1,10 +1,10 @@
 package io.github.agentsoz.ees.agents;
 
-/*
+/*-
  * #%L
- * Jill Cognitive Agents Platform
+ * Emergency Evacuation Simulator
  * %%
- * Copyright (C) 2014 - 2016 by its authors. See AUTHORS file.
+ * Copyright (C) 2014 - 2018 by its authors. See AUTHORS file.
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -21,6 +21,7 @@ package io.github.agentsoz.ees.agents;
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
  * #L%
  */
+
 
 import io.github.agentsoz.abmjill.genact.EnvironmentAction;
 import io.github.agentsoz.bdimatsim.MATSimModel.EvacRoutingMode;

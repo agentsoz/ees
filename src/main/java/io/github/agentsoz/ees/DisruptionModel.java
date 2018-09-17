@@ -1,10 +1,10 @@
 package io.github.agentsoz.ees;
 
-/*
+/*-
  * #%L
- * BDI-ABM Integration Package
+ * Emergency Evacuation Simulator
  * %%
- * Copyright (C) 2014 - 2016 by its authors. See AUTHORS file.
+ * Copyright (C) 2014 - 2018 by its authors. See AUTHORS file.
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -21,6 +21,7 @@ package io.github.agentsoz.ees;
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
  * #L%
  */
+
 
 import com.google.gson.Gson;
 import io.github.agentsoz.dataInterface.DataServer;

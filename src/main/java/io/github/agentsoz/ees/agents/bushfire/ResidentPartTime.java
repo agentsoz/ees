@@ -2,7 +2,7 @@ package io.github.agentsoz.ees.agents.bushfire;
 
 /*-
  * #%L
- * BDI-ABM Integration Package
+ * Emergency Evacuation Simulator
  * %%
  * Copyright (C) 2014 - 2018 by its authors. See AUTHORS file.
  * %%
@@ -21,6 +21,7 @@ package io.github.agentsoz.ees.agents.bushfire;
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
  * #L%
  */
+
 
 import io.github.agentsoz.jill.lang.AgentInfo;
 
