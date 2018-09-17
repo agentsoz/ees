@@ -221,9 +221,6 @@
           <projectName>Emergency Evacuation Simulator</projectName>
           <inceptionYear>2014</inceptionYear>
           <licenseName>lgpl_v3</licenseName>
-          <roots>
-           <root>src/main/java</root>
-          </roots>
         </configuration>
         <executions>
           <execution>
