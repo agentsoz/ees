@@ -72,7 +72,7 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
     private boolean willGoHomeAfterVisitingDependents = false;
     private boolean willGoHomeBeforeLeaving = false;
     private double smokeVisualValue = 0.3;
-    private double fireVisualValue = 0.4;
+    private double fireVisualValue = 1.0;
     private double socialMessageEvacNowValue = 0.3;
 
 

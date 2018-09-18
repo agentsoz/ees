@@ -72,8 +72,8 @@
       <!-- Congestion parameters used by vehicles to decide if they are stuck in congestion. See issues
            https://github.com/agentsoz/bdi-abm-integration/issues/8 and
            https://github.com/agentsoz/bdi-abm-integration/issues/35 -->
-      <opt id="congestionEvaluationInterval">180</opt>
-      <opt id="congestionToleranceThreshold">0.33</opt>
+      <opt id="congestionEvaluationInterval">300</opt>
+      <opt id="congestionToleranceThreshold">0.5</opt>
       <opt id="congestionReactionProbability">0.10</opt>
     </model>
 
@@ -97,7 +97,7 @@
       <!-- Messaging JSON file  -->
       <opt id="fileJson">scenarios/surf-coast-shire/population-subgroups/scenario_messages_staged_directed.json</opt>
       <!-- Zones GeoJSON file mapping zone IDs to polygon shapes -->
-      <opt id="fileZonesGeoJson">scenarios/surf-coast-shire/population-subgroups/Anglesea_SA1s_WSG84.json</opt>
+      <opt id="fileZonesGeoJson">scenarios/surf-coast-shire/population-subgroups/SCS_SA1s_WSG84.json</opt>
     </model>
 
   </models>
