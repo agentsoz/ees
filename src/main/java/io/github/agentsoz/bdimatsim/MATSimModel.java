@@ -322,6 +322,8 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 			// default action:
 			agentManager.getAgent(agentId).getActionHandler().registerBDIAction(
 					ActionList.DRIVETO, new DRIVETODefaultActionHandlerV2(this) );
+			agentManager.getAgent(agentId).getActionHandler().registerBDIAction(
+					ActionList.REPLAN_CURRENT_DRIVETO, new ReplanDriveToDefaultActionHandlerV2(this) );
 		}
 		{
 			ActivityParams params = new ActivityParams("driveTo");
