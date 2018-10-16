@@ -24,7 +24,6 @@ package io.github.agentsoz.bdimatsim;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.events.*;
@@ -63,12 +62,13 @@ public final class EventsMonitorRegistry implements LinkEnterEventHandler, LinkL
 	 * pass on to where.  We would not want all BDI agents subscribe to all events directly.  kai, nov'17
 	 */
 	public enum MonitoredEventType {
-		EnteredNode,
-		ExitedNode,
+		AgentInCongestion,
 		ArrivedAtDestination,
 		DepartedDestination,
 		EndedActivity,
-		AgentInCongestion, NextLinkBlocked
+		EnteredLink,
+		ExitedLink,
+		NextLinkBlocked
 	}
 	
 	private static final Logger log = LoggerFactory.getLogger(EventsMonitorRegistry.class ) ;
@@ -170,10 +170,10 @@ public final class EventsMonitorRegistry implements LinkEnterEventHandler, LinkL
 		} else if (ev instanceof NextLinkBlockedEvent && monitors.containsKey(NextLinkBlocked)) {
 			handleNextLinkBlockedEvent((NextLinkBlockedEvent) ev);
 
-		} else if (ev instanceof LinkEnterEvent && monitors.containsKey(EnteredNode)) {
+		} else if (ev instanceof LinkEnterEvent && monitors.containsKey(EnteredLink)) {
 			handleLinkEnterEvent((LinkEnterEvent) ev);
 
-		} else if (ev instanceof LinkLeaveEvent && monitors.containsKey(ExitedNode)) {
+		} else if (ev instanceof LinkLeaveEvent && monitors.containsKey(ExitedLink)) {
 			handleLinkLeaveEvent((LinkLeaveEvent) ev);
 
 		} else if (ev instanceof PersonArrivalEvent && monitors.containsKey(ArrivedAtDestination)) {
@@ -237,7 +237,7 @@ public final class EventsMonitorRegistry implements LinkEnterEventHandler, LinkL
 		LinkEnterEvent event = ev;
 		Id<Person> driverId = this.getDriverOfVehicle(event.getVehicleId());
 		Gbl.assertNotNull(driverId);
-		Monitor monitor = monitors.get(EnteredNode).get(driverId);
+		Monitor monitor = monitors.get(EnteredLink).get(driverId);
 		if (monitor != null) {
 			if (monitor.getAgentId().equals(driverId) && event.getLinkId().equals(monitor.getLinkId())) {
 				if (monitor.getHandler().handle(monitor.getAgentId(), monitor.getLinkId(), monitor.getEvent())) {
@@ -245,8 +245,8 @@ public final class EventsMonitorRegistry implements LinkEnterEventHandler, LinkL
 				}
 			}
 		}
-		synchronized (monitors.get(EnteredNode)) {
-			monitors.get(EnteredNode).entrySet().removeAll(toRemove.entrySet());
+		synchronized (monitors.get(EnteredLink)) {
+			monitors.get(EnteredLink).entrySet().removeAll(toRemove.entrySet());
 		}
 	}
 
@@ -255,7 +255,7 @@ public final class EventsMonitorRegistry implements LinkEnterEventHandler, LinkL
 		LinkLeaveEvent event = ev;
 		Id<Person> driverId = this.getDriverOfVehicle(event.getVehicleId());
 		Gbl.assertNotNull(driverId);
-		Monitor monitor = monitors.get(ExitedNode).get(driverId);
+		Monitor monitor = monitors.get(ExitedLink).get(driverId);
 		if (monitor != null) {
 			if (monitor.getAgentId().equals(event.getDriverId()) && monitor.getLinkId().equals(event.getLinkId())) {
 				if (monitor.getHandler().handle(monitor.getAgentId(), monitor.getLinkId(), monitor.getEvent())) {
@@ -263,8 +263,8 @@ public final class EventsMonitorRegistry implements LinkEnterEventHandler, LinkL
 				}
 			}
 		}
-		synchronized (monitors.get(ExitedNode)) {
-			monitors.get(ExitedNode).entrySet().removeAll(toRemove.entrySet());
+		synchronized (monitors.get(ExitedLink)) {
+			monitors.get(ExitedLink).entrySet().removeAll(toRemove.entrySet());
 		}
 	}
 
