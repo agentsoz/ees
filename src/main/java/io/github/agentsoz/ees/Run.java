@@ -160,6 +160,7 @@ public class Run implements DataClient {
             synchronized (sequenceLock) {
                 dataServer.stepTime();
             }
+            // TODO: time should instead be passed to the models during stepTime()
             dataServer.publish(PerceptList.TIME, dataServer.getTime());
         }
 
