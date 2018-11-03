@@ -372,16 +372,20 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 			}
 
 			private void setupCarFreespeedRouting() {
+				// memorize the routing mode:
 				String routingMode = EvacRoutingMode.carFreespeed.name() ;
 
 				addRoutingModuleBinding(routingMode).toProvider(new NetworkRoutingProvider(TransportMode.car,routingMode)) ;
+				// (above line means that when "routingMode" is requested, a "network" routing will be provided, and the route
+				// will be executed as "car" in the mobsim).
 
-				// freespeed travel time:
 				addTravelTimeBinding(routingMode).to(FreeSpeedTravelTime.class);
+				// (this defines which travel time this routing mode should use.  Here: free speed))
 
-				// travel disutility includes the fire penalty. If no data arrives, it makes no difference.
 				TravelDisutilityFactory disutilityFactory = new EvacTravelDisutility.Factory(penaltyFactorsOfLinks);
 				addTravelDisutilityFactoryBinding(routingMode).toInstance(disutilityFactory);
+				// (this defines which travel disutility this routing mode should use.  Here: a specific evac travel disutility, which takes
+				// penalty factors as input.  The penalty factors are filled from fire data; if there is no fire data, they remain empty)
 			}
 
 			private void setupCarGlobalInformationRouting() {
