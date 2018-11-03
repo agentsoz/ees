@@ -24,7 +24,6 @@ package io.github.agentsoz.bdimatsim;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.events.*;
@@ -73,24 +72,22 @@ public final class EventsMonitorRegistry implements LinkEnterEventHandler, LinkL
 	
 	private static final Logger log = LoggerFactory.getLogger(EventsMonitorRegistry.class ) ;
 
-	private Map<MonitoredEventType, Map<Id<Person>,Monitor>> monitors = Collections.synchronizedMap(new LinkedHashMap<>());
+	private final Map<MonitoredEventType, Map<Id<Person>,Monitor>> monitors = Collections.synchronizedMap(new LinkedHashMap<>());
 
-    private Map<MonitoredEventType, Map<Id<Person>,Monitor>> toAdd = Collections.synchronizedMap(new LinkedHashMap<>());
+	private final Map<MonitoredEventType, Map<Id<Person>,Monitor>> toAdd = Collections.synchronizedMap(new LinkedHashMap<>());
     
-    public EventsMonitorRegistry() {
+	public EventsMonitorRegistry() {
     	// supposedly works like this:
 //		((ch.qos.logback.classic.Logger) log).setLevel(ch.qos.logback.classic.Level.DEBUG);
 		// so the slf4j interface does not have these commands, but the logback implementation does.
 		// kai, based on pointer by dhirendra
 	}
 	
-	@Override
-	public void handleEvent(VehicleEntersTrafficEvent event) {
+	@Override public void handleEvent(VehicleEntersTrafficEvent event) {
 		vehicle2Driver.handleEvent(event);
 	}
 	
-	@Override
-	public void handleEvent(VehicleLeavesTrafficEvent event) {
+	@Override public void handleEvent(VehicleLeavesTrafficEvent event) {
 		vehicle2Driver.handleEvent(event);
 	}
 	
@@ -100,39 +97,27 @@ public final class EventsMonitorRegistry implements LinkEnterEventHandler, LinkL
 	
 	private Vehicle2DriverEventHandler vehicle2Driver = new Vehicle2DriverEventHandler() ;
 
-	@Override
-	public final void reset(int iteration) {
+	@Override public final void reset(int iteration) { }
 
-	}
+	@Override public final void handleEvent(LinkEnterEvent event) { callRegisteredHandlers(event); }
 
-	@Override
-	public final void handleEvent(LinkEnterEvent event) {
-		callRegisteredHandlers(event);
-		//linkEnterEventsMap.put( event.getVehicleId(), event.getTime() ) ;
-	}
-
-	@Override
-	public void handleEvent(LinkLeaveEvent event) {
+	@Override public void handleEvent(LinkLeaveEvent event) {
 		callRegisteredHandlers(event);
 	}
 
-	@Override
-	public final void handleEvent(PersonDepartureEvent event) {
+	@Override public final void handleEvent(PersonDepartureEvent event) {
 		callRegisteredHandlers(event);
 	}
 
-	@Override
-	public final void handleEvent(PersonArrivalEvent event) {
+	@Override public final void handleEvent(PersonArrivalEvent event) {
 		callRegisteredHandlers(event);
 	}
 	
-	@Override
-	public void handleEvent(ActivityEndEvent event) {
+	@Override public void handleEvent(ActivityEndEvent event) {
 		callRegisteredHandlers(event);
 	}
 
-	@Override
-	public void handleEvent( Event event ) {
+	@Override public void handleEvent( Event event ) {
 		if (event instanceof NextLinkBlockedEvent || event instanceof AgentInCongestionEvent ) {
 			callRegisteredHandlers(event);
 		}
@@ -187,16 +172,15 @@ public final class EventsMonitorRegistry implements LinkEnterEventHandler, LinkL
 		}
 	}
 
-	private void handleAgentInCongestionEvent(AgentInCongestionEvent ev) {
+	private void handleAgentInCongestionEvent( AgentInCongestionEvent ev) {
 		Map<Id<Person>, Monitor> toRemove = new HashMap<>();
-		AgentInCongestionEvent event = ev;
-		Id<Person> driverId = this.getDriverOfVehicle(event.getVehicleId());
+		Id<Person> driverId = this.getDriverOfVehicle( ev.getVehicleId());
 		Gbl.assertNotNull(driverId);
 		Monitor monitor = monitors.get(AgentInCongestion).get(driverId);
 		if (monitor != null) {
 			log.debug("handling AgentInCongestion event");
 			if (monitor.getAgentId().equals(driverId)) {
-				if (monitor.getHandler().handle(monitor.getAgentId(), event.getCurrentLinkId(), monitor.getEvent())) {
+				if (monitor.getHandler().handle(monitor.getAgentId(), ev.getCurrentLinkId(), monitor.getEvent())) {
 					toRemove.put(driverId, monitor);
 					Monitor arrivedMonitor = monitors.get(ArrivedAtDestination).get(driverId);
 					if (arrivedMonitor != null) {
@@ -310,12 +294,11 @@ public final class EventsMonitorRegistry implements LinkEnterEventHandler, LinkL
 
 	private void handleActivityEndEvent(ActivityEndEvent ev) {
 		Map<Id<Person>, Monitor> toRemove = new HashMap<>();
-		ActivityEndEvent event = ev;
-		Id<Person> driverId = event.getPersonId();
+		Id<Person> driverId = ev.getPersonId();
 		Gbl.assertNotNull(driverId);
 		Monitor monitor = monitors.get(EndedActivity).get(driverId);
 		if (monitor != null) {
-			if (monitor.getAgentId().equals(event.getPersonId()) && monitor.getLinkId().equals(event.getLinkId())) {
+			if (monitor.getAgentId().equals( ev.getPersonId()) && monitor.getLinkId().equals( ev.getLinkId())) {
 				if (monitor.getHandler().handle(monitor.getAgentId(), monitor.getLinkId(), monitor.getEvent())) {
 					toRemove.put(driverId,monitor);
 				}

@@ -33,31 +33,33 @@ import org.slf4j.LoggerFactory;
 
 import java.io.PrintStream;
 
-class EmberWriter {
-	private static final Logger log = LoggerFactory.getLogger(EmberWriter.class);
-
+class Shape2XyWriter {
+	private static final Logger log = LoggerFactory.getLogger( Shape2XyWriter.class);
+	
 	private final Config config;
+	private final String name;
 	private PrintStream writer;
-	EmberWriter(Config config1 ) {
+	Shape2XyWriter( Config config1, final String name ) {
 		config = config1 ;
+		this.name = name;
 	}
-	void write(double now, Geometry shape) {
-		if (writer == null) {
-			final String filename = config.controler().getOutputDirectory() + "/output_emberCoords.txt.gz";
-			log.info("writing ember data to " + filename);
+	void write(double now, Geometry fire) {
+		if ( writer == null) {
+			final String filename = config.controler().getOutputDirectory() + "/output_" + name + "Coords.txt.gz";
+			log.info("writing " + name + " data to " + filename);
 			writer = IOUtils.getPrintStream(filename);
 			writer.println("time\tx\ty");
 		}
 		// can't do this earlier since the output directories are not yet prepared by the controler.  kai, dec'17
 		
 		Envelope env = new Envelope();
-		env.expandToInclude(shape.getEnvelopeInternal());
-		double gridsize = 400.;
+		env.expandToInclude(fire.getEnvelopeInternal());
+		double gridsize = 200.;
 		boolean atLeastOnePixel = false;
 		StringBuilder str = new StringBuilder();
 		for (double yy = env.getMinY(); yy <= env.getMaxY(); yy += gridsize) {
 			for (double xx = env.getMinX(); xx <= env.getMaxX(); xx += gridsize) {
-				if (shape.contains(new GeometryFactory().createPoint(new Coordinate(xx, yy)))) {
+				if (fire.contains(new GeometryFactory().createPoint(new Coordinate(xx, yy)))) {
 					str.append(now);
 					str.append("\t");
 					str.append(xx);
@@ -69,11 +71,10 @@ class EmberWriter {
 				}
 			}
 		}
-		if (atLeastOnePixel) {
+		if(atLeastOnePixel) {
 			writer.print(str);
-
 		} else {
-			final String strn = now + "\t" + shape.getCentroid().getX() + "\t" + shape.getCentroid().getY();
+			final String strn = now + "\t" + fire.getCentroid().getX() + "\t" + fire.getCentroid().getY();
 			writer.println(strn);
 		}
 	}

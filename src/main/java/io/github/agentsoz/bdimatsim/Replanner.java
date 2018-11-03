@@ -64,7 +64,7 @@ public final class Replanner {
 	private EditPlans editPlans ;
 	
 	@Inject
-	Replanner(QSim qSim2, TripRouter tripRouter, Map<String,TravelTime> travelTimes ) {
+	Replanner(QSim qSim2, /*TripRouter tripRouter,*/ Map<String,TravelTime> travelTimes ) {
 		Scenario scenario = qSim2.getScenario();
 		this.travelTimes = travelTimes ;
 		{
@@ -73,6 +73,7 @@ public final class Replanner {
 			LeastCostPathCalculator pathCalculator = new FastAStarLandmarksFactory().createPathCalculator(scenario.getNetwork(), travelDisutility, travelTime);
 			this.editRoutes = new EditRoutes(scenario.getNetwork(), pathCalculator, scenario.getPopulation().getFactory());
 		}
+		final TripRouter tripRouter = null;
 		this.editTrips = new EditTrips(tripRouter, qSim2.getScenario() ) ;
 		this.editPlans = new EditPlans(qSim2, tripRouter, editTrips, scenario.getPopulation().getFactory() ) ;
 	}

@@ -2,9 +2,9 @@ package io.github.agentsoz.bdimatsim;
 
 import java.util.*;
 
+import ch.qos.logback.classic.Level;
 import com.google.gson.Gson;
 import com.vividsolutions.jts.geom.*;
-import com.vividsolutions.jts.precision.GeometryPrecisionReducer;
 import io.github.agentsoz.bdiabm.QueryPerceptInterface;
 import io.github.agentsoz.bdiabm.data.ActionContent;
 import io.github.agentsoz.bdiabm.data.PerceptContent;
@@ -115,8 +115,8 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 
 
 	private EvacConfig evacConfig = null;
-	private FireWriter fireWriter = null;
-	private EmberWriter emberWriter = null;
+	private Shape2XyWriter fireWriter = null;
+	private Shape2XyWriter emberWriter = null;
 	private DisruptionWriter disruptionWriter = null;
 	private Config config = null;
 	private boolean configLoaded = false;
@@ -135,7 +135,9 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 	/**
 	 * This is in fact a MATSim class that provides a view onto the QSim.
 	 */
-	private final MobsimDataProvider mobsimDataProvider = new MobsimDataProvider() ;
+	@Inject private MobsimDataProvider mobsimDataProvider ;
+	@Inject private Replanner replanner;
+	// yy This is working because MATSimModel is bound somewhere.
 
 	private QSim qSim;
 
@@ -147,7 +149,6 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 	private PlayPauseSimulationControl playPause;
 	private final EventsMonitorRegistry eventsMonitors  = new EventsMonitorRegistry() ;
 	private Thread matsimThread;
-	@Inject private Replanner replanner;
 
 	private boolean scenarioLoaded = false ;
 
@@ -214,7 +215,7 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 	}
 
 	public MATSimModel( String[] args) {
-//		((ch.qos.logback.classic.Logger)log).setLevel(Level.DEBUG);
+		((ch.qos.logback.classic.Logger)log).setLevel( Level.DEBUG);
 
 		config = ConfigUtils.loadConfig( args[0] ) ;
 
@@ -263,8 +264,8 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 
 		this.agentManager = new PAAgentManager(eventsMonitors) ;
 
-		this.fireWriter = new FireWriter( config ) ;
-		this.emberWriter = new EmberWriter( config ) ;
+		this.fireWriter = new Shape2XyWriter( config, "fire" ) ;
+		this.emberWriter = new Shape2XyWriter( config, "ember" ) ;
 		this.disruptionWriter = new DisruptionWriter( config ) ;
 
 	}
@@ -368,7 +369,7 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 
 				// congestion detection in {@link EvacAgentTracker}
 
-				this.addMobsimListenerBinding().toInstance( mobsimDataProvider );
+				this.addMobsimListenerBinding().to( MobsimDataProvider.class ) ;
 			}
 
 			private void setupCarFreespeedRouting() {
@@ -611,7 +612,7 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 		}
 	}
 
-	private void processEmbersData(Geometry data, double now, Scenario scenario, EmberWriter emberWriter) {
+	private void processEmbersData(Geometry data, double now, Scenario scenario, Shape2XyWriter emberWriter) {
 		log.debug("received embers data: {}", data);
 		Geometry embers = data;
 		if (embers == null) {
@@ -771,7 +772,7 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 	
 	private void processFireData(Geometry data, double now, Map<Id<Link>, Double> penaltyFactorsOfLinks,
 										   Scenario scenario, Map<Id<Link>, Double> penaltyFactorsOfLinksForEmergencyVehicles,
-										   FireWriter fireWriter) {
+										   Shape2XyWriter fireWriter) {
 
 		log.debug("received fire data: {}", data);
 		Geometry fire = data;

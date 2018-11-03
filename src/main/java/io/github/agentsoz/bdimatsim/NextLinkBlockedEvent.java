@@ -33,7 +33,7 @@ public final class NextLinkBlockedEvent extends Event {
 	private final Id<Person> driverId;
 	private final Id<Link> currentLinkId;
 	
-	public NextLinkBlockedEvent(double time, Id<Vehicle> vehicleId, Id<Person> driverId, Id<Link> currentLinkId, Id<Link> blockedLinkId) {
+	NextLinkBlockedEvent( double time, Id<Vehicle> vehicleId, Id<Person> driverId, Id<Link> currentLinkId, Id<Link> blockedLinkId ) {
 		super(time);
 		this.driverId = driverId ;
 		this.currentLinkId = currentLinkId;

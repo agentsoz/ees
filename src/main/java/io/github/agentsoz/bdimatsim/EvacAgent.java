@@ -51,8 +51,8 @@ import org.matsim.api.core.v01.population.Person;
 import org.matsim.api.core.v01.population.Plan;
 import org.matsim.api.core.v01.population.PlanElement;
 import org.matsim.core.api.experimental.events.EventsManager;
-import org.matsim.core.gbl.Gbl;
 import org.matsim.core.mobsim.framework.*;
+import org.matsim.core.mobsim.qsim.agents.AgentFactory;
 import org.matsim.core.mobsim.qsim.agents.BasicPlanAgentImpl;
 import org.matsim.core.mobsim.qsim.agents.HasModifiablePlan;
 import org.matsim.core.mobsim.qsim.agents.PlanBasedDriverAgentImpl;
@@ -67,6 +67,8 @@ import org.matsim.vehicles.Vehicle;
 import org.matsim.withinday.utils.EditTrips;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.inject.Inject;
 
 class EvacAgent implements MobsimDriverAgent, HasPerson, PlanAgent, HasModifiablePlan {
 
@@ -294,12 +296,12 @@ class EvacAgent implements MobsimDriverAgent, HasPerson, PlanAgent, HasModifiabl
 		return basicAgentDelegate.getModifiablePlan() ;
 	}
 	@Override
-	public Facility<? extends Facility<?>> getCurrentFacility() {
+	public Facility getCurrentFacility() {
 		return this.basicAgentDelegate.getCurrentFacility();
 	}
 
 	@Override
-	public Facility<? extends Facility<?>> getDestinationFacility() {
+	public Facility getDestinationFacility() {
 		return this.basicAgentDelegate.getDestinationFacility();
 	}
 
@@ -318,5 +320,22 @@ class EvacAgent implements MobsimDriverAgent, HasPerson, PlanAgent, HasModifiabl
 	public int getCurrentLinkIndex() {
 		return this.basicAgentDelegate.getCurrentLinkIndex() ;
 	}
-
+	
+	public static class Factory implements AgentFactory {
+	
+		private final Netsim simulation;
+		@Inject TripRouter tripRouter ;
+	
+		@Inject
+		public Factory( final Netsim simulation) {
+			this.simulation = simulation;
+		}
+	
+		@Override
+		public MobsimAgent createMobsimAgentFromPerson(final Person p) {
+	//		MobsimDriverPassengerAgent agent = TransitAgent.createTransitAgent(p, this.simulation);
+			return new EvacAgent( p.getSelectedPlan(), this.simulation, tripRouter );
+		}
+	
+	}
 }

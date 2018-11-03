@@ -123,12 +123,12 @@ final class MATSimStubAgent implements MobsimDriverAgent{
 		throw new RuntimeException("not implemented") ;
 	}
 	@Override
-	public Facility<? extends Facility<?>> getCurrentFacility() {
+	public Facility getCurrentFacility() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 	@Override
-	public Facility<? extends Facility<?>> getDestinationFacility() {
+	public Facility getDestinationFacility() {
 		// TODO Auto-generated method stub
 		return null;
 	}
