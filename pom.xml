@@ -41,12 +41,15 @@
 		<dependency>
 			<groupId>org.matsim</groupId>
 			<artifactId>matsim</artifactId>
-			<version>0.11.0-SNAPSHOT</version>
+			<!--<version>0.11.0-SNAPSHOT</version>-->
+			<version>0.11.0-2018w44</version>
+			<!--(weekly release)-->
 		</dependency>
 		<dependency>
 			<groupId>org.matsim.contrib</groupId>
 			<artifactId>travelsummary</artifactId>
-			<version>0.10.0</version>
+			<version>0.11.0-SNAPSHOT</version>
+			<!--(does not (yet?) exist as weekly release)-->
 		</dependency>
 		<dependency>
 			<groupId>io.github.agentsoz</groupId>

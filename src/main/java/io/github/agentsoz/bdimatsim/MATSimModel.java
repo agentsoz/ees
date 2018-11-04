@@ -36,7 +36,17 @@ import org.matsim.core.gbl.Gbl;
 import org.matsim.core.mobsim.framework.MobsimAgent;
 import org.matsim.core.mobsim.framework.PlayPauseSimulationControl;
 import org.matsim.core.mobsim.framework.listeners.MobsimInitializedListener;
+import org.matsim.core.mobsim.qsim.AbstractQSimModule;
 import org.matsim.core.mobsim.qsim.QSim;
+import org.matsim.core.mobsim.qsim.agents.AgentFactory;
+import org.matsim.core.mobsim.qsim.qnetsimengine.ConfigurableQNetworkFactory;
+import org.matsim.core.mobsim.qsim.qnetsimengine.DefaultTurnAcceptanceLogic;
+import org.matsim.core.mobsim.qsim.qnetsimengine.QLaneI;
+import org.matsim.core.mobsim.qsim.qnetsimengine.QLinkI;
+import org.matsim.core.mobsim.qsim.qnetsimengine.QNetwork;
+import org.matsim.core.mobsim.qsim.qnetsimengine.QNetworkFactory;
+import org.matsim.core.mobsim.qsim.qnetsimengine.QVehicle;
+import org.matsim.core.mobsim.qsim.qnetsimengine.TurnAcceptanceLogic;
 import org.matsim.core.network.NetworkChangeEvent;
 import org.matsim.core.network.NetworkUtils;
 import org.matsim.core.population.routes.RouteUtils;
@@ -48,6 +58,7 @@ import org.matsim.core.trafficmonitoring.FreeSpeedTravelTime;
 import org.matsim.core.utils.geometry.CoordinateTransformation;
 import org.matsim.core.utils.geometry.GeometryUtils;
 import org.matsim.core.utils.geometry.transformations.TransformationFactory;
+import org.matsim.vehicles.Vehicle;
 import org.matsim.withinday.mobsim.MobsimDataProvider;
 import org.matsim.withinday.trafficmonitoring.WithinDayTravelTime;
 
@@ -160,7 +171,18 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 	private io.github.agentsoz.bdiabm.v2.AgentDataContainer adc = new io.github.agentsoz.bdiabm.v2.AgentDataContainer();
 
 	public MATSimModel(Map<String, String> opts, DataServer dataServer) {
-		this(opts.get(eConfigFile), opts.get(eOutputDir), opts.get(eGlobalStartHhMm));
+		this( new String [] {
+				opts.get( eConfigFile ) ,
+							  MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR , opts.get( eOutputDir) ,
+							  eGlobalStartHhMm , opts.get( eGlobalStartHhMm )
+		} ) ;
+
+		// yyyy this is so far NOT the same as what is was originally, see below, since the code below
+		// could pass "null" which the new code cannot.  (However, the "null" was not really handled
+		// correctly in the receiving code so it needs to be repaired ...).  kai, nov'18
+		
+//		this(opts.get(eConfigFile), opts.get(eOutputDir), opts.get(eGlobalStartHhMm));
+		
 		registerDataServer(dataServer);
 		if (opts == null) {
 			return;
@@ -204,15 +226,15 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 		}
 	}
 
-	public MATSimModel(String matSimFile, String matsimOutputDirectory, String startHHMM) {
-		// not the most elegant way of doing this ...
-		// yy maybe just pass the whole string from above and take apart ourselves?
-		this(
-		matsimOutputDirectory==null ?
-				new String[]{matSimFile} :
-				new String[]{ matSimFile, MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR, matsimOutputDirectory, eGlobalStartHhMm, startHHMM }
-		);
-	}
+//	public MATSimModel(String matSimFile, String matsimOutputDirectory, String startHHMM) {
+//		// not the most elegant way of doing this ...
+//		// yy maybe just pass the whole string from above and take apart ourselves?
+//		this(
+//		matsimOutputDirectory==null ?
+//				new String[]{matSimFile} :
+//				new String[]{ matSimFile, MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR, matsimOutputDirectory, eGlobalStartHhMm, startHHMM }
+//		);
+//	}
 
 	public MATSimModel( String[] args) {
 		((ch.qos.logback.classic.Logger)log).setLevel( Level.DEBUG);
@@ -343,19 +365,31 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 				controller.getEvents().addHandler(handler);
 			}
 		}
+		
+		// infrastructure at QSim level (separating line not fully logical)
+		controller.addOverridingQSimModule( new AbstractQSimModule() {
+			@Override protected void configureQSim() {
+				this.bind( AgentFactory.class ).to( EvacAgent.Factory.class ) ;
+				this.bind(Replanner.class).in( Singleton.class ) ;
+				this.bind( MATSimModel.class ).toInstance( MATSimModel.this );
+			}
+		} );
 
+		// infrastructure at Controler level (separating line not fully logical)
 		controller.addOverridingModule(new AbstractModule(){
 			@Override public void install() {
+				
+				this.bind( MobsimDataProvider.class ).in( Singleton.class ) ;
+				this.addMobsimListenerBinding().to( MobsimDataProvider.class ) ;
+				// (pulls mobsim from Listener Event.  maybe not so good ...)
+
 				setupEmergencyVehicleRouting();
 				setupCarGlobalInformationRouting();
 				setupCarFreespeedRouting();
 
 				// analysis:
 				this.addControlerListenerBinding().to( OutputEvents2TravelDiaries.class );
-
-
-				install( new EvacQSimModule(MATSimModel.this, controller.getEvents()) ) ;
-
+				
 				this.addMobsimListenerBinding().toInstance((MobsimInitializedListener) e -> {
 					// memorize the qSim:
 					qSim = (QSim) e.getQueueSimulation() ;
@@ -367,9 +401,41 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 					//						initialiseVisualisedAgents() ;
 				}) ;
 
-				// congestion detection in {@link EvacAgentTracker}
-
-				this.addMobsimListenerBinding().to( MobsimDataProvider.class ) ;
+				
+				// define the turn acceptance logic that reacts to blocked links:
+				{
+					ConfigurableQNetworkFactory qNetworkFactory = new ConfigurableQNetworkFactory( controller.getEvents(), scenario );
+					qNetworkFactory.setTurnAcceptanceLogic( new TurnAcceptanceLogic() {
+						TurnAcceptanceLogic delegate = new DefaultTurnAcceptanceLogic();
+						
+						@Override
+						public AcceptTurn isAcceptingTurn( Link currentLink, QLaneI currentLane, Id<Link> nextLinkId, QVehicle veh, QNetwork qNetwork, double now ) {
+							
+							AcceptTurn accept = delegate.isAcceptingTurn( currentLink, currentLane, nextLinkId, veh, qNetwork, now );
+							
+							QLinkI nextQLink = qNetwork.getNetsimLink( nextLinkId );
+							double speed = nextQLink.getLink().getFreespeed( now );
+							if ( speed < 0.1 ) { // m/s
+								accept = AcceptTurn.WAIT;
+								Id<Person> driverId = veh.getDriver().getId();
+								Id<Link> currentLinkId = veh.getCurrentLink().getId();
+								Id<Vehicle> vehicleId = veh.getId();
+								Id<Link> blockedLinkId = nextLinkId;
+								controller.getEvents().processEvent( new NextLinkBlockedEvent( now, vehicleId,
+										driverId, currentLinkId, blockedLinkId ) );
+								// yyyy this event is now generated both here and in the agent.  In general,
+								// it should be triggered in the agent, giving the bdi time to compute.  However, the
+								// blockage may happen between there and arriving at the node ...  kai, dec'17
+								
+							}
+//							log.debug( "time=" + MATSimModel.this.getTime() + ";\t fromLink=" + currentLink.getId() +
+//										     ";\ttoLink=" + nextLinkId + ";\tanswer=" + accept.name() );
+							return accept;
+						}
+					} );
+					bind( QNetworkFactory.class ).toInstance( qNetworkFactory );
+				}
+				
 			}
 
 			private void setupCarFreespeedRouting() {
@@ -730,7 +796,8 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 	private List<Id<Person>> getPersonsWithin(Scenario scenario, Geometry shape) {
 		List<Id<Person>> personsWithin = new ArrayList<>();
 		for(Id<Person> personId : scenario.getPopulation().getPersons().keySet()) {
-			MobsimAgent agent = this.getMobsimDataProvider().getAgent(personId);
+			Gbl.assertNotNull( mobsimDataProvider );
+			MobsimAgent agent = mobsimDataProvider.getAgent(personId);
 			if (agent == null) {
 				log.error("MobsimAgent {} not found, should never happen!!", personId);
 				continue;

@@ -41,13 +41,13 @@ import org.slf4j.LoggerFactory;
 
 import static io.github.agentsoz.bdimatsim.EventsMonitorRegistry.MonitoredEventType.*;
 
-/**
+/**<p>
  * Acts as a simple listener for Matsim agent events then
  *         passes to MATSimAgentManager
+ *         </p>
  *
  * @author Edmund Kemsley
  */
-
 public final class EventsMonitorRegistry implements LinkEnterEventHandler, LinkLeaveEventHandler,
 				   PersonArrivalEventHandler, PersonDepartureEventHandler, ActivityEndEventHandler,
 				   VehicleEntersTrafficEventHandler, VehicleLeavesTrafficEventHandler, BasicEventHandler
@@ -55,14 +55,19 @@ public final class EventsMonitorRegistry implements LinkEnterEventHandler, LinkL
 	
 	private Map<Id<Vehicle>,Double> linkEnterEventsMap = new LinkedHashMap<>() ;
 
-	/**
+	/**<p>
 	 * if these event types were sitting in bdi-abm, I would understand this.  But given that they are sitting here,
 	 * why not use the matsim events directly?  kai, nov'17
 	 * Well, in the end this here is an events concentrator/filter: it listens to all events once, and decides which ones to
 	 * pass on to where.  We would not want all BDI agents subscribe to all events directly.  kai, nov'17
+	 * </p><p>
+	 *       yy But why can't we use MATSim event names directly? kai, nov'18
+	 * </p>
 	 */
 	public enum MonitoredEventType {
+		@Deprecated // confusing nomenclature; corresponds to enter link in matsim
 		EnteredNode,
+		@Deprecated // confusing nomenclature; corresponds to exit link in matsim
 		ExitedNode,
 		ArrivedAtDestination,
 		DepartedDestination,

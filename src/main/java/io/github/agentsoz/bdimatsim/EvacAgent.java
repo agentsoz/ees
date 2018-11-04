@@ -252,10 +252,6 @@ class EvacAgent implements MobsimDriverAgent, HasPerson, PlanAgent, HasModifiabl
 		double now = simTimer.getTimeOfDay() ;
 		this.expectedLinkLeaveTime = link.getLength()/link.getFreespeed(now) ;
 	}
-	final double getExpectedLinkLeaveTime() {
-		return this.expectedLinkLeaveTime ;
-	}
-
 	@Override
 	public final Id<Link> chooseNextLinkId() {
 		return driverAgentDelegate.chooseNextLinkId();
@@ -281,16 +277,6 @@ class EvacAgent implements MobsimDriverAgent, HasPerson, PlanAgent, HasModifiabl
 		
 		return retVal ;
 	}
-
-	//	final Leg getCurrentLeg() {
-	//		return basicAgentDelegate.getCurrentLeg() ;
-	//	}
-	//	final int getCurrentLinkIndex() {
-	//		return basicAgentDelegate.getCurrentLinkIndex() ;
-	//	}
-	//	final int getCurrentPlanElementIndex() {
-	//		return basicAgentDelegate.getCurrentPlanElementIndex() ;
-	//	}
 	@Override public final Plan getModifiablePlan() {
 		this.planWasModified=true ;
 		return basicAgentDelegate.getModifiablePlan() ;
@@ -322,20 +308,10 @@ class EvacAgent implements MobsimDriverAgent, HasPerson, PlanAgent, HasModifiabl
 	}
 	
 	public static class Factory implements AgentFactory {
-	
-		private final Netsim simulation;
+		@Inject Netsim simulation;
 		@Inject TripRouter tripRouter ;
-	
-		@Inject
-		public Factory( final Netsim simulation) {
-			this.simulation = simulation;
-		}
-	
-		@Override
-		public MobsimAgent createMobsimAgentFromPerson(final Person p) {
-	//		MobsimDriverPassengerAgent agent = TransitAgent.createTransitAgent(p, this.simulation);
+		@Override public MobsimAgent createMobsimAgentFromPerson(final Person p) {
 			return new EvacAgent( p.getSelectedPlan(), this.simulation, tripRouter );
 		}
-	
 	}
 }
