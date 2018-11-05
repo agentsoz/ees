@@ -57,7 +57,7 @@
 	</logger>
 
 	<root>
-		<priority value="fatal"></priority> <!-- Adjust if needed -->
+		<priority value="warn"></priority> <!-- Adjust if needed -->
 		<appender-ref ref="stdout"/>
 		<appender-ref ref="stderr"/>
 	</root>
