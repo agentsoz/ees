@@ -47,6 +47,7 @@ public class Anglesea12kTestStaged {
     public MatsimTestUtils utils = new MatsimTestUtils();
 
     @Test
+    @Ignore // in intellij, the annotation at the class level is not sufficient.  kai, nov'18
     public void testAnglesea12kStaged() {
 
         String[] args = {
