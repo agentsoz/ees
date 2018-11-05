@@ -197,7 +197,7 @@ public final class DRIVETODefaultActionHandler implements BDIActionHandler {
 		return true;
 	}
 	
-	private void printPlan(String str ,MobsimAgent agent1) {
+	static void printPlan(String str ,MobsimAgent agent1) {
 		Plan plan = WithinDayAgentUtils.getModifiablePlan(agent1) ;
 		log.debug(str + plan ); ;
 		for ( PlanElement pe : plan.getPlanElements() ) {
