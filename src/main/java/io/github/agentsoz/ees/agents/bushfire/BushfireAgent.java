@@ -224,6 +224,9 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
             updateResponseBarometerSocialMessage(parameters);
         } else if (perceptID.equals(PerceptList.FIELD_OF_VIEW)) {
             updateResponseBarometerFieldOfViewPercept(parameters);
+            if (PerceptList.SIGHTED_FIRE.equalsIgnoreCase(parameters.toString())) {
+                handleFireVisual();
+            }
         } else if (perceptID.equals(PerceptList.ARRIVED)) {
             // do something
         } else if (perceptID.equals(PerceptList.BLOCKED)) {
@@ -232,6 +235,17 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
 
         // Now trigger a response as needed
         checkBarometersAndTriggerResponseAsNeeded();
+    }
+
+    private void handleFireVisual() {
+        // Always replan when we see fire
+        memorise(MemoryEventType.ACTIONED.name(), ActionList.REPLAN_CURRENT_DRIVETO);
+        EnvironmentAction action = new EnvironmentAction(Integer.toString(getId()),
+                ActionList.REPLAN_CURRENT_DRIVETO,
+                new Object[] {MATSimModel.EvacRoutingMode.carGlobalInformation});
+        setActiveEnvironmentAction(action);
+        post(action);
+
     }
 
     protected void checkBarometersAndTriggerResponseAsNeeded() {
