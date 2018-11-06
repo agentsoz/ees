@@ -1,0 +1,25 @@
+{
+  "help": [
+    "List of emergency messages to inject into the simulation",
+    "{",
+      "type: one of ADVICE, WATCH_AND_ACT, EVACUATE_NOW",
+      "broadcastHHMM : the time in HHMM format when this mesage is to be sent",
+      "broadcastZones: list of zones IDs to which this message should be sent",
+    "}"
+  ],
+
+  "spatialReferenceEPSG" : "EPSG:32754",
+
+  "messages" : [
+    {
+      "type" : "EVACUATE_NOW",
+      "content" : "Waurn Ponds,789654,5764865,Evacuate now if safe to do so",
+      "broadcastHHMM" : "1530",
+      "broadcastZones" : {
+        "20303104905": null,
+        "20303104906": null,
+        "20303104909": null,
+        "20303104910": null}
+    }
+  ]
+}
