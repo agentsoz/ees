@@ -32,8 +32,8 @@
 
 	<module name="network">
 		<param name="inputNetworkFile" value="../mount_alexander_shire_network_2018.xml.gz" />
-		<param name= "timeVariantNetwork" value= "true" />
-		<param name= "inputChangeEventsFile" value= "scenario_matsim_network_change_events.xml.gz" />
+		<param name= "timeVariantNetwork" value= "false" />
+		<!--<param name= "inputChangeEventsFile" value= "scenario_matsim_network_change_events.xml.gz" />-->
 	</module>
 
 	<module name="plans">
