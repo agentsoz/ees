@@ -237,7 +237,9 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 //	}
 
 	public MATSimModel( String[] args) {
-		((ch.qos.logback.classic.Logger)log).setLevel( Level.DEBUG);
+		// Log level should be set in logback.xml, see
+		// https://github.com/agentsoz/ees/blob/a769eb9497c444beac7cf823bfae05764eb06356/src/main/resources/logback.xml#L39
+		//((ch.qos.logback.classic.Logger)log).setLevel( Level.DEBUG);
 
 		config = ConfigUtils.loadConfig( args[0] ) ;
 
