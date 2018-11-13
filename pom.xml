@@ -69,9 +69,8 @@
       <groupId>org.matsim</groupId>
       <artifactId>matsim</artifactId>
       <type>test-jar</type>
-      <!--<version>0.9.0</version>-->
-      <!--<version>0.10.0-nov17</version>-->
-      <version>0.10.0</version>
+      <!-- <version>0.10.0</version> -->
+      <version>0.11.0-2018w44</version>
       <scope>test</scope>
     </dependency>
     <!-- logging framework -->
