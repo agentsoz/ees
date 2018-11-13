@@ -36,6 +36,7 @@
 
 
 	<logger name="io.github.agentsoz" level="info" />
+	<logger name="io.github.agentsoz.bdimatsim.MATSimModel" level="info" />
 
 	<root level="error">
 		<appender-ref ref="STDOUT" />

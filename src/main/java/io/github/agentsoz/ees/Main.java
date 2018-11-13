@@ -104,7 +104,11 @@ public class Main {
 		// initialise the messaging module
 		initializeAndStartMessagingModel(dataServer);
 
-		MATSimModel matsimModel = new MATSimModel( SimpleConfig.getMatSimFile(), matsimOutputDirectory, null );
+//		MATSimModel matsimModel = new MATSimModel( SimpleConfig.getMatSimFile(), matsimOutputDirectory, null );
+		MATSimModel matsimModel = new MATSimModel( new String [] {
+				SimpleConfig.getMatSimFile() ,
+				MATSimModel.MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR , matsimOutputDirectory
+		} ) ;
 
 		// --- do some things for which you need a handle to matsim:
 		matsimModel.registerDataServer(dataServer);
@@ -550,7 +554,7 @@ public class Main {
 						try {
 							SimpleConfig.setCongestionEvaluationInterval(Double.parseDouble(vals[0]));
 							SimpleConfig.setCongestionToleranceThreshold(Double.parseDouble(vals[1]));
-							SimpleConfig.setCongestionReactionProbability(Double.parseDouble(vals[2]));
+							SimpleConfig.setCongestionReactionProbability( Double.parseDouble( vals[ 2 ] ) );
 
 						} catch (Exception e) {
 							System.err.println("Could not parse congestion config '"
