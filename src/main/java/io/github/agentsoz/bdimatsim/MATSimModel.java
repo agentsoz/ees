@@ -600,11 +600,15 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 	}
 
 	@Override public void receiveData(double time, String dataType, Object data) {
-		if ( time+1 < getTime() || time-1 > getTime() ) {
-			log.error( "given time in receiveData is {}, simulation time is {}.  " +
-							   "Don't know what that means.  Will use given time.",
-					time, getTime() );
-		}
+		// receiveData can be called prior to runUntil for a new time step,
+		// which can be at a granularity greater than 1 sec. In that case
+		// time != getTime() is excepted so am disabling this check. DS,Nov18
+		//
+		//if ( time+1 < getTime() || time-1 > getTime() ) {
+		//	log.error( "given time in receiveData is {}, simulation time is {}.  " +
+		//					   "Don't know what that means.  Will use given time.",
+		//			time, getTime() );
+		//}
 		double now = time; //getTime() ;
 
 		switch( dataType ) {
