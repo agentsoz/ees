@@ -30,6 +30,20 @@
 
   <!-- global configuration sent to all models -->
   <global>
+    <!--
+      Simulation time step in seconds.
+      Each step equals this many seconds of simulated time;
+      higher values will make the simulation faster but 
+      at the expense of fidelity. For instance, when set to 60,
+      all models will progress in 1 minute steps. This means things like:
+      * BDI reasoning will trigger once per simulated minute
+      * Fire model will update fire shapes in 1 min jumps
+      * MATSim will simulate traffic for a minute between interruptions;
+        which means that vehicles might drive for instance into fire for
+        up to a minute before they realise this (upon control passing to BDI)
+        and do something about it.
+    -->
+    <opt id="timestepInSecs">30</opt>
     <!-- random seed to be used for all models; set to -1 if not used -->
     <opt id="randomSeed">12345</opt>
     <!-- coordinate reference system in EPSG format to be used for all models; see http://spatialreference.org -->

@@ -56,6 +56,9 @@ public class Run implements DataClient {
     private AgentDataContainer adc_from_abm = new AgentDataContainer();
     private final Object sequenceLock = new Object();
 
+    //  Defaults
+    private int optTimestep = 1; // in seconds
+
 
     public static void main(String[] args) {
         Thread.currentThread().setName("ees");
@@ -73,6 +76,7 @@ public class Run implements DataClient {
         // initialise the data server bus for passing data around using a publish/subscribe or pull mechanism
         DataServer dataServer = DataServer.getInstance(DATASERVER);
         dataServer.setTime(hhMmToS(cfg.getGlobalConfig(Config.eGlobalStartHhMm)));
+        dataServer.setTimeStep(optTimestep);
         dataServer.subscribe(this, PerceptList.AGENT_DATA_CONTAINER_FROM_BDI);
 
         // initialise the fire model and register it as an active data source
@@ -144,7 +148,12 @@ public class Run implements DataClient {
         matsimModel.setAgentDataContainer(adc_from_abm);
         jillmodel.useSequenceLock(sequenceLock);
         matsimModel.useSequenceLock(sequenceLock);
+
         while (true) {
+            // Wait till both models are done before incrementing time
+            synchronized (sequenceLock) {
+                dataServer.stepTime();
+            }
             // BDI to take control; the BDI thread should synchronize on adc_from_bdi
             dataServer.publish(PerceptList.TAKE_CONTROL_BDI, adc_from_abm);
             // Wait till both models are done before checking for termination condition
@@ -155,11 +164,6 @@ public class Run implements DataClient {
             }
             // ABM to take control; the ABM thread should synchronize on adc_from_abm
             dataServer.publish(PerceptList.TAKE_CONTROL_ABM, adc_from_bdi);
-
-            // Wait till both models are done before incrementing time
-            synchronized (sequenceLock) {
-                dataServer.stepTime();
-            }
         }
 
         // finish up
@@ -179,6 +183,9 @@ public class Run implements DataClient {
             switch(opt) {
                 case Config.eGlobalRandomSeed:
                     Global.setRandomSeed(Long.parseLong(opts.get(opt)));
+                    break;
+                case Config.eGlobalTimeStep:
+                    optTimestep = Integer.parseInt(opts.get(opt));
                     break;
                 default:
                     log.warn("Ignoring option: " + opt + "=" + opts.get(opt));
