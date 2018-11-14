@@ -24,6 +24,7 @@ package io.github.agentsoz.ees;
  */
 
 import io.github.agentsoz.util.TestUtils;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.matsim.testcases.MatsimTestUtils;
@@ -42,7 +43,7 @@ public class FallsFestival65kTest {
 
     @Rule
     public MatsimTestUtils utils = new MatsimTestUtils();
-
+    @Ignore
     @Test
     public void testFallsFestival65k() {
 

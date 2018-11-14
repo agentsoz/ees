@@ -24,7 +24,7 @@ package io.github.agentsoz.ees;
  */
 
 import io.github.agentsoz.util.TestUtils;
-import jdk.nashorn.internal.ir.annotations.Ignore;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.matsim.testcases.MatsimTestUtils;
@@ -40,10 +40,10 @@ public class TypicalSummerWeekday50kTest {
     // have tests in separate classes so that they run, at least under maven, in separate JVMs.  kai, nov'17
 
     private static final Logger log = LoggerFactory.getLogger(TypicalSummerWeekday50kTest.class);
-    @Ignore
+
     @Rule
     public MatsimTestUtils utils = new MatsimTestUtils();
-
+    @Ignore
     @Test
     public void testTypicalSummerWeekday50k() {
 
