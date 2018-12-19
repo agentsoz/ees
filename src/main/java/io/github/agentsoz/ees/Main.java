@@ -104,7 +104,7 @@ public class Main {
 		// initialise the messaging module
 		initializeAndStartMessagingModel(dataServer);
 
-//		MATSimModel matsimModel = new MATSimModel( SimpleConfig.getMatSimFile(), matsimOutputDirectory, null );
+//		MATSimEvacModel matsimModel = new MATSimEvacModel( SimpleConfig.getMatSimFile(), matsimOutputDirectory, null );
 		MATSimModel matsimModel = new MATSimModel( new String [] {
 				SimpleConfig.getMatSimFile() ,
 				MATSimModel.MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR , matsimOutputDirectory

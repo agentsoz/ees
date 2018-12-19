@@ -1,6 +1,26 @@
-package io.github.agentsoz.bdimatsim;
+package io.github.agentsoz.ees.matsim;
+
+import io.github.agentsoz.bdimatsim.MATSimModel.EvacRoutingMode;
+import org.matsim.api.core.v01.Scenario;
+import org.matsim.api.core.v01.population.Leg;
+import org.matsim.api.core.v01.population.Plan;
+import org.matsim.api.core.v01.population.PlanElement;
+import org.matsim.core.mobsim.framework.HasPerson;
+import org.matsim.core.mobsim.framework.MobsimAgent;
+import org.matsim.core.mobsim.qsim.QSim;
+import org.matsim.core.mobsim.qsim.agents.WithinDayAgentUtils;
+import org.matsim.core.network.NetworkChangeEvent;
+import org.matsim.core.router.FastAStarLandmarksFactory;
+import org.matsim.core.router.TripRouter;
+import org.matsim.core.router.util.*;
+import org.matsim.withinday.trafficmonitoring.WithinDayTravelTime;
+import org.matsim.withinday.utils.EditPlans;
+import org.matsim.withinday.utils.EditRoutes;
+import org.matsim.withinday.utils.EditTrips;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+import java.util.Map;
 
 /*
  * #%L
@@ -12,45 +32,17 @@ import javax.inject.Inject;
  * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Lesser Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Lesser Public
  * License along with this program.  If not, see
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
  * #L%
  */
-
-import ch.qos.logback.classic.Logger;
-import io.github.agentsoz.bdimatsim.MATSimModel.EvacRoutingMode;
-import org.matsim.api.core.v01.Scenario;
-import org.matsim.api.core.v01.network.Link;
-import org.matsim.api.core.v01.population.Leg;
-import org.matsim.api.core.v01.population.Plan;
-import org.matsim.api.core.v01.population.PlanElement;
-import org.matsim.core.gbl.Gbl;
-import org.matsim.core.mobsim.framework.HasPerson;
-import org.matsim.core.mobsim.framework.MobsimAgent;
-import org.matsim.core.mobsim.qsim.QSim;
-import org.matsim.core.mobsim.qsim.agents.WithinDayAgentUtils;
-import org.matsim.core.network.NetworkChangeEvent;
-import org.matsim.core.router.FastAStarLandmarksFactory;
-import org.matsim.core.router.TripRouter;
-import org.matsim.core.router.util.LeastCostPathCalculator;
-import org.matsim.core.router.util.TravelDisutility;
-import org.matsim.core.router.util.TravelDisutilityUtils;
-import org.matsim.core.router.util.TravelTime;
-import org.matsim.core.router.util.TravelTimeUtils;
-import org.matsim.withinday.trafficmonitoring.WithinDayTravelTime;
-import org.matsim.withinday.utils.EditPlans;
-import org.matsim.withinday.utils.EditRoutes;
-import org.matsim.withinday.utils.EditTrips;
-import org.slf4j.LoggerFactory;
-
-import java.util.Map;
 
 public final class Replanner {
 	// note that this is no longer meant to be extended for customization.  The "action recipes" now go directly into the classes

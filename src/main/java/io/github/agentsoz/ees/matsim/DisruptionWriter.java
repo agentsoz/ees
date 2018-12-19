@@ -1,4 +1,4 @@
-package io.github.agentsoz.bdimatsim;
+package io.github.agentsoz.ees.matsim;
 
 /*-
  * #%L
@@ -22,10 +22,6 @@ package io.github.agentsoz.bdimatsim;
  * #L%
  */
 
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
 import org.matsim.api.core.v01.Coord;
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.network.Link;
@@ -36,7 +32,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.PrintStream;
-import java.util.*;
+import java.util.PriorityQueue;
+import java.util.Queue;
 
 class DisruptionWriter {
 	private static final Logger log = LoggerFactory.getLogger(DisruptionWriter.class);

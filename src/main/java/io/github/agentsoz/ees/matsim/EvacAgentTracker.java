@@ -1,4 +1,4 @@
-package io.github.agentsoz.bdimatsim;
+package io.github.agentsoz.ees.matsim;
 
 /*
  * #%L
@@ -22,6 +22,7 @@ package io.github.agentsoz.bdimatsim;
  * #L%
  */
 
+import io.github.agentsoz.bdimatsim.AgentInCongestionEvent;
 import io.github.agentsoz.util.Global;
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.events.*;

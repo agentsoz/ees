@@ -1,13 +1,13 @@
-package io.github.agentsoz.bdimatsim;
+package io.github.agentsoz.ees.matsim;
 
 import java.util.*;
 
-import ch.qos.logback.classic.Level;
 import com.google.gson.Gson;
 import com.vividsolutions.jts.geom.*;
 import io.github.agentsoz.bdiabm.QueryPerceptInterface;
 import io.github.agentsoz.bdiabm.data.ActionContent;
 import io.github.agentsoz.bdiabm.data.PerceptContent;
+import io.github.agentsoz.bdimatsim.MATSimModel;
 import io.github.agentsoz.dataInterface.DataClient;
 import io.github.agentsoz.nonmatsim.PAAgent;
 import io.github.agentsoz.util.Disruption;
@@ -97,8 +97,8 @@ import javax.inject.Singleton;
 /**
  * @author QingyuChen, KaiNagel, Dhi Singh
  */
-public final class MATSimModel implements ABMServerInterface, QueryPerceptInterface, DataClient {
-	private static final Logger log = LoggerFactory.getLogger(MATSimModel.class);
+public final class MATSimEvacModel extends MATSimModel {
+	private static final Logger log = LoggerFactory.getLogger(MATSimEvacModel.class);
 	public static final String MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR = "--matsim-output-directory";
 
 	public static final String eGlobalStartHhMm = "startHHMM";
@@ -148,7 +148,7 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 	 */
 	@Inject private MobsimDataProvider mobsimDataProvider ;
 	@Inject private Replanner replanner;
-	// yy This is working because MATSimModel is bound somewhere.
+	// yy This is working because MATSimEvacModel is bound somewhere.
 
 	private QSim qSim;
 
@@ -170,7 +170,7 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 	private final Map<String, DataClient> dataListeners = createDataListeners();
 	private io.github.agentsoz.bdiabm.v2.AgentDataContainer adc = new io.github.agentsoz.bdiabm.v2.AgentDataContainer();
 
-	public MATSimModel(Map<String, String> opts, DataServer dataServer) {
+	public MATSimEvacModel(Map<String, String> opts, DataServer dataServer) {
 		this( new String [] {
 				opts.get( eConfigFile ) ,
 							  MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR , opts.get( eOutputDir) ,
@@ -226,7 +226,7 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 		}
 	}
 
-//	public MATSimModel(String matSimFile, String matsimOutputDirectory, String startHHMM) {
+//	public MATSimEvacModel(String matSimFile, String matsimOutputDirectory, String startHHMM) {
 //		// not the most elegant way of doing this ...
 //		// yy maybe just pass the whole string from above and take apart ourselves?
 //		this(
@@ -236,7 +236,7 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 //		);
 //	}
 
-	public MATSimModel( String[] args) {
+	public MATSimEvacModel(String[] args) {
 		// Log level should be set in logback.xml, see
 		// https://github.com/agentsoz/ees/blob/a769eb9497c444beac7cf823bfae05764eb06356/src/main/resources/logback.xml#L39
 		//((ch.qos.logback.classic.Logger)log).setLevel( Level.DEBUG);
@@ -373,7 +373,7 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 			@Override protected void configureQSim() {
 				this.bind( AgentFactory.class ).to( EvacAgent.Factory.class ) ;
 				this.bind(Replanner.class).in( Singleton.class ) ;
-				this.bind( MATSimModel.class ).toInstance( MATSimModel.this );
+				this.bind( MATSimEvacModel.class ).toInstance( MATSimEvacModel.this );
 			}
 		} );
 
@@ -430,7 +430,7 @@ public final class MATSimModel implements ABMServerInterface, QueryPerceptInterf
 								// blockage may happen between there and arriving at the node ...  kai, dec'17
 								
 							}
-//							log.debug( "time=" + MATSimModel.this.getTime() + ";\t fromLink=" + currentLink.getId() +
+//							log.debug( "time=" + MATSimEvacModel.this.getTime() + ";\t fromLink=" + currentLink.getId() +
 //										     ";\ttoLink=" + nextLinkId + ";\tanswer=" + accept.name() );
 							return accept;
 						}

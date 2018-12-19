@@ -1,4 +1,4 @@
-package io.github.agentsoz.bdimatsim;
+package io.github.agentsoz.ees.matsim;
 
 /*
  * #%L
@@ -22,13 +22,9 @@ package io.github.agentsoz.bdimatsim;
  * #L%
  */
 
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
-import io.github.agentsoz.util.Location;
 import org.matsim.api.core.v01.Coord;
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.Scenario;
@@ -42,10 +38,12 @@ import org.matsim.core.network.NetworkUtils;
 import org.matsim.core.population.PopulationUtils;
 import org.matsim.core.scenario.ScenarioUtils;
 import org.matsim.core.utils.geometry.GeometryUtils;
-
-import com.vividsolutions.jts.geom.LineString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 /**
@@ -238,17 +236,17 @@ public final class Utils {
 	static void parseAdditionalArguments(String[] args, Config config) {
 		for (int i = 1; i < args.length; i++) {
 			switch (args[i]) {
-				case MATSimModel.MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR:
+				case MATSimEvacModel.MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR:
 					if (i + 1 < args.length) {
 						i++;
 						log.info("setting matsim output directory to " + args[i] );
 						config.controler().setOutputDirectory( args[i] );
 					}
 					break;
-				case MATSimModel.eGlobalStartHhMm:
+				case MATSimEvacModel.eGlobalStartHhMm:
 					if (i + 1 < args.length) {
 						i++;
-						double secs = MATSimModel.convertTimeToSeconds(args[i].replace(":", ""));
+						double secs = MATSimEvacModel.convertTimeToSeconds(args[i].replace(":", ""));
 						config.qsim().setStartTime( (secs) > 3600 ? secs-3600 : secs  );
 						log.info("setting matsim start time to " + args[i]);
 					}

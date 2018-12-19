@@ -1,4 +1,4 @@
-package io.github.agentsoz.bdimatsim;
+package io.github.agentsoz.ees.matsim;
 
 /*
  * #%L
@@ -25,6 +25,7 @@ package io.github.agentsoz.bdimatsim;
 import io.github.agentsoz.bdiabm.data.ActionContent;
 import io.github.agentsoz.bdiabm.data.PerceptContent;
 import io.github.agentsoz.bdimatsim.EventsMonitorRegistry.MonitoredEventType;
+import io.github.agentsoz.bdimatsim.MATSimModel;
 import io.github.agentsoz.nonmatsim.BDIActionHandler;
 import io.github.agentsoz.nonmatsim.BDIPerceptHandler;
 import io.github.agentsoz.nonmatsim.PAAgent;
