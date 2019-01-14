@@ -232,7 +232,7 @@ public final class Utils {
 
 	}
 	
-	
+	/*
 	static void parseAdditionalArguments(String[] args, Config config) {
 		for (int i = 1; i < args.length; i++) {
 			switch (args[i]) {
@@ -256,7 +256,7 @@ public final class Utils {
 					}
 		}
 	}
-	
+	*/
 	static void penaltyMethod2(Geometry fire, Geometry buffer, double bufferWidth,
 									   Map<Id<Link>, Double> penaltyFactorsOfLinks, Scenario scenario ) {
 		// Starting thoughts:

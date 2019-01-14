@@ -33,6 +33,7 @@ import io.github.agentsoz.bdimatsim.Utils;
 import io.github.agentsoz.dataInterface.DataClient;
 import io.github.agentsoz.dataInterface.DataServer;
 import io.github.agentsoz.dataInterface.DataSource;
+import io.github.agentsoz.ees.matsim.MATSimEvacModel;
 import io.github.agentsoz.util.Global;
 import io.github.agentsoz.util.Time;
 import io.github.agentsoz.util.evac.PerceptList;
@@ -108,9 +109,9 @@ public class Run implements DataClient {
         }
         // initialise the MATSim model and register it as an active data source
         log.info("Creating MATSim model");
-        MATSimModel matsimModel = new MATSimModel(cfg.getModelConfig(Config.eModelMatsim), dataServer);
-        EvacConfig evacConfig = matsimModel.initialiseEvacConfig(matsimModel.loadAndPrepareConfig());
-        Scenario scenario = matsimModel.loadAndPrepareScenario() ;
+        MATSimEvacModel matsimEvacModel = new MATSimEvacModel(new MATSimModel(cfg.getModelConfig(Config.eModelMatsim), dataServer));
+        EvacConfig evacConfig = matsimEvacModel.initialiseEvacConfig(matsimEvacModel.loadAndPrepareConfig());
+        Scenario scenario = matsimEvacModel.loadAndPrepareScenario() ;
 
         // get BDI agents map from the MATSim population file
         log.info("Reading BDI agents from MATSim population file");
@@ -128,26 +129,26 @@ public class Run implements DataClient {
 
         // initialise the Jill model, register it as an active data source, and start it
         log.info("Starting Jill BDI model");
-        JillBDIModel jillmodel = new JillBDIModel(cfg.getModelConfig(Config.eModelBdi), dataServer, (QueryPerceptInterface)matsimModel, bdiMap);
-        jillmodel.init(matsimModel.getAgentManager().getAgentDataContainer(), null, null, bdiAgentIDs.toArray( new String[bdiAgentIDs.size()] ));
+        JillBDIModel jillmodel = new JillBDIModel(cfg.getModelConfig(Config.eModelBdi), dataServer, (QueryPerceptInterface)matsimEvacModel, bdiMap);
+        jillmodel.init(matsimEvacModel.getAgentManager().getAgentDataContainer(), null, null, bdiAgentIDs.toArray( new String[bdiAgentIDs.size()] ));
         jillmodel.start();
 
         // --- initialize and start MATSim
         log.info("Starting MATSim model");
-        matsimModel.init(bdiAgentIDs);
+        matsimEvacModel.init(bdiAgentIDs);
         {
             // yyyy try to replace this by injection. because otherwise it again needs to be added "late enough", which we
             // wanted to get rid of.  kai, dec'17
-            EvacAgentTracker tracker = new EvacAgentTracker(evacConfig, matsimModel.getScenario().getNetwork(), matsimModel.getEvents());
-            matsimModel.getEvents().addHandler(tracker);
+            EvacAgentTracker tracker = new EvacAgentTracker(evacConfig, matsimEvacModel.getScenario().getNetwork(), matsimEvacModel.getEvents());
+            matsimEvacModel.getEvents().addHandler(tracker);
         }
 
         // start the main simulation loop
         log.info("Starting the simulation loop");
         jillmodel.setAgentDataContainer(adc_from_bdi);
-        matsimModel.setAgentDataContainer(adc_from_abm);
+        matsimEvacModel.setAgentDataContainer(adc_from_abm);
         jillmodel.useSequenceLock(sequenceLock);
-        matsimModel.useSequenceLock(sequenceLock);
+        matsimEvacModel.useSequenceLock(sequenceLock);
 
         while (true) {
             // Wait till both models are done before incrementing time
@@ -158,7 +159,7 @@ public class Run implements DataClient {
             dataServer.publish(PerceptList.TAKE_CONTROL_BDI, adc_from_abm);
             // Wait till both models are done before checking for termination condition
             synchronized (sequenceLock) {
-                if (matsimModel.isFinished()) {
+                if (matsimEvacModel.isFinished()) {
                     break;
                 }
             }
@@ -169,7 +170,7 @@ public class Run implements DataClient {
         // finish up
         log.info("Finishing up");
         jillmodel.finish();
-        matsimModel.finish() ;
+        matsimEvacModel.finish() ;
         DataServer.cleanup() ;
         log.info("All done");
     }
