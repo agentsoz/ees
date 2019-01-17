@@ -1,45 +1,5 @@
 package io.github.agentsoz.ees.matsim;
 
-import com.google.gson.Gson;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.geom.Polygon;
-import io.github.agentsoz.bdiabm.ABMServerInterface;
-import io.github.agentsoz.bdiabm.QueryPerceptInterface;
-import io.github.agentsoz.bdiabm.data.AgentDataContainer;
-import io.github.agentsoz.bdiabm.data.PerceptContent;
-import io.github.agentsoz.bdimatsim.MATSimModel;
-import io.github.agentsoz.bdimatsim.Replanner;
-import io.github.agentsoz.dataInterface.DataClient;
-import io.github.agentsoz.dataInterface.DataServer;
-import io.github.agentsoz.nonmatsim.PAAgent;
-import io.github.agentsoz.nonmatsim.PAAgentManager;
-import io.github.agentsoz.util.Disruption;
-import io.github.agentsoz.util.EmergencyMessage;
-import io.github.agentsoz.util.evac.PerceptList;
-import org.matsim.api.core.v01.Coord;
-import org.matsim.api.core.v01.Id;
-import org.matsim.api.core.v01.Scenario;
-import org.matsim.api.core.v01.network.Link;
-import org.matsim.api.core.v01.population.Person;
-import org.matsim.core.api.experimental.events.EventsManager;
-import org.matsim.core.config.Config;
-import org.matsim.core.config.ConfigUtils;
-import org.matsim.core.controler.Controler;
-import org.matsim.core.gbl.Gbl;
-import org.matsim.core.mobsim.framework.MobsimAgent;
-import org.matsim.core.mobsim.qsim.AbstractQSimModule;
-import org.matsim.core.mobsim.qsim.agents.AgentFactory;
-import org.matsim.core.network.NetworkUtils;
-import org.matsim.core.utils.geometry.CoordinateTransformation;
-import org.matsim.core.utils.geometry.GeometryUtils;
-import org.matsim.core.utils.geometry.transformations.TransformationFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.inject.Singleton;
-import java.util.*;
-
 /*
  * #%L
  * BDI-ABM Integration Package
@@ -62,6 +22,53 @@ import java.util.*;
  * #L%
  */
 
+import com.google.gson.Gson;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.geom.Polygon;
+import io.github.agentsoz.bdiabm.ABMServerInterface;
+import io.github.agentsoz.bdiabm.QueryPerceptInterface;
+import io.github.agentsoz.bdiabm.data.AgentDataContainer;
+import io.github.agentsoz.bdiabm.data.PerceptContent;
+import io.github.agentsoz.bdimatsim.EvacTravelDisutility;
+import io.github.agentsoz.bdimatsim.MATSimModel;
+import io.github.agentsoz.bdimatsim.Replanner;
+import io.github.agentsoz.dataInterface.DataClient;
+import io.github.agentsoz.dataInterface.DataServer;
+import io.github.agentsoz.nonmatsim.PAAgent;
+import io.github.agentsoz.nonmatsim.PAAgentManager;
+import io.github.agentsoz.util.Disruption;
+import io.github.agentsoz.util.EmergencyMessage;
+import io.github.agentsoz.util.evac.PerceptList;
+import org.matsim.api.core.v01.Coord;
+import org.matsim.api.core.v01.Id;
+import org.matsim.api.core.v01.Scenario;
+import org.matsim.api.core.v01.TransportMode;
+import org.matsim.api.core.v01.network.Link;
+import org.matsim.api.core.v01.population.Person;
+import org.matsim.core.api.experimental.events.EventsManager;
+import org.matsim.core.config.Config;
+import org.matsim.core.config.ConfigUtils;
+import org.matsim.core.controler.AbstractModule;
+import org.matsim.core.controler.Controler;
+import org.matsim.core.gbl.Gbl;
+import org.matsim.core.mobsim.framework.MobsimAgent;
+import org.matsim.core.mobsim.qsim.AbstractQSimModule;
+import org.matsim.core.mobsim.qsim.agents.AgentFactory;
+import org.matsim.core.network.NetworkUtils;
+import org.matsim.core.router.NetworkRoutingProvider;
+import org.matsim.core.router.costcalculators.TravelDisutilityFactory;
+import org.matsim.core.trafficmonitoring.FreeSpeedTravelTime;
+import org.matsim.core.utils.geometry.CoordinateTransformation;
+import org.matsim.core.utils.geometry.GeometryUtils;
+import org.matsim.core.utils.geometry.transformations.TransformationFactory;
+import org.matsim.withinday.trafficmonitoring.WithinDayTravelTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.inject.Singleton;
+import java.util.*;
+
 /**
  * @author Dhi Singh
  */
@@ -76,6 +83,8 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
     private Shape2XyWriter emberWriter = null;
     private DisruptionWriter disruptionWriter = null;
 
+    private final Map<Id<Link>,Double> penaltyFactorsOfLinks = new HashMap<>() ;
+    private final Map<Id<Link>,Double> penaltyFactorsOfLinksForEmergencyVehicles = new HashMap<>() ;
 
     private static final String eMaxDistanceForFireVisual = "maxDistanceForFireVisual";
     private static final String eMaxDistanceForSmokeVisual = "maxDistanceForSmokeVisual";
@@ -168,8 +177,8 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
         Map<String, DataClient> listeners = new  HashMap<>();
 
         listeners.put(PerceptList.FIRE_DATA, (DataClient<Geometry>) (time, dataType, data) -> {
-            processFireData(data, time, matsimModel.getPenaltyFactorsOfLinks(), matsimModel.getScenario(),
-                    matsimModel.getPenaltyFactorsOfLinksForEmergencyVehicles(), fireWriter);
+            processFireData(data, time, penaltyFactorsOfLinks, matsimModel.getScenario(),
+                    penaltyFactorsOfLinksForEmergencyVehicles, fireWriter);
         });
 
         listeners.put(PerceptList.EMBERS_DATA, (DataClient<Geometry>) (time, dataType, data) -> {
@@ -376,6 +385,67 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
                 this.bind( AgentFactory.class ).to( EvacAgent.Factory.class ) ;
                 this.bind(Replanner.class).in( Singleton.class ) ;
                 this.bind( MATSimModel.class ).toInstance( matsimModel );
+            }
+        } );
+        controller.addOverridingModule(new AbstractModule() {
+            @Override
+            public void install() {
+                setupEmergencyVehicleRouting();
+                setupCarGlobalInformationRouting();
+                setupCarFreespeedRouting();
+            }
+            private void setupCarFreespeedRouting() {
+                // memorize the routing mode:
+                String routingMode = MATSimModel.EvacRoutingMode.carFreespeed.name() ;
+
+                addRoutingModuleBinding(routingMode).toProvider(new NetworkRoutingProvider(TransportMode.car,routingMode)) ;
+                // (above line means that when "routingMode" is requested, a "network" routing will be provided, and the route
+                // will be executed as "car" in the mobsim).
+
+                addTravelTimeBinding(routingMode).to(FreeSpeedTravelTime.class);
+                // (this defines which travel time this routing mode should use.  Here: free speed))
+
+                TravelDisutilityFactory disutilityFactory = new io.github.agentsoz.bdimatsim.EvacTravelDisutility.Factory(penaltyFactorsOfLinks);
+                addTravelDisutilityFactoryBinding(routingMode).toInstance(disutilityFactory);
+                // (this defines which travel disutility this routing mode should use.  Here: a specific evac travel disutility, which takes
+                // penalty factors as input.  The penalty factors are filled from fire data; if there is no fire data, they remain empty)
+            }
+
+            private void setupCarGlobalInformationRouting() {
+                final String routingMode = MATSimModel.EvacRoutingMode.carGlobalInformation.name();
+
+                addRoutingModuleBinding(routingMode).toProvider(new NetworkRoutingProvider(TransportMode.car, routingMode)) ;
+
+                // congested travel time:
+                bind(WithinDayTravelTime.class).in(Singleton.class);
+                addEventHandlerBinding().to(WithinDayTravelTime.class);
+                addMobsimListenerBinding().to(WithinDayTravelTime.class);
+                addTravelTimeBinding(routingMode).to(WithinDayTravelTime.class) ;
+
+                // travel disutility includes the fire penalty. If no data arrives, it makes no difference.
+                TravelDisutilityFactory disutilityFactory = new io.github.agentsoz.bdimatsim.EvacTravelDisutility.Factory(penaltyFactorsOfLinks);
+                // (yyyyyy the now following cases are just there because of the different tests.  Solve by config,
+                addTravelDisutilityFactoryBinding(routingMode).toInstance(disutilityFactory);
+            }
+
+            private void setupEmergencyVehicleRouting() {
+                final String routingMode = MATSimModel.EvacRoutingMode.emergencyVehicle.name();
+
+                addRoutingModuleBinding(routingMode).toProvider(new NetworkRoutingProvider(TransportMode.car, routingMode)) ;
+
+                // congested travel time:
+                bind(WithinDayTravelTime.class).in(Singleton.class);
+                addEventHandlerBinding().to(WithinDayTravelTime.class);
+                addMobsimListenerBinding().to(WithinDayTravelTime.class);
+                addTravelTimeBinding(routingMode).to(WithinDayTravelTime.class) ;
+
+                // travel disutility includes the fire penalty:
+                TravelDisutilityFactory disutilityFactory = new EvacTravelDisutility.Factory(penaltyFactorsOfLinksForEmergencyVehicles);
+                // yyyyyy This uses the same disutility as the evacuees.  May not be what we want.
+                // But what do we want?  kai, dec'17/jan'18
+
+//					TravelDisutilityFactory disutilityFactory = new OnlyTimeDependentTravelDisutilityFactory();
+                addTravelDisutilityFactoryBinding(routingMode).toInstance(disutilityFactory);
             }
         } );
     }
