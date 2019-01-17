@@ -30,7 +30,6 @@ import io.github.agentsoz.bdiabm.ABMServerInterface;
 import io.github.agentsoz.bdiabm.QueryPerceptInterface;
 import io.github.agentsoz.bdiabm.data.AgentDataContainer;
 import io.github.agentsoz.bdiabm.data.PerceptContent;
-import io.github.agentsoz.bdimatsim.EvacTravelDisutility;
 import io.github.agentsoz.bdimatsim.MATSimModel;
 import io.github.agentsoz.bdimatsim.Replanner;
 import io.github.agentsoz.dataInterface.DataClient;
@@ -91,6 +90,8 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
     private static final String eMaxDistanceForSmokeVisual = "maxDistanceForSmokeVisual";
     private static final String eFireAvoidanceBufferForVehicles = "fireAvoidanceBufferForVehicles";
     private static final String eFireAvoidanceBufferForEmergencyVehicles = "fireAvoidanceBufferForEmergencyVehicles";
+
+    public enum EvacRoutingMode {carFreespeed, carGlobalInformation, emergencyVehicle}
 
     // Defaults
 

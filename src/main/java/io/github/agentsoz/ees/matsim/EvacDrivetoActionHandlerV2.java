@@ -90,7 +90,7 @@ public final class EvacDrivetoActionHandlerV2 implements BDIActionHandler {
 		
 		// routingMode:
 		String routingMode = null ; // could have some default
-		switch (((MATSimModel.EvacRoutingMode) args[3])) {
+		switch (((MATSimEvacModel.EvacRoutingMode) args[3])) {
 			case carFreespeed:
 				routingMode = MATSimModel.EvacRoutingMode.carFreespeed.name() ;
 				break;
