@@ -24,12 +24,15 @@ package io.github.agentsoz.ees;
 
 
 import io.github.agentsoz.bdiabm.QueryPerceptInterface;
+import io.github.agentsoz.bdiabm.data.PerceptContent;
 import io.github.agentsoz.bdiabm.v2.AgentDataContainer;
 import io.github.agentsoz.bdimatsim.EvacAgentTracker;
 import io.github.agentsoz.bdimatsim.EvacConfig;
+import io.github.agentsoz.bdimatsim.MATSimModel;
 import io.github.agentsoz.bdimatsim.Utils;
 import io.github.agentsoz.dataInterface.DataClient;
 import io.github.agentsoz.dataInterface.DataServer;
+import io.github.agentsoz.dataInterface.DataSource;
 import io.github.agentsoz.ees.matsim.MATSimEvacModel;
 import io.github.agentsoz.util.Global;
 import io.github.agentsoz.util.Time;
@@ -38,10 +41,7 @@ import org.matsim.api.core.v01.Scenario;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Emergency Evacuation Simulator (EES) main program.
@@ -110,7 +110,8 @@ public class Run implements DataClient {
         // initialise the MATSim model and register it as an active data source
         log.info("Creating MATSim model");
         MATSimEvacModel matsimEvacModel = new MATSimEvacModel(cfg.getModelConfig(Config.eModelMatsim), dataServer);
-        EvacConfig evacConfig = matsimEvacModel.initialiseEvacConfig(matsimEvacModel.loadAndPrepareConfig());
+        matsimEvacModel.loadAndPrepareConfig();
+        EvacConfig evacConfig = matsimEvacModel.getEvacConfig();
         Scenario scenario = matsimEvacModel.loadAndPrepareScenario() ;
 
         // get BDI agents map from the MATSim population file

@@ -66,7 +66,7 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
     private static final Logger log = LoggerFactory.getLogger(MATSimEvacModel.class);
     private final MATSimModel matsimModel;
     private final Map<String, DataClient> dataListeners = createDataListeners();
-
+    private EvacConfig evacConfig = null;
 
     private Shape2XyWriter fireWriter = null;
     private Shape2XyWriter emberWriter = null;
@@ -113,11 +113,10 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
                     log.warn("Ignoring option: " + opt + "=" + opts.get(opt));
             }
         }
-
     }
 
-    public io.github.agentsoz.bdimatsim.EvacConfig initialiseEvacConfig(Config config) {
-        io.github.agentsoz.bdimatsim.EvacConfig evacConfig = ConfigUtils.addOrGetModule(config, io.github.agentsoz.bdimatsim.EvacConfig.class);
+    private EvacConfig initialiseEvacConfig(Config config) {
+        evacConfig = ConfigUtils.addOrGetModule(config, EvacConfig.class);
         evacConfig.setSetup(EvacConfig.Setup.standard);
         evacConfig.setCongestionEvaluationInterval(matsimModel.getOptCongestionEvaluationInterval());
         evacConfig.setCongestionToleranceThreshold(matsimModel.getOptCongestionToleranceThreshold());
@@ -402,14 +401,34 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
     }
 
     public Config loadAndPrepareConfig() {
-        return matsimModel.loadAndPrepareConfig();
+        Config config = matsimModel.loadAndPrepareConfig();
+        initialiseEvacConfig(config);
+        return config;
     }
 
     public Scenario loadAndPrepareScenario() {
-        return matsimModel.loadAndPrepareScenario();
+        matsimModel.loadAndPrepareScenario();
+        // make sure links don't have speed infinity (results in problems with the router; yy instead repair input files?):
+        for ( Link link : matsimModel.getScenario().getNetwork().getLinks().values() ) {
+            final double veryLargeSpeed = 9999999999.;
+            if ( link.getFreespeed() > veryLargeSpeed ) {
+                link.setFreespeed(veryLargeSpeed);
+            }
+            if ( evacConfig.getSetup()== EvacConfig.Setup.tertiaryRoadsCorrection ) {
+                // yyyy correction for much too high speed value on tertiary roads. kai, dec'17
+                if (link.getFreespeed() == 27.77777777777778 && link.getCapacity() == 600.) {
+                    link.setFreespeed(50. / 3.6);
+                }
+            }
+        }
+        return matsimModel.getScenario();
     }
 
     public PAAgentManager getAgentManager() {
         return matsimModel.getAgentManager();
+    }
+
+    public EvacConfig getEvacConfig() {
+        return evacConfig;
     }
 }
