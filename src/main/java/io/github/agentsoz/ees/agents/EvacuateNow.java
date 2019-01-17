@@ -23,16 +23,13 @@ package io.github.agentsoz.ees.agents;
  */
 
 import io.github.agentsoz.abmjill.genact.EnvironmentAction;
-import io.github.agentsoz.util.evac.ActionList;
-import io.github.agentsoz.bdimatsim.MATSimModel.EvacRoutingMode;
-import io.github.agentsoz.util.Location;
-import io.github.agentsoz.dataInterface.DataServer;
-
-
+import io.github.agentsoz.ees.matsim.MATSimEvacModel;
 import io.github.agentsoz.jill.lang.Agent;
 import io.github.agentsoz.jill.lang.Goal;
 import io.github.agentsoz.jill.lang.Plan;
 import io.github.agentsoz.jill.lang.PlanStep;
+import io.github.agentsoz.util.Location;
+import io.github.agentsoz.util.evac.ActionList;
 
 import java.io.PrintStream;
 import java.util.Map;
@@ -64,7 +61,7 @@ public class EvacuateNow extends Plan {
 					params[0] = bdiAction;
 					params[1] = coords;
 					params[2] = evacTime;
-					params[3] = (resident.getFailedAttempts() > 0) ? EvacRoutingMode.carGlobalInformation : EvacRoutingMode.carFreespeed;
+					params[3] = (resident.getFailedAttempts() > 0) ? MATSimEvacModel.EvacRoutingMode.carGlobalInformation : MATSimEvacModel.EvacRoutingMode.carFreespeed;
 					// (could use EvacRoutingMode.carFreespeed.name() if you like that better. kai, dec'17)
 					writer.println(resident.logPrefix() + "will start driving to shelter in "+ shelterLocation + " at time " + evacTime);
 					post(new EnvironmentAction(

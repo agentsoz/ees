@@ -22,13 +22,10 @@ package io.github.agentsoz.ees.agents.bushfire;
  * #L%
  */
 
-import io.github.agentsoz.abmjill.genact.EnvironmentAction;
-import io.github.agentsoz.bdimatsim.MATSimModel;
 import io.github.agentsoz.jill.lang.Agent;
 import io.github.agentsoz.jill.lang.Goal;
 import io.github.agentsoz.jill.lang.Plan;
 import io.github.agentsoz.jill.lang.PlanStep;
-import io.github.agentsoz.util.evac.ActionList;
 
 import java.util.Map;
 

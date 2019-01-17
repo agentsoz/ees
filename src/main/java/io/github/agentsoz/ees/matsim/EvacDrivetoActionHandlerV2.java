@@ -68,7 +68,7 @@ public final class EvacDrivetoActionHandlerV2 implements BDIActionHandler {
 		Gbl.assertIf( args[1] instanceof double[] ) ;
 		double[] coords = (double[]) args[1];
 		Coord coord = new Coord( coords[0], coords[1] ) ;
-		Gbl.assertIf( args[3] instanceof MATSimModel.EvacRoutingMode ) ; // could have some default
+		Gbl.assertIf( args[3] instanceof MATSimEvacModel.EvacRoutingMode ) ; // could have some default
 		
 		log.debug("replanning; time step=" + model.getTime()
 		+ "; agentId=" + agentID + "; routing mode " + args[3] ) ;
@@ -92,13 +92,13 @@ public final class EvacDrivetoActionHandlerV2 implements BDIActionHandler {
 		String routingMode = null ; // could have some default
 		switch (((MATSimEvacModel.EvacRoutingMode) args[3])) {
 			case carFreespeed:
-				routingMode = MATSimModel.EvacRoutingMode.carFreespeed.name() ;
+				routingMode = MATSimEvacModel.EvacRoutingMode.carFreespeed.name() ;
 				break;
 			case carGlobalInformation:
-				routingMode = MATSimModel.EvacRoutingMode.carGlobalInformation.name() ;
+				routingMode = MATSimEvacModel.EvacRoutingMode.carGlobalInformation.name() ;
 				break;
 			case emergencyVehicle:
-				routingMode = MATSimModel.EvacRoutingMode.emergencyVehicle.name();
+				routingMode = MATSimEvacModel.EvacRoutingMode.emergencyVehicle.name();
 				break;
 			default:
 				throw new RuntimeException("not implemented" ) ;

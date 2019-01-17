@@ -22,26 +22,11 @@ package io.github.agentsoz.ees.matsim;
  * #L%
  */
 
-import io.github.agentsoz.bdiabm.data.ActionContent;
-import io.github.agentsoz.bdiabm.data.PerceptContent;
-import io.github.agentsoz.bdimatsim.EventsMonitorRegistry.MonitoredEventType;
 import io.github.agentsoz.bdimatsim.MATSimModel;
 import io.github.agentsoz.nonmatsim.BDIActionHandler;
-import io.github.agentsoz.nonmatsim.BDIPerceptHandler;
-import io.github.agentsoz.nonmatsim.PAAgent;
-import io.github.agentsoz.util.evac.ActionList;
-import io.github.agentsoz.util.evac.PerceptList;
-import org.matsim.api.core.v01.Coord;
-import org.matsim.api.core.v01.Id;
-import org.matsim.api.core.v01.network.Link;
-import org.matsim.api.core.v01.population.Activity;
-import org.matsim.api.core.v01.population.Person;
-import org.matsim.api.core.v01.population.Plan;
-import org.matsim.api.core.v01.population.PlanElement;
 import org.matsim.core.gbl.Gbl;
 import org.matsim.core.mobsim.framework.MobsimAgent;
 import org.matsim.core.mobsim.qsim.agents.WithinDayAgentUtils;
-import org.matsim.core.network.NetworkUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,8 +43,8 @@ public final class ReplanDriveToDefaultActionHandlerV2 implements BDIActionHandl
 		MobsimAgent mobsimAgent = model.getMobsimAgentFromIdString(agentID) ;
 		Gbl.assertNotNull(mobsimAgent) ;
 		Gbl.assertIf( args.length >= 1 );
-		Gbl.assertIf( args[0] instanceof MATSimModel.EvacRoutingMode ) ; // could have some default
-		MATSimModel.EvacRoutingMode routingMode = (MATSimModel.EvacRoutingMode)args[0];
+		Gbl.assertIf( args[0] instanceof MATSimEvacModel.EvacRoutingMode ) ; // could have some default
+		MATSimEvacModel.EvacRoutingMode routingMode = (MATSimEvacModel.EvacRoutingMode)args[0];
 		if (WithinDayAgentUtils.isOnReplannableCarLeg(mobsimAgent)) {
 			model.getReplanner().editTrips().replanCurrentTrip(mobsimAgent, 0.0, routingMode.name());
 		}

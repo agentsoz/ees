@@ -382,9 +382,11 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
         matsimModel.init(bdiAgentIDs);
         initialiseControllerForEvac(matsimModel.getControler());
         for(String agentId: bdiAgentIDs) {
-            // replace the default DRIVETO action handler with an evacuation specific one
+            // replace the default action handlers with evacuation specific ones
             matsimModel.getAgentManager().getAgent(agentId).getActionHandler().registerBDIAction(
                     ActionList.DRIVETO, new EvacDrivetoActionHandlerV2(matsimModel));
+            matsimModel.getAgentManager().getAgent(agentId).getActionHandler().registerBDIAction(
+                    ActionList.REPLAN_CURRENT_DRIVETO, new ReplanDriveToDefaultActionHandlerV2(matsimModel));
         }
     }
 
@@ -406,7 +408,7 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
             }
             private void setupCarFreespeedRouting() {
                 // memorize the routing mode:
-                String routingMode = MATSimModel.EvacRoutingMode.carFreespeed.name() ;
+                String routingMode = MATSimEvacModel.EvacRoutingMode.carFreespeed.name() ;
 
                 addRoutingModuleBinding(routingMode).toProvider(new NetworkRoutingProvider(TransportMode.car,routingMode)) ;
                 // (above line means that when "routingMode" is requested, a "network" routing will be provided, and the route
@@ -422,7 +424,7 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
             }
 
             private void setupCarGlobalInformationRouting() {
-                final String routingMode = MATSimModel.EvacRoutingMode.carGlobalInformation.name();
+                final String routingMode = MATSimEvacModel.EvacRoutingMode.carGlobalInformation.name();
 
                 addRoutingModuleBinding(routingMode).toProvider(new NetworkRoutingProvider(TransportMode.car, routingMode)) ;
 
@@ -439,7 +441,7 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
             }
 
             private void setupEmergencyVehicleRouting() {
-                final String routingMode = MATSimModel.EvacRoutingMode.emergencyVehicle.name();
+                final String routingMode = MATSimEvacModel.EvacRoutingMode.emergencyVehicle.name();
 
                 addRoutingModuleBinding(routingMode).toProvider(new NetworkRoutingProvider(TransportMode.car, routingMode)) ;
 

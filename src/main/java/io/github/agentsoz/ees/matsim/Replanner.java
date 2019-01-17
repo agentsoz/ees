@@ -1,6 +1,5 @@
 package io.github.agentsoz.ees.matsim;
 
-import io.github.agentsoz.bdimatsim.MATSimModel.EvacRoutingMode;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.population.Leg;
 import org.matsim.api.core.v01.population.Plan;
@@ -82,7 +81,7 @@ public final class Replanner {
 		WithinDayAgentUtils.resetCaches(agent);
 	}
 	@Deprecated // I don't think that this is really needed for the bushfire applications.  kai, nov'17
-	public EditRoutes editRoutes(EvacRoutingMode evacRoutingMode) {
+	public EditRoutes editRoutes(MATSimEvacModel.EvacRoutingMode evacRoutingMode) {
 		switch( evacRoutingMode ) {
 			case carFreespeed:
 				return editRoutes ;
@@ -103,7 +102,7 @@ public final class Replanner {
 	
 	final void addNetworkChangeEvent(NetworkChangeEvent changeEvent) {
 		
-		TravelTime globalTTime = this.travelTimes.get(EvacRoutingMode.carGlobalInformation.name());
+		TravelTime globalTTime = this.travelTimes.get(MATSimEvacModel.EvacRoutingMode.carGlobalInformation.name());
 		if ( globalTTime instanceof WithinDayTravelTime ) {
 			((WithinDayTravelTime) globalTTime).addNetworkChangeEvent(changeEvent);
 		}

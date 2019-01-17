@@ -27,9 +27,9 @@ package io.github.agentsoz.ees.agents.bushfire;
 import io.github.agentsoz.abmjill.genact.EnvironmentAction;
 import io.github.agentsoz.bdiabm.QueryPerceptInterface;
 import io.github.agentsoz.bdiabm.data.ActionContent;
-import io.github.agentsoz.bdimatsim.MATSimModel;
 import io.github.agentsoz.dataInterface.DataServer;
 import io.github.agentsoz.ees.Run;
+import io.github.agentsoz.ees.matsim.MATSimEvacModel;
 import io.github.agentsoz.jill.core.beliefbase.BeliefBaseException;
 import io.github.agentsoz.jill.core.beliefbase.BeliefSetField;
 import io.github.agentsoz.jill.lang.Agent;
@@ -242,7 +242,7 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
         memorise(MemoryEventType.ACTIONED.name(), ActionList.REPLAN_CURRENT_DRIVETO);
         EnvironmentAction action = new EnvironmentAction(Integer.toString(getId()),
                 ActionList.REPLAN_CURRENT_DRIVETO,
-                new Object[] {MATSimModel.EvacRoutingMode.carGlobalInformation});
+                new Object[] {MATSimEvacModel.EvacRoutingMode.carGlobalInformation});
         setActiveEnvironmentAction(action);
         post(action);
 
@@ -395,7 +395,7 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
         //}
     }
 
-    boolean startDrivingTo(Location location, MATSimModel.EvacRoutingMode routingMode) {
+    boolean startDrivingTo(Location location, MATSimEvacModel.EvacRoutingMode routingMode) {
         if (location == null) return false;
         memorise(MemoryEventType.DECIDED.name(), MemoryEventValue.GOTO_LOCATION.name() + ":" + location.toString());
         double distToTravel = getTravelDistanceTo(location);
