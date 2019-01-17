@@ -28,10 +28,10 @@ import java.io.PrintWriter;
 import java.util.*;
 
 import io.github.agentsoz.bdiabm.QueryPerceptInterface;
-import io.github.agentsoz.bdimatsim.EvacAgentTracker;
-import io.github.agentsoz.bdimatsim.EvacConfig;
 import io.github.agentsoz.bdimatsim.MATSimModel;
 import io.github.agentsoz.bdimatsim.Utils;
+import io.github.agentsoz.ees.matsim.EvacAgentTracker;
+import io.github.agentsoz.ees.matsim.EvacConfig;
 import org.json.simple.parser.ParseException;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.core.config.Config;

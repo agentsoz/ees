@@ -8,8 +8,8 @@ import io.github.agentsoz.bdiabm.ABMServerInterface;
 import io.github.agentsoz.bdiabm.QueryPerceptInterface;
 import io.github.agentsoz.bdiabm.data.AgentDataContainer;
 import io.github.agentsoz.bdiabm.data.PerceptContent;
-import io.github.agentsoz.bdimatsim.EvacConfig;
 import io.github.agentsoz.bdimatsim.MATSimModel;
+import io.github.agentsoz.bdimatsim.Replanner;
 import io.github.agentsoz.dataInterface.DataClient;
 import io.github.agentsoz.dataInterface.DataServer;
 import io.github.agentsoz.nonmatsim.PAAgent;
@@ -25,8 +25,11 @@ import org.matsim.api.core.v01.population.Person;
 import org.matsim.core.api.experimental.events.EventsManager;
 import org.matsim.core.config.Config;
 import org.matsim.core.config.ConfigUtils;
+import org.matsim.core.controler.Controler;
 import org.matsim.core.gbl.Gbl;
 import org.matsim.core.mobsim.framework.MobsimAgent;
+import org.matsim.core.mobsim.qsim.AbstractQSimModule;
+import org.matsim.core.mobsim.qsim.agents.AgentFactory;
 import org.matsim.core.network.NetworkUtils;
 import org.matsim.core.utils.geometry.CoordinateTransformation;
 import org.matsim.core.utils.geometry.GeometryUtils;
@@ -34,6 +37,7 @@ import org.matsim.core.utils.geometry.transformations.TransformationFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Singleton;
 import java.util.*;
 
 /*
@@ -365,6 +369,15 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
 
     public void init(List<String> bdiAgentIDs) {
         matsimModel.init(bdiAgentIDs);
+        Controler controller = matsimModel.getControler();
+        // infrastructure at QSim level (separating line not fully logical)
+        controller.addOverridingQSimModule( new AbstractQSimModule() {
+            @Override protected void configureQSim() {
+                this.bind( AgentFactory.class ).to( EvacAgent.Factory.class ) ;
+                this.bind(Replanner.class).in( Singleton.class ) ;
+                this.bind( MATSimModel.class ).toInstance( matsimModel );
+            }
+        } );
     }
 
     public Scenario getScenario() {
@@ -430,5 +443,9 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
 
     public EvacConfig getEvacConfig() {
         return evacConfig;
+    }
+
+    public void start() {
+        matsimModel.start();
     }
 }

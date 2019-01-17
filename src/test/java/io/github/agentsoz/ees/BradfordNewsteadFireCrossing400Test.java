@@ -23,13 +23,9 @@ package io.github.agentsoz.ees;
  * #L%
  */
 
-import io.github.agentsoz.bdimatsim.EvacConfig;
-import io.github.agentsoz.bdimatsim.MATSimModel;
 import io.github.agentsoz.util.TestUtils;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
-import org.matsim.core.utils.misc.CRCChecksum;
 import org.matsim.testcases.MatsimTestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
