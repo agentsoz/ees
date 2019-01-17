@@ -39,6 +39,7 @@ import io.github.agentsoz.nonmatsim.PAAgent;
 import io.github.agentsoz.nonmatsim.PAAgentManager;
 import io.github.agentsoz.util.Disruption;
 import io.github.agentsoz.util.EmergencyMessage;
+import io.github.agentsoz.util.evac.ActionList;
 import io.github.agentsoz.util.evac.PerceptList;
 import org.matsim.api.core.v01.Coord;
 import org.matsim.api.core.v01.Id;
@@ -378,7 +379,15 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
 
     public void init(List<String> bdiAgentIDs) {
         matsimModel.init(bdiAgentIDs);
-        Controler controller = matsimModel.getControler();
+        initialiseControllerForEvac(matsimModel.getControler());
+        for(String agentId: bdiAgentIDs) {
+            // replace the default DRIVETO action handler with an evacuation specific one
+            matsimModel.getAgentManager().getAgent(agentId).getActionHandler().registerBDIAction(
+                    ActionList.DRIVETO, new EvacDrivetoActionHandlerV2(matsimModel));
+        }
+    }
+
+    private void initialiseControllerForEvac(Controler controller) {
         // infrastructure at QSim level (separating line not fully logical)
         controller.addOverridingQSimModule( new AbstractQSimModule() {
             @Override protected void configureQSim() {
@@ -405,7 +414,7 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
                 addTravelTimeBinding(routingMode).to(FreeSpeedTravelTime.class);
                 // (this defines which travel time this routing mode should use.  Here: free speed))
 
-                TravelDisutilityFactory disutilityFactory = new io.github.agentsoz.bdimatsim.EvacTravelDisutility.Factory(penaltyFactorsOfLinks);
+                TravelDisutilityFactory disutilityFactory = new EvacTravelDisutility.Factory(penaltyFactorsOfLinks);
                 addTravelDisutilityFactoryBinding(routingMode).toInstance(disutilityFactory);
                 // (this defines which travel disutility this routing mode should use.  Here: a specific evac travel disutility, which takes
                 // penalty factors as input.  The penalty factors are filled from fire data; if there is no fire data, they remain empty)
@@ -423,7 +432,7 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
                 addTravelTimeBinding(routingMode).to(WithinDayTravelTime.class) ;
 
                 // travel disutility includes the fire penalty. If no data arrives, it makes no difference.
-                TravelDisutilityFactory disutilityFactory = new io.github.agentsoz.bdimatsim.EvacTravelDisutility.Factory(penaltyFactorsOfLinks);
+                TravelDisutilityFactory disutilityFactory = new EvacTravelDisutility.Factory(penaltyFactorsOfLinks);
                 // (yyyyyy the now following cases are just there because of the different tests.  Solve by config,
                 addTravelDisutilityFactoryBinding(routingMode).toInstance(disutilityFactory);
             }

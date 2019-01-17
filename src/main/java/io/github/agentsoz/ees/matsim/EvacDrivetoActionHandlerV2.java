@@ -22,9 +22,7 @@ package io.github.agentsoz.ees.matsim;
  * #L%
  */
 
-import io.github.agentsoz.bdiabm.data.ActionContainer;
 import io.github.agentsoz.bdiabm.data.ActionContent;
-import io.github.agentsoz.bdiabm.data.PerceptContainer;
 import io.github.agentsoz.bdiabm.data.PerceptContent;
 import io.github.agentsoz.bdimatsim.EventsMonitorRegistry.MonitoredEventType;
 import io.github.agentsoz.bdimatsim.MATSimModel;
@@ -47,11 +45,11 @@ import org.matsim.core.network.NetworkUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public final class DRIVETODefaultActionHandlerV2 implements BDIActionHandler {
-	private static final Logger log = LoggerFactory.getLogger(DRIVETODefaultActionHandlerV2.class ) ;
+public final class EvacDrivetoActionHandlerV2 implements BDIActionHandler {
+	private static final Logger log = LoggerFactory.getLogger(EvacDrivetoActionHandlerV2.class ) ;
 
 	private final MATSimModel model;
-	public DRIVETODefaultActionHandlerV2(MATSimModel model ) {
+	public EvacDrivetoActionHandlerV2(MATSimModel model ) {
 //		log.setLevel(Level.DEBUG);
 		this.model = model;
 	}
