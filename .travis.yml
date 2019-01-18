@@ -1,10 +1,10 @@
 language: java
 jdk: oraclejdk8
 sudo: required # enabled 30/aug/18 due to travis issue #6593 causing failure
-addons:
-  apt:
-    packages:
-      - oracle-java8-installer  # https://github.com/travis-ci/travis-ci/issues/3259
+# addons:
+#   apt:
+#     packages:
+#       - oracle-java8-installer  # https://github.com/travis-ci/travis-ci/issues/3259
 before_install:
   # MATSim config
   #- cd $HOME && git clone --depth=1 --branch=kaibranch https://github.com/matsim-org/matsim.git
