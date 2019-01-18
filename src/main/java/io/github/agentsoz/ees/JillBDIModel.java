@@ -30,10 +30,8 @@ import io.github.agentsoz.bdiabm.data.AgentStateList;
 import io.github.agentsoz.dataInterface.DataClient;
 import io.github.agentsoz.dataInterface.DataServer;
 import io.github.agentsoz.jill.lang.Agent;
-import io.github.agentsoz.util.DiffusedContent;
 import io.github.agentsoz.util.Global;
 import io.github.agentsoz.util.Time;
-import io.github.agentsoz.util.evac.PerceptList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

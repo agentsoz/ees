@@ -34,12 +34,13 @@ import io.github.agentsoz.bdimatsim.MATSimModel;
 import io.github.agentsoz.bdimatsim.Replanner;
 import io.github.agentsoz.dataInterface.DataClient;
 import io.github.agentsoz.dataInterface.DataServer;
+import io.github.agentsoz.ees.ActionList;
+import io.github.agentsoz.ees.Disruption;
+import io.github.agentsoz.ees.EmergencyMessage;
+import io.github.agentsoz.ees.PerceptList;
+import io.github.agentsoz.ees.util.Utils;
 import io.github.agentsoz.nonmatsim.PAAgent;
 import io.github.agentsoz.nonmatsim.PAAgentManager;
-import io.github.agentsoz.util.Disruption;
-import io.github.agentsoz.util.EmergencyMessage;
-import io.github.agentsoz.util.evac.ActionList;
-import io.github.agentsoz.util.evac.PerceptList;
 import org.matsim.api.core.v01.Coord;
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.Scenario;
@@ -222,7 +223,7 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
         emberWriter.write( now, embers);
     }
 
-    private void processDisruptionData( Map<Double,Disruption> data, double now, Scenario scenario, DisruptionWriter disruptionWriter ) {
+    private void processDisruptionData(Map<Double, Disruption> data, double now, Scenario scenario, DisruptionWriter disruptionWriter ) {
         log.info("receiving disruption data at time={}", now); ;
         log.info( "{}", new Gson().toJson(data) ) ;
 
@@ -269,7 +270,7 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
         }
     }
 
-    private void processEmergencyMessageData(Map<Double,EmergencyMessage> data, double now, Scenario scenario) {
+    private void processEmergencyMessageData(Map<Double, EmergencyMessage> data, double now, Scenario scenario) {
         log.info("receiving emergency message data at time={}", now);
         log.info( "{}{}", new Gson().toJson(data).substring(0,Math.min(new Gson().toJson(data).length(),200)),
                 "... use DEBUG to see full coordinates list") ;

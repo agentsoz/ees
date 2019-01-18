@@ -29,9 +29,7 @@ import io.github.agentsoz.dataInterface.DataSource;
 import io.github.agentsoz.socialnetwork.ICModel;
 import io.github.agentsoz.socialnetwork.SNConfig;
 import io.github.agentsoz.socialnetwork.SocialNetworkManager;
-import io.github.agentsoz.util.DiffusedContent;
 import io.github.agentsoz.util.Time;
-import io.github.agentsoz.util.evac.PerceptList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

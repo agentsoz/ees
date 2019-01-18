@@ -25,12 +25,12 @@ package io.github.agentsoz.ees.agents;
 import io.github.agentsoz.bdiabm.QueryPerceptInterface;
 import io.github.agentsoz.bdiabm.data.ActionContent;
 import io.github.agentsoz.bdiabm.data.ActionContent.State;
+import io.github.agentsoz.ees.ActionList;
+import io.github.agentsoz.ees.PerceptList;
 import io.github.agentsoz.ees.SimpleConfig;
 import io.github.agentsoz.jill.lang.Agent;
 import io.github.agentsoz.jill.lang.AgentInfo;
 import io.github.agentsoz.util.Location;
-import io.github.agentsoz.util.evac.ActionList;
-import io.github.agentsoz.util.evac.PerceptList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

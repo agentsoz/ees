@@ -23,13 +23,13 @@ package io.github.agentsoz.ees.agents;
  */
 
 import io.github.agentsoz.abmjill.genact.EnvironmentAction;
+import io.github.agentsoz.ees.ActionList;
 import io.github.agentsoz.ees.matsim.MATSimEvacModel;
 import io.github.agentsoz.jill.lang.Agent;
 import io.github.agentsoz.jill.lang.Goal;
 import io.github.agentsoz.jill.lang.Plan;
 import io.github.agentsoz.jill.lang.PlanStep;
 import io.github.agentsoz.util.Location;
-import io.github.agentsoz.util.evac.ActionList;
 
 import java.io.PrintStream;
 import java.util.Map;

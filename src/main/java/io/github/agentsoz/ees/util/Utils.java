@@ -1,4 +1,4 @@
-package io.github.agentsoz.ees.matsim;
+package io.github.agentsoz.ees.util;
 
 /*
  * #%L
@@ -257,8 +257,8 @@ public final class Utils {
 		}
 	}
 	*/
-	static void penaltyMethod2(Geometry fire, Geometry buffer, double bufferWidth,
-									   Map<Id<Link>, Double> penaltyFactorsOfLinks, Scenario scenario ) {
+	public static void penaltyMethod2(Geometry fire, Geometry buffer, double bufferWidth,
+									  Map<Id<Link>, Double> penaltyFactorsOfLinks, Scenario scenario) {
 		// Starting thoughts:
 		// * Could make everything very expensive in buffer + fire, they find the fastest path out.  This may, however,
 		// be through the fire.

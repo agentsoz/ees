@@ -30,7 +30,6 @@ import com.vividsolutions.jts.precision.GeometryPrecisionReducer;
 import io.github.agentsoz.dataInterface.DataServer;
 import io.github.agentsoz.dataInterface.DataSource;
 import io.github.agentsoz.util.Time;
-import io.github.agentsoz.util.evac.PerceptList;
 import org.geotools.geometry.jts.GeometryBuilder;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;

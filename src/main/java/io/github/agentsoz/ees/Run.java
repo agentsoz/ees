@@ -33,7 +33,6 @@ import io.github.agentsoz.ees.matsim.EvacConfig;
 import io.github.agentsoz.ees.matsim.MATSimEvacModel;
 import io.github.agentsoz.util.Global;
 import io.github.agentsoz.util.Time;
-import io.github.agentsoz.util.evac.PerceptList;
 import org.matsim.api.core.v01.Scenario;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

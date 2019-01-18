@@ -26,15 +26,15 @@ import java.io.PrintStream;
 
 import io.github.agentsoz.bdiabm.QueryPerceptInterface;
 import io.github.agentsoz.dataInterface.DataServer;
-import io.github.agentsoz.util.EmergencyMessage;
+import io.github.agentsoz.ees.ActionList;
+import io.github.agentsoz.ees.EmergencyMessage;
+import io.github.agentsoz.ees.PerceptList;
 import io.github.agentsoz.util.Global;
-import io.github.agentsoz.util.evac.PerceptList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.github.agentsoz.bdiabm.data.ActionContent;
 import io.github.agentsoz.bdiabm.data.ActionContent.State;
-import io.github.agentsoz.util.evac.ActionList;
 import io.github.agentsoz.util.Location;
 import io.github.agentsoz.ees.SimpleConfig;
 
