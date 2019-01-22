@@ -56,12 +56,12 @@ public class PlanGoHomeThenLeave extends Plan {
 				agent.memorise(BushfireAgent.MemoryEventType.ACTIONED.name(), getGoal() + "|" + this.getClass().getSimpleName());
 				if (agent.getWillGoHomeBeforeLeaving()) {
 					goingHomeBeforeLeaving =true;
-					post(new GoalGoHome("GoalGoHome"));
+					subgoal(new GoalGoHome("GoalGoHome"));
 					// Now wait till the next step for this goal to finish
 				}
 			},
 			() -> {
-				post(new GoalGotoEvacPlace("GoalGotoEvacPlace"));
+				subgoal(new GoalGotoEvacPlace("GoalGotoEvacPlace"));
 				// Now wait till the next step for this goal to finish
 			},
 			() -> {

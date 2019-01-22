@@ -56,7 +56,7 @@ public class PlanInitialResponseWithoutDependents extends Plan {
 					agent.memorise(BushfireAgent.MemoryEventType.DECIDED.name(), BushfireAgent.MemoryEventValue.DONE_FOR_NOW.name());
 				} else {
 					goingHomeFirst = true;
-					post(new GoalGoHome("GoalGoHome"));
+					subgoal(new GoalGoHome("GoalGoHome"));
 					// Now wait till the next step for this goal to finish
 				}
 			},

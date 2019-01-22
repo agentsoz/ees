@@ -70,14 +70,14 @@ public class PlanGotoDependentsIfNearby extends Plan {
 			// Go visits dependents now
 			() -> {
 				agent.memorise(BushfireAgent.MemoryEventType.ACTIONED.name(), getGoal() + "|" + this.getClass().getSimpleName());
-                post(new GoalGotoDependents("GoalGotoDependents"));
+				subgoal(new GoalGotoDependents("GoalGotoDependents"));
                 // Now wait till the next step for this goal to finish
             },
 			// Arrived at Dependents. Go home with some probability
 			() -> {
                 agent.memorise(BushfireAgent.MemoryEventType.BELIEVED.name(), BushfireAgent.MemoryEventValue.DEPENDENTS_INFO.name() + ":" + agent.getDependentInfo() );
                 if (agent.getWillGoHomeAfterVisitingDependents()) {
-                    post(new GoalGoHome("GoalGoHome"));
+					subgoal(new GoalGoHome("GoalGoHome"));
                     // Now wait till the next step for this goal to finish
                 } else {
                     agent.memorise(BushfireAgent.MemoryEventType.DECIDED.name(), BushfireAgent.MemoryEventValue.DONE_FOR_NOW.name());

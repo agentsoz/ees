@@ -64,7 +64,7 @@ public class EvacuateNow extends Plan {
 					params[3] = (resident.getFailedAttempts() > 0) ? MATSimEvacModel.EvacRoutingMode.carGlobalInformation : MATSimEvacModel.EvacRoutingMode.carFreespeed;
 					// (could use EvacRoutingMode.carFreespeed.name() if you like that better. kai, dec'17)
 					writer.println(resident.logPrefix() + "will start driving to shelter in "+ shelterLocation + " at time " + evacTime);
-					post(new EnvironmentAction(
+					subgoal(new EnvironmentAction(
 							Integer.toString(resident.getId()),
 							bdiAction, params));
 					}

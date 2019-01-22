@@ -66,7 +66,7 @@ public class ProtectInhabitedAreaUnderThreat extends Plan {
 					params[3] = MATSimEvacModel.EvacRoutingMode.emergencyVehicle;
 					//params[3] = EvacRoutingMode.carFreespeed;
 					writer.println(responder.logPrefix() + "will start driving to "+ threatenedLocation + " under fire threat at time " + evacTime);
-					post(new EnvironmentAction(
+					subgoal(new EnvironmentAction(
 							Integer.toString(responder.getId()),
 							bdiAction, params));
 					}

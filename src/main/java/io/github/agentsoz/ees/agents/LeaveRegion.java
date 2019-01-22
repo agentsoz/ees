@@ -66,7 +66,7 @@ public class LeaveRegion extends Plan {
                     params[3] = (tourist.getFailedAttempts() > 0) ? MATSimEvacModel.EvacRoutingMode.carGlobalInformation : MATSimEvacModel.EvacRoutingMode.carFreespeed;
                     // (could use EvacRoutingMode.carFreespeed.name() if you like that better. kai, dec'17)
                     writer.println(tourist.logPrefix() + "will start driving to freeway "+ freewayEntraceLocation + " at time " + evacTime);
-                    post(new EnvironmentAction(
+                    subgoal(new EnvironmentAction(
                             Integer.toString(tourist.getId()),
                             bdiAction, params));
                 }

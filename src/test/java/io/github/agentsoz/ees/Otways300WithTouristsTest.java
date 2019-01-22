@@ -46,6 +46,7 @@ public class Otways300WithTouristsTest {
     @Rule
     public MatsimTestUtils utils = new MatsimTestUtils();
 
+    @Ignore
     @Test
     public void testOtways300TouristReducedV2() {
 

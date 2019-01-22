@@ -412,7 +412,7 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
                 + ":"+ location + ":" + String.format("%.0f", distToTravel) + "m away");
         EnvironmentAction action = new EnvironmentAction(Integer.toString(getId()), ActionList.DRIVETO, params);
         setActiveEnvironmentAction(action); // will be reset by updateAction()
-        post(action); // post should be last call in any plan step
+        subgoal(action); // should be last call in any plan step
         return true;
     }
 
