@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--===========================================================================
+  #%L
+  BDI-ABM Integration Package
+  %%
+  Copyright (C) 2014 - 2016 by its authors. See AUTHORS file.
+  %%
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as
+  published by the Free Software Foundation, either version 3 of the
+  License, or (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Lesser Public License for more details.
+
+  You should have received a copy of the GNU General Lesser Public
+  License along with this program.  If not, see
+  <http://www.gnu.org/licenses/lgpl-3.0.html>.
+  #L%
+============================================================================-->
+
+<simulation
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="https://github.com/agentsoz/bdi-abm-integration"
+  xsi:schemaLocation="https://github.com/agentsoz/bdi-abm-integration ../../xsd/ees.xsd"
+  version="v2.0">
+
+  <!-- global configuration sent to all models -->
+  <global>
+    <!--
+      Simulation time step in seconds.
+      Each step equals this many seconds of simulated time;
+      higher values will make the simulation faster but
+      at the expense of fidelity. For instance, when set to 60,
+      all models will progress in 1 minute steps. This means things like:
+      * BDI reasoning will trigger once per simulated minute
+      * Fire model will update fire shapes in 1 min jumps
+      * MATSim will simulate traffic for a minute between interruptions;
+        which means that vehicles might drive for instance into fire for
+        up to a minute before they realise this (upon control passing to BDI)
+        and do something about it.
+    -->
+    <opt id="timestepInSecs">30</opt>
+    <!-- random seed to be used for all models; set to -1 if not used -->
+    <opt id="randomSeed">12345</opt>
+    <!-- coordinate reference system in EPSG format to be used for all models; see http://spatialreference.org -->
+    <opt id="crs">EPSG:4326</opt>
+    <!-- simulation start time in HH:MM format -->
+    <opt id="startHHMM">01:05</opt>
+  </global>
+
+  <!-- model specific configuration -->
+  <models>
+
+    <model id="bdi">
+      <!-- Legacy option to control the peak of vehicles leaving once the FIRE_ALERT is issued by the phoenix model;
+           Only applies if the phoenix model option sendFireAlertOnFireStart=true -->
+      <opt id="evacPeakMins">60</opt>
+
+      <!-- Jill BDI engine configuration arguments; DO NOT CHANGE IF UNSURE -->
+      <opt id="jPlanSelectionPolicy">FIRST</opt>
+      <opt id="jAgents"></opt>
+      <opt id="jLogLevel">WARN</opt>
+      <opt id="jLogFile">test/output/io/github/agentsoz/ees/SurfCoastShirePopulationSubgroupsTest/testSurfCoastShirePopulationSubgroups/jill.log</opt>
+      <opt id="jOutFile">test/output/io/github/agentsoz/ees/SurfCoastShirePopulationSubgroupsTest/testSurfCoastShirePopulationSubgroups/jill.out</opt>
+      <!--<opt id="jNumThreads">1</opt>-->
+
+    </model>
+
+    <model id="matsim">
+      <!-- MATSim output directory relative to examples/bushfire directory (will overrule the setting in MATSim config) -->
+      <opt id="outputDir">test/output/io/github/agentsoz/ees/SurfCoastShirePopulationSubgroupsTest/testSurfCoastShirePopulationSubgroups/matsim</opt>
+      <!-- MATSim XML config XML file relative to examples/bushfire directory -->
+      <opt id="configXml">scenarios/surf-coast-shire/population-subgroups/scenario_matsim_main.xml</opt>
+      <!-- Maximum distance at which the fire can be seen (in metres)-->
+      <opt id="maxDistanceForFireVisual">1000</opt>
+      <!-- Maximum distance at which smoke can be seen (in metres)-->
+      <opt id="maxDistanceForSmokeVisual">5000</opt>
+      <!-- Fire avoidance buffer used for planning routes for regular vehicles (in metres)-->
+      <opt id="fireAvoidanceBufferForVehicles">5000</opt>
+      <!-- Fire avoidance buffer used for planning routes for emergency vehicles (in metres)-->
+      <opt id="fireAvoidanceBufferForEmergencyVehicles">1000</opt>
+      <!-- Congestion parameters used by vehicles to decide if they are stuck in congestion. See issues
+           https://github.com/agentsoz/bdi-abm-integration/issues/8 and
+           https://github.com/agentsoz/bdi-abm-integration/issues/35 -->
+      <opt id="congestionEvaluationInterval">300</opt>
+      <opt id="congestionToleranceThreshold">0.5</opt>
+      <opt id="congestionReactionProbability">0.10</opt>
+      <!-- Use a custom routing algorithm for evacuation -->
+      <opt id="routingAlgorithmType">ExampleRoutingAlgorithm</opt>
+    </model>
+
+    <model id="phoenix">
+      <!-- Phoenix start time in HH:MM format; used to calculate absolute values for hour_spot and hour_burnt -->
+      <opt id="ignitionHHMM">12:00</opt>
+      <!-- Phoenix grid GeoJSON file -->
+      <opt id="gridGeoJson">scenarios/surf-coast-shire/population-subgroups/Anglesea_evac_test_ffdi104_phx5_2016data_minsup_fh2017_grid_epsg32754.json</opt>
+      <!-- Phoenix grid square size (in meteres) -->
+      <opt id="gridSquareSideInMetres">180</opt>
+      <!-- Enables/disables legacy option to broadcast FIRE_ALERT as soon as the fire starts -->
+      <opt id="sendFireAlertOnFireStart">false</opt>
+    </model>
+
+    <model id="disruption">
+      <!-- Disruptions JSON file relative to examples/bushfire directory -->
+      <opt id="fileJson"></opt>
+    </model>
+
+    <model id="messaging">
+      <!-- Messaging JSON file  -->
+      <opt id="fileJson">scenarios/surf-coast-shire/population-subgroups/scenario_messages_staged_directed.json</opt>
+      <!-- Zones GeoJSON file mapping zone IDs to polygon shapes -->
+      <opt id="fileZonesGeoJson">scenarios/surf-coast-shire/population-subgroups/SCS_SA1s_WSG84.json</opt>
+    </model>
+
+  </models>
+
+</simulation>
