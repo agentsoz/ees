@@ -38,6 +38,7 @@ import io.github.agentsoz.ees.ActionList;
 import io.github.agentsoz.ees.Disruption;
 import io.github.agentsoz.ees.EmergencyMessage;
 import io.github.agentsoz.ees.PerceptList;
+import io.github.agentsoz.ees.matsim.router.ExampleRoutingAlgorithmFactory;
 import io.github.agentsoz.ees.util.Utils;
 import io.github.agentsoz.nonmatsim.PAAgent;
 import io.github.agentsoz.nonmatsim.PAAgentManager;
@@ -59,6 +60,7 @@ import org.matsim.core.mobsim.qsim.agents.AgentFactory;
 import org.matsim.core.network.NetworkUtils;
 import org.matsim.core.router.NetworkRoutingProvider;
 import org.matsim.core.router.costcalculators.TravelDisutilityFactory;
+import org.matsim.core.router.util.LeastCostPathCalculatorFactory;
 import org.matsim.core.trafficmonitoring.FreeSpeedTravelTime;
 import org.matsim.core.utils.geometry.CoordinateTransformation;
 import org.matsim.core.utils.geometry.GeometryUtils;
@@ -70,6 +72,8 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Singleton;
 import java.util.*;
 
+import static io.github.agentsoz.bdimatsim.MATSimModel.convertTimeToSeconds;
+
 /**
  * @author Dhi Singh
  */
@@ -80,9 +84,9 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
     private final Map<String, DataClient> dataListeners = createDataListeners();
     private EvacConfig evacConfig = null;
 
-    private Shape2XyWriter fireWriter = null;
-    private Shape2XyWriter emberWriter = null;
-    private DisruptionWriter disruptionWriter = null;
+    private Shape2XyWriter fireWriter;
+    private Shape2XyWriter emberWriter;
+    private DisruptionWriter disruptionWriter;
 
     private final Map<Id<Link>,Double> penaltyFactorsOfLinks = new HashMap<>() ;
     private final Map<Id<Link>,Double> penaltyFactorsOfLinksForEmergencyVehicles = new HashMap<>() ;
@@ -91,8 +95,11 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
     private static final String eMaxDistanceForSmokeVisual = "maxDistanceForSmokeVisual";
     private static final String eFireAvoidanceBufferForVehicles = "fireAvoidanceBufferForVehicles";
     private static final String eFireAvoidanceBufferForEmergencyVehicles = "fireAvoidanceBufferForEmergencyVehicles";
+    private static final String eRoutingAlgorithmType = "routingAlgorithmType";
+
 
     public enum EvacRoutingMode {carFreespeed, carGlobalInformation, emergencyVehicle}
+    public enum EvacuationRoutingAlgorithmType {MATSimDefault, ExampleRoutingAlgorithm}
 
     // Defaults
 
@@ -100,6 +107,8 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
     private double optMaxDistanceForSmokeVisual = 3000;
     private double optFireAvoidanceBufferForVehicles = 10000;
     private double optFireAvoidanceBufferForEmergencyVehicles = 1000;
+    private EvacuationRoutingAlgorithmType optRoutingAlgorithmType =
+            EvacuationRoutingAlgorithmType.MATSimDefault;
 
     public MATSimEvacModel(Map<String, String> opts, DataServer server) {
         matsimModel = new MATSimModel(opts, server);
@@ -125,19 +134,22 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
                 case eFireAvoidanceBufferForEmergencyVehicles:
                     optFireAvoidanceBufferForVehicles = Double.parseDouble(opts.get(opt));
                     break;
+                case eRoutingAlgorithmType:
+                    optRoutingAlgorithmType =
+                            EvacuationRoutingAlgorithmType.valueOf(opts.get(opt));
+                    break;
                 default:
                     log.warn("Ignoring option: " + opt + "=" + opts.get(opt));
             }
         }
     }
 
-    private EvacConfig initialiseEvacConfig(Config config) {
+    private void initialiseEvacConfig(Config config) {
         evacConfig = ConfigUtils.addOrGetModule(config, EvacConfig.class);
         evacConfig.setSetup(EvacConfig.Setup.standard);
         evacConfig.setCongestionEvaluationInterval(matsimModel.getOptCongestionEvaluationInterval());
         evacConfig.setCongestionToleranceThreshold(matsimModel.getOptCongestionToleranceThreshold());
         evacConfig.setCongestionReactionProbability(matsimModel.getOptCongestionReactionProbability());
-        return evacConfig;
     }
 
     @Override
@@ -150,7 +162,7 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
         return matsimModel.queryPercept(agentID, perceptID, args);
     }
 
-    public final void registerDataServer( DataServer server ) {
+    private void registerDataServer( DataServer server ) {
         server.subscribe(this, PerceptList.FIRE_DATA);
         server.subscribe(this, PerceptList.EMBERS_DATA);
         server.subscribe(this, PerceptList.DISRUPTION);
@@ -159,13 +171,12 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
 
     @Override
     public void receiveData(double time, String dataType, Object data) {
-        double now = time;
         switch( dataType ) {
             case PerceptList.FIRE_DATA:
             case PerceptList.EMBERS_DATA:
             case PerceptList.DISRUPTION:
             case PerceptList.EMERGENCY_MESSAGE:
-                dataListeners.get(dataType).receiveData(now, dataType, data);
+                dataListeners.get(dataType).receiveData(time, dataType, data);
                 break;
             default:
                 matsimModel.receiveData(time, dataType, data);
@@ -174,38 +185,33 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
 
     /**
      * Creates a listener for each type of message we expect from the DataServer
-     * @return
+     * @return the map of listeners
      */
     private Map<String, DataClient> createDataListeners() {
         Map<String, DataClient> listeners = new  HashMap<>();
 
-        listeners.put(PerceptList.FIRE_DATA, (DataClient<Geometry>) (time, dataType, data) -> {
-            processFireData(data, time, penaltyFactorsOfLinks, matsimModel.getScenario(),
-                    penaltyFactorsOfLinksForEmergencyVehicles, fireWriter);
-        });
+        listeners.put(PerceptList.FIRE_DATA, (DataClient<Geometry>) (time, dataType, data)
+                -> processFireData(data, time, penaltyFactorsOfLinks, matsimModel.getScenario(),
+                penaltyFactorsOfLinksForEmergencyVehicles, fireWriter));
 
-        listeners.put(PerceptList.EMBERS_DATA, (DataClient<Geometry>) (time, dataType, data) -> {
-            processEmbersData(data, time, matsimModel.getScenario(), emberWriter);
-        });
+        listeners.put(PerceptList.EMBERS_DATA, (DataClient<Geometry>) (time, dataType, data)
+                -> processEmbersData(data, time, matsimModel.getScenario(), emberWriter));
 
-        listeners.put(PerceptList.DISRUPTION, (DataClient<Map<Double,Disruption>>) (time, dataType, data) -> {
-            processDisruptionData(data, time, matsimModel.getScenario(), disruptionWriter);
-        });
+        listeners.put(PerceptList.DISRUPTION, (DataClient<Map<Double,Disruption>>) (time, dataType, data)
+                -> processDisruptionData(data, time, matsimModel.getScenario(), disruptionWriter));
 
-        listeners.put(PerceptList.EMERGENCY_MESSAGE, (DataClient<Map<Double,EmergencyMessage>>) (time, dataType, data) -> {
-            processEmergencyMessageData(data, time, matsimModel.getScenario());
-        });
+        listeners.put(PerceptList.EMERGENCY_MESSAGE, (DataClient<Map<Double,EmergencyMessage>>) (time, dataType, data)
+                -> processEmergencyMessageData(data, time, matsimModel.getScenario()));
 
         return listeners;
     }
 
     private void processEmbersData(Geometry data, double now, Scenario scenario, Shape2XyWriter emberWriter) {
         log.debug("received embers data: {}", data);
-        Geometry embers = data;
-        if (embers == null) {
+        if (data == null) {
             return;
         }
-        Geometry embersBuffer = embers.buffer(optMaxDistanceForSmokeVisual);
+        Geometry embersBuffer = data.buffer(optMaxDistanceForSmokeVisual);
         List<Id<Person>> personsMatched = getPersonsWithin(scenario, embersBuffer);
         if (!personsMatched.isEmpty()) {
             log.info("Embers/smoke seen at time {} by {} persons ... use DEBUG to see full list",
@@ -220,18 +226,16 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
                 getAgentManager().getAgentDataContainerV2().putPercept(agent.getAgentID(), PerceptList.FIELD_OF_VIEW, pc);
             }
         }
-        emberWriter.write( now, embers);
+        emberWriter.write( now, data);
     }
 
     private void processDisruptionData(Map<Double, Disruption> data, double now, Scenario scenario, DisruptionWriter disruptionWriter ) {
-        log.info("receiving disruption data at time={}", now); ;
+        log.info("receiving disruption data at time={}", now);
         log.info( "{}", new Gson().toJson(data) ) ;
 
-        Map<Double,Disruption> timeMapOfDisruptions = data;
+        for (Disruption dd : data.values()) {
 
-        for (Disruption dd : timeMapOfDisruptions.values()) {
-
-            double speedInMpS = 0;
+            double speedInMpS;
             switch (dd.getEffectiveSpeedUnit()) {
                 case "kmph":
                 case "KMPH":
@@ -251,7 +255,7 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
                 log.info("Updating freespeed on link {} from {} to {} due to disruption",
                         link.getId(), prevSpeed, speedInMpS);
                 {
-                    double startTime = matsimModel.convertTimeToSeconds(dd.getStartHHMM());
+                    double startTime = convertTimeToSeconds(dd.getStartHHMM());
                     if (startTime < now) {
                         startTime = now;
                     }
@@ -259,7 +263,7 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
                     disruptionWriter.write(startTime, link.getId(), link.getCoord(), speedInMpS);
                 }
                 {
-                    double startTime = matsimModel.convertTimeToSeconds(dd.getEndHHMM());
+                    double startTime = convertTimeToSeconds(dd.getEndHHMM());
                     if (startTime < now) {
                         startTime = now;
                     }
@@ -277,14 +281,12 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
         log.debug( "{}", new Gson().toJson(data)) ;
 
 
-        Map<Double,EmergencyMessage> timeMapOfEmergencyMessages = data;
-
         // FIXME: Assumes incoming is WSG84 format. See https://github.com/agentsoz/bdi-abm-integration/issues/34
         CoordinateTransformation transform = TransformationFactory.getCoordinateTransformation(
                 TransformationFactory.WGS84, scenario.getConfig().global().getCoordinateSystem());
 
         // The key is time, value is a message
-        for (EmergencyMessage msg : timeMapOfEmergencyMessages.values()) {
+        for (EmergencyMessage msg : data.values()) {
             // For each zone in this message
             List<Id<Person>> personsInZones = new ArrayList<>();
 
@@ -319,10 +321,9 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
                                  Shape2XyWriter fireWriter) {
 
         log.debug("received fire data: {}", data);
-        Geometry fire = data;
 
         {
-            Geometry buffer = fire.buffer(optMaxDistanceForFireVisual);
+            Geometry buffer = data.buffer(optMaxDistanceForFireVisual);
             List<Id<Person>> personsMatched = getPersonsWithin(scenario, buffer);
             if (!personsMatched.isEmpty()) {
                 log.info("Fire seen at time {} by {} persons ... use DEBUG to see full list",
@@ -341,21 +342,21 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
 //		https://stackoverflow.com/questions/38404095/how-to-calculate-the-distance-in-meters-between-a-geographic-point-and-a-given-p
         {
             final double bufferWidth = optFireAvoidanceBufferForVehicles;
-            Geometry buffer = fire.buffer(bufferWidth);
+            Geometry buffer = data.buffer(bufferWidth);
             penaltyFactorsOfLinks.clear();
 //		Utils.penaltyMethod1(fire, buffer, penaltyFactorsOfLinks, scenario );
-            Utils.penaltyMethod2(fire, buffer, bufferWidth, penaltyFactorsOfLinks, scenario);
+            Utils.penaltyMethod2(data, buffer, bufferWidth, penaltyFactorsOfLinks, scenario);
             // I think that penaltyMethod2 looks nicer than method1.  kai, dec'17
             // yy could make this settable, but for the time being this pedestrian approach
             // seems sufficient.  kai, jan'18
         }
         {
             final double bufferWidth = optFireAvoidanceBufferForEmergencyVehicles;
-            Geometry buffer = fire.buffer(bufferWidth);
+            Geometry buffer = data.buffer(bufferWidth);
             penaltyFactorsOfLinksForEmergencyVehicles.clear();
-            Utils.penaltyMethod2(fire, buffer, bufferWidth, penaltyFactorsOfLinksForEmergencyVehicles, scenario);
+            Utils.penaltyMethod2(data, buffer, bufferWidth, penaltyFactorsOfLinksForEmergencyVehicles, scenario);
         }
-        fireWriter.write( now, fire);
+        fireWriter.write( now, data);
     }
 
     private List<Id<Person>> getPersonsWithin(Scenario scenario, Geometry shape) {
@@ -403,10 +404,20 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
         controller.addOverridingModule(new AbstractModule() {
             @Override
             public void install() {
+                // Attach our evacuation-based routing algorithm selector
+                bindEvacuationRoutingAlgorithm();
+                // Set up the evacuation routers
                 setupEmergencyVehicleRouting();
                 setupCarGlobalInformationRouting();
                 setupCarFreespeedRouting();
             }
+
+            private void bindEvacuationRoutingAlgorithm() {
+                if (optRoutingAlgorithmType == EvacuationRoutingAlgorithmType.ExampleRoutingAlgorithm) {
+                    this.bind(LeastCostPathCalculatorFactory.class).to(ExampleRoutingAlgorithmFactory.class);
+                }
+            }
+
             private void setupCarFreespeedRouting() {
                 // memorize the routing mode:
                 String routingMode = MATSimEvacModel.EvacRoutingMode.carFreespeed.name() ;
