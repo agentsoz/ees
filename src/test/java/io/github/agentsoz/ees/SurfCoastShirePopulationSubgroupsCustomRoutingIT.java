@@ -45,7 +45,7 @@ public class SurfCoastShirePopulationSubgroupsCustomRoutingIT {
 
 
     @Test
-    public void testSurfCoastShirePopulationSubgroups() {
+    public void testSurfCoastShirePopulationSubgroupsCustomRouting() {
 
         String[] args = {
                 "--config", "scenarios/surf-coast-shire/population-subgroups/ees-custom-routing.xml",
