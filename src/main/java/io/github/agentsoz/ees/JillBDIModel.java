@@ -87,6 +87,8 @@ public class JillBDIModel extends JillModel implements DataClient {
 
 	private final Map<String, DataClient> dataListeners = createDataListeners();
 
+	private Object sequenceLock;
+
 	public JillBDIModel(String[] initArgs) {
 		super();
 		msgMap = new TreeMap<>();
@@ -459,7 +461,7 @@ public class JillBDIModel extends JillModel implements DataClient {
 
 		listeners.put(PerceptList.TAKE_CONTROL_BDI, (DataClient<io.github.agentsoz.bdiabm.v2.AgentDataContainer>) (time, dataType, data) -> {
 			//takeControl(data);
-			synchronized (super.getSequenceLock()) {
+			synchronized (getSequenceLock()) {
 				getAgentDataContainer().clear();
 				takeControl(time, data);
 				dataServer.publish(PerceptList.AGENT_DATA_CONTAINER_FROM_BDI, getAgentDataContainer());
@@ -480,4 +482,12 @@ public class JillBDIModel extends JillModel implements DataClient {
 
 		return listeners;
 	}
+	public void useSequenceLock(Object sequenceLock) {
+		this.sequenceLock = sequenceLock;
+	}
+
+	protected Object getSequenceLock() {
+		return sequenceLock;
+	}
+
 }
