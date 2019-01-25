@@ -80,7 +80,7 @@ public class SurfCoastShirePopulationSubgroupsIT {
                 "--x-zones-file", "scenarios/surf-coast-shire/population-subgroups/Anglesea_SA1s_WSG84.json", // map from zone (SA1) ids to shapes
         };
 
-        Main.main(args);
+        //Main.main(args);
 
     }
 

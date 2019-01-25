@@ -22,6 +22,7 @@ package io.github.agentsoz.ees.agents;
  * #L%
  */
 
+import io.github.agentsoz.bdiabm.EnvironmentActionInterface;
 import io.github.agentsoz.bdiabm.QueryPerceptInterface;
 import io.github.agentsoz.bdiabm.data.ActionContent;
 import io.github.agentsoz.bdiabm.data.ActionContent.State;
@@ -46,6 +47,7 @@ public class Responder extends Agent implements io.github.agentsoz.bdiabm.Agent 
 	private Prefix prefix = new Prefix();
 	private double time = -1;
 	private QueryPerceptInterface queryInterface;
+	private EnvironmentActionInterface envInterface;
 
 	public Responder(String str) {
 		super(str);
@@ -105,14 +107,6 @@ public class Responder extends Agent implements io.github.agentsoz.bdiabm.Agent 
 	}
 
 	/**
-	 * Called by the Jill model when this agent posts a new BDI action
-	 * to the ABM environment
-	 */
-	@Override
-	public void packageAction(String actionID, Object[] parameters) {
-	}
-
-	/** 
 	 * Called by the Jill model with the status of a BDI action previously
 	 * posted by this agent to the ABM environment. 
 	 */
@@ -170,6 +164,16 @@ public class Responder extends Agent implements io.github.agentsoz.bdiabm.Agent 
 	@Override
 	public QueryPerceptInterface getQueryPerceptInterface() {
 		return queryInterface;
+	}
+
+	@Override
+	public void setEnvironmentActionInterface(EnvironmentActionInterface envActInterface) {
+		envInterface = envActInterface;
+	}
+
+	@Override
+	public EnvironmentActionInterface getEnvironmentActionInterface() {
+		return envInterface;
 	}
 
 	double getTime() {

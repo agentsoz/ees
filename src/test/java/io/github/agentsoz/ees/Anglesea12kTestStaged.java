@@ -72,7 +72,7 @@ public class Anglesea12kTestStaged {
                 "--x-zones-file", "scenarios/surf-coast-shire/anglesea-12k/Anglesea_SA1s_WSG84.json", // map from zone (SA1) ids to shapes
         };
 
-        Main.main(args);
+        //Main.main(args);
 
         final String actualEventsFilename = utils.getOutputDirectory() + "/output_events.xml.gz";
         long actualEventsCRC = CRCChecksum.getCRCFromFile( actualEventsFilename ) ;

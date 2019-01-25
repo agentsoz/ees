@@ -28,7 +28,7 @@ import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
 import io.github.agentsoz.bdiabm.ABMServerInterface;
 import io.github.agentsoz.bdiabm.QueryPerceptInterface;
-import io.github.agentsoz.bdiabm.data.AgentDataContainer;
+import io.github.agentsoz.bdiabm.v2.AgentDataContainer;
 import io.github.agentsoz.bdiabm.data.PerceptContent;
 import io.github.agentsoz.bdimatsim.MATSimModel;
 import io.github.agentsoz.bdimatsim.Replanner;
@@ -153,8 +153,8 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
     }
 
     @Override
-    public void takeControl(AgentDataContainer agentDataContainer) {
-        matsimModel.takeControl(agentDataContainer);
+    public AgentDataContainer takeControl(double time, AgentDataContainer agentDataContainer) {
+        return takeControl(time, agentDataContainer);
     }
 
     @Override
@@ -380,8 +380,9 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
     }
 
 
-    public void init(List<String> bdiAgentIDs) {
-        matsimModel.init(bdiAgentIDs);
+    public void init(Object[] args) {
+        matsimModel.init(args);
+        List<String> bdiAgentIDs = (List<String>)args[0];
         initialiseControllerForEvac(matsimModel.getControler());
         for(String agentId: bdiAgentIDs) {
             // replace the default action handlers with evacuation specific ones
@@ -484,6 +485,11 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
 
     public void setAgentDataContainer(io.github.agentsoz.bdiabm.v2.AgentDataContainer adc_from_abm) {
         matsimModel.setAgentDataContainer(adc_from_abm);
+    }
+
+    @Override
+    public AgentDataContainer getAgentDataContainer() {
+        return matsimModel.getAgentDataContainer();
     }
 
     public void useSequenceLock(Object sequenceLock) {

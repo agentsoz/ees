@@ -23,15 +23,11 @@ package io.github.agentsoz.ees;
  */
 
 import io.github.agentsoz.abmjill.JillModel;
-import io.github.agentsoz.bdiabm.ABMServerInterface;
 import io.github.agentsoz.bdiabm.QueryPerceptInterface;
-import io.github.agentsoz.bdiabm.data.AgentDataContainer;
-import io.github.agentsoz.bdiabm.data.AgentStateList;
+import io.github.agentsoz.bdiabm.v2.AgentDataContainer;
 import io.github.agentsoz.dataInterface.DataClient;
 import io.github.agentsoz.dataInterface.DataServer;
 import io.github.agentsoz.jill.lang.Agent;
-import io.github.agentsoz.util.Global;
-import io.github.agentsoz.util.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -325,10 +321,7 @@ public class JillBDIModel extends JillModel implements DataClient {
 	}
 
 	@Override
-	public boolean init(AgentDataContainer agentDataContainer,
-			AgentStateList agentList,
-			ABMServerInterface abmServer,
-			Object[] params)
+	public void init(Object[] params)
 	{
 		dataServer.subscribe(this, PerceptList.TAKE_CONTROL_BDI);
 		dataServer.subscribe(this, PerceptList.FIRE_ALERT);
@@ -338,41 +331,38 @@ public class JillBDIModel extends JillModel implements DataClient {
 		logger.info("Initialising jill with args: " + Arrays.toString(initArgs));
 		// Initialise the Jill model
 		// params[] contains the list of agent names to create
-		if (super.init(agentDataContainer, agentList, abmServer, initArgs)) {
-			// Initialise the alertPercepts
-			int capacity = (params.length<1) ? 1 : params.length;
-			alertPercepts = new PriorityQueue<TimedAlert>(capacity, new Comparator<TimedAlert>() {
-				@Override
-				public int compare(TimedAlert o1, TimedAlert o2) {
-					double t1 = o1.getTime();
-					double t2 = o2.getTime();
-					if (t1 > t2) {
-						return 1;
-					} else if (t1 < t2) {
-						return -1;
-					} else {
-						return 0;
-					}
+		super.init(initArgs);
+		// Initialise the alertPercepts
+		int capacity = (params.length<1) ? 1 : params.length;
+		alertPercepts = new PriorityQueue<TimedAlert>(capacity, new Comparator<TimedAlert>() {
+			@Override
+			public int compare(TimedAlert o1, TimedAlert o2) {
+				double t1 = o1.getTime();
+				double t2 = o2.getTime();
+				if (t1 > t2) {
+					return 1;
+				} else if (t1 < t2) {
+					return -1;
+				} else {
+					return 0;
 				}
-			});
-			// Set the BDI query percept interface that the agents can use
-			for (int i=0; i<params.length; i++) {
-				getAgent(i).setQueryPerceptInterface(this.getQueryPerceptInterface());
 			}
-			// Initialise agents with per-given args if available
-			if (agentsInitMap != null) {
-				Map<String, List<String>> args = JillBDIModel.getFlattenedArgsFromAgentsInitMap(agentsInitMap);
-				initialiseAgentsWithArgs(args);
-			}
-			// Now create the given map to jill agent ids
-			for (int i=0; i<params.length; i++) {
-				String jillID = String.valueOf(((Agent)getAgent(i)).getId());
-				mapMATsimToJillIds.put((String)params[i], jillID);
-				mapJillToMATsimIds.put(jillID, (String)params[i]);
-			}
-			return true;
+		});
+		// Set the BDI query percept interface that the agents can use
+		for (int i=0; i<params.length; i++) {
+			getAgent(i).setQueryPerceptInterface(this.getQueryPerceptInterface());
 		}
-		return false;
+		// Initialise agents with per-given args if available
+		if (agentsInitMap != null) {
+			Map<String, List<String>> args = JillBDIModel.getFlattenedArgsFromAgentsInitMap(agentsInitMap);
+			initialiseAgentsWithArgs(args);
+		}
+		// Now create the given map to jill agent ids
+		for (int i=0; i<params.length; i++) {
+			String jillID = String.valueOf(((Agent)getAgent(i)).getId());
+			mapMATsimToJillIds.put((String)params[i], jillID);
+			mapJillToMATsimIds.put(jillID, (String)params[i]);
+		}
 	}
 
 	@Override
@@ -394,53 +384,28 @@ public class JillBDIModel extends JillModel implements DataClient {
 		evacPeak = peak;
 	}
 
-	@Override
-	// send percepts to individual agents
-	public void takeControl(AgentDataContainer adc) {
-		// Schedul the fire alertPercepts
-		if (!fireAlertPerceptsScheduled && fireAlertTime != -1) {
-			int[] hhmm = evacStartHHMM;
-			int peak = evacPeak;
-			logger.info(String.format("Scheduling evacuation starting at %2d:%2d and peaking %d mins after start", hhmm[0], hhmm[1], peak));
-			scheduleFireAlertPerceptsToResidents(hhmm, peak);
-			fireAlertPerceptsScheduled = true;
-		}
-		double timeInSecs = dataServer.getTime();
-		// Send fire alertPercepts to all agents scheduled for this time step (or earlier)
-		while (!alertPercepts.isEmpty() && alertPercepts.peek().getTime() <= timeInSecs) {
-			TimedAlert alert = alertPercepts.poll();
-			String matsimAgentId = alert.getAgent();
-			adc.getOrCreate(matsimAgentId).getPerceptContainer().put(PerceptList.FIRE_ALERT, new Double(timeInSecs));
-		}
-		translateToJillIds(adc);
-		adc.getOrCreate(PerceptList.BROADCAST).getPerceptContainer().put(PerceptList.TIME, timeInSecs);
-		sendSocialNetworkMessagesToAgents(adc);
-		super.takeControl(adc);
-        translateToMATSimIds(adc);
-	}
-
 	private void sendSocialNetworkMessagesToAgents(AgentDataContainer adc) {
-		for (Double msgTime : msgMap.keySet()) {
-			DiffusedContent content = msgMap.get(msgTime);
-			Map<String, String[]> msgs = content.getcontentSpreadMap();
-			for (String msg : msgs.keySet()) {
-				Set<String> messagedAgents = informedAgents.containsKey(msg) ? informedAgents.get(msg) : new HashSet<>();
-				String[] agents = msgs.get(msg);
-				for (String agent : agents) {
-					if (!messagedAgents.contains(agent)) {
-						String id = String.valueOf(agent);
-						adc.getOrCreate(id).getPerceptContainer().put(PerceptList.SOCIAL_NETWORK_MSG, msg);
-						messagedAgents.add(agent);
-						informedAgents.put(msg,messagedAgents);
-					}
-				}
-				logger.info("Total "+messagedAgents.size()+" agents received this message from social network:" + msg);
-				logger.info("Agents receiving message from social network are: {}",
-						Arrays.toString(messagedAgents.toArray()));
-
-			}
-		}
-		msgMap.clear();
+//		for (Double msgTime : msgMap.keySet()) {
+//			DiffusedContent content = msgMap.get(msgTime);
+//			Map<String, String[]> msgs = content.getcontentSpreadMap();
+//			for (String msg : msgs.keySet()) {
+//				Set<String> messagedAgents = informedAgents.containsKey(msg) ? informedAgents.get(msg) : new HashSet<>();
+//				String[] agents = msgs.get(msg);
+//				for (String agent : agents) {
+//					if (!messagedAgents.contains(agent)) {
+//						String id = String.valueOf(agent);
+//						adc.getOrCreate(id).getPerceptContainer().put(PerceptList.SOCIAL_NETWORK_MSG, msg);
+//						messagedAgents.add(agent);
+//						informedAgents.put(msg,messagedAgents);
+//					}
+//				}
+//				logger.info("Total "+messagedAgents.size()+" agents received this message from social network:" + msg);
+//				logger.info("Agents receiving message from social network are: {}",
+//						Arrays.toString(messagedAgents.toArray()));
+//
+//			}
+//		}
+//		msgMap.clear();
 	}
 
 	private void translateToJillIds(AgentDataContainer adc) {
@@ -450,30 +415,6 @@ public class JillBDIModel extends JillModel implements DataClient {
   private void translateToMATSimIds(AgentDataContainer adc) {
     // FIXME: The outgoing IDs need to be converted to MATSim IDs before returning
   }
-
-  /**
-	 * Schedules fire alertPercepts to be send to residents starting at time
-	 * {@link SimpleConfig#getEvacStartHHMM()} and with a normal peak at
-	 * {@link SimpleConfig#getEvacPeakMins()} minutes after start.
-	 *
-	 * Ideally this decision should be made by the agents, i.e., they should
-	 * all receive a fire alert at {@link SimpleConfig#getEvacStartHHMM()} and
-	 * then they should individually decide how to react to that alert.
-	 * Here we are forcing a pattern of vehicles leaving, by spreading the
-	 * alertPercepts over a normal distribution.
-	 */
-	public void scheduleFireAlertPerceptsToResidents(int[] hhmm, int mins3Sigma) {
-		double minsSigma = mins3Sigma/3.0;
-		double minsMean = mins3Sigma;
-		double evacStartInSeconds = Time.convertTime(hhmm[0], Time.TimestepUnit.HOURS, Time.TimestepUnit.SECONDS)
-				+ Time.convertTime(hhmm[1], Time.TimestepUnit.MINUTES, Time.TimestepUnit.SECONDS);
-		for (String matsimAgentId: mapMATsimToJillIds.keySet()) {
-			double minsOffset = Global.getRandom().nextGaussian() * minsSigma + minsMean;
-			double secsOffset = Math.round(Time.convertTime(minsOffset, Time.TimestepUnit.MINUTES, Time.TimestepUnit.SECONDS));
-			double evacTimeInSeconds = evacStartInSeconds + secsOffset;
-			alertPercepts.add(new TimedAlert(evacTimeInSeconds, matsimAgentId));
-		}
-	}
 
 	public void initialiseAgentsWithArgs(Map<String, List<String>> map) {
 		if(map == null) return;
@@ -520,7 +461,7 @@ public class JillBDIModel extends JillModel implements DataClient {
 			//takeControl(data);
 			synchronized (super.getSequenceLock()) {
 				getAgentDataContainer().clear();
-				takeControlV2(time, data);
+				takeControl(time, data);
 				dataServer.publish(PerceptList.AGENT_DATA_CONTAINER_FROM_BDI, getAgentDataContainer());
 			}
 		});

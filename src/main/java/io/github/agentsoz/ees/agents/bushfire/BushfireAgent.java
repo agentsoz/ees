@@ -25,6 +25,7 @@ package io.github.agentsoz.ees.agents.bushfire;
 
 
 import io.github.agentsoz.abmjill.genact.EnvironmentAction;
+import io.github.agentsoz.bdiabm.EnvironmentActionInterface;
 import io.github.agentsoz.bdiabm.QueryPerceptInterface;
 import io.github.agentsoz.bdiabm.data.ActionContent;
 import io.github.agentsoz.dataInterface.DataServer;
@@ -58,6 +59,7 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
 
     private PrintStream writer = null;
     private QueryPerceptInterface queryInterface;
+    private EnvironmentActionInterface envActionInterface;
     private double time = -1;
     private BushfireAgent.Prefix prefix = new BushfireAgent.Prefix();
 
@@ -440,15 +442,6 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
     }
 
     /**
-     * Called by the Jill model when this agent posts a new BDI action
-     * to the ABM environment
-     */
-    @Override
-    public void packageAction(String actionID, Object[] parameters) {
-        //logger.warn("{} ignoring action {}", logPrefix(), actionID);
-    }
-
-    /**
      * Called by the Jill model with the status of a BDI action previously
      * posted by this agent to the ABM environment.
      */
@@ -509,6 +502,14 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
     @Override
     public QueryPerceptInterface getQueryPerceptInterface() {
         return queryInterface;
+    }
+
+    public void setEnvironmentActionInterface(EnvironmentActionInterface envActInterface) {
+        this.envActionInterface = envActInterface;
+    }
+
+    public EnvironmentActionInterface getEnvironmentActionInterface() {
+        return envActionInterface;
     }
 
 

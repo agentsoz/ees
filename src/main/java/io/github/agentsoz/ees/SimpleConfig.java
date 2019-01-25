@@ -263,10 +263,7 @@ public class SimpleConfig {
 			// Now read the geography file
 			readGeography();
 		} catch(Exception e){
-			//			abort(e.getMessage());
-			Main.abort(e) ;
-			// (if you just pass the message, the exception type is not passed on, so e.g. for a null pointer error one does not
-			// see anything.  kai, nov'17)
+			throw new RuntimeException("ERROR while reading config", e);
 		}
 
 

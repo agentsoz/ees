@@ -25,12 +25,12 @@ package io.github.agentsoz.ees;
 
 import io.github.agentsoz.bdiabm.QueryPerceptInterface;
 import io.github.agentsoz.bdiabm.v2.AgentDataContainer;
-import io.github.agentsoz.bdimatsim.Utils;
 import io.github.agentsoz.dataInterface.DataClient;
 import io.github.agentsoz.dataInterface.DataServer;
 import io.github.agentsoz.ees.matsim.EvacAgentTracker;
 import io.github.agentsoz.ees.matsim.EvacConfig;
 import io.github.agentsoz.ees.matsim.MATSimEvacModel;
+import io.github.agentsoz.ees.util.Utils;
 import io.github.agentsoz.util.Global;
 import io.github.agentsoz.util.Time;
 import org.matsim.api.core.v01.Scenario;
@@ -44,7 +44,6 @@ import java.util.Map;
 
 /**
  * Emergency Evacuation Simulator (EES) main program.
- * Uses input config v2. For legacy config use {@link Main}.
  * @author Dhirendra Singh
  */
 public class Run implements DataClient {
@@ -130,12 +129,12 @@ public class Run implements DataClient {
         // initialise the Jill model, register it as an active data source, and start it
         log.info("Starting Jill BDI model");
         JillBDIModel jillmodel = new JillBDIModel(cfg.getModelConfig(Config.eModelBdi), dataServer, (QueryPerceptInterface)matsimEvacModel, bdiMap);
-        jillmodel.init(matsimEvacModel.getAgentManager().getAgentDataContainer(), null, null, bdiAgentIDs.toArray( new String[bdiAgentIDs.size()] ));
+        jillmodel.init(bdiAgentIDs.toArray( new String[bdiAgentIDs.size()] ));
         jillmodel.start();
 
         // --- initialize and start MATSim
         log.info("Starting MATSim model");
-        matsimEvacModel.init(bdiAgentIDs);
+        matsimEvacModel.init(new Object[]{bdiAgentIDs});
         matsimEvacModel.start();
         {
             // yyyy try to replace this by injection. because otherwise it again needs to be added "late enough", which we
