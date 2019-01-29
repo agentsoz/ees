@@ -3,7 +3,7 @@
 
   <groupId>io.github.agentsoz</groupId>
   <artifactId>ees</artifactId>
-  <version>2.0.2-SNAPSHOT</version>
+  <version>2.1.0</version>
 
   <modelVersion>4.0.0</modelVersion>
   <packaging>jar</packaging>
@@ -20,7 +20,7 @@
     <connection>scm:git:https://github.com/agentsoz/ees.git</connection>
     <developerConnection>scm:git:https://github.com/agentsoz/ees.git</developerConnection>
     <url>https://github.com/agentsoz/ees.git</url>
-    <tag>HEAD</tag>
+    <tag>ees-2.1.0</tag>
   </scm>
 
   <developers>
@@ -114,22 +114,22 @@
     <dependency>
       <groupId>io.github.agentsoz</groupId>
       <artifactId>bdi-abm</artifactId>
-      <version>2.0.2-SNAPSHOT</version>
+      <version>3.0.0</version>
     </dependency>
     <dependency>
       <groupId>io.github.agentsoz</groupId>
       <artifactId>abm-jill</artifactId>
-      <version>2.0.2-SNAPSHOT</version>
+      <version>3.0.0</version>
     </dependency>
     <dependency>
       <groupId>io.github.agentsoz</groupId>
       <artifactId>bdi-matsim</artifactId>
-      <version>2.0.2-SNAPSHOT</version>
+      <version>3.0.0</version>
     </dependency>
     <dependency>
       <groupId>io.github.agentsoz</groupId>
       <artifactId>util</artifactId>
-      <version>2.0.2-SNAPSHOT</version>
+      <version>3.0.0</version>
     </dependency>
     <dependency>
       <groupId>io.github.agentsoz</groupId>
@@ -269,7 +269,7 @@
                   </manifestEntries>
                 </transformer>
                 <!-- This bit merges the various GeoTools META-INF/services files         -->
-                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
               </transformers>
             </configuration>
           </execution>
