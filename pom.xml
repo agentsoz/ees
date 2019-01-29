@@ -10,6 +10,7 @@
 
   <name>Emergency Evacuation Simulator</name>
   <description>Understanding community evacuation timing</description>
+  <url>https://github.com/agentsoz/ees</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -22,6 +23,13 @@
     <url>https://github.com/agentsoz/ees.git</url>
     <tag>HEAD</tag>
   </scm>
+
+  <licenses>
+    <license>
+      <name>GNU General Lesser Public License, Version 3.0</name>
+      <url>http://www.gnu.org/licenses/lgpl-3.0.html</url>
+    </license>
+  </licenses>
 
   <developers>
     <developer>
