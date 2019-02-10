@@ -83,14 +83,14 @@
 
     <model id="disruption">
       <!-- Disruptions JSON file relative to examples/bushfire directory -->
-      <opt id="fileJson"></opt>
+      <opt id="fileJson"><!--scenarios/surf-coast-shire/typical-summer-weekday-50k/scenario_disruptions.json--></opt>
     </model>
 
     <model id="messaging">
       <!-- Messaging JSON file  -->
-      <opt id="fileJson">scenarios/surf-coast-shire/typical-summer-weekday-50k/scenario_messages.json</opt>
+      <opt id="fileJson"></opt>
       <!-- Zones GeoJSON file mapping zone IDs to polygon shapes -->
-      <opt id="fileZonesGeoJson">scenarios/surf-coast-shire/typical-summer-weekday-50k/Anglesea_SA1s_WSG84.json</opt>
+      <opt id="fileZonesGeoJson"></opt>
     </model>
 
   </models>
