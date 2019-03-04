@@ -28,6 +28,7 @@ import io.github.agentsoz.abmjill.genact.EnvironmentAction;
 import io.github.agentsoz.bdiabm.EnvironmentActionInterface;
 import io.github.agentsoz.bdiabm.QueryPerceptInterface;
 import io.github.agentsoz.bdiabm.data.ActionContent;
+import io.github.agentsoz.bdiabm.data.PerceptContent;
 import io.github.agentsoz.dataInterface.DataServer;
 import io.github.agentsoz.ees.ActionList;
 import io.github.agentsoz.ees.EmergencyMessage;
@@ -215,13 +216,6 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
 
         if (perceptID.equals(PerceptList.EMERGENCY_MESSAGE)) {
             updateResponseBarometerMessages(parameters);
-            if (sharesInfoWithSocialNetwork &&
-                    !messagesShared.contains(EmergencyMessage.EmergencyMessageType.EVACUATE_NOW.name()) &&
-                    parameters instanceof String &&
-                    getEmergencyMessageType(parameters) == EmergencyMessage.EmergencyMessageType.EVACUATE_NOW) {
-                shareWithSocialNetwork((String) parameters);
-                messagesShared.add(EmergencyMessage.EmergencyMessageType.EVACUATE_NOW.name());
-            }
         } else if (perceptID.equals(PerceptList.SOCIAL_NETWORK_MSG)) {
             updateResponseBarometerSocialMessage(parameters);
         } else if (perceptID.equals(PerceptList.FIELD_OF_VIEW)) {
@@ -235,8 +229,34 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
             // do something
         }
 
+        // handle percept spread on social network
+        handleSocialPercept(perceptID, parameters);
+
         // Now trigger a response as needed
         checkBarometersAndTriggerResponseAsNeeded();
+    }
+
+    private void handleSocialPercept(String perceptID, Object parameters) {
+        // Nothing to do if this is not an agent who shares with the social networks
+        if (!sharesInfoWithSocialNetwork) {
+            return;
+        }
+        // Spread EVACUATE_NOW if haven't done so already
+        if (perceptID.equals(PerceptList.EMERGENCY_MESSAGE) &&
+                !messagesShared.contains(EmergencyMessage.EmergencyMessageType.EVACUATE_NOW.name()) &&
+                parameters instanceof String &&
+                getEmergencyMessageType(parameters) == EmergencyMessage.EmergencyMessageType.EVACUATE_NOW) {
+            shareWithSocialNetwork((String) parameters);
+            messagesShared.add(getEmergencyMessageType(parameters).name());
+        }
+        // Spread BLOCKED for given blocked link if haven't already
+        if (perceptID.equals(PerceptList.BLOCKED)) {
+            String blockedMsg = PerceptList.BLOCKED + parameters.toString();
+            if (!messagesShared.contains(blockedMsg)) {
+                shareWithSocialNetwork(blockedMsg);
+                messagesShared.add(blockedMsg);
+            }
+        }
     }
 
     private void handleFireVisual() {
