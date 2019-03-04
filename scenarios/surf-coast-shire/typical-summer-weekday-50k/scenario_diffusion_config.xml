@@ -1,0 +1,76 @@
+<diffusion>
+
+<!-- Social Network Model Configurations -->
+<!-- Specify the diffusion model: lt=Linear Threshold model, ic= Independant Cascade model, clt= Competitive LT model-->
+<!-- specify the network strucuture: random= random ER MODEL), sw=small world model, rand-reg=random-regular model -->
+	<!-- spcify the logfile path and log level (i=info, d=debug, t=trace) -->
+<snModel
+	diffusionType="ic"
+	networkType="rand-reg"
+	coord_file="not-needed-if-using-random"
+	log_file="test/output/io/github/agentsoz/ees/SocialNetworkExperiments50kDiffusionIT/diffusion.log"
+	log_level="i"
+	out_file="test/output/io/github/agentsoz/ees/SocialNetworkExperiments50kDiffusionIT/diffusion.out"
+/>
+
+<!-- network configurations-->
+<randomNetwork
+	normalise="true"
+	avg_links="2"
+/>
+
+<randRegNetwork
+
+        normalise="true"
+        avg_links="3"
+
+/>
+
+<!--specify distance in km-->
+<swNetwork
+	normalise="true"
+	distance="0.8"
+	avg_links="3"
+	rewire_probability="0.0"
+
+/>
+
+<!-- diffusion model configurations-->
+    <!--IC diffusion model-->
+    <!-- step_size: step size of the diffusion process (mins)-->
+	<!--seeding_strategy: seeding strategy that defines the selection of initial set of agents that is active: random, none -->
+    <!--seed = percentage of initially active agents (%)-->
+    <!--diffusion_probaility: mean diffusion probability that is varied using a standard deviation (sigma) to randomly draw probabilities from a gaussian distribution-->
+<ic>
+    <step_size>30</step_size>
+	<seeding_strategy seed="53">random</seeding_strategy>
+    <diffusion_probability sigma="0.05">0.9</diffusion_probability>
+</ic>
+
+
+
+	<!-- stratgey = random or nearfire or prob-->
+	<!--  Thigh is replaced in SNConfig as Thigh = 2 * Tlow -->
+	<!-- 1st config set: common to all diffusion models, 2nd set: specific for LT diffusion model, 3rd set: specific for CLT diffusion model-->
+
+<diffModel
+
+
+	diff_turn="60"
+	standard_deviation="0.025"
+	strategy="random"
+	thresholdType="guassian"
+
+	diff_seed="5"
+	mean_act_threshold="0.3"
+	mean_high_threshold="0.7"
+
+	panicSeed="10"
+	waitSeed="30"
+	waitT="0.5"
+	panicT="0.5"
+
+
+/>
+
+</diffusion>

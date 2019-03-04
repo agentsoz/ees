@@ -23,8 +23,6 @@ package io.github.agentsoz.ees;
  * #L%
  */
 
-import io.github.agentsoz.util.TestUtils;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.matsim.testcases.MatsimTestUtils;
@@ -35,21 +33,21 @@ import org.slf4j.LoggerFactory;
  * @author dsingh, Joel Robertson
  *
  */
-public class SocialNetworkExperiments50kIT {
+public class SocialNetworkExperiments50kDiffusionIT {
 
     // have tests in separate classes so that they run, at least under maven, in separate JVMs.  kai, nov'17
 
-    private static final Logger log = LoggerFactory.getLogger(SocialNetworkExperiments50kIT.class);
+    private static final Logger log = LoggerFactory.getLogger(SocialNetworkExperiments50kDiffusionIT.class);
 
     @Rule
     public MatsimTestUtils utils = new MatsimTestUtils();
 
     @Test
-    public void testSNBaseline50k() {
+    public void testSocialNetwork50kDiffusion() {
 
         utils.getOutputDirectory(); // creates a clean one so need to call this first
         String[] args = {
-                "--config", "scenarios/surf-coast-shire/typical-summer-weekday-50k/social_network_experiments.xml",
+                "--config", "scenarios/surf-coast-shire/typical-summer-weekday-50k/social_network_experiments_diffusion.xml",
         };
         Run.main(args);
 

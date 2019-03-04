@@ -11,16 +11,16 @@
     "}"
   ],
 
-  "spatialReferenceEPSG" : "EPSG:32754",
+  "spatialReferenceEPSG" : "EPSG:28355",
 
   "disruptions" : [
     {
-      "description" : "Road blocked due to fallen tree",
-      "startHHMM" : "0033",
+      "description" : "Accident on Grossmans Road on the section between Duffields Rd and Messmate Rd",
+      "startHHMM" : "0001",
       "endHHMM" : "2359",
       "effectiveSpeed" : "0",
       "effectiveSpeedUnit" : "KMPH",
-      "impactedLinks" : ["75276-75274-75272-75270", "75269-75271-75273-75275"]
+      "impactedLinks" : ["12340-12338-12336-12334-12332", "12331-12333-12335-12337-12339"]
     }
   ]
 }

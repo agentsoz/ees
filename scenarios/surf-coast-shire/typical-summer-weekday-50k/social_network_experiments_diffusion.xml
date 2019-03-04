@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--===========================================================================
+  #%L
+  BDI-ABM Integration Package
+  %%
+  Copyright (C) 2014 - 2016 by its authors. See AUTHORS file.
+  %%
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as
+  published by the Free Software Foundation, either version 3 of the
+  License, or (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Lesser Public License for more details.
+
+  You should have received a copy of the GNU General Lesser Public
+  License along with this program.  If not, see
+  <http://www.gnu.org/licenses/lgpl-3.0.html>.
+  #L%
+============================================================================-->
+
+<simulation
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="https://github.com/agentsoz/bdi-abm-integration"
+  xsi:schemaLocation="https://github.com/agentsoz/bdi-abm-integration ../../xsd/ees.xsd"
+  version="v2.0">
+
+  <!-- global configuration sent to all models -->
+  <global>
+    <!-- random seed to be used for all models; set to -1 if not used -->
+    <opt id="randomSeed">12345</opt>
+    <!-- coordinate reference system in EPSG format to be used for all models; see http://spatialreference.org -->
+    <opt id="crs">EPSG:28355</opt>
+    <!-- simulation start time in HH:MM format -->
+    <opt id="startHHMM">00:00</opt>
+  </global>
+
+  <!-- model specific configuration -->
+  <models>
+
+    <model id="bdi">
+      <!-- Jill BDI engine configuration arguments; DO NOT CHANGE IF UNSURE -->
+      <opt id="jPlanSelectionPolicy">FIRST</opt>
+      <opt id="jAgents"></opt>
+      <opt id="jLogLevel">WARN</opt>
+      <opt id="jLogFile">test/output/io/github/agentsoz/ees/SocialNetworkExperiments50kDiffusionIT/jill.log</opt>
+      <opt id="jOutFile">test/output/io/github/agentsoz/ees/SocialNetworkExperiments50kDiffusionIT/jill.out</opt>
+      <!--<opt id="jNumThreads">1</opt>-->
+    </model>
+
+    <model id="matsim">
+      <!-- MATSim output directory relative to examples/bushfire directory (will overrule the setting in MATSim config) -->
+      <opt id="outputDir">test/output/io/github/agentsoz/ees/SocialNetworkExperiments50kDiffusionIT/matsim</opt>
+      <!-- MATSim XML config XML file relative to examples/bushfire directory -->
+      <opt id="configXml">scenarios/surf-coast-shire/typical-summer-weekday-50k/scenario_matsim_main.xml</opt>
+      <!-- Maximum distance at which the fire can be seen (in metres)-->
+      <opt id="maxDistanceForFireVisual">1000</opt>
+      <!-- Maximum distance at which smoke can be seen (in metres)-->
+      <opt id="maxDistanceForSmokeVisual">5000</opt>
+      <!-- Fire avoidance buffer used for planning routes for regular vehicles (in metres)-->
+      <opt id="fireAvoidanceBufferForVehicles">5000</opt>
+      <!-- Fire avoidance buffer used for planning routes for emergency vehicles (in metres)-->
+      <opt id="fireAvoidanceBufferForEmergencyVehicles">1000</opt>
+      <!-- Congestion parameters used by vehicles to decide if they are stuck in congestion. See issues
+           https://github.com/agentsoz/bdi-abm-integration/issues/8 and
+           https://github.com/agentsoz/bdi-abm-integration/issues/35 -->
+      <opt id="congestionEvaluationInterval">180</opt>
+      <opt id="congestionToleranceThreshold">0.33</opt>
+      <opt id="congestionReactionProbability">0.0</opt> <!-- disable congestion replanning -->
+    </model>
+
+    <model id="phoenix">
+      <!-- Phoenix start time in HH:MM format; used to calculate absolute values for hour_spot and hour_burnt -->
+      <opt id="ignitionHHMM">00:00</opt>
+      <!-- Phoenix fire GeoJSON file -->
+      <opt id="fireGeoJson">scenarios/surf-coast-shire/typical-summer-weekday-50k/scenario_fire.json</opt>
+      <!-- Phoenix smoke (embers) GeoJSON file -->
+      <opt id="smokeGeoJson"></opt>
+    </model>
+
+    <model id="disruption">
+      <!-- Disruptions JSON file relative to examples/bushfire directory -->
+      <!--<opt id="fileJson">scenarios/surf-coast-shire/typical-summer-weekday-50k/scenario_disruptions.json</opt>-->
+    </model>
+
+    <model id="diffusion">
+      <!-- Diffusion model config file relative to examples/bushfire directory;
+           see: https://github.com/agentsoz/diffusion-model -->
+      <opt id="configFile">scenarios/surf-coast-shire/typical-summer-weekday-50k/scenario_diffusion_config.xml</opt>
+      <!--diffusion outcomes output file-->
+    </model>
+
+    <model id="messaging">
+      <!-- Messaging JSON file  -->
+      <opt id="fileJson"></opt>
+      <!-- Zones GeoJSON file mapping zone IDs to polygon shapes -->
+      <opt id="fileZonesGeoJson"></opt>
+    </model>
+
+  </models>
+
+</simulation>
