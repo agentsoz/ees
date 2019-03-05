@@ -3,12 +3,14 @@
 
 ## Dependencies
 
-This program depends on the BDI-ABM integration framework: https://github.com/agentsoz/bdi-abm-integration.
-
+This program depends on the following projects:
+* BDI-ABM Integration: https://github.com/agentsoz/bdi-abm-integration
+* Jill BDI Engine: https://github.com/agentsoz/jill
+* Social Network Diffusion Model: https://github.com/agentsoz/diffusion-model
 
 ## How to build
 
-To build, first clone the BDI-ABM repository alongside this repository. Then do:
+To build, first clone the dependency repositories alongside this repository, then do:
 ```
 make
 ```
@@ -18,13 +20,10 @@ This will produce the executable JAR in `target/ees-x.y.z-SNAPSHOT.jar`.
 ## How to run
 
 To run an example scenario do:
-```concept
+```
 make run
 ```
-A scenario is a simulation configuration, specified in a XML file. To run a different scenario, you specify a different configuration file at startup.
-
-The package includes several scenarios:
-
+A scenario is a simulation configuration, specified in a XML file. To run a different scenario, you specify a different configuration file at startup. The projects includes several scenarios:
 *   Mount Alexander Shire VIC: `scenarios/mount-alexander-shire/*`.
 *   Surf Coast Shire VIC: `scenarios/surf-coast-shire/*`.
 
