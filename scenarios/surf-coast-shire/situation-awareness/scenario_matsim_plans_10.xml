@@ -4,25 +4,21 @@
     <!-- ====================================================================== -->
     <person id= "0" >
        <attributes>
-         <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.Resident</attribute>
+         <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.ResidentPartTime</attribute>
          <attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>
-         <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.6</attribute>
+         <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.2</attribute>
          <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.6</attribute>
          <attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.Boolean" >false</attribute>
          <attribute name="WillGoHomeBeforeLeaving" class="java.lang.Boolean" >false</attribute>
-         <attribute name="EvacLocationPreference" class="java.lang.String">Lorne 21,759384.918109419,5730417.76020269</attribute>
-         <attribute name="InvacLocationPreference" class="java.lang.String">,786837.913088847,5770051.74481541</attribute>
+         <attribute name="EvacLocationPreference" class="java.lang.String">,790515.310544487,5753801.66301497</attribute>
+         <attribute name="InvacLocationPreference" class="java.lang.String">Moggs Creek 1,767117.436616738,5737857.31181404</attribute>
        </attributes>
        <plan selected="yes">
-         <activity type="home" x="786831.511691175" y="5770083.81316717" end_time="08:16:00" />
+         <activity type="home" x="767025.471275973" y="5737751.86364303" end_time="11:19:00" />
          <leg mode="car" />
-         <activity type="shops" x="759299.781695201" y="5729901.27980373" end_time="10:34:00" />
+         <activity type="shops" x="790330.833186088" y="5752142.2955515" end_time="13:35:00" />
          <leg mode="car" />
-         <activity type="beach" x="791120.803641559" y="5752820.35296198" end_time="13:07:00" />
-         <leg mode="car" />
-         <activity type="other" x="789848.578586559" y="5753094.78647086" end_time="15:55:00" />
-         <leg mode="car" />
-         <activity type="home" x="786831.511691175" y="5770083.81316717" />
+         <activity type="home" x="767025.471275973" y="5737751.86364303" />
        </plan>
      </person>
 
@@ -52,33 +48,30 @@
         </plan>
       </person>
 
-      <person id= "2" >
-         <attributes>
-           <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.ResidentPartTime</attribute>
-           <attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>
-           <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.2</attribute>
-           <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.6</attribute>
-           <attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.Boolean" >false</attribute>
-           <attribute name="WillGoHomeBeforeLeaving" class="java.lang.Boolean" >false</attribute>
-           <attribute name="EvacLocationPreference" class="java.lang.String">,790515.310544487,5753801.66301497</attribute>
-           <attribute name="InvacLocationPreference" class="java.lang.String">Moggs Creek 1,767117.436616738,5737857.31181404</attribute>
-         </attributes>
-         <plan selected="yes">
-           <activity type="home" x="767025.471275973" y="5737751.86364303" end_time="00:01:00" />
-           <leg mode="car" />
-           <activity type="other" x="771396.301080196" y="5738862.70157473" end_time="02:48:00" />
-           <leg mode="car" />
-           <activity type="home" x="767025.471275973" y="5737751.86364303" end_time="11:19:00" />
-           <leg mode="car" />
-           <activity type="shops" x="790330.833186088" y="5752142.2955515" end_time="13:35:00" />
-           <leg mode="car" />
-           <activity type="home" x="767025.471275973" y="5737751.86364303" end_time="15:00:00" />
-           <leg mode="car" />
-           <activity type="shops" x="790638.050911312" y="5752234.06713154" end_time="16:30:00" />
-           <leg mode="car" />
-           <activity type="home" x="767025.471275973" y="5737751.86364303" />
-         </plan>
-       </person>
+    <person id= "2" >
+       <attributes>
+         <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.Resident</attribute>
+         <attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>
+         <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.6</attribute>
+         <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.6</attribute>
+         <attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.Boolean" >false</attribute>
+         <attribute name="WillGoHomeBeforeLeaving" class="java.lang.Boolean" >false</attribute>
+         <attribute name="EvacLocationPreference" class="java.lang.String">Lorne 21,759384.918109419,5730417.76020269</attribute>
+         <attribute name="InvacLocationPreference" class="java.lang.String">,786837.913088847,5770051.74481541</attribute>
+       </attributes>
+       <plan selected="yes">
+         <activity type="home" x="786831.511691175" y="5770083.81316717" end_time="08:16:00" />
+         <leg mode="car" />
+         <activity type="shops" x="759299.781695201" y="5729901.27980373" end_time="10:34:00" />
+         <leg mode="car" />
+         <activity type="beach" x="791120.803641559" y="5752820.35296198" end_time="13:07:00" />
+         <leg mode="car" />
+         <activity type="other" x="789848.578586559" y="5753094.78647086" end_time="15:55:00" />
+         <leg mode="car" />
+         <activity type="home" x="786831.511691175" y="5770083.81316717" />
+       </plan>
+     </person>
+
 
        <person id= "3" >
           <attributes>
@@ -125,8 +118,6 @@
              <activity type="beach" x="790568.951774962" y="5751325.2355685" end_time="18:54:00" />
              <leg mode="car" />
              <activity type="shops" x="790700.602352901" y="5752106.05359128" end_time="21:43:00" />
-             <leg mode="car" />
-             <activity type="other" x="789816.421674447" y="5753213.33592403" end_time="23:59:00" />
              <leg mode="car" />
              <activity type="home" x="770997.275334295" y="5738474.93507403" />
            </plan>

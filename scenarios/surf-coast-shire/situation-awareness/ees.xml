@@ -46,14 +46,14 @@
       <opt id="jPlanSelectionPolicy">FIRST</opt>
       <opt id="jAgents"></opt>
       <opt id="jLogLevel">WARN</opt>
-      <opt id="jLogFile">test/output/io/github/agentsoz/ees/SituationAwarenessTest/jill.log</opt>
-      <opt id="jOutFile">test/output/io/github/agentsoz/ees/SituationAwarenessTest/jill.out</opt>
+      <opt id="jLogFile">test/output/io/github/agentsoz/ees/SituationAwarenessTest/testBlockagePerceptsDuringDailyPlan/jill.log</opt>
+      <opt id="jOutFile">test/output/io/github/agentsoz/ees/SituationAwarenessTest/testBlockagePerceptsDuringDailyPlan/jill.out</opt>
       <!--<opt id="jNumThreads">1</opt>-->
     </model>
 
     <model id="matsim">
       <!-- MATSim output directory relative to examples/bushfire directory (will overrule the setting in MATSim config) -->
-      <opt id="outputDir">test/output/io/github/agentsoz/ees/SituationAwarenessTest/matsim</opt>
+      <opt id="outputDir">test/output/io/github/agentsoz/ees/SituationAwarenessTest/testBlockagePerceptsDuringDailyPlan/matsim</opt>
       <!-- MATSim XML config XML file relative to examples/bushfire directory -->
       <opt id="configXml">scenarios/surf-coast-shire/situation-awareness/scenario_matsim_main.xml</opt>
     </model>
