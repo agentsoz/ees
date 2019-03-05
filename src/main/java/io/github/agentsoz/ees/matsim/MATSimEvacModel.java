@@ -28,8 +28,10 @@ import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
 import io.github.agentsoz.bdiabm.ABMServerInterface;
 import io.github.agentsoz.bdiabm.QueryPerceptInterface;
+import io.github.agentsoz.bdiabm.data.ActionContent;
 import io.github.agentsoz.bdiabm.v2.AgentDataContainer;
 import io.github.agentsoz.bdiabm.data.PerceptContent;
+import io.github.agentsoz.bdimatsim.EventsMonitorRegistry;
 import io.github.agentsoz.bdimatsim.MATSimModel;
 import io.github.agentsoz.bdimatsim.Replanner;
 import io.github.agentsoz.dataInterface.DataClient;
@@ -40,6 +42,7 @@ import io.github.agentsoz.ees.EmergencyMessage;
 import io.github.agentsoz.ees.PerceptList;
 import io.github.agentsoz.ees.matsim.router.ExampleRoutingAlgorithmFactory;
 import io.github.agentsoz.ees.util.Utils;
+import io.github.agentsoz.nonmatsim.BDIPerceptHandler;
 import io.github.agentsoz.nonmatsim.PAAgent;
 import io.github.agentsoz.nonmatsim.PAAgentManager;
 import org.matsim.api.core.v01.Coord;
@@ -385,12 +388,29 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
         List<String> bdiAgentIDs = (List<String>)args[0];
         initialiseControllerForEvac(matsimModel.getControler());
         for(String agentId: bdiAgentIDs) {
+            PAAgent paAgent = getAgentManager().getAgent( agentId );
+
             // replace the default action handlers with evacuation specific ones
-            matsimModel.getAgentManager().getAgent(agentId).getActionHandler().registerBDIAction(
+            paAgent.getActionHandler().registerBDIAction(
                     ActionList.DRIVETO, new EvacDrivetoActionHandlerV2(matsimModel));
-            matsimModel.getAgentManager().getAgent(agentId).getActionHandler().registerBDIAction(
+            paAgent.getActionHandler().registerBDIAction(
                     ActionList.REPLAN_CURRENT_DRIVETO, new ReplanDriveToDefaultActionHandlerV2(matsimModel));
+            // add a one-off listener for next link blocked events
+            // And another in case the agent gets stuck on the way
+            paAgent.getPerceptHandler().registerBDIPerceptHandler( paAgent.getAgentID(), EventsMonitorRegistry.MonitoredEventType.NextLinkBlocked,
+                    null, new BDIPerceptHandler() {
+                        @Override
+                        public boolean handle(Id<Person> agentId, Id<Link> currentLinkId, EventsMonitorRegistry.MonitoredEventType monitoredEvent) {
+                            PAAgent agent = getAgentManager().getAgent( agentId.toString() );
+                            Object[] params = { currentLinkId.toString() };
+                            PerceptContent pc = new PerceptContent(PerceptList.BLOCKED, params[0]);
+                            getAgentManager().getAgentDataContainerV2().putPercept(agent.getAgentID(), PerceptList.BLOCKED, pc);
+                            return true;
+                        }
+                    }
+            );
         }
+
     }
 
     private void initialiseControllerForEvac(Controler controller) {
