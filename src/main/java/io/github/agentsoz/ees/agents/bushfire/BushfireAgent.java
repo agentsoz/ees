@@ -226,7 +226,9 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
         } else if (perceptID.equals(PerceptList.ARRIVED)) {
             // do something
         } else if (perceptID.equals(PerceptList.BLOCKED)) {
-            // do something
+            if (activeEnvironmentAction == null) {
+                replanCurrentDriveTo(MATSimEvacModel.EvacRoutingMode.carGlobalInformation);
+            }
         }
 
         // handle percept spread on social network
@@ -261,13 +263,7 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
 
     private void handleFireVisual() {
         // Always replan when we see fire
-        memorise(MemoryEventType.ACTIONED.name(), ActionList.REPLAN_CURRENT_DRIVETO);
-        EnvironmentAction action = new EnvironmentAction(Integer.toString(getId()),
-                ActionList.REPLAN_CURRENT_DRIVETO,
-                new Object[] {MATSimEvacModel.EvacRoutingMode.carGlobalInformation});
-        setActiveEnvironmentAction(action);
-        post(action);
-
+        replanCurrentDriveTo(MATSimEvacModel.EvacRoutingMode.carGlobalInformation);
     }
 
     protected void checkBarometersAndTriggerResponseAsNeeded() {
@@ -433,6 +429,17 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
         memorise(MemoryEventType.ACTIONED.name(), ActionList.DRIVETO
                 + ":"+ location + ":" + String.format("%.0f", distToTravel) + "m away");
         EnvironmentAction action = new EnvironmentAction(Integer.toString(getId()), ActionList.DRIVETO, params);
+        setActiveEnvironmentAction(action); // will be reset by updateAction()
+        subgoal(action); // should be last call in any plan step
+        return true;
+    }
+
+    boolean replanCurrentDriveTo(MATSimEvacModel.EvacRoutingMode routingMode) {
+        memorise(MemoryEventType.ACTIONED.name(), ActionList.REPLAN_CURRENT_DRIVETO);
+        EnvironmentAction action = new EnvironmentAction(
+                Integer.toString(getId()),
+                ActionList.REPLAN_CURRENT_DRIVETO,
+                new Object[] {routingMode});
         setActiveEnvironmentAction(action); // will be reset by updateAction()
         subgoal(action); // should be last call in any plan step
         return true;
