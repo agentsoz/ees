@@ -43,7 +43,6 @@ public class SituationAwarenessTest {
 	@Rule public MatsimTestUtils utils = new MatsimTestUtils() ;
 
 	@Test
-	//@Ignore
 	public void testBlockagePerceptsDuringDailyPlan() {
 
 		utils.getOutputDirectory(); // creates a clean one so need to call this first
@@ -52,12 +51,12 @@ public class SituationAwarenessTest {
 		};
 		Run.main(args);
 
-//		final String actualEventsFilename = utils.getOutputDirectory() + "/output_events.xml.gz";
-//		final String primaryExpectedEventsFilename = utils.getInputDirectory() + "/output_events.xml.gz";
-//		TestUtils.comparingDepartures(primaryExpectedEventsFilename,actualEventsFilename,10.);
-//		TestUtils.comparingArrivals(primaryExpectedEventsFilename,actualEventsFilename,10.);
-//		TestUtils.comparingActivityStarts(primaryExpectedEventsFilename,actualEventsFilename, 10.);
-//		TestUtils.compareFullEvents(primaryExpectedEventsFilename,actualEventsFilename, false);
+		final String actualEventsFilename = utils.getOutputDirectory() + "/output_events.xml.gz";
+		final String primaryExpectedEventsFilename = utils.getInputDirectory() + "/output_events.xml.gz";
+		TestUtils.comparingDepartures(primaryExpectedEventsFilename,actualEventsFilename,10.);
+		TestUtils.comparingArrivals(primaryExpectedEventsFilename,actualEventsFilename,10.);
+		TestUtils.comparingActivityStarts(primaryExpectedEventsFilename,actualEventsFilename, 10.);
+		TestUtils.compareFullEvents(primaryExpectedEventsFilename,actualEventsFilename, false);
 	}
 
 }
