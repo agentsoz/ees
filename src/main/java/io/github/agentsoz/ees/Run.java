@@ -119,12 +119,10 @@ public class Run implements DataClient {
         List<String> bdiAgentIDs = new ArrayList<>(bdiMap.keySet());
 
         // initialise the diffusion model and register it as an active data source
-        {
-            log.info("Starting information diffusion model");
-            DiffusionModel model = new DiffusionModel(cfg.getModelConfig(Config.eModelDiffusion), dataServer, bdiAgentIDs);
-            model.setTimestepUnit(Time.TimestepUnit.SECONDS);
-            model.start();
-        }
+        log.info("Starting information diffusion model");
+        DiffusionModel diffusionModel = new DiffusionModel(cfg.getModelConfig(Config.eModelDiffusion), dataServer, bdiAgentIDs);
+        diffusionModel.setTimestepUnit(Time.TimestepUnit.SECONDS);
+        diffusionModel.start();
 
         // initialise the Jill model, register it as an active data source, and start it
         log.info("Starting Jill BDI model");
@@ -171,6 +169,7 @@ public class Run implements DataClient {
         log.info("Finishing up");
         jillmodel.finish();
         matsimEvacModel.finish() ;
+        diffusionModel.finish();
         DataServer.cleanup() ;
         log.info("All done");
     }

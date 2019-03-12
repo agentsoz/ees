@@ -1,0 +1,26 @@
+{
+  "help": [
+    "List of disruptions to inject into the MATSim network",
+    "{",
+      "description: information string, e.g., Accident on Main Road,",
+      "startHhMm : the time in HHMM format when this disruption takes effect,",
+      "endHhMm : the time in HHMM format when the disruption is removed",
+      "effectiveSpeed: a positive number to indicate the effective speed during the disruption,",
+      "effectiveSpeedUnit : one of: RELATIVE (i.e., percentage of free speed) or KMPH (kilometers per hour),",
+      "impactedLinks: list of links to which this disruption should be applied",
+    "}"
+  ],
+
+  "spatialReferenceEPSG" : "EPSG:28355",
+
+  "disruptions" : [
+    {
+      "description" : "Accident on Grossmans Road on the section between Duffields Rd and Messmate Rd",
+      "startHHMM" : "0001",
+      "endHHMM" : "2359",
+      "effectiveSpeed" : "0",
+      "effectiveSpeedUnit" : "KMPH",
+      "impactedLinks" : ["12340-12338-12336-12334-12332", "12331-12333-12335-12337-12339"]
+    }
+  ]
+}

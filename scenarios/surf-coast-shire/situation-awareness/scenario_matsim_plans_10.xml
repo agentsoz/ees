@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?>
+  <!DOCTYPE population SYSTEM "http://www.matsim.org/files/dtd/population_v6.dtd">
+  <population>
+    <!-- ====================================================================== -->
+    <person id= "0" >
+       <attributes>
+         <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.ResidentPartTime</attribute>
+         <attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>
+         <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.2</attribute>
+         <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.6</attribute>
+         <attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.Boolean" >false</attribute>
+         <attribute name="WillGoHomeBeforeLeaving" class="java.lang.Boolean" >false</attribute>
+         <attribute name="EvacLocationPreference" class="java.lang.String">,790515.310544487,5753801.66301497</attribute>
+         <attribute name="InvacLocationPreference" class="java.lang.String">Moggs Creek 1,767117.436616738,5737857.31181404</attribute>
+       </attributes>
+       <plan selected="yes">
+         <activity type="home" x="767025.471275973" y="5737751.86364303" end_time="11:19:00" />
+         <leg mode="car" />
+         <activity type="shops" x="790330.833186088" y="5752142.2955515" end_time="13:35:00" />
+         <leg mode="car" />
+         <activity type="home" x="767025.471275973" y="5737751.86364303" />
+       </plan>
+     </person>
+
+     <person id= "1" >
+        <attributes>
+          <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.ResidentPartTime</attribute>
+          <attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>
+          <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.5</attribute>
+          <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.6</attribute>
+          <attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.Boolean" >false</attribute>
+          <attribute name="WillGoHomeBeforeLeaving" class="java.lang.Boolean" >true</attribute>
+          <attribute name="EvacLocationPreference" class="java.lang.String">,743345.54165134,5752749.80696866</attribute>
+          <attribute name="InvacLocationPreference" class="java.lang.String">Anglesea 48,778716.721084499,5744971.28945333</attribute>
+        </attributes>
+        <plan selected="yes">
+          <activity type="home" x="778796.058093634" y="5744998.63073179" end_time="08:40:00" />
+          <leg mode="car" />
+          <activity type="shops" x="790541.898148591" y="5752254.35409471" end_time="11:44:00" />
+          <leg mode="car" />
+          <activity type="home" x="778796.058093634" y="5744998.63073179" end_time="13:32:00" />
+          <leg mode="car" />
+          <activity type="shops" x="778601.658940287" y="5744465.93473351" end_time="15:13:00" />
+          <leg mode="car" />
+          <activity type="other" x="789816.421674447" y="5753213.33592403" end_time="19:05:00" />
+          <leg mode="car" />
+          <activity type="home" x="778796.058093634" y="5744998.63073179" />
+        </plan>
+      </person>
+
+    <person id= "2" >
+       <attributes>
+         <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.Resident</attribute>
+         <attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>
+         <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.6</attribute>
+         <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.6</attribute>
+         <attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.Boolean" >false</attribute>
+         <attribute name="WillGoHomeBeforeLeaving" class="java.lang.Boolean" >false</attribute>
+         <attribute name="EvacLocationPreference" class="java.lang.String">Lorne 21,759384.918109419,5730417.76020269</attribute>
+         <attribute name="InvacLocationPreference" class="java.lang.String">,786837.913088847,5770051.74481541</attribute>
+       </attributes>
+       <plan selected="yes">
+         <activity type="home" x="786831.511691175" y="5770083.81316717" end_time="08:16:00" />
+         <leg mode="car" />
+         <activity type="shops" x="759299.781695201" y="5729901.27980373" end_time="10:34:00" />
+         <leg mode="car" />
+         <activity type="beach" x="791120.803641559" y="5752820.35296198" end_time="13:07:00" />
+         <leg mode="car" />
+         <activity type="other" x="789848.578586559" y="5753094.78647086" end_time="15:55:00" />
+         <leg mode="car" />
+         <activity type="home" x="786831.511691175" y="5770083.81316717" />
+       </plan>
+     </person>
+
+
+       <person id= "3" >
+          <attributes>
+            <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.Resident</attribute>
+            <attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>
+            <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.6</attribute>
+            <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.7</attribute>
+            <attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.Boolean" >false</attribute>
+            <attribute name="WillGoHomeBeforeLeaving" class="java.lang.Boolean" >true</attribute>
+            <attribute name="EvacLocationPreference" class="java.lang.String">NSP Surf Club,759414.662987548,5729942.34603638</attribute>
+            <attribute name="InvacLocationPreference" class="java.lang.String">,744636.20899627,5739507.77818855</attribute>
+          </attributes>
+          <plan selected="yes">
+            <activity type="home" x="744636.20854346" y="5739507.7783445" end_time="13:16:00" />
+            <leg mode="car" />
+            <activity type="work" x="790232.039224226" y="5754694.25111168" end_time="17:43:00" />
+            <leg mode="car" />
+            <activity type="shops" x="790638.050911312" y="5752234.06713154" end_time="21:24:00" />
+            <leg mode="car" />
+            <activity type="home" x="744636.20854346" y="5739507.7783445" />
+          </plan>
+        </person>
+
+        <person id= "4" >
+           <attributes>
+             <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.ResidentPartTime</attribute>
+             <attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>
+             <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.4</attribute>
+             <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.4</attribute>
+             <attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.Boolean" >false</attribute>
+             <attribute name="WillGoHomeBeforeLeaving" class="java.lang.Boolean" >true</attribute>
+             <attribute name="EvacLocationPreference" class="java.lang.String">,768145.215009431,5778372.30932458</attribute>
+             <attribute name="InvacLocationPreference" class="java.lang.String">Aireys Pub,770925.250436505,5738417.25117341</attribute>
+           </attributes>
+           <plan selected="yes">
+             <activity type="home" x="770997.275334295" y="5738474.93507403" end_time="08:28:00" />
+             <leg mode="car" />
+             <activity type="beach" x="790568.951774962" y="5751325.2355685" end_time="12:08:00" />
+             <leg mode="car" />
+             <activity type="shops" x="790591.152859536" y="5751729.2571063" end_time="15:38:00" />
+             <leg mode="car" />
+             <activity type="home" x="770997.275334295" y="5738474.93507403" end_time="16:50:00" />
+             <leg mode="car" />
+             <activity type="beach" x="790568.951774962" y="5751325.2355685" end_time="18:54:00" />
+             <leg mode="car" />
+             <activity type="shops" x="790700.602352901" y="5752106.05359128" end_time="21:43:00" />
+             <leg mode="car" />
+             <activity type="home" x="770997.275334295" y="5738474.93507403" />
+           </plan>
+         </person>
+
+         <person id= "5" >
+             <attributes>
+               <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.Resident</attribute>
+               <attribute name="HasDependentsAtLocation" class="java.lang.String" >796661.180651232,5769248.92929532</attribute>
+               <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.3</attribute>
+               <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.6</attribute>
+               <attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.Boolean" >true</attribute>
+               <attribute name="WillGoHomeBeforeLeaving" class="java.lang.Boolean" >false</attribute>
+               <attribute name="EvacLocationPreference" class="java.lang.String">,743345.54165134,5752749.80696866</attribute>
+               <attribute name="InvacLocationPreference" class="java.lang.String">,772193.453128564,5760009.79676825</attribute>
+             </attributes>
+             <plan selected="yes">
+               <activity type="home" x="796666.395056869" y="5769235.3434908" end_time="10:56:00" />
+               <leg mode="car" />
+               <activity type="work" x="778980.068339046" y="5744576.673304" end_time="15:04:00" />
+               <leg mode="car" />
+               <activity type="home" x="796666.395056869" y="5769235.3434908" end_time="16:05:00" />
+               <leg mode="car" />
+               <activity type="work" x="789723.616206089" y="5752618.79757824" end_time="20:16:00" />
+               <leg mode="car" />
+               <activity type="home" x="796666.395056869" y="5769235.3434908" />
+             </plan>
+           </person>
+
+           <person id= "6" >
+              <attributes>
+                <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.Resident</attribute>
+                <attribute name="HasDependentsAtLocation" class="java.lang.String" >764030.837457137,5736043.34183458</attribute>
+                <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.2</attribute>
+                <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.2</attribute>
+                <attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.Boolean" >false</attribute>
+                <attribute name="WillGoHomeBeforeLeaving" class="java.lang.Boolean" >false</attribute>
+                <attribute name="EvacLocationPreference" class="java.lang.String">Anglesea Shops,778567.629793594,5744455.95718697</attribute>
+                <attribute name="InvacLocationPreference" class="java.lang.String">Lorne 19,759267.160670797,5730635.95953665</attribute>
+              </attributes>
+              <plan selected="yes">
+                <activity type="home" x="764041.943826833" y="5736040.08096112" end_time="11:36:00" />
+                <leg mode="car" />
+                <activity type="work" x="759213.076104582" y="5730302.0781955" end_time="14:52:00" />
+                <leg mode="car" />
+                <activity type="shops" x="759299.781695201" y="5729901.27980373" end_time="17:03:00" />
+                <leg mode="car" />
+                <activity type="home" x="764041.943826833" y="5736040.08096112" />
+              </plan>
+            </person>
+
+            <person id= "7" >
+               <attributes>
+                 <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.Resident</attribute>
+                 <attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>
+                 <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.3</attribute>
+                 <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.7</attribute>
+                 <attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.Boolean" >false</attribute>
+                 <attribute name="WillGoHomeBeforeLeaving" class="java.lang.Boolean" >false</attribute>
+                 <attribute name="EvacLocationPreference" class="java.lang.String">Aireys Pub,770925.250436505,5738417.25117341</attribute>
+                 <attribute name="InvacLocationPreference" class="java.lang.String">,794051.635367584,5772455.00726611</attribute>
+               </attributes>
+               <plan selected="yes">
+                 <activity type="home" x="794698.9568412" y="5771306.83235811" end_time="08:18:00" />
+                 <leg mode="car" />
+                 <activity type="other" x="789816.421674447" y="5753213.33592403" end_time="11:19:00" />
+                 <leg mode="car" />
+                 <activity type="shops" x="790544.400714649" y="5752127.56440654" end_time="12:02:00" />
+                 <leg mode="car" />
+                 <activity type="work" x="790110.687756304" y="5754758.10550802" end_time="17:59:00" />
+                 <leg mode="car" />
+                 <activity type="shops" x="790459.988865424" y="5752140.64212887" end_time="18:25:00" />
+                 <leg mode="car" />
+                 <activity type="home" x="794698.9568412" y="5771306.83235811" />
+               </plan>
+             </person>
+             <person id= "8" >
+                <attributes>
+                  <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorOvernight</attribute>
+                  <attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>
+                  <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.4</attribute>
+                  <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.4</attribute>
+                  <attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.Boolean" >false</attribute>
+                  <attribute name="WillGoHomeBeforeLeaving" class="java.lang.Boolean" >true</attribute>
+                  <attribute name="EvacLocationPreference" class="java.lang.String">Anglesea Shops,778567.629793594,5744455.95718697</attribute>
+                  <attribute name="InvacLocationPreference" class="java.lang.String">,794051.635367584,5772455.00726611</attribute>
+                </attributes>
+                <plan selected="yes">
+                  <activity type="home" x="792546.4" y="5771781.5" end_time="09:26:00" />
+                  <leg mode="car" />
+                  <activity type="other" x="778559.299427463" y="5744473.47815365" end_time="10:38:00" />
+                  <leg mode="car" />
+                  <activity type="beach" x="790568.951774962" y="5751325.2355685" end_time="15:02:00" />
+                  <leg mode="car" />
+                  <activity type="shops" x="790741.856121383" y="5752094.69690535" end_time="21:21:00" />
+                  <leg mode="car" />
+                  <activity type="home" x="792546.4" y="5771781.5" />
+                </plan>
+              </person>
+
+              <person id= "9" >
+                 <attributes>
+                   <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.ResidentPartTime</attribute>
+                   <attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>
+                   <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.5</attribute>
+                   <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.6</attribute>
+                   <attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.Boolean" >false</attribute>
+                   <attribute name="WillGoHomeBeforeLeaving" class="java.lang.Boolean" >true</attribute>
+                   <attribute name="EvacLocationPreference" class="java.lang.String">,725946.634709856,5753152.68589706</attribute>
+                   <attribute name="InvacLocationPreference" class="java.lang.String">Anglesea 38,777759.87624535,5744234.2597468</attribute>
+                 </attributes>
+                 <plan selected="yes">
+                   <activity type="home" x="777546.884206465" y="5744362.86142326" end_time="10:33:00" />
+                   <leg mode="car" />
+                   <activity type="beach" x="790568.951774962" y="5751325.2355685" end_time="12:32:00" />
+                   <leg mode="car" />
+                   <activity type="shops" x="790690.630895316" y="5752183.89395097" end_time="18:56:00" />
+                   <leg mode="car" />
+                   <activity type="home" x="777546.884206465" y="5744362.86142326" />
+                 </plan>
+               </person>
+
+    <!-- ====================================================================== -->
+  </population>

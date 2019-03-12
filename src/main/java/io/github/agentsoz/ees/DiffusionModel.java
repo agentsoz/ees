@@ -95,6 +95,8 @@ public class DiffusionModel implements DataSource<SortedMap<Double, DiffusedCont
 
 
     public void init(List<String> idList) {
+
+        this.snManager.setupSNConfigs(); // first, setup configs and create log
         for (String id : idList) {
             this.snManager.createSocialAgent(id); //populate agentmap
         }
@@ -108,6 +110,8 @@ public class DiffusionModel implements DataSource<SortedMap<Double, DiffusedCont
         snManager.diffuseContent(); // step the diffusion model
         if (snManager.getDiffModel() instanceof ICModel) {
             ICModel icModel = (ICModel) snManager.getDiffModel();
+            icModel.recordCurrentStepSpread(dataServer.getTime());
+
             HashMap<String, String[]> latestUpdate = icModel.getLatestDiffusionUpdates();
             if (!latestUpdate.isEmpty()) {
                 DiffusedContent dc = new DiffusedContent();
@@ -217,5 +221,17 @@ public class DiffusionModel implements DataSource<SortedMap<Double, DiffusedCont
 
     public void finish() {
         // cleaning
+
+        if(snManager == null) { // return if the diffusion model is not executed
+            return;
+        }
+        if (snManager.getDiffModel() instanceof ICModel) {
+
+            //terminate diffusion model and output diffusion data
+            ICModel icModel = (ICModel) this.snManager.getDiffModel();
+            icModel.finish();
+            icModel.getDataCollector().writeSpreadDataToFile();
+        }
+
     }
 }

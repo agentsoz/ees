@@ -1,21 +1,35 @@
+define CMD_RUN
+mvn exec:exec \
+	-Dexec.executable=java \
+	-Dexec.classpathScope=test \
+	-Dexec.args="\
+		-Xmx4g -Xms4g \
+		-cp %classpath io.github.agentsoz.ees.Run \
+		--config scenarios/mount-alexander-shire/maldon-600/ees.xml"
+endef
+
 all: dist
 
-VERSION=ees-2.0.2-SNAPSHOT
-QUICK=-DskipTests
+jill:
+	cd ../jill && mvn clean install
 
-full:
-	export QUICK= && make all
+diffusion:
+	cd ../diffusion-model && mvn clean install
 
-dist:
-	cd ../bdi-abm-integration/ && mvn clean install -N ${QUICK}
-	cd ../bdi-abm-integration/util/ && mvn clean install ${QUICK}
-	cd ../bdi-abm-integration/integrations/bdi-abm/ && mvn clean install ${QUICK}
-	cd ../bdi-abm-integration/integrations/abm-jill/ && mvn clean install ${QUICK}
-	cd ../bdi-abm-integration/integrations/bdi-matsim/ && mvn clean install ${QUICK}
-	mvn clean install ${QUICK}
+bdiabm:
+	cd ../bdi-abm-integration/ && mvn clean install -N
+	cd ../bdi-abm-integration/util/ && mvn clean install
+	cd ../bdi-abm-integration/integrations/bdi-abm/ && mvn clean install
+	cd ../bdi-abm-integration/integrations/abm-jill/ && mvn clean install
+	cd ../bdi-abm-integration/integrations/bdi-matsim/ && mvn clean install
 
-dist-quick:
-	mvn clean install ${QUICK}
+dep: jill diffusion bdiabm
 
-run: target/${VERSION}.jar
-	java -jar target/${VERSION}.jar --config scenarios/mount-alexander-shire/maldon-600/ees.xml
+dist: dep
+	mvn clean install
+
+run:
+	${CMD_RUN}
+
+
+#	java -jar target/${VERSION}.jar --config scenarios/mount-alexander-shire/maldon-600/ees.xml
