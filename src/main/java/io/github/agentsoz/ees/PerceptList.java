@@ -52,6 +52,7 @@ public class PerceptList {
     public static final String DIFFUSION = "diffusion";
     public static final String BDI_STATE_UPDATES    = "bdi_state_updates";
     public static final String SOCIAL_NETWORK_MSG = "social_network_message";
+    public static final String BROADCAST_MSG = "broadcast_message";
 
 
 

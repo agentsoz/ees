@@ -5,4 +5,6 @@
 /*.txt
 /.idea/
 /*.iml
+.DS_Store
+*.iml
 .Rproj.user

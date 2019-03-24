@@ -51,19 +51,22 @@ public class DiffusionModel implements DataSource<SortedMap<Double, DiffusedCont
     private String configFile = null;
     private List<String> agentsIds = null;
 
-    Map<String, Set> contentFromAgents;
+    Map<String, Set> localContentFromAgents;
+    ArrayList<String> globalContentFromAgents;
 
     public DiffusionModel(String configFile) {
         this.snManager = (configFile==null) ? null : new SocialNetworkManager(configFile);
         this.allStepsInfoSpreadMap = new TreeMap<>();
-        this.contentFromAgents = new HashMap<>();
+        this.localContentFromAgents = new HashMap<>();
+        this.globalContentFromAgents =  new ArrayList<String>();
     }
 
     public DiffusionModel(Map<String, String> opts, DataServer dataServer, List<String> agentsIds) {
         parse(opts);
         this.snManager = (configFile==null) ? null : new SocialNetworkManager(configFile);
         this.allStepsInfoSpreadMap = new TreeMap<>();
-        this.contentFromAgents = new HashMap<>();
+        this.localContentFromAgents = new HashMap<>();
+        this.globalContentFromAgents =  new ArrayList<String>();
         this.dataServer = dataServer;
         this.agentsIds = agentsIds;
     }
@@ -104,6 +107,7 @@ public class DiffusionModel implements DataSource<SortedMap<Double, DiffusedCont
         this.snManager.printSNModelconfigs();
         //subscribe to BDI data updates
         this.dataServer.subscribe(this, PerceptList.SOCIAL_NETWORK_MSG);
+        this.dataServer.subscribe(this,PerceptList.BROADCAST_MSG);
     }
 
     private void stepDiffusionProcess() {
@@ -131,10 +135,10 @@ public class DiffusionModel implements DataSource<SortedMap<Double, DiffusedCont
             dataServer.registerTimedUpdate(PerceptList.DIFFUSION, this, nextTime);
             // update the model with any new messages form agents
             ICModel icModel = (ICModel) this.snManager.getDiffModel();
-            if (!contentFromAgents.isEmpty()) {
+            if (!localContentFromAgents.isEmpty()) { // update local content
                 Map<String, String[]> map = new HashMap<>();
-                for (String key : contentFromAgents.keySet()) {
-                    Object[] set = contentFromAgents.get(key).toArray(new String[0]);
+                for (String key : localContentFromAgents.keySet()) {
+                    Object[] set = localContentFromAgents.get(key).toArray(new String[0]);
                     String[] newSet = new String[set.length];
                     for (int i = 0; i < set.length; i++) {
                         newSet[i] = (String)set[i];
@@ -143,12 +147,21 @@ public class DiffusionModel implements DataSource<SortedMap<Double, DiffusedCont
                     logger.info(String.format("At time %.0f, total %d agents will spread new message: %s", timestep, newSet.length, key));
                     logger.info("Agents spreading new message are: {}", Arrays.toString(newSet));
                 }
-                icModel.updateSocialStatesFromBDIPercepts(map);
+                icModel.updateSocialStatesFromLocalContent(map);
+            }
+
+            if(!globalContentFromAgents.isEmpty()) { // update global content
+
+                logger.info("Global content received to spread: {}", globalContentFromAgents.toString());
+                icModel.updateSocialStatesFromGlobalContent(globalContentFromAgents);
+
             }
             // step the model before begin called again
             stepDiffusionProcess();
+
             // clear the contents
-            contentFromAgents.clear();
+            globalContentFromAgents.clear();
+            localContentFromAgents.clear();
         }
         double currentTime = Time.convertTime(timestep, timestepUnit, Time.TimestepUnit.MINUTES);
         SortedMap<Double, DiffusedContent> periodicInfoSpread = allStepsInfoSpreadMap.subMap(lastUpdateTimeInMinutes, currentTime);
@@ -169,14 +182,27 @@ public class DiffusionModel implements DataSource<SortedMap<Double, DiffusedCont
                     break;
                 }
                 String[] content = (String[]) data;
-                logger.debug("received content " + content);
+                logger.debug("received local content " + content);
                 String msg = content[0];
                 String agentId = content[1];
-                Set<String> agents = (contentFromAgents.containsKey(msg)) ? contentFromAgents.get(msg) :
+                Set<String> agents = (localContentFromAgents.containsKey(msg)) ? localContentFromAgents.get(msg) :
                         new HashSet<>();
                 agents.add(agentId);
-                contentFromAgents.put(msg, agents);
+                localContentFromAgents.put(msg, agents);
                 break;
+            case PerceptList.BROADCAST_MSG:
+                if (!(data instanceof String[]) || ((String[]) data).length != 2) {
+                    logger.error("received unknown data: " + data);
+                    break;
+                }
+                String[] globalContent = (String[]) data;
+                logger.debug("received global content " + globalContent);
+                String gMsg = globalContent[0];
+                if(!globalContentFromAgents.contains(gMsg)) {
+                    globalContentFromAgents.add(gMsg);
+                }
+                break;
+
             default:
                 throw new RuntimeException("Unknown data type received: " + dataType);
         }
