@@ -107,7 +107,7 @@ public class DiffusionModel implements DataSource<SortedMap<Double, DiffusedCont
         this.snManager.printSNModelconfigs();
         //subscribe to BDI data updates
         this.dataServer.subscribe(this, PerceptList.SOCIAL_NETWORK_MSG);
-        this.dataServer.subscribe(this,PerceptList.BROADCAST_MSG);
+        this.dataServer.subscribe(this,PerceptList.SOCIAL_NETWORK_BROADCAST_MSG);
     }
 
     private void stepDiffusionProcess() {
@@ -190,7 +190,7 @@ public class DiffusionModel implements DataSource<SortedMap<Double, DiffusedCont
                 agents.add(agentId);
                 localContentFromAgents.put(msg, agents);
                 break;
-            case PerceptList.BROADCAST_MSG:
+            case PerceptList.SOCIAL_NETWORK_BROADCAST_MSG:
                 if (!(data instanceof String[]) || ((String[]) data).length != 2) {
                     logger.error("received unknown data: " + data);
                     break;
