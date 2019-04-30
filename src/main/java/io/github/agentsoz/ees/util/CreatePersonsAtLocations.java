@@ -1,4 +1,4 @@
-package io.github.agentsoz.util.evac;
+package io.github.agentsoz.ees.util;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -46,7 +46,7 @@ import io.github.agentsoz.util.Global;
  * #L%
  */
 
-public class GenerateInput {
+public class CreatePersonsAtLocations {
 
 	private enum PopulationLocationType {
 		UNKNOWN, // Invalid value
@@ -162,7 +162,7 @@ public class GenerateInput {
 
 	private static String usage() {
 		return "usage: "
-				+ GenerateInput.class.getName()
+				+ CreatePersonsAtLocations.class.getName()
 				+ "  [options] \n"
 				+ "   -prefix STRING   MATSim scenario prefix used for filenames and person IDs (default is '"+matsimScenarioPrefix+"')\n"
 				+ "   -matsimpop       N/WKT/LOC/ARG  places N agents at LOC locations (specified in WKT coordinate system); valid examples are\n"
