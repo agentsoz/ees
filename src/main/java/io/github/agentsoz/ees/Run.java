@@ -127,11 +127,13 @@ public class Run implements DataClient {
         // initialise the Jill model, register it as an active data source, and start it
         log.info("Starting Jill BDI model");
         JillBDIModel jillmodel = new JillBDIModel(cfg.getModelConfig(Config.eModelBdi), dataServer, (QueryPerceptInterface)matsimEvacModel, bdiMap);
+        jillmodel.setAgentDataContainer(adc_from_bdi);
         jillmodel.init(bdiAgentIDs.toArray( new String[bdiAgentIDs.size()] ));
         jillmodel.start();
 
         // --- initialize and start MATSim
         log.info("Starting MATSim model");
+        matsimEvacModel.setAgentDataContainer(adc_from_abm);
         matsimEvacModel.init(new Object[]{bdiAgentIDs});
         matsimEvacModel.start();
         {
@@ -143,8 +145,6 @@ public class Run implements DataClient {
 
         // start the main simulation loop
         log.info("Starting the simulation loop");
-        jillmodel.setAgentDataContainer(adc_from_bdi);
-        matsimEvacModel.setAgentDataContainer(adc_from_abm);
         jillmodel.useSequenceLock(sequenceLock);
         matsimEvacModel.useSequenceLock(sequenceLock);
 
@@ -153,8 +153,6 @@ public class Run implements DataClient {
             synchronized (sequenceLock) {
                 dataServer.stepTime();
             }
-            // BDI to take control; the BDI thread should synchronize on adc_from_bdi
-            dataServer.publish(PerceptList.TAKE_CONTROL_BDI, adc_from_abm);
             // Wait till both models are done before checking for termination condition
             synchronized (sequenceLock) {
                 if (matsimEvacModel.isFinished()) {
@@ -163,6 +161,8 @@ public class Run implements DataClient {
             }
             // ABM to take control; the ABM thread should synchronize on adc_from_abm
             dataServer.publish(PerceptList.TAKE_CONTROL_ABM, adc_from_bdi);
+            // BDI to take control; the BDI thread should synchronize on adc_from_bdi
+            dataServer.publish(PerceptList.TAKE_CONTROL_BDI, adc_from_abm);
         }
 
         // finish up

@@ -395,20 +395,6 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
                     ActionList.DRIVETO, new EvacDrivetoActionHandlerV2(matsimModel));
             paAgent.getActionHandler().registerBDIAction(
                     ActionList.REPLAN_CURRENT_DRIVETO, new ReplanDriveToDefaultActionHandlerV2(matsimModel));
-            // add a one-off listener for next link blocked events
-            // And another in case the agent gets stuck on the way
-            paAgent.getPerceptHandler().registerBDIPerceptHandler( paAgent.getAgentID(), EventsMonitorRegistry.MonitoredEventType.NextLinkBlocked,
-                    null, new BDIPerceptHandler() {
-                        @Override
-                        public boolean handle(Id<Person> agentId, Id<Link> currentLinkId, EventsMonitorRegistry.MonitoredEventType monitoredEvent) {
-                            PAAgent agent = getAgentManager().getAgent( agentId.toString() );
-                            Object[] params = { currentLinkId.toString() };
-                            PerceptContent pc = new PerceptContent(PerceptList.BLOCKED, params[0]);
-                            getAgentManager().getAgentDataContainerV2().putPercept(agent.getAgentID(), PerceptList.BLOCKED, pc);
-                            return true;
-                        }
-                    }
-            );
         }
 
     }

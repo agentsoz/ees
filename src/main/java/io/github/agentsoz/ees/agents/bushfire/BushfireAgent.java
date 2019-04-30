@@ -186,6 +186,12 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
         } catch (BeliefBaseException e) {
             throw new RuntimeException(e);
         }
+        // perceive congestion and blockage events always
+        EnvironmentAction action = new EnvironmentAction(
+                Integer.toString(getId()),
+                ActionList.PERCEIVE,
+                new Object[] {PerceptList.BLOCKED});
+        post(action);
     }
 
     /**
