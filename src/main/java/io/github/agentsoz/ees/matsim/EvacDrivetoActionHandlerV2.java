@@ -132,42 +132,6 @@ public final class EvacDrivetoActionHandlerV2 implements BDIActionHandler {
 					}
 				}
 		);
-		
-		// And another in case the agent gets stuck on the way
-		paAgent.getPerceptHandler().registerBDIPerceptHandler( paAgent.getAgentID(), MonitoredEventType.NextLinkBlockedEvent,
-				null, new BDIPerceptHandler() {
-					@Override
-					public boolean handle(Id<Person> agentId, Id<Link> currentLinkId, MonitoredEventType monitoredEvent) {
-						PAAgent agent = model.getAgentManager().getAgent( agentId.toString() );
-						Object[] params = { currentLinkId.toString() };
-						ActionContent ac = new ActionContent(params, ActionContent.State.FAILED, ActionList.DRIVETO);
-						model.getAgentManager().getAgentDataContainerV2().putAction(agent.getAgentID(), ActionList.DRIVETO, ac);
-						PerceptContent pc = new PerceptContent(PerceptList.BLOCKED, params[0]);
-						model.getAgentManager().getAgentDataContainerV2().putPercept(agent.getAgentID(), PerceptList.BLOCKED, pc);
-						return true;
-					}
-				}
-		);
-
-		// And yet another in case the agent gets stuck in congestion on the way
-		paAgent.getPerceptHandler().registerBDIPerceptHandler( paAgent.getAgentID(), MonitoredEventType.AgentInCongestionEvent,
-				null, new BDIPerceptHandler() {
-					@Override
-					public boolean handle(Id<Person> agentId, Id<Link> currentLinkId, MonitoredEventType monitoredEvent) {
-						PAAgent agent = model.getAgentManager().getAgent( agentId.toString() );
-						Object[] params = { currentLinkId.toString() };
-						// Send the congestion percept back to the BDI agent. We should not fail the action here,
-						// but let the BDI agent decide to abort the action if it so decides. However, while
-						// abortion is not supported in Jill we will have to live with failing the action for
-						// the time being; dsingh 1/2/18
-						ActionContent ac = new ActionContent(params, ActionContent.State.FAILED, ActionList.DRIVETO);
-						model.getAgentManager().getAgentDataContainerV2().putAction(agent.getAgentID(), ActionList.DRIVETO, ac);
-						PerceptContent pc = new PerceptContent(PerceptList.CONGESTION, params[0]);
-						model.getAgentManager().getAgentDataContainerV2().putPercept(agent.getAgentID(), PerceptList.CONGESTION, pc);
-						return true;
-					}
-				}
-		);
 
 		log.debug("------------------------------------------------------------------------------------------"); ;
 		return true;
