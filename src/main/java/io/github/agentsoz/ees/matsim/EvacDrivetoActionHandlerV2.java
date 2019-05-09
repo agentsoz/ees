@@ -118,10 +118,9 @@ public final class EvacDrivetoActionHandlerV2 implements BDIActionHandler {
 
 		// Now register an event handler for when the agent arrives at the destination
 		PAAgent paAgent = model.getAgentManager().getAgent( agentID );
-		paAgent.getPerceptHandler().registerBDIPerceptHandler(paAgent.getAgentID(), MonitoredEventType.PersonArrivalEvent,
-				newLinkId.toString(), new BDIPerceptHandler() {
+		paAgent.getEventsMonitorRegistry().registerMonitor( paAgent.getAgentID(), MonitoredEventType.PersonArrivalEvent, newLinkId.toString(), new BDIPerceptHandler() {
 					@Override
-					public boolean handle(Id<Person> agentId, Id<Link> linkId, MonitoredEventType monitoredEvent) {
+					public boolean handle( Id<Person> agentId, Id<Link> linkId, MonitoredEventType monitoredEvent ) {
 						PAAgent agent = model.getAgentManager().getAgent(agentId.toString());
 						Object[] params = {linkId.toString()};
 						ActionContent ac = new ActionContent(params, ActionContent.State.PASSED, ActionList.DRIVETO);
@@ -130,8 +129,7 @@ public final class EvacDrivetoActionHandlerV2 implements BDIActionHandler {
 						model.getAgentManager().getAgentDataContainerV2().putPercept(agent.getAgentID(), PerceptList.ARRIVED, pc);
 						return true;
 					}
-				}
-		);
+				} );
 
 		log.debug("------------------------------------------------------------------------------------------"); ;
 		return true;
