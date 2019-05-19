@@ -99,7 +99,7 @@ public class DiffusionModel implements DataSource<SortedMap<Double, DiffusedCont
 
     public void init(List<String> idList) {
 
-        this.snManager.setupSNConfigs(); // first, setup configs and create log
+        this.snManager.setupSNConfigsAndLogs(); // first, setup configs and create log
         for (String id : idList) {
             this.snManager.createSocialAgent(id); //populate agentmap
         }

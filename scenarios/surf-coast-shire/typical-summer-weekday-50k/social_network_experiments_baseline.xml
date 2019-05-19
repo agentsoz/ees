@@ -83,7 +83,7 @@
 
     <model id="disruption">
       <!-- Disruptions JSON file relative to examples/bushfire directory -->
-      <opt id="fileJson">scenarios/surf-coast-shire/typical-summer-weekday-50k/scenario_disruptions.json</opt>
+      <opt id="fileJson">scenarios/surf-coast-shire/typical-summer-weekday-50k/scenario_disruptions_great_ocean_road.json</opt>
     </model>
 
     <model id="messaging">
