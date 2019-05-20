@@ -426,6 +426,14 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
             // already there, so no need to drive
             return false;
         }
+
+        // perceive congestion and blockage events always
+        post(new EnvironmentAction(
+                Integer.toString(getId()),
+                ActionList.PERCEIVE,
+                new Object[] {PerceptList.BLOCKED, PerceptList.CONGESTION}));
+
+
         Object[] params = new Object[4];
         params[0] = ActionList.DRIVETO;
         params[1] = location.getCoordinates();
