@@ -116,17 +116,22 @@ public class SynthpopToMatsim {
         int personId = 0;
         for (CSVRecord record : records) {
             Map<String,String> map = record.toMap();
-            for (String key : map.keySet()) {
-                System.out.println(key + "=" + map.get(key));
-            }
-            scenario.getPopulation().addPerson(createPersonWithActivity(
+            String[] carr = map.get("Geographical.Coordinate")
+                    .replaceAll("[\\[\\]]", "")
+                    .split(",");
+            Person person = createPersonWithActivity(
                     Integer.toString(personId++),
                     "home",
-                    0,
-                    0,
+                    Double.valueOf(carr[0]),
+                    Double.valueOf(carr[1]),
                     21600,
-                    scenario.getPopulation().getFactory()));
-            break;
+                    scenario.getPopulation().getFactory());
+            for (String key : map.keySet()) {
+                person.getAttributes().putAttribute(key, map.get(key) ) ;
+            }
+            person.getAttributes().putAttribute("BDIAgentType", "io.github.agentsoz.ees.agents.bushfire.Resident" );
+
+            scenario.getPopulation().addPerson(person);
         }
 
         // Finally, write this population to file
