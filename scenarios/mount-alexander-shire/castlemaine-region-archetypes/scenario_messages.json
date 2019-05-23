@@ -1,0 +1,77 @@
+{
+  "help": [
+    "List of emergency messages to inject into the simulation",
+    "{",
+      "type: one of ADVICE, WATCH_AND_ACT, EVACUATE_NOW",
+      "broadcastHHMM : the time in HHMM format when this mesage is to be sent",
+      "broadcastZones: list of zones IDs to which this message should be sent",
+    "}"
+  ],
+
+  "spatialReferenceEPSG" : "EPSG:28355",
+
+  "messages" : [
+    {
+      "type" : "ADVICE",
+      "content" : "Bushfire NW of Maldon; stay up to date in case the situation changes.",
+      "broadcastHHMM" : "1110",
+      "broadcastZones" : {
+        "20202102802" : null,
+        "20202102803" : null,
+        "20202102804" : null,
+        "20202102809" : null,
+        "20202102810" : null,
+        "20202102811" : null,
+        "20202102812" : null,
+        "20202102813" : null,
+        "20202102817" : null,
+        "20202102818" : null,
+        "20202102820" : null,
+        "20202102821" : null,
+        "20202102822" : null,
+        "20202102824" : null
+      }
+    },
+    {
+      "type" : "WATCH_AND_ACT",
+      "content" : "Bushfire NW of Maldon; not under control yet.",
+      "broadcastHHMM" : "1200",
+      "broadcastZones" : {
+        "20202102802" : null,
+        "20202102803" : null,
+        "20202102804" : null,
+        "20202102809" : null,
+        "20202102810" : null,
+        "20202102811" : null,
+        "20202102812" : null,
+        "20202102813" : null,
+        "20202102817" : null,
+        "20202102818" : null,
+        "20202102820" : null,
+        "20202102821" : null,
+        "20202102822" : null,
+        "20202102824" : null
+      }
+    },
+    {
+      "type" : "EVACUATE_NOW",
+      "content" : "Harcourt,255934,5901133,Evacuate now if safe to do so",
+      "broadcastHHMM" : "1230",
+      "broadcastZones" : {
+        "20202102810" : null,
+        "20202102817" : null,
+        "20202102818" : null,
+        "20202102821" : null
+      }
+    },
+    {
+      "type" : "EVACUATE_NOW",
+      "content" : "Harcourt,255934,5901133,Evacuate now if safe to do so",
+      "broadcastHHMM" : "1300",
+      "broadcastZones" : {
+        "20202102809" : null,
+        "20202102820" : null
+      }
+    },
+  ]
+}
