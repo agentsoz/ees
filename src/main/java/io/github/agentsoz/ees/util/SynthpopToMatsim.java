@@ -39,13 +39,15 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Paths;
 import java.util.Map;
+import java.util.Random;
 import java.util.zip.GZIPInputStream;
 
 public class SynthpopToMatsim {
 
     private static String inputCsvGzip = null;
     private static String matsimPopulationFile = "plans.xml";
-    private static String matsimOutputCoordinateSystem = "EPSG:4326";
+    private static String outputCoordinateSystem = "EPSG:4326";
+    private static String inputCoordinateSystem = "EPSG:4326";
 
     private static String usage() {
         return "usage: "
@@ -53,7 +55,7 @@ public class SynthpopToMatsim {
                 + "  [options] \n"
                 + "   --incsv FILE   Synthetic population CSV to convert (.csv.gz from https://github.com/agentsoz/synthetic-population)\n"
                 + "   --outxml FILE  Output file in MATSim plans XML format (default is '"+matsimPopulationFile+"')\n"
-                + "   --wkt STRING   Coordinate reference system to use for generated output (default is '"+matsimOutputCoordinateSystem+"')\n"
+                + "   --wkt STRING   Coordinate reference system to use for generated output (default is '"+ outputCoordinateSystem +"')\n"
                 ;
     }
 
@@ -72,10 +74,16 @@ public class SynthpopToMatsim {
                         matsimPopulationFile = Paths.get(args[i]).toAbsolutePath().normalize().toString();
                     }
                     break;
-                case "--wkt":
+                case "--in-crs":
                     if (i + 1 < args.length) {
                         i++;
-                        matsimOutputCoordinateSystem = args[i];
+                        inputCoordinateSystem = args[i];
+                    }
+                    break;
+                case "--out-crs":
+                    if (i + 1 < args.length) {
+                        i++;
+                        outputCoordinateSystem = args[i];
                     }
                     break;
                 default:
@@ -110,8 +118,8 @@ public class SynthpopToMatsim {
 
         Scenario scenario = ScenarioUtils.createScenario(ConfigUtils.createConfig());
         CoordinateTransformation ct = new GeotoolsTransformation(
-                "EPSG:4326",
-                matsimOutputCoordinateSystem);
+                inputCoordinateSystem,
+                outputCoordinateSystem);
 
         int personId = 0;
         for (CSVRecord record : records) {
@@ -119,17 +127,23 @@ public class SynthpopToMatsim {
             String[] carr = map.get("Geographical.Coordinate")
                     .replaceAll("[\\[\\]]", "")
                     .split(",");
+            Coord coord = ct.transform(new Coord(Double.valueOf(carr[0]), Double.valueOf(carr[1])));
             Person person = createPersonWithActivity(
                     Integer.toString(personId++),
                     "home",
-                    Double.valueOf(carr[0]),
-                    Double.valueOf(carr[1]),
+                    coord.getX(),
+                    coord.getY(),
                     (23*60*60)+(59*60)+59,
                     scenario.getPopulation().getFactory());
             for (String key : map.keySet()) {
                 person.getAttributes().putAttribute(key, map.get(key) ) ;
             }
             person.getAttributes().putAttribute("BDIAgentType", "io.github.agentsoz.ees.agents.bushfire.Resident" );
+
+            //Random rand = new Random(12345);
+            //person.getAttributes().putAttribute("EvacLocationPreference", "Elphinstone,262869,5890813" );
+            //person.getAttributes().putAttribute("InitialResponseThreshold", rand.nextDouble() );
+            //person.getAttributes().putAttribute("FinalResponseThreshold", rand.nextDouble() );
 
             scenario.getPopulation().addPerson(person);
         }
