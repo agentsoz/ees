@@ -124,7 +124,7 @@ public class SynthpopToMatsim {
                     "home",
                     Double.valueOf(carr[0]),
                     Double.valueOf(carr[1]),
-                    21600,
+                    (23*60*60)+(59*60)+59,
                     scenario.getPopulation().getFactory());
             for (String key : map.keySet()) {
                 person.getAttributes().putAttribute(key, map.get(key) ) ;
