@@ -266,10 +266,11 @@ class EvacAgent implements MobsimDriverAgent, HasPerson, PlanAgent, HasModifiabl
 			Link nextLink = this.network.getLinks().get( this.chooseNextLinkId() ) ;
 			final double now = this.simTimer.getTimeOfDay();
 			if (nextLink.getFreespeed(now) < 0.1) {
-				this.eventsManager.processEvent(
-						new NextLinkBlockedEvent(
-								now, this.getVehicle().getId(), this.getId(), this.getCurrentLinkId(),
-														nextLink.getId() ) );
+			    NextLinkBlockedEvent nextLinkBlockedEvent = new NextLinkBlockedEvent(
+                        now, this.getVehicle().getId(), this.getId(), this.getCurrentLinkId(),
+                        nextLink.getId() );
+				log.debug(nextLinkBlockedEvent.toString());
+				this.eventsManager.processEvent( nextLinkBlockedEvent );
 				// yyyy this event is now generated both here and in the intersection.  In general,
 				// it should be triggered here, giving the bdi time to compute.  However, the
 				// closure may happen between here and arriving at the node ...  kai, dec'17
