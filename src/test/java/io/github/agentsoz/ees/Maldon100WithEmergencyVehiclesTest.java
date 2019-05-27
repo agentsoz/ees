@@ -50,8 +50,6 @@ public class Maldon100WithEmergencyVehiclesTest {
 		String[] args = {
 				"--config", "scenarios/mount-alexander-shire/maldon-100-with-emergency-vehicles/ees.xml",
 		};
-		// FIXME: io.github.agentsoz.ees.agents.Responder does not work as it does not react to fire/messaging
-		// As a result, all three emergency responders in the test do not move. Accepting for now.
 		Run.main(args);
 
 		final String actualEventsFilename = utils.getOutputDirectory() + "/output_events.xml.gz";
