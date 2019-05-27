@@ -16,7 +16,7 @@
   "disruptions" : [
     {
       "description" : "Road blocked due to fallen tree",
-      "startHHMM" : "0033",
+      "startHHMM" : "0016",
       "endHHMM" : "2359",
       "effectiveSpeed" : "0",
       "effectiveSpeedUnit" : "KMPH",
