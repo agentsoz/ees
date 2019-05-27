@@ -28,6 +28,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.LineString;
 import org.matsim.api.core.v01.Id;
 
 
@@ -41,10 +44,6 @@ import org.matsim.api.core.v01.events.handler.PersonArrivalEventHandler;
 import org.matsim.api.core.v01.events.handler.PersonDepartureEventHandler;
 import org.matsim.api.core.v01.network.Link;
 import org.matsim.api.core.v01.network.Network;
-
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.LineString;
 
 import io.github.agentsoz.bdimatsim.MATSimModel;
 import io.github.agentsoz.bdimatsim.Utils;

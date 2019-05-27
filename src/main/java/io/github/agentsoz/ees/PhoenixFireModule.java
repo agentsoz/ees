@@ -30,15 +30,15 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.PrecisionModel;
-import com.vividsolutions.jts.precision.GeometryPrecisionReducer;
 import io.github.agentsoz.util.Time;
 import org.geotools.geometry.jts.GeometryBuilder;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.geom.PrecisionModel;
+import org.locationtech.jts.precision.GeometryPrecisionReducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
