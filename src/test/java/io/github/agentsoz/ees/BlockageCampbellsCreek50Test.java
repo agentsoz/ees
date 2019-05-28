@@ -24,6 +24,7 @@ package io.github.agentsoz.ees;
  */
 
 import io.github.agentsoz.util.TestUtils;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.matsim.testcases.MatsimTestUtils;
@@ -42,6 +43,7 @@ public class BlockageCampbellsCreek50Test {
 	@Rule public MatsimTestUtils utils = new MatsimTestUtils() ;
 
 	@Test
+	@Ignore
 	public void testBlockage50V2() {
 
 		utils.getOutputDirectory(); // creates a clean one so need to call this first
@@ -56,8 +58,8 @@ public class BlockageCampbellsCreek50Test {
 		// If the full events comparison fails (possibly due to multi-threading differences on travis/other),
 		// then use the checks below, adjusting slack as needed,
 		// but ideally keeping it below 10 secs; dhi 28/may/19
-		TestUtils.comparingDepartures(primaryExpectedEventsFilename,actualEventsFilename,10.);
-		TestUtils.comparingArrivals(primaryExpectedEventsFilename,actualEventsFilename,10.);
-		TestUtils.comparingActivityStarts(primaryExpectedEventsFilename,actualEventsFilename, 10.);
+		TestUtils.comparingDepartures(primaryExpectedEventsFilename,actualEventsFilename,1.);
+		TestUtils.comparingArrivals(primaryExpectedEventsFilename,actualEventsFilename,1.);
+		TestUtils.comparingActivityStarts(primaryExpectedEventsFilename,actualEventsFilename, 1.);
 	}
 }
