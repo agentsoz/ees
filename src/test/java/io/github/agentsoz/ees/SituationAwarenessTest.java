@@ -57,9 +57,9 @@ public class SituationAwarenessTest {
 		// If the full events comparison fails (possibly due to multi-threading differences on travis/other),
 		// then use the checks below, adjusting slack as needed,
 		// but ideally keeping it below 10 secs; dhi 28/may/19
-		TestUtils.comparingDepartures(primaryExpectedEventsFilename,actualEventsFilename,0.);
-		TestUtils.comparingArrivals(primaryExpectedEventsFilename,actualEventsFilename,0.);
-		TestUtils.comparingActivityStarts(primaryExpectedEventsFilename,actualEventsFilename, 0.);
+		TestUtils.comparingDepartures(primaryExpectedEventsFilename,actualEventsFilename,1.);
+		TestUtils.comparingArrivals(primaryExpectedEventsFilename,actualEventsFilename,1.);
+		TestUtils.comparingActivityStarts(primaryExpectedEventsFilename,actualEventsFilename, 1.);
 	}
 
 }
