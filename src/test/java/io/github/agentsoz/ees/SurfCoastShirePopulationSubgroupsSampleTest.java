@@ -48,42 +48,21 @@ public class SurfCoastShirePopulationSubgroupsSampleTest {
     @Test
     public void testSurfCoastShirePopulationSubgroupsSample() {
 
+        utils.getOutputDirectory(); // creates a clean one so need to call this first
         String[] args = {
                 "--config", "scenarios/surf-coast-shire/population-subgroups-sample/ees.xml",
         };
         Run.main(args);
+
+        final String actualEventsFilename = utils.getOutputDirectory() + "/output_events.xml.gz";
+        final String primaryExpectedEventsFilename = utils.getInputDirectory() + "/output_events.xml.gz";
+        // TestUtils.compareFullEvents(primaryExpectedEventsFilename,actualEventsFilename, true);
+        // Full events comparison is unstable on Travis (can pass or fail) due to threading differences.
+        // Will use more lenient checks below, adjusting slack as needed,
+        // but ideally keeping it below 10 secs; dhi 28/may/19
+        TestUtils.comparingDepartures(primaryExpectedEventsFilename,actualEventsFilename,1.);
+        TestUtils.comparingArrivals(primaryExpectedEventsFilename,actualEventsFilename,1.);
+        TestUtils.comparingActivityStarts(primaryExpectedEventsFilename,actualEventsFilename, 1.);
     }
-
-    @Test
-    @Ignore
-    public void testSurfCoastShirePopulationSubgroupsSampleLegacyConfig() {
-
-        String[] args = {
-                "--config", "scenarios/surf-coast-shire/population-subgroups-sample/scenario_main.xml",
-                "--logfile", utils.getOutputDirectory()+"../scenario.log",
-                "--loglevel", "INFO",
-                "--seed", "12345",
-                "--safeline-output-file-pattern", utils.getOutputDirectory()+"../safeline.%d%.out",
-                "--matsim-output-directory", utils.getOutputDirectory(),
-                "--jillconfig",
-                "--plan-selection-policy=FIRST=" + // to allow fallback to last option PlanDoNothing
-                "--config={" +
-                "agents:[],"+ // must be this string; will be replaced based on MATSim plans file
-                "logLevel: WARN," +
-                "logFile: \""+utils.getOutputDirectory()+"../jill.log\"," +
-                "programOutputFile: \""+utils.getOutputDirectory()+"../jill.out\"," +
-                "randomSeed: 12345" + // jill random seed
-                ",numThreads: 1"+ // run jill in single-threaded mode so logs are deterministic
-                "}",
-                "--x-congestion-config", "180:0.33:1.0",
-                "--x-load-bdi-agents-from-matsim-plans-file", "true", // Load agents from MATSim plans file
-                "--x-messages-file", "scenarios/surf-coast-shire/population-subgroups-sample/scenario_messages.json", // specifies when to send evac now msg
-                "--x-zones-file", "scenarios/surf-coast-shire/population-subgroups-sample/Anglesea_SA1s_WSG84.json", // map from zone (SA1) ids to shapes
-        };
-
-        //Main.main(args);
-
-    }
-
 }
 
