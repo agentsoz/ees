@@ -70,7 +70,7 @@ public class PlanGotoInvacPlace extends Plan {
 			() -> {
 				// Try a second time
 				startedDriving = false;
-				if (agent.getLastEnvironmentActionState() != ActionContent.State.DROPPED && agent.getTravelDistanceTo(destination)  > 0.0) {
+				if (agent.getLastDriveActionStatus() != ActionContent.State.DROPPED && agent.getTravelDistanceTo(destination)  > 0.0) {
 					startedDriving = agent.startDrivingTo(destination, MATSimEvacModel.EvacRoutingMode.carGlobalInformation);
 				}
 			},
@@ -86,7 +86,7 @@ public class PlanGotoInvacPlace extends Plan {
 			() -> {
 				// Try a third time
 				startedDriving = false;
-				if (agent.getLastEnvironmentActionState() != ActionContent.State.DROPPED && agent.getTravelDistanceTo(destination)  > 0.0) {
+				if (agent.getLastDriveActionStatus() != ActionContent.State.DROPPED && agent.getTravelDistanceTo(destination)  > 0.0) {
 					startedDriving = agent.startDrivingTo(destination, MATSimEvacModel.EvacRoutingMode.carGlobalInformation);
 				}
 			},

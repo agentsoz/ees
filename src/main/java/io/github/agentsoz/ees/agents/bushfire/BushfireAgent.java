@@ -28,7 +28,6 @@ import io.github.agentsoz.abmjill.genact.EnvironmentAction;
 import io.github.agentsoz.bdiabm.EnvironmentActionInterface;
 import io.github.agentsoz.bdiabm.QueryPerceptInterface;
 import io.github.agentsoz.bdiabm.data.ActionContent;
-import io.github.agentsoz.bdiabm.data.PerceptContent;
 import io.github.agentsoz.dataInterface.DataServer;
 import io.github.agentsoz.ees.ActionList;
 import io.github.agentsoz.ees.EmergencyMessage;
@@ -109,8 +108,8 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
     // Internal variables
     private final String memory = "memory";
     private Map<String,Location> locations;
-    private EnvironmentAction activeEnvironmentAction;
-    private ActionContent.State lastEnvironmentActionStatus;
+    private Map<String,EnvironmentAction> activeEnvironmentActions;
+    private ActionContent.State lastDriveActionStatus;
     private Set<String> messagesShared;
 
 
@@ -118,6 +117,7 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
         super(id);
         locations = new HashMap<>();
         messagesShared = new HashSet<>();
+        activeEnvironmentActions = new HashMap<>();
 
     }
 
@@ -147,20 +147,29 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
     }
 
     boolean isDriving() {
-        return activeEnvironmentAction != null && activeEnvironmentAction.getActionID().equals(ActionList.DRIVETO);
+        return activeEnvironmentActions != null && activeEnvironmentActions.containsKey(ActionList.DRIVETO);
     }
 
-    void setActiveEnvironmentAction(EnvironmentAction activeEnvironmentAction) {
-        this.activeEnvironmentAction = activeEnvironmentAction;
+    private void addActiveEnvironmentAction(EnvironmentAction activeEnvironmentAction) {
+        activeEnvironmentActions.put(activeEnvironmentAction.getActionID(), activeEnvironmentAction);
     }
 
-    public void setLastEnvironmentActionState(ActionContent.State lastEnvironmentActionStatus) {
-        this.lastEnvironmentActionStatus = lastEnvironmentActionStatus;
+    private EnvironmentAction removeActiveEnvironmentAction(String actionId) {
+        if (actionId != null && activeEnvironmentActions.containsKey(actionId)) {
+            return activeEnvironmentActions.remove(actionId);
+        }
+        return null;
     }
 
-    public ActionContent.State getLastEnvironmentActionState() {
-        return lastEnvironmentActionStatus;
+
+    private void setLastDriveActionStatus(ActionContent.State lastDriveActionStatus) {
+        this.lastDriveActionStatus = lastDriveActionStatus;
     }
+
+    public ActionContent.State getLastDriveActionStatus() {
+        return lastDriveActionStatus;
+    }
+
 
     /**
      * Called by the Jill model when starting a new agent.
@@ -187,10 +196,12 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
             throw new RuntimeException(e);
         }
         // perceive congestion and blockage events always
-        post(new EnvironmentAction(
+        EnvironmentAction action = new EnvironmentAction(
                 Integer.toString(getId()),
                 ActionList.PERCEIVE,
-                new Object[] {PerceptList.BLOCKED, PerceptList.CONGESTION}));
+                new Object[] {PerceptList.BLOCKED, PerceptList.CONGESTION});
+        post(action);
+        addActiveEnvironmentAction(action);
     }
 
     /**
@@ -231,9 +242,14 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
         } else if (perceptID.equals(PerceptList.ARRIVED)) {
             // do something
         } else if (perceptID.equals(PerceptList.BLOCKED)) {
-            if (activeEnvironmentAction == null) {
-                replanCurrentDriveTo(MATSimEvacModel.EvacRoutingMode.carGlobalInformation);
-            }
+            replanCurrentDriveTo(MATSimEvacModel.EvacRoutingMode.carGlobalInformation);
+            // perceive congestion and blockage events always
+            EnvironmentAction action = new EnvironmentAction(
+                    Integer.toString(getId()),
+                    ActionList.PERCEIVE,
+                    new Object[] {PerceptList.BLOCKED, PerceptList.CONGESTION});
+            post(action);
+            addActiveEnvironmentAction(action);
         }
 
         // handle percept spread on social network
@@ -428,11 +444,12 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
         }
 
         // perceive congestion and blockage events always
-        post(new EnvironmentAction(
+        EnvironmentAction action = new EnvironmentAction(
                 Integer.toString(getId()),
                 ActionList.PERCEIVE,
-                new Object[] {PerceptList.BLOCKED, PerceptList.CONGESTION}));
-
+                new Object[] {PerceptList.BLOCKED, PerceptList.CONGESTION});
+        post(action);
+        addActiveEnvironmentAction(action);
 
         Object[] params = new Object[4];
         params[0] = ActionList.DRIVETO;
@@ -441,8 +458,10 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
         params[3] = routingMode;
         memorise(MemoryEventType.ACTIONED.name(), ActionList.DRIVETO
                 + ":"+ location + ":" + String.format("%.0f", distToTravel) + "m away");
-        EnvironmentAction action = new EnvironmentAction(Integer.toString(getId()), ActionList.DRIVETO, params);
-        setActiveEnvironmentAction(action); // will be reset by updateAction()
+        action = new EnvironmentAction(
+                Integer.toString(getId()),
+                ActionList.DRIVETO, params);
+        addActiveEnvironmentAction(action); // will be reset by updateAction()
         subgoal(action); // should be last call in any plan step
         return true;
     }
@@ -453,7 +472,7 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
                 Integer.toString(getId()),
                 ActionList.REPLAN_CURRENT_DRIVETO,
                 new Object[] {routingMode});
-        setActiveEnvironmentAction(action); // will be reset by updateAction()
+        addActiveEnvironmentAction(action); // will be reset by updateAction()
         subgoal(action); // should be last call in any plan step
         return true;
     }
@@ -488,14 +507,15 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
     @Override
     public void updateAction(String actionID, ActionContent content) {
         logger.debug("{} received action update: {}", logPrefix(), content);
-        setLastEnvironmentActionState(content.getState()); // save the finish state of the action
-        if (content.getAction_type().equals(ActionList.DRIVETO)) {
-            ActionContent.State actionState = content.getState();
-            if (actionState == ActionContent.State.PASSED ||
-                    actionState == ActionContent.State.FAILED ||
-                    actionState == ActionContent.State.DROPPED) {
-                memorise(BushfireAgent.MemoryEventType.BELIEVED.name(), BushfireAgent.MemoryEventValue.LAST_ENV_ACTION_STATE.name() + "=" + actionState.name());
-                setActiveEnvironmentAction(null); // remove the action
+        ActionContent.State actionState = content.getState();
+        if (actionState == ActionContent.State.PASSED ||
+                actionState == ActionContent.State.FAILED ||
+                actionState == ActionContent.State.DROPPED) {
+            memorise(BushfireAgent.MemoryEventType.BELIEVED.name(), BushfireAgent.MemoryEventValue.LAST_ENV_ACTION_STATE.name() + "=" + actionState.name());
+            removeActiveEnvironmentAction(content.getAction_type()); // remove the action
+
+            if (content.getAction_type().equals(ActionList.DRIVETO)) {
+                setLastDriveActionStatus(content.getState()); // save the finish state of the action
                 // Wake up the agent that was waiting for external action to finish
                 // FIXME: BDI actions put agent in suspend, which won't work for multiple intention stacks
                 suspend(false);
