@@ -7,6 +7,9 @@
 	diffusionType="ic"
 	networkType="rand-reg"
 	coord_file="not-needed-if-using-random"
+	log_file="scenarios/surf-coast-shire/anglesea-12k-sample/diffusion.log"
+	log_level="i"
+	out_file="scenarios/surf-coast-shire/anglesea-12k-sample/diffusion.out"
 />
 
 <!-- network configurations-->

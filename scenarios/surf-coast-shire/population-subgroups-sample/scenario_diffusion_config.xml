@@ -7,6 +7,9 @@
 	diffusionType="ic"
 	networkType="rand-reg"
 	coord_file="not-needed-if-using-random"
+	log_file="test/output/io/github/agentsoz/ees/SurfCoastShirePopulationSubgroupsSampleTest/testSurfCoastShirePopulationSubgroupsSample/diffusion.log"
+	log_level="i"
+	out_file="test/output/io/github/agentsoz/ees/SurfCoastShirePopulationSubgroupsSampleTest/testSurfCoastShirePopulationSubgroupsSample/diffusion.out"
 />
 
 <!-- network configurations-->
