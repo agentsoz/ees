@@ -52,7 +52,7 @@ public class BlockageEquilTest {
 
 		final String actualEventsFilename = utils.getOutputDirectory() + "/output_events.xml.gz";
 		final String primaryExpectedEventsFilename = utils.getInputDirectory() + "/output_events.xml.gz";
-		// TestUtils.compareFullEvents(primaryExpectedEventsFilename,actualEventsFilename, true);
+		TestUtils.compareFullEvents(primaryExpectedEventsFilename,actualEventsFilename, true);
 		// If the full events comparison fails (possibly due to multi-threading differences on travis/other),
 		// then use the checks below, adjusting slack as needed,
 		// but ideally keeping it below 10 secs; dhi 28/may/19
