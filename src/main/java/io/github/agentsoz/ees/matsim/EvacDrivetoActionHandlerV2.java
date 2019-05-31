@@ -54,13 +54,13 @@ public final class EvacDrivetoActionHandlerV2 implements BDIActionHandler {
 		this.model = model;
 	}
 	@Override
-	public boolean handle(String agentID, String actionID, Object[] args) {
+	public ActionContent.State handle(String agentID, String actionID, Object[] args) {
 		log.debug("------------------------------------------------------------------------------------------");
 		{
 			// dsingh 16/may/18 - towards #12
 			if (args.length < 4) {
 				log.error("agent " + agentID + " DRIVETO handler has " +args.length + " args (>=4 expected); will continue without handling this event");
-				return true;
+				return ActionContent.State.RUNNING; // FIXME: seems incorrect to return RUNNING
 			}
 		}
 		// assertions:
@@ -134,7 +134,7 @@ public final class EvacDrivetoActionHandlerV2 implements BDIActionHandler {
 		);
 
 		log.debug("------------------------------------------------------------------------------------------"); ;
-		return true;
+		return ActionContent.State.RUNNING;
 	}
 	
 	private void printPlan(String str ,MobsimAgent agent1) {

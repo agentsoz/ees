@@ -22,6 +22,7 @@ package io.github.agentsoz.ees.matsim;
  * #L%
  */
 
+import io.github.agentsoz.bdiabm.data.ActionContent;
 import io.github.agentsoz.bdimatsim.MATSimModel;
 import io.github.agentsoz.nonmatsim.BDIActionHandler;
 import org.matsim.core.gbl.Gbl;
@@ -38,7 +39,7 @@ public final class ReplanDriveToDefaultActionHandlerV2 implements BDIActionHandl
 		this.model = model;
 	}
 	@Override
-	public boolean handle(String agentID, String actionID, Object[] args) {
+	public ActionContent.State handle(String agentID, String actionID, Object[] args) {
 		// assertions:
 		MobsimAgent mobsimAgent = model.getMobsimAgentFromIdString(agentID) ;
 		Gbl.assertNotNull(mobsimAgent) ;
@@ -48,6 +49,6 @@ public final class ReplanDriveToDefaultActionHandlerV2 implements BDIActionHandl
 		if (WithinDayAgentUtils.isOnReplannableCarLeg(mobsimAgent)) {
 			model.getReplanner().editTrips().replanCurrentTrip(mobsimAgent, 0.0, routingMode.name());
 		}
-		return true;
+		return ActionContent.State.PASSED;
 	}
 }
