@@ -30,13 +30,13 @@
 	</module>
 
 	<module name="network">
-		<param name="inputNetworkFile" value="../mount_alexander_shire_network_2018.xml.gz" />
+		<param name="inputNetworkFile" value="../../loddon-mallee-northern-cluster-shires/loddon_mallee_northern_cluster_shires_network.xml.gz" />
 		<param name= "timeVariantNetwork" value= "false" />
 		<!--<param name= "inputChangeEventsFile" value= "scenario_matsim_network_change_events.xml.gz" />-->
 	</module>
 
 	<module name="plans">
-		<param name="inputPlansFile" value="scenario_matsim_plans.xml.gz" />
+		<param name="inputPlansFile" value="population-baseline.xml.gz" />
 	</module>
 
 	<module name="controler">

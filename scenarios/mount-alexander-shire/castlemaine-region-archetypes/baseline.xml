@@ -46,16 +46,16 @@
       <opt id="jPlanSelectionPolicy">FIRST</opt>
       <opt id="jAgents"></opt>
       <opt id="jLogLevel">WARN</opt>
-      <opt id="jLogFile">test/output/io/github/agentsoz/ees/CastlemaineRegionArchetypesIT/testCastlemaineRegionArchetypes/jill.log</opt>
-      <opt id="jOutFile">test/output/io/github/agentsoz/ees/CastlemaineRegionArchetypesIT/testCastlemaineRegionArchetypes/jill.out</opt>
+      <opt id="jLogFile">test/output/io/github/agentsoz/ees/CastlemaineRegionBaselineIT/testCastlemaineRegionBaseline/jill.log</opt>
+      <opt id="jOutFile">test/output/io/github/agentsoz/ees/CastlemaineRegionBaselineIT/testCastlemaineRegionBaseline/jill.out</opt>
       <!--<opt id="jNumThreads">1</opt>-->
     </model>
 
     <model id="matsim">
       <!-- MATSim output directory relative to examples/bushfire directory (will overrule the setting in MATSim config) -->
-      <opt id="outputDir">test/output/io/github/agentsoz/ees/CastlemaineRegionArchetypesIT/testCastlemaineRegionArchetypes/matsim</opt>
+      <opt id="outputDir">test/output/io/github/agentsoz/ees/CastlemaineRegionBaselineIT/testCastlemaineRegionBaseline/matsim</opt>
       <!-- MATSim XML config XML file relative to examples/bushfire directory -->
-      <opt id="configXml">scenarios/mount-alexander-shire/castlemaine-region-archetypes/scenario_matsim_main.xml</opt>
+      <opt id="configXml">scenarios/mount-alexander-shire/castlemaine-region-archetypes/baseline_matsim_main.xml</opt>
       <!-- Maximum distance at which the fire can be seen (in metres)-->
       <opt id="maxDistanceForFireVisual">1000</opt>
       <!-- Maximum distance at which smoke can be seen (in metres)-->
