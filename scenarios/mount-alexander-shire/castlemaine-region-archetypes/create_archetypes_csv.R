@@ -19,5 +19,12 @@ for(archetype in unique(df$Archetype)) {
   df[filter,]$BDIAgentType<-paste0("io.github.agentsoz.ees.agents.archetype.", type)
 }
 
+# Fix any type naming
+filter<-df$BDIAgentType=="io.github.agentsoz.ees.agents.archetype.DependentEvacuators"
+df[filter,]$BDIAgentType<-"io.github.agentsoz.ees.agents.archetype.DependentEvacuator"
+
+# Add any other attributes
+df$EvacLocationPreference<-"Elphinstone,262869,5890813"
+
 con <- gzfile('./archetypes.csv.gz')
 write.csv(df, con, row.names=FALSE, quote=TRUE)
