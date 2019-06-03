@@ -26,5 +26,5 @@ df[filter,]$BDIAgentType<-"io.github.agentsoz.ees.agents.archetype.DependentEvac
 # Add any other attributes
 df$EvacLocationPreference<-"Elphinstone,262869,5890813"
 
-con <- gzfile('./archetypes-population.csv.gz')
+con <- gzfile('./population-archetypes.csv.gz')
 write.csv(df, con, row.names=FALSE, quote=TRUE)

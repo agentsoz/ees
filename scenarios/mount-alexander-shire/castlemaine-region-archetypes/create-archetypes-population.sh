@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-INCSV=./archetypes-population.csv.gz
-OUTXML=./archetypes-population.xml
+INCSV=./population-archetypes.csv.gz
+OUTXML=./population-archetypes.xml
 
-Rscript --vanilla './create_archetypes_csv.R'
+Rscript --vanilla './create-archetypes-csv.R'
 
 CMD="java -cp ../../../target/ees-2.1.1-SNAPSHOT.jar \
   io.github.agentsoz.ees.util.SynthpopToMatsim \
