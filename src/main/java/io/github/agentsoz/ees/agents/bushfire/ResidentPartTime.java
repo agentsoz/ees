@@ -48,7 +48,7 @@ public class ResidentPartTime extends BushfireAgent {
     }
 
     @Override
-    String logPrefix() {
+    public String logPrefix() {
         return prefix.toString();
     }
 

@@ -573,7 +573,7 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
     }
 
 
-    double getTime() {
+    public double getTime() {
         return time;
     }
 
@@ -704,7 +704,7 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
         }
     }
 
-    String logPrefix() {
+    public String logPrefix() {
         return prefix.toString();
     }
 
