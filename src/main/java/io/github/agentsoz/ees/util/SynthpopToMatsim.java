@@ -53,9 +53,10 @@ public class SynthpopToMatsim {
         return "usage: "
                 + SynthpopToMatsim.class.getName()
                 + "  [options] \n"
-                + "   --incsv FILE   Synthetic population CSV to convert (.csv.gz from https://github.com/agentsoz/synthetic-population)\n"
-                + "   --outxml FILE  Output file in MATSim plans XML format (default is '"+matsimPopulationFile+"')\n"
-                + "   --wkt STRING   Coordinate reference system to use for generated output (default is '"+ outputCoordinateSystem +"')\n"
+                + "   --incsv FILE     Synthetic population CSV to convert (.csv.gz from https://github.com/agentsoz/synthetic-population)\n"
+                + "   --outxml FILE    Output file in MATSim plans XML format (default is '"+matsimPopulationFile+"')\n"
+                + "   --incrs STRING   Coordinate reference system of input (default is '"+ inputCoordinateSystem +"')\n"
+                + "   --outcrs STRING  Coordinate reference system to use for generated output (default is '"+ outputCoordinateSystem +"')\n"
                 ;
     }
 
@@ -74,13 +75,13 @@ public class SynthpopToMatsim {
                         matsimPopulationFile = Paths.get(args[i]).toAbsolutePath().normalize().toString();
                     }
                     break;
-                case "--in-crs":
+                case "--incrs":
                     if (i + 1 < args.length) {
                         i++;
                         inputCoordinateSystem = args[i];
                     }
                     break;
-                case "--out-crs":
+                case "--outcrs":
                     if (i + 1 < args.length) {
                         i++;
                         outputCoordinateSystem = args[i];
@@ -126,6 +127,7 @@ public class SynthpopToMatsim {
             Map<String,String> map = record.toMap();
             String[] carr = map.get("Geographical.Coordinate")
                     .replaceAll("[\\[\\]]", "")
+                    .trim()
                     .split(",");
             Coord coord = ct.transform(new Coord(Double.valueOf(carr[0]), Double.valueOf(carr[1])));
             Person person = createPersonWithActivity(
@@ -138,7 +140,7 @@ public class SynthpopToMatsim {
             for (String key : map.keySet()) {
                 person.getAttributes().putAttribute(key, map.get(key) ) ;
             }
-            person.getAttributes().putAttribute("BDIAgentType", "io.github.agentsoz.ees.agents.bushfire.Resident" );
+            //person.getAttributes().putAttribute("BDIAgentType", "io.github.agentsoz.ees.agents.bushfire.Resident" );
 
             //Random rand = new Random(12345);
             //person.getAttributes().putAttribute("EvacLocationPreference", "Elphinstone,262869,5890813" );
