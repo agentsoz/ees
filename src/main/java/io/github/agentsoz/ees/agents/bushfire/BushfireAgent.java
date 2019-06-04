@@ -586,7 +586,12 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
                             i++;
                             if (!args[i].isEmpty()) { // empty arg is ok, signifies no dependents
                                 try {
-                                    String[] vals = args[i].split(",");
+                                    String arg = args[i]
+                                            .replaceAll("\\[","")
+                                            .replaceAll("\\]","")
+                                            .replaceAll(" ", "")
+                                            .trim();
+                                    String[] vals = arg.split(",");
                                     Location location = new Location("Dependent", Double.parseDouble(vals[0]), Double.parseDouble(vals[1]));
                                     dependentInfo = new DependentInfo();
                                     dependentInfo.setLocation(location);
