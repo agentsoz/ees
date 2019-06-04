@@ -1,3 +1,16 @@
+## Commit `e2ebe0b` | 4 Jun, 2019
+
+* `CastlemaineRegionBaselineIT`: is now the renamed baseline scenario (from below).
+* `CastlemaineRegionArchetypesIT`: this is the archetypes scenario.
+
+A [basic comparison video of the two is here](https://cloudstor.aarnet.edu.au/plus/s/MXqKylC2JPnJXo5).
+
+Some notes re the archetypes population:
+* The population attributes in `population-archetypes.xml.gz` are initialised as per the agreed values.
+* The behaviours are the same as the `Resident` class (below).
+* So the main difference in the two populations is predominantly in the initialisation. 
+
+
 ## Commit `8a33ec6` | May 23, 2019
 
 A very basic scenario with `Resident` agents (similar to those used for Surf Coast Shire) evacuating the Castlemaine/Region is ready (see [video](https://cloudstor.aarnet.edu.au/plus/s/icWong3jdLUIPo6)).
