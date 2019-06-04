@@ -26,5 +26,19 @@ df[filter,]$BDIAgentType<-"io.github.agentsoz.ees.agents.archetype.DependentEvac
 # Add any other attributes
 df$EvacLocationPreference<-"Elphinstone,262869,5890813"
 
+# Assign Dependent Evacuators (randomly) as dependents to be picked up by others
+# 1. get a list of dependents locations in random order
+filter<-df$BDIAgentType=="io.github.agentsoz.ees.agents.archetype.DependentEvacuator"
+locs<-sample(df[filter,]$Geographical.Coordinate)
+# 2. Get people who have dependents and are not dependent themselves (to assign dependents to)
+filter<-df$HasDependents==1 & df$BDIAgentType!="io.github.agentsoz.ees.agents.archetype.DependentEvacuator"
+candidates<-which(filter)
+# 3. Assign as many dependents as possible
+len<-min(sum(filter), length(locs))
+candidates<-candidates[1:len]
+df$HasDependentsAtLocation<-""
+df[candidates,]$HasDependentsAtLocation<-locs
+
+# Write out the table
 con <- gzfile('./population-archetypes.csv.gz')
 write.csv(df, con, row.names=FALSE, quote=TRUE)
