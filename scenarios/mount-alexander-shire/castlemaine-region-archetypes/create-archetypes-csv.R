@@ -39,6 +39,10 @@ candidates<-candidates[1:len]
 df$HasDependentsAtLocation<-""
 df[candidates,]$HasDependentsAtLocation<-locs
 
+# Remove all the dependent evacuators now (have been accounted for in pickups as best we can)
+filter<-df$BDIAgentType!="io.github.agentsoz.ees.agents.archetype.DependentEvacuator"
+df<-df[filter,]
+
 # Write out the table
 con <- gzfile('./population-archetypes.csv.gz')
 write.csv(df, con, row.names=FALSE, quote=TRUE)
