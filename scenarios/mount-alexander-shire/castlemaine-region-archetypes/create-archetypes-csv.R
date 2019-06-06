@@ -10,21 +10,23 @@ close(con)
 
 
 persons<-rbind(persons1,persons2)
-
 df<-persons
-df$BDIAgentType<-df$Archetype
+
+# Fix any type naming
+filter<-df$Archetype=="Dependent.Evacuators"
+df[filter,]$Archetype<-"Dependent.Evacuator"
+
+# Add BDI agent class
+df$BDIAgentType<-""
 for(archetype in unique(df$Archetype)) {
-  filter<-df$BDIAgentType==archetype
+  filter<-df$Archetype==archetype
   type<-gsub("\\.", "", archetype)
   df[filter,]$BDIAgentType<-paste0("io.github.agentsoz.ees.agents.archetype.", type)
 }
 
-# Fix any type naming
-filter<-df$BDIAgentType=="io.github.agentsoz.ees.agents.archetype.DependentEvacuators"
-df[filter,]$BDIAgentType<-"io.github.agentsoz.ees.agents.archetype.DependentEvacuator"
-
 # Add any other attributes
 df$EvacLocationPreference<-"Elphinstone,262869,5890813"
+df$InvacLocationPreference<-"Castlemaine,252140,5894312"
 
 # Assign Dependent Evacuators (randomly) as dependents to be picked up by others
 # 1. get a list of dependents locations in random order
