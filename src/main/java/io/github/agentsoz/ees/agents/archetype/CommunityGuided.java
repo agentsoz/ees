@@ -34,7 +34,7 @@ import io.github.agentsoz.jill.lang.AgentInfo;
         "io.github.agentsoz.ees.agents.bushfire.GoalGotoDependents",
         "io.github.agentsoz.ees.agents.bushfire.GoalGotoInvacPlace",
         "io.github.agentsoz.ees.agents.bushfire.GoalGotoEvacPlace"})
-public class CommunityGuided extends BushfireAgent {
+public class CommunityGuided extends ArchetypeAgent {
 
     private Prefix prefix = new CommunityGuided.Prefix();
 
