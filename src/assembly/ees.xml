@@ -1,0 +1,89 @@
+<!--
+  #%L
+  Emergency Evacuation Simulator
+  %%
+  Copyright (C) 2014 - 2018 by its authors. See AUTHORS file.
+  %%
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as
+  published by the Free Software Foundation, either version 3 of the
+  License, or (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Lesser Public License for more details.
+
+  You should have received a copy of the GNU General Lesser Public
+  License along with this program.  If not, see
+  <http://www.gnu.org/licenses/lgpl-3.0.html>.
+  #L%
+  -->
+
+<assembly
+  xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0 http://maven.apache.org/xsd/assembly-1.1.0.xsd">
+	<id>release</id>
+
+	<formats>
+		<format>zip</format>
+	</formats>
+
+  <fileSets>
+		<fileSet>
+			<directory>${basedir}</directory>
+			<outputDirectory></outputDirectory>
+			<excludes>
+				<exclude>**/*.log</exclude>
+				<exclude>**/*.out</exclude>
+			</excludes>
+			<includes>
+				<include>scenarios/mount-alexander-shire/mount_alexander_shire_network_2018.xml.gz</include>
+				<include>scenarios/mount-alexander-shire/maldon-600/*.*</include>
+				<include>scenarios/template/*.*</include>
+				<include>scenarios/xsd/*.*</include>
+			</includes>
+		</fileSet>
+	</fileSets>
+
+	<files>
+		<file>
+			<source>LICENSE.txt</source>
+			<outputDirectory>/</outputDirectory>
+      <destName>LICENSE.txt</destName>
+		</file>
+    <file>
+			<source>THIRD-PARTY.txt</source>
+			<outputDirectory>/</outputDirectory>
+      <destName>THIRD-PARTY.txt</destName>
+		</file>
+		<file>
+			<source>AUTHORS</source>
+			<outputDirectory>/</outputDirectory>
+      <destName>AUTHORS.txt</destName>
+		</file>
+    <file>
+			<source>README.release.txt</source>
+			<outputDirectory>/</outputDirectory>
+      <destName>README.txt</destName>
+		</file>
+		<file>
+			<source>${project.build.directory}/${project.build.finalName}.jar</source>
+			<outputDirectory>/</outputDirectory>
+		</file>
+		<file>
+			<source>${project.build.directory}/${project.build.finalName}-sources.jar</source>
+			<outputDirectory>/</outputDirectory>
+		</file>
+	</files>
+
+	<dependencySets>
+		<dependencySet>
+			<useProjectArtifact>false</useProjectArtifact>
+			<outputDirectory>/libs/</outputDirectory>
+			<unpack>false</unpack>
+		</dependencySet>
+	</dependencySets>
+
+</assembly>

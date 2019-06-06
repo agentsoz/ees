@@ -58,32 +58,6 @@
       <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-source-plugin</artifactId>
-        <version>2.2.1</version>
-        <executions>
-          <execution>
-            <id>attach-sources</id>
-            <goals>
-              <goal>jar-no-fork</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <version>3.0.0</version>
-        <executions>
-          <execution>
-            <id>attach-javadocs</id>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-gpg-plugin</artifactId>
         <version>1.5</version>
         <executions>
@@ -212,6 +186,7 @@
         <target>1.8</target>
       </configuration>
     </plugin>
+      <!--
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
@@ -231,6 +206,7 @@
           </execution>
         </executions>
       </plugin>
+      -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
@@ -238,13 +214,14 @@
           <archive>
             <manifest>
               <addClasspath>true</addClasspath>
-              <classpathPrefix>lib/</classpathPrefix>
+              <classpathPrefix>libs/</classpathPrefix>
               <useUniqueVersions>false</useUniqueVersions>
-              <mainClass>io.github.agentsoz.ees.Main</mainClass>
+              <mainClass>io.github.agentsoz.ees.Run</mainClass>
             </manifest>
           </archive>
         </configuration>
       </plugin>
+      <!--
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
@@ -257,27 +234,55 @@
             </goals>
             <configuration>
               <transformers>
-                <!-- This bit sets the main class for the executable jar as you otherwise -->
-                <!-- would with the assembly plugin                                       -->
+                <!- This bit sets the main class for the executable jar as you otherwise ->
+                <!- would with the assembly plugin                                       ->
                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                   <manifestEntries>
                     <Main-Class>io.github.agentsoz.ees.Run</Main-Class>
                   </manifestEntries>
                 </transformer>
-                <!-- This bit merges the various GeoTools META-INF/services files         -->
+                <!- This bit merges the various GeoTools META-INF/services files         ->
                 <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
               </transformers>
             </configuration>
           </execution>
         </executions>
       </plugin>
+      -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>2.2.1</version>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>3.0.0</version>
+        <executions>
+          <execution>
+            <id>attach-javadocs</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
         <configuration>
-          <!-- set to false to create EES Web UI .zip (outdated) -->
-          <skipAssembly>true</skipAssembly>
+          <skipAssembly>false</skipAssembly>
           <descriptors>
-          <descriptor>src/assembly/minimal.xml</descriptor>
+          <descriptor>src/assembly/ees.xml</descriptor>
           </descriptors>
         </configuration>
         <executions>
@@ -300,6 +305,8 @@
           <projectName>Emergency Evacuation Simulator</projectName>
           <inceptionYear>2014</inceptionYear>
           <licenseName>lgpl_v3</licenseName>
+          <outputDirectory>${project.basedir}</outputDirectory>
+          <thirdPartyFilename>THIRD-PARTY.txt</thirdPartyFilename>
         </configuration>
         <executions>
           <execution>
@@ -307,6 +314,7 @@
             <goals>
               <goal>update-project-license</goal>
               <goal>update-file-header</goal>
+              <goal>add-third-party</goal>
             </goals>
             <phase>process-sources</phase>
           </execution>
