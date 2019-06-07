@@ -28,150 +28,213 @@ import io.github.agentsoz.abmjill.genact.EnvironmentAction;
 import io.github.agentsoz.bdiabm.EnvironmentActionInterface;
 import io.github.agentsoz.bdiabm.QueryPerceptInterface;
 import io.github.agentsoz.bdiabm.data.ActionContent;
-import io.github.agentsoz.dataInterface.DataServer;
 import io.github.agentsoz.ees.ActionList;
-import io.github.agentsoz.ees.EmergencyMessage;
 import io.github.agentsoz.ees.PerceptList;
-import io.github.agentsoz.ees.Run;
-import io.github.agentsoz.ees.agents.bushfire.GoalActNow;
-import io.github.agentsoz.ees.agents.bushfire.GoalInitialResponse;
-import io.github.agentsoz.ees.matsim.MATSimEvacModel;
 import io.github.agentsoz.jill.core.beliefbase.BeliefBaseException;
 import io.github.agentsoz.jill.core.beliefbase.BeliefSetField;
 import io.github.agentsoz.jill.lang.Agent;
 import io.github.agentsoz.jill.lang.AgentInfo;
-import io.github.agentsoz.util.Location;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.PrintStream;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
+/**
+ * ArchetypeAgent Class
+ *
+ * author: dsingh
+ */
 @AgentInfo(hasGoals={"io.github.agentsoz.ees.agents.bushfire.GoalDoNothing"})
-public abstract class ArchetypeAgent extends  Agent implements io.github.agentsoz.bdiabm.Agent {
+public abstract class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.Agent {
 
+
+    //===============================================================================
+    //region Class constants
+    //===============================================================================
     private final Logger logger = LoggerFactory.getLogger(ArchetypeAgent.class);
 
-    static final String LOCATION_HOME = "home";
-    static final String LOCATION_EVAC_PREFERRED = "evac";
-    static final String LOCATION_INVAC_PREFERRED = "invac";
+    //===============================================================================
+    //endregion
+    //===============================================================================
+
+    //===============================================================================
+    //region Class variables
+    //===============================================================================
 
     private PrintStream writer = null;
-    private QueryPerceptInterface queryInterface;
-    private EnvironmentActionInterface envActionInterface;
     private double time = -1;
     private ArchetypeAgent.Prefix prefix = new ArchetypeAgent.Prefix();
 
-    // Defaults
-    private DependentInfo dependentInfo = null;
-    private double initialResponseThreshold = 0.5;
-    private double finalResponseThreshold = 0.5;
-    private double responseBarometerMessages = 0.0;
-    private double responseBarometerFieldOfView = 0.0;
-    private double responseBarometerSocialMessage = 0.0;
-    private boolean sharesInfoWithSocialNetwork = false;
-    private boolean willGoHomeAfterVisitingDependents = false;
-    private boolean willGoHomeBeforeLeaving = false;
-    private double smokeVisualValue = 0.3;
-    private double fireVisualValue = 1.0;
-    private double socialMessageEvacNowValue = 0.3;
+    //===============================================================================
+    //endregion
+    //===============================================================================
 
 
-    enum MemoryEventType {
-        BELIEVED,
-        PERCEIVED,
-        DECIDED,
-        ACTIONED
+    //===============================================================================
+    //region Class functionality
+    //===============================================================================
+
+    /**
+     * Constructor.
+     * Use {@link #start(PrintStream, String[])} instead
+     * to perform any agent specific initialisation.
+     * @param name
+     */
+    public ArchetypeAgent(String name) {
+        super(name);
     }
 
-    enum MemoryEventValue {
-        DEPENDENTS_INFO,
-        DONE_FOR_NOW,
-        IS_PLAN_APPLICABLE,
-        STATE_CHANGED,
-        RESPONSE_BAROMETER_MESSAGES_CHANGED,
-        RESPONSE_BAROMETER_FIELD_OF_VIEW_CHANGED,
-        RESPONSE_BAROMETER_SOCIAL_MESSAGE_CHANGED,
-        INITIAL_RESPONSE_THRESHOLD_BREACHED,
-        FINAL_RESPONSE_THRESHOLD_BREACHED,
-        INITIAL_AND_FINAL_RESPONSE_THRESHOLDS_BREACHED_TOGETHER,
-        TRIGGER_INITIAL_RESPONSE_NOW,
-        TRIGGER_FINAL_RESPONSE_NOW,
-        GOTO_LOCATION,
-        DISTANCE_TO_LOCATION,
-        SAFE,
-        LAST_ENV_ACTION_STATE,
-        SOCIAL_NETWORK_MESSAGE,
+
+    //===============================================================================
+    //endregion
+    //===============================================================================
+
+
+    //===============================================================================
+    //region BDI percepts
+    //===============================================================================
+
+    /**
+     * Handles the TIME percept
+     * @param parameters
+     */
+    private void handleTime(Object parameters) {
+        if (parameters instanceof Double) {
+            time = (double) parameters;
+        }
     }
 
-    // Internal variables
-    private final String memory = "memory";
-    private Map<String,Location> locations;
-    private Map<String,EnvironmentAction> activeEnvironmentActions;
-    private ActionContent.State lastDriveActionStatus;
-    private Set<String> messagesShared;
-
-
-    public ArchetypeAgent(String id) {
-        super(id);
-        locations = new HashMap<>();
-        messagesShared = new HashSet<>();
-        activeEnvironmentActions = new HashMap<>();
-
+    private void handleArrived(Object parameters) {
     }
 
-    DependentInfo getDependentInfo() {
-        return dependentInfo;
+    private void handleBlocked(Object parameters) {
     }
 
-    public Map<String, Location> getLocations() {
-        return locations;
+    private void handleCongestion(Object parameters) {
     }
 
-    public void setLocations(Map<String, Location> locations) {
-        this.locations = locations;
+    private void handleFieldOfView(Object parameters) {
     }
 
-    double getResponseBarometer() {
-        return responseBarometerMessages + responseBarometerFieldOfView + responseBarometerSocialMessage;
+    private void handleEmergencyMessage(Object parameters) {
     }
 
-    boolean getWillGoHomeAfterVisitingDependents()
-    {
-        return willGoHomeAfterVisitingDependents;
-    }
-    boolean getWillGoHomeBeforeLeaving()
-    {
-        return willGoHomeBeforeLeaving;
+    private void handleSocialNetworkMessage(Object parameters) {
     }
 
-    boolean isDriving() {
-        return activeEnvironmentActions != null && activeEnvironmentActions.containsKey(ActionList.DRIVETO);
+
+    //===============================================================================
+    //endregion
+    //===============================================================================
+
+    //===============================================================================
+    //region BDI actions
+    //===============================================================================
+
+    // Map of active BDI actions, one per action type supported only
+    private Map<String,EnvironmentAction> activeBdiActions;
+
+    // Last BDI action done (used for checking status of finished drive actions)
+    EnvironmentAction lastBdiAction;
+
+    private void setLastBdiAction(EnvironmentAction action) {
+        this.lastBdiAction = action;
+    }
+
+    public EnvironmentAction getLastBdiAction() {
+        return lastBdiAction;
     }
 
     private void addActiveEnvironmentAction(EnvironmentAction activeEnvironmentAction) {
-        activeEnvironmentActions.put(activeEnvironmentAction.getActionID(), activeEnvironmentAction);
+        activeBdiActions.put(activeEnvironmentAction.getActionID(), activeEnvironmentAction);
     }
 
     private EnvironmentAction removeActiveEnvironmentAction(String actionId) {
-        if (actionId != null && activeEnvironmentActions.containsKey(actionId)) {
-            return activeEnvironmentActions.remove(actionId);
+        if (actionId != null && activeBdiActions.containsKey(actionId)) {
+            return activeBdiActions.remove(actionId);
         }
         return null;
     }
 
+    //===============================================================================
+    //endregion
+    //===============================================================================
 
-    private void setLastDriveActionStatus(ActionContent.State lastDriveActionStatus) {
-        this.lastDriveActionStatus = lastDriveActionStatus;
+
+
+    //===============================================================================
+    //region BDI beliefs
+    //===============================================================================
+
+    // This agent's belief set
+    private static final String beliefSetName = "mem";
+
+    /**
+     * Creates all belief sets for this BDI agent
+     */
+    private void createBeliefSets() {
+        // Create a new belief set to store memory
+        BeliefSetField[] fields = {
+                new BeliefSetField("key", String.class, false),
+                new BeliefSetField("value", String.class, false),
+        };
+        try {
+            this.createBeliefSet(beliefSetName, fields); // Attach this belief set to this agent
+        } catch (BeliefBaseException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public ActionContent.State getLastDriveActionStatus() {
-        return lastDriveActionStatus;
+    /**
+     * Sets a belief for this agent
+     * @param key the belief name
+     * @param value the value of the belief
+     */
+    void believe(String key, String value) {
+        try {
+            addBelief(beliefSetName, key, value);
+            out("believed " + key + "=" + value);
+        } catch (BeliefBaseException e) {
+            throw new RuntimeException(e);
+        }
     }
 
+
+    //===============================================================================
+    //endregion
+    //===============================================================================
+
+
+
+    //===============================================================================
+    //region Getters & Setters
+    //===============================================================================
+
+    public double getTime() {
+        return time;
+    }
+
+
+    //===============================================================================
+    //endregion
+    //===============================================================================
+
+
+    //===============================================================================
+    //region Arguments parsing
+    //===============================================================================
+
+    private void parseArgs(String[] params) {
+    }
+
+    //===============================================================================
+    //endregion
+    //===============================================================================
+
+    //===============================================================================
+    //region Jill Agent inherited functions
+    //===============================================================================
 
     /**
      * Called by the Jill model when starting a new agent.
@@ -182,21 +245,8 @@ public abstract class ArchetypeAgent extends  Agent implements io.github.agentso
     public void start(PrintStream writer, String[] params) {
         this.writer = writer;
         parseArgs(params);
-        // Create a new belief set to store memory
-        BeliefSetField[] fields = {
-                new BeliefSetField("event", String.class, false),
-                new BeliefSetField("value", String.class, false),
-        };
-        try {
-            // Attach this belief set to this agent
-            this.createBeliefSet(memory, fields);
+        createBeliefSets();
 
-            memorise(ArchetypeAgent.MemoryEventType.BELIEVED.name(),
-                    MemoryEventValue.DEPENDENTS_INFO.name() + ":" + getDependentInfo() );
-
-        } catch (BeliefBaseException e) {
-            throw new RuntimeException(e);
-        }
         // perceive congestion and blockage events always
         EnvironmentAction action = new EnvironmentAction(
                 Integer.toString(getId()),
@@ -205,6 +255,7 @@ public abstract class ArchetypeAgent extends  Agent implements io.github.agentso
         post(action);
         addActiveEnvironmentAction(action);
     }
+
 
     /**
      * Called by the Jill model when terminating
@@ -213,7 +264,75 @@ public abstract class ArchetypeAgent extends  Agent implements io.github.agentso
     public void finish() {
     }
 
-        /**
+    //===============================================================================
+    //endregion
+    //===============================================================================
+
+
+    //===============================================================================
+    //region BDI-ABM Agent interface functions
+    //===============================================================================
+
+    private QueryPerceptInterface queryInterface;
+    private EnvironmentActionInterface envActionInterface;
+
+    @Override
+    public void setQueryPerceptInterface(QueryPerceptInterface queryInterface) {
+        this.queryInterface = queryInterface;
+    }
+
+    @Override
+    public QueryPerceptInterface getQueryPerceptInterface() {
+        return queryInterface;
+    }
+
+    @Override
+    public void setEnvironmentActionInterface(EnvironmentActionInterface envActInterface) {
+        this.envActionInterface = envActInterface;
+    }
+
+    @Override
+    public EnvironmentActionInterface getEnvironmentActionInterface() {
+        return envActionInterface;
+    }
+
+    /**
+     * BDI-ABM agent init function; Not used by Jill.
+     * Use {@link #start(PrintStream, String[])} instead
+     * to perform any agent specific initialisation.
+     */
+    @Override
+    public void init(String[] args) {
+        throw new RuntimeException(logPrefix()
+                + "unexpected call, "
+                + "use start(PrintStream, String[]) instead");
+    }
+
+    /**
+     * BDI-ABM agent start function; Not used by Jill.
+     * Use {@link #start(PrintStream, String[])} instead
+     * to perform agent startup.
+     */
+    @Override
+    public void start() {
+        throw new RuntimeException(logPrefix()
+                + "unexpected call, "
+                + "use start(PrintStream, String[]) instead");
+    }
+
+    /**
+     * BDI-ABM agent kill function; Not used by Jill.
+     * Use {@link #finish()} instead
+     * to perform agent termination.
+     */
+    @Override
+    public void kill() {
+        throw new RuntimeException(logPrefix()
+                + "unexpected call, "
+                + "use finish() instead");
+    }
+
+    /**
      * Called by the Jill model with the status of a BDI percept
      * for this agent, coming from the ABM environment.
      */
@@ -222,284 +341,32 @@ public abstract class ArchetypeAgent extends  Agent implements io.github.agentso
         if (perceptID == null || perceptID.isEmpty()) {
             return;
         }
-        if (perceptID.equals(PerceptList.TIME)) {
-            if (parameters instanceof Double) {
-                time = (double) parameters;
-            }
-            return;
+        switch(perceptID) {
+            case PerceptList.TIME:
+                handleTime(parameters);
+                break;
+            case PerceptList.ARRIVED:
+                handleArrived(parameters);
+                break;
+            case PerceptList.BLOCKED:
+                handleBlocked(parameters);
+                break;
+            case PerceptList.CONGESTION:
+                handleCongestion(parameters);
+                break;
+            case PerceptList.FIELD_OF_VIEW:
+                handleFieldOfView(parameters);
+                break;
+            case PerceptList.EMERGENCY_MESSAGE:
+                handleEmergencyMessage(parameters);
+                break;
+            case PerceptList.SOCIAL_NETWORK_MSG:
+                handleSocialNetworkMessage(parameters);
+                break;
+            default:
+                logger.warn("{} received unknown percept '{}'", logPrefix(), perceptID);
+
         }
-
-        // save it to memory
-        memorise(MemoryEventType.PERCEIVED.name(), perceptID + ":" +parameters.toString());
-
-        if (perceptID.equals(PerceptList.EMERGENCY_MESSAGE)) {
-            updateResponseBarometerMessages(parameters);
-        } else if (perceptID.equals(PerceptList.SOCIAL_NETWORK_MSG)) {
-            updateResponseBarometerSocialMessage(parameters);
-        } else if (perceptID.equals(PerceptList.FIELD_OF_VIEW)) {
-            updateResponseBarometerFieldOfViewPercept(parameters);
-            if (PerceptList.SIGHTED_FIRE.equalsIgnoreCase(parameters.toString())) {
-                handleFireVisual();
-            }
-        } else if (perceptID.equals(PerceptList.ARRIVED)) {
-            // do something
-        } else if (perceptID.equals(PerceptList.BLOCKED)) {
-            replanCurrentDriveTo(MATSimEvacModel.EvacRoutingMode.carGlobalInformation);
-            // perceive congestion and blockage events always
-            EnvironmentAction action = new EnvironmentAction(
-                    Integer.toString(getId()),
-                    ActionList.PERCEIVE,
-                    new Object[] {PerceptList.BLOCKED, PerceptList.CONGESTION});
-            post(action);
-            addActiveEnvironmentAction(action);
-        }
-
-        // handle percept spread on social network
-        handleSocialPercept(perceptID, parameters);
-
-        // Now trigger a response as needed
-        checkBarometersAndTriggerResponseAsNeeded();
-    }
-
-    private void handleSocialPercept(String perceptID, Object parameters) {
-        // Nothing to do if this is not an agent who shares with the social networks
-        if (!sharesInfoWithSocialNetwork) {
-            return;
-        }
-        // Spread EVACUATE_NOW if haven't done so already
-        if (perceptID.equals(PerceptList.EMERGENCY_MESSAGE) &&
-                !messagesShared.contains(EmergencyMessage.EmergencyMessageType.EVACUATE_NOW.name()) &&
-                parameters instanceof String &&
-                getEmergencyMessageType(parameters) == EmergencyMessage.EmergencyMessageType.EVACUATE_NOW) {
-            shareWithSocialNetwork((String) parameters);
-            messagesShared.add(getEmergencyMessageType(parameters).name());
-        }
-        // Spread BLOCKED for given blocked link if haven't already
-        if (perceptID.equals(PerceptList.BLOCKED)) {
-            String blockedMsg = PerceptList.BLOCKED + parameters.toString();
-            if (!messagesShared.contains(blockedMsg)) {
-                shareWithSocialNetwork(blockedMsg);
-                messagesShared.add(blockedMsg);
-            }
-        }
-    }
-
-    private void handleFireVisual() {
-        // Always replan when we see fire
-        replanCurrentDriveTo(MATSimEvacModel.EvacRoutingMode.carGlobalInformation);
-    }
-
-    protected void checkBarometersAndTriggerResponseAsNeeded() {
-        try {
-            // Nothing to do if already triggered responses once
-            MemoryEventValue breach = null;
-            if (!eval("memory.value = " + MemoryEventValue.INITIAL_RESPONSE_THRESHOLD_BREACHED.name())) {
-                // initial response threshold not breached yet
-                if (isInitialResponseThresholdBreached()) {
-                    // initial response threshold breached for the first time
-                    memorise(MemoryEventType.DECIDED.name(), MemoryEventValue.INITIAL_RESPONSE_THRESHOLD_BREACHED.name());
-                    breach= MemoryEventValue.INITIAL_RESPONSE_THRESHOLD_BREACHED;
-                }
-            }
-            if (!eval("memory.value = " + MemoryEventValue.FINAL_RESPONSE_THRESHOLD_BREACHED.name())) {
-                // final response threshold not breached yet
-                if (isFinalResponseThresholdBreached()) {
-                    // final response threshold breached for the first time
-                    memorise(MemoryEventType.DECIDED.name(), MemoryEventValue.FINAL_RESPONSE_THRESHOLD_BREACHED.name());
-                    if (!isInitialResponseThresholdBreached()) {
-                        // final breached bu not initial, so force initial breach now as well
-                        logger.warn("{} had final threshold breached but not initial; will assume both have breached", logPrefix());
-                        memorise(MemoryEventType.DECIDED.name(), MemoryEventValue.INITIAL_AND_FINAL_RESPONSE_THRESHOLDS_BREACHED_TOGETHER.name());
-                        breach = MemoryEventValue.INITIAL_AND_FINAL_RESPONSE_THRESHOLDS_BREACHED_TOGETHER;
-                    } else if (breach==null) {
-                        // only final response breached just now, not initial
-                        breach = MemoryEventValue.FINAL_RESPONSE_THRESHOLD_BREACHED;
-                    } else {
-                        // both thresholds breached together
-                        memorise(MemoryEventType.DECIDED.name(), MemoryEventValue.INITIAL_AND_FINAL_RESPONSE_THRESHOLDS_BREACHED_TOGETHER.name());
-                        breach = MemoryEventValue.INITIAL_AND_FINAL_RESPONSE_THRESHOLDS_BREACHED_TOGETHER;
-                    }
-                }
-            }
-            if (breach != null) {
-                triggerResponse(breach);
-            }
-
-        } catch (BeliefBaseException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    boolean isInitialResponseThresholdBreached() {
-        return (getResponseBarometer() >= initialResponseThreshold);
-    }
-
-    boolean isFinalResponseThresholdBreached() {
-        return (getResponseBarometer() >= finalResponseThreshold);
-    }
-
-    void memorise(String event, String data) {
-        try {
-            addBelief(memory, event, data);
-            log("memory:" + event + ":" + data);
-        } catch (BeliefBaseException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    /**
-     * Called after a new percept has been processed
-     * @param breach
-     */
-    private void triggerResponse(MemoryEventValue breach) {
-        if (breach == MemoryEventValue.INITIAL_AND_FINAL_RESPONSE_THRESHOLDS_BREACHED_TOGETHER) {
-            memorise(MemoryEventType.DECIDED.name(), MemoryEventValue.TRIGGER_INITIAL_RESPONSE_NOW.name());
-            memorise(MemoryEventType.DECIDED.name(), MemoryEventValue.TRIGGER_FINAL_RESPONSE_NOW.name());
-            // CAREFUL: Must use LIFO when pushing multiple goals that should be executed sequentially
-            // onto the Jill stack
-            post(new GoalActNow("ActNow")); // 1. will execute second
-            post(new GoalInitialResponse("InitialResponse")); // 2. will execute first
-
-        } else if (breach == MemoryEventValue.INITIAL_RESPONSE_THRESHOLD_BREACHED) {
-            memorise(MemoryEventType.DECIDED.name(), MemoryEventValue.TRIGGER_INITIAL_RESPONSE_NOW.name());
-            post(new GoalInitialResponse("InitialResponse"));
-
-        } else if (breach == MemoryEventValue.FINAL_RESPONSE_THRESHOLD_BREACHED) {
-            memorise(MemoryEventType.DECIDED.name(), MemoryEventValue.TRIGGER_FINAL_RESPONSE_NOW.name());
-            post(new GoalActNow("ActNow"));
-        }
-    }
-
-    /**
-     * Writes {@link #responseBarometerSocialMessage} with value of the incoming msg
-     * @param msg the incoming social network message
-     */
-    private void updateResponseBarometerSocialMessage(Object msg) {
-        double value = 0.0;
-        if (!messagesShared.contains(EmergencyMessage.EmergencyMessageType.EVACUATE_NOW.name())
-                && getEmergencyMessageType(msg) == EmergencyMessage.EmergencyMessageType.EVACUATE_NOW) {
-            // The EVAC_NOW message has value if we haven't shared it before
-            value = socialMessageEvacNowValue;
-        } // else if (...) {}
-        if (value > responseBarometerSocialMessage) {
-            responseBarometerSocialMessage = value;
-            memorise(MemoryEventType.BELIEVED.name(), MemoryEventValue.RESPONSE_BAROMETER_SOCIAL_MESSAGE_CHANGED.name() + "=" + Double.toString(value));
-        }
-    }
-
-    /**
-     * Overwrites {@link #responseBarometerFieldOfView} with the value of the incoming visual
-     * if the incoming value is higher.
-     * @param view the incoming visual percept
-     */
-    private void updateResponseBarometerFieldOfViewPercept(Object view) {
-        if (view == null) {
-            return;
-        }
-        double value = 0.0;
-        if (PerceptList.SIGHTED_EMBERS.equalsIgnoreCase(view.toString())) {
-            value = smokeVisualValue;
-        } else if (PerceptList.SIGHTED_FIRE.equalsIgnoreCase(view.toString())) {
-            value = fireVisualValue;
-        } else {
-            logger.warn("{} ignoring field of view percept: {}", logPrefix(), view);
-            return;
-        }
-        if (value > responseBarometerFieldOfView) {
-            responseBarometerFieldOfView = value;
-            memorise(MemoryEventType.BELIEVED.name(), MemoryEventValue.RESPONSE_BAROMETER_FIELD_OF_VIEW_CHANGED.name() + "=" + Double.toString(value));
-        }
-    }
-
-    /**
-     * Overwrites {@link #responseBarometerMessages} with the value of the incoming message
-     * if the incoming value is higher.
-     * @param msg the incoming emergency message
-     */
-    private void updateResponseBarometerMessages(Object msg) {
-        if (msg == null || !(msg instanceof String)) {
-            return;
-        }
-        String[] tokens = ((String) msg).split(",");
-        EmergencyMessage.EmergencyMessageType type = EmergencyMessage.EmergencyMessageType.valueOf(tokens[0]);
-        try {
-            String loc= tokens[1];
-            double [] coords = new double[]{Double.parseDouble(tokens[2]), Double.parseDouble(tokens[3])};
-            locations.put(LOCATION_EVAC_PREFERRED, new Location(loc,coords[0], coords[1]));
-            memorise(MemoryEventType.BELIEVED.name(), LOCATION_EVAC_PREFERRED + "=" + locations.get(LOCATION_EVAC_PREFERRED));
-        } catch (Exception e) {}
-        double value = type.getValue();
-        // Allow the barometer to go down as well if the intensity of the situation (message) is reduced
-        //if (value > responseBarometerMessages) {
-            responseBarometerMessages = value;
-            memorise(MemoryEventType.BELIEVED.name(), MemoryEventValue.RESPONSE_BAROMETER_MESSAGES_CHANGED.name() + "=" + Double.toString(value));
-        //}
-    }
-
-    boolean startDrivingTo(Location location, MATSimEvacModel.EvacRoutingMode routingMode) {
-        if (location == null) return false;
-        memorise(MemoryEventType.DECIDED.name(), MemoryEventValue.GOTO_LOCATION.name() + ":" + location.toString());
-        double distToTravel = getTravelDistanceTo(location);
-        if (distToTravel == 0.0) {
-            // already there, so no need to drive
-            return false;
-        }
-
-        // perceive congestion and blockage events always
-        EnvironmentAction action = new EnvironmentAction(
-                Integer.toString(getId()),
-                ActionList.PERCEIVE,
-                new Object[] {PerceptList.BLOCKED, PerceptList.CONGESTION});
-        post(action);
-        addActiveEnvironmentAction(action);
-
-        Object[] params = new Object[4];
-        params[0] = ActionList.DRIVETO;
-        params[1] = location.getCoordinates();
-        params[2] = getTime() + 5.0; // five secs from now;
-        params[3] = routingMode;
-        memorise(MemoryEventType.ACTIONED.name(), ActionList.DRIVETO
-                + ":"+ location + ":" + String.format("%.0f", distToTravel) + "m away");
-        action = new EnvironmentAction(
-                Integer.toString(getId()),
-                ActionList.DRIVETO, params);
-        addActiveEnvironmentAction(action); // will be reset by updateAction()
-        subgoal(action); // should be last call in any plan step
-        return true;
-    }
-
-    boolean replanCurrentDriveTo(MATSimEvacModel.EvacRoutingMode routingMode) {
-        memorise(MemoryEventType.ACTIONED.name(), ActionList.REPLAN_CURRENT_DRIVETO);
-        EnvironmentAction action = new EnvironmentAction(
-                Integer.toString(getId()),
-                ActionList.REPLAN_CURRENT_DRIVETO,
-                new Object[] {routingMode});
-        addActiveEnvironmentAction(action); // will be reset by updateAction()
-        subgoal(action); // should be last call in any plan step
-        return true;
-    }
-
-    double getTravelDistanceTo(Location location) {
-        return (double) getQueryPerceptInterface().queryPercept(
-                    String.valueOf(getId()),
-                    PerceptList.REQUEST_DRIVING_DISTANCE_TO,
-                    location.getCoordinates());
-    }
-
-    private EmergencyMessage.EmergencyMessageType getEmergencyMessageType(Object msg) {
-        if (msg == null || !(msg instanceof String)) {
-            return null;
-        }
-        String[] tokens = ((String) msg).split(",");
-        EmergencyMessage.EmergencyMessageType type = EmergencyMessage.EmergencyMessageType.valueOf(tokens[0]);
-        return type;
-    }
-
-    private void shareWithSocialNetwork(String content) {
-        String[] msg = {content, String.valueOf(getId())};
-        memorise(MemoryEventType.ACTIONED.name(), PerceptList.SOCIAL_NETWORK_MSG
-                + ":" + content);
-        DataServer.getInstance(Run.DATASERVER).publish(PerceptList.SOCIAL_NETWORK_MSG, msg);
     }
 
     /**
@@ -513,201 +380,33 @@ public abstract class ArchetypeAgent extends  Agent implements io.github.agentso
         if (actionState == ActionContent.State.PASSED ||
                 actionState == ActionContent.State.FAILED ||
                 actionState == ActionContent.State.DROPPED) {
-            memorise(ArchetypeAgent.MemoryEventType.BELIEVED.name(), ArchetypeAgent.MemoryEventValue.LAST_ENV_ACTION_STATE.name() + "=" + actionState.name());
-            removeActiveEnvironmentAction(content.getAction_type()); // remove the action
 
+
+            //memorise(BushfireAgent.MemoryEventType.BELIEVED.name(),
+            //        BushfireAgent.MemoryEventValue.LAST_ENV_ACTION_STATE.name() + "=" + actionState.name());
+
+
+            // remove the action and records it as the last action performed
+            setLastBdiAction(removeActiveEnvironmentAction(content.getAction_type()));
             if (content.getAction_type().equals(ActionList.DRIVETO)) {
-                setLastDriveActionStatus(content.getState()); // save the finish state of the action
-                // Wake up the agent that was waiting for external action to finish
-                // FIXME: BDI actions put agent in suspend, which won't work for multiple intention stacks
+                // Wake up the agent that was waiting for drive action to finish
                 suspend(false);
             }
         }
     }
 
-    /**
-     * BDI-ABM agent init function; Not used by Jill.
-     * Use {@link #start(PrintStream, String[])} instead
-     * to perform any agent specific initialisation.
-     */
-    @Override
-    public void init(String[] args) {
-        parseArgs(args);
-    }
-
-    /**
-     * BDI-ABM agent start function; Not used by Jill.
-     * Use {@link #start(PrintStream, String[])} instead
-     * to perform agent startup.
-     */
-    @Override
-    public void start() {
-        logger.warn("{} using a stub for io.github.agentsoz.bdiabm.Agent.start()", logPrefix());
-    }
-
-    /**
-     * BDI-ABM agent kill function; Not used by Jill.
-     * Use {@link #finish()} instead
-     * to perform agent termination.
-     */
-
-    @Override
-    public void kill() {
-        logger.warn("{} using a stub for io.github.agentsoz.bdiabm.Agent.kill()", logPrefix());
-    }
-
-    @Override
-    public void setQueryPerceptInterface(QueryPerceptInterface queryInterface) {
-        this.queryInterface = queryInterface;
-    }
-
-    @Override
-    public QueryPerceptInterface getQueryPerceptInterface() {
-        return queryInterface;
-    }
-
-    public void setEnvironmentActionInterface(EnvironmentActionInterface envActInterface) {
-        this.envActionInterface = envActInterface;
-    }
-
-    public EnvironmentActionInterface getEnvironmentActionInterface() {
-        return envActionInterface;
-    }
+    //===============================================================================
+    //endregion
+    //===============================================================================
 
 
-    public double getTime() {
-        return time;
-    }
-
-    private void parseArgs(String[] args) {
-        if (args != null) {
-            for (int i = 0; i < args.length; i++) {
-                switch (args[i]) {
-                    case "HasDependentsAtLocation":
-                        if (i + 1 < args.length) {
-                            i++;
-                            if (!args[i].isEmpty()) { // empty arg is ok, signifies no dependents
-                                try {
-                                    String arg = args[i]
-                                            .replaceAll("\\[","")
-                                            .replaceAll("\\]","")
-                                            .replaceAll(" ", "")
-                                            .trim();
-                                    String[] vals = arg.split(",");
-                                    Location location = new Location("Dependent", Double.parseDouble(vals[0]), Double.parseDouble(vals[1]));
-                                    dependentInfo = new DependentInfo();
-                                    dependentInfo.setLocation(location);
-                                } catch (Exception e) {
-                                    System.err.println("Could not parse dependent's location '"
-                                            + args[i] + "' : " + e.getMessage());
-                                }
-                            }
-                        }
-                        break;
-                    case "InitialResponseThreshold":
-                        if(i+1<args.length) {
-                            i++ ;
-                            try {
-                                initialResponseThreshold = Double.parseDouble(args[i]);
-                                // limit it to between 0 and 1
-                                initialResponseThreshold =
-                                        (initialResponseThreshold<0.0) ? 0.0 :
-                                                (initialResponseThreshold>1.0) ? 1.0 :
-                                                        initialResponseThreshold;
-                            } catch (Exception e) {
-                                logger.error("Could not parse double '"+ args[i] + "'", e);
-                            }
-                        }
-                        break;
-                    case "FinalResponseThreshold":
-                        if(i+1<args.length) {
-                            i++ ;
-                            try {
-                                finalResponseThreshold = Double.parseDouble(args[i]);
-                                // limit it to between 0 and 1
-                                finalResponseThreshold =
-                                        (finalResponseThreshold<0.0) ? 0.0 :
-                                                (finalResponseThreshold>1.0) ? 1.0 :
-                                                        finalResponseThreshold;
-                            } catch (Exception e) {
-                                logger.error("Could not parse double '"+ args[i] + "'", e);
-                            }
-
-                        }
-                        break;
-                    case LOCATION_HOME:
-                        if(i+1<args.length) {
-                            i++;
-                            try {
-                                String[] vals = args[i].split(",");
-                                Location location = new Location(LOCATION_HOME, Double.parseDouble(vals[0]), Double.parseDouble(vals[1]));
-                                locations.put(LOCATION_HOME, location);
-                            } catch (Exception e) {
-                                System.err.println("Could not parse dependent's location '"
-                                        + args[i] + "' : " + e.getMessage());
-                            }
-                        }
-                        break;
-                    case "EvacLocationPreference":
-                    case "InvacLocationPreference":
-                        if(i+1<args.length) {
-                            i++;
-                            try {
-                                String[] vals = args[i].split(",");
-                                Location location = new Location(vals[0], Double.parseDouble(vals[1]), Double.parseDouble(vals[2]));
-                                String loc = args[i-1].equals("EvacLocationPreference") ?
-                                        LOCATION_EVAC_PREFERRED : LOCATION_INVAC_PREFERRED;
-                                locations.put(loc, location);
-                            } catch (Exception e) {
-                                System.err.println("Could not parse location '"
-                                        + args[i] + "' : " + e.getMessage());
-                            }
-                        }
-                        break;
-                    case "sharesInfoWithSocialNetwork":
-                        if(i+1<args.length) {
-                            i++;
-                            try {
-                                sharesInfoWithSocialNetwork = Boolean.parseBoolean(args[i]);
-                            } catch (Exception e) {
-                                System.err.println("Could not parse double '"
-                                        + args[i] + "' : " + e.getMessage());
-                            }
-                        }
-                        break;
-                    case "WillGoHomeAfterVisitingDependents":
-                        if(i+1<args.length) {
-                            i++;
-                            try {
-                                willGoHomeAfterVisitingDependents = Boolean.parseBoolean(args[i]);
-                            } catch (Exception e) {
-                                System.err.println("Could not parse boolean '"
-                                        + args[i] + "' : " + e.getMessage());
-                            }
-                        }
-                        break;
-                    case "WillGoHomeBeforeLeaving":
-                        if(i+1<args.length) {
-                            i++;
-                            try {
-                                willGoHomeBeforeLeaving = Boolean.parseBoolean(args[i]);
-                            } catch (Exception e) {
-                                System.err.println("Could not parse boolean '"
-                                        + args[i] + "' : " + e.getMessage());
-                            }
-                        }
-                        break;
-                    default:
-                        // ignore other options
-                        break;
-                }
-            }
-        }
-    }
+    //===============================================================================
+    //region Logging
+    //===============================================================================
 
     class Prefix{
         public String toString() {
-            return String.format("Time %05.0f ArchetypeAgent %-4s : ", getTime(), getId());
+            return String.format("Time %05.0f BushfireAgent %-4s : ", getTime(), getId());
         }
     }
 
@@ -715,39 +414,12 @@ public abstract class ArchetypeAgent extends  Agent implements io.github.agentso
         return prefix.toString();
     }
 
-    void log(String msg) {
+    void out(String msg) {
         writer.println(logPrefix()+msg);
     }
 
-    class DependentInfo {
-        private Location location;
-        private double lastVisitedAtTime = -1;
+    //===============================================================================
+    //endregion
+    //===============================================================================
 
-        public Location getLocation() {
-            return location;
-        }
-
-        public void setLocation(Location location) {
-            this.location = location;
-        }
-
-        public double getLastVisitedAtTime() {
-            return lastVisitedAtTime;
-        }
-
-        public void setLastVisitedAtTime(double lastVisitedAtTime) {
-            this.lastVisitedAtTime = lastVisitedAtTime;
-        }
-
-        public boolean isVisited() {
-            return getLastVisitedAtTime()==-1;
-        }
-
-        @Override
-        public String toString() {
-            String s = (location==null) ? "null" : location.toString();
-            s += ", last visited at time="+ lastVisitedAtTime;
-            return s;
-        }
-    }
 }
