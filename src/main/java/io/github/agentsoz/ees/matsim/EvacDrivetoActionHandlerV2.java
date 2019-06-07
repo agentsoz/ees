@@ -110,7 +110,8 @@ public final class EvacDrivetoActionHandlerV2 implements BDIActionHandler {
 		printPlan("after flush: " , mobsimAgent) ;
 
 		// new destination
-		Activity newAct = model.getReplanner().editPlans().createFinalActivity( "driveTo", newLinkId ) ;
+		String activity = (args.length >=  5 && args[4] instanceof String) ? (String)args[4] : "driveTo";
+		Activity newAct = model.getReplanner().editPlans().createFinalActivity( activity, newLinkId ) ;
 		model.getReplanner().editPlans().addActivityAtEnd(mobsimAgent, newAct, routingMode) ;
 		printPlan("after adding act: " , mobsimAgent ) ;
 		
