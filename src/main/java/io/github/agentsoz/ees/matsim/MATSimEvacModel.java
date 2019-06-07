@@ -22,6 +22,7 @@ package io.github.agentsoz.ees.matsim;
  * #L%
  */
 
+import com.google.common.collect.ObjectArrays;
 import com.google.gson.Gson;
 import io.github.agentsoz.bdiabm.ABMServerInterface;
 import io.github.agentsoz.bdiabm.QueryPerceptInterface;
@@ -97,6 +98,11 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
     private static final String eFireAvoidanceBufferForEmergencyVehicles = "fireAvoidanceBufferForEmergencyVehicles";
     private static final String eRoutingAlgorithmType = "routingAlgorithmType";
 
+    private static final String[] evacActivities = {
+      "EvacPlace",
+      "InvacPlace",
+      "DependentsPlace"
+    };
 
     public enum EvacRoutingMode {carFreespeed, carGlobalInformation, emergencyVehicle}
     public enum EvacuationRoutingAlgorithmType {MATSimDefault, ExampleRoutingAlgorithm}
@@ -381,7 +387,7 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
 
 
     public void init(Object[] args) {
-        matsimModel.init(args);
+        matsimModel.init(ObjectArrays.concat(args, new Object[]{Arrays.asList(evacActivities)}, Object.class));
         List<String> bdiAgentIDs = (List<String>)args[0];
         initialiseControllerForEvac(matsimModel.getControler());
         for(String agentId: bdiAgentIDs) {
