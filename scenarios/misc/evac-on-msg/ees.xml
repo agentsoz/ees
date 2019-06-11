@@ -59,9 +59,9 @@
       <!-- Maximum distance at which the fire can be seen (in metres)-->
       <opt id="maxDistanceForFireVisual">1000</opt>
       <!-- Maximum distance at which smoke can be seen (in metres)-->
-      <opt id="maxDistanceForSmokeVisual">5000</opt>
+      <opt id="maxDistanceForSmokeVisual">3000</opt>
       <!-- Fire avoidance buffer used for planning routes for regular vehicles (in metres)-->
-      <opt id="fireAvoidanceBufferForVehicles">5000</opt>
+      <opt id="fireAvoidanceBufferForVehicles">2000</opt>
       <!-- Fire avoidance buffer used for planning routes for emergency vehicles (in metres)-->
       <opt id="fireAvoidanceBufferForEmergencyVehicles">1000</opt>
       <!-- Congestion parameters used by vehicles to decide if they are stuck in congestion. See issues
@@ -77,6 +77,15 @@
       <opt id="fileJson">scenarios/misc/evac-on-msg/messages.json</opt>
       <!-- Zones GeoJSON file mapping zone IDs to polygon shapes -->
       <opt id="fileZonesGeoJson">scenarios/misc/evac-on-msg/gridzones.json</opt>
+    </model>
+
+    <model id="phoenix">
+      <!-- Phoenix start time in HH:MM format; used to calculate absolute values for hour_spot and hour_burnt -->
+      <opt id="ignitionHHMM">01:00</opt>
+      <!-- Phoenix grid GeoJSON file -->
+      <opt id="gridGeoJson">scenarios/misc/evac-on-msg/gridfire-nw.json</opt>
+      <!-- Phoenix grid square size (in meteres) -->
+      <opt id="gridSquareSideInMetres">180</opt>
     </model>
 
   </models>

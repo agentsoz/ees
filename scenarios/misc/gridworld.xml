@@ -4,63 +4,64 @@
 <!--
 Author: Dhirendra Singh, 2019
 
-The gridworld network consists of 36 nodes and 25 links labelled as shown.
+The gridworld network is a 5x5 km grid and consists of
+36 nodes and 25 links labelled as shown in the diagram below.
 Link capacities increase from left to right as: 1000,2000,3000,4000,5000,6000.
 Link speeds (kmph) decrease from left to right as: 110,100,80,60,50,40.
 
            30-31     32-33     34-35
-"30"(0,5) o____o____o____o____o____o "35"(5,5)
-          |    |    |    |    |    |
-"24"(0,4) o____o____o____o____o____o "29"(5,4)
-          |    |    |    |    |    |
-"18"(0,3) o____o____o____o____o____o "23"(5,3)
-          |    |    |    |    |    |
-"12"(0,2) o____o____o____o____o____o "17"(5,2)
-          |    |    |    |    |    |
- "6"(0,1) o____o____o____o____o____o "11"(5,1)
-          |    |    |    |    |    |
- "0"(0,0) o____o____o____o____o____o "5"(5,0)
+"30"(0,5k) o____o____o____o____o____o "35"(5k,5k)
+           |    |    |    |    |    |
+"24"(0,4k) o____o____o____o____o____o "29"(5k,4k)
+           |    |    |    |    |    |
+"18"(0,3k) o____o____o____o____o____o "23"(5k,3k)
+           |    |    |    |    |    |
+"12"(0,2k) o____o____o____o____o____o "17"(5k,2k)
+           |    |    |    |    |    |
+ "6"(0,1k) o____o____o____o____o____o "11"(5k,1k)
+           |    |    |    |    |    |
+ "0"(0,0)  o____o____o____o____o____o "5"(5k,0)
            0-1       2-3       4-5
 -->
 
 <network name="Grid network">
   <nodes>
-    <node id="0"  x="0" y="0"/>
-    <node id="1"  x="1" y="0"/>
-    <node id="2"  x="2" y="0"/>
-    <node id="3"  x="3" y="0"/>
-    <node id="4"  x="4" y="0"/>
-    <node id="5"  x="5" y="0"/>
-    <node id="6"  x="0" y="1"/>
-    <node id="7"  x="1" y="1"/>
-    <node id="8"  x="2" y="1"/>
-    <node id="9"  x="3" y="1"/>
-    <node id="10" x="4" y="1"/>
-    <node id="11" x="5" y="1"/>
-    <node id="12" x="0" y="2"/>
-    <node id="13" x="1" y="2"/>
-    <node id="14" x="2" y="2"/>
-    <node id="15" x="3" y="2"/>
-    <node id="16" x="4" y="2"/>
-    <node id="17" x="5" y="2"/>
-    <node id="18" x="0" y="3"/>
-    <node id="19" x="1" y="3"/>
-    <node id="20" x="2" y="3"/>
-    <node id="21" x="3" y="3"/>
-    <node id="22" x="4" y="3"/>
-    <node id="23" x="5" y="3"/>
-    <node id="24" x="0" y="4"/>
-    <node id="25" x="1" y="4"/>
-    <node id="26" x="2" y="4"/>
-    <node id="27" x="3" y="4"/>
-    <node id="28" x="4" y="4"/>
-    <node id="29" x="5" y="4"/>
-    <node id="30" x="0" y="5"/>
-    <node id="31" x="1" y="5"/>
-    <node id="32" x="2" y="5"/>
-    <node id="33" x="3" y="5"/>
-    <node id="34" x="4" y="5"/>
-    <node id="35" x="5" y="5"/>
+    <node id="0"  x="0000" y="0000"/>
+    <node id="1"  x="1000" y="0000"/>
+    <node id="2"  x="2000" y="0000"/>
+    <node id="3"  x="3000" y="0000"/>
+    <node id="4"  x="4000" y="0000"/>
+    <node id="5"  x="5000" y="0000"/>
+    <node id="6"  x="0000" y="1000"/>
+    <node id="7"  x="1000" y="1000"/>
+    <node id="8"  x="2000" y="1000"/>
+    <node id="9"  x="3000" y="1000"/>
+    <node id="10" x="4000" y="1000"/>
+    <node id="11" x="5000" y="1000"/>
+    <node id="12" x="0000" y="2000"/>
+    <node id="13" x="1000" y="2000"/>
+    <node id="14" x="2000" y="2000"/>
+    <node id="15" x="3000" y="2000"/>
+    <node id="16" x="4000" y="2000"/>
+    <node id="17" x="5000" y="2000"/>
+    <node id="18" x="0000" y="3000"/>
+    <node id="19" x="1000" y="3000"/>
+    <node id="20" x="2000" y="3000"/>
+    <node id="21" x="3000" y="3000"/>
+    <node id="22" x="4000" y="3000"/>
+    <node id="23" x="5000" y="3000"/>
+    <node id="24" x="0000" y="4000"/>
+    <node id="25" x="1000" y="4000"/>
+    <node id="26" x="2000" y="4000"/>
+    <node id="27" x="3000" y="4000"/>
+    <node id="28" x="4000" y="4000"/>
+    <node id="29" x="5000" y="4000"/>
+    <node id="30" x="0000" y="5000"/>
+    <node id="31" x="1000" y="5000"/>
+    <node id="32" x="2000" y="5000"/>
+    <node id="33" x="3000" y="5000"/>
+    <node id="34" x="4000" y="5000"/>
+    <node id="35" x="5000" y="5000"/>
    </nodes>
    <links capperiod="01:00:00">
       <link id="0-1" from="0" to="1"     length="1000.00" capacity="1000" freespeed="30.56" permlanes="1"  />
