@@ -43,6 +43,7 @@ public class SituationAwarenessTest {
 	@Rule public MatsimTestUtils utils = new MatsimTestUtils() ;
 
 	@Test
+	@Ignore
 	public void testBlockagePerceptsDuringDailyPlan() {
 
 		utils.getOutputDirectory(); // creates a clean one so need to call this first
