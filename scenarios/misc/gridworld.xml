@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE network SYSTEM "http://www.matsim.org/files/dtd/network_v1.dtd">
+
+<!--
+Author: Dhirendra Singh, 2019
+
+The gridworld network consists of 36 nodes and 25 links labelled as shown.
+Link capacities increase from left to right as: 1000,2000,3000,4000,5000,6000.
+Link speeds (kmph) decrease from left to right as: 110,100,80,60,50,40.
+
+           30-31     32-33     34-35
+"30"(0,5) o____o____o____o____o____o "35"(5,5)
+          |    |    |    |    |    |
+"24"(0,4) o____o____o____o____o____o "29"(5,4)
+          |    |    |    |    |    |
+"18"(0,3) o____o____o____o____o____o "23"(5,3)
+          |    |    |    |    |    |
+"12"(0,2) o____o____o____o____o____o "17"(5,2)
+          |    |    |    |    |    |
+ "6"(0,1) o____o____o____o____o____o "11"(5,1)
+          |    |    |    |    |    |
+ "0"(0,0) o____o____o____o____o____o "5"(5,0)
+           0-1       2-3       4-5
+-->
+
+<network name="Grid network">
+  <nodes>
+    <node id="0"  x="0" y="0"/>
+    <node id="1"  x="1" y="0"/>
+    <node id="2"  x="2" y="0"/>
+    <node id="3"  x="3" y="0"/>
+    <node id="4"  x="4" y="0"/>
+    <node id="5"  x="5" y="0"/>
+    <node id="6"  x="0" y="1"/>
+    <node id="7"  x="1" y="1"/>
+    <node id="8"  x="2" y="1"/>
+    <node id="9"  x="3" y="1"/>
+    <node id="10" x="4" y="1"/>
+    <node id="11" x="5" y="1"/>
+    <node id="12" x="0" y="2"/>
+    <node id="13" x="1" y="2"/>
+    <node id="14" x="2" y="2"/>
+    <node id="15" x="3" y="2"/>
+    <node id="16" x="4" y="2"/>
+    <node id="17" x="5" y="2"/>
+    <node id="18" x="0" y="3"/>
+    <node id="19" x="1" y="3"/>
+    <node id="20" x="2" y="3"/>
+    <node id="21" x="3" y="3"/>
+    <node id="22" x="4" y="3"/>
+    <node id="23" x="5" y="3"/>
+    <node id="24" x="0" y="4"/>
+    <node id="25" x="1" y="4"/>
+    <node id="26" x="2" y="4"/>
+    <node id="27" x="3" y="4"/>
+    <node id="28" x="4" y="4"/>
+    <node id="29" x="5" y="4"/>
+    <node id="30" x="0" y="5"/>
+    <node id="31" x="1" y="5"/>
+    <node id="32" x="2" y="5"/>
+    <node id="33" x="3" y="5"/>
+    <node id="34" x="4" y="5"/>
+    <node id="35" x="5" y="5"/>
+   </nodes>
+   <links capperiod="01:00:00">
+      <link id="0-1" from="0" to="1"     length="1000.00" capacity="1000" freespeed="30.56" permlanes="1"  />
+      <link id="1-2" from="1" to="2"     length="1000.00" capacity="2000" freespeed="27.78" permlanes="1"  />
+      <link id="2-3" from="2" to="3"     length="1000.00" capacity="3000" freespeed="22.22" permlanes="1"  />
+      <link id="3-4" from="3" to="4"     length="1000.00" capacity="4000" freespeed="16.67" permlanes="1"  />
+      <link id="4-5" from="4" to="5"     length="1000.00" capacity="5000" freespeed="13.89" permlanes="1"  />
+
+      <link id="6-7" from="6" to="7"     length="1000.00" capacity="1000" freespeed="30.56" permlanes="1"  />
+      <link id="7-8" from="7" to="8"     length="1000.00" capacity="2000" freespeed="27.78" permlanes="1"  />
+      <link id="8-9" from="8" to="9"     length="1000.00" capacity="3000" freespeed="22.22" permlanes="1"  />
+      <link id="9-10" from="9" to="10"   length="1000.00" capacity="4000" freespeed="16.67" permlanes="1"  />
+      <link id="10-11" from="10" to="11" length="1000.00" capacity="5000" freespeed="13.89" permlanes="1"  />
+
+      <link id="12-13" from="12" to="13" length="1000.00" capacity="1000" freespeed="30.56" permlanes="1"  />
+      <link id="13-14" from="13" to="14" length="1000.00" capacity="2000" freespeed="27.78" permlanes="1"  />
+      <link id="14-15" from="14" to="15" length="1000.00" capacity="3000" freespeed="22.22" permlanes="1"  />
+      <link id="15-16" from="15" to="16" length="1000.00" capacity="4000" freespeed="16.67" permlanes="1"  />
+      <link id="16-17" from="16" to="17" length="1000.00" capacity="5000" freespeed="13.89" permlanes="1"  />
+
+      <link id="18-19" from="18" to="19" length="1000.00" capacity="1000" freespeed="30.56" permlanes="1"  />
+      <link id="19-20" from="19" to="20" length="1000.00" capacity="2000" freespeed="27.78" permlanes="1"  />
+      <link id="20-21" from="20" to="21" length="1000.00" capacity="3000" freespeed="22.22" permlanes="1"  />
+      <link id="21-22" from="21" to="22" length="1000.00" capacity="4000" freespeed="16.67" permlanes="1"  />
+      <link id="22-23" from="22" to="23" length="1000.00" capacity="5000" freespeed="13.89" permlanes="1"  />
+
+      <link id="24-25" from="24" to="25" length="1000.00" capacity="1000" freespeed="30.56" permlanes="1"  />
+      <link id="25-26" from="25" to="26" length="1000.00" capacity="2000" freespeed="27.78" permlanes="1"  />
+      <link id="26-27" from="26" to="27" length="1000.00" capacity="3000" freespeed="22.22" permlanes="1"  />
+      <link id="27-28" from="27" to="28" length="1000.00" capacity="4000" freespeed="16.67" permlanes="1"  />
+      <link id="28-29" from="28" to="29" length="1000.00" capacity="5000" freespeed="13.89" permlanes="1"  />
+
+      <link id="30-31" from="30" to="31" length="1000.00" capacity="1000" freespeed="30.56" permlanes="1"  />
+      <link id="31-32" from="31" to="32" length="1000.00" capacity="2000" freespeed="27.78" permlanes="1"  />
+      <link id="32-33" from="32" to="33" length="1000.00" capacity="3000" freespeed="22.22" permlanes="1"  />
+      <link id="33-34" from="33" to="34" length="1000.00" capacity="4000" freespeed="16.67" permlanes="1"  />
+      <link id="34-35" from="34" to="35" length="1000.00" capacity="5000" freespeed="13.89" permlanes="1"  />
+
+
+      <link id="0-6" from="0" to="6"     length="1000.00" capacity="1000" freespeed="30.56" permlanes="1"  />
+      <link id="1-7" from="1" to="7"     length="1000.00" capacity="2000" freespeed="27.78" permlanes="1"  />
+      <link id="2-8" from="2" to="8"     length="1000.00" capacity="3000" freespeed="22.22" permlanes="1"  />
+      <link id="3-9" from="3" to="9"     length="1000.00" capacity="4000" freespeed="16.67" permlanes="1"  />
+      <link id="4-10" from="4" to="10"   length="1000.00" capacity="5000" freespeed="13.89" permlanes="1"  />
+      <link id="5-11" from="5" to="11"   length="1000.00" capacity="6000" freespeed="13.89" permlanes="1"  />
+
+      <link id="6-12" from="6" to="12"   length="1000.00" capacity="1000" freespeed="30.56" permlanes="1"  />
+      <link id="7-13" from="7" to="13"   length="1000.00" capacity="2000" freespeed="27.78" permlanes="1"  />
+      <link id="8-14" from="8" to="14"   length="1000.00" capacity="3000" freespeed="22.22" permlanes="1"  />
+      <link id="9-15" from="9" to="15"   length="1000.00" capacity="4000" freespeed="16.67" permlanes="1"  />
+      <link id="10-16" from="10" to="16" length="1000.00" capacity="5000" freespeed="13.89" permlanes="1"  />
+      <link id="11-17" from="11" to="17" length="1000.00" capacity="6000" freespeed="13.89" permlanes="1"  />
+
+      <link id="12-18" from="12" to="18" length="1000.00" capacity="1000" freespeed="30.56" permlanes="1"  />
+      <link id="13-19" from="13" to="19" length="1000.00" capacity="2000" freespeed="27.78" permlanes="1"  />
+      <link id="14-20" from="14" to="20" length="1000.00" capacity="3000" freespeed="22.22" permlanes="1"  />
+      <link id="15-21" from="15" to="21" length="1000.00" capacity="4000" freespeed="16.67" permlanes="1"  />
+      <link id="16-22" from="16" to="22" length="1000.00" capacity="5000" freespeed="13.89" permlanes="1"  />
+      <link id="17-23" from="17" to="23" length="1000.00" capacity="6000" freespeed="13.89" permlanes="1"  />
+
+      <link id="18-24" from="18" to="24" length="1000.00" capacity="1000" freespeed="30.56" permlanes="1"  />
+      <link id="19-25" from="19" to="25" length="1000.00" capacity="2000" freespeed="27.78" permlanes="1"  />
+      <link id="20-26" from="20" to="26" length="1000.00" capacity="3000" freespeed="22.22" permlanes="1"  />
+      <link id="21-27" from="21" to="27" length="1000.00" capacity="4000" freespeed="16.67" permlanes="1"  />
+      <link id="22-28" from="22" to="28" length="1000.00" capacity="5000" freespeed="13.89" permlanes="1"  />
+      <link id="23-29" from="23" to="29" length="1000.00" capacity="6000" freespeed="13.89" permlanes="1"  />
+
+      <link id="24-30" from="24" to="30" length="1000.00" capacity="1000" freespeed="30.56" permlanes="1"  />
+      <link id="25-31" from="25" to="31" length="1000.00" capacity="2000" freespeed="27.78" permlanes="1"  />
+      <link id="26-32" from="26" to="32" length="1000.00" capacity="3000" freespeed="22.22" permlanes="1"  />
+      <link id="27-33" from="27" to="33" length="1000.00" capacity="4000" freespeed="16.67" permlanes="1"  />
+      <link id="28-34" from="28" to="34" length="1000.00" capacity="5000" freespeed="13.89" permlanes="1"  />
+      <link id="29-35" from="29" to="35" length="1000.00" capacity="6000" freespeed="13.89" permlanes="1"  />
+
+
+      <link id="0-1r" to="0" from="1"     length="1000.00" capacity="1000" freespeed="30.56" permlanes="1"  />
+      <link id="1-2r" to="1" from="2"     length="1000.00" capacity="2000" freespeed="27.78" permlanes="1"  />
+      <link id="2-3r" to="2" from="3"     length="1000.00" capacity="3000" freespeed="22.22" permlanes="1"  />
+      <link id="3-4r" to="3" from="4"     length="1000.00" capacity="4000" freespeed="16.67" permlanes="1"  />
+      <link id="4-5r" to="4" from="5"     length="1000.00" capacity="5000" freespeed="13.89" permlanes="1"  />
+
+      <link id="6-7r" to="6" from="7"     length="1000.00" capacity="1000" freespeed="30.56" permlanes="1"  />
+      <link id="7-8r" to="7" from="8"     length="1000.00" capacity="2000" freespeed="27.78" permlanes="1"  />
+      <link id="8-9r" to="8" from="9"     length="1000.00" capacity="3000" freespeed="22.22" permlanes="1"  />
+      <link id="9-10r" to="9" from="10"   length="1000.00" capacity="4000" freespeed="16.67" permlanes="1"  />
+      <link id="10-11r" to="10" from="11" length="1000.00" capacity="5000" freespeed="13.89" permlanes="1"  />
+
+      <link id="12-13r" to="12" from="13" length="1000.00" capacity="1000" freespeed="30.56" permlanes="1"  />
+      <link id="13-14r" to="13" from="14" length="1000.00" capacity="2000" freespeed="27.78" permlanes="1"  />
+      <link id="14-15r" to="14" from="15" length="1000.00" capacity="3000" freespeed="22.22" permlanes="1"  />
+      <link id="15-16r" to="15" from="16" length="1000.00" capacity="4000" freespeed="16.67" permlanes="1"  />
+      <link id="16-17r" to="16" from="17" length="1000.00" capacity="5000" freespeed="13.89" permlanes="1"  />
+
+      <link id="18-19r" to="18" from="19" length="1000.00" capacity="1000" freespeed="30.56" permlanes="1"  />
+      <link id="19-20r" to="19" from="20" length="1000.00" capacity="2000" freespeed="27.78" permlanes="1"  />
+      <link id="20-21r" to="20" from="21" length="1000.00" capacity="3000" freespeed="22.22" permlanes="1"  />
+      <link id="21-22r" to="21" from="22" length="1000.00" capacity="4000" freespeed="16.67" permlanes="1"  />
+      <link id="22-23r" to="22" from="23" length="1000.00" capacity="5000" freespeed="13.89" permlanes="1"  />
+
+      <link id="24-25r" to="24" from="25" length="1000.00" capacity="1000" freespeed="30.56" permlanes="1"  />
+      <link id="25-26r" to="25" from="26" length="1000.00" capacity="2000" freespeed="27.78" permlanes="1"  />
+      <link id="26-27r" to="26" from="27" length="1000.00" capacity="3000" freespeed="22.22" permlanes="1"  />
+      <link id="27-28r" to="27" from="28" length="1000.00" capacity="4000" freespeed="16.67" permlanes="1"  />
+      <link id="28-29r" to="28" from="29" length="1000.00" capacity="5000" freespeed="13.89" permlanes="1"  />
+
+      <link id="30-31r" to="30" from="31" length="1000.00" capacity="1000" freespeed="30.56" permlanes="1"  />
+      <link id="31-32r" to="31" from="32" length="1000.00" capacity="2000" freespeed="27.78" permlanes="1"  />
+      <link id="32-33r" to="32" from="33" length="1000.00" capacity="3000" freespeed="22.22" permlanes="1"  />
+      <link id="33-34r" to="33" from="34" length="1000.00" capacity="4000" freespeed="16.67" permlanes="1"  />
+      <link id="34-35r" to="34" from="35" length="1000.00" capacity="5000" freespeed="13.89" permlanes="1"  />
+
+
+      <link id="0-6r" to="0" from="6"     length="1000.00" capacity="1000" freespeed="30.56" permlanes="1"  />
+      <link id="1-7r" to="1" from="7"     length="1000.00" capacity="2000" freespeed="27.78" permlanes="1"  />
+      <link id="2-8r" to="2" from="8"     length="1000.00" capacity="3000" freespeed="22.22" permlanes="1"  />
+      <link id="3-9r" to="3" from="9"     length="1000.00" capacity="4000" freespeed="16.67" permlanes="1"  />
+      <link id="4-10r" to="4" from="10"   length="1000.00" capacity="5000" freespeed="13.89" permlanes="1"  />
+      <link id="5-11r" to="5" from="11"   length="1000.00" capacity="6000" freespeed="13.89" permlanes="1"  />
+
+      <link id="6-12r" to="6" from="12"   length="1000.00" capacity="1000" freespeed="30.56" permlanes="1"  />
+      <link id="7-13r" to="7" from="13"   length="1000.00" capacity="2000" freespeed="27.78" permlanes="1"  />
+      <link id="8-14r" to="8" from="14"   length="1000.00" capacity="3000" freespeed="22.22" permlanes="1"  />
+      <link id="9-15r" to="9" from="15"   length="1000.00" capacity="4000" freespeed="16.67" permlanes="1"  />
+      <link id="10-16r" to="10" from="16" length="1000.00" capacity="5000" freespeed="13.89" permlanes="1"  />
+      <link id="11-17r" to="11" from="17" length="1000.00" capacity="6000" freespeed="13.89" permlanes="1"  />
+
+      <link id="12-18r" to="12" from="18" length="1000.00" capacity="1000" freespeed="30.56" permlanes="1"  />
+      <link id="13-19r" to="13" from="19" length="1000.00" capacity="2000" freespeed="27.78" permlanes="1"  />
+      <link id="14-20r" to="14" from="20" length="1000.00" capacity="3000" freespeed="22.22" permlanes="1"  />
+      <link id="15-21r" to="15" from="21" length="1000.00" capacity="4000" freespeed="16.67" permlanes="1"  />
+      <link id="16-22r" to="16" from="22" length="1000.00" capacity="5000" freespeed="13.89" permlanes="1"  />
+      <link id="17-23r" to="17" from="23" length="1000.00" capacity="6000" freespeed="13.89" permlanes="1"  />
+
+      <link id="18-24r" to="18" from="24" length="1000.00" capacity="1000" freespeed="30.56" permlanes="1"  />
+      <link id="19-25r" to="19" from="25" length="1000.00" capacity="2000" freespeed="27.78" permlanes="1"  />
+      <link id="20-26r" to="20" from="26" length="1000.00" capacity="3000" freespeed="22.22" permlanes="1"  />
+      <link id="21-27r" to="21" from="27" length="1000.00" capacity="4000" freespeed="16.67" permlanes="1"  />
+      <link id="22-28r" to="22" from="28" length="1000.00" capacity="5000" freespeed="13.89" permlanes="1"  />
+      <link id="23-29r" to="23" from="29" length="1000.00" capacity="6000" freespeed="13.89" permlanes="1"  />
+
+      <link id="24-30r" to="24" from="30" length="1000.00" capacity="1000" freespeed="30.56" permlanes="1"  />
+      <link id="25-31r" to="25" from="31" length="1000.00" capacity="2000" freespeed="27.78" permlanes="1"  />
+      <link id="26-32r" to="26" from="32" length="1000.00" capacity="3000" freespeed="22.22" permlanes="1"  />
+      <link id="27-33r" to="27" from="33" length="1000.00" capacity="4000" freespeed="16.67" permlanes="1"  />
+      <link id="28-34r" to="28" from="34" length="1000.00" capacity="5000" freespeed="13.89" permlanes="1"  />
+      <link id="29-35r" to="29" from="35" length="1000.00" capacity="6000" freespeed="13.89" permlanes="1"  />
+
+   </links>
+</network>

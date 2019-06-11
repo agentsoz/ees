@@ -38,6 +38,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.PrintStream;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -83,6 +84,7 @@ public abstract class ArchetypeAgent extends Agent implements io.github.agentsoz
      */
     public ArchetypeAgent(String name) {
         super(name);
+        activeBdiActions = new HashMap<>();
     }
 
 
@@ -303,9 +305,7 @@ public abstract class ArchetypeAgent extends Agent implements io.github.agentsoz
      */
     @Override
     public void init(String[] args) {
-        throw new RuntimeException(logPrefix()
-                + "unexpected call, "
-                + "use start(PrintStream, String[]) instead");
+        // intentionally left blank
     }
 
     /**
