@@ -1,5 +1,5 @@
 
-package io.github.agentsoz.ees;
+package io.github.agentsoz.ees.agents.archetype;
 
 /*-
  * #%L
@@ -23,7 +23,7 @@ package io.github.agentsoz.ees;
  * #L%
  */
 
-import io.github.agentsoz.util.TestUtils;
+import io.github.agentsoz.ees.Run;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
@@ -35,22 +35,21 @@ import org.slf4j.LoggerFactory;
  * @author dsingh
  *
  */
-public class GridEvacMessageTest {
+public class ConsideredEvacuatorTest {
 
     // have tests in separate classes so that they run, at least under maven, in separate JVMs.  kai, nov'17
 
-    private static final Logger log = LoggerFactory.getLogger(GridEvacMessageTest.class);
+    private static final Logger log = LoggerFactory.getLogger(ConsideredEvacuatorTest.class);
 
     @Rule
     public MatsimTestUtils utils = new MatsimTestUtils();
 
     @Test
-    @Ignore
-    public void testGridEvacMessage() {
+    public void testFire() {
 
         utils.getOutputDirectory(); // creates a clean one so need to call this first
         String[] args = {
-                "--config", "scenarios/misc/evac-on-msg//ees.xml",
+                "--config", "scenarios/grid/ce-1a-ees-fire.xml",
         };
         Run.main(args);
 

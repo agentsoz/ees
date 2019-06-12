@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE population SYSTEM "http://www.matsim.org/files/dtd/population_v6.dtd">
+
+<population>
+
+  <person id="0">
+    <attributes>
+      <attribute name="Age" class="java.lang.String" >80</attribute>
+      <attribute name="AgentId" class="java.lang.String" >202021028P223</attribute>
+      <attribute name="Archetype" class="java.lang.String" >Considered.Evacuator</attribute>
+      <attribute name="Archetypes.Age" class="java.lang.String" >75 years +</attribute>
+      <attribute name="Archetypes.Household" class="java.lang.String" >Couple without dependents living at home</attribute>
+      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.archetype.ConsideredEvacuator</attribute>
+      <attribute name="EZI_ADD" class="java.lang.String" >17 BUCKLEY STREET HARCOURT 3453</attribute>
+      <attribute name="EvacLocationPreference" class="java.lang.String" >Elphinstone,262869,5890813</attribute>
+      <attribute name="Gender" class="java.lang.String" >Male</attribute>
+      <attribute name="Geographical.Coordinate" class="java.lang.String" >[144.2623, -36.9993]</attribute>
+      <attribute name="HasDependents" class="java.lang.String" >0</attribute>
+      <attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>
+      <attribute name="HouseholdId" class="java.lang.String" >202021028H1439</attribute>
+      <attribute name="ImpactFromFireDangerIndexRating" class="java.lang.String" >0.1</attribute>
+      <attribute name="ImpactFromImmersionInSmoke" class="java.lang.String" >0.4</attribute>
+      <attribute name="ImpactFromMessageAdvice" class="java.lang.String" >0.4</attribute>
+      <attribute name="ImpactFromMessageEmergencyWarning" class="java.lang.String" >0.6</attribute>
+      <attribute name="ImpactFromMessageEvacuateNow" class="java.lang.String" >0.7</attribute>
+      <attribute name="ImpactFromMessageRespondersAttending" class="java.lang.String" >0.2</attribute>
+      <attribute name="ImpactFromMessageWatchAndAct" class="java.lang.String" >0.5</attribute>
+      <attribute name="ImpactFromSocialMessage" class="java.lang.String" >0.5</attribute>
+      <attribute name="ImpactFromVisibleEmbers" class="java.lang.String" >0.5</attribute>
+      <attribute name="ImpactFromVisibleFire" class="java.lang.String" >0.6</attribute>
+      <attribute name="ImpactFromVisibleResponders" class="java.lang.String" >0.4</attribute>
+      <attribute name="ImpactFromVisibleSmoke" class="java.lang.String" >0.3</attribute>
+      <attribute name="InvacLocationPreference" class="java.lang.String" >Castlemaine,252140,5894312</attribute>
+      <attribute name="PrimaryFamilyType" class="java.lang.String" >COUPLE_ONLY</attribute>
+      <attribute name="ResponseThresholdFinal" class="java.lang.String" >0.19</attribute>
+      <attribute name="ResponseThresholdInitial" class="java.lang.String" >0.26</attribute>
+      <attribute name="SA1_7DIGCODE" class="java.lang.String" >2102819</attribute>
+      <attribute name="SA2_MAINCODE" class="java.lang.String" >202021028</attribute>
+      <attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.String" >1</attribute>
+      <attribute name="WillGoHomeBeforeLeaving" class="java.lang.String" >1</attribute>
+      <attribute name="WillStay" class="java.lang.String" >0</attribute>
+    </attributes>
+    <plan selected="yes">
+      <activity type="home" x="0000.0" y="0000.0" end_time="01:00:00" />
+      <leg mode="car" />
+      <activity type="work" x="5000.0" y="5000.0" end_time="01:30:00" />
+      <leg mode="car" />
+      <activity type="home" x="0000.0" y="0000.0" />
+    </plan>
+  </person>
+
+</population>
