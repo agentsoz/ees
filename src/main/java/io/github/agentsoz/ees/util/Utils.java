@@ -106,6 +106,12 @@ public final class Utils {
 
         return map;
     }
+	public static Map<String,List<String[]>> getAgentsFromMATSimPlansFile(String matsimConfigFile ) {
+		Config config = ConfigUtils.loadConfig(matsimConfigFile);
+		Scenario scenario = ScenarioUtils.loadScenario(config);
+		return getAgentsFromMATSimPlansFile(scenario);
+
+	}
 
 	/**
 	 * Deprecated. Use {@link #getAgentsFromMATSimPlansFile} instead.

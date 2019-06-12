@@ -55,25 +55,45 @@ public class Run implements DataClient {
     private AgentDataContainer adc_from_abm = new AgentDataContainer();
     private final Object sequenceLock = new Object();
 
+    // Models
+    DataServer dataServer = null;
+    private DiffusionModel diffusionModel = null;
+
     //  Defaults
     private int optTimestep = 1; // in seconds
 
 
     public static void main(String[] args) {
         Thread.currentThread().setName("ees");
+
+        // Read the config
         Config cfg = new Config();
         Map<String,String> opts = cfg.parse(args);
         cfg.loadFromFile(opts.get(Config.OPT_CONFIG));
-        Run sim = new Run();
-        sim.start(cfg);
+
+        // Get BDI agents map from the MATSim population file
+        log.info("Reading BDI agents from MATSim population file");
+        Map<String, List<String[]>> bdiMap = Utils.getAgentsFromMATSimPlansFile(cfg.getModelConfig(Config.eModelMatsim).get("configXml"));
+        JillBDIModel.removeNonBdiAgentsFrom(bdiMap);
+
+        // Run it
+        new Run()
+        .withModel(DataServer.getInstance(DATASERVER))
+        .withModel(new DiffusionModel(cfg.getModelConfig(Config.eModelDiffusion), DataServer.getInstance(DATASERVER), new ArrayList<>(bdiMap.keySet())))
+        .start(cfg, bdiMap);
     }
 
-    private void start(Config cfg) {
+    private void start(Config cfg, Map<String, List<String[]>> bdiMap) {
         parse(cfg.getModelConfig(""));
+
+        // Get the BDI agent IDs from the  map
+        List<String> bdiAgentIDs = new ArrayList<>(bdiMap.keySet());
 
         log.info("Starting the data server");
         // initialise the data server bus for passing data around using a publish/subscribe or pull mechanism
-        DataServer dataServer = DataServer.getInstance(DATASERVER);
+        if (dataServer == null) {
+            dataServer = DataServer.getInstance(DATASERVER);
+        }
         dataServer.setTime(hhMmToS(cfg.getGlobalConfig(Config.eGlobalStartHhMm)));
         dataServer.setTimeStep(optTimestep);
         dataServer.subscribe(this, PerceptList.AGENT_DATA_CONTAINER_FROM_BDI);
@@ -112,15 +132,11 @@ public class Run implements DataClient {
         EvacConfig evacConfig = matsimEvacModel.getEvacConfig();
         Scenario scenario = matsimEvacModel.loadAndPrepareScenario() ;
 
-        // get BDI agents map from the MATSim population file
-        log.info("Reading BDI agents from MATSim population file");
-        Map<String, List<String[]>> bdiMap = Utils.getAgentsFromMATSimPlansFile(scenario);
-        JillBDIModel.removeNonBdiAgentsFrom(bdiMap);
-        List<String> bdiAgentIDs = new ArrayList<>(bdiMap.keySet());
-
         // initialise the diffusion model and register it as an active data source
         log.info("Starting information diffusion model");
-        DiffusionModel diffusionModel = new DiffusionModel(cfg.getModelConfig(Config.eModelDiffusion), dataServer, bdiAgentIDs);
+        if (diffusionModel == null) {
+            diffusionModel = new DiffusionModel(cfg.getModelConfig(Config.eModelDiffusion), dataServer, bdiAgentIDs);
+        }
         diffusionModel.setTimestepUnit(Time.TimestepUnit.SECONDS);
         diffusionModel.start();
 
@@ -200,6 +216,30 @@ public class Run implements DataClient {
         double secs = Time.convertTime(hhmm[0], Time.TimestepUnit.HOURS, Time.TimestepUnit.SECONDS)
                 + Time.convertTime(hhmm[1], Time.TimestepUnit.MINUTES, Time.TimestepUnit.SECONDS);
         return secs;
+    }
+
+    /**
+     * Allows models to be overriden; interim solution for #37
+     * @param model
+     * @return
+     */
+    private Run withModel(Object model) {
+        if (model != null) {
+            if (model instanceof DataServer) {
+                this.dataServer = (DataServer) model;
+
+            } else if (model instanceof DiffusionModel) {
+                this.diffusionModel = (DiffusionModel) model;
+
+            } else {
+                throw new RuntimeException(
+                        "Not all models can be overriden in this way. " +
+                                " A cleaner mechanism is under development, " +
+                                "see https://github.com/agentsoz/ees/issues/37"
+                );
+            }
+        }
+        return this;
     }
 
     private Map<String, DataClient> createDataListeners() {
