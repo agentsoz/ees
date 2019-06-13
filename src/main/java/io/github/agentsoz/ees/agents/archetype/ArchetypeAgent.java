@@ -30,6 +30,7 @@ import io.github.agentsoz.bdiabm.QueryPerceptInterface;
 import io.github.agentsoz.bdiabm.data.ActionContent;
 import io.github.agentsoz.ees.ActionList;
 import io.github.agentsoz.ees.PerceptList;
+import io.github.agentsoz.jill.core.beliefbase.Belief;
 import io.github.agentsoz.jill.core.beliefbase.BeliefBaseException;
 import io.github.agentsoz.jill.core.beliefbase.BeliefSetField;
 import io.github.agentsoz.jill.lang.Agent;
@@ -53,7 +54,56 @@ public abstract class ArchetypeAgent extends Agent implements io.github.agentsoz
     //===============================================================================
     //region Class constants
     //===============================================================================
+
     private final Logger logger = LoggerFactory.getLogger(ArchetypeAgent.class);
+
+    enum Beliefname {
+        Age("Age"),
+        AgentId("AgentId"),
+        Archetype("Archetype"),
+        ArchetypeAge("Archetypes.Age"),
+        ArchetypeHousehold("Archetypes.Household"),
+        AgentType("BDIAgentType"),
+        Address("EZI_ADD"),
+        EvacuationLocationPreference("EvacLocationPreference"),
+        Gender("Gender"),
+        AddressCoordinates("Geographical.Coordinate"),
+        HasDependents("HasDependents"),
+        HasDependentsAtLocation("HasDependentsAtLocation"),
+        HouseholdId("HouseholdId"),
+        ImpactFromFireDangerIndexRating("ImpactFromFireDangerIndexRating"),
+        ImpactFromImmersionInSmoke("ImpactFromImmersionInSmoke"),
+        ImpactFromMessageAdvice("ImpactFromMessageAdvice"),
+        ImpactFromMessageEmergencyWarning("ImpactFromMessageEmergencyWarning"),
+        ImpactFromMessageEvacuateNow("ImpactFromMessageEvacuateNow"),
+        ImpactFromMessageRespondersAttending("ImpactFromMessageRespondersAttending"),
+        ImpactFromMessageWatchAndAct("ImpactFromMessageWatchAndAct"),
+        ImpactFromSocialMessage("ImpactFromSocialMessage"),
+        ImpactFromVisibleEmbers("ImpactFromVisibleEmbers"),
+        ImpactFromVisibleFire("ImpactFromVisibleFire"),
+        ImpactFromVisibleResponders("ImpactFromVisibleResponders"),
+        ImpactFromVisibleSmoke("ImpactFromVisibleSmoke"),
+        InvacLocationPreference("InvacLocationPreference"),
+        PrimaryFamilyType("PrimaryFamilyType"),
+        ResponseThresholdFinal("ResponseThresholdFinal"),
+        ResponseThresholdInitial("ResponseThresholdInitial"),
+        Sa1("SA1_7DIGCODE"),
+        Sa2("SA2_MAINCODE"),
+        WillGoHomeAfterVisitingDependents("WillGoHomeAfterVisitingDependents"),
+        WillGoHomeBeforeLeaving("WillGoHomeBeforeLeaving"),
+        WillStay("WillStay"),
+        ;
+
+        private final String commonName;
+
+        Beliefname(String name){
+            this.commonName = name;
+        }
+
+        public String getCommonName() {
+            return commonName;
+        }
+    };
 
     //===============================================================================
     //endregion
@@ -176,13 +226,19 @@ public abstract class ArchetypeAgent extends Agent implements io.github.agentsoz
      * Creates all belief sets for this BDI agent
      */
     private void createBeliefSets() {
-        // Create a new belief set to store memory
-        BeliefSetField[] fields = {
-                new BeliefSetField("key", String.class, false),
-                new BeliefSetField("value", String.class, false),
-        };
         try {
-            this.createBeliefSet(beliefSetName, fields); // Attach this belief set to this agent
+//            Beliefname[] beliefnames = Beliefname.values();
+//            BeliefSetField[] fields = new BeliefSetField[beliefnames.length];
+//            for(int i = 0; i < beliefnames.length; i++) {
+//                fields[i] = new BeliefSetField(beliefnames[i].toString(), String.class, false);
+//            }
+//            this.createBeliefSet(beliefSetName,fields);
+
+            this.createBeliefSet(beliefSetName,
+                    new BeliefSetField[]{
+                            new BeliefSetField("key", String.class, true),
+                            new BeliefSetField("value", String.class, false),
+                    });
         } catch (BeliefBaseException e) {
             throw new RuntimeException(e);
         }
@@ -202,6 +258,37 @@ public abstract class ArchetypeAgent extends Agent implements io.github.agentsoz
         }
     }
 
+    String getBelief(String key) {
+        if (key != null) {
+            String query = beliefSetName + ".key=" + key;
+            try {
+                if (eval(query)) {
+                    return (String) getLastResults().toArray(new Belief[0])[0].getTuple()[1];
+                }
+            } catch (BeliefBaseException e) {
+                logger.error("Could not evaluate belief query:  " + query, e);
+            }
+        }
+        return null;
+    }
+
+
+    /**
+     * Queries this agent's beliefs
+     * @param key the name of the belief
+     * @param value the value of the belief
+     * @return true if the agent hold's the belief with that value
+     */
+    boolean hasBelief(String key, String value) {
+        if (key == null || value == null) {
+            return false;
+        }
+        String beliefValue = getBelief(key);
+        if (beliefValue != null && ("*".equals(value) || beliefValue.equals(value))) {
+            return true;
+        }
+        return false;
+    }
 
     //===============================================================================
     //endregion
@@ -210,7 +297,7 @@ public abstract class ArchetypeAgent extends Agent implements io.github.agentsoz
 
 
     //===============================================================================
-    //region Getters & Setters
+    //region Class getters & setters
     //===============================================================================
 
     public double getTime() {
@@ -227,7 +314,28 @@ public abstract class ArchetypeAgent extends Agent implements io.github.agentsoz
     //region Arguments parsing
     //===============================================================================
 
-    private void parseArgs(String[] params) {
+    private void parseArgs(String[] args) {
+        for (int i = 0; args!= null && i < args.length; i++) {
+            String key = args[i];
+            String value = null;
+            if (i + 1 < args.length) {
+                i++;
+                value = args[i];
+            }
+            boolean found = false;
+            for(Beliefname beliefname : Beliefname.values()) {
+                if (key.equals(beliefname.getCommonName())) {
+                    believe(beliefname.name(), value);
+                    found = true;
+                }
+            }
+            if (!found) {
+                String s = "Ignoring unknown key/value: " + key + "=" + value;
+                out(s);
+                logger.warn(s);
+
+            }
+        }
     }
 
     //===============================================================================
@@ -235,19 +343,24 @@ public abstract class ArchetypeAgent extends Agent implements io.github.agentsoz
     //===============================================================================
 
     //===============================================================================
-    //region Jill Agent inherited functions
+    //region Jill Agent functions
     //===============================================================================
 
     /**
      * Called by the Jill model when starting a new agent.
-     * There is no separate initialisation call prior to this, so all
-     * agent initialisation should be done here (using params).
+     * Prior to this {@link #init(String[])} is called with initialisation arguments
+     * too.
      */
     @Override
     public void start(PrintStream writer, String[] params) {
         this.writer = writer;
         parseArgs(params);
-        createBeliefSets();
+
+        // Write out my beliefs
+        for(Beliefname beliefname : Beliefname.values()) {
+            String value = getBelief(beliefname.toString());
+            out("believes " + beliefname.name() + " " + beliefname.getCommonName() + "=" + value);
+        }
 
         // perceive congestion and blockage events always
         EnvironmentAction action = new EnvironmentAction(
@@ -272,7 +385,7 @@ public abstract class ArchetypeAgent extends Agent implements io.github.agentsoz
 
 
     //===============================================================================
-    //region BDI-ABM Agent interface functions
+    //region BDI-ABM Agent functions
     //===============================================================================
 
     private QueryPerceptInterface queryInterface;
@@ -299,13 +412,15 @@ public abstract class ArchetypeAgent extends Agent implements io.github.agentsoz
     }
 
     /**
-     * BDI-ABM agent init function; Not used by Jill.
-     * Use {@link #start(PrintStream, String[])} instead
-     * to perform any agent specific initialisation.
+     * BDI-ABM agent init function; used for initialising agent args only;
+     * Use {@link #start(PrintStream, String[])}
+     * to perform agent startup.
      */
     @Override
     public void init(String[] args) {
-        // intentionally left blank
+        createBeliefSets(); // create this agent's belief sets
+        parseArgs(args); // and store any initial beliefs
+
     }
 
     /**
@@ -415,7 +530,9 @@ public abstract class ArchetypeAgent extends Agent implements io.github.agentsoz
     }
 
     void out(String msg) {
-        writer.println(logPrefix()+msg);
+        if (writer != null) {
+            writer.println(logPrefix() + msg);
+        }
     }
 
     //===============================================================================
