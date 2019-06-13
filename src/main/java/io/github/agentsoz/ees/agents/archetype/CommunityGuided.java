@@ -23,17 +23,11 @@ package io.github.agentsoz.ees.agents.archetype;
  */
 
 
-import io.github.agentsoz.ees.agents.bushfire.BushfireAgent;
 import io.github.agentsoz.jill.lang.AgentInfo;
 
 @AgentInfo(hasGoals={
-        "io.github.agentsoz.abmjill.genact.EnvironmentAction",
-        "io.github.agentsoz.ees.agents.bushfire.GoalInitialResponse",
-        "io.github.agentsoz.ees.agents.bushfire.GoalActNow",
-        "io.github.agentsoz.ees.agents.bushfire.GoalGoHome",
-        "io.github.agentsoz.ees.agents.bushfire.GoalGotoDependents",
-        "io.github.agentsoz.ees.agents.bushfire.GoalGotoInvacPlace",
-        "io.github.agentsoz.ees.agents.bushfire.GoalGotoEvacPlace"})
+        "io.github.agentsoz.abmjill.genact.EnvironmentAction"
+})
 public class CommunityGuided extends ArchetypeAgent {
 
     private Prefix prefix = new CommunityGuided.Prefix();
