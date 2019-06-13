@@ -65,7 +65,6 @@ public abstract class ArchetypeAgent extends Agent implements io.github.agentsoz
         ArchetypeHousehold("Archetypes.Household"),
         AgentType("BDIAgentType"),
         Address("EZI_ADD"),
-        EvacuationLocationPreference("EvacLocationPreference"),
         Gender("Gender"),
         AddressCoordinates("Geographical.Coordinate"),
         HasDependents("HasDependents"),
@@ -83,7 +82,10 @@ public abstract class ArchetypeAgent extends Agent implements io.github.agentsoz
         ImpactFromVisibleFire("ImpactFromVisibleFire"),
         ImpactFromVisibleResponders("ImpactFromVisibleResponders"),
         ImpactFromVisibleSmoke("ImpactFromVisibleSmoke"),
-        InvacLocationPreference("InvacLocationPreference"),
+        LocationEvacuationPreference("EvacLocationPreference"),
+        LocationInvacPreference("InvacLocationPreference"),
+        LocationHome("home"),
+        LocationWork("work"),
         PrimaryFamilyType("PrimaryFamilyType"),
         ResponseThresholdFinal("ResponseThresholdFinal"),
         ResponseThresholdInitial("ResponseThresholdInitial"),
@@ -227,13 +229,6 @@ public abstract class ArchetypeAgent extends Agent implements io.github.agentsoz
      */
     private void createBeliefSets() {
         try {
-//            Beliefname[] beliefnames = Beliefname.values();
-//            BeliefSetField[] fields = new BeliefSetField[beliefnames.length];
-//            for(int i = 0; i < beliefnames.length; i++) {
-//                fields[i] = new BeliefSetField(beliefnames[i].toString(), String.class, false);
-//            }
-//            this.createBeliefSet(beliefSetName,fields);
-
             this.createBeliefSet(beliefSetName,
                     new BeliefSetField[]{
                             new BeliefSetField("key", String.class, true),
