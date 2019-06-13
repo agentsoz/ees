@@ -1,5 +1,5 @@
 
-package io.github.agentsoz.ees;
+package io.github.agentsoz.ees.agents.archetype;
 
 /*-
  * #%L
@@ -23,6 +23,7 @@ package io.github.agentsoz.ees;
  * #L%
  */
 
+import io.github.agentsoz.ees.Run;
 import org.junit.Rule;
 import org.junit.Test;
 import org.matsim.testcases.MatsimTestUtils;
@@ -33,21 +34,21 @@ import org.slf4j.LoggerFactory;
  * @author dsingh
  *
  */
-public class CastlemaineRegionArchetypesIT {
+public class CastlemaineRegionArchetypesBaselineIT {
 
     // have tests in separate classes so that they run, at least under maven, in separate JVMs.  kai, nov'17
 
-    private static final Logger log = LoggerFactory.getLogger(CastlemaineRegionArchetypesIT.class);
+    private static final Logger log = LoggerFactory.getLogger(CastlemaineRegionArchetypesBaselineIT.class);
 
     @Rule
     public MatsimTestUtils utils = new MatsimTestUtils();
 
 
     @Test
-    public void testCastlemaineRegionArchetypes() {
+    public void testCastlemaineRegionArchetypesBaseline() {
 
         String[] args = {
-                "--config", "scenarios/mount-alexander-shire/castlemaine-region-archetypes/archetypes.xml",
+                "--config", "scenarios/mount-alexander-shire/castlemaine-region-archetypes/baseline.xml",
         };
         Run.main(args);
     }
