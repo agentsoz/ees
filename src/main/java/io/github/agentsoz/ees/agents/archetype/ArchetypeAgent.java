@@ -28,19 +28,24 @@ import io.github.agentsoz.abmjill.genact.EnvironmentAction;
 import io.github.agentsoz.bdiabm.EnvironmentActionInterface;
 import io.github.agentsoz.bdiabm.QueryPerceptInterface;
 import io.github.agentsoz.bdiabm.data.ActionContent;
-import io.github.agentsoz.ees.ActionList;
+import io.github.agentsoz.ees.Constants;
 import io.github.agentsoz.ees.PerceptList;
+import io.github.agentsoz.ees.matsim.MATSimEvacModel;
 import io.github.agentsoz.jill.core.beliefbase.Belief;
 import io.github.agentsoz.jill.core.beliefbase.BeliefBaseException;
 import io.github.agentsoz.jill.core.beliefbase.BeliefSetField;
 import io.github.agentsoz.jill.lang.Agent;
 import io.github.agentsoz.jill.lang.AgentInfo;
+import io.github.agentsoz.jill.lang.Goal;
+import io.github.agentsoz.util.Location;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.matsim.core.utils.misc.Time.writeTime;
 
 /**
  * ArchetypeAgent Class
@@ -70,6 +75,7 @@ public abstract class ArchetypeAgent extends Agent implements io.github.agentsoz
         HasDependents("HasDependents"),
         HasDependentsAtLocation("HasDependentsAtLocation"),
         HouseholdId("HouseholdId"),
+        isDriving("isDriving"),
         ImpactFromFireDangerIndexRating("ImpactFromFireDangerIndexRating"),
         ImpactFromImmersionInSmoke("ImpactFromImmersionInSmoke"),
         ImpactFromMessageAdvice("ImpactFromMessageAdvice"),
@@ -140,6 +146,53 @@ public abstract class ArchetypeAgent extends Agent implements io.github.agentsoz
     }
 
 
+    Location parseLocation(String slocation) {
+        if (slocation != null && !slocation.isEmpty()) {
+            try {
+                String[] tokens = slocation.split(",");
+                String loc = tokens[0];
+                double[] coords = new double[]{Double.parseDouble(tokens[1]), Double.parseDouble(tokens[2])};
+                return new Location(loc, coords[0], coords[1]);
+            } catch (Exception e) {
+                logger.error("Could not parse location: " + slocation);
+            }
+        }
+        return null;
+    }
+
+    double getTravelDistanceTo(Location location) {
+        double dist = (location == null) ? -1 :
+                (double) getQueryPerceptInterface().queryPercept(
+                        String.valueOf(getId()),
+                        PerceptList.REQUEST_DRIVING_DISTANCE_TO,
+                        location.getCoordinates());
+        return dist;
+    }
+
+    Goal prepareDrivingGoal(Constants.EvacActivity activity, Location location, MATSimEvacModel.EvacRoutingMode routingMode) {
+        // perceive congestion and blockage events always
+        EnvironmentAction action = new EnvironmentAction(
+                Integer.toString(getId()),
+                Constants.PERCEIVE,
+                new Object[] {PerceptList.BLOCKED, PerceptList.CONGESTION});
+        post(action);
+        addActiveEnvironmentAction(action);
+
+        Object[] params = new Object[6];
+        params[0] = Constants.DRIVETO;
+        params[1] = location.getCoordinates();
+        params[2] = getTime() + 5.0; // five secs from now;
+        params[3] = routingMode;
+        params[4] = activity.toString();
+        params[5] = true; // add zero-time replan activity to mark location/time of replanning
+        action = new EnvironmentAction(
+                Integer.toString(getId()),
+                Constants.DRIVETO, params);
+        addActiveEnvironmentAction(action); // will be reset by updateAction()
+        return action;
+    }
+
+
     //===============================================================================
     //endregion
     //===============================================================================
@@ -155,7 +208,7 @@ public abstract class ArchetypeAgent extends Agent implements io.github.agentsoz
      */
     private void handleTime(Object parameters) {
         if (parameters instanceof Double) {
-            time = (double) parameters;
+            setTime((double) parameters);
         }
     }
 
@@ -169,6 +222,7 @@ public abstract class ArchetypeAgent extends Agent implements io.github.agentsoz
     }
 
     private void handleFieldOfView(Object parameters) {
+        post(new GotoLocationEvacuation(GotoLocationEvacuation.class.getSimpleName()));
     }
 
     private void handleEmergencyMessage(Object parameters) {
@@ -247,12 +301,17 @@ public abstract class ArchetypeAgent extends Agent implements io.github.agentsoz
     void believe(String key, String value) {
         try {
             addBelief(beliefSetName, key, value);
-            out("believed " + key + "=" + value);
+            out("believes " + key + "=" + value);
         } catch (BeliefBaseException e) {
             throw new RuntimeException(e);
         }
     }
 
+    /**
+     * Get's the named belief
+     * @param key the name of the belief
+     * @return the value of the belief, or null if not found
+     */
     String getBelief(String key) {
         if (key != null) {
             String query = beliefSetName + ".key=" + key;
@@ -297,6 +356,11 @@ public abstract class ArchetypeAgent extends Agent implements io.github.agentsoz
 
     public double getTime() {
         return time;
+    }
+
+    public void setTime(double time) {
+        this.time = time;
+
     }
 
 
@@ -351,16 +415,19 @@ public abstract class ArchetypeAgent extends Agent implements io.github.agentsoz
         this.writer = writer;
         parseArgs(params);
 
+        // Reset state beliefs
+        believe(Beliefname.isDriving.name(), new Boolean(false).toString());
+
         // Write out my beliefs
         for(Beliefname beliefname : Beliefname.values()) {
             String value = getBelief(beliefname.toString());
-            out("believes " + beliefname.name() + " " + beliefname.getCommonName() + "=" + value);
+            out("believes " + beliefname.name() + "=" + value + " #" + beliefname.getCommonName());
         }
 
         // perceive congestion and blockage events always
         EnvironmentAction action = new EnvironmentAction(
                 Integer.toString(getId()),
-                ActionList.PERCEIVE,
+                Constants.PERCEIVE,
                 new Object[] {PerceptList.BLOCKED, PerceptList.CONGESTION});
         post(action);
         addActiveEnvironmentAction(action);
@@ -498,7 +565,7 @@ public abstract class ArchetypeAgent extends Agent implements io.github.agentsoz
 
             // remove the action and records it as the last action performed
             setLastBdiAction(removeActiveEnvironmentAction(content.getAction_type()));
-            if (content.getAction_type().equals(ActionList.DRIVETO)) {
+            if (content.getAction_type().equals(Constants.DRIVETO)) {
                 // Wake up the agent that was waiting for drive action to finish
                 suspend(false);
             }
@@ -514,9 +581,12 @@ public abstract class ArchetypeAgent extends Agent implements io.github.agentsoz
     //region Logging
     //===============================================================================
 
+    String getTimeString() {
+        return writeTime(getTime(), "HH:mm:ss");
+    }
     class Prefix{
         public String toString() {
-            return String.format("Time %05.0f BushfireAgent %-4s : ", getTime(), getId());
+            return String.format("Time %9s %s %-4s : ", getTimeString(), ArchetypeAgent.class.getSimpleName(), getId());
         }
     }
 
