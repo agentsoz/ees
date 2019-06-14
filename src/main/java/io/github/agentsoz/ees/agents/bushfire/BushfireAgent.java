@@ -29,7 +29,7 @@ import io.github.agentsoz.bdiabm.EnvironmentActionInterface;
 import io.github.agentsoz.bdiabm.QueryPerceptInterface;
 import io.github.agentsoz.bdiabm.data.ActionContent;
 import io.github.agentsoz.dataInterface.DataServer;
-import io.github.agentsoz.ees.ActionList;
+import io.github.agentsoz.ees.Constants;
 import io.github.agentsoz.ees.EmergencyMessage;
 import io.github.agentsoz.ees.PerceptList;
 import io.github.agentsoz.ees.Run;
@@ -147,7 +147,7 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
     }
 
     boolean isDriving() {
-        return activeEnvironmentActions != null && activeEnvironmentActions.containsKey(ActionList.DRIVETO);
+        return activeEnvironmentActions != null && activeEnvironmentActions.containsKey(Constants.DRIVETO);
     }
 
     private void addActiveEnvironmentAction(EnvironmentAction activeEnvironmentAction) {
@@ -198,7 +198,7 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
         // perceive congestion and blockage events always
         EnvironmentAction action = new EnvironmentAction(
                 Integer.toString(getId()),
-                ActionList.PERCEIVE,
+                Constants.PERCEIVE,
                 new Object[] {PerceptList.BLOCKED, PerceptList.CONGESTION});
         post(action);
         addActiveEnvironmentAction(action);
@@ -246,7 +246,7 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
             // perceive congestion and blockage events always
             EnvironmentAction action = new EnvironmentAction(
                     Integer.toString(getId()),
-                    ActionList.PERCEIVE,
+                    Constants.PERCEIVE,
                     new Object[] {PerceptList.BLOCKED, PerceptList.CONGESTION});
             post(action);
             addActiveEnvironmentAction(action);
@@ -446,31 +446,31 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
         // perceive congestion and blockage events always
         EnvironmentAction action = new EnvironmentAction(
                 Integer.toString(getId()),
-                ActionList.PERCEIVE,
+                Constants.PERCEIVE,
                 new Object[] {PerceptList.BLOCKED, PerceptList.CONGESTION});
         post(action);
         addActiveEnvironmentAction(action);
 
         Object[] params = new Object[4];
-        params[0] = ActionList.DRIVETO;
+        params[0] = Constants.DRIVETO;
         params[1] = location.getCoordinates();
         params[2] = getTime() + 5.0; // five secs from now;
         params[3] = routingMode;
-        memorise(MemoryEventType.ACTIONED.name(), ActionList.DRIVETO
+        memorise(MemoryEventType.ACTIONED.name(), Constants.DRIVETO
                 + ":"+ location + ":" + String.format("%.0f", distToTravel) + "m away");
         action = new EnvironmentAction(
                 Integer.toString(getId()),
-                ActionList.DRIVETO, params);
+                Constants.DRIVETO, params);
         addActiveEnvironmentAction(action); // will be reset by updateAction()
         subgoal(action); // should be last call in any plan step
         return true;
     }
 
     boolean replanCurrentDriveTo(MATSimEvacModel.EvacRoutingMode routingMode) {
-        memorise(MemoryEventType.ACTIONED.name(), ActionList.REPLAN_CURRENT_DRIVETO);
+        memorise(MemoryEventType.ACTIONED.name(), Constants.REPLAN_CURRENT_DRIVETO);
         EnvironmentAction action = new EnvironmentAction(
                 Integer.toString(getId()),
-                ActionList.REPLAN_CURRENT_DRIVETO,
+                Constants.REPLAN_CURRENT_DRIVETO,
                 new Object[] {routingMode});
         addActiveEnvironmentAction(action); // will be reset by updateAction()
         subgoal(action); // should be last call in any plan step
@@ -514,7 +514,7 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
             memorise(BushfireAgent.MemoryEventType.BELIEVED.name(), BushfireAgent.MemoryEventValue.LAST_ENV_ACTION_STATE.name() + "=" + actionState.name());
             removeActiveEnvironmentAction(content.getAction_type()); // remove the action
 
-            if (content.getAction_type().equals(ActionList.DRIVETO)) {
+            if (content.getAction_type().equals(Constants.DRIVETO)) {
                 setLastDriveActionStatus(content.getState()); // save the finish state of the action
                 // Wake up the agent that was waiting for external action to finish
                 // FIXME: BDI actions put agent in suspend, which won't work for multiple intention stacks

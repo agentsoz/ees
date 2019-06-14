@@ -26,7 +26,7 @@ import io.github.agentsoz.bdiabm.data.ActionContent;
 import io.github.agentsoz.bdiabm.data.PerceptContent;
 import io.github.agentsoz.bdimatsim.EventsMonitorRegistry.MonitoredEventType;
 import io.github.agentsoz.bdimatsim.MATSimModel;
-import io.github.agentsoz.ees.ActionList;
+import io.github.agentsoz.ees.Constants;
 import io.github.agentsoz.ees.PerceptList;
 import io.github.agentsoz.nonmatsim.BDIActionHandler;
 import io.github.agentsoz.nonmatsim.BDIPerceptHandler;
@@ -42,7 +42,6 @@ import org.matsim.core.gbl.Gbl;
 import org.matsim.core.mobsim.framework.MobsimAgent;
 import org.matsim.core.mobsim.qsim.agents.WithinDayAgentUtils;
 import org.matsim.core.network.NetworkUtils;
-import org.matsim.core.router.StageActivityTypes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -146,8 +145,8 @@ public final class EvacDrivetoActionHandlerV2 implements BDIActionHandler {
 					public boolean handle(Id<Person> agentId, Id<Link> linkId, MonitoredEventType monitoredEvent) {
 						PAAgent agent = model.getAgentManager().getAgent(agentId.toString());
 						Object[] params = {linkId.toString()};
-						ActionContent ac = new ActionContent(params, ActionContent.State.PASSED, ActionList.DRIVETO);
-						model.getAgentManager().getAgentDataContainerV2().putAction(agent.getAgentID(), ActionList.DRIVETO, ac);
+						ActionContent ac = new ActionContent(params, ActionContent.State.PASSED, Constants.DRIVETO);
+						model.getAgentManager().getAgentDataContainerV2().putAction(agent.getAgentID(), Constants.DRIVETO, ac);
 						PerceptContent pc = new PerceptContent(PerceptList.ARRIVED, params[0]);
 						model.getAgentManager().getAgentDataContainerV2().putPercept(agent.getAgentID(), PerceptList.ARRIVED, pc);
 						return true;

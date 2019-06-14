@@ -32,7 +32,7 @@ import io.github.agentsoz.bdimatsim.MATSimModel;
 import io.github.agentsoz.bdimatsim.Replanner;
 import io.github.agentsoz.dataInterface.DataClient;
 import io.github.agentsoz.dataInterface.DataServer;
-import io.github.agentsoz.ees.ActionList;
+import io.github.agentsoz.ees.Constants;
 import io.github.agentsoz.ees.Disruption;
 import io.github.agentsoz.ees.EmergencyMessage;
 import io.github.agentsoz.ees.PerceptList;
@@ -72,6 +72,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Singleton;
 import java.util.*;
+import java.util.stream.Stream;
 
 import static io.github.agentsoz.bdimatsim.MATSimModel.convertTimeToSeconds;
 
@@ -98,11 +99,7 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
     private static final String eFireAvoidanceBufferForEmergencyVehicles = "fireAvoidanceBufferForEmergencyVehicles";
     private static final String eRoutingAlgorithmType = "routingAlgorithmType";
 
-    private static final String[] evacActivities = {
-      "EvacPlace",
-      "InvacPlace",
-      "DependentsPlace"
-    };
+    ;
 
     public enum EvacRoutingMode {carFreespeed, carGlobalInformation, emergencyVehicle}
     public enum EvacuationRoutingAlgorithmType {MATSimDefault, ExampleRoutingAlgorithm}
@@ -387,7 +384,8 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
 
 
     public void init(Object[] args) {
-        matsimModel.init(ObjectArrays.concat(args, new Object[]{Arrays.asList(evacActivities)}, Object.class));
+        String[] acts = Stream.of(Constants.EvacActivity.values()).map(Constants.EvacActivity::name).toArray(String[]::new);
+        matsimModel.init(ObjectArrays.concat(args, new Object[]{Arrays.asList(acts)}, Object.class));
         List<String> bdiAgentIDs = (List<String>)args[0];
         initialiseControllerForEvac(matsimModel.getControler());
         for(String agentId: bdiAgentIDs) {
@@ -395,9 +393,9 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
 
             // replace the default action handlers with evacuation specific ones
             paAgent.getActionHandler().registerBDIAction(
-                    ActionList.DRIVETO, new EvacDrivetoActionHandlerV2(matsimModel));
+                    Constants.DRIVETO, new EvacDrivetoActionHandlerV2(matsimModel));
             paAgent.getActionHandler().registerBDIAction(
-                    ActionList.REPLAN_CURRENT_DRIVETO, new ReplanDriveToDefaultActionHandlerV2(matsimModel));
+                    Constants.REPLAN_CURRENT_DRIVETO, new ReplanDriveToDefaultActionHandlerV2(matsimModel));
         }
 
     }

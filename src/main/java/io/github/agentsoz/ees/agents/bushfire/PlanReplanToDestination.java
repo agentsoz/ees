@@ -22,8 +22,6 @@ package io.github.agentsoz.ees.agents.bushfire;
  * #L%
  */
 
-import io.github.agentsoz.abmjill.genact.EnvironmentAction;
-import io.github.agentsoz.ees.ActionList;
 import io.github.agentsoz.ees.matsim.MATSimEvacModel;
 import io.github.agentsoz.jill.lang.Agent;
 import io.github.agentsoz.jill.lang.Goal;

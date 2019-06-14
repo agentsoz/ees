@@ -22,8 +22,15 @@ package io.github.agentsoz.ees;
  * #L%
  */
 
-public class ActionList {
+public class Constants {
     public static final String DRIVETO = io.github.agentsoz.util.ActionList.DRIVETO;
     public static final String REPLAN_CURRENT_DRIVETO = io.github.agentsoz.util.ActionList.REPLAN_CURRENT_DRIVETO;
     public static final String PERCEIVE = io.github.agentsoz.util.ActionList.PERCEIVE;
+
+    public enum EvacActivity {
+        DrivePlace,
+        EvacPlace,
+        InvacPlace,
+        DependentsPlace
+    }
 }

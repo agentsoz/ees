@@ -24,7 +24,7 @@ package io.github.agentsoz.ees.agents;
 
 
 import io.github.agentsoz.abmjill.genact.EnvironmentAction;
-import io.github.agentsoz.ees.ActionList;
+import io.github.agentsoz.ees.Constants;
 import io.github.agentsoz.ees.matsim.MATSimEvacModel;
 import io.github.agentsoz.jill.lang.Agent;
 import io.github.agentsoz.jill.lang.Goal;
@@ -54,7 +54,7 @@ public class ProtectInhabitedAreaUnderThreat extends Plan {
 	PlanStep[] steps = {
 			new PlanStep() {
 				public void step() {
-					String bdiAction = ActionList.DRIVETO;
+					String bdiAction = Constants.DRIVETO;
 					Location threatenedLocation = responder.getLocationUnderFireThreat();
 					double[] coords = threatenedLocation.getCoordinates();
 					double evacTime = responder.getTime() + 5.0; // five secs from now

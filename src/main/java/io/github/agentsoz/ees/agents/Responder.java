@@ -26,9 +26,8 @@ import io.github.agentsoz.bdiabm.EnvironmentActionInterface;
 import io.github.agentsoz.bdiabm.QueryPerceptInterface;
 import io.github.agentsoz.bdiabm.data.ActionContent;
 import io.github.agentsoz.bdiabm.data.ActionContent.State;
-import io.github.agentsoz.ees.ActionList;
+import io.github.agentsoz.ees.Constants;
 import io.github.agentsoz.ees.PerceptList;
-import io.github.agentsoz.ees.SimpleConfig;
 import io.github.agentsoz.jill.lang.Agent;
 import io.github.agentsoz.jill.lang.AgentInfo;
 import io.github.agentsoz.util.Location;
@@ -113,7 +112,7 @@ public class Responder extends Agent implements io.github.agentsoz.bdiabm.Agent 
 	@Override
 	public void updateAction(String actionID, ActionContent content) {
 		logger.debug("{} received action update: {}", prefix, content);
-		if (content.getAction_type().equals(ActionList.DRIVETO)) {
+		if (content.getAction_type().equals(Constants.DRIVETO)) {
 			if (content.getState()==State.PASSED) {
 				// Wake up the agent that was waiting for external action to finish
 				// FIXME: BDI actions put agent in suspend, which won't work for multiple intention stacks 
