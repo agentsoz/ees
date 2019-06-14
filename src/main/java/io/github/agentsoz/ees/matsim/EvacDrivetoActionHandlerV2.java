@@ -42,6 +42,7 @@ import org.matsim.core.gbl.Gbl;
 import org.matsim.core.mobsim.framework.MobsimAgent;
 import org.matsim.core.mobsim.qsim.agents.WithinDayAgentUtils;
 import org.matsim.core.network.NetworkUtils;
+import org.matsim.core.router.StageActivityTypes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -109,12 +110,32 @@ public final class EvacDrivetoActionHandlerV2 implements BDIActionHandler {
 		model.getReplanner().editPlans().flushEverythingBeyondCurrent(mobsimAgent) ;
 		printPlan("after flush: " , mobsimAgent) ;
 
-		// new destination
-		String activity = (args.length >=  5 && args[4] instanceof String) ? (String)args[4] : "driveTo";
+		boolean addZeroTimeReplanActivity = (args.length >=  6 && args[5] instanceof Boolean) ? true : false;
+
+		// add small replan activity so we know where/when the replanning occurred
+		Activity rnewAct = null;
+		if (addZeroTimeReplanActivity) {
+			String ractivity = "Replan";
+			final Link link = model.getScenario().getNetwork().getLinks().get( mobsimAgent.getCurrentLinkId() );
+			rnewAct = model.getReplanner().editPlans().createFinalActivity(ractivity, link.getId());
+			rnewAct.setStartTime(model.getTime());
+			rnewAct.setEndTime(model.getTime());
+			model.getReplanner().editPlans().addActivityAtEnd(mobsimAgent, rnewAct, routingMode);
+			printPlan("after adding act: ", mobsimAgent);
+		}
+
+		// new evac destination
+		String activity = (args.length >=  5 && args[4] instanceof String) ? (String)args[4] : "DriveTo";
 		Activity newAct = model.getReplanner().editPlans().createFinalActivity( activity, newLinkId ) ;
 		model.getReplanner().editPlans().addActivityAtEnd(mobsimAgent, newAct, routingMode) ;
 		printPlan("after adding act: " , mobsimAgent ) ;
-		
+
+		// add an empty leg between the replan and evac activities
+		if (addZeroTimeReplanActivity) {
+			model.getReplanner().editTrips().insertEmptyTrip(
+					WithinDayAgentUtils.getModifiablePlan(mobsimAgent),
+					rnewAct, newAct, routingMode);
+		}
 		// beyond is already non-matsim:
 
 		// Now register an event handler for when the agent arrives at the destination
