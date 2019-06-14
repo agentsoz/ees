@@ -25,7 +25,6 @@ package io.github.agentsoz.ees.agents.archetype;
 import io.github.agentsoz.ees.Constants;
 import io.github.agentsoz.ees.agents.archetype.ArchetypeAgent.Beliefname;
 import io.github.agentsoz.bdiabm.data.ActionContent;
-import io.github.agentsoz.ees.matsim.MATSimEvacModel;
 import io.github.agentsoz.jill.lang.Agent;
 import io.github.agentsoz.jill.lang.Goal;
 import io.github.agentsoz.jill.lang.Plan;
@@ -81,7 +80,7 @@ public class GotoLocationEvacuationPlan extends Plan {
 				agent.out("started driving to "
 						+ destination + String.format(" %.0f", distToDest) + "m away"
 						+ " #" + getFullName());
-				Goal action = agent.prepareDrivingGoal(Constants.EvacActivity.EvacPlace, destination, MATSimEvacModel.EvacRoutingMode.carFreespeed);
+				Goal action = agent.prepareDrivingGoal(Constants.EvacActivity.EvacPlace, destination, Constants.EvacRoutingMode.carFreespeed);
 				agent.believe(Beliefname.isDriving.name(), new Boolean(action != null).toString());
 				subgoal(action); // should be last call in any plan step
 			},

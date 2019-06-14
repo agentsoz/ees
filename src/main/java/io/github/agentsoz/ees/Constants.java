@@ -67,4 +67,6 @@ public class Constants {
         InvacPlace,
         DependentsPlace
     }
+
+    public enum EvacRoutingMode {carFreespeed, carGlobalInformation, emergencyVehicle}
 }

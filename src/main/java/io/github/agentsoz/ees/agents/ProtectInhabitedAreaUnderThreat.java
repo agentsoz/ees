@@ -25,7 +25,6 @@ package io.github.agentsoz.ees.agents;
 
 import io.github.agentsoz.abmjill.genact.EnvironmentAction;
 import io.github.agentsoz.ees.Constants;
-import io.github.agentsoz.ees.matsim.MATSimEvacModel;
 import io.github.agentsoz.jill.lang.Agent;
 import io.github.agentsoz.jill.lang.Goal;
 import io.github.agentsoz.jill.lang.Plan;
@@ -62,7 +61,7 @@ public class ProtectInhabitedAreaUnderThreat extends Plan {
 					params[0] = bdiAction;
 					params[1] = coords;
 					params[2] = evacTime;
-					params[3] = MATSimEvacModel.EvacRoutingMode.emergencyVehicle;
+					params[3] = Constants.EvacRoutingMode.emergencyVehicle;
 					writer.println(responder.logPrefix() + "will start driving to "+ threatenedLocation + " under fire threat at time " + evacTime);
 					subgoal(new EnvironmentAction(
 							Integer.toString(responder.getId()),

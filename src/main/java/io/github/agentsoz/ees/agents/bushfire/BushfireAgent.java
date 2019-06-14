@@ -32,7 +32,6 @@ import io.github.agentsoz.dataInterface.DataServer;
 import io.github.agentsoz.ees.Constants;
 import io.github.agentsoz.ees.EmergencyMessage;
 import io.github.agentsoz.ees.Run;
-import io.github.agentsoz.ees.matsim.MATSimEvacModel;
 import io.github.agentsoz.jill.core.beliefbase.BeliefBaseException;
 import io.github.agentsoz.jill.core.beliefbase.BeliefSetField;
 import io.github.agentsoz.jill.lang.Agent;
@@ -241,7 +240,7 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
         } else if (perceptID.equals(Constants.ARRIVED)) {
             // do something
         } else if (perceptID.equals(Constants.BLOCKED)) {
-            replanCurrentDriveTo(MATSimEvacModel.EvacRoutingMode.carGlobalInformation);
+            replanCurrentDriveTo(Constants.EvacRoutingMode.carGlobalInformation);
             // perceive congestion and blockage events always
             EnvironmentAction action = new EnvironmentAction(
                     Integer.toString(getId()),
@@ -283,7 +282,7 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
 
     private void handleFireVisual() {
         // Always replan when we see fire
-        replanCurrentDriveTo(MATSimEvacModel.EvacRoutingMode.carGlobalInformation);
+        replanCurrentDriveTo(Constants.EvacRoutingMode.carGlobalInformation);
     }
 
     protected void checkBarometersAndTriggerResponseAsNeeded() {
@@ -433,7 +432,7 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
         //}
     }
 
-    boolean startDrivingTo(Location location, MATSimEvacModel.EvacRoutingMode routingMode) {
+    boolean startDrivingTo(Location location, Constants.EvacRoutingMode routingMode) {
         if (location == null) return false;
         memorise(MemoryEventType.DECIDED.name(), MemoryEventValue.GOTO_LOCATION.name() + ":" + location.toString());
         double distToTravel = getTravelDistanceTo(location);
@@ -465,7 +464,7 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
         return true;
     }
 
-    boolean replanCurrentDriveTo(MATSimEvacModel.EvacRoutingMode routingMode) {
+    boolean replanCurrentDriveTo(Constants.EvacRoutingMode routingMode) {
         memorise(MemoryEventType.ACTIONED.name(), Constants.REPLAN_CURRENT_DRIVETO);
         EnvironmentAction action = new EnvironmentAction(
                 Integer.toString(getId()),

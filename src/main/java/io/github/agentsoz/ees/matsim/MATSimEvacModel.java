@@ -100,7 +100,6 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
 
     ;
 
-    public enum EvacRoutingMode {carFreespeed, carGlobalInformation, emergencyVehicle}
     public enum EvacuationRoutingAlgorithmType {MATSimDefault, ExampleRoutingAlgorithm}
 
     // Defaults
@@ -427,7 +426,7 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
 
             private void setupCarFreespeedRouting() {
                 // memorize the routing mode:
-                String routingMode = MATSimEvacModel.EvacRoutingMode.carFreespeed.name() ;
+                String routingMode = Constants.EvacRoutingMode.carFreespeed.name() ;
 
                 addRoutingModuleBinding(routingMode).toProvider(new NetworkRoutingProvider(TransportMode.car,routingMode)) ;
                 // (above line means that when "routingMode" is requested, a "network" routing will be provided, and the route
@@ -443,7 +442,7 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
             }
 
             private void setupCarGlobalInformationRouting() {
-                final String routingMode = MATSimEvacModel.EvacRoutingMode.carGlobalInformation.name();
+                final String routingMode = Constants.EvacRoutingMode.carGlobalInformation.name();
 
                 addRoutingModuleBinding(routingMode).toProvider(new NetworkRoutingProvider(TransportMode.car, routingMode)) ;
 
@@ -460,7 +459,7 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
             }
 
             private void setupEmergencyVehicleRouting() {
-                final String routingMode = MATSimEvacModel.EvacRoutingMode.emergencyVehicle.name();
+                final String routingMode = Constants.EvacRoutingMode.emergencyVehicle.name();
 
                 addRoutingModuleBinding(routingMode).toProvider(new NetworkRoutingProvider(TransportMode.car, routingMode)) ;
 

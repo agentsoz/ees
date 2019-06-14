@@ -23,7 +23,7 @@ package io.github.agentsoz.ees.agents.bushfire;
  */
 
 import io.github.agentsoz.bdiabm.data.ActionContent;
-import io.github.agentsoz.ees.matsim.MATSimEvacModel;
+import io.github.agentsoz.ees.Constants;
 import io.github.agentsoz.jill.lang.Agent;
 import io.github.agentsoz.jill.lang.Goal;
 import io.github.agentsoz.jill.lang.Plan;
@@ -56,7 +56,7 @@ public class PlanGotoInvacPlace extends Plan {
 			() -> {
 				agent.memorise(BushfireAgent.MemoryEventType.ACTIONED.name(), getGoal() + "|" + this.getClass().getSimpleName());
 				destination = agent.getLocations().get(agent.LOCATION_INVAC_PREFERRED);
-				startedDriving = agent.startDrivingTo(destination, MATSimEvacModel.EvacRoutingMode.carFreespeed);
+				startedDriving = agent.startDrivingTo(destination, Constants.EvacRoutingMode.carFreespeed);
 			},
 			() -> {
 				if (startedDriving) {
@@ -71,7 +71,7 @@ public class PlanGotoInvacPlace extends Plan {
 				// Try a second time
 				startedDriving = false;
 				if (agent.getLastDriveActionStatus() != ActionContent.State.DROPPED && agent.getTravelDistanceTo(destination)  > 0.0) {
-					startedDriving = agent.startDrivingTo(destination, MATSimEvacModel.EvacRoutingMode.carGlobalInformation);
+					startedDriving = agent.startDrivingTo(destination, Constants.EvacRoutingMode.carGlobalInformation);
 				}
 			},
 			() -> {
@@ -87,7 +87,7 @@ public class PlanGotoInvacPlace extends Plan {
 				// Try a third time
 				startedDriving = false;
 				if (agent.getLastDriveActionStatus() != ActionContent.State.DROPPED && agent.getTravelDistanceTo(destination)  > 0.0) {
-					startedDriving = agent.startDrivingTo(destination, MATSimEvacModel.EvacRoutingMode.carGlobalInformation);
+					startedDriving = agent.startDrivingTo(destination, Constants.EvacRoutingMode.carGlobalInformation);
 				}
 			},
 			() -> {

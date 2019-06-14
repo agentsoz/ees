@@ -24,6 +24,7 @@ package io.github.agentsoz.ees.matsim;
 
 import io.github.agentsoz.bdiabm.data.ActionContent;
 import io.github.agentsoz.bdimatsim.MATSimModel;
+import io.github.agentsoz.ees.Constants;
 import io.github.agentsoz.nonmatsim.BDIActionHandler;
 import org.matsim.core.gbl.Gbl;
 import org.matsim.core.mobsim.framework.MobsimAgent;
@@ -44,8 +45,8 @@ public final class ReplanDriveToDefaultActionHandlerV2 implements BDIActionHandl
 		MobsimAgent mobsimAgent = model.getMobsimAgentFromIdString(agentID) ;
 		Gbl.assertNotNull(mobsimAgent) ;
 		Gbl.assertIf( args.length >= 1 );
-		Gbl.assertIf( args[0] instanceof MATSimEvacModel.EvacRoutingMode ) ; // could have some default
-		MATSimEvacModel.EvacRoutingMode routingMode = (MATSimEvacModel.EvacRoutingMode)args[0];
+		Gbl.assertIf( args[0] instanceof Constants.EvacRoutingMode) ; // could have some default
+		Constants.EvacRoutingMode routingMode = (Constants.EvacRoutingMode)args[0];
 		if (WithinDayAgentUtils.isOnReplannableCarLeg(mobsimAgent)) {
 			model.getReplanner().editTrips().replanCurrentTrip(mobsimAgent, 0.0, routingMode.name());
 		}

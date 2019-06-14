@@ -22,7 +22,7 @@ package io.github.agentsoz.ees.agents.bushfire;
  * #L%
  */
 
-import io.github.agentsoz.ees.matsim.MATSimEvacModel;
+import io.github.agentsoz.ees.Constants;
 import io.github.agentsoz.jill.lang.Agent;
 import io.github.agentsoz.jill.lang.Goal;
 import io.github.agentsoz.jill.lang.Plan;
@@ -53,7 +53,7 @@ public class PlanReplanToDestination extends Plan {
 			() -> {
 				((BushfireAgent)getAgent()).memorise(BushfireAgent.MemoryEventType.DECIDED.name(), BushfireAgent.MemoryEventValue.DONE_FOR_NOW.name());
 				agent.memorise(BushfireAgent.MemoryEventType.ACTIONED.name(), getGoal() + "|" + this.getClass().getSimpleName());
-				isReplanning = agent.replanCurrentDriveTo(MATSimEvacModel.EvacRoutingMode.carGlobalInformation);
+				isReplanning = agent.replanCurrentDriveTo(Constants.EvacRoutingMode.carGlobalInformation);
 			},
 			() -> {
 				if (isReplanning) {

@@ -29,7 +29,6 @@ import io.github.agentsoz.bdiabm.EnvironmentActionInterface;
 import io.github.agentsoz.bdiabm.QueryPerceptInterface;
 import io.github.agentsoz.bdiabm.data.ActionContent;
 import io.github.agentsoz.ees.Constants;
-import io.github.agentsoz.ees.matsim.MATSimEvacModel;
 import io.github.agentsoz.jill.core.beliefbase.Belief;
 import io.github.agentsoz.jill.core.beliefbase.BeliefBaseException;
 import io.github.agentsoz.jill.core.beliefbase.BeliefSetField;
@@ -168,7 +167,7 @@ public abstract class ArchetypeAgent extends Agent implements io.github.agentsoz
         return dist;
     }
 
-    Goal prepareDrivingGoal(Constants.EvacActivity activity, Location location, MATSimEvacModel.EvacRoutingMode routingMode) {
+    Goal prepareDrivingGoal(Constants.EvacActivity activity, Location location, Constants.EvacRoutingMode routingMode) {
         // perceive congestion and blockage events always
         EnvironmentAction action = new EnvironmentAction(
                 Integer.toString(getId()),
