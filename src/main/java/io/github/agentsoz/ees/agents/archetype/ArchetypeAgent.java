@@ -35,6 +35,7 @@ import io.github.agentsoz.jill.core.beliefbase.BeliefSetField;
 import io.github.agentsoz.jill.lang.Agent;
 import io.github.agentsoz.jill.lang.AgentInfo;
 import io.github.agentsoz.jill.lang.Goal;
+import io.github.agentsoz.util.Global;
 import io.github.agentsoz.util.Location;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,6 +44,7 @@ import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.matsim.core.utils.misc.Time.parseTime;
 import static org.matsim.core.utils.misc.Time.writeTime;
 
 /**
@@ -60,6 +62,29 @@ public abstract class ArchetypeAgent extends Agent implements io.github.agentsoz
 
     private final Logger logger = LoggerFactory.getLogger(ArchetypeAgent.class);
 
+    private final int reactionTimeInSecs = 60;
+
+    enum State {
+        anxietyFromSituation,
+        anxietyFromEmergencyMessages,
+        anxietyFromSocialMessages,
+        //
+        futureValueOfFireDangerIndexRating,
+        futureValueOfVisibleFire,
+        futureValueOfVisibleSmoke,
+        futureValueOfSmokeImmersion,
+        futureValueOfVisibleEmbers,
+        futureValueOfVisibleResponders,
+        futureValueOfMessageRespondersAttending,
+        futureValueOfMessageAdvice,
+        futureValueOfMessageWatchAndAct,
+        futureValueOfMessageEmergencyWarning,
+        futureValueOfMessageEvacuateNow,
+        futureValueOfMessageSocial,
+        //
+        willEvaluateFullSituationAtFutureTime,
+    }
+    
     enum Beliefname {
         Age("Age"),
         AgentId("AgentId"),
@@ -143,6 +168,27 @@ public abstract class ArchetypeAgent extends Agent implements io.github.agentsoz
         activeBdiActions = new HashMap<>();
     }
 
+    private void initialiseBehaviourAttributes() {
+        believe(State.anxietyFromSituation.name(), "0.0");
+        believe(State.anxietyFromSocialMessages.name(), "0.0");
+        believe(State.anxietyFromEmergencyMessages.name(), "0.0");
+        //
+        believe(State.futureValueOfFireDangerIndexRating.name(), getBelief(Beliefname.ImpactFromFireDangerIndexRating.name()));
+        believe(State.futureValueOfSmokeImmersion.name(), getBelief(Beliefname.ImpactFromImmersionInSmoke.name()));
+        believe(State.futureValueOfMessageAdvice.name(), getBelief(Beliefname.ImpactFromMessageAdvice.name()));
+        believe(State.futureValueOfMessageEmergencyWarning.name(), getBelief(Beliefname.ImpactFromMessageEmergencyWarning.name()));
+        believe(State.futureValueOfMessageEvacuateNow.name(), getBelief(Beliefname.ImpactFromMessageEvacuateNow.name()));
+        believe(State.futureValueOfMessageRespondersAttending.name(), getBelief(Beliefname.ImpactFromMessageRespondersAttending.name()));
+        believe(State.futureValueOfMessageWatchAndAct.name(), getBelief(Beliefname.ImpactFromMessageWatchAndAct.name()));
+        believe(State.futureValueOfMessageSocial.name(), getBelief(Beliefname.ImpactFromSocialMessage.name()));
+        believe(State.futureValueOfVisibleEmbers.name(), getBelief(Beliefname.ImpactFromVisibleEmbers.name()));
+        believe(State.futureValueOfVisibleResponders.name(), getBelief(Beliefname.ImpactFromVisibleResponders.name()));
+        believe(State.futureValueOfVisibleFire.name(), getBelief(Beliefname.ImpactFromVisibleFire.name()));
+        believe(State.futureValueOfVisibleSmoke.name(), getBelief(Beliefname.ImpactFromVisibleSmoke.name()));
+        //
+        believe(State.willEvaluateFullSituationAtFutureTime.name(), "na");
+
+    }
 
     Location parseLocation(String slocation) {
         if (slocation != null && !slocation.isEmpty()) {
@@ -190,7 +236,6 @@ public abstract class ArchetypeAgent extends Agent implements io.github.agentsoz
         return action;
     }
 
-
     //===============================================================================
     //endregion
     //===============================================================================
@@ -207,6 +252,15 @@ public abstract class ArchetypeAgent extends Agent implements io.github.agentsoz
     private void handleTime(Object parameters) {
         if (parameters instanceof Double) {
             setTime((double) parameters);
+            try {
+                String val = getBelief(State.willEvaluateFullSituationAtFutureTime.name());
+                double reactTime = parseTime(val);
+                if (reactTime <= getTime()) {
+                    // FIXME: overwriting beliefs in Jill (ie primary keys) does not work!!
+                    believe(State.willEvaluateFullSituationAtFutureTime.name(), "na");
+                    //post(new GotoLocationEvacuation(GotoLocationEvacuation.class.getSimpleName()));
+                }
+            } catch (Exception e) {}
         }
     }
 
@@ -219,8 +273,30 @@ public abstract class ArchetypeAgent extends Agent implements io.github.agentsoz
     private void handleCongestion(Object parameters) {
     }
 
-    private void handleFieldOfView(Object parameters) {
-        post(new GotoLocationEvacuation(GotoLocationEvacuation.class.getSimpleName()));
+    private void handleFieldOfView(Object view) {
+        if (view == null) {
+            return;
+        }
+        out("sensed " + view);
+        if (Constants.SIGHTED_EMBERS.equalsIgnoreCase(view.toString())) {
+            double effect = Double.valueOf(getBelief(State.futureValueOfVisibleEmbers.name()));
+            double barometer = Double.valueOf(getBelief(State.anxietyFromSituation.name()));
+            believe(State.anxietyFromSituation.name(), Double.toString(barometer+effect));
+            believe(State.futureValueOfVisibleEmbers.name(), "0.0");
+            double futureTime = getTime() + Global.getRandom().nextInt(reactionTimeInSecs);
+            believe(State.willEvaluateFullSituationAtFutureTime.name(), writeTime(futureTime));
+
+        } else if (Constants.SIGHTED_FIRE.equalsIgnoreCase(view.toString())) {
+            double effect = Double.valueOf(getBelief(State.futureValueOfVisibleFire.name()));
+            double barometer = Double.valueOf(getBelief(State.anxietyFromSituation.name()));
+            believe(State.anxietyFromSituation.name(), Double.toString(barometer+effect));
+            believe(State.futureValueOfVisibleFire.name(), "0.0");
+            double futureTime = getTime() + Global.getRandom().nextInt(reactionTimeInSecs);
+            believe(State.willEvaluateFullSituationAtFutureTime.name(), writeTime(futureTime));
+        } else {
+            logger.error("{} ignoring field of view percept: {}", logPrefix(), view);
+            return;
+        }
     }
 
     private void handleEmergencyMessage(Object parameters) {
@@ -422,6 +498,9 @@ public abstract class ArchetypeAgent extends Agent implements io.github.agentsoz
             out("believes " + beliefname.name() + "=" + value + " #" + beliefname.getCommonName());
         }
 
+        // Initialise behaviour attributes from initial beliefs
+        initialiseBehaviourAttributes();
+
         // perceive congestion and blockage events always
         EnvironmentAction action = new EnvironmentAction(
                 Integer.toString(getId()),
@@ -430,7 +509,6 @@ public abstract class ArchetypeAgent extends Agent implements io.github.agentsoz
         post(action);
         addActiveEnvironmentAction(action);
     }
-
 
     /**
      * Called by the Jill model when terminating
