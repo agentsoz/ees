@@ -22,7 +22,7 @@ package io.github.agentsoz.ees.agents.bushfire;
  * #L%
  */
 
-import io.github.agentsoz.ees.PerceptList;
+import io.github.agentsoz.ees.Constants;
 import io.github.agentsoz.jill.lang.Agent;
 import io.github.agentsoz.jill.lang.Goal;
 import io.github.agentsoz.jill.lang.Plan;
@@ -54,7 +54,7 @@ public class PlanGotoDependentsIfNearby extends Plan {
 			Location dependentsLocation = agent.getDependentInfo().getLocation();
 			if (!(homeLocation == null || dependentsLocation == null)) {
 				Location from = ((Location[])agent.getQueryPerceptInterface().queryPercept(
-						String.valueOf(agent.getId()), PerceptList.REQUEST_LOCATION, null))[0];
+						String.valueOf(agent.getId()), Constants.REQUEST_LOCATION, null))[0];
 				// Using beeline distance which is more natural and not computationally expensive
 				double distanceToHome = Location.distanceBetween(from,homeLocation);
 				double distanceToDependents = Location.distanceBetween(from,dependentsLocation);

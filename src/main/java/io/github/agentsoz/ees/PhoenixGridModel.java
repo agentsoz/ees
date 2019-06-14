@@ -174,7 +174,7 @@ public class PhoenixGridModel implements DataSource<Geometry> {
 	@Override
 	public Geometry sendData(double timestep, String dataType) {
 		double time = Time.convertTime(timestep, timestepUnit, Time.TimestepUnit.SECONDS);
-		if (PerceptList.EMBERS_DATA.equals(dataType)) {
+		if (Constants.EMBERS_DATA.equals(dataType)) {
 			SortedMap<Double, Geometry> shapes = embers.subMap(0.0, time);
 			Geometry shape = getGeometry(shapes);
 			shape = (shape==null) ? null : new ConvexHull(shape).getConvexHull();
@@ -183,12 +183,12 @@ public class PhoenixGridModel implements DataSource<Geometry> {
 			}
 			Double nextTime = embers.higherKey(time);
 			if (nextTime != null) {
-				dataServer.registerTimedUpdate(PerceptList.EMBERS_DATA, this, Time.convertTime(nextTime, Time.TimestepUnit.SECONDS, timestepUnit));
+				dataServer.registerTimedUpdate(Constants.EMBERS_DATA, this, Time.convertTime(nextTime, Time.TimestepUnit.SECONDS, timestepUnit));
 			}
 			logger.debug("sending embers data at time {}: {}", timestep, shape);
  			return shape;
 
-		} else if (PerceptList.FIRE_DATA.equals(dataType)) {
+		} else if (Constants.FIRE_DATA.equals(dataType)) {
 			SortedMap<Double, Geometry> shapes = fire.subMap(0.0, time);
 			Geometry shape = getGeometry(shapes);
 			shape = (shape==null) ? null : new ConvexHull(shape).getConvexHull();
@@ -197,7 +197,7 @@ public class PhoenixGridModel implements DataSource<Geometry> {
 			}
 			Double nextTime = fire.higherKey(time);
 			if (nextTime != null) {
-				dataServer.registerTimedUpdate(PerceptList.FIRE_DATA, this, Time.convertTime(nextTime, Time.TimestepUnit.SECONDS, timestepUnit));
+				dataServer.registerTimedUpdate(Constants.FIRE_DATA, this, Time.convertTime(nextTime, Time.TimestepUnit.SECONDS, timestepUnit));
 			}
 			logger.debug("sending fire data at time {}: {}", timestep, shape);
  			return shape;
@@ -244,8 +244,8 @@ public class PhoenixGridModel implements DataSource<Geometry> {
 		if (optGridGeoJsonFile != null && !optGridGeoJsonFile.isEmpty()) {
 			try {
 				loadPhoenixGridGeoJson(optGridGeoJsonFile);
-				dataServer.registerTimedUpdate(PerceptList.EMBERS_DATA, this, startTimeInSeconds);
-				dataServer.registerTimedUpdate(PerceptList.FIRE_DATA, this, startTimeInSeconds);
+				dataServer.registerTimedUpdate(Constants.EMBERS_DATA, this, startTimeInSeconds);
+				dataServer.registerTimedUpdate(Constants.FIRE_DATA, this, startTimeInSeconds);
 			} catch (Exception e) {
 				throw new RuntimeException("Could not load phoenix grid shapes from [" + optGridGeoJsonFile + "]", e);
 			}

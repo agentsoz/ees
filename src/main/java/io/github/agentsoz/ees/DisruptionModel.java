@@ -117,7 +117,7 @@ public class DisruptionModel implements DataSource<SortedMap<Double, Disruption>
 		lastUpdateTimeInMinutes = time;
 		Double nextTime = disruptions.higherKey(time);
 		if (nextTime != null) {
-			dataServer.registerTimedUpdate(PerceptList.DISRUPTION, this, Time.convertTime(nextTime, Time.TimestepUnit.MINUTES, timestepUnit));
+			dataServer.registerTimedUpdate(Constants.DISRUPTION, this, Time.convertTime(nextTime, Time.TimestepUnit.MINUTES, timestepUnit));
 		}
 		return effectiveDisruptions;
 	}
@@ -139,14 +139,14 @@ public class DisruptionModel implements DataSource<SortedMap<Double, Disruption>
 		}
 		double startTimeInSeconds = Time.convertTime(hhmm[0], Time.TimestepUnit.HOURS, Time.TimestepUnit.SECONDS)
 				+ Time.convertTime(hhmm[1], Time.TimestepUnit.MINUTES, Time.TimestepUnit.SECONDS);
-		dataServer.registerTimedUpdate(PerceptList.DISRUPTION, this, Time.convertTime(startTimeInSeconds, Time.TimestepUnit.SECONDS, timestepUnit));
+		dataServer.registerTimedUpdate(Constants.DISRUPTION, this, Time.convertTime(startTimeInSeconds, Time.TimestepUnit.SECONDS, timestepUnit));
 	}
 
 	public void start() {
 		if (optJsonFile != null && !optJsonFile.isEmpty()) {
 			try {
 				loadJson(optJsonFile);
-				dataServer.registerTimedUpdate(PerceptList.DISRUPTION, this, Time.convertTime(startTimeInSeconds, Time.TimestepUnit.SECONDS, timestepUnit));
+				dataServer.registerTimedUpdate(Constants.DISRUPTION, this, Time.convertTime(startTimeInSeconds, Time.TimestepUnit.SECONDS, timestepUnit));
 			} catch (Exception e) {
 				throw new RuntimeException("Could not load json from [" + optJsonFile + "]", e);
 			}

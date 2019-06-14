@@ -35,7 +35,6 @@ import io.github.agentsoz.dataInterface.DataServer;
 import io.github.agentsoz.ees.Constants;
 import io.github.agentsoz.ees.Disruption;
 import io.github.agentsoz.ees.EmergencyMessage;
-import io.github.agentsoz.ees.PerceptList;
 import io.github.agentsoz.ees.matsim.router.ExampleRoutingAlgorithmFactory;
 import io.github.agentsoz.ees.util.Utils;
 import io.github.agentsoz.nonmatsim.PAAgent;
@@ -166,19 +165,19 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
     }
 
     private void registerDataServer( DataServer server ) {
-        server.subscribe(this, PerceptList.FIRE_DATA);
-        server.subscribe(this, PerceptList.EMBERS_DATA);
-        server.subscribe(this, PerceptList.DISRUPTION);
-        server.subscribe(this, PerceptList.EMERGENCY_MESSAGE);
+        server.subscribe(this, Constants.FIRE_DATA);
+        server.subscribe(this, Constants.EMBERS_DATA);
+        server.subscribe(this, Constants.DISRUPTION);
+        server.subscribe(this, Constants.EMERGENCY_MESSAGE);
     }
 
     @Override
     public void receiveData(double time, String dataType, Object data) {
         switch( dataType ) {
-            case PerceptList.FIRE_DATA:
-            case PerceptList.EMBERS_DATA:
-            case PerceptList.DISRUPTION:
-            case PerceptList.EMERGENCY_MESSAGE:
+            case Constants.FIRE_DATA:
+            case Constants.EMBERS_DATA:
+            case Constants.DISRUPTION:
+            case Constants.EMERGENCY_MESSAGE:
                 dataListeners.get(dataType).receiveData(time, dataType, data);
                 break;
             default:
@@ -193,17 +192,17 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
     private Map<String, DataClient> createDataListeners() {
         Map<String, DataClient> listeners = new  HashMap<>();
 
-        listeners.put(PerceptList.FIRE_DATA, (DataClient<Geometry>) (time, dataType, data)
+        listeners.put(Constants.FIRE_DATA, (DataClient<Geometry>) (time, dataType, data)
                 -> processFireData(data, time, penaltyFactorsOfLinks, matsimModel.getScenario(),
                 penaltyFactorsOfLinksForEmergencyVehicles, fireWriter));
 
-        listeners.put(PerceptList.EMBERS_DATA, (DataClient<Geometry>) (time, dataType, data)
+        listeners.put(Constants.EMBERS_DATA, (DataClient<Geometry>) (time, dataType, data)
                 -> processEmbersData(data, time, matsimModel.getScenario(), emberWriter));
 
-        listeners.put(PerceptList.DISRUPTION, (DataClient<Map<Double,Disruption>>) (time, dataType, data)
+        listeners.put(Constants.DISRUPTION, (DataClient<Map<Double,Disruption>>) (time, dataType, data)
                 -> processDisruptionData(data, time, matsimModel.getScenario(), disruptionWriter));
 
-        listeners.put(PerceptList.EMERGENCY_MESSAGE, (DataClient<Map<Double,EmergencyMessage>>) (time, dataType, data)
+        listeners.put(Constants.EMERGENCY_MESSAGE, (DataClient<Map<Double,EmergencyMessage>>) (time, dataType, data)
                 -> processEmergencyMessageData(data, time, matsimModel.getScenario()));
 
         return listeners;
@@ -225,8 +224,8 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
         for (Id<Person> personId : personsMatched) {
             PAAgent agent = this.getAgentManager().getAgent(personId.toString());
             if (agent != null) { // only do this if this is a BDI-like agent
-                PerceptContent pc = new PerceptContent(PerceptList.FIELD_OF_VIEW, PerceptList.SIGHTED_EMBERS);
-                getAgentManager().getAgentDataContainerV2().putPercept(agent.getAgentID(), PerceptList.FIELD_OF_VIEW, pc);
+                PerceptContent pc = new PerceptContent(Constants.FIELD_OF_VIEW, Constants.SIGHTED_EMBERS);
+                getAgentManager().getAgentDataContainerV2().putPercept(agent.getAgentID(), Constants.FIELD_OF_VIEW, pc);
             }
         }
         emberWriter.write( now, data);
@@ -311,8 +310,8 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
             for (Id<Person> personId : personsInZones) {
                 PAAgent agent = this.getAgentManager().getAgent(personId.toString());
                 if (agent != null) { // only do this if this is a BDI-like agent
-                    PerceptContent pc = new PerceptContent(PerceptList.EMERGENCY_MESSAGE, msg.getType() + "," + msg.getContent());
-                    getAgentManager().getAgentDataContainerV2().putPercept(agent.getAgentID(), PerceptList.EMERGENCY_MESSAGE, pc);
+                    PerceptContent pc = new PerceptContent(Constants.EMERGENCY_MESSAGE, msg.getType() + "," + msg.getContent());
+                    getAgentManager().getAgentDataContainerV2().putPercept(agent.getAgentID(), Constants.EMERGENCY_MESSAGE, pc);
                 }
             }
 
@@ -337,8 +336,8 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
             for (Id<Person> personId : personsMatched) {
                 PAAgent agent = this.getAgentManager().getAgent(personId.toString());
                 if (agent != null) { // only do this if this is a BDI-like agent
-                    PerceptContent pc = new PerceptContent(PerceptList.FIELD_OF_VIEW, PerceptList.SIGHTED_FIRE);
-                    getAgentManager().getAgentDataContainerV2().putPercept(agent.getAgentID(), PerceptList.FIELD_OF_VIEW, pc);
+                    PerceptContent pc = new PerceptContent(Constants.FIELD_OF_VIEW, Constants.SIGHTED_FIRE);
+                    getAgentManager().getAgentDataContainerV2().putPercept(agent.getAgentID(), Constants.FIELD_OF_VIEW, pc);
                 }
             }
         }

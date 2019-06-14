@@ -325,10 +325,10 @@ public class JillBDIModel extends JillModel implements DataClient {
 	@Override
 	public void init(Object[] params)
 	{
-		dataServer.subscribe(this, PerceptList.TAKE_CONTROL_BDI);
-		dataServer.subscribe(this, PerceptList.FIRE_ALERT);
-		dataServer.subscribe(this, PerceptList.DIFFUSION);
-		dataServer.subscribe(this, PerceptList.SOCIAL_NETWORK_MSG);
+		dataServer.subscribe(this, Constants.TAKE_CONTROL_BDI);
+		dataServer.subscribe(this, Constants.FIRE_ALERT);
+		dataServer.subscribe(this, Constants.DIFFUSION);
+		dataServer.subscribe(this, Constants.SOCIAL_NETWORK_MSG);
 
 		logger.info("Initialising jill with args: " + Arrays.toString(initArgs));
 		// Initialise the Jill model
@@ -370,10 +370,10 @@ public class JillBDIModel extends JillModel implements DataClient {
 	@Override
 	public void receiveData(double time, String dataType, Object data) {
 		switch (dataType) {
-			case PerceptList.TAKE_CONTROL_BDI:
-			case PerceptList.FIRE_ALERT:
-			case PerceptList.DIFFUSION:
-			case PerceptList.SOCIAL_NETWORK_MSG:
+			case Constants.TAKE_CONTROL_BDI:
+			case Constants.FIRE_ALERT:
+			case Constants.DIFFUSION:
+			case Constants.SOCIAL_NETWORK_MSG:
 				dataListeners.get(dataType).receiveData(time, dataType, data);
 				break;
 			default:
@@ -459,24 +459,24 @@ public class JillBDIModel extends JillModel implements DataClient {
 	private Map<String, DataClient> createDataListeners() {
 		Map<String, DataClient> listeners = new  HashMap<>();
 
-		listeners.put(PerceptList.TAKE_CONTROL_BDI, (DataClient<io.github.agentsoz.bdiabm.v2.AgentDataContainer>) (time, dataType, data) -> {
+		listeners.put(Constants.TAKE_CONTROL_BDI, (DataClient<io.github.agentsoz.bdiabm.v2.AgentDataContainer>) (time, dataType, data) -> {
 			//takeControl(data);
 			synchronized (getSequenceLock()) {
 				getAgentDataContainer().clear();
 				takeControl(time, data);
-				dataServer.publish(PerceptList.AGENT_DATA_CONTAINER_FROM_BDI, getAgentDataContainer());
+				dataServer.publish(Constants.AGENT_DATA_CONTAINER_FROM_BDI, getAgentDataContainer());
 			}
 		});
 
-		listeners.put(PerceptList.FIRE_ALERT, (DataClient<Double>) (time, dataType, data) -> {
+		listeners.put(Constants.FIRE_ALERT, (DataClient<Double>) (time, dataType, data) -> {
 			fireAlertTime = time;
 		});
 
-		listeners.put(PerceptList.DIFFUSION, (DataClient<Map<Double, DiffusedContent>>) (time, dataType, data) -> {
+		listeners.put(Constants.DIFFUSION, (DataClient<Map<Double, DiffusedContent>>) (time, dataType, data) -> {
 			msgMap = data;
 		});
 
-		listeners.put(PerceptList.SOCIAL_NETWORK_MSG, (DataClient<String[]>) (time, dataType, data) -> {
+		listeners.put(Constants.SOCIAL_NETWORK_MSG, (DataClient<String[]>) (time, dataType, data) -> {
 			logger.warn("Ignoring received data of type {}", dataType);
 		});
 

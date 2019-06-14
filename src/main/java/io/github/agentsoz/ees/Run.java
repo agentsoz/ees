@@ -96,7 +96,7 @@ public class Run implements DataClient {
         }
         dataServer.setTime(hhMmToS(cfg.getGlobalConfig(Config.eGlobalStartHhMm)));
         dataServer.setTimeStep(optTimestep);
-        dataServer.subscribe(this, PerceptList.AGENT_DATA_CONTAINER_FROM_BDI);
+        dataServer.subscribe(this, Constants.AGENT_DATA_CONTAINER_FROM_BDI);
 
         // initialise the fire model and register it as an active data source
         {
@@ -176,9 +176,9 @@ public class Run implements DataClient {
                 }
             }
             // ABM to take control; the ABM thread should synchronize on adc_from_abm
-            dataServer.publish(PerceptList.TAKE_CONTROL_ABM, adc_from_bdi);
+            dataServer.publish(Constants.TAKE_CONTROL_ABM, adc_from_bdi);
             // BDI to take control; the BDI thread should synchronize on adc_from_bdi
-            dataServer.publish(PerceptList.TAKE_CONTROL_BDI, adc_from_abm);
+            dataServer.publish(Constants.TAKE_CONTROL_BDI, adc_from_abm);
         }
 
         // finish up
@@ -246,12 +246,12 @@ public class Run implements DataClient {
         Map<String, DataClient> listeners = new  HashMap<>();
 
         // Saves the incoming agent data container from BDI
-        listeners.put(PerceptList.AGENT_DATA_CONTAINER_FROM_BDI, (DataClient<AgentDataContainer>) (time, dataType, data) -> {
+        listeners.put(Constants.AGENT_DATA_CONTAINER_FROM_BDI, (DataClient<AgentDataContainer>) (time, dataType, data) -> {
             adc_from_bdi = data;
         });
 
         // Saves the incoming agent data container from the ABM
-        listeners.put(PerceptList.AGENT_DATA_CONTAINER_FROM_ABM, (DataClient<AgentDataContainer>) (time, dataType, data) -> {
+        listeners.put(Constants.AGENT_DATA_CONTAINER_FROM_ABM, (DataClient<AgentDataContainer>) (time, dataType, data) -> {
             adc_from_abm = data;
         });
         return listeners;
@@ -260,8 +260,8 @@ public class Run implements DataClient {
     @Override
     public void receiveData(double time, String dataType, Object data) {
         switch (dataType) {
-            case PerceptList.AGENT_DATA_CONTAINER_FROM_BDI:
-            case PerceptList.AGENT_DATA_CONTAINER_FROM_ABM:
+            case Constants.AGENT_DATA_CONTAINER_FROM_BDI:
+            case Constants.AGENT_DATA_CONTAINER_FROM_ABM:
                 dataListeners.get(dataType).receiveData(time, dataType, data);
                 break;
             default:

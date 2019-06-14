@@ -27,7 +27,6 @@ import io.github.agentsoz.bdiabm.QueryPerceptInterface;
 import io.github.agentsoz.bdiabm.data.ActionContent;
 import io.github.agentsoz.bdiabm.data.ActionContent.State;
 import io.github.agentsoz.ees.Constants;
-import io.github.agentsoz.ees.PerceptList;
 import io.github.agentsoz.jill.lang.Agent;
 import io.github.agentsoz.jill.lang.AgentInfo;
 import io.github.agentsoz.util.Location;
@@ -91,14 +90,14 @@ public class Responder extends Agent implements io.github.agentsoz.bdiabm.Agent 
 	 */
 	@Override
 	public void handlePercept(String perceptID, Object parameters) {
-		if (perceptID.equals(PerceptList.TIME)) {
+		if (perceptID.equals(Constants.TIME)) {
 			if (parameters instanceof Double) {
 				time = (double) parameters;
 			}
-		} else if (perceptID.equals(PerceptList.ARRIVED)) {
+		} else if (perceptID.equals(Constants.ARRIVED)) {
 			// Agent just arrived at the shelter
 			writer.println(prefix + "arrived at fire threat location " + getLocationUnderFireThreat());
-		} else if (perceptID.equals(PerceptList.EMERGENCY_MESSAGE)) {
+		} else if (perceptID.equals(Constants.EMERGENCY_MESSAGE)) {
 			// Start responding as soon as there is an emergency message (of any type)
 			writer.println(prefix + "received " + perceptID);
 			post(new RespondToFireThreat("RespondToFireThreat"));

@@ -148,18 +148,18 @@ public class PhoenixFireModule implements DataSource<Geometry> {
 		// irrespective of when the fire actually starts
 		if (!fireAlertSent && evacStartInSeconds > 0.0 && timestep >= evacStartInSeconds) { 
 			logger.info("step {} ({} mins): sending fire alert!!", String.format("%.0f", timestep), String.format("%.0f", time));
-			dataServer.publish(PerceptList.FIRE_ALERT, null);
+			dataServer.publish(Constants.FIRE_ALERT, null);
 			fireAlertSent = true;
 		}
 		if (!shapes.isEmpty()) {
 			// If evac start not explicitly set, then send alert at fire start
 			if (!fireAlertSent && evacStartInSeconds == 0.0) {
 				logger.info("step {} ({} mins): sending fire alert!!", String.format("%.0f", timestep), String.format("%.0f", time));
-				dataServer.publish(PerceptList.FIRE_ALERT, null);
+				dataServer.publish(Constants.FIRE_ALERT, null);
 			}
 			geometry = getGeometry(shapes);
-			logger.info("sending {} : {}", PerceptList.FIRE_DATA, geometry);
-			dataServer.publish(PerceptList.FIRE_DATA, geometry);
+			logger.info("sending {} : {}", Constants.FIRE_DATA, geometry);
+			dataServer.publish(Constants.FIRE_DATA, geometry);
 		}
 
 		// Setting 'lastUpdateTimeInMinutes = time' below will mean that only the new fire shapes since the
@@ -172,7 +172,7 @@ public class PhoenixFireModule implements DataSource<Geometry> {
 
 		Double nextTime = fire.higherKey(time);
 		if (nextTime != null) {
-			dataServer.registerTimedUpdate(PerceptList.FIRE, this, Time.convertTime(nextTime, Time.TimestepUnit.MINUTES, timestepUnit));
+			dataServer.registerTimedUpdate(Constants.FIRE, this, Time.convertTime(nextTime, Time.TimestepUnit.MINUTES, timestepUnit));
 		}
 		return geometry;
 	}
@@ -219,7 +219,7 @@ public class PhoenixFireModule implements DataSource<Geometry> {
 		} else if (json==null) {
 			logger.warn("started but will be idle forever!!");
 		}
-		dataServer.registerTimedUpdate(PerceptList.FIRE, this, evacStartInSeconds);
+		dataServer.registerTimedUpdate(Constants.FIRE, this, evacStartInSeconds);
 	}
 
 	public void convertLatLongToUtm() {

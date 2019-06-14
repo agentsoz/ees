@@ -106,8 +106,8 @@ public class DiffusionModel implements DataSource<SortedMap<Double, DiffusedCont
         this.snManager.genNetworkAndDiffModels(); // setup configs, gen network and diffusion models
         this.snManager.printSNModelconfigs();
         //subscribe to BDI data updates
-        this.dataServer.subscribe(this, PerceptList.SOCIAL_NETWORK_MSG);
-        this.dataServer.subscribe(this,PerceptList.SOCIAL_NETWORK_BROADCAST_MSG);
+        this.dataServer.subscribe(this, Constants.SOCIAL_NETWORK_MSG);
+        this.dataServer.subscribe(this, Constants.SOCIAL_NETWORK_BROADCAST_MSG);
     }
 
     private void stepDiffusionProcess() {
@@ -132,7 +132,7 @@ public class DiffusionModel implements DataSource<SortedMap<Double, DiffusedCont
     public SortedMap<Double, DiffusedContent> sendData(double timestep, String dataType) {
         Double nextTime = timestep + SNConfig.getDiffturn();
         if (nextTime != null) {
-            dataServer.registerTimedUpdate(PerceptList.DIFFUSION, this, nextTime);
+            dataServer.registerTimedUpdate(Constants.DIFFUSION, this, nextTime);
             // update the model with any new messages form agents
             ICModel icModel = (ICModel) this.snManager.getDiffModel();
             if (!localContentFromAgents.isEmpty()) { // update local content
@@ -175,7 +175,7 @@ public class DiffusionModel implements DataSource<SortedMap<Double, DiffusedCont
     public void receiveData(double time, String dataType, String[] data) { // data package from the BDI side
 
         switch (dataType) {
-            case PerceptList.SOCIAL_NETWORK_MSG: // update social states based on BDI reasoning
+            case Constants.SOCIAL_NETWORK_MSG: // update social states based on BDI reasoning
                 // data from agent is of type [String,String] being [content,agentid]
                 if (!(data instanceof String[]) || ((String[]) data).length != 2) {
                     logger.error("received unknown data: " + data);
@@ -190,7 +190,7 @@ public class DiffusionModel implements DataSource<SortedMap<Double, DiffusedCont
                 agents.add(agentId);
                 localContentFromAgents.put(msg, agents);
                 break;
-            case PerceptList.SOCIAL_NETWORK_BROADCAST_MSG:
+            case Constants.SOCIAL_NETWORK_BROADCAST_MSG:
                 if (!(data instanceof String[]) || ((String[]) data).length != 2) {
                     logger.error("received unknown data: " + data);
                     break;
@@ -229,7 +229,7 @@ public class DiffusionModel implements DataSource<SortedMap<Double, DiffusedCont
         if (snManager != null) {
             init(agentsIds);
             setTimestepUnit(Time.TimestepUnit.MINUTES);
-            dataServer.registerTimedUpdate(PerceptList.DIFFUSION, this, Time.convertTime(startTimeInSeconds, Time.TimestepUnit.SECONDS, timestepUnit));
+            dataServer.registerTimedUpdate(Constants.DIFFUSION, this, Time.convertTime(startTimeInSeconds, Time.TimestepUnit.SECONDS, timestepUnit));
         } else {
             logger.warn("started but will be idle forever!!");
         }
@@ -241,7 +241,7 @@ public class DiffusionModel implements DataSource<SortedMap<Double, DiffusedCont
     public void start(int[] hhmm) {
         double startTimeInSeconds = Time.convertTime(hhmm[0], Time.TimestepUnit.HOURS, Time.TimestepUnit.SECONDS)
                 + Time.convertTime(hhmm[1], Time.TimestepUnit.MINUTES, Time.TimestepUnit.SECONDS);
-        dataServer.registerTimedUpdate(PerceptList.DIFFUSION, this, startTimeInSeconds);
+        dataServer.registerTimedUpdate(Constants.DIFFUSION, this, startTimeInSeconds);
     }
 
 

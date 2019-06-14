@@ -186,7 +186,7 @@ public class MessagingModel implements DataSource<SortedMap<Double, EmergencyMes
 		lastUpdateTimeInMinutes = time;
 		Double nextTime = messages.higherKey(time);
 		if (nextTime != null) {
-			dataServer.registerTimedUpdate(PerceptList.EMERGENCY_MESSAGE, this, Time.convertTime(nextTime, Time.TimestepUnit.MINUTES, timestepUnit));
+			dataServer.registerTimedUpdate(Constants.EMERGENCY_MESSAGE, this, Time.convertTime(nextTime, Time.TimestepUnit.MINUTES, timestepUnit));
 		}
 		return effectiveMessages;
 	}
@@ -209,14 +209,14 @@ public class MessagingModel implements DataSource<SortedMap<Double, EmergencyMes
 
 		double startTimeInSeconds = Time.convertTime(hhmm[0], Time.TimestepUnit.HOURS, Time.TimestepUnit.SECONDS)
 				+ Time.convertTime(hhmm[1], Time.TimestepUnit.MINUTES, Time.TimestepUnit.SECONDS);
-		dataServer.registerTimedUpdate(PerceptList.EMERGENCY_MESSAGE, this, Time.convertTime(startTimeInSeconds, Time.TimestepUnit.SECONDS, timestepUnit));
+		dataServer.registerTimedUpdate(Constants.EMERGENCY_MESSAGE, this, Time.convertTime(startTimeInSeconds, Time.TimestepUnit.SECONDS, timestepUnit));
 	}
 
 	public void start() {
 		if (optGeoJsonZonesFile !=null && !optGeoJsonZonesFile.isEmpty() && optJsonFile != null && !optJsonFile.isEmpty()) {
 			try {
 				loadJsonMessagesForZones(optJsonFile, optGeoJsonZonesFile);
-				dataServer.registerTimedUpdate(PerceptList.EMERGENCY_MESSAGE, this, Time.convertTime(startTimeInSeconds, Time.TimestepUnit.SECONDS, timestepUnit));
+				dataServer.registerTimedUpdate(Constants.EMERGENCY_MESSAGE, this, Time.convertTime(startTimeInSeconds, Time.TimestepUnit.SECONDS, timestepUnit));
 			} catch (Exception e) {
 				throw new RuntimeException("Could not load json from [" + optJsonFile + "]", e);
 			}

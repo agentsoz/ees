@@ -31,7 +31,6 @@ import io.github.agentsoz.bdiabm.data.ActionContent;
 import io.github.agentsoz.dataInterface.DataServer;
 import io.github.agentsoz.ees.Constants;
 import io.github.agentsoz.ees.EmergencyMessage;
-import io.github.agentsoz.ees.PerceptList;
 import io.github.agentsoz.ees.Run;
 import io.github.agentsoz.ees.matsim.MATSimEvacModel;
 import io.github.agentsoz.jill.core.beliefbase.BeliefBaseException;
@@ -199,7 +198,7 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
         EnvironmentAction action = new EnvironmentAction(
                 Integer.toString(getId()),
                 Constants.PERCEIVE,
-                new Object[] {PerceptList.BLOCKED, PerceptList.CONGESTION});
+                new Object[] {Constants.BLOCKED, Constants.CONGESTION});
         post(action);
         addActiveEnvironmentAction(action);
     }
@@ -220,7 +219,7 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
         if (perceptID == null || perceptID.isEmpty()) {
             return;
         }
-        if (perceptID.equals(PerceptList.TIME)) {
+        if (perceptID.equals(Constants.TIME)) {
             if (parameters instanceof Double) {
                 time = (double) parameters;
             }
@@ -230,24 +229,24 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
         // save it to memory
         memorise(MemoryEventType.PERCEIVED.name(), perceptID + ":" +parameters.toString());
 
-        if (perceptID.equals(PerceptList.EMERGENCY_MESSAGE)) {
+        if (perceptID.equals(Constants.EMERGENCY_MESSAGE)) {
             updateResponseBarometerMessages(parameters);
-        } else if (perceptID.equals(PerceptList.SOCIAL_NETWORK_MSG)) {
+        } else if (perceptID.equals(Constants.SOCIAL_NETWORK_MSG)) {
             updateResponseBarometerSocialMessage(parameters);
-        } else if (perceptID.equals(PerceptList.FIELD_OF_VIEW)) {
+        } else if (perceptID.equals(Constants.FIELD_OF_VIEW)) {
             updateResponseBarometerFieldOfViewPercept(parameters);
-            if (PerceptList.SIGHTED_FIRE.equalsIgnoreCase(parameters.toString())) {
+            if (Constants.SIGHTED_FIRE.equalsIgnoreCase(parameters.toString())) {
                 handleFireVisual();
             }
-        } else if (perceptID.equals(PerceptList.ARRIVED)) {
+        } else if (perceptID.equals(Constants.ARRIVED)) {
             // do something
-        } else if (perceptID.equals(PerceptList.BLOCKED)) {
+        } else if (perceptID.equals(Constants.BLOCKED)) {
             replanCurrentDriveTo(MATSimEvacModel.EvacRoutingMode.carGlobalInformation);
             // perceive congestion and blockage events always
             EnvironmentAction action = new EnvironmentAction(
                     Integer.toString(getId()),
                     Constants.PERCEIVE,
-                    new Object[] {PerceptList.BLOCKED, PerceptList.CONGESTION});
+                    new Object[] {Constants.BLOCKED, Constants.CONGESTION});
             post(action);
             addActiveEnvironmentAction(action);
         }
@@ -265,7 +264,7 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
             return;
         }
         // Spread EVACUATE_NOW if haven't done so already
-        if (perceptID.equals(PerceptList.EMERGENCY_MESSAGE) &&
+        if (perceptID.equals(Constants.EMERGENCY_MESSAGE) &&
                 !messagesShared.contains(EmergencyMessage.EmergencyMessageType.EVACUATE_NOW.name()) &&
                 parameters instanceof String &&
                 getEmergencyMessageType(parameters) == EmergencyMessage.EmergencyMessageType.EVACUATE_NOW) {
@@ -273,8 +272,8 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
             messagesShared.add(getEmergencyMessageType(parameters).name());
         }
         // Spread BLOCKED for given blocked link if haven't already
-        if (perceptID.equals(PerceptList.BLOCKED)) {
-            String blockedMsg = PerceptList.BLOCKED + parameters.toString();
+        if (perceptID.equals(Constants.BLOCKED)) {
+            String blockedMsg = Constants.BLOCKED + parameters.toString();
             if (!messagesShared.contains(blockedMsg)) {
                 shareWithSocialNetwork(blockedMsg);
                 messagesShared.add(blockedMsg);
@@ -395,9 +394,9 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
             return;
         }
         double value = 0.0;
-        if (PerceptList.SIGHTED_EMBERS.equalsIgnoreCase(view.toString())) {
+        if (Constants.SIGHTED_EMBERS.equalsIgnoreCase(view.toString())) {
             value = smokeVisualValue;
-        } else if (PerceptList.SIGHTED_FIRE.equalsIgnoreCase(view.toString())) {
+        } else if (Constants.SIGHTED_FIRE.equalsIgnoreCase(view.toString())) {
             value = fireVisualValue;
         } else {
             logger.warn("{} ignoring field of view percept: {}", logPrefix(), view);
@@ -447,7 +446,7 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
         EnvironmentAction action = new EnvironmentAction(
                 Integer.toString(getId()),
                 Constants.PERCEIVE,
-                new Object[] {PerceptList.BLOCKED, PerceptList.CONGESTION});
+                new Object[] {Constants.BLOCKED, Constants.CONGESTION});
         post(action);
         addActiveEnvironmentAction(action);
 
@@ -480,7 +479,7 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
     double getTravelDistanceTo(Location location) {
         return (double) getQueryPerceptInterface().queryPercept(
                     String.valueOf(getId()),
-                    PerceptList.REQUEST_DRIVING_DISTANCE_TO,
+                    Constants.REQUEST_DRIVING_DISTANCE_TO,
                     location.getCoordinates());
     }
 
@@ -495,9 +494,9 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
 
     private void shareWithSocialNetwork(String content) {
         String[] msg = {content, String.valueOf(getId())};
-        memorise(MemoryEventType.ACTIONED.name(), PerceptList.SOCIAL_NETWORK_MSG
+        memorise(MemoryEventType.ACTIONED.name(), Constants.SOCIAL_NETWORK_MSG
                 + ":" + content);
-        DataServer.getInstance(Run.DATASERVER).publish(PerceptList.SOCIAL_NETWORK_MSG, msg);
+        DataServer.getInstance(Run.DATASERVER).publish(Constants.SOCIAL_NETWORK_MSG, msg);
     }
 
     /**

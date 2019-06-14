@@ -29,7 +29,6 @@ import io.github.agentsoz.bdiabm.EnvironmentActionInterface;
 import io.github.agentsoz.bdiabm.QueryPerceptInterface;
 import io.github.agentsoz.bdiabm.data.ActionContent;
 import io.github.agentsoz.ees.Constants;
-import io.github.agentsoz.ees.PerceptList;
 import io.github.agentsoz.ees.matsim.MATSimEvacModel;
 import io.github.agentsoz.jill.core.beliefbase.Belief;
 import io.github.agentsoz.jill.core.beliefbase.BeliefBaseException;
@@ -164,7 +163,7 @@ public abstract class ArchetypeAgent extends Agent implements io.github.agentsoz
         double dist = (location == null) ? -1 :
                 (double) getQueryPerceptInterface().queryPercept(
                         String.valueOf(getId()),
-                        PerceptList.REQUEST_DRIVING_DISTANCE_TO,
+                        Constants.REQUEST_DRIVING_DISTANCE_TO,
                         location.getCoordinates());
         return dist;
     }
@@ -174,7 +173,7 @@ public abstract class ArchetypeAgent extends Agent implements io.github.agentsoz
         EnvironmentAction action = new EnvironmentAction(
                 Integer.toString(getId()),
                 Constants.PERCEIVE,
-                new Object[] {PerceptList.BLOCKED, PerceptList.CONGESTION});
+                new Object[] {Constants.BLOCKED, Constants.CONGESTION});
         post(action);
         addActiveEnvironmentAction(action);
 
@@ -428,7 +427,7 @@ public abstract class ArchetypeAgent extends Agent implements io.github.agentsoz
         EnvironmentAction action = new EnvironmentAction(
                 Integer.toString(getId()),
                 Constants.PERCEIVE,
-                new Object[] {PerceptList.BLOCKED, PerceptList.CONGESTION});
+                new Object[] {Constants.BLOCKED, Constants.CONGESTION});
         post(action);
         addActiveEnvironmentAction(action);
     }
@@ -519,25 +518,25 @@ public abstract class ArchetypeAgent extends Agent implements io.github.agentsoz
             return;
         }
         switch(perceptID) {
-            case PerceptList.TIME:
+            case Constants.TIME:
                 handleTime(parameters);
                 break;
-            case PerceptList.ARRIVED:
+            case Constants.ARRIVED:
                 handleArrived(parameters);
                 break;
-            case PerceptList.BLOCKED:
+            case Constants.BLOCKED:
                 handleBlocked(parameters);
                 break;
-            case PerceptList.CONGESTION:
+            case Constants.CONGESTION:
                 handleCongestion(parameters);
                 break;
-            case PerceptList.FIELD_OF_VIEW:
+            case Constants.FIELD_OF_VIEW:
                 handleFieldOfView(parameters);
                 break;
-            case PerceptList.EMERGENCY_MESSAGE:
+            case Constants.EMERGENCY_MESSAGE:
                 handleEmergencyMessage(parameters);
                 break;
-            case PerceptList.SOCIAL_NETWORK_MSG:
+            case Constants.SOCIAL_NETWORK_MSG:
                 handleSocialNetworkMessage(parameters);
                 break;
             default:

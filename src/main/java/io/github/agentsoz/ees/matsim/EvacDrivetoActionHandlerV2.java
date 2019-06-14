@@ -27,7 +27,6 @@ import io.github.agentsoz.bdiabm.data.PerceptContent;
 import io.github.agentsoz.bdimatsim.EventsMonitorRegistry.MonitoredEventType;
 import io.github.agentsoz.bdimatsim.MATSimModel;
 import io.github.agentsoz.ees.Constants;
-import io.github.agentsoz.ees.PerceptList;
 import io.github.agentsoz.nonmatsim.BDIActionHandler;
 import io.github.agentsoz.nonmatsim.BDIPerceptHandler;
 import io.github.agentsoz.nonmatsim.PAAgent;
@@ -147,8 +146,8 @@ public final class EvacDrivetoActionHandlerV2 implements BDIActionHandler {
 						Object[] params = {linkId.toString()};
 						ActionContent ac = new ActionContent(params, ActionContent.State.PASSED, Constants.DRIVETO);
 						model.getAgentManager().getAgentDataContainerV2().putAction(agent.getAgentID(), Constants.DRIVETO, ac);
-						PerceptContent pc = new PerceptContent(PerceptList.ARRIVED, params[0]);
-						model.getAgentManager().getAgentDataContainerV2().putPercept(agent.getAgentID(), PerceptList.ARRIVED, pc);
+						PerceptContent pc = new PerceptContent(Constants.ARRIVED, params[0]);
+						model.getAgentManager().getAgentDataContainerV2().putPercept(agent.getAgentID(), Constants.ARRIVED, pc);
 						return true;
 					}
 				}
