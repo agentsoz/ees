@@ -223,7 +223,7 @@ public class Run implements DataClient {
      * @param model
      * @return
      */
-    private Run withModel(Object model) {
+    public Run withModel(Object model) {
         if (model != null) {
             if (model instanceof DataServer) {
                 this.dataServer = (DataServer) model;

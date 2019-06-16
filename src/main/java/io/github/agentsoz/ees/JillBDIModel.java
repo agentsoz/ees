@@ -285,7 +285,7 @@ public class JillBDIModel extends JillModel implements DataClient {
      *
      * @param map
      */
-    static void removeNonBdiAgentsFrom(Map<String, List<String[]>> map) {
+    public static void removeNonBdiAgentsFrom(Map<String, List<String[]>> map) {
         Iterator<Map.Entry<String, List<String[]>>> it = map.entrySet().iterator();
         while(it.hasNext()) {
             Map.Entry<String, List<String[]>> entry = it.next();
