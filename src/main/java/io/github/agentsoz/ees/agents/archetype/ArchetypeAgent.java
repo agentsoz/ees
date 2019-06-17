@@ -43,6 +43,7 @@ import org.slf4j.LoggerFactory;
 import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import static org.matsim.core.utils.misc.Time.parseTime;
 import static org.matsim.core.utils.misc.Time.writeTime;
@@ -82,6 +83,8 @@ public abstract class ArchetypeAgent extends Agent implements io.github.agentsoz
         futureValueOfMessageEvacuateNow,
         futureValueOfMessageSocial,
         //
+        responseThresholdInitialReached,
+        responseThresholdFinalReached,
         willEvaluateFullSituationAtFutureTime,
     }
     
@@ -168,28 +171,6 @@ public abstract class ArchetypeAgent extends Agent implements io.github.agentsoz
         activeBdiActions = new HashMap<>();
     }
 
-    private void initialiseBehaviourAttributes() {
-        believe(State.anxietyFromSituation.name(), "0.0");
-        believe(State.anxietyFromSocialMessages.name(), "0.0");
-        believe(State.anxietyFromEmergencyMessages.name(), "0.0");
-        //
-        believe(State.futureValueOfFireDangerIndexRating.name(), getBelief(Beliefname.ImpactFromFireDangerIndexRating.name()));
-        believe(State.futureValueOfSmokeImmersion.name(), getBelief(Beliefname.ImpactFromImmersionInSmoke.name()));
-        believe(State.futureValueOfMessageAdvice.name(), getBelief(Beliefname.ImpactFromMessageAdvice.name()));
-        believe(State.futureValueOfMessageEmergencyWarning.name(), getBelief(Beliefname.ImpactFromMessageEmergencyWarning.name()));
-        believe(State.futureValueOfMessageEvacuateNow.name(), getBelief(Beliefname.ImpactFromMessageEvacuateNow.name()));
-        believe(State.futureValueOfMessageRespondersAttending.name(), getBelief(Beliefname.ImpactFromMessageRespondersAttending.name()));
-        believe(State.futureValueOfMessageWatchAndAct.name(), getBelief(Beliefname.ImpactFromMessageWatchAndAct.name()));
-        believe(State.futureValueOfMessageSocial.name(), getBelief(Beliefname.ImpactFromSocialMessage.name()));
-        believe(State.futureValueOfVisibleEmbers.name(), getBelief(Beliefname.ImpactFromVisibleEmbers.name()));
-        believe(State.futureValueOfVisibleResponders.name(), getBelief(Beliefname.ImpactFromVisibleResponders.name()));
-        believe(State.futureValueOfVisibleFire.name(), getBelief(Beliefname.ImpactFromVisibleFire.name()));
-        believe(State.futureValueOfVisibleSmoke.name(), getBelief(Beliefname.ImpactFromVisibleSmoke.name()));
-        //
-        believe(State.willEvaluateFullSituationAtFutureTime.name(), "na");
-
-    }
-
     Location parseLocation(String slocation) {
         if (slocation != null && !slocation.isEmpty()) {
             try {
@@ -252,16 +233,35 @@ public abstract class ArchetypeAgent extends Agent implements io.github.agentsoz
     private void handleTime(Object parameters) {
         if (parameters instanceof Double) {
             setTime((double) parameters);
-            try {
-                String val = getBelief(State.willEvaluateFullSituationAtFutureTime.name());
-                double reactTime = parseTime(val);
-                if (reactTime <= getTime()) {
-                    // FIXME: overwriting beliefs in Jill (ie primary keys) does not work!!
-                    believe(State.willEvaluateFullSituationAtFutureTime.name(), "na");
-                    //post(new GotoLocationEvacuation(GotoLocationEvacuation.class.getSimpleName()));
-                }
-            } catch (Exception e) {}
+            evaluateSituation();
         }
+    }
+
+    private void evaluateSituation() {
+        try {
+            String val = getBelief(State.willEvaluateFullSituationAtFutureTime.name());
+            double reactTime = parseTime(val);
+            if (reactTime >= 0 && reactTime <= getTime()) {
+                // check if either threshold was reached
+                double anxiety = Double.valueOf(getBelief(State.anxietyFromSituation.name()))
+                        + Double.valueOf(getBelief(State.anxietyFromEmergencyMessages.name()))
+                        + Double.valueOf(getBelief(State.anxietyFromSocialMessages.name()));
+                double initialResponseThreshold = Double.valueOf(getBelief(Beliefname.ResponseThresholdInitial.name()));
+                double finalResponseThreshold = Double.valueOf(getBelief(Beliefname.ResponseThresholdInitial.name()));
+                boolean initialThresholdReached = anxiety >= initialResponseThreshold;
+                boolean finalThresholdReached = anxiety >= finalResponseThreshold;
+                // if threshold was reached then act now, else re-evaluate later
+                if (initialThresholdReached || finalThresholdReached) {
+                    believe(State.responseThresholdInitialReached.name(), Boolean.toString(initialThresholdReached));
+                    believe(State.responseThresholdFinalReached.name(), Boolean.toString(finalThresholdReached));
+                    believe(State.willEvaluateFullSituationAtFutureTime.name(), null);
+                    post(new GotoLocationEvacuation(GotoLocationEvacuation.class.getSimpleName()));
+                } else {
+                    double futureTime = getTime() + Global.getRandom().nextInt(reactionTimeInSecs);
+                    believe(State.willEvaluateFullSituationAtFutureTime.name(), writeTime(futureTime));
+                }
+            }
+        } catch (Exception e) {}
     }
 
     private void handleArrived(Object parameters) {
@@ -368,12 +368,13 @@ public abstract class ArchetypeAgent extends Agent implements io.github.agentsoz
     }
 
     /**
-     * Sets a belief for this agent
+     * Sets a belief for this agent. If the belief already exists it will be overwritten.
      * @param key the belief name
      * @param value the value of the belief
      */
     void believe(String key, String value) {
         try {
+            removeIfExists(key, value);
             addBelief(beliefSetName, key, value);
             out("believes " + key + "=" + value);
         } catch (BeliefBaseException e) {
@@ -390,6 +391,7 @@ public abstract class ArchetypeAgent extends Agent implements io.github.agentsoz
         if (key != null) {
             String query = beliefSetName + ".key=" + key;
             try {
+
                 if (eval(query)) {
                     return (String) getLastResults().toArray(new Belief[0])[0].getTuple()[1];
                 }
@@ -400,6 +402,32 @@ public abstract class ArchetypeAgent extends Agent implements io.github.agentsoz
         return null;
     }
 
+
+    /**
+     * Removes the belief if it already exists.
+     * @param key
+     * @param value
+     */
+    private void removeIfExists(String key, String value) {
+        if (key == null) {
+            return;
+        }
+        String query = beliefSetName + ".key=" + key;
+        try {
+            if (eval(query)) {
+                Set<Belief> beliefs = getLastResults();
+                for (Belief belief : beliefs) {
+                    try {
+                        removeBelief(belief);
+                    } catch (BeliefBaseException e){
+                        logger.error("Could not remove belief:  " + belief, e);
+                    }
+                }
+            }
+        } catch (BeliefBaseException e) {
+            logger.error("Could not evaluate belief query:  " + query, e);
+        }
+    }
 
     /**
      * Queries this agent's beliefs
@@ -416,6 +444,30 @@ public abstract class ArchetypeAgent extends Agent implements io.github.agentsoz
             return true;
         }
         return false;
+    }
+
+    private void initialiseBeliefs() {
+        believe(State.anxietyFromSituation.name(), "0.0");
+        believe(State.anxietyFromSocialMessages.name(), "0.0");
+        believe(State.anxietyFromEmergencyMessages.name(), "0.0");
+        //
+        believe(State.futureValueOfFireDangerIndexRating.name(), getBelief(Beliefname.ImpactFromFireDangerIndexRating.name()));
+        believe(State.futureValueOfSmokeImmersion.name(), getBelief(Beliefname.ImpactFromImmersionInSmoke.name()));
+        believe(State.futureValueOfMessageAdvice.name(), getBelief(Beliefname.ImpactFromMessageAdvice.name()));
+        believe(State.futureValueOfMessageEmergencyWarning.name(), getBelief(Beliefname.ImpactFromMessageEmergencyWarning.name()));
+        believe(State.futureValueOfMessageEvacuateNow.name(), getBelief(Beliefname.ImpactFromMessageEvacuateNow.name()));
+        believe(State.futureValueOfMessageRespondersAttending.name(), getBelief(Beliefname.ImpactFromMessageRespondersAttending.name()));
+        believe(State.futureValueOfMessageWatchAndAct.name(), getBelief(Beliefname.ImpactFromMessageWatchAndAct.name()));
+        believe(State.futureValueOfMessageSocial.name(), getBelief(Beliefname.ImpactFromSocialMessage.name()));
+        believe(State.futureValueOfVisibleEmbers.name(), getBelief(Beliefname.ImpactFromVisibleEmbers.name()));
+        believe(State.futureValueOfVisibleResponders.name(), getBelief(Beliefname.ImpactFromVisibleResponders.name()));
+        believe(State.futureValueOfVisibleFire.name(), getBelief(Beliefname.ImpactFromVisibleFire.name()));
+        believe(State.futureValueOfVisibleSmoke.name(), getBelief(Beliefname.ImpactFromVisibleSmoke.name()));
+        //
+        believe(State.willEvaluateFullSituationAtFutureTime.name(), null);
+        believe(State.responseThresholdInitialReached.name(), null);
+        believe(State.responseThresholdFinalReached.name(), null);
+
     }
 
     //===============================================================================
@@ -499,7 +551,7 @@ public abstract class ArchetypeAgent extends Agent implements io.github.agentsoz
         }
 
         // Initialise behaviour attributes from initial beliefs
-        initialiseBehaviourAttributes();
+        initialiseBeliefs();
 
         // perceive congestion and blockage events always
         EnvironmentAction action = new EnvironmentAction(

@@ -72,7 +72,7 @@ public class GotoLocationEvacuationPlan extends Plan {
 							+ destination + String.format(" %.0f", distToDest) + "m away"
 							+ " after " + tries + " tries"
 							+ " #" + getFullName());
-					drop();
+					agent.believe(Beliefname.isDriving.name(), new Boolean(false).toString());					drop();
 					return;
 				}
 				// Not there yet, so start driving
