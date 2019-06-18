@@ -24,6 +24,7 @@ package io.github.agentsoz.ees.agents.archetype;
  */
 
 import io.github.agentsoz.ees.Run;
+import io.github.agentsoz.ees.util.TestUtils;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
@@ -42,26 +43,16 @@ public class ArchetypeAgentTest {
     private static final Logger log = LoggerFactory.getLogger(ArchetypeAgentTest.class);
 
     @Rule
-    public MatsimTestUtils utils = new MatsimTestUtils();
+    public MatsimTestUtils matsimUtils = new MatsimTestUtils();
 
     @Test
     public void testFire() {
-
-        utils.getOutputDirectory(); // creates a clean one so need to call this first
-        String[] args = {
-                "--config", "scenarios/grid/ar-1a-ees-fire.xml",
-        };
-        Run.main(args);
-
-        //final String actualEventsFilename = utils.getOutputDirectory() + "/output_events.xml.gz";
-        //final String primaryExpectedEventsFilename = utils.getInputDirectory() + "/output_events.xml.gz";
-        // TestUtils.compareFullEvents(primaryExpectedEventsFilename,actualEventsFilename, true);
-        // If the full events comparison fails (possibly due to multi-threading differences on travis/other),
-        // then use the checks below, adjusting slack as needed,
-        // but ideally keeping it below 10 secs; dhi 28/may/19
-        //TestUtils.comparingDepartures(primaryExpectedEventsFilename,actualEventsFilename,1.);
-        //TestUtils.comparingArrivals(primaryExpectedEventsFilename,actualEventsFilename,1.);
-        //TestUtils.comparingActivityStarts(primaryExpectedEventsFilename,actualEventsFilename, 1.);
+        matsimUtils.getOutputDirectory(); // creates a clean one so need to call this first
+        Run.main(new String[] {"--config", "scenarios/grid/ar-1a-ees-fire.xml"});
+        new TestUtils().compareLineByLine(
+                matsimUtils.getOutputDirectory() + "../archetype.out",
+                matsimUtils.getInputDirectory() + "archetype.out",
+                "@@$");
     }
 
 }
