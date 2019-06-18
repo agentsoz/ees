@@ -77,7 +77,7 @@ public class GotoLocationEvacuationPlan extends Plan {
 				}
 				// Not there yet, so start driving
 				tries++;
-				agent.out("started driving to "
+				agent.out("will start driving to "
 						+ destination + String.format(" %.0f", distToDest) + "m away"
 						+ " #" + getFullName());
 				Goal action = agent.prepareDrivingGoal(Constants.EvacActivity.EvacPlace, destination, Constants.EvacRoutingMode.carFreespeed);

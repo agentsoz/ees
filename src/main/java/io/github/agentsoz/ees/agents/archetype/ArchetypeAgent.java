@@ -195,14 +195,6 @@ public abstract class ArchetypeAgent extends Agent implements io.github.agentsoz
     }
 
     Goal prepareDrivingGoal(Constants.EvacActivity activity, Location location, Constants.EvacRoutingMode routingMode) {
-        // perceive congestion and blockage events always
-        EnvironmentAction action = new EnvironmentAction(
-                Integer.toString(getId()),
-                Constants.PERCEIVE,
-                new Object[] {Constants.BLOCKED, Constants.CONGESTION});
-        post(action);
-        addActiveEnvironmentAction(action);
-
         Object[] params = new Object[6];
         params[0] = Constants.DRIVETO;
         params[1] = location.getCoordinates();
@@ -210,31 +202,11 @@ public abstract class ArchetypeAgent extends Agent implements io.github.agentsoz
         params[3] = routingMode;
         params[4] = activity.toString();
         params[5] = true; // add zero-time replan activity to mark location/time of replanning
-        action = new EnvironmentAction(
+        EnvironmentAction action = new EnvironmentAction(
                 Integer.toString(getId()),
                 Constants.DRIVETO, params);
         addActiveEnvironmentAction(action); // will be reset by updateAction()
         return action;
-    }
-
-    //===============================================================================
-    //endregion
-    //===============================================================================
-
-
-    //===============================================================================
-    //region BDI percepts
-    //===============================================================================
-
-    /**
-     * Handles the TIME percept
-     * @param parameters
-     */
-    private void handleTime(Object parameters) {
-        if (parameters instanceof Double) {
-            setTime((double) parameters);
-            evaluateSituation();
-        }
     }
 
     private void evaluateSituation() {
@@ -264,20 +236,56 @@ public abstract class ArchetypeAgent extends Agent implements io.github.agentsoz
         } catch (Exception e) {}
     }
 
+
+    //===============================================================================
+    //endregion
+    //===============================================================================
+
+
+    //===============================================================================
+    //region BDI percepts
+    //===============================================================================
+
+    /**
+     * Handles the TIME percept
+     * @param parameters
+     */
+    private void handleTime(Object parameters) {
+        if (parameters instanceof Double) {
+            setTime((double) parameters);
+            evaluateSituation();
+        }
+    }
+
     private void handleArrived(Object parameters) {
+        record("stopped driving");
+    }
+
+    private void handleDeparted(Object parameters) {
+        record("started driving to " + ((Map<String,String>)parameters).get("actType"));
+    }
+
+    private void handleActivityStarted(Object parameters) {
+        record("started activity " + ((Map<String,String>)parameters).get("actType"));
+    }
+
+    private void handleActivityEnded(Object parameters) {
+        record("finished activity " + ((Map<String,String>)parameters).get("actType"));
     }
 
     private void handleBlocked(Object parameters) {
+        record("is blocked");
     }
 
     private void handleCongestion(Object parameters) {
+        record("is in congestion");
     }
 
     private void handleFieldOfView(Object view) {
         if (view == null) {
             return;
         }
-        out("sensed " + view);
+        record("saw " + view);
         if (Constants.SIGHTED_EMBERS.equalsIgnoreCase(view.toString())) {
             double effect = Double.valueOf(getBelief(State.futureValueOfVisibleEmbers.name()));
             double barometer = Double.valueOf(getBelief(State.anxietyFromSituation.name()));
@@ -376,7 +384,7 @@ public abstract class ArchetypeAgent extends Agent implements io.github.agentsoz
         try {
             removeIfExists(key, value);
             addBelief(beliefSetName, key, value);
-            out("believes " + key + "=" + value);
+            record("believes " + key + "=" + value);
         } catch (BeliefBaseException e) {
             throw new RuntimeException(e);
         }
@@ -547,17 +555,23 @@ public abstract class ArchetypeAgent extends Agent implements io.github.agentsoz
         // Write out my beliefs
         for(Beliefname beliefname : Beliefname.values()) {
             String value = getBelief(beliefname.toString());
-            out("believes " + beliefname.name() + "=" + value + " #" + beliefname.getCommonName());
+            record("believes " + beliefname.name() + "=" + value + " #" + beliefname.getCommonName());
         }
 
         // Initialise behaviour attributes from initial beliefs
         initialiseBeliefs();
 
-        // perceive congestion and blockage events always
+        // register to perceive certain events
         EnvironmentAction action = new EnvironmentAction(
                 Integer.toString(getId()),
                 Constants.PERCEIVE,
-                new Object[] {Constants.BLOCKED, Constants.CONGESTION});
+                new Object[] {
+                        Constants.BLOCKED,
+                        Constants.CONGESTION,
+                        Constants.ARRIVED,
+                        Constants.DEPARTED,
+                        Constants.ACTIVITY_STARTED,
+                        Constants.ACTIVITY_ENDED});
         post(action);
         addActiveEnvironmentAction(action);
     }
@@ -653,6 +667,15 @@ public abstract class ArchetypeAgent extends Agent implements io.github.agentsoz
             case Constants.ARRIVED:
                 handleArrived(parameters);
                 break;
+            case Constants.DEPARTED:
+                handleDeparted(parameters);
+                break;
+            case Constants.ACTIVITY_STARTED:
+                handleActivityStarted(parameters);
+                break;
+            case Constants.ACTIVITY_ENDED:
+                handleActivityEnded(parameters);
+                break;
             case Constants.BLOCKED:
                 handleBlocked(parameters);
                 break;
@@ -725,6 +748,12 @@ public abstract class ArchetypeAgent extends Agent implements io.github.agentsoz
     void out(String msg) {
         if (writer != null) {
             writer.println(logPrefix() + msg);
+        }
+    }
+
+    void record(String msg) {
+        if (msg != null) {
+            out(msg + " @@");
         }
     }
 

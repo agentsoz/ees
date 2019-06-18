@@ -45,8 +45,8 @@ public class Constants {
     public static final String EMBERS_DATA = "embers_data";
     public static final String FIRE_ALERT = "fire_alert";
     public static final String FIRE_DATA  = "fire_data";
-    public static final String SIGHTED_EMBERS= "sighted_embers";
-    public static final String SIGHTED_FIRE= "sighted_fire";
+    public static final String SIGHTED_EMBERS= "embers";
+    public static final String SIGHTED_FIRE= "fire";
     public static final String TIME = io.github.agentsoz.util.PerceptList.TIME;
 
     // BDI Query Percept strings
