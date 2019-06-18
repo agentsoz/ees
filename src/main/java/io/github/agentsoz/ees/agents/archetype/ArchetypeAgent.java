@@ -53,8 +53,11 @@ import static org.matsim.core.utils.misc.Time.writeTime;
  *
  * author: dsingh
  */
-@AgentInfo(hasGoals={"io.github.agentsoz.ees.agents.bushfire.GoalDoNothing"})
-public abstract class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.Agent {
+@AgentInfo(hasGoals={
+        "io.github.agentsoz.abmjill.genact.EnvironmentAction",
+        "io.github.agentsoz.ees.agents.archetype.GotoLocationEvacuation"
+})
+public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.Agent {
 
 
     //===============================================================================

@@ -36,7 +36,7 @@
 	</module>
 
 	<module name="plans">
-		<param name="inputPlansFile" value="ce-1a-pop.xml" />
+		<param name="inputPlansFile" value="ar-1a-pop.xml" />
 	</module>
 
 	<module name="controler">

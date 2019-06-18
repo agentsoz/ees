@@ -46,16 +46,16 @@
       <opt id="jPlanSelectionPolicy">FIRST</opt>
       <opt id="jAgents"></opt>
       <opt id="jLogLevel">WARN</opt>
-      <opt id="jLogFile">test/output/io/github/agentsoz/ees/agents/archetype/ConsideredEvacuatorTest/testFire/jill.log</opt>
-      <opt id="jOutFile">test/output/io/github/agentsoz/ees/agents/archetype/ConsideredEvacuatorTest/testFire/jill.out</opt>
+      <opt id="jLogFile">test/output/io/github/agentsoz/ees/agents/archetype/ArchetypeAgentTest/testFire/archetype.log</opt>
+      <opt id="jOutFile">test/output/io/github/agentsoz/ees/agents/archetype/ArchetypeAgentTest/testFire/archetype.out</opt>
       <!--<opt id="jNumThreads">1</opt>-->
     </model>
 
     <model id="matsim">
       <!-- MATSim output directory relative to examples/bushfire directory (will overrule the setting in MATSim config) -->
-      <opt id="outputDir">test/output/io/github/agentsoz/ees/agents/archetype/ConsideredEvacuatorTest/testFire/matsim</opt>
+      <opt id="outputDir">test/output/io/github/agentsoz/ees/agents/archetype/ArchetypeAgentTest/testFire/matsim</opt>
       <!-- MATSim XML config XML file relative to examples/bushfire directory -->
-      <opt id="configXml">scenarios/grid/ce-1a-mat.xml</opt>
+      <opt id="configXml">scenarios/grid/ar-1a-mat.xml</opt>
       <!-- Maximum distance at which the fire can be seen (in metres)-->
       <opt id="maxDistanceForFireVisual">1000</opt>
       <!-- Maximum distance at which smoke can be seen (in metres)-->

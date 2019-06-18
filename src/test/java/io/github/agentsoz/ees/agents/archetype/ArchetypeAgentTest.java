@@ -35,22 +35,21 @@ import org.slf4j.LoggerFactory;
  * @author dsingh
  *
  */
-public class ConsideredEvacuatorTest {
+public class ArchetypeAgentTest {
 
     // have tests in separate classes so that they run, at least under maven, in separate JVMs.  kai, nov'17
 
-    private static final Logger log = LoggerFactory.getLogger(ConsideredEvacuatorTest.class);
+    private static final Logger log = LoggerFactory.getLogger(ArchetypeAgentTest.class);
 
     @Rule
     public MatsimTestUtils utils = new MatsimTestUtils();
 
     @Test
-    @Ignore
     public void testFire() {
 
         utils.getOutputDirectory(); // creates a clean one so need to call this first
         String[] args = {
-                "--config", "scenarios/grid/ce-1a-ees-fire.xml",
+                "--config", "scenarios/grid/ar-1a-ees-fire.xml",
         };
         Run.main(args);
 
