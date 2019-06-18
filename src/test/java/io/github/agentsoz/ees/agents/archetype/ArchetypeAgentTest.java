@@ -49,6 +49,16 @@ public class ArchetypeAgentTest {
     public void testFire() {
         matsimUtils.getOutputDirectory(); // creates a clean one so need to call this first
         Run.main(new String[] {"--config", "scenarios/grid/ar-1a-ees-fire.xml"});
+        //new TestUtils().compareLineByLine(
+        //        matsimUtils.getOutputDirectory() + "../archetype.out",
+        //        matsimUtils.getInputDirectory() + "archetype.out",
+        //        "@@$");
+    }
+
+    @Test
+    public void testSmoke() {
+        matsimUtils.getOutputDirectory(); // creates a clean one so need to call this first
+        Run.main(new String[] {"--config", "scenarios/grid/ar-1a-ees-smoke.xml"});
         new TestUtils().compareLineByLine(
                 matsimUtils.getOutputDirectory() + "../archetype.out",
                 matsimUtils.getInputDirectory() + "archetype.out",
