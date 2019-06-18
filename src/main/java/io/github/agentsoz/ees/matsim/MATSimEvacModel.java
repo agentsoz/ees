@@ -98,9 +98,9 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
     private static final String eFireAvoidanceBufferForEmergencyVehicles = "fireAvoidanceBufferForEmergencyVehicles";
     private static final String eRoutingAlgorithmType = "routingAlgorithmType";
 
-    ;
-
     public enum EvacuationRoutingAlgorithmType {MATSimDefault, ExampleRoutingAlgorithm}
+
+    MonitorPersonsInDangerZone monitorPersonsEnteringDangerZones;
 
     // Defaults
 
@@ -117,6 +117,8 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
         this.fireWriter = new Shape2XyWriter( matsimModel.getConfig(), "fire" ) ;
         this.emberWriter = new Shape2XyWriter( matsimModel.getConfig(), "ember" ) ;
         this.disruptionWriter = new DisruptionWriter( matsimModel.getConfig() ) ;
+        this.monitorPersonsEnteringDangerZones = new MonitorPersonsInDangerZone(getAgentManager());
+
         if (opts == null) {
             return;
         }
@@ -325,6 +327,7 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
 
         {
             Geometry buffer = data.buffer(optMaxDistanceForFireVisual);
+            monitorPersonsEnteringDangerZones.setFireZone(getLinksWithin(scenario, buffer));
             List<Id<Person>> personsMatched = getPersonsWithin(scenario, buffer);
             if (!personsMatched.isEmpty()) {
                 log.info("Fire seen at time {} by {} persons ... use DEBUG to see full list",
@@ -380,6 +383,24 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
         return personsWithin;
     }
 
+    /**
+     * Gets all links that have a fromNode within the given shape
+     * @param scenario
+     * @param shape
+     * @return
+     */
+    private Set<Id<Link>> getLinksWithin(Scenario scenario, Geometry shape) {
+        Set<Id<Link>> links = new HashSet<>();
+        for(Id<Link> linkId : scenario.getNetwork().getLinks().keySet()) {
+            final Link link = scenario.getNetwork().getLinks().get(linkId);
+            Point fromPoint = GeometryUtils.createGeotoolsPoint(link.getFromNode().getCoord());
+            if (shape.contains(fromPoint)) {
+                links.add(linkId);
+            }
+        }
+        return links;
+    }
+
 
     public void init(Object[] args) {
         String[] acts = Stream.of(Constants.EvacActivity.values()).map(Constants.EvacActivity::name).toArray(String[]::new);
@@ -399,6 +420,7 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
     }
 
     private void initialiseControllerForEvac(Controler controller) {
+        controller.getEvents().addHandler(monitorPersonsEnteringDangerZones);
         // infrastructure at QSim level (separating line not fully logical)
         controller.addOverridingQSimModule( new AbstractQSimModule() {
             @Override protected void configureQSim() {
