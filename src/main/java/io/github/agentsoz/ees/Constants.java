@@ -22,6 +22,8 @@ package io.github.agentsoz.ees;
  * #L%
  */
 
+import io.github.agentsoz.util.PerceptList;
+
 public class Constants {
     // Actions
     public static final String DRIVETO = io.github.agentsoz.util.ActionList.DRIVETO;
@@ -30,9 +32,12 @@ public class Constants {
 
     // Percepts
     public static final String ARRIVED = io.github.agentsoz.util.PerceptList.ARRIVED;
+    public static final String ACTIVITY_STARTED = PerceptList.ACTIVITY_STARTED;
+    public static final String ACTIVITY_ENDED = PerceptList.ACTIVITY_ENDED;
     public static final String BLOCKED = io.github.agentsoz.util.PerceptList.BLOCKED;
     public static final String BROADCAST = io.github.agentsoz.util.PerceptList.BROADCAST;
     public static final String CONGESTION = io.github.agentsoz.util.PerceptList.CONGESTION;
+    public static final String DEPARTED = PerceptList.DEPARTED;
     public static final String DISRUPTION = "disruption";
     public static final String EMERGENCY_MESSAGE = "emergency_message";
     public static final String FIELD_OF_VIEW = "field_of-view";
