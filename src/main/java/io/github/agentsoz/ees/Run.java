@@ -83,7 +83,7 @@ public class Run implements DataClient {
         .start(cfg, bdiMap);
     }
 
-    private void start(Config cfg, Map<String, List<String[]>> bdiMap) {
+    public void start(Config cfg, Map<String, List<String[]>> bdiMap) {
         parse(cfg.getModelConfig(""));
 
         // Get the BDI agent IDs from the  map
