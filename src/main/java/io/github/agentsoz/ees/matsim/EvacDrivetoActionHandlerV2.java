@@ -29,6 +29,7 @@ import io.github.agentsoz.bdimatsim.MATSimModel;
 import io.github.agentsoz.ees.Constants;
 import io.github.agentsoz.nonmatsim.BDIActionHandler;
 import io.github.agentsoz.nonmatsim.BDIPerceptHandler;
+import io.github.agentsoz.nonmatsim.EventData;
 import io.github.agentsoz.nonmatsim.PAAgent;
 import org.matsim.api.core.v01.Coord;
 import org.matsim.api.core.v01.Id;
@@ -134,24 +135,9 @@ public final class EvacDrivetoActionHandlerV2 implements BDIActionHandler {
 					WithinDayAgentUtils.getModifiablePlan(mobsimAgent),
 					rnewAct, newAct, routingMode);
 		}
-		// beyond is already non-matsim:
 
-		// Now register an event handler for when the agent arrives at the destination
-		PAAgent paAgent = model.getAgentManager().getAgent( agentID );
-		paAgent.getPerceptHandler().registerBDIPerceptHandler(paAgent.getAgentID(), MonitoredEventType.PersonArrivalEvent,
-				newLinkId.toString(), new BDIPerceptHandler() {
-					@Override
-					public boolean handle(Id<Person> agentId, Id<Link> linkId, MonitoredEventType monitoredEvent) {
-						PAAgent agent = model.getAgentManager().getAgent(agentId.toString());
-						Object[] params = {linkId.toString()};
-						ActionContent ac = new ActionContent(params, ActionContent.State.PASSED, Constants.DRIVETO);
-						model.getAgentManager().getAgentDataContainerV2().putAction(agent.getAgentID(), Constants.DRIVETO, ac);
-						PerceptContent pc = new PerceptContent(Constants.ARRIVED, params[0]);
-						model.getAgentManager().getAgentDataContainerV2().putPercept(agent.getAgentID(), Constants.ARRIVED, pc);
-						return true;
-					}
-				}
-		);
+		// Record that this agent is driving
+		model.getAgentsPerformingBdiDriveTo().put(agentID, newLinkId);
 
 		log.debug("------------------------------------------------------------------------------------------"); ;
 		return ActionContent.State.RUNNING;

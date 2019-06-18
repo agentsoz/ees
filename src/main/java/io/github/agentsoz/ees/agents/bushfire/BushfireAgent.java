@@ -241,13 +241,6 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
             // do something
         } else if (perceptID.equals(Constants.BLOCKED)) {
             replanCurrentDriveTo(Constants.EvacRoutingMode.carGlobalInformation);
-            // perceive congestion and blockage events always
-            EnvironmentAction action = new EnvironmentAction(
-                    Integer.toString(getId()),
-                    Constants.PERCEIVE,
-                    new Object[] {Constants.BLOCKED, Constants.CONGESTION});
-            post(action);
-            addActiveEnvironmentAction(action);
         }
 
         // handle percept spread on social network
@@ -441,14 +434,6 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
             return false;
         }
 
-        // perceive congestion and blockage events always
-        EnvironmentAction action = new EnvironmentAction(
-                Integer.toString(getId()),
-                Constants.PERCEIVE,
-                new Object[] {Constants.BLOCKED, Constants.CONGESTION});
-        post(action);
-        addActiveEnvironmentAction(action);
-
         Object[] params = new Object[4];
         params[0] = Constants.DRIVETO;
         params[1] = location.getCoordinates();
@@ -456,7 +441,7 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
         params[3] = routingMode;
         memorise(MemoryEventType.ACTIONED.name(), Constants.DRIVETO
                 + ":"+ location + ":" + String.format("%.0f", distToTravel) + "m away");
-        action = new EnvironmentAction(
+        EnvironmentAction action = new EnvironmentAction(
                 Integer.toString(getId()),
                 Constants.DRIVETO, params);
         addActiveEnvironmentAction(action); // will be reset by updateAction()

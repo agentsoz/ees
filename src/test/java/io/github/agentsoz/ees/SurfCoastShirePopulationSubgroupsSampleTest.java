@@ -46,6 +46,7 @@ public class SurfCoastShirePopulationSubgroupsSampleTest {
     public MatsimTestUtils utils = new MatsimTestUtils();
 
     @Test
+    @Ignore
     public void testSurfCoastShirePopulationSubgroupsSample() {
 
         utils.getOutputDirectory(); // creates a clean one so need to call this first
