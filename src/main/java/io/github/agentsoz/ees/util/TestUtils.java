@@ -22,6 +22,9 @@ package io.github.agentsoz.ees.util;
  * #L%
  */
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -36,18 +39,19 @@ import static junit.framework.TestCase.assertTrue;
 
 public class TestUtils {
 
+    private static final Logger log = LoggerFactory.getLogger(TestUtils.class);
 
     public void compareLineByLine(String actualFile, String expectedFile, String expression) {
         try {
             List<String> expectedLines = getMatchingLines(expectedFile, expression);
             List<String> actualLines = getMatchingLines(actualFile, expression);
+            log.info("\n===< comparing >===\n"
+                    + "expected: " + expectedFile + ", " + expectedLines.size() + " lines\n"
+                    + "actual  : " + actualFile + ", " + actualLines.size() + " lines");
             for (int i = 0; i < expectedLines.size(); i++) {
                 String expected = expectedLines.get(i);
                 if (i >= actualLines.size()) {
-                    String msg = "\nmatching lines:"
-                            + " expected:" + expectedLines.size()
-                            + " actual:" + actualLines.size() + "\n"
-                            + "diff:\n"
+                    String msg = "\ndiff:\n"
                             + "expected: " + expected + "\n"
                             + "actual  : <EOF>\n";
                     assertTrue(msg, false);
@@ -64,6 +68,8 @@ public class TestUtils {
             e.printStackTrace();
             assertTrue(e.getMessage(), false);
         }
+        log.info("\n===< ok >===");
+
     }
 
     private List<String> getMatchingLines(String file, String expression) throws IOException {
