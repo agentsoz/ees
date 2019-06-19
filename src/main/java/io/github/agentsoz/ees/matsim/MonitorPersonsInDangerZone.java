@@ -54,6 +54,10 @@ public class MonitorPersonsInDangerZone implements LinkEnterEventHandler {
         linksInFireBuffer = linksWithin;
     }
 
+    public void setEmbersZone(Set<Id<Link>> linksWithin) {
+        linksInEmbersBuffer = linksWithin;
+    }
+
     @Override
     public void handleEvent(LinkEnterEvent linkEnterEvent) {
         PAAgent agent = agentManager.getAgent(linkEnterEvent.getVehicleId().toString());
