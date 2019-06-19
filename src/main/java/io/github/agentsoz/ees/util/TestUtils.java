@@ -45,6 +45,8 @@ public class TestUtils {
         try {
             List<String> expectedLines = getMatchingLines(expectedFile, expression);
             List<String> actualLines = getMatchingLines(actualFile, expression);
+            java.util.Collections.sort(expectedLines);
+            java.util.Collections.sort(actualLines);
             log.info("\n===< comparing >===\n"
                     + "expected: " + expectedFile + ", " + expectedLines.size() + " lines\n"
                     + "actual  : " + actualFile + ", " + actualLines.size() + " lines");
