@@ -214,26 +214,40 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
 
     private void evaluateSituation() {
         try {
-            String val = getBelief(State.willEvaluateFullSituationAtFutureTime.name());
-            double reactTime = parseTime(val);
+            // get values of anxiety and the thresholds
+            double anxiety = Double.valueOf(getBelief(State.anxietyFromSituation.name()))
+                    + Double.valueOf(getBelief(State.anxietyFromEmergencyMessages.name()))
+                    + Double.valueOf(getBelief(State.anxietyFromSocialMessages.name()));
+            double initialResponseThreshold = Double.valueOf(getBelief(Beliefname.ResponseThresholdInitial.name()));
+            double finalResponseThreshold = Double.valueOf(getBelief(Beliefname.ResponseThresholdInitial.name()));
+
+            // and whether we already know if the thresholds are reached
+            boolean initialThresholdReached = Boolean.valueOf(getBelief(State.responseThresholdInitialReached.name()));
+            boolean finalThresholdReached = Boolean.valueOf(getBelief(State.responseThresholdFinalReached.name()));
+            String evaluteAtTime = getBelief(State.willEvaluateFullSituationAtFutureTime.name());
+
+            // if either threshold was just reached, then re-evaluate the situation after some time lag
+            if (evaluteAtTime == null && (
+                    (!initialThresholdReached && (anxiety >= initialResponseThreshold)) ||
+                    (!finalThresholdReached &&  (anxiety >= finalResponseThreshold))
+            )) {
+                double futureTime = getTime() + Global.getRandom().nextInt(reactionTimeInSecs);
+                believe(State.willEvaluateFullSituationAtFutureTime.name(), writeTime(futureTime));
+            }
+
+            // if the time lag has passed then react now
+            double reactTime = parseTime(evaluteAtTime);
             if (reactTime >= 0 && reactTime <= getTime()) {
-                // check if either threshold was reached
-                double anxiety = Double.valueOf(getBelief(State.anxietyFromSituation.name()))
-                        + Double.valueOf(getBelief(State.anxietyFromEmergencyMessages.name()))
-                        + Double.valueOf(getBelief(State.anxietyFromSocialMessages.name()));
-                double initialResponseThreshold = Double.valueOf(getBelief(Beliefname.ResponseThresholdInitial.name()));
-                double finalResponseThreshold = Double.valueOf(getBelief(Beliefname.ResponseThresholdInitial.name()));
-                boolean initialThresholdReached = anxiety >= initialResponseThreshold;
-                boolean finalThresholdReached = anxiety >= finalResponseThreshold;
-                // if threshold was reached then act now, else re-evaluate later
-                if (initialThresholdReached || finalThresholdReached) {
+                if (!initialThresholdReached && (anxiety >= initialResponseThreshold)) {
+                    initialThresholdReached = true;
                     believe(State.responseThresholdInitialReached.name(), Boolean.toString(initialThresholdReached));
-                    believe(State.responseThresholdFinalReached.name(), Boolean.toString(finalThresholdReached));
                     believe(State.willEvaluateFullSituationAtFutureTime.name(), null);
                     post(new GotoLocationEvacuation(GotoLocationEvacuation.class.getSimpleName()));
-                } else {
-                    double futureTime = getTime() + Global.getRandom().nextInt(reactionTimeInSecs);
-                    believe(State.willEvaluateFullSituationAtFutureTime.name(), writeTime(futureTime));
+                }
+                if (!finalThresholdReached && (anxiety >= finalResponseThreshold)) {
+                    finalThresholdReached = true;
+                    believe(State.responseThresholdFinalReached.name(), Boolean.toString(finalThresholdReached));
+                    believe(State.willEvaluateFullSituationAtFutureTime.name(), null);
                 }
             }
         } catch (Exception e) {}
@@ -294,16 +308,12 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
             double barometer = Double.valueOf(getBelief(State.anxietyFromSituation.name()));
             believe(State.anxietyFromSituation.name(), Double.toString(barometer+effect));
             believe(State.futureValueOfVisibleEmbers.name(), "0.0");
-            double futureTime = getTime() + Global.getRandom().nextInt(reactionTimeInSecs);
-            believe(State.willEvaluateFullSituationAtFutureTime.name(), writeTime(futureTime));
 
         } else if (Constants.SIGHTED_FIRE.equalsIgnoreCase(view.toString())) {
             double effect = Double.valueOf(getBelief(State.futureValueOfVisibleFire.name()));
             double barometer = Double.valueOf(getBelief(State.anxietyFromSituation.name()));
             believe(State.anxietyFromSituation.name(), Double.toString(barometer+effect));
             believe(State.futureValueOfVisibleFire.name(), "0.0");
-            double futureTime = getTime() + Global.getRandom().nextInt(reactionTimeInSecs);
-            believe(State.willEvaluateFullSituationAtFutureTime.name(), writeTime(futureTime));
         } else {
             logger.error("{} ignoring field of view percept: {}", logPrefix(), view);
             return;

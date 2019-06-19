@@ -60,20 +60,36 @@ Time  01:07:10 ArchetypeAgent 0    : stopped driving @@
 Time  01:07:10 ArchetypeAgent 0    : started activity work @@
 Time  01:10:00 ArchetypeAgent 0    : started driving to home @@
 Time  01:10:00 ArchetypeAgent 0    : finished activity work @@
-Time  01:12:01 ArchetypeAgent 0    : saw embers @@
-Time  01:12:01 ArchetypeAgent 0    : believes anxietyFromSituation=0.5 @@
-Time  01:12:01 ArchetypeAgent 0    : believes futureValueOfVisibleEmbers=0.0 @@
-Time  01:12:01 ArchetypeAgent 0    : believes willEvaluateFullSituationAtFutureTime=01:12:32 @@
-Time  01:12:32 ArchetypeAgent 0    : believes responseThresholdInitialReached=true @@
-Time  01:12:32 ArchetypeAgent 0    : believes responseThresholdFinalReached=true @@
-Time  01:12:32 ArchetypeAgent 0    : believes willEvaluateFullSituationAtFutureTime=null @@
-Time  01:12:32 ArchetypeAgent 0    : thinks GotoLocationEvacuation~>GotoLocationEvacuationPlan is applicable
-Time  01:12:32 ArchetypeAgent 0    : will start driving to (FarFarAway, coords=5000.0,0.0) 6000m away #GotoLocationEvacuation~>GotoLocationEvacuationPlan
-Time  01:12:32 ArchetypeAgent 0    : believes isDriving=true @@
+Time  01:12:13 ArchetypeAgent 0    : saw embers @@
+Time  01:12:13 ArchetypeAgent 0    : believes anxietyFromSituation=0.5 @@
+Time  01:12:13 ArchetypeAgent 0    : believes futureValueOfVisibleEmbers=0.0 @@
+Time  01:12:14 ArchetypeAgent 0    : believes willEvaluateFullSituationAtFutureTime=01:12:45 @@
+Time  01:12:45 ArchetypeAgent 0    : believes responseThresholdInitialReached=true @@
+Time  01:12:45 ArchetypeAgent 0    : believes willEvaluateFullSituationAtFutureTime=null @@
+Time  01:12:45 ArchetypeAgent 0    : believes responseThresholdFinalReached=true @@
+Time  01:12:45 ArchetypeAgent 0    : believes willEvaluateFullSituationAtFutureTime=null @@
+Time  01:12:45 ArchetypeAgent 0    : thinks GotoLocationEvacuation~>GotoLocationEvacuationPlan is applicable
+Time  01:12:45 ArchetypeAgent 0    : will start driving to (FarFarAway, coords=5000.0,0.0) 6000m away #GotoLocationEvacuation~>GotoLocationEvacuationPlan
+Time  01:12:45 ArchetypeAgent 0    : believes isDriving=true @@
 Time  01:12:58 ArchetypeAgent 0    : stopped driving @@
 Time  01:12:58 ArchetypeAgent 0    : started driving to EvacPlace @@
 Time  01:12:58 ArchetypeAgent 0    : started activity Replan @@
 Time  01:12:58 ArchetypeAgent 0    : finished activity Replan @@
+Time  01:13:00 ArchetypeAgent 0    : saw embers @@
+Time  01:13:00 ArchetypeAgent 0    : believes anxietyFromSituation=0.5 @@
+Time  01:13:00 ArchetypeAgent 0    : believes futureValueOfVisibleEmbers=0.0 @@
+Time  01:13:46 ArchetypeAgent 0    : saw embers @@
+Time  01:13:46 ArchetypeAgent 0    : believes anxietyFromSituation=0.5 @@
+Time  01:13:46 ArchetypeAgent 0    : believes futureValueOfVisibleEmbers=0.0 @@
+Time  01:14:46 ArchetypeAgent 0    : saw embers @@
+Time  01:14:46 ArchetypeAgent 0    : believes anxietyFromSituation=0.5 @@
+Time  01:14:46 ArchetypeAgent 0    : believes futureValueOfVisibleEmbers=0.0 @@
+Time  01:15:46 ArchetypeAgent 0    : saw embers @@
+Time  01:15:46 ArchetypeAgent 0    : believes anxietyFromSituation=0.5 @@
+Time  01:15:46 ArchetypeAgent 0    : believes futureValueOfVisibleEmbers=0.0 @@
+Time  01:16:46 ArchetypeAgent 0    : saw embers @@
+Time  01:16:46 ArchetypeAgent 0    : believes anxietyFromSituation=0.5 @@
+Time  01:16:46 ArchetypeAgent 0    : believes futureValueOfVisibleEmbers=0.0 @@
 Time  01:20:57 ArchetypeAgent 0    : stopped driving @@
 Time  01:20:57 ArchetypeAgent 0    : started activity EvacPlace @@
 Time  01:20:57 ArchetypeAgent 0    : finished driving to (FarFarAway, coords=5000.0,0.0) 0m away after 1 tries #GotoLocationEvacuation~>GotoLocationEvacuationPlan

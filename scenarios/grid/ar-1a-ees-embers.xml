@@ -59,7 +59,7 @@
       <!-- Maximum distance at which the fire can be seen (in metres)-->
       <opt id="maxDistanceForFireVisual">0</opt>
       <!-- Maximum distance at which smoke can be seen (in metres)-->
-      <opt id="maxDistanceForSmokeVisual">3000</opt>
+      <opt id="maxDistanceForSmokeVisual">1500</opt>
       <!-- Fire avoidance buffer used for planning routes for regular vehicles (in metres)-->
       <opt id="fireAvoidanceBufferForVehicles">2000</opt>
       <!-- Fire avoidance buffer used for planning routes for emergency vehicles (in metres)-->
