@@ -66,7 +66,7 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
 
     private final Logger logger = LoggerFactory.getLogger(ArchetypeAgent.class);
 
-    private final int reactionTimeInSecs = 1;
+    private final int reactionTimeInSecs = 30;
 
     enum State {
         anxietyFromSituation,
@@ -88,7 +88,6 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
         //
         responseThresholdInitialReached,
         responseThresholdFinalReached,
-        willEvaluateFullSituationAtFutureTime,
     }
     
     enum Beliefname {
@@ -198,13 +197,14 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
     }
 
     Goal prepareDrivingGoal(Constants.EvacActivity activity, Location location, Constants.EvacRoutingMode routingMode) {
-        Object[] params = new Object[6];
+        Object[] params = new Object[7];
         params[0] = Constants.DRIVETO;
         params[1] = location.getCoordinates();
         params[2] = getTime() + 5.0; // five secs from now;
         params[3] = routingMode;
         params[4] = activity.toString();
-        params[5] = true; // add zero-time replan activity to mark location/time of replanning
+        params[5] = true; // add replan activity to mark location/time of replanning
+        params[6] = Global.getRandom().nextInt(reactionTimeInSecs);
         EnvironmentAction action = new EnvironmentAction(
                 Integer.toString(getId()),
                 Constants.DRIVETO, params);
@@ -224,31 +224,19 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
             // and whether we already know if the thresholds are reached
             boolean initialThresholdReached = Boolean.valueOf(getBelief(State.responseThresholdInitialReached.name()));
             boolean finalThresholdReached = Boolean.valueOf(getBelief(State.responseThresholdFinalReached.name()));
-            String evaluteAtTime = getBelief(State.willEvaluateFullSituationAtFutureTime.name());
 
-            // if either threshold was just reached, then re-evaluate the situation after some time lag
-            if (evaluteAtTime == null && (
-                    (!initialThresholdReached && (anxiety >= initialResponseThreshold)) ||
-                    (!finalThresholdReached &&  (anxiety >= finalResponseThreshold))
-            )) {
-                double futureTime = getTime() + Global.getRandom().nextInt(reactionTimeInSecs);
-                believe(State.willEvaluateFullSituationAtFutureTime.name(), writeTime(futureTime));
-                evaluteAtTime = getBelief(State.willEvaluateFullSituationAtFutureTime.name());
-            }
-
-            // if the time lag has passed then react now
-            double reactTime = parseTime(evaluteAtTime);
-            if (reactTime >= 0 && reactTime <= getTime()) {
+            // if either threshold was just reached, then react now
+            if ((!initialThresholdReached && (anxiety >= initialResponseThreshold)) ||
+                    (!finalThresholdReached &&  (anxiety >= finalResponseThreshold)))
+            {
                 if (!initialThresholdReached && (anxiety >= initialResponseThreshold)) {
                     initialThresholdReached = true;
                     believe(State.responseThresholdInitialReached.name(), Boolean.toString(initialThresholdReached));
-                    believe(State.willEvaluateFullSituationAtFutureTime.name(), null);
                     post(new GotoLocationEvacuation(GotoLocationEvacuation.class.getSimpleName()));
                 }
                 if (!finalThresholdReached && (anxiety >= finalResponseThreshold)) {
                     finalThresholdReached = true;
                     believe(State.responseThresholdFinalReached.name(), Boolean.toString(finalThresholdReached));
-                    believe(State.willEvaluateFullSituationAtFutureTime.name(), null);
                 }
             }
         } catch (Exception e) {}
@@ -491,7 +479,6 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
         believe(State.futureValueOfVisibleFire.name(), getBelief(Beliefname.ImpactFromVisibleFire.name()));
         believe(State.futureValueOfVisibleSmoke.name(), getBelief(Beliefname.ImpactFromVisibleSmoke.name()));
         //
-        believe(State.willEvaluateFullSituationAtFutureTime.name(), null);
         believe(State.responseThresholdInitialReached.name(), null);
         believe(State.responseThresholdFinalReached.name(), null);
 

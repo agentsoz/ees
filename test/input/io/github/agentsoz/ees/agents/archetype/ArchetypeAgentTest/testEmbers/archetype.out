@@ -51,7 +51,6 @@ Time -00:00:01 ArchetypeAgent 0    : believes futureValueOfVisibleEmbers=0.5 @@
 Time -00:00:01 ArchetypeAgent 0    : believes futureValueOfVisibleResponders=0.4 @@
 Time -00:00:01 ArchetypeAgent 0    : believes futureValueOfVisibleFire=0.6 @@
 Time -00:00:01 ArchetypeAgent 0    : believes futureValueOfVisibleSmoke=0.3 @@
-Time -00:00:01 ArchetypeAgent 0    : believes willEvaluateFullSituationAtFutureTime=null @@
 Time -00:00:01 ArchetypeAgent 0    : believes responseThresholdInitialReached=null @@
 Time -00:00:01 ArchetypeAgent 0    : believes responseThresholdFinalReached=null @@
 Time  01:00:00 ArchetypeAgent 0    : started driving to work @@
@@ -63,11 +62,8 @@ Time  01:10:00 ArchetypeAgent 0    : finished activity work @@
 Time  01:12:13 ArchetypeAgent 0    : saw embers @@
 Time  01:12:13 ArchetypeAgent 0    : believes anxietyFromSituation=0.5 @@
 Time  01:12:13 ArchetypeAgent 0    : believes futureValueOfVisibleEmbers=0.0 @@
-Time  01:12:13 ArchetypeAgent 0    : believes willEvaluateFullSituationAtFutureTime=01:12:13 @@
 Time  01:12:13 ArchetypeAgent 0    : believes responseThresholdInitialReached=true @@
-Time  01:12:13 ArchetypeAgent 0    : believes willEvaluateFullSituationAtFutureTime=null @@
 Time  01:12:13 ArchetypeAgent 0    : believes responseThresholdFinalReached=true @@
-Time  01:12:13 ArchetypeAgent 0    : believes willEvaluateFullSituationAtFutureTime=null @@
 Time  01:12:13 ArchetypeAgent 0    : thinks GotoLocationEvacuation~>GotoLocationEvacuationPlan is applicable
 Time  01:12:13 ArchetypeAgent 0    : will start driving to (FarFarAway, coords=5000.0,0.0) 6000m away #GotoLocationEvacuation~>GotoLocationEvacuationPlan
 Time  01:12:13 ArchetypeAgent 0    : believes isDriving=true @@

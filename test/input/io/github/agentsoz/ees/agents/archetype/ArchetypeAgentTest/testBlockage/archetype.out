@@ -51,7 +51,6 @@ Time -00:00:01 ArchetypeAgent 0    : believes futureValueOfVisibleEmbers=0.5 @@
 Time -00:00:01 ArchetypeAgent 0    : believes futureValueOfVisibleResponders=0.4 @@
 Time -00:00:01 ArchetypeAgent 0    : believes futureValueOfVisibleFire=0.6 @@
 Time -00:00:01 ArchetypeAgent 0    : believes futureValueOfVisibleSmoke=0.3 @@
-Time -00:00:01 ArchetypeAgent 0    : believes willEvaluateFullSituationAtFutureTime=null @@
 Time -00:00:01 ArchetypeAgent 0    : believes responseThresholdInitialReached=null @@
 Time -00:00:01 ArchetypeAgent 0    : believes responseThresholdFinalReached=null @@
 Time  01:00:00 ArchetypeAgent 0    : started driving to work @@

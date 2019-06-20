@@ -31,6 +31,7 @@ import io.github.agentsoz.nonmatsim.BDIActionHandler;
 import io.github.agentsoz.nonmatsim.BDIPerceptHandler;
 import io.github.agentsoz.nonmatsim.EventData;
 import io.github.agentsoz.nonmatsim.PAAgent;
+import io.github.agentsoz.util.Global;
 import org.matsim.api.core.v01.Coord;
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.network.Link;
@@ -109,16 +110,17 @@ public final class EvacDrivetoActionHandlerV2 implements BDIActionHandler {
 		model.getReplanner().editPlans().flushEverythingBeyondCurrent(mobsimAgent) ;
 		printPlan("after flush: " , mobsimAgent) ;
 
-		boolean addZeroTimeReplanActivity = (args.length >=  6 && args[5] instanceof Boolean) ? true : false;
+		boolean addReplanActivity = (args.length >=  6 && args[5] instanceof Boolean) ? true : false;
+		int replanTime = (args.length >=  7 && args[6] instanceof Integer) ? (int)args[6] : 0;
 
 		// add small replan activity so we know where/when the replanning occurred
 		Activity rnewAct = null;
-		if (addZeroTimeReplanActivity) {
+		if (addReplanActivity) {
 			String ractivity = "Replan";
 			final Link link = model.getScenario().getNetwork().getLinks().get( mobsimAgent.getCurrentLinkId() );
 			rnewAct = model.getReplanner().editPlans().createFinalActivity(ractivity, link.getId());
 			rnewAct.setStartTime(model.getTime());
-			rnewAct.setEndTime(model.getTime());
+			rnewAct.setEndTime(model.getTime() + replanTime);
 			model.getReplanner().editPlans().addActivityAtEnd(mobsimAgent, rnewAct, routingMode);
 			printPlan("after adding act: ", mobsimAgent);
 		}
@@ -130,7 +132,7 @@ public final class EvacDrivetoActionHandlerV2 implements BDIActionHandler {
 		printPlan("after adding act: " , mobsimAgent ) ;
 
 		// add an empty leg between the replan and evac activities
-		if (addZeroTimeReplanActivity) {
+		if (addReplanActivity) {
 			model.getReplanner().editTrips().insertEmptyTrip(
 					WithinDayAgentUtils.getModifiablePlan(mobsimAgent),
 					rnewAct, newAct, routingMode);
