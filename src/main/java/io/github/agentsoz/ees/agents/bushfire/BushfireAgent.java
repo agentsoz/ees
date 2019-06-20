@@ -193,11 +193,18 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
         } catch (BeliefBaseException e) {
             throw new RuntimeException(e);
         }
+        registerPercepts(new String[] {Constants.BLOCKED, Constants.CONGESTION});
+    }
+
+    protected void registerPercepts(String[] percepts) {
+        if (percepts == null || percepts.length == 0) {
+            return;
+        }
         // perceive congestion and blockage events always
         EnvironmentAction action = new EnvironmentAction(
                 Integer.toString(getId()),
                 Constants.PERCEIVE,
-                new Object[] {Constants.BLOCKED, Constants.CONGESTION});
+                percepts);
         post(action);
         addActiveEnvironmentAction(action);
     }
@@ -449,7 +456,7 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
         return true;
     }
 
-    boolean replanCurrentDriveTo(Constants.EvacRoutingMode routingMode) {
+    protected boolean replanCurrentDriveTo(Constants.EvacRoutingMode routingMode) {
         memorise(MemoryEventType.ACTIONED.name(), Constants.REPLAN_CURRENT_DRIVETO);
         EnvironmentAction action = new EnvironmentAction(
                 Integer.toString(getId()),
