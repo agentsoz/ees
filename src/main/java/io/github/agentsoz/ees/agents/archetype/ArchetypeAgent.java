@@ -66,7 +66,7 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
 
     private final Logger logger = LoggerFactory.getLogger(ArchetypeAgent.class);
 
-    private final int reactionTimeInSecs = 60;
+    private final int reactionTimeInSecs = 1;
 
     enum State {
         anxietyFromSituation,
@@ -233,6 +233,7 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
             )) {
                 double futureTime = getTime() + Global.getRandom().nextInt(reactionTimeInSecs);
                 believe(State.willEvaluateFullSituationAtFutureTime.name(), writeTime(futureTime));
+                evaluteAtTime = getBelief(State.willEvaluateFullSituationAtFutureTime.name());
             }
 
             // if the time lag has passed then react now
@@ -270,7 +271,6 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
     private void handleTime(Object parameters) {
         if (parameters instanceof Double) {
             setTime((double) parameters);
-            evaluateSituation();
         }
     }
 
@@ -714,6 +714,9 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
                 logger.warn("{} received unknown percept '{}'", logPrefix(), perceptID);
 
         }
+
+        // evaluate the situation always
+        evaluateSituation();
     }
 
     /**

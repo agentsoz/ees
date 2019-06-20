@@ -59,14 +59,14 @@ Time  01:00:00 ArchetypeAgent 0    : finished activity home @@
 Time  01:02:25 ArchetypeAgent 0    : saw fire @@
 Time  01:02:25 ArchetypeAgent 0    : believes anxietyFromSituation=0.6 @@
 Time  01:02:25 ArchetypeAgent 0    : believes futureValueOfVisibleFire=0.0 @@
-Time  01:02:26 ArchetypeAgent 0    : believes willEvaluateFullSituationAtFutureTime=01:02:57 @@
-Time  01:02:57 ArchetypeAgent 0    : believes responseThresholdInitialReached=true @@
-Time  01:02:57 ArchetypeAgent 0    : believes willEvaluateFullSituationAtFutureTime=null @@
-Time  01:02:57 ArchetypeAgent 0    : believes responseThresholdFinalReached=true @@
-Time  01:02:57 ArchetypeAgent 0    : believes willEvaluateFullSituationAtFutureTime=null @@
-Time  01:02:57 ArchetypeAgent 0    : thinks GotoLocationEvacuation~>GotoLocationEvacuationPlan is applicable
-Time  01:02:57 ArchetypeAgent 0    : will start driving to (FarFarAway, coords=5000.0,0.0) 7000m away #GotoLocationEvacuation~>GotoLocationEvacuationPlan
-Time  01:02:57 ArchetypeAgent 0    : believes isDriving=true @@
+Time  01:02:25 ArchetypeAgent 0    : believes willEvaluateFullSituationAtFutureTime=01:02:25 @@
+Time  01:02:25 ArchetypeAgent 0    : believes responseThresholdInitialReached=true @@
+Time  01:02:25 ArchetypeAgent 0    : believes willEvaluateFullSituationAtFutureTime=null @@
+Time  01:02:25 ArchetypeAgent 0    : believes responseThresholdFinalReached=true @@
+Time  01:02:25 ArchetypeAgent 0    : believes willEvaluateFullSituationAtFutureTime=null @@
+Time  01:02:25 ArchetypeAgent 0    : thinks GotoLocationEvacuation~>GotoLocationEvacuationPlan is applicable
+Time  01:02:25 ArchetypeAgent 0    : will start driving to (FarFarAway, coords=5000.0,0.0) 7000m away #GotoLocationEvacuation~>GotoLocationEvacuationPlan
+Time  01:02:25 ArchetypeAgent 0    : believes isDriving=true @@
 Time  01:03:00 ArchetypeAgent 0    : stopped driving @@
 Time  01:03:00 ArchetypeAgent 0    : started driving to EvacPlace @@
 Time  01:03:00 ArchetypeAgent 0    : started activity Replan @@
