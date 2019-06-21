@@ -52,7 +52,8 @@ public class ArchetypeAgentTest {
         new TestUtils().compareLineByLine(
                 matsimUtils.getOutputDirectory() + "../archetype.out",
                 matsimUtils.getInputDirectory() + "archetype.out",
-                "@@$");
+                "@@$",
+                1);
     }
 
     @Test
@@ -62,7 +63,8 @@ public class ArchetypeAgentTest {
         new TestUtils().compareLineByLine(
                 matsimUtils.getOutputDirectory() + "../archetype.out",
                 matsimUtils.getInputDirectory() + "archetype.out",
-                "@@$");
+                "@@$",
+                1);
     }
 
     @Test
@@ -72,7 +74,8 @@ public class ArchetypeAgentTest {
         new TestUtils().compareLineByLine(
                 matsimUtils.getOutputDirectory() + "../archetype.out",
                 matsimUtils.getInputDirectory() + "archetype.out",
-                "@@$");
+                "@@$",
+                1);
     }
 }
 

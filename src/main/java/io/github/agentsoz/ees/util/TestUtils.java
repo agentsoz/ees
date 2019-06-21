@@ -36,12 +36,13 @@ import java.util.regex.Pattern;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
+import static org.matsim.core.utils.misc.Time.parseTime;
 
 public class TestUtils {
 
     private static final Logger log = LoggerFactory.getLogger(TestUtils.class);
 
-    public void compareLineByLine(String actualFile, String expectedFile, String expression) {
+    public void compareLineByLine(String actualFile, String expectedFile, String expression, int slack) {
         try {
             List<String> expectedLines = getMatchingLines(expectedFile, expression);
             List<String> actualLines = getMatchingLines(actualFile, expression);
@@ -60,10 +61,25 @@ public class TestUtils {
                 }
                 String actual = actualLines.get(i);
                 if (!actual.equals(expected)) {
-                    String msg = "\ndiff:\n"
-                            + "expected: " + expected + "\n"
-                            + "actual  : " + actual + "\n";
-                    assertTrue(msg, false);
+                    boolean isDifferent = true;
+                    String[] exp = expected.split("\\|",2);
+                    String[] act = actual.split("\\|",2);
+                    // check if all but the first column (time) is the same
+                    if (exp[1].equals(act[1])) {
+                        // if so, and the time difference is within slack then accept
+                        double expTime = parseTime(exp[0]);
+                        double actTime = parseTime(act[0]);
+                        if ((actTime+slack<=expTime) || (actTime-slack>=expTime)) {
+                            isDifferent = false;
+                        }
+
+                    }
+                    if (isDifferent) {
+                        String msg = "\ndiff:\n"
+                                + "expected: " + expected + "\n"
+                                + "actual  : " + actual + "\n";
+                        assertTrue(msg, false);
+                    }
                 }
             }
         } catch (IOException e) {
