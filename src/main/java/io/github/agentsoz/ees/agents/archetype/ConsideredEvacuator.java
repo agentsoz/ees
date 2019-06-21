@@ -39,7 +39,7 @@ public class ConsideredEvacuator extends ArchetypeAgent {
 
     class Prefix{
         public String toString() {
-            return String.format("Time %9s %s %-4s : ", getTimeString(), ConsideredEvacuator.class.getSimpleName(), getId());
+            return String.format("%8s|%s|%-5s|", getTimeString(), ConsideredEvacuator.class.getSimpleName(), getId());
         }
     }
 

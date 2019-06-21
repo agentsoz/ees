@@ -38,7 +38,7 @@ public class ExperiencedIndependent extends ArchetypeAgent {
 
     class Prefix{
         public String toString() {
-            return String.format("Time %05.0f ExperiencedIndependent %-9s : ", getTime(), getId());
+            return String.format("%8s|%s|%-5s|", getTimeString(), ExperiencedIndependent.class.getSimpleName(), getId());
         }
     }
 
