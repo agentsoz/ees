@@ -289,7 +289,13 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
     }
 
     private void handleCongestion(Object parameters) {
-        record("is in congestion");
+        record("is in congestion and will replan");
+        EnvironmentAction action = new EnvironmentAction(
+                Integer.toString(getId()),
+                Constants.REPLAN_CURRENT_DRIVETO,
+                new Object[] {Constants.EvacRoutingMode.carGlobalInformation});
+        addActiveEnvironmentAction(action); // will be reset by updateAction()
+        post(action);
     }
 
     private void handleFieldOfView(Object view) {
