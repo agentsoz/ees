@@ -45,6 +45,8 @@ df[candidates,]$HasDependentsAtLocation<-locs
 filter<-df$BDIAgentType!="io.github.agentsoz.ees.agents.archetype.DependentEvacuator"
 df<-df[filter,]
 
+df<-df[order(df$BDIAgentType),]
+
 # Write out the table
 con <- gzfile('./population-archetypes.csv.gz')
 write.csv(df, con, row.names=FALSE, quote=TRUE)
