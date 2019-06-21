@@ -177,7 +177,8 @@ public class SimpleConfig {
 	}
 
 	/**
-	 * Pick one of the listed evac points
+	 * Pick one of the listed evac points randomly
+	 * @return evac location
 	 */
 	public static Location getRandomEvacLocation() {
 	  Location[] locs = locations.values().toArray(new Location[0]);

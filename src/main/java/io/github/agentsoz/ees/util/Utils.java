@@ -116,8 +116,8 @@ public final class Utils {
 	/**
 	 * Deprecated. Use {@link #getAgentsFromMATSimPlansFile} instead.
 	 * Example usage is in {@code examples/bushfire/scenarios/mount-alexander-shire/maldon-100-with-emergency-vehicles}
-	 * @param scenario
-	 * @return
+	 * @param scenario the MATSim scenario
+	 * @return the list of BDI agents' IDs
 	 */
 	@Deprecated
     public static List<String> getBDIAgentIDs( Scenario scenario ) {
@@ -238,31 +238,6 @@ public final class Utils {
 
 	}
 	
-	/*
-	static void parseAdditionalArguments(String[] args, Config config) {
-		for (int i = 1; i < args.length; i++) {
-			switch (args[i]) {
-				case MATSimEvacModel.MATSIM_OUTPUT_DIRECTORY_CONFIG_INDICATOR:
-					if (i + 1 < args.length) {
-						i++;
-						log.info("setting matsim output directory to " + args[i] );
-						config.controler().setOutputDirectory( args[i] );
-					}
-					break;
-				case MATSimEvacModel.eGlobalStartHhMm:
-					if (i + 1 < args.length) {
-						i++;
-						double secs = MATSimEvacModel.convertTimeToSeconds(args[i].replace(":", ""));
-						config.qsim().setStartTime( (secs) > 3600 ? secs-3600 : secs  );
-						log.info("setting matsim start time to " + args[i]);
-					}
-						break;
-				default:
-							throw new RuntimeException("unknown config option") ;
-					}
-		}
-	}
-	*/
 	public static void penaltyMethod2(Geometry fire, Geometry buffer, double bufferWidth,
 									  Map<Id<Link>, Double> penaltyFactorsOfLinks, Scenario scenario) {
 		// Starting thoughts:

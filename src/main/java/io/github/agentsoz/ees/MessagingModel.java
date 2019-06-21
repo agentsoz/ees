@@ -201,6 +201,7 @@ public class MessagingModel implements DataSource<SortedMap<Double, EmergencyMes
 
 	/**
 	 * Start publishing messages data
+	 * @param hhmm an array of size 2 with hour and minutes representing start time
 	 */
 	public void start(int[] hhmm) {
 		if (messages.isEmpty()) {

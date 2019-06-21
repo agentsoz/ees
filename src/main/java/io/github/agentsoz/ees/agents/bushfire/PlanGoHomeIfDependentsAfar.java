@@ -45,8 +45,8 @@ public class PlanGoHomeIfDependentsAfar extends Plan {
 	}
 
 	/**
-     * Returns true if distance to dependents is less than distance to home
-	 * @return
+     * Applies if distance to dependents is less than distance to home
+	 * @return true if distance to dependents is less than distance to home
      */
 	public boolean context() {
 		boolean applicable = false;

@@ -166,7 +166,7 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
      * Constructor.
      * Use {@link #start(PrintStream, String[])} instead
      * to perform any agent specific initialisation.
-     * @param name
+     * @param name name of this agent
      */
     public ArchetypeAgent(String name) {
         super(name);

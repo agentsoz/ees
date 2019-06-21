@@ -209,7 +209,11 @@ public class Run implements DataClient {
         }
     }
 
-
+    /**
+     * Convert HHMM string to seconds
+     * @param HHMM time in HHMM format
+     * @return time in seconds
+     */
     private static double hhMmToS(String HHMM) {
         String[] tokens = HHMM.split(":");
         int[] hhmm = new int[]{Integer.parseInt(tokens[0]),Integer.parseInt(tokens[1])};
@@ -220,8 +224,8 @@ public class Run implements DataClient {
 
     /**
      * Allows models to be overriden; interim solution for #37
-     * @param model
-     * @return
+     * @param model the model to override with
+     * @return the run object
      */
     public Run withModel(Object model) {
         if (model != null) {

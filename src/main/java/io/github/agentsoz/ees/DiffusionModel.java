@@ -239,6 +239,7 @@ public class DiffusionModel implements DataSource<SortedMap<Double, DiffusedCont
 
     /**
      * Start publishing data
+     * @param hhmm an array of size 2 with hour and minutes representing start time
      */
     public void start(int[] hhmm) {
         double startTimeInSeconds = Time.convertTime(hhmm[0], Time.TimestepUnit.HOURS, Time.TimestepUnit.SECONDS)

@@ -132,6 +132,7 @@ public class DisruptionModel implements DataSource<SortedMap<Double, Disruption>
 
 	/**
 	 * Start publishing disruptions data
+	 * @param hhmm an array of size 2 with hour and minutes representing start time
 	 */
 	public void start(int[] hhmm) {
 		if (disruptions.isEmpty()) {
