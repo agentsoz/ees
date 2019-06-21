@@ -45,7 +45,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import static org.matsim.core.utils.misc.Time.parseTime;
+import static io.github.agentsoz.ees.Constants.EmergencyMessage.*;
 import static org.matsim.core.utils.misc.Time.writeTime;
 
 /**
@@ -218,25 +218,26 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
             double anxiety = Double.valueOf(getBelief(State.anxietyFromSituation.name()))
                     + Double.valueOf(getBelief(State.anxietyFromEmergencyMessages.name()))
                     + Double.valueOf(getBelief(State.anxietyFromSocialMessages.name()));
-            double initialResponseThreshold = Double.valueOf(getBelief(Beliefname.ResponseThresholdInitial.name()));
-            double finalResponseThreshold = Double.valueOf(getBelief(Beliefname.ResponseThresholdInitial.name()));
+            if (anxiety > 0) {
+                double initialResponseThreshold = Double.valueOf(getBelief(Beliefname.ResponseThresholdInitial.name()));
+                double finalResponseThreshold = Double.valueOf(getBelief(Beliefname.ResponseThresholdInitial.name()));
 
-            // and whether we already know if the thresholds are reached
-            boolean initialThresholdReached = Boolean.valueOf(getBelief(State.responseThresholdInitialReached.name()));
-            boolean finalThresholdReached = Boolean.valueOf(getBelief(State.responseThresholdFinalReached.name()));
+                // and whether we already know if the thresholds are reached
+                boolean initialThresholdReached = Boolean.valueOf(getBelief(State.responseThresholdInitialReached.name()));
+                boolean finalThresholdReached = Boolean.valueOf(getBelief(State.responseThresholdFinalReached.name()));
 
-            // if either threshold was just reached, then react now
-            if ((!initialThresholdReached && (anxiety >= initialResponseThreshold)) ||
-                    (!finalThresholdReached &&  (anxiety >= finalResponseThreshold)))
-            {
-                if (!initialThresholdReached && (anxiety >= initialResponseThreshold)) {
-                    initialThresholdReached = true;
-                    believe(State.responseThresholdInitialReached.name(), Boolean.toString(initialThresholdReached));
-                    post(new GotoLocationEvacuation(GotoLocationEvacuation.class.getSimpleName()));
-                }
-                if (!finalThresholdReached && (anxiety >= finalResponseThreshold)) {
-                    finalThresholdReached = true;
-                    believe(State.responseThresholdFinalReached.name(), Boolean.toString(finalThresholdReached));
+                // if either threshold was just reached, then react now
+                if ((!initialThresholdReached && (anxiety >= initialResponseThreshold)) ||
+                        (!finalThresholdReached && (anxiety >= finalResponseThreshold))) {
+                    if (!initialThresholdReached && (anxiety >= initialResponseThreshold)) {
+                        initialThresholdReached = true;
+                        believe(State.responseThresholdInitialReached.name(), Boolean.toString(initialThresholdReached));
+                        post(new GotoLocationEvacuation(GotoLocationEvacuation.class.getSimpleName()));
+                    }
+                    if (!finalThresholdReached && (anxiety >= finalResponseThreshold)) {
+                        finalThresholdReached = true;
+                        believe(State.responseThresholdFinalReached.name(), Boolean.toString(finalThresholdReached));
+                    }
                 }
             }
         } catch (Exception e) {}
@@ -321,6 +322,27 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
     }
 
     private void handleEmergencyMessage(Object parameters) {
+        try{
+            double effect = 0.0;
+            String[] args = ((String)parameters).split(",");
+            if (Advice.getCommonName().equals(args[0])) {
+                effect = Double.valueOf(getBelief(State.futureValueOfMessageAdvice.name()));
+                believe(State.futureValueOfMessageAdvice.name(), "0.0");
+            } else if (WatchAndAct.getCommonName().equals(args[0])) {
+                effect = Double.valueOf(getBelief(State.futureValueOfMessageWatchAndAct.name()));
+                believe(State.futureValueOfMessageWatchAndAct.name(), "0.0");
+            } else if (EmergencyMessage.getCommonName().equals(args[0])) {
+                effect = Double.valueOf(getBelief(State.futureValueOfMessageEmergencyWarning.name()));
+                believe(State.futureValueOfMessageEmergencyWarning.name(), "0.0");
+            } else if (EvacuateNow.getCommonName().equals(args[0])) {
+                effect = Double.valueOf(getBelief(State.futureValueOfMessageEvacuateNow.name()));
+                believe(State.futureValueOfMessageEvacuateNow.name(), "0.0");
+            }
+            double barometer = Double.valueOf(getBelief(State.anxietyFromEmergencyMessages.name()));
+            believe(State.anxietyFromEmergencyMessages.name(), Double.toString(barometer+effect));
+        } catch (Exception e) {
+            logger.warn(logPrefix() + "failed to parse " + parameters);
+        }
     }
 
     private void handleSocialNetworkMessage(Object parameters) {

@@ -74,4 +74,22 @@ public class Constants {
     }
 
     public enum EvacRoutingMode {carFreespeed, carGlobalInformation, emergencyVehicle}
+
+    public enum EmergencyMessage {
+        Advice("ADVICE"),
+        WatchAndAct("WATCH_AND_ACT"),
+        EmergencyMessage("EMERGENCY_MESSAGE"),
+        EvacuateNow("EVACUATE_NOW")
+        ;
+
+        private final String commonName;
+
+        EmergencyMessage(String name){
+            this.commonName = name;
+        }
+
+        public String getCommonName() {
+            return commonName;
+        }
+    }
 }
