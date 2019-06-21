@@ -24,6 +24,7 @@ package io.github.agentsoz.ees;
  */
 
 import io.github.agentsoz.util.TestUtils;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.matsim.testcases.MatsimTestUtils;
@@ -42,6 +43,7 @@ public class BlockageEquilTest {
 	@Rule public MatsimTestUtils utils = new MatsimTestUtils() ;
 
 	@Test
+	@Ignore
 	public void testBlockageEquil() {
 
 		utils.getOutputDirectory(); // creates a clean one so need to call this first

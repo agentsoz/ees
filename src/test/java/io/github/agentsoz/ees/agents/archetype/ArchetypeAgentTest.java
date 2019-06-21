@@ -68,6 +68,7 @@ public class ArchetypeAgentTest {
     }
 
     @Test
+    @Ignore
     public void testBlockage() {
         matsimUtils.getOutputDirectory(); // creates a clean one so need to call this first
         Run.main(new String[] {"--config", "scenarios/grid/ar-1a-ees-blockage.xml"});
