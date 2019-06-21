@@ -70,6 +70,10 @@ public class TestUtils {
                         double expTime = parseTime(exp[0]);
                         double actTime = parseTime(act[0]);
                         if ((actTime+slack<=expTime) || (actTime-slack>=expTime)) {
+                            String msg = "\naccepting diff (with time slack "+slack+"):\n"
+                                    + "expected: " + expected + "\n"
+                                    + "actual  : " + actual + "\n";
+                            log.info(msg);
                             isDifferent = false;
                         }
 
