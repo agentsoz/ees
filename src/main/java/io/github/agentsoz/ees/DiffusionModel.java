@@ -116,7 +116,9 @@ public class DiffusionModel implements DataSource<SortedMap<Double, DiffusedCont
             ICModel icModel = (ICModel) snManager.getDiffModel();
             icModel.recordCurrentStepSpread(dataServer.getTime());
 
-            HashMap<String, String[]> latestUpdate = icModel.getLatestDiffusionUpdates();
+            // FIXME: disabling below, broken since diffusion-model repo commit ced012c, dhi 21/jun/19
+            //HashMap<String, String[]> latestUpdate = icModel.getLatestDiffusionUpdates();
+            HashMap<String, String[]> latestUpdate = new HashMap<>();
             if (!latestUpdate.isEmpty()) {
                 DiffusedContent dc = new DiffusedContent();
                 dc.setContentSpreadMap(latestUpdate);
