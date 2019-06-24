@@ -45,7 +45,12 @@ df[candidates,]$HasDependentsAtLocation<-locs
 filter<-df$BDIAgentType!="io.github.agentsoz.ees.agents.archetype.DependentEvacuator"
 df<-df[filter,]
 
+# Reorder by archetypes, needed for correct assignment of Jill BDI agents types
 df<-df[order(df$BDIAgentType),]
+
+# Assign ID and put it as first column
+df$Id<-seq(0,nrow(df)-1)
+df<-df[,c(ncol(df),1:(ncol(df)-1))]
 
 # Write out the table
 con <- gzfile('./population-archetypes.csv.gz')
