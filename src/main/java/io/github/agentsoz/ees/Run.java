@@ -71,7 +71,6 @@ public class Run implements DataClient {
         // Get BDI agents map from the MATSim population file
         log.info("Reading BDI agents from MATSim population file");
         Map<Integer, List<String[]>> bdiMap = Utils.getAgentsFromMATSimPlansFile(cfg.getModelConfig(Config.eModelMatsim).get("configXml"));
-        String[] bdiIds = Arrays.toString(bdiMap.keySet().toArray(new Integer[0])).split("[\\[\\]]")[1].split(", ");
         JillBDIModel.removeNonBdiAgentsFrom(bdiMap);
 
         // Run it
@@ -80,16 +79,19 @@ public class Run implements DataClient {
         .withModel(new DiffusionModel(
                 cfg.getModelConfig(Config.eModelDiffusion),
                 DataServer.getInstance(DATASERVER),
-                new ArrayList<>(Arrays.asList(bdiIds))))
+                new ArrayList<>(Arrays.asList(getAsSortedStringArray(bdiMap.keySet())))))
         .start(cfg, bdiMap);
+    }
+
+    public static String[] getAsSortedStringArray(Set<Integer> intIds) {
+        Integer[] ids = intIds.toArray(new Integer[0]);
+        Arrays.sort(ids);
+        String[] idStrings = Arrays.toString(ids).split("[\\[\\]]")[1].split(", ");
+        return idStrings;
     }
 
     public void start(Config cfg, Map<Integer, List<String[]>> bdiMap) {
         parse(cfg.getModelConfig(""));
-
-        // Get the BDI agent IDs from the  map
-        List<String> bdiAgentIDs =   Arrays.asList(Arrays.toString(bdiMap.keySet().toArray(new Integer[0])).split("[\\[\\]]")[1].split(", "));
-
 
         log.info("Starting the data server");
         // initialise the data server bus for passing data around using a publish/subscribe or pull mechanism
@@ -137,7 +139,10 @@ public class Run implements DataClient {
         // initialise the diffusion model and register it as an active data source
         log.info("Starting information diffusion model");
         if (diffusionModel == null) {
-            diffusionModel = new DiffusionModel(cfg.getModelConfig(Config.eModelDiffusion), dataServer, bdiAgentIDs);
+            diffusionModel = new DiffusionModel(
+                    cfg.getModelConfig(Config.eModelDiffusion),
+                    dataServer,
+                    Arrays.asList(getAsSortedStringArray(bdiMap.keySet())));
         }
         diffusionModel.setTimestepUnit(Time.TimestepUnit.SECONDS);
         diffusionModel.start();
@@ -146,13 +151,13 @@ public class Run implements DataClient {
         log.info("Starting Jill BDI model");
         JillBDIModel jillmodel = new JillBDIModel(cfg.getModelConfig(Config.eModelBdi), dataServer, (QueryPerceptInterface)matsimEvacModel, bdiMap);
         jillmodel.setAgentDataContainer(adc_from_bdi);
-        jillmodel.init(bdiAgentIDs.toArray( new String[bdiAgentIDs.size()] ));
+        jillmodel.init(getAsSortedStringArray(bdiMap.keySet()));
         jillmodel.start();
 
         // --- initialize and start MATSim
         log.info("Starting MATSim model");
         matsimEvacModel.setAgentDataContainer(adc_from_abm);
-        matsimEvacModel.init(new Object[]{bdiAgentIDs});
+        matsimEvacModel.init(new Object[]{Arrays.asList(getAsSortedStringArray(bdiMap.keySet()))});
         matsimEvacModel.start();
         {
             // yyyy try to replace this by injection. because otherwise it again needs to be added "late enough", which we
