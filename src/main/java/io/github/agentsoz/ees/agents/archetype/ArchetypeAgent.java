@@ -104,6 +104,7 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
         HasDependentsAtLocation("HasDependentsAtLocation"),
         HouseholdId("HouseholdId"),
         isDriving("isDriving"),
+        Id("Id"),
         ImpactFromFireDangerIndexRating("ImpactFromFireDangerIndexRating"),
         ImpactFromImmersionInSmoke("ImpactFromImmersionInSmoke"),
         ImpactFromMessageAdvice("ImpactFromMessageAdvice"),

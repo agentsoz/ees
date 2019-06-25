@@ -12,6 +12,7 @@
 -00:00:01|ArchetypeAgent|0    |believes HasDependentsAtLocation= #HasDependentsAtLocation @@
 -00:00:01|ArchetypeAgent|0    |believes HouseholdId=202021028H1439 #HouseholdId @@
 -00:00:01|ArchetypeAgent|0    |believes isDriving=false #isDriving @@
+-00:00:01|ArchetypeAgent|0    |believes Id=null #Id @@
 -00:00:01|ArchetypeAgent|0    |believes ImpactFromFireDangerIndexRating=0.1 #ImpactFromFireDangerIndexRating @@
 -00:00:01|ArchetypeAgent|0    |believes ImpactFromImmersionInSmoke=0.4 #ImpactFromImmersionInSmoke @@
 -00:00:01|ArchetypeAgent|0    |believes ImpactFromMessageAdvice=0.4 #ImpactFromMessageAdvice @@
