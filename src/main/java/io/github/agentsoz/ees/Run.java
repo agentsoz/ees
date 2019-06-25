@@ -79,15 +79,8 @@ public class Run implements DataClient {
         .withModel(new DiffusionModel(
                 cfg.getModelConfig(Config.eModelDiffusion),
                 DataServer.getInstance(DATASERVER),
-                new ArrayList<>(Arrays.asList(getAsSortedStringArray(bdiMap.keySet())))))
+                new ArrayList<>(Arrays.asList(Utils.getAsSortedStringArray(bdiMap.keySet())))))
         .start(cfg, bdiMap);
-    }
-
-    public static String[] getAsSortedStringArray(Set<Integer> intIds) {
-        Integer[] ids = intIds.toArray(new Integer[0]);
-        Arrays.sort(ids);
-        String[] idStrings = Arrays.toString(ids).split("[\\[\\]]")[1].split(", ");
-        return idStrings;
     }
 
     public void start(Config cfg, Map<Integer, List<String[]>> bdiMap) {
@@ -142,7 +135,7 @@ public class Run implements DataClient {
             diffusionModel = new DiffusionModel(
                     cfg.getModelConfig(Config.eModelDiffusion),
                     dataServer,
-                    Arrays.asList(getAsSortedStringArray(bdiMap.keySet())));
+                    Arrays.asList(Utils.getAsSortedStringArray(bdiMap.keySet())));
         }
         diffusionModel.setTimestepUnit(Time.TimestepUnit.SECONDS);
         diffusionModel.start();
@@ -151,13 +144,13 @@ public class Run implements DataClient {
         log.info("Starting Jill BDI model");
         JillBDIModel jillmodel = new JillBDIModel(cfg.getModelConfig(Config.eModelBdi), dataServer, (QueryPerceptInterface)matsimEvacModel, bdiMap);
         jillmodel.setAgentDataContainer(adc_from_bdi);
-        jillmodel.init(getAsSortedStringArray(bdiMap.keySet()));
+        jillmodel.init(Utils.getAsSortedStringArray(bdiMap.keySet()));
         jillmodel.start();
 
         // --- initialize and start MATSim
         log.info("Starting MATSim model");
         matsimEvacModel.setAgentDataContainer(adc_from_abm);
-        matsimEvacModel.init(new Object[]{Arrays.asList(getAsSortedStringArray(bdiMap.keySet()))});
+        matsimEvacModel.init(new Object[]{Arrays.asList(Utils.getAsSortedStringArray(bdiMap.keySet()))});
         matsimEvacModel.start();
         {
             // yyyy try to replace this by injection. because otherwise it again needs to be added "late enough", which we

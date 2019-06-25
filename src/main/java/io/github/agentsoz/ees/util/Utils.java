@@ -399,4 +399,11 @@ public final class Utils {
 		// yyyy above is start, but one will need the full "potential" approach from Gregor. Otherwise, you cut a link
 		// in two and get a different answer.  Which should not be. kai, dec'17
 	}
+
+	public static String[] getAsSortedStringArray(Set<Integer> intIds) {
+		Integer[] ids = intIds.toArray(new Integer[0]);
+		Arrays.sort(ids);
+		String[] idStrings = Arrays.toString(ids).split("[\\[\\]]")[1].split(", ");
+		return idStrings;
+	}
 }

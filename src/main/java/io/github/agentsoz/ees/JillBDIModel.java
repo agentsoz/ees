@@ -27,6 +27,7 @@ import io.github.agentsoz.bdiabm.QueryPerceptInterface;
 import io.github.agentsoz.bdiabm.v2.AgentDataContainer;
 import io.github.agentsoz.dataInterface.DataClient;
 import io.github.agentsoz.dataInterface.DataServer;
+import io.github.agentsoz.ees.util.Utils;
 import io.github.agentsoz.jill.lang.Agent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -249,9 +250,12 @@ public class JillBDIModel extends JillModel implements DataClient {
         if (map == null) {
             return null;
         }
-        // Count instances of each agent type
-        Map<String,Integer> counts = new LinkedHashMap<>();
-        for (List<String[]> values: map.values()) {
+
+		// Count instances of each agent type
+		Map<String,Integer> counts = new LinkedHashMap<>();
+
+		for (String id : Utils.getAsSortedStringArray(map.keySet())) {
+			List<String[]> values = map.get(Integer.valueOf(id));
             for (String[] val : values) {
                 if (eBDIAgentType.equals(val[0])) {
                     String type = val[1];
@@ -259,7 +263,6 @@ public class JillBDIModel extends JillModel implements DataClient {
                     counts.put(type, count + 1);
                 }
             }
-
         }
 
         StringBuilder arg = new StringBuilder();
