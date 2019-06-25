@@ -37,10 +37,7 @@ import org.matsim.api.core.v01.Scenario;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Emergency Evacuation Simulator (EES) main program.
@@ -73,21 +70,26 @@ public class Run implements DataClient {
 
         // Get BDI agents map from the MATSim population file
         log.info("Reading BDI agents from MATSim population file");
-        Map<String, List<String[]>> bdiMap = Utils.getAgentsFromMATSimPlansFile(cfg.getModelConfig(Config.eModelMatsim).get("configXml"));
+        Map<Integer, List<String[]>> bdiMap = Utils.getAgentsFromMATSimPlansFile(cfg.getModelConfig(Config.eModelMatsim).get("configXml"));
+        String[] bdiIds = Arrays.toString(bdiMap.keySet().toArray(new Integer[0])).split("[\\[\\]]")[1].split(", ");
         JillBDIModel.removeNonBdiAgentsFrom(bdiMap);
 
         // Run it
         new Run()
         .withModel(DataServer.getInstance(DATASERVER))
-        .withModel(new DiffusionModel(cfg.getModelConfig(Config.eModelDiffusion), DataServer.getInstance(DATASERVER), new ArrayList<>(bdiMap.keySet())))
+        .withModel(new DiffusionModel(
+                cfg.getModelConfig(Config.eModelDiffusion),
+                DataServer.getInstance(DATASERVER),
+                new ArrayList<>(Arrays.asList(bdiIds))))
         .start(cfg, bdiMap);
     }
 
-    public void start(Config cfg, Map<String, List<String[]>> bdiMap) {
+    public void start(Config cfg, Map<Integer, List<String[]>> bdiMap) {
         parse(cfg.getModelConfig(""));
 
         // Get the BDI agent IDs from the  map
-        List<String> bdiAgentIDs = new ArrayList<>(bdiMap.keySet());
+        List<String> bdiAgentIDs =   Arrays.asList(Arrays.toString(bdiMap.keySet().toArray(new Integer[0])).split("[\\[\\]]")[1].split(", "));
+
 
         log.info("Starting the data server");
         // initialise the data server bus for passing data around using a publish/subscribe or pull mechanism

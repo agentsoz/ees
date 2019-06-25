@@ -69,7 +69,7 @@ public class JillBDIModel extends JillModel implements DataClient {
 
 	// Jill initialisation args
 	private String[] initArgs = null;
-	private Map<String, List<String[]>> agentsInitMap = null;
+	private Map<Integer, List<String[]>> agentsInitMap = null;
 
 	// Map of MATSim agent IDs to jill agent IDs
 	private Map<String,String> mapMATsimToJillIds;
@@ -98,7 +98,7 @@ public class JillBDIModel extends JillModel implements DataClient {
 		this.initArgs = initArgs;
 	}
 
-	public JillBDIModel(Map<String, String> opts, DataServer dataServer, QueryPerceptInterface qpi, Map<String, List<String[]>> agentsInitMap) {
+	public JillBDIModel(Map<String, String> opts, DataServer dataServer, QueryPerceptInterface qpi, Map<Integer, List<String[]>> agentsInitMap) {
 		this(null);
 		parse(opts);
 		this.dataServer = dataServer;
@@ -107,7 +107,7 @@ public class JillBDIModel extends JillModel implements DataClient {
 		initArgs = buildJillConfig(agentsInitMap);
 	}
 
-	private String[] buildJillConfig(Map<String, List<String[]>> agentsInitMap) {
+	private String[] buildJillConfig(Map<Integer, List<String[]>> agentsInitMap) {
 		List<String> args = new ArrayList<>();
 		if (oPlanSelectionPolicy != null && !oPlanSelectionPolicy.isEmpty()) {
 			args.add(OPT_JILL_PLAN_SELECTION_POLICY);
@@ -213,7 +213,7 @@ public class JillBDIModel extends JillModel implements DataClient {
 	 * @param jillargs
 	 * @param map map of agent id to list of its init args
 	 */
-	private static void updateJillConfigFromAgentsMap(String[] jillargs, Map<String, List<String[]>> map) {
+	private static void updateJillConfigFromAgentsMap(String[] jillargs, Map<Integer, List<String[]>> map) {
 		if (map != null) {
 			for (int i = 0; jillargs != null && i < jillargs.length; i++) {
 				if (JillBDIModel.OPT_JILL_CONFIG.equals(jillargs[i]) && i < (jillargs.length-1)) {
@@ -245,7 +245,7 @@ public class JillBDIModel extends JillModel implements DataClient {
      * @param map
      * @return
      */
-    static String buildJillAgentsArgsFromAgentMap(Map<String, List<String[]>> map) {
+    static String buildJillAgentsArgsFromAgentMap(Map<Integer, List<String[]>> map) {
         if (map == null) {
             return null;
         }
@@ -284,11 +284,10 @@ public class JillBDIModel extends JillModel implements DataClient {
      * Filter out all but the BDI agents
      * @param map input map to filter from
      */
-    public static void removeNonBdiAgentsFrom(Map<String, List<String[]>> map) {
-        Iterator<Map.Entry<String, List<String[]>>> it = map.entrySet().iterator();
+    public static void removeNonBdiAgentsFrom(Map<Integer, List<String[]>> map) {
+        Iterator<Map.Entry<Integer, List<String[]>>> it = map.entrySet().iterator();
         while(it.hasNext()) {
-            Map.Entry<String, List<String[]>> entry = it.next();
-            String id = entry.getKey();
+            Map.Entry<Integer, List<String[]>> entry = it.next();
             boolean found = false;
             for (String[] val : entry.getValue()) {
                 if (eBDIAgentType.equals(val[0])) {
@@ -302,9 +301,9 @@ public class JillBDIModel extends JillModel implements DataClient {
         }
     }
 
-	static Map<String, List<String>> getFlattenedArgsFromAgentsInitMap(Map<String, List<String[]>> agentsInitMap) {
-        Map<String,List<String>> args = new HashMap<>();
-        for (String id : agentsInitMap.keySet()) {
+	static Map<Integer, List<String>> getFlattenedArgsFromAgentsInitMap(Map<Integer, List<String[]>> agentsInitMap) {
+        Map<Integer,List<String>> args = new HashMap<>();
+        for (Integer id : agentsInitMap.keySet()) {
             List<String[]> values = agentsInitMap.get(id);
             List<String> flatlist = new ArrayList<>();
             for (String[] arr : values) {
@@ -355,7 +354,7 @@ public class JillBDIModel extends JillModel implements DataClient {
 		}
 		// Initialise agents with per-given args if available
 		if (agentsInitMap != null) {
-			Map<String, List<String>> args = JillBDIModel.getFlattenedArgsFromAgentsInitMap(agentsInitMap);
+			Map<Integer, List<String>> args = JillBDIModel.getFlattenedArgsFromAgentsInitMap(agentsInitMap);
 			initialiseAgentsWithArgs(args);
 		}
 		// Now create the given map to jill agent ids
@@ -417,15 +416,14 @@ public class JillBDIModel extends JillModel implements DataClient {
     // FIXME: The outgoing IDs need to be converted to MATSim IDs before returning
   }
 
-	public void initialiseAgentsWithArgs(Map<String, List<String>> map) {
+	public void initialiseAgentsWithArgs(Map<Integer, List<String>> map) {
 		if(map == null) return;
-		for (String id : map.keySet()) {
+		for (Integer id : map.keySet()) {
 			try {
-				Integer idx = Integer.valueOf(id); // agent id must be an integer
 				List<String> args = map.get(id);
 				if (args != null && !args.isEmpty()) {
 					String[] vargs = args.toArray(new String[args.size()]);
-					getAgent(Integer.valueOf(id)).init(vargs);
+					getAgent(id).init(vargs);
 				}
 			} catch (NumberFormatException e) {
 				logger.warn("Jill agent IDs can only be integers; found `"+id+"`. " + e.getMessage());

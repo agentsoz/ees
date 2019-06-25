@@ -59,7 +59,7 @@ public final class Utils {
 	private static final Logger log = LoggerFactory.getLogger(Utils.class);
 
     /**
-     * Returns a map of agent IDs to specified attributes
+     * Returns a map of agent IDs (must be integers) to specified attributes
      * Input should be of form given below:
      * <pre>{@code
      * <person id="2">
@@ -75,8 +75,8 @@ public final class Utils {
      * @param scenario MATSim scenario reference
      * @return the map or else an empty map if no BDI agent types were found
      */
-    public static Map<String,List<String[]>> getAgentsFromMATSimPlansFile(Scenario scenario ) {
-        Map<String,List<String[]>> map = new LinkedHashMap<>();
+    public static Map<Integer,List<String[]>> getAgentsFromMATSimPlansFile(Scenario scenario ) {
+        Map<Integer,List<String[]>> map = new LinkedHashMap<>();
         for (Person person : scenario.getPopulation().getPersons().values()) {
 
 			// Get all person attributes
@@ -100,13 +100,17 @@ public final class Utils {
 				}
 				element.toString();
 			}
-
-			map.put(person.getId().toString(), initArgs);
+			try {
+				Integer id = Integer.valueOf(person.getId().toString());
+				map.put(id, initArgs);
+			} catch (Exception e) {
+				throw new RuntimeException("Agent ID must be an integer, found: " + person.getId().toString());
+			}
         }
 
         return map;
     }
-	public static Map<String,List<String[]>> getAgentsFromMATSimPlansFile(String matsimConfigFile ) {
+	public static Map<Integer,List<String[]>> getAgentsFromMATSimPlansFile(String matsimConfigFile ) {
 		Config config = ConfigUtils.loadConfig(matsimConfigFile);
 		Scenario scenario = ScenarioUtils.loadScenario(config);
 		return getAgentsFromMATSimPlansFile(scenario);
