@@ -45,6 +45,10 @@ df[candidates,]$HasDependentsAtLocation<-locs
 filter<-df$BDIAgentType!="io.github.agentsoz.ees.agents.archetype.DependentEvacuator"
 df<-df[filter,]
 
+# Remove all Unknown types for now 
+filter<-df$BDIAgentType!="io.github.agentsoz.ees.agents.archetype.UnknownType"
+df<-df[filter,]
+
 # Reorder by archetypes, needed for correct assignment of Jill BDI agents types
 df<-df[order(df$BDIAgentType),]
 
