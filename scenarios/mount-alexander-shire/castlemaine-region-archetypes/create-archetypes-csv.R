@@ -12,6 +12,10 @@ close(con)
 persons<-rbind(persons1,persons2)
 df<-persons
 
+# Remove all Unknown types for now 
+filter<-df$Archetype!="Unknown.Type"
+df<-df[filter,]
+
 # Fix any type naming
 filter<-df$Archetype=="Dependent.Evacuators"
 df[filter,]$Archetype<-"Dependent.Evacuator"
@@ -45,9 +49,9 @@ df[candidates,]$HasDependentsAtLocation<-locs
 filter<-df$BDIAgentType!="io.github.agentsoz.ees.agents.archetype.DependentEvacuator"
 df<-df[filter,]
 
-# Remove all Unknown types for now 
-filter<-df$BDIAgentType!="io.github.agentsoz.ees.agents.archetype.UnknownType"
-df<-df[filter,]
+# Ensure that the initial threshold is never greater than the final threshold
+filter<-df$ResponseThresholdInitial > df$ResponseThresholdFinal
+df[filter,]$ResponseThresholdInitial<-df[filter,]$ResponseThresholdFinal
 
 # Reorder by archetypes, needed for correct assignment of Jill BDI agents types
 df<-df[order(df$BDIAgentType),]
