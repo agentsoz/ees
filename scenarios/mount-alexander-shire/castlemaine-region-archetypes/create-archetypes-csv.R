@@ -36,8 +36,9 @@ df$InvacLocationPreference<-"Castlemaine,252140,5894312"
 # 1. get a list of dependents locations in random order
 filter<-df$BDIAgentType=="io.github.agentsoz.ees.agents.archetype.DependentEvacuator"
 locs<-sample(df[filter,]$Geographical.Coordinate)
-# 2. Get people who have dependents and are not dependent themselves (to assign dependents to)
-filter<-df$HasDependents==1 & df$BDIAgentType!="io.github.agentsoz.ees.agents.archetype.DependentEvacuator"
+# 2. Get people who have dependents and are not dependent themselves (to assign dependents to);
+#    other than ExperiencedIndependent who should not have dependents
+filter<-df$HasDependents==1 & df$BDIAgentType!="io.github.agentsoz.ees.agents.archetype.DependentEvacuator" & df$BDIAgentType!="io.github.agentsoz.ees.agents.archetype.ExperiencedIndependent"
 candidates<-which(filter)
 # 3. Assign as many dependents as possible
 len<-min(sum(filter), length(locs))
