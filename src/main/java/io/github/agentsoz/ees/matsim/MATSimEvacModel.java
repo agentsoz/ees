@@ -362,13 +362,9 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
 
     private List<Id<Person>> getPersonsWithin(Scenario scenario, Geometry shape) {
         List<Id<Person>> personsWithin = new ArrayList<>();
-        for(Id<Person> personId : scenario.getPopulation().getPersons().keySet()) {
+        for(Id<Person> personId : matsimModel.getMobsimDataProvider().getAgents().keySet()) {
             Gbl.assertNotNull( matsimModel.getMobsimDataProvider() );
             MobsimAgent agent = matsimModel.getMobsimDataProvider().getAgent(personId);
-            if (agent == null) {
-                log.error("MobsimAgent {} not found, should never happen!!", personId);
-                continue;
-            }
             final Id<Link> linkId = agent.getCurrentLinkId();
             final Link link = scenario.getNetwork().getLinks().get(linkId);
             Point fromPoint = GeometryUtils.createGeotoolsPoint(link.getFromNode().getCoord());
