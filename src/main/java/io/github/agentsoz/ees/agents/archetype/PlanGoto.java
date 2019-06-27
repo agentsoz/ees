@@ -62,10 +62,10 @@ public class PlanGoto extends Plan {
 				// All done if already at the destination,
 				// or tried enough times,
 				// or were driving but the last bdi action (presumably the drive action) was dropped
-				if(distToDest <= 0.0 ||
+				if (distToDest <= 0.0 ||
 						tries >= maximumTries ||
-						(agent.getLastBdiAction().getActionState() != ActionContent.State.DROPPED.toString() &&
-								agent.hasBelief(Beliefname.isDriving.name(), new Boolean(true).toString()))) {
+						(!ActionContent.State.DROPPED.toString().equals(agent.getLastBdiAction().getActionState())
+								&& agent.hasBelief(Beliefname.isDriving.name(), new Boolean(true).toString()))) {
 					agent.out("finished driving to "
 							+ destination + String.format(" %.0f", distToDest) + "m away"
 							+ " after " + tries + " tries"

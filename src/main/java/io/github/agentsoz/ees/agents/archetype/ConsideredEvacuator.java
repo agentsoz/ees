@@ -26,7 +26,11 @@ package io.github.agentsoz.ees.agents.archetype;
 import io.github.agentsoz.jill.lang.AgentInfo;
 
 @AgentInfo(hasGoals={
-        "io.github.agentsoz.abmjill.genact.EnvironmentAction"
+        "io.github.agentsoz.ees.agents.archetype.GoalFullResponse",
+        "io.github.agentsoz.ees.agents.archetype.GoalInitialResponse",
+        "io.github.agentsoz.ees.agents.archetype.GoalFinalResponse",
+        "io.github.agentsoz.ees.agents.archetype.GoalGoto",
+        "io.github.agentsoz.abmjill.genact.EnvironmentAction",
 })
 public class ConsideredEvacuator extends ArchetypeAgent {
 
