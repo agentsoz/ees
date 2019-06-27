@@ -28,10 +28,11 @@ import io.github.agentsoz.jill.lang.Goal;
 import io.github.agentsoz.jill.lang.GoalInfo;
 
 @GoalInfo(hasPlans={
-        "io.github.agentsoz.ees.agents.archetype.GotoLocationEvacuationPlan",
-        })
-public class GotoLocationEvacuation extends Goal {
-    public GotoLocationEvacuation(String name) {
+        "io.github.agentsoz.ees.agents.archetype.PlanLeaveNow",
+        "io.github.agentsoz.ees.agents.archetype.PlanStayAndDefend"
+})
+public class GoalFinalResponse extends Goal {
+    public GoalFinalResponse(String name) {
         super(name);
     }
 }

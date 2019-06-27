@@ -8,7 +8,7 @@
 -00:00:01|ArchetypeAgent|0    |believes Address=17 BUCKLEY STREET HARCOURT 3453 #EZI_ADD @@
 -00:00:01|ArchetypeAgent|0    |believes Gender=Male #Gender @@
 -00:00:01|ArchetypeAgent|0    |believes AddressCoordinates=[144.2623, -36.9993] #Geographical.Coordinate @@
--00:00:01|ArchetypeAgent|0    |believes HasDependents=0 #HasDependents @@
+-00:00:01|ArchetypeAgent|0    |believes HasDependents=false #HasDependents @@
 -00:00:01|ArchetypeAgent|0    |believes HasDependentsAtLocation= #HasDependentsAtLocation @@
 -00:00:01|ArchetypeAgent|0    |believes HouseholdId=202021028H1439 #HouseholdId @@
 -00:00:01|ArchetypeAgent|0    |believes isDriving=false #isDriving @@
@@ -34,9 +34,9 @@
 -00:00:01|ArchetypeAgent|0    |believes ResponseThresholdInitial=0.26 #ResponseThresholdInitial @@
 -00:00:01|ArchetypeAgent|0    |believes Sa1=2102819 #SA1_7DIGCODE @@
 -00:00:01|ArchetypeAgent|0    |believes Sa2=202021028 #SA2_MAINCODE @@
--00:00:01|ArchetypeAgent|0    |believes WillGoHomeAfterVisitingDependents=1 #WillGoHomeAfterVisitingDependents @@
--00:00:01|ArchetypeAgent|0    |believes WillGoHomeBeforeLeaving=1 #WillGoHomeBeforeLeaving @@
--00:00:01|ArchetypeAgent|0    |believes WillStay=0 #WillStay @@
+-00:00:01|ArchetypeAgent|0    |believes WillGoHomeAfterVisitingDependents=false #WillGoHomeAfterVisitingDependents @@
+-00:00:01|ArchetypeAgent|0    |believes WillGoHomeBeforeLeaving=false #WillGoHomeBeforeLeaving @@
+-00:00:01|ArchetypeAgent|0    |believes WillStay=false #WillStay @@
 -00:00:01|ArchetypeAgent|0    |believes anxietyFromSituation=0.0 @@
 -00:00:01|ArchetypeAgent|0    |believes anxietyFromSocialMessages=0.0 @@
 -00:00:01|ArchetypeAgent|0    |believes anxietyFromEmergencyMessages=0.0 @@
@@ -61,8 +61,17 @@
 01:02:25|ArchetypeAgent|0    |believes futureValueOfVisibleFire=0.0 @@
 01:02:25|ArchetypeAgent|0    |believes responseThresholdInitialReached=true @@
 01:02:25|ArchetypeAgent|0    |believes responseThresholdFinalReached=true @@
-01:02:25|ArchetypeAgent|0    |thinks GotoLocationEvacuation~>GotoLocationEvacuationPlan is applicable
-01:02:25|ArchetypeAgent|0    |will start driving to (FarFarAway, coords=5000.0,0.0) 7000m away #GotoLocationEvacuation~>GotoLocationEvacuationPlan
+01:02:25|ArchetypeAgent|0    |thinks GoalFullResponse~>PlanFullResponse is applicable
+01:02:25|ArchetypeAgent|0    |thinks GoalInitialResponse~>PlanResponseWhenDependentsAfar is not applicable
+01:02:25|ArchetypeAgent|0    |thinks GoalInitialResponse~>PlanResponseWhenDependentsNearby is not applicable
+01:02:25|ArchetypeAgent|0    |thinks GoalInitialResponse~>PlanResponseWithoutDependents is applicable
+01:02:25|ArchetypeAgent|0    |thinks GoalInitialResponse~>PlanDoNothing is applicable
+01:02:25|ArchetypeAgent|0    |will wait at location (26, coords=2000.0,4000.0) #GoalInitialResponse~>PlanResponseWithoutDependents
+01:02:25|ArchetypeAgent|0    |thinks GoalFinalResponse~>PlanLeaveNow is applicable
+01:02:25|ArchetypeAgent|0    |thinks GoalFinalResponse~>PlanStayAndDefend is not applicable
+01:02:25|ArchetypeAgent|0    |will go to evac location (FarFarAway, coords=5000.0,0.0) #GoalFinalResponse~>PlanLeaveNow
+01:02:25|ArchetypeAgent|0    |thinks GoalGoto~>PlanGoto is applicable
+01:02:25|ArchetypeAgent|0    |will start driving to (FarFarAway, coords=5000.0,0.0) 7000m away #GoalGoto~>PlanGoto
 01:02:25|ArchetypeAgent|0    |believes isDriving=true @@
 01:03:00|ArchetypeAgent|0    |stopped driving @@
 01:03:00|ArchetypeAgent|0    |started driving to EvacPlace @@
@@ -70,5 +79,6 @@
 01:03:00|ArchetypeAgent|0    |finished activity Replan @@
 01:09:03|ArchetypeAgent|0    |stopped driving @@
 01:09:03|ArchetypeAgent|0    |started activity EvacPlace @@
-01:09:03|ArchetypeAgent|0    |finished driving to (FarFarAway, coords=5000.0,0.0) 0m away after 1 tries #GotoLocationEvacuation~>GotoLocationEvacuationPlan
+01:09:03|ArchetypeAgent|0    |finished driving to (FarFarAway, coords=5000.0,0.0) 0m away after 1 tries #GoalGoto~>PlanGoto
 01:09:03|ArchetypeAgent|0    |believes isDriving=false @@
+01:09:03|ArchetypeAgent|0    |reached evac location (FarFarAway, coords=5000.0,0.0) #GoalFinalResponse~>PlanLeaveNow

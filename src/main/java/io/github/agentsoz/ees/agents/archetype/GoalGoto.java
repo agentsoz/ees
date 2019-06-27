@@ -23,29 +23,23 @@ package io.github.agentsoz.ees.agents.archetype;
  */
 
 
-import io.github.agentsoz.jill.lang.AgentInfo;
 
-@AgentInfo(hasGoals={
-        "io.github.agentsoz.abmjill.genact.EnvironmentAction"
-})
-public class ConsideredEvacuator extends ArchetypeAgent {
+import io.github.agentsoz.jill.lang.Goal;
+import io.github.agentsoz.jill.lang.GoalInfo;
+import io.github.agentsoz.util.Location;
 
-    private Prefix prefix = new ConsideredEvacuator.Prefix();
+@GoalInfo(hasPlans={
+        "io.github.agentsoz.ees.agents.archetype.PlanGoto",
+        })
+public class GoalGoto extends Goal {
+    private Location destination;
 
-    public ConsideredEvacuator(String id) {
-        super(id);
+    public GoalGoto(String name, Location destination) {
+        super(name);
+        this.destination = destination;
     }
 
-    class Prefix{
-        public String toString() {
-            return String.format("%8s|%s|%-5s|", getTimeString(), ConsideredEvacuator.class.getSimpleName(), getId());
-        }
+    public Location getDestination() {
+        return destination;
     }
-
-    @Override
-    public String logPrefix() {
-        return prefix.toString();
-    }
-
-
 }

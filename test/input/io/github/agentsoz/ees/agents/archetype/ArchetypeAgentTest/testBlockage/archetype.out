@@ -8,7 +8,7 @@
 -00:00:01|ArchetypeAgent|0    |believes Address=17 BUCKLEY STREET HARCOURT 3453 #EZI_ADD @@
 -00:00:01|ArchetypeAgent|0    |believes Gender=Male #Gender @@
 -00:00:01|ArchetypeAgent|0    |believes AddressCoordinates=[144.2623, -36.9993] #Geographical.Coordinate @@
--00:00:01|ArchetypeAgent|0    |believes HasDependents=0 #HasDependents @@
+-00:00:01|ArchetypeAgent|0    |believes HasDependents=false #HasDependents @@
 -00:00:01|ArchetypeAgent|0    |believes HasDependentsAtLocation= #HasDependentsAtLocation @@
 -00:00:01|ArchetypeAgent|0    |believes HouseholdId=202021028H1439 #HouseholdId @@
 -00:00:01|ArchetypeAgent|0    |believes isDriving=false #isDriving @@
@@ -34,9 +34,9 @@
 -00:00:01|ArchetypeAgent|0    |believes ResponseThresholdInitial=0.26 #ResponseThresholdInitial @@
 -00:00:01|ArchetypeAgent|0    |believes Sa1=2102819 #SA1_7DIGCODE @@
 -00:00:01|ArchetypeAgent|0    |believes Sa2=202021028 #SA2_MAINCODE @@
--00:00:01|ArchetypeAgent|0    |believes WillGoHomeAfterVisitingDependents=1 #WillGoHomeAfterVisitingDependents @@
--00:00:01|ArchetypeAgent|0    |believes WillGoHomeBeforeLeaving=1 #WillGoHomeBeforeLeaving @@
--00:00:01|ArchetypeAgent|0    |believes WillStay=0 #WillStay @@
+-00:00:01|ArchetypeAgent|0    |believes WillGoHomeAfterVisitingDependents=false #WillGoHomeAfterVisitingDependents @@
+-00:00:01|ArchetypeAgent|0    |believes WillGoHomeBeforeLeaving=false #WillGoHomeBeforeLeaving @@
+-00:00:01|ArchetypeAgent|0    |believes WillStay=false #WillStay @@
 -00:00:01|ArchetypeAgent|0    |believes anxietyFromSituation=0.0 @@
 -00:00:01|ArchetypeAgent|0    |believes anxietyFromSocialMessages=0.0 @@
 -00:00:01|ArchetypeAgent|0    |believes anxietyFromEmergencyMessages=0.0 @@

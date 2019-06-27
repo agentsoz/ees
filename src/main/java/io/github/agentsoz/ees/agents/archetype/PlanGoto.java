@@ -34,7 +34,7 @@ import io.github.agentsoz.util.Location;
 import java.util.Map;
 
 
-public class GotoLocationEvacuationPlan extends Plan {
+public class PlanGoto extends Plan {
 
 	private static final int maximumTries = 3;
 
@@ -42,9 +42,10 @@ public class GotoLocationEvacuationPlan extends Plan {
 	private Location destination = null;
 	private int tries;
 
-	public GotoLocationEvacuationPlan(Agent agent, Goal goal, String name) {
+	public PlanGoto(Agent agent, Goal goal, String name) {
 		super(agent, goal, name);
 		this.agent = (ArchetypeAgent)agent;
+		destination = ((GoalGoto)getGoal()).getDestination();
 		body = steps;
 	}
 
@@ -57,9 +58,6 @@ public class GotoLocationEvacuationPlan extends Plan {
 
 	PlanStep[] steps = {
 			() -> {
-				if (destination == null) {
-					destination = agent.parseLocation(agent.getBelief(Beliefname.LocationEvacuationPreference.name()));
-				}
 				double distToDest = agent.getTravelDistanceTo(destination);
 				// All done if already at the destination,
 				// or tried enough times,

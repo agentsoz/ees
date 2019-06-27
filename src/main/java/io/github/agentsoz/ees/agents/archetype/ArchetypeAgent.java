@@ -54,8 +54,11 @@ import static org.matsim.core.utils.misc.Time.writeTime;
  * author: dsingh
  */
 @AgentInfo(hasGoals={
+        "io.github.agentsoz.ees.agents.archetype.GoalFullResponse",
+        "io.github.agentsoz.ees.agents.archetype.GoalInitialResponse",
+        "io.github.agentsoz.ees.agents.archetype.GoalFinalResponse",
+        "io.github.agentsoz.ees.agents.archetype.GoalGoto",
         "io.github.agentsoz.abmjill.genact.EnvironmentAction",
-        "io.github.agentsoz.ees.agents.archetype.GotoLocationEvacuation"
 })
 public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.Agent {
 
@@ -178,9 +181,13 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
         if (slocation != null && !slocation.isEmpty()) {
             try {
                 String[] tokens = slocation.split(",");
-                String loc = tokens[0];
-                double[] coords = new double[]{Double.parseDouble(tokens[1]), Double.parseDouble(tokens[2])};
-                return new Location(loc, coords[0], coords[1]);
+                if (tokens.length>=3) {
+                    String name = tokens[0];
+                    double[] coords = new double[]{Double.parseDouble(tokens[1]), Double.parseDouble(tokens[2])};
+                    return new Location(name, coords[0], coords[1]);
+                }
+                double[] coords = new double[]{Double.parseDouble(tokens[0]), Double.parseDouble(tokens[1])};
+                return new Location("", coords[0], coords[1]);
             } catch (Exception e) {
                 logger.error("Could not parse location: " + slocation);
             }
@@ -230,14 +237,20 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
                 // if either threshold was just reached, then react now
                 if ((!initialThresholdReached && (anxiety >= initialResponseThreshold)) ||
                         (!finalThresholdReached && (anxiety >= finalResponseThreshold))) {
-                    if (!initialThresholdReached && (anxiety >= initialResponseThreshold)) {
-                        initialThresholdReached = true;
+                    initialThresholdReached = anxiety >= initialResponseThreshold;
+                    finalThresholdReached = anxiety >= finalResponseThreshold;
+                    boolean bothThresholdsReached = initialThresholdReached && finalThresholdReached;
+
+                    if (bothThresholdsReached) {
                         believe(State.responseThresholdInitialReached.name(), Boolean.toString(initialThresholdReached));
-                        post(new GotoLocationEvacuation(GotoLocationEvacuation.class.getSimpleName()));
-                    }
-                    if (!finalThresholdReached && (anxiety >= finalResponseThreshold)) {
-                        finalThresholdReached = true;
                         believe(State.responseThresholdFinalReached.name(), Boolean.toString(finalThresholdReached));
+                        post(new GoalFullResponse(GoalFullResponse.class.getSimpleName()));
+                    } else if (initialThresholdReached) {
+                        believe(State.responseThresholdInitialReached.name(), Boolean.toString(initialThresholdReached));
+                        post(new GoalInitialResponse(GoalInitialResponse.class.getSimpleName()));
+                    } else if (finalThresholdReached) {
+                        believe(State.responseThresholdFinalReached.name(), Boolean.toString(finalThresholdReached));
+                        post(new GoalFinalResponse(GoalFinalResponse.class.getSimpleName()));
                     }
                 }
             }

@@ -49,7 +49,7 @@ public class Constants {
     public static final String SIGHTED_FIRE= "fire";
     public static final String TIME = io.github.agentsoz.util.PerceptList.TIME;
 
-    // BDI Query Percept strings
+    // BDI Query Percept  strings
     public static final String REQUEST_LOCATION = io.github.agentsoz.util.PerceptList.REQUEST_LOCATION;
     public static final String REQUEST_DRIVING_DISTANCE_TO = io.github.agentsoz.util.PerceptList.REQUEST_DRIVING_DISTANCE_TO;
 

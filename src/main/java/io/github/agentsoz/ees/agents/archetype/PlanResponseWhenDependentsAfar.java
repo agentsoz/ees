@@ -1,0 +1,136 @@
+package io.github.agentsoz.ees.agents.archetype;
+
+/*-
+ * #%L
+ * Emergency Evacuation Simulator
+ * %%
+ * Copyright (C) 2014 - 2018 by its authors. See AUTHORS file.
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Lesser Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Lesser Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/lgpl-3.0.html>.
+ * #L%
+ */
+
+import io.github.agentsoz.ees.Constants;
+import io.github.agentsoz.ees.agents.bushfire.BushfireAgent;
+import io.github.agentsoz.ees.agents.bushfire.GoalGoHome;
+import io.github.agentsoz.ees.agents.bushfire.GoalGotoDependents;
+import io.github.agentsoz.jill.lang.*;
+import io.github.agentsoz.util.Location;
+
+import java.util.Map;
+
+
+@PlanInfo(postsGoals = {
+		"io.github.agentsoz.ees.agents.archetype.GoalGoto",
+})
+public class PlanResponseWhenDependentsAfar extends Plan {
+
+	ArchetypeAgent agent = null;
+	Location xyHome;
+	Location xyDeps;
+	Location xyNow;
+	double distDeps;
+	double distHome;
+
+	public PlanResponseWhenDependentsAfar(Agent agent, Goal goal, String name) {
+		super(agent, goal, name);
+		this.agent = (ArchetypeAgent) agent;
+		body = steps;
+	}
+
+	/**
+	 * Applies during initial response, if distance to dependents is further than distance to home
+	 * @return true if distance to dependents is further than distance to home, false otherwise
+	 */
+	public boolean context() {
+		setName(this.getClass().getSimpleName()); // give this plan a user friendly name for logging purposes
+		boolean applicable = false;
+		boolean hasDependents = Boolean.valueOf(agent.getBelief(ArchetypeAgent.Beliefname.HasDependents.name()));
+		if (hasDependents) {
+			xyHome = agent.parseLocation(agent.getBelief(ArchetypeAgent.Beliefname.LocationHome.name()));
+			xyDeps = agent.parseLocation(agent.getBelief(ArchetypeAgent.Beliefname.HasDependentsAtLocation.name()));
+			if (xyHome != null && xyDeps != null) {
+				xyNow = ((Location[])agent.getQueryPerceptInterface().queryPercept(
+						String.valueOf(agent.getId()), Constants.REQUEST_LOCATION, null))[1];
+				// Using beeline distance which is more natural and not computationally expensive
+				distHome = Location.distanceBetween(xyNow,xyHome);
+				distDeps = Location.distanceBetween(xyNow,xyDeps);
+				applicable = (distDeps > distHome);
+			}
+		}
+		agent.out("thinks " + getFullName() + " is " + (applicable ? "" : "not ") + "applicable");
+		return applicable;
+	}
+
+	PlanStep[] steps = {
+			() -> {
+				// Go home now
+				agent.out("will go home to " + xyHome + " #" + getFullName());
+				subgoal(new GoalGoto(GoalGoto.class.getSimpleName(), xyHome));
+				// subgoal should be last call in any plan step
+			},
+			() -> {
+				// Check if we have arrived
+				xyNow = ((Location[])agent.getQueryPerceptInterface().queryPercept(
+						String.valueOf(agent.getId()), Constants.REQUEST_LOCATION, null))[1];
+				distHome = Location.distanceBetween(xyNow,xyHome);
+				boolean reached = (distHome > 0);
+				if (reached) {
+					agent.out("reached home at " + xyHome + " #" + getFullName());
+				} else {
+					agent.out("is stuck at location " + xyNow + " #" + getFullName());
+				}
+				// Go visits dependents now
+				agent.out("will go to dependents at " + xyDeps + " #" + getFullName());
+				subgoal(new GoalGoto(GoalGoto.class.getSimpleName(), xyDeps));
+				// subgoal should be last call in any plan step
+
+			},
+			() -> {
+				// Check if we have arrived
+				xyNow = ((Location[])agent.getQueryPerceptInterface().queryPercept(
+						String.valueOf(agent.getId()), Constants.REQUEST_LOCATION, null))[1];
+				distDeps = Location.distanceBetween(xyNow,xyDeps);
+				boolean reached = (distDeps <= 0);
+				agent.out((reached ? "is with" : "did not reach") + " dependents at " + xyDeps + " #" + getFullName());
+				// Decide if we will go home from here
+				boolean willGoHomeAfterVisitingDependents = Boolean.valueOf(agent.getBelief(ArchetypeAgent.Beliefname.WillGoHomeAfterVisitingDependents.name()));
+				if (reached && !willGoHomeAfterVisitingDependents) {
+					agent.out("will wait with dependents at " + xyDeps + " #" + getFullName());
+					this.drop(); // all done, drop the remaining plan steps
+				} else {
+					agent.out("will go home to " + xyHome + " #" + getFullName());
+					subgoal(new GoalGoto(GoalGoto.class.getSimpleName(), xyHome));
+					// subgoal should be last call in any plan step
+				}
+			},
+			() -> {
+				// Check if we have arrived
+				xyNow = ((Location[])agent.getQueryPerceptInterface().queryPercept(
+						String.valueOf(agent.getId()), Constants.REQUEST_LOCATION, null))[1];
+				distHome = Location.distanceBetween(xyNow,xyHome);
+				boolean reached = (distHome <= 0);
+				if (reached) {
+					agent.out("reached home at " + xyHome + " #" + getFullName());
+				} else {
+					agent.out("is stuck at location " + xyNow + " #" + getFullName());
+				}
+			},
+	};
+
+	@Override
+	public void setPlanVariables(Map<String, Object> vars) {
+	}
+}
