@@ -180,13 +180,16 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
     Location parseLocation(String slocation) {
         if (slocation != null && !slocation.isEmpty()) {
             try {
+                slocation = slocation
+                        .replaceAll("\\[", "")
+                        .replaceAll("\\]", "");
                 String[] tokens = slocation.split(",");
                 if (tokens.length>=3) {
                     String name = tokens[0];
-                    double[] coords = new double[]{Double.parseDouble(tokens[1]), Double.parseDouble(tokens[2])};
+                    double[] coords = new double[]{Double.parseDouble(tokens[1].trim()), Double.parseDouble(tokens[2].trim())};
                     return new Location(name, coords[0], coords[1]);
                 }
-                double[] coords = new double[]{Double.parseDouble(tokens[0]), Double.parseDouble(tokens[1])};
+                double[] coords = new double[]{Double.parseDouble(tokens[0].trim()), Double.parseDouble(tokens[1].trim())};
                 return new Location("", coords[0], coords[1]);
             } catch (Exception e) {
                 logger.error("Could not parse location: " + slocation);
