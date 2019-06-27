@@ -54,6 +54,24 @@ df<-df[filter,]
 filter<-df$ResponseThresholdInitial > df$ResponseThresholdFinal
 df[filter,]$ResponseThresholdInitial<-df[filter,]$ResponseThresholdFinal
 
+# Change logicals to Java boolean
+filter<-df$WillGoHomeAfterVisitingDependents==1
+df[filter,]$WillGoHomeAfterVisitingDependents<-"true"
+filter<-df$WillGoHomeAfterVisitingDependents==0
+df[filter,]$WillGoHomeAfterVisitingDependents<-"false"
+filter<-df$WillGoHomeBeforeLeaving==1
+df[filter,]$WillGoHomeBeforeLeaving<-"true"
+filter<-df$WillGoHomeBeforeLeaving==0
+df[filter,]$WillGoHomeBeforeLeaving<-"false"
+filter<-df$WillStay==1
+df[filter,]$WillStay<-"true"
+filter<-df$WillStay==0
+df[filter,]$WillStay<-"false"
+filter<-df$HasDependents==1
+df[filter,]$HasDependents<-"true"
+filter<-df$HasDependents==0
+df[filter,]$HasDependents<-"false"
+
 # Reorder by archetypes, needed for correct assignment of Jill BDI agents types
 df<-df[order(df$BDIAgentType),]
 
