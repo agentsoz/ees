@@ -198,7 +198,7 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
         return null;
     }
 
-    double getTravelDistanceTo(Location location) {
+    double getDrivingDistanceTo(Location location) {
         double dist = (location == null) ? -1 :
                 (double) getQueryPerceptInterface().queryPercept(
                         String.valueOf(getId()),

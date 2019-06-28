@@ -22,6 +22,7 @@ package io.github.agentsoz.ees.agents.archetype;
  * #L%
  */
 
+import io.github.agentsoz.bdiabm.data.ActionContent;
 import io.github.agentsoz.ees.Constants;
 import io.github.agentsoz.jill.lang.*;
 import io.github.agentsoz.util.Location;
@@ -35,7 +36,6 @@ import java.util.Map;
 public class PlanStayAndDefend extends Plan {
 
 	ArchetypeAgent agent = null;
-	Location xyNow;
 	Location xyHome;
 
 	public PlanStayAndDefend(Agent agent, Goal goal, String name) {
@@ -56,9 +56,7 @@ public class PlanStayAndDefend extends Plan {
 	PlanStep[] steps = {
 			() -> {
 				xyHome = agent.parseLocation(agent.getBelief(ArchetypeAgent.Beliefname.LocationHome.name()));
-				xyNow = ((Location[])agent.getQueryPerceptInterface().queryPercept(
-						String.valueOf(agent.getId()), Constants.REQUEST_LOCATION, null))[1];
-				double distHome = Location.distanceBetween(xyNow,xyHome);
+				double distHome = agent.getDrivingDistanceTo(xyHome);
 				boolean atHome = (distHome <= 0);
 				if (!atHome) {
 					// Go home first
@@ -73,14 +71,12 @@ public class PlanStayAndDefend extends Plan {
 			},
 			() -> {
 				// Check if we have arrived
-				xyNow = ((Location[])agent.getQueryPerceptInterface().queryPercept(
-						String.valueOf(agent.getId()), Constants.REQUEST_LOCATION, null))[1];
-				double distHome = Location.distanceBetween(xyNow,xyHome);
-				boolean reached = (distHome <= 0);
-				if (reached) {
+				if (ActionContent.State.PASSED.toString().equals(agent.getLastBdiAction().getActionState())) {
 					agent.out("will stay and defend now #" + getFullName());
 				} else {
-					agent.out("is stuck at location " + xyNow + " #" + getFullName());
+					Location[] xy = ((Location[])agent.getQueryPerceptInterface().queryPercept(
+							String.valueOf(agent.getId()), Constants.REQUEST_LOCATION, null));
+					agent.out("is stuck between locations " + xy[0] + " and " + xy[1] + " #" + getFullName());
 				}
 			},
 	};

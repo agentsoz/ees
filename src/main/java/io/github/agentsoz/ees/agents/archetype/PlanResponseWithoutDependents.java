@@ -22,6 +22,7 @@ package io.github.agentsoz.ees.agents.archetype;
  * #L%
  */
 
+import io.github.agentsoz.bdiabm.data.ActionContent;
 import io.github.agentsoz.ees.Constants;
 import io.github.agentsoz.ees.agents.bushfire.BushfireAgent;
 import io.github.agentsoz.ees.agents.bushfire.GoalGoHome;
@@ -37,7 +38,6 @@ import java.util.Map;
 public class PlanResponseWithoutDependents extends Plan {
 
 	ArchetypeAgent agent = null;
-	Location xyNow;
 	Location xyHome;
 
 	public PlanResponseWithoutDependents(Agent agent, Goal goal, String name) {
@@ -55,10 +55,8 @@ public class PlanResponseWithoutDependents extends Plan {
 		setName(this.getClass().getSimpleName()); // give this plan a user friendly name for logging purposes
 		boolean hasDependents = Boolean.valueOf(agent.getBelief(ArchetypeAgent.Beliefname.HasDependents.name()));
 		if (!hasDependents) {
-			xyNow = ((Location[])agent.getQueryPerceptInterface().queryPercept(
-					String.valueOf(agent.getId()), Constants.REQUEST_LOCATION, null))[1];
 			xyHome = agent.parseLocation(agent.getBelief(ArchetypeAgent.Beliefname.LocationHome.name()));
-			double distHome = Location.distanceBetween(xyNow,xyHome);
+			double distHome = agent.getDrivingDistanceTo(xyHome);
 			applicable = distHome > 0;
 		}
 		agent.out("thinks " + getFullName() + " is " + (applicable ? "" : "not ") + "applicable");
@@ -75,23 +73,20 @@ public class PlanResponseWithoutDependents extends Plan {
 					// subgoal should be last call in any plan step
 				} else {
 					// Wait at current location
-					xyNow = ((Location[])agent.getQueryPerceptInterface().queryPercept(
-							String.valueOf(agent.getId()), Constants.REQUEST_LOCATION, null))[1];
-					agent.out("will wait at location " + xyNow + " #" + getFullName());
+					Location[] xy = ((Location[])agent.getQueryPerceptInterface().queryPercept(
+							String.valueOf(agent.getId()), Constants.REQUEST_LOCATION, null));
+					agent.out("will wait at location between " + xy[0] + " and " + xy[1] + " #" + getFullName());
 					this.drop(); // all done, drop the remaining plan steps
 				}
 			},
 			() -> {
 				// Check if we have arrived
-				xyNow = ((Location[])agent.getQueryPerceptInterface().queryPercept(
-						String.valueOf(agent.getId()), Constants.REQUEST_LOCATION, null))[1];
-				xyHome = agent.parseLocation(agent.getBelief(ArchetypeAgent.Beliefname.LocationHome.name()));
-				double distHome = Location.distanceBetween(xyNow,xyHome);
-				boolean reachedHome = (distHome <= 0);
-				if (reachedHome) {
+				if (ActionContent.State.PASSED.toString().equals(agent.getLastBdiAction().getActionState())) {
 					agent.out("reached home at " + xyHome + " #" + getFullName());
 				} else {
-					agent.out("is stuck at location " + xyNow + " #" + getFullName());
+					Location[] xy = ((Location[])agent.getQueryPerceptInterface().queryPercept(
+							String.valueOf(agent.getId()), Constants.REQUEST_LOCATION, null));
+					agent.out("is stuck between locations " + xy[0] + " and " + xy[1] + " #" + getFullName());
 				}
 			},
 	};

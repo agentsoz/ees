@@ -58,7 +58,7 @@ public class PlanGoto extends Plan {
 
 	PlanStep[] steps = {
 			() -> {
-				double distToDest = agent.getTravelDistanceTo(destination);
+				double distToDest = agent.getDrivingDistanceTo(destination);
 				// All done if already at the destination,
 				// or tried enough times,
 				// or were driving but the last bdi action (presumably the drive action) was dropped
