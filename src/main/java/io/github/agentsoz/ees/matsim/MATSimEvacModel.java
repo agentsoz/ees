@@ -566,6 +566,11 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
     }
 
     public void start() {
+        // FIXME: Eventually remove the following hack to reset the log level for EditTrips
+        // EditTrips incorrectly forces a particular log level in its constructor and orerwrites anything coming from log4j.xml,
+        // so here we reset it back to what was in log4j.xml
+        org.apache.log4j.Level level = org.apache.log4j.Logger.getLogger(org.matsim.withinday.utils.EditTrips.class).getLevel();
         matsimModel.start();
+        org.apache.log4j.Logger.getLogger(org.matsim.withinday.utils.EditTrips.class).setLevel(level);
     }
 }

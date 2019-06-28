@@ -55,6 +55,17 @@
 	<logger name="org.matsim.core.mobsim.qsim.qnetsimengine.QNetsimEngine">
 		<level value="info"/> <!-- Adjust if needed -->
 	</logger>
+	<logger name="org.matsim.withinday.utils.EditTrips">
+		<level value="error"/> <!-- Adjust if needed -->
+	</logger>
+	<logger name="org.matsim.core.scoring">
+		<level value="error"/> <!-- Adjust if needed -->
+	</logger>
+	<logger name="org.matsim.core.mobsim.qsim.changeeventsengine.NetworkChangeEventsEngine">
+		<level value="error"/> <!-- Adjust if needed -->
+	</logger>
+
+
 
 	<root>
 		<priority value="warn"></priority> <!-- Adjust if needed -->
