@@ -22,6 +22,7 @@ package io.github.agentsoz.ees.agents.archetype;
  * #L%
  */
 
+import io.github.agentsoz.bdiabm.data.ActionContent;
 import io.github.agentsoz.ees.Constants;
 import io.github.agentsoz.jill.lang.*;
 import io.github.agentsoz.util.Location;
@@ -38,7 +39,6 @@ public class PlanLeaveNow extends Plan {
 	Location xyEvac;
 	Location xyInvac;
 	Location xyHome;
-	Location xyNow;
 
 	public PlanLeaveNow(Agent agent, Goal goal, String name) {
 		super(agent, goal, name);
@@ -64,15 +64,13 @@ public class PlanLeaveNow extends Plan {
 			},
 			() -> {
 				// Check if we have arrived
-				xyNow = ((Location[])agent.getQueryPerceptInterface().queryPercept(
-						String.valueOf(agent.getId()), Constants.REQUEST_LOCATION, null))[1];
-				double dist = Location.distanceBetween(xyNow,xyEvac);
-				boolean reached = (dist <= 0);
-				if (reached) {
+				if (ActionContent.State.PASSED.toString().equals(agent.getLastBdiAction().getActionState())) {
 					agent.out("reached evac location " + xyEvac + " #" + getFullName());
 					this.drop(); // all done, drop the remaining plan steps
 				} else {
-					agent.out("is stuck at location " + xyNow + " #" + getFullName());
+					Location[] xy = ((Location[])agent.getQueryPerceptInterface().queryPercept(
+							String.valueOf(agent.getId()), Constants.REQUEST_LOCATION, null));
+					agent.out("is stuck between locations " + xy[0] + " and " + xy[1] + " #" + getFullName());
 					// Try invac location
 					xyInvac = agent.parseLocation(agent.getBelief(ArchetypeAgent.Beliefname.LocationInvacPreference.name()));
 					agent.out("will go to invac location " + xyInvac + " #" + getFullName());
@@ -82,15 +80,13 @@ public class PlanLeaveNow extends Plan {
 			},
 			() -> {
 				// Check if we have arrived
-				xyNow = ((Location[])agent.getQueryPerceptInterface().queryPercept(
-						String.valueOf(agent.getId()), Constants.REQUEST_LOCATION, null))[1];
-				double dist = Location.distanceBetween(xyNow,xyInvac);
-				boolean reached = (dist <= 0);
-				if (reached) {
+				if (ActionContent.State.PASSED.toString().equals(agent.getLastBdiAction().getActionState())) {
 					agent.out("reached invac location " + xyEvac + " #" + getFullName());
 					this.drop(); // all done, drop the remaining plan steps
 				} else {
-					agent.out("is stuck at location " + xyNow + " #" + getFullName());
+					Location[] xy = ((Location[])agent.getQueryPerceptInterface().queryPercept(
+							String.valueOf(agent.getId()), Constants.REQUEST_LOCATION, null));
+					agent.out("is stuck between locations " + xy[0] + " and " + xy[1] + " #" + getFullName());
 					// Try home
 					xyHome = agent.parseLocation(agent.getBelief(ArchetypeAgent.Beliefname.LocationHome.name()));
 					agent.out("will go home to " + xyInvac + " #" + getFullName());
@@ -100,14 +96,12 @@ public class PlanLeaveNow extends Plan {
 			},
 			() -> {
 				// Check if we have arrived
-				xyNow = ((Location[])agent.getQueryPerceptInterface().queryPercept(
-						String.valueOf(agent.getId()), Constants.REQUEST_LOCATION, null))[1];
-				double dist = Location.distanceBetween(xyNow,xyHome);
-				boolean reached = (dist <= 0);
-				if (reached) {
+				if (ActionContent.State.PASSED.toString().equals(agent.getLastBdiAction().getActionState())) {
 					agent.out("reached home at " + xyHome + " #" + getFullName());
 				} else {
-					agent.out("is out of options and stranded at location " + xyNow + " #" + getFullName());
+					Location[] xy = ((Location[])agent.getQueryPerceptInterface().queryPercept(
+							String.valueOf(agent.getId()), Constants.REQUEST_LOCATION, null));
+					agent.out("is stranded between locations " + xy[0] + " and " + xy[1] + " #" + getFullName());
 				}
 			},
 	};

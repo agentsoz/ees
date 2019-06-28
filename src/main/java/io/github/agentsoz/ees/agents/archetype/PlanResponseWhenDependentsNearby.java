@@ -22,6 +22,7 @@ package io.github.agentsoz.ees.agents.archetype;
  * #L%
  */
 
+import io.github.agentsoz.bdiabm.data.ActionContent;
 import io.github.agentsoz.ees.Constants;
 import io.github.agentsoz.ees.agents.bushfire.BushfireAgent;
 import io.github.agentsoz.ees.agents.bushfire.GoalGoHome;
@@ -40,7 +41,6 @@ public class PlanResponseWhenDependentsNearby extends Plan {
 	ArchetypeAgent agent = null;
 	Location xyHome;
 	Location xyDeps;
-	Location xyNow;
 	double distDeps;
 	double distHome;
 
@@ -62,11 +62,9 @@ public class PlanResponseWhenDependentsNearby extends Plan {
 			xyHome = agent.parseLocation(agent.getBelief(ArchetypeAgent.Beliefname.LocationHome.name()));
 			xyDeps = agent.parseLocation(agent.getBelief(ArchetypeAgent.Beliefname.HasDependentsAtLocation.name()));
 			if (xyHome != null && xyDeps != null) {
-				xyNow = ((Location[])agent.getQueryPerceptInterface().queryPercept(
-						String.valueOf(agent.getId()), Constants.REQUEST_LOCATION, null))[0];
 				// Using beeline distance which is more natural and not computationally expensive
-				distHome = Location.distanceBetween(xyNow,xyHome);
-				distDeps = Location.distanceBetween(xyNow,xyDeps);
+				distHome = agent.getDrivingDistanceTo(xyHome);
+				distDeps = agent.getDrivingDistanceTo(xyDeps);
 				applicable = (distDeps <= distHome);
 			}
 		}
@@ -83,9 +81,7 @@ public class PlanResponseWhenDependentsNearby extends Plan {
             },
 			() -> {
 				// Check if we have arrived
-				xyNow = ((Location[])agent.getQueryPerceptInterface().queryPercept(
-						String.valueOf(agent.getId()), Constants.REQUEST_LOCATION, null))[1];
-				distDeps = Location.distanceBetween(xyNow,xyDeps);
+				distDeps = agent.getDrivingDistanceTo(xyDeps);
 				boolean reached = (distDeps <= 0);
 				agent.out((reached ? "is with" : "did not reach") + " dependents at " + xyDeps + " #" + getFullName());
 				// Decide if we will go home from here
@@ -101,14 +97,12 @@ public class PlanResponseWhenDependentsNearby extends Plan {
             },
 			() -> {
 				// Check if we have arrived
-				xyNow = ((Location[])agent.getQueryPerceptInterface().queryPercept(
-						String.valueOf(agent.getId()), Constants.REQUEST_LOCATION, null))[1];
-				distHome = Location.distanceBetween(xyNow,xyHome);
-				boolean reached = (distHome <= 0);
-				if (reached) {
+				if (ActionContent.State.PASSED.toString().equals(agent.getLastBdiAction().getActionState())) {
 					agent.out("reached home at " + xyHome + " #" + getFullName());
 				} else {
-					agent.out("is stuck at location " + xyNow + " #" + getFullName());
+					Location[] xy = ((Location[])agent.getQueryPerceptInterface().queryPercept(
+							String.valueOf(agent.getId()), Constants.REQUEST_LOCATION, null));
+					agent.out("is stuck between locations " + xy[0] + " and " + xy[1] + " #" + getFullName());
 				}
 			},
 	};
