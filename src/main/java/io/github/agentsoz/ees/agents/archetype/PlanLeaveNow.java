@@ -64,7 +64,7 @@ public class PlanLeaveNow extends Plan {
 			},
 			() -> {
 				// Check if we have arrived
-				if (ActionContent.State.PASSED.toString().equals(agent.getLastBdiAction().getActionState())) {
+				if (ActionContent.State.PASSED.equals(agent.getLastBdiActionState())) {
 					agent.out("reached evac location " + xyEvac + " #" + getFullName());
 					this.drop(); // all done, drop the remaining plan steps
 				} else {
@@ -80,7 +80,7 @@ public class PlanLeaveNow extends Plan {
 			},
 			() -> {
 				// Check if we have arrived
-				if (ActionContent.State.PASSED.toString().equals(agent.getLastBdiAction().getActionState())) {
+				if (ActionContent.State.PASSED.equals(agent.getLastBdiActionState())) {
 					agent.out("reached invac location " + xyEvac + " #" + getFullName());
 					this.drop(); // all done, drop the remaining plan steps
 				} else {
@@ -96,7 +96,7 @@ public class PlanLeaveNow extends Plan {
 			},
 			() -> {
 				// Check if we have arrived
-				if (ActionContent.State.PASSED.toString().equals(agent.getLastBdiAction().getActionState())) {
+				if (ActionContent.State.PASSED.equals(agent.getLastBdiActionState())) {
 					agent.out("reached home at " + xyHome + " #" + getFullName());
 				} else {
 					Location[] xy = ((Location[])agent.getQueryPerceptInterface().queryPercept(

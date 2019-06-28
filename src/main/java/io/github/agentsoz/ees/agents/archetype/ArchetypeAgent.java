@@ -379,14 +379,17 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
 
     // Last BDI action done (used for checking status of finished drive actions)
     EnvironmentAction lastBdiAction;
+    ActionContent.State lastBdiActionState;
 
-    private void setLastBdiAction(EnvironmentAction action) {
+    private void setLastBdiActionAndState(EnvironmentAction action, ActionContent.State state) {
         this.lastBdiAction = action;
+        this.lastBdiActionState = state;
     }
 
-    public EnvironmentAction getLastBdiAction() {
-        return lastBdiAction;
+    public ActionContent.State getLastBdiActionState() {
+        return lastBdiActionState;
     }
+
 
     private void addActiveEnvironmentAction(EnvironmentAction activeEnvironmentAction) {
         activeBdiActions.put(activeEnvironmentAction.getActionID(), activeEnvironmentAction);
@@ -769,7 +772,8 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
 
 
             // remove the action and records it as the last action performed
-            setLastBdiAction(removeActiveEnvironmentAction(content.getAction_type()));
+            EnvironmentAction lastAction = removeActiveEnvironmentAction(content.getAction_type());
+            setLastBdiActionAndState(lastAction, actionState);
             if (content.getAction_type().equals(Constants.DRIVETO)) {
                 // Wake up the agent that was waiting for drive action to finish
                 suspend(false);

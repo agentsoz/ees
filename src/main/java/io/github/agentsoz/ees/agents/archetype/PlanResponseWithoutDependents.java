@@ -81,7 +81,7 @@ public class PlanResponseWithoutDependents extends Plan {
 			},
 			() -> {
 				// Check if we have arrived
-				if (ActionContent.State.PASSED.toString().equals(agent.getLastBdiAction().getActionState())) {
+				if (ActionContent.State.PASSED.equals(agent.getLastBdiActionState())) {
 					agent.out("reached home at " + xyHome + " #" + getFullName());
 				} else {
 					Location[] xy = ((Location[])agent.getQueryPerceptInterface().queryPercept(
