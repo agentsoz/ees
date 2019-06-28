@@ -791,7 +791,7 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
     }
     class Prefix{
         public String toString() {
-            return String.format("%8s|%s|%-5s|", getTimeString(), ArchetypeAgent.class.getSimpleName(), getId());
+            return String.format("%05.0f|%s|%s|%s|", getTime(), getTimeString(), ArchetypeAgent.class.getSimpleName(), getId());
         }
     }
 

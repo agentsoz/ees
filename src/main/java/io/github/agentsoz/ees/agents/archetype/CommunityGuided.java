@@ -42,7 +42,7 @@ public class CommunityGuided extends ArchetypeAgent {
 
     class Prefix{
         public String toString() {
-            return String.format("%8s|%s|%-5s|", getTimeString(), CommunityGuided.class.getSimpleName(), getId());
+            return String.format("%05.0f|%s|%s|%s|", getTime(), getTimeString(), CommunityGuided.class.getSimpleName(), getId());
         }
     }
 

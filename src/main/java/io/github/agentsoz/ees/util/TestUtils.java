@@ -62,13 +62,13 @@ public class TestUtils {
                 String actual = actualLines.get(i);
                 if (!actual.equals(expected)) {
                     boolean isDifferent = true;
-                    String[] exp = expected.split("\\|",2);
-                    String[] act = actual.split("\\|",2);
+                    String[] exp = expected.split("\\|",3);
+                    String[] act = actual.split("\\|",3);
                     // check if all but the first column (time) is the same
-                    if (exp[1].equals(act[1])) {
+                    if (exp[2].equals(act[2])) {
                         // if so, and the time difference is within slack then accept
-                        double expTime = parseTime(exp[0]);
-                        double actTime = parseTime(act[0]);
+                        double expTime = Double.valueOf(exp[0]);
+                        double actTime = Double.valueOf(act[0]);
                         if ((actTime+slack<=expTime) || (actTime-slack>=expTime)) {
                             String msg = "\naccepting diff (with time slack "+slack+"):\n"
                                     + "expected: " + expected + "\n"

@@ -42,7 +42,7 @@ public class WorriedWaverer extends ArchetypeAgent {
 
     class Prefix{
         public String toString() {
-            return String.format("%8s|%s|%-5s|", getTimeString(), WorriedWaverer.class.getSimpleName(), getId());
+            return String.format("%05.0f|%s|%s|%s|", getTime(), getTimeString(), WorriedWaverer.class.getSimpleName(), getId());
         }
     }
 
