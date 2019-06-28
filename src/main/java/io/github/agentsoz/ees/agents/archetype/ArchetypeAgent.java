@@ -231,7 +231,7 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
                     + Double.valueOf(getBelief(State.anxietyFromSocialMessages.name()));
             if (anxiety > 0) {
                 double initialResponseThreshold = Double.valueOf(getBelief(Beliefname.ResponseThresholdInitial.name()));
-                double finalResponseThreshold = Double.valueOf(getBelief(Beliefname.ResponseThresholdInitial.name()));
+                double finalResponseThreshold = Double.valueOf(getBelief(Beliefname.ResponseThresholdFinal.name()));
 
                 // and whether we already know if the thresholds are reached
                 boolean initialThresholdReached = Boolean.valueOf(getBelief(State.responseThresholdInitialReached.name()));
