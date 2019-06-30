@@ -110,7 +110,7 @@ public final class EvacDrivetoActionHandlerV2 implements BDIActionHandler {
 		model.getReplanner().editPlans().flushEverythingBeyondCurrent(mobsimAgent) ;
 		printPlan("after flush: " , mobsimAgent) ;
 
-		boolean addReplanActivity = (args.length >=  6 && args[5] instanceof Boolean) ? true : false;
+		boolean addReplanActivity = (args.length >=  6 && args[5] instanceof Boolean) ? (Boolean)args[5] : false;
 		int replanTime = (args.length >=  7 && args[6] instanceof Integer) ? (int)args[6] : 0;
 
 		// add small replan activity so we know where/when the replanning occurred

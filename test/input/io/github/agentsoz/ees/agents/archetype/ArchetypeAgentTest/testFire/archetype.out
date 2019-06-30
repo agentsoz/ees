@@ -66,19 +66,15 @@
 03745|01:02:25|ArchetypeAgent|0|thinks GoalInitialResponse~>PlanResponseWhenDependentsNearby is not applicable
 03745|01:02:25|ArchetypeAgent|0|thinks GoalInitialResponse~>PlanResponseWithoutDependents is applicable
 03745|01:02:25|ArchetypeAgent|0|thinks GoalInitialResponse~>PlanDoNothing is applicable
-03745|01:02:25|ArchetypeAgent|0|will wait at location (26, coords=2000.0,4000.0) #GoalInitialResponse~>PlanResponseWithoutDependents
+03745|01:02:25|ArchetypeAgent|0|will wait and see #GoalInitialResponse~>PlanResponseWithoutDependents
 03745|01:02:25|ArchetypeAgent|0|thinks GoalFinalResponse~>PlanLeaveNow is applicable
 03745|01:02:25|ArchetypeAgent|0|thinks GoalFinalResponse~>PlanStayAndDefend is not applicable
 03745|01:02:25|ArchetypeAgent|0|will go to evac location (FarFarAway, coords=5000.0,0.0) #GoalFinalResponse~>PlanLeaveNow
 03745|01:02:25|ArchetypeAgent|0|thinks GoalGoto~>PlanGoto is applicable
 03745|01:02:25|ArchetypeAgent|0|will start driving to (FarFarAway, coords=5000.0,0.0) 7000m away #GoalGoto~>PlanGoto
 03745|01:02:25|ArchetypeAgent|0|believes isDriving=true @@
-03780|01:03:00|ArchetypeAgent|0|stopped driving @@
-03780|01:03:00|ArchetypeAgent|0|started driving to EvacPlace @@
-03780|01:03:00|ArchetypeAgent|0|started activity Replan @@
-03780|01:03:00|ArchetypeAgent|0|finished activity Replan @@
-04143|01:09:03|ArchetypeAgent|0|stopped driving @@
-04143|01:09:03|ArchetypeAgent|0|started activity EvacPlace @@
-04143|01:09:03|ArchetypeAgent|0|finished driving to (FarFarAway, coords=5000.0,0.0) 0m away after 1 tries #GoalGoto~>PlanGoto
-04143|01:09:03|ArchetypeAgent|0|believes isDriving=false @@
-04143|01:09:03|ArchetypeAgent|0|reached evac location (FarFarAway, coords=5000.0,0.0) #GoalFinalResponse~>PlanLeaveNow
+04142|01:09:02|ArchetypeAgent|0|stopped driving @@
+04142|01:09:02|ArchetypeAgent|0|started activity EvacPlace @@
+04142|01:09:02|ArchetypeAgent|0|finished driving to (FarFarAway, coords=5000.0,0.0) 0m away after 1 tries #GoalGoto~>PlanGoto
+04142|01:09:02|ArchetypeAgent|0|believes isDriving=false @@
+04142|01:09:02|ArchetypeAgent|0|reached evac location (FarFarAway, coords=5000.0,0.0) #GoalFinalResponse~>PlanLeaveNow

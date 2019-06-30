@@ -70,34 +70,30 @@
 04333|01:12:13|ArchetypeAgent|0|thinks GoalInitialResponse~>PlanResponseWhenDependentsNearby is not applicable
 04333|01:12:13|ArchetypeAgent|0|thinks GoalInitialResponse~>PlanResponseWithoutDependents is applicable
 04333|01:12:13|ArchetypeAgent|0|thinks GoalInitialResponse~>PlanDoNothing is applicable
-04333|01:12:13|ArchetypeAgent|0|will wait at location (32, coords=2000.0,5000.0) #GoalInitialResponse~>PlanResponseWithoutDependents
+04333|01:12:13|ArchetypeAgent|0|will wait and see #GoalInitialResponse~>PlanResponseWithoutDependents
 04333|01:12:13|ArchetypeAgent|0|thinks GoalFinalResponse~>PlanLeaveNow is applicable
 04333|01:12:13|ArchetypeAgent|0|thinks GoalFinalResponse~>PlanStayAndDefend is not applicable
 04333|01:12:13|ArchetypeAgent|0|will go to evac location (FarFarAway, coords=5000.0,0.0) #GoalFinalResponse~>PlanLeaveNow
 04333|01:12:13|ArchetypeAgent|0|thinks GoalGoto~>PlanGoto is applicable
 04333|01:12:13|ArchetypeAgent|0|will start driving to (FarFarAway, coords=5000.0,0.0) 6000m away #GoalGoto~>PlanGoto
 04333|01:12:13|ArchetypeAgent|0|believes isDriving=true @@
-04378|01:12:58|ArchetypeAgent|0|stopped driving @@
-04378|01:12:58|ArchetypeAgent|0|started driving to EvacPlace @@
-04378|01:12:58|ArchetypeAgent|0|started activity Replan @@
-04378|01:12:58|ArchetypeAgent|0|finished activity Replan @@
-04380|01:13:00|ArchetypeAgent|0|saw embers @@
-04380|01:13:00|ArchetypeAgent|0|believes anxietyFromSituation=0.5 @@
-04380|01:13:00|ArchetypeAgent|0|believes futureValueOfVisibleEmbers=0.0 @@
-04426|01:13:46|ArchetypeAgent|0|saw embers @@
-04426|01:13:46|ArchetypeAgent|0|believes anxietyFromSituation=0.5 @@
-04426|01:13:46|ArchetypeAgent|0|believes futureValueOfVisibleEmbers=0.0 @@
-04486|01:14:46|ArchetypeAgent|0|saw embers @@
-04486|01:14:46|ArchetypeAgent|0|believes anxietyFromSituation=0.5 @@
-04486|01:14:46|ArchetypeAgent|0|believes futureValueOfVisibleEmbers=0.0 @@
-04546|01:15:46|ArchetypeAgent|0|saw embers @@
-04546|01:15:46|ArchetypeAgent|0|believes anxietyFromSituation=0.5 @@
-04546|01:15:46|ArchetypeAgent|0|believes futureValueOfVisibleEmbers=0.0 @@
-04606|01:16:46|ArchetypeAgent|0|saw embers @@
-04606|01:16:46|ArchetypeAgent|0|believes anxietyFromSituation=0.5 @@
-04606|01:16:46|ArchetypeAgent|0|believes futureValueOfVisibleEmbers=0.0 @@
-04857|01:20:57|ArchetypeAgent|0|stopped driving @@
-04857|01:20:57|ArchetypeAgent|0|started activity EvacPlace @@
-04857|01:20:57|ArchetypeAgent|0|finished driving to (FarFarAway, coords=5000.0,0.0) 0m away after 1 tries #GoalGoto~>PlanGoto
-04857|01:20:57|ArchetypeAgent|0|believes isDriving=false @@
-04857|01:20:57|ArchetypeAgent|0|reached evac location (FarFarAway, coords=5000.0,0.0) #GoalFinalResponse~>PlanLeaveNow
+04379|01:12:59|ArchetypeAgent|0|saw embers @@
+04379|01:12:59|ArchetypeAgent|0|believes anxietyFromSituation=0.5 @@
+04379|01:12:59|ArchetypeAgent|0|believes futureValueOfVisibleEmbers=0.0 @@
+04425|01:13:45|ArchetypeAgent|0|saw embers @@
+04425|01:13:45|ArchetypeAgent|0|believes anxietyFromSituation=0.5 @@
+04425|01:13:45|ArchetypeAgent|0|believes futureValueOfVisibleEmbers=0.0 @@
+04485|01:14:45|ArchetypeAgent|0|saw embers @@
+04485|01:14:45|ArchetypeAgent|0|believes anxietyFromSituation=0.5 @@
+04485|01:14:45|ArchetypeAgent|0|believes futureValueOfVisibleEmbers=0.0 @@
+04545|01:15:45|ArchetypeAgent|0|saw embers @@
+04545|01:15:45|ArchetypeAgent|0|believes anxietyFromSituation=0.5 @@
+04545|01:15:45|ArchetypeAgent|0|believes futureValueOfVisibleEmbers=0.0 @@
+04605|01:16:45|ArchetypeAgent|0|saw embers @@
+04605|01:16:45|ArchetypeAgent|0|believes anxietyFromSituation=0.5 @@
+04605|01:16:45|ArchetypeAgent|0|believes futureValueOfVisibleEmbers=0.0 @@
+04856|01:20:56|ArchetypeAgent|0|stopped driving @@
+04856|01:20:56|ArchetypeAgent|0|started activity EvacPlace @@
+04856|01:20:56|ArchetypeAgent|0|finished driving to (FarFarAway, coords=5000.0,0.0) 0m away after 1 tries #GoalGoto~>PlanGoto
+04856|01:20:56|ArchetypeAgent|0|believes isDriving=false @@
+04856|01:20:56|ArchetypeAgent|0|reached evac location (FarFarAway, coords=5000.0,0.0) #GoalFinalResponse~>PlanLeaveNow

@@ -74,11 +74,15 @@ public class PlanGoto extends Plan {
 					return;
 				}
 				// Not there yet, so start driving
-				tries++;
 				agent.out("will start driving to "
 						+ destination + String.format(" %.0f", distToDest) + "m away"
 						+ " #" + getFullName());
-				Goal action = agent.prepareDrivingGoal(Constants.EvacActivity.EvacPlace, destination, Constants.EvacRoutingMode.carFreespeed);
+				Goal action = agent.prepareDrivingGoal(
+						Constants.EvacActivity.EvacPlace,
+						destination,
+						Constants.EvacRoutingMode.carFreespeed,
+						tries>0);
+				tries++;
 				agent.believe(Beliefname.isDriving.name(), new Boolean(action != null).toString());
 				subgoal(action); // should be last call in any plan step
 			},

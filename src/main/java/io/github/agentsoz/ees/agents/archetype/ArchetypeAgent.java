@@ -207,14 +207,17 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
         return dist;
     }
 
-    Goal prepareDrivingGoal(Constants.EvacActivity activity, Location location, Constants.EvacRoutingMode routingMode) {
+    Goal prepareDrivingGoal(Constants.EvacActivity activity,
+                            Location location,
+                            Constants.EvacRoutingMode routingMode,
+                            boolean addReplanningActivity) {
         Object[] params = new Object[7];
         params[0] = Constants.DRIVETO;
         params[1] = location.getCoordinates();
         params[2] = getTime() + 5.0; // five secs from now;
         params[3] = routingMode;
         params[4] = activity.toString();
-        params[5] = true; // add replan activity to mark location/time of replanning
+        params[5] = addReplanningActivity; // add replan activity to mark location/time of replanning
         params[6] = Global.getRandom().nextInt(reactionTimeInSecs);
         EnvironmentAction action = new EnvironmentAction(
                 Integer.toString(getId()),
@@ -317,9 +320,6 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
     }
 
     private void handleFieldOfView(Object view) {
-        if (view == null) {
-            return;
-        }
         record("saw " + view);
         if (Constants.SIGHTED_EMBERS.equalsIgnoreCase(view.toString())) {
             double effect = Double.valueOf(getBelief(State.futureValueOfVisibleEmbers.name()));
@@ -340,6 +340,7 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
 
     private void handleEmergencyMessage(Object parameters) {
         try{
+            record("got message " + parameters);
             double effect = 0.0;
             String[] args = ((String)parameters).split(",");
             if (Advice.getCommonName().equals(args[0])) {

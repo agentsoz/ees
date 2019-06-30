@@ -72,10 +72,10 @@ public class PlanResponseWithoutDependents extends Plan {
 					subgoal(new GoalGoto(GoalGoto.class.getSimpleName(), xyHome));
 					// subgoal should be last call in any plan step
 				} else {
-					// Wait at current location
+					// Continue doing what it is doing
 					Location[] xy = ((Location[])agent.getQueryPerceptInterface().queryPercept(
 							String.valueOf(agent.getId()), Constants.REQUEST_LOCATION, null));
-					agent.out("will wait at location between " + xy[0] + " and " + xy[1] + " #" + getFullName());
+					agent.out("will wait and see #" + getFullName());
 					this.drop(); // all done, drop the remaining plan steps
 				}
 			},
