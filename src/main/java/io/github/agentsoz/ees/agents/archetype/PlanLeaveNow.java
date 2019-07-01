@@ -71,11 +71,18 @@ public class PlanLeaveNow extends Plan {
 					Location[] xy = ((Location[])agent.getQueryPerceptInterface().queryPercept(
 							String.valueOf(agent.getId()), Constants.REQUEST_LOCATION, null));
 					agent.out("is stuck between locations " + xy[0] + " and " + xy[1] + " #" + getFullName());
-					// Try invac location
 					xyInvac = agent.parseLocation(agent.getBelief(ArchetypeAgent.Beliefname.LocationInvacPreference.name()));
-					agent.out("will go to invac location " + xyInvac + " #" + getFullName());
-					subgoal(new GoalGoto(GoalGoto.class.getSimpleName(), xyInvac));
-					// subgoal should be last call in any plan step
+					if (Location.distanceBetween(xy[0],xyEvac) > Location.distanceBetween(xy[0],xyInvac)) {
+						// Try invac location
+						agent.out("will go to invac location " + xyInvac + " #" + getFullName());
+						subgoal(new GoalGoto(GoalGoto.class.getSimpleName(), xyInvac));
+						// subgoal should be last call in any plan step
+					} else {
+						// Else try evac location again
+						agent.out("will go to evac location " + xyEvac + " #" + getFullName());
+						subgoal(new GoalGoto(GoalGoto.class.getSimpleName(), xyEvac));
+						// subgoal should be last call in any plan step
+					}
 				}
 			},
 			() -> {
@@ -87,17 +94,24 @@ public class PlanLeaveNow extends Plan {
 					Location[] xy = ((Location[])agent.getQueryPerceptInterface().queryPercept(
 							String.valueOf(agent.getId()), Constants.REQUEST_LOCATION, null));
 					agent.out("is stuck between locations " + xy[0] + " and " + xy[1] + " #" + getFullName());
-					// Try home
 					xyHome = agent.parseLocation(agent.getBelief(ArchetypeAgent.Beliefname.LocationHome.name()));
-					agent.out("will go home to " + xyInvac + " #" + getFullName());
-					subgoal(new GoalGoto(GoalGoto.class.getSimpleName(), xyHome));
-					// subgoal should be last call in any plan step
+					if (Location.distanceBetween(xy[0],xyInvac) > Location.distanceBetween(xy[0],xyHome)) {
+						// Try home
+						agent.out("will go home to " + xyHome + " #" + getFullName());
+						subgoal(new GoalGoto(GoalGoto.class.getSimpleName(), xyHome));
+						// subgoal should be last call in any plan step
+					} else {
+						// Else try invac location again
+						agent.out("will go to invac location " + xyInvac + " #" + getFullName());
+						subgoal(new GoalGoto(GoalGoto.class.getSimpleName(), xyInvac));
+						// subgoal should be last call in any plan step
+					}
 				}
 			},
 			() -> {
 				// Check if we have arrived
 				if (ActionContent.State.PASSED.equals(agent.getLastBdiActionState())) {
-					agent.out("reached home at " + xyHome + " #" + getFullName());
+					agent.out("reached destination #" + getFullName());
 				} else {
 					Location[] xy = ((Location[])agent.getQueryPerceptInterface().queryPercept(
 							String.valueOf(agent.getId()), Constants.REQUEST_LOCATION, null));
