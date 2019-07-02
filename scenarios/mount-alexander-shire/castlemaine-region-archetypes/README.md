@@ -19,7 +19,7 @@ A [video of the run is here](https://cloudstor.aarnet.edu.au/plus/s/3aav6UK89gbR
 
 Symbol | Meaning |
 ---    | --- |
-White cars | Worried Waverers |
+Blue cars | Worried Waverers |
 Yellow cars | Considered Evacuators |
 Green cars | Community Guided |
 Pink cars | Responsibility Deniers |

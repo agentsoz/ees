@@ -138,7 +138,20 @@ public class SynthpopToMatsim {
                     (23*60*60)+(59*60)+59,
                     scenario.getPopulation().getFactory());
             for (String key : map.keySet()) {
-                person.getAttributes().putAttribute(key, map.get(key) ) ;
+                String value = map.get(key);
+                if ("HasDependentsAtLocation".equals(key)) {
+                    try {
+                        String[] loc = map.get(key)
+                                .replaceAll("[\\[\\]]", "")
+                                .trim()
+                                .split(",");
+                        Coord coords = ct.transform(new Coord(Double.valueOf(loc[0]), Double.valueOf(loc[1])));
+                        value = String.format("[%f,%f]", coord.getX(), coords.getY());
+
+                    } catch (Exception e) {
+                    }
+                }
+                person.getAttributes().putAttribute(key, value) ;
             }
             //person.getAttributes().putAttribute("BDIAgentType", "io.github.agentsoz.ees.agents.bushfire.Resident" );
 
