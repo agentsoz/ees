@@ -1,3 +1,16 @@
+getRandomCoordsWithinRadius <- function (latslons, max_radius) {
+  lats<-latslons[,1]
+  lons<-latslons[,2]
+  r <- sqrt(runif(1))*max_radius
+  t <- 2*pi*runif(1)*max_radius
+  dx <- r*cos(t); dy <- r*sin(t)
+  EarthRadius<-6371 # km
+  OneDegree<-EarthRadius * 2 * pi / 360 * 1000 # 1° latitude in meters
+  random_lats <- lats + dy / OneDegree
+  random_lons <- lons + dx / ( OneDegree * cos(lats * pi / 180) )
+  cbind(random_lats,random_lons)
+}
+
 gz<-'../../../../archetypes-modelling/population/archetypes/Bendigo-SA4/Castlemaine/persons_archetypes_attributes.csv.gz'
 con<-gzfile(gz,'rt')
 persons1<-read.csv(con,header=T,sep=',',stringsAsFactors = F,strip.white = T)
@@ -45,6 +58,12 @@ len<-min(sum(filter), length(locs))
 candidates<-candidates[1:len]
 df$HasDependentsAtLocation<-""
 df[candidates,]$HasDependentsAtLocation<-locs
+# 4. Assign random locations to remaining archetypes with dependents
+filter<-df$HasDependents==1 & df$HasDependentsAtLocation==""
+latslons<-as.numeric(unlist(strsplit(gsub('\\[|\\]| ','',sample(df[filter,]$Geographical.Coordinate)),",")))
+latslons<-cbind(latslons[seq(1, length(latslons), 2)], latslons[seq(2, length(latslons), 2)])
+rand_dests<-getRandomCoordsWithinRadius(latslons,5000)
+df[filter,]$HasDependentsAtLocation<-sprintf("[%f,%f]", rand_dests[,1], rand_dests[,2])
 
 # Remove all the dependent evacuators now (have been accounted for in pickups as best we can)
 filter<-df$BDIAgentType!="io.github.agentsoz.ees.agents.archetype.DependentEvacuator"
