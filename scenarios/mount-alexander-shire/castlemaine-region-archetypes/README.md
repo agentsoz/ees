@@ -1,3 +1,35 @@
+## Commit `4ba94ba` | 2 Jul, 2019
+
+
+`CastlemaineRegionArchetypesIT` is now showing sensible outputs with all the
+archetypes implemented to a reasonable degree.
+* All behaviour attributes for all archetypes are included in the population.
+* Dependent Evacuators are assigned randomly to others in the population (but not to Experienced Independents).
+* Unknown Type persons are removed.
+* Situation awareness involves sensing embers and fire, as well as all emergency messages (including Emergency Warnings).
+* Archetypes correctly use their threshold values as well as barometer change values when assessing the situation.
+* People with dependents go to attend to them in the initial phase as per the agreed behaviour (not fully debugged yet so might have some issues still).
+* People evacuate to preferred location, and if stuck fall back to Invac location, or home, in that order. Each location is tries three times before giving up and falling back to the next option.
+
+An initial check of randomly selected individuals in the simulation showed many interested traces, such as:
+* An Experienced Independent chose to defend but evacuated at the last minute when the fire came very close, while some others stayed and defended.
+* A Community Guided person left for the Elphington (evac location), got stuck in congestion, did a u-turn and decided to head towards Castlemaine (invac location), got stuck in congestion on that route too, and eventually turned back and headed home (successfully due to lighter traffic).
+
+A [video of the run is here](https://cloudstor.aarnet.edu.au/plus/s/3aav6UK89gbRBfz). Some notes about the colours in the video:
+
+Symbol | Meaning |
+---    | --- |
+White cars | Worried Waverers |
+Yellow cars | Considered Evacuators |
+Green cars | Community Guided |
+Pink cars | Responsibility Deniers |
+Orange cars | Threat Deniers |
+Red cars | Experienced Independents|
+White fixed dots | People at home |
+
+
+
+
 ## Commit `e2ebe0b` | 4 Jun, 2019
 
 * `CastlemaineRegionBaselineIT`: is now the renamed baseline scenario (from below).
@@ -8,7 +40,7 @@ A [basic comparison video of the two is here](https://cloudstor.aarnet.edu.au/pl
 Some notes re the archetypes population:
 * The population attributes in `population-archetypes.xml.gz` are initialised as per the agreed values.
 * The behaviours are the same as the `Resident` class (below).
-* So the main difference in the two populations is predominantly in the initialisation. 
+* So the main difference in the two populations is predominantly in the initialisation.
 
 
 ## Commit `8a33ec6` | May 23, 2019
