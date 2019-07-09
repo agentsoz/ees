@@ -1,3 +1,27 @@
+## Commit `c465c3f` | 10 Jul, 2019
+
+Debugged some behaviours related to dependents.
+
+The [latest video is here](https://cloudstor.aarnet.edu.au/plus/s/Ma8B0NwlGOfVfnL). Some notes about the colours in the video:
+
+Cars | Meaning |
+--- | --- |
+Blue | Worried Waverers |
+Yellow | Considered Evacuators |
+Green | Community Guided |
+Pink | Responsibility Deniers |
+Orange | Threat Deniers |
+Red | Experienced Independents|
+
+Dots | Meaning |
+--- | --- |
+Blue | People at home |
+Purple | People at Invac/Evac place |
+Green | People at Dependents place |
+
+
+
+
 ## Commit `4ba94ba` | 2 Jul, 2019
 
 
