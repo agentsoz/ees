@@ -237,25 +237,28 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
                 double finalResponseThreshold = Double.valueOf(getBelief(Beliefname.ResponseThresholdFinal.name()));
 
                 // and whether we already know if the thresholds are reached
-                boolean initialThresholdReached = Boolean.valueOf(getBelief(State.responseThresholdInitialReached.name()));
-                boolean finalThresholdReached = Boolean.valueOf(getBelief(State.responseThresholdFinalReached.name()));
+                boolean initialThresholdAlreadyReached = Boolean.valueOf(getBelief(State.responseThresholdInitialReached.name()));
+                boolean finalThresholdAlreadyReached = Boolean.valueOf(getBelief(State.responseThresholdFinalReached.name()));
+                boolean initialThresholdJustReached = !initialThresholdAlreadyReached && anxiety >= initialResponseThreshold ;
+                boolean finalThresholdJustReached = !finalThresholdAlreadyReached && anxiety >= finalResponseThreshold;
 
                 // if either threshold was just reached, then react now
-                if ((!initialThresholdReached && (anxiety >= initialResponseThreshold)) ||
-                        (!finalThresholdReached && (anxiety >= finalResponseThreshold))) {
-                    initialThresholdReached = anxiety >= initialResponseThreshold;
-                    finalThresholdReached = anxiety >= finalResponseThreshold;
-                    boolean bothThresholdsReached = initialThresholdReached && finalThresholdReached;
+                if (initialThresholdJustReached || finalThresholdJustReached) {
+                    boolean bothThresholdsJustReached = initialThresholdJustReached && finalThresholdJustReached;
 
-                    if (bothThresholdsReached) {
-                        believe(State.responseThresholdInitialReached.name(), Boolean.toString(initialThresholdReached));
-                        believe(State.responseThresholdFinalReached.name(), Boolean.toString(finalThresholdReached));
+                    if (bothThresholdsJustReached) {
+                        believe(State.responseThresholdInitialReached.name(),
+                                Boolean.toString(initialThresholdJustReached || initialThresholdAlreadyReached));
+                        believe(State.responseThresholdFinalReached.name(),
+                                Boolean.toString(finalThresholdJustReached || finalThresholdAlreadyReached));
                         post(new GoalFullResponse(GoalFullResponse.class.getSimpleName()));
-                    } else if (initialThresholdReached) {
-                        believe(State.responseThresholdInitialReached.name(), Boolean.toString(initialThresholdReached));
+                    } else if (initialThresholdJustReached) {
+                        believe(State.responseThresholdInitialReached.name(),
+                                Boolean.toString(initialThresholdJustReached || initialThresholdAlreadyReached));
                         post(new GoalInitialResponse(GoalInitialResponse.class.getSimpleName()));
-                    } else if (finalThresholdReached) {
-                        believe(State.responseThresholdFinalReached.name(), Boolean.toString(finalThresholdReached));
+                    } else if (finalThresholdJustReached) {
+                        believe(State.responseThresholdFinalReached.name(),
+                                Boolean.toString(finalThresholdJustReached || finalThresholdAlreadyReached));
                         post(new GoalFinalResponse(GoalFinalResponse.class.getSimpleName()));
                     }
                 }

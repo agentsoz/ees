@@ -67,6 +67,7 @@ public class Constants {
 
     // Evacuation-related activity names (added dynamically to MATSim)
     public enum EvacActivity {
+        Home,
         DrivePlace,
         EvacPlace,
         InvacPlace,

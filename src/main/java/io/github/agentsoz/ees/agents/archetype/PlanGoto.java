@@ -39,13 +39,16 @@ public class PlanGoto extends Plan {
 	private static final int maximumTries = 3;
 
 	ArchetypeAgent agent = null;
+	Constants.EvacActivity destinationType = null;
 	private Location destination = null;
+
 	private int tries;
 
 	public PlanGoto(Agent agent, Goal goal, String name) {
 		super(agent, goal, name);
 		this.agent = (ArchetypeAgent)agent;
 		destination = ((GoalGoto)getGoal()).getDestination();
+		destinationType = ((GoalGoto)getGoal()).getDestinationType();
 		body = steps;
 	}
 
@@ -78,7 +81,7 @@ public class PlanGoto extends Plan {
 						+ destination + String.format(" %.0f", distToDest) + "m away"
 						+ " #" + getFullName());
 				Goal action = agent.prepareDrivingGoal(
-						Constants.EvacActivity.EvacPlace,
+						destinationType,
 						destination,
 						Constants.EvacRoutingMode.carFreespeed,
 						tries>0);

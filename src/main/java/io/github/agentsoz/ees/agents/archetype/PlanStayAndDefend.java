@@ -61,7 +61,7 @@ public class PlanStayAndDefend extends Plan {
 				if (!atHome) {
 					// Go home first
 					agent.out("will go home to " + xyHome + " #" + getFullName());
-					subgoal(new GoalGoto(GoalGoto.class.getSimpleName(), xyHome));
+					subgoal(new GoalGoto(GoalGoto.class.getSimpleName(), xyHome, Constants.EvacActivity.Home));
 					// subgoal should be last call in any plan step
 				}
 				else {

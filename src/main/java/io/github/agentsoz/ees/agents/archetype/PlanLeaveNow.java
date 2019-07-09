@@ -59,7 +59,7 @@ public class PlanLeaveNow extends Plan {
 				// Leave for evac location
 				xyEvac = agent.parseLocation(agent.getBelief(ArchetypeAgent.Beliefname.LocationEvacuationPreference.name()));
 				agent.out("will go to evac location " + xyEvac + " #" + getFullName());
-				subgoal(new GoalGoto(GoalGoto.class.getSimpleName(), xyEvac));
+				subgoal(new GoalGoto(GoalGoto.class.getSimpleName(), xyEvac, Constants.EvacActivity.EvacPlace));
 				// subgoal should be last call in any plan step
 			},
 			() -> {
@@ -75,12 +75,12 @@ public class PlanLeaveNow extends Plan {
 					if (Location.distanceBetween(xy[0],xyEvac) > Location.distanceBetween(xy[0],xyInvac)) {
 						// Try invac location
 						agent.out("will go to invac location " + xyInvac + " #" + getFullName());
-						subgoal(new GoalGoto(GoalGoto.class.getSimpleName(), xyInvac));
+						subgoal(new GoalGoto(GoalGoto.class.getSimpleName(), xyInvac, Constants.EvacActivity.InvacPlace));
 						// subgoal should be last call in any plan step
 					} else {
 						// Else try evac location again
 						agent.out("will go to evac location " + xyEvac + " #" + getFullName());
-						subgoal(new GoalGoto(GoalGoto.class.getSimpleName(), xyEvac));
+						subgoal(new GoalGoto(GoalGoto.class.getSimpleName(), xyEvac, Constants.EvacActivity.EvacPlace));
 						// subgoal should be last call in any plan step
 					}
 				}
@@ -98,12 +98,12 @@ public class PlanLeaveNow extends Plan {
 					if (Location.distanceBetween(xy[0],xyInvac) > Location.distanceBetween(xy[0],xyHome)) {
 						// Try home
 						agent.out("will go home to " + xyHome + " #" + getFullName());
-						subgoal(new GoalGoto(GoalGoto.class.getSimpleName(), xyHome));
+						subgoal(new GoalGoto(GoalGoto.class.getSimpleName(), xyHome, Constants.EvacActivity.Home));
 						// subgoal should be last call in any plan step
 					} else {
 						// Else try invac location again
 						agent.out("will go to invac location " + xyInvac + " #" + getFullName());
-						subgoal(new GoalGoto(GoalGoto.class.getSimpleName(), xyInvac));
+						subgoal(new GoalGoto(GoalGoto.class.getSimpleName(), xyInvac, Constants.EvacActivity.InvacPlace));
 						// subgoal should be last call in any plan step
 					}
 				}

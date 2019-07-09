@@ -74,10 +74,12 @@ public class PlanResponseWhenDependentsNearby extends Plan {
 
 	PlanStep[] steps = {
 			() -> {
-				// Go visits dependents now
-				agent.out("will go to dependents nearby at " + xyDeps + " #" + getFullName());
-				subgoal(new GoalGoto(GoalGoto.class.getSimpleName(), xyDeps));
-				// subgoal should be last call in any plan step
+				if (distDeps > 0) {
+					// Go visits dependents now
+					agent.out("will go to dependents nearby at " + xyDeps + " #" + getFullName());
+					subgoal(new GoalGoto(GoalGoto.class.getSimpleName(), xyDeps, Constants.EvacActivity.DependentsPlace));
+					// subgoal should be last call in any plan step
+				}
             },
 			() -> {
 				// Check if we have arrived
@@ -91,7 +93,7 @@ public class PlanResponseWhenDependentsNearby extends Plan {
 					this.drop(); // all done, drop the remaining plan steps
 				} else {
 					agent.out("will go home to " + xyHome + " #" + getFullName());
-					subgoal(new GoalGoto(GoalGoto.class.getSimpleName(), xyHome));
+					subgoal(new GoalGoto(GoalGoto.class.getSimpleName(), xyHome, Constants.EvacActivity.Home));
 					// subgoal should be last call in any plan step
 				}
             },

@@ -24,6 +24,7 @@ package io.github.agentsoz.ees.agents.archetype;
 
 
 
+import io.github.agentsoz.ees.Constants;
 import io.github.agentsoz.jill.lang.Goal;
 import io.github.agentsoz.jill.lang.GoalInfo;
 import io.github.agentsoz.util.Location;
@@ -33,13 +34,19 @@ import io.github.agentsoz.util.Location;
         })
 public class GoalGoto extends Goal {
     private Location destination;
+    private Constants.EvacActivity type;
 
-    public GoalGoto(String name, Location destination) {
+    public GoalGoto(String name, Location destination, Constants.EvacActivity type) {
         super(name);
         this.destination = destination;
+        this.type = type;
     }
 
     public Location getDestination() {
         return destination;
+    }
+
+    public Constants.EvacActivity getDestinationType() {
+        return type;
     }
 }

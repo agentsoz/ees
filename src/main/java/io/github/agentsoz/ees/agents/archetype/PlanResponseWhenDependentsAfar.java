@@ -74,17 +74,19 @@ public class PlanResponseWhenDependentsAfar extends Plan {
 
 	PlanStep[] steps = {
 			() -> {
-				// Go home now
-				agent.out("will go home to " + xyHome + " #" + getFullName());
-				subgoal(new GoalGoto(GoalGoto.class.getSimpleName(), xyHome));
-				// subgoal should be last call in any plan step
+				if (distHome > 0) {
+					// Go home now
+					agent.out("will go home to " + xyHome + " #" + getFullName());
+					subgoal(new GoalGoto(GoalGoto.class.getSimpleName(), xyHome, Constants.EvacActivity.Home));
+					// subgoal should be last call in any plan step
+				}
 			},
 			() -> {
 				// Check if we have arrived
 				distHome = agent.getDrivingDistanceTo(xyHome);
-				boolean reached = (distHome > 0);
+				boolean reached = (distHome <= 0);
 				if (reached) {
-					agent.out("reached home at " + xyHome + " #" + getFullName());
+					agent.out("is at home at " + xyHome + " #" + getFullName());
 				} else {
 					Location[] xy = ((Location[])agent.getQueryPerceptInterface().queryPercept(
 							String.valueOf(agent.getId()), Constants.REQUEST_LOCATION, null));
@@ -92,7 +94,7 @@ public class PlanResponseWhenDependentsAfar extends Plan {
 				}
 				// Go visits dependents now
 				agent.out("will go to dependents at " + xyDeps + " #" + getFullName());
-				subgoal(new GoalGoto(GoalGoto.class.getSimpleName(), xyDeps));
+				subgoal(new GoalGoto(GoalGoto.class.getSimpleName(), xyDeps, Constants.EvacActivity.DependentsPlace));
 				// subgoal should be last call in any plan step
 
 			},
@@ -108,7 +110,7 @@ public class PlanResponseWhenDependentsAfar extends Plan {
 					this.drop(); // all done, drop the remaining plan steps
 				} else {
 					agent.out("will go home to " + xyHome + " #" + getFullName());
-					subgoal(new GoalGoto(GoalGoto.class.getSimpleName(), xyHome));
+					subgoal(new GoalGoto(GoalGoto.class.getSimpleName(), xyHome, Constants.EvacActivity.Home));
 					// subgoal should be last call in any plan step
 				}
 			},
