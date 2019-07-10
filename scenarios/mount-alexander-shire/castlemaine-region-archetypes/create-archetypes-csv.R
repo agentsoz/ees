@@ -46,6 +46,9 @@ df$EvacLocationPreference<-"Elphinstone,262869,5890813"
 df$InvacLocationPreference<-"Castlemaine,252140,5894312"
 
 # Assign Dependent Evacuators (randomly) as dependents to be picked up by others
+# 0. For Experienced Independents remove dependents (responsibility of other household members typically)
+filter<-df$BDIAgentType=="io.github.agentsoz.ees.agents.archetype.ExperiencedIndependent"
+df[filter,]$HasDependents<-0
 # 1. get a list of dependents locations in random order
 filter<-df$BDIAgentType=="io.github.agentsoz.ees.agents.archetype.DependentEvacuator"
 locs<-sample(df[filter,]$Geographical.Coordinate)
