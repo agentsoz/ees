@@ -1,8 +1,8 @@
-## Commit `c465c3f` | 10 Jul, 2019
+## Commit `0cf4242` | 10 Jul, 2019
 
 Debugged some behaviours related to dependents.
 
-The [latest video is here](https://cloudstor.aarnet.edu.au/plus/s/Ma8B0NwlGOfVfnL). Some notes about the colours in the video:
+The [latest video is here](https://cloudstor.aarnet.edu.au/plus/s/7HbvH2OjqYKKPZw). Some notes about the colours in the video:
 
 Cars | Meaning |
 --- | --- |
@@ -17,7 +17,7 @@ Dots | Meaning |
 --- | --- |
 Blue | People at home |
 Purple | People at Invac/Evac place |
-Green | People at Dependents place |
+White | People at Dependents place |
 
 
 
