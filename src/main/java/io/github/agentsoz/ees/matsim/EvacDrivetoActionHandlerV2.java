@@ -139,7 +139,7 @@ public final class EvacDrivetoActionHandlerV2 implements BDIActionHandler {
 		}
 
 		// Record that this agent is driving
-		model.getAgentsPerformingBdiDriveTo().put(agentID, newLinkId);
+		model.getAgentManager().getAgentsPerformingBdiDriveTo().put(agentID, newLinkId.toString());
 
 		log.debug("------------------------------------------------------------------------------------------"); ;
 		return ActionContent.State.RUNNING;
