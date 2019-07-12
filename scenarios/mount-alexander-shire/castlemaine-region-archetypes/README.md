@@ -1,3 +1,37 @@
+## Commit `23aba19` | 12 Jul, 2019
+
+* Changed messaging to
+`ADVICE@1110`, `WATCH_AND_ACT@1200`, `EMERGENCY_WARNING@1230`, `EVACUATE_NOW@1300`
+* Added a time lag of `15 mins +- 20%` when acting on initial response (picking up dependents etc.)
+* Added a time lag in minutes when leaving finally as:
+  * Threat Denier: 10 mins
+  * Responsibility Denier: 10 mins
+  * Community Guided: 15 mins
+  * Worried Waverer: 20 mins
+  * Dependent Evacuator: N/A
+  * Considered Evacuator: 10 mins
+  * Experienced Independent: 5 mins
+* Adjusted message values such that reaction to messages is not too strong when compared to reaction to fire/smoke.
+
+The [latest video is here](https://cloudstor.aarnet.edu.au/plus/s/UYB8i5Lrn4RS2c5). Some notes about the colours in the video:
+
+Cars | Meaning |
+--- | --- |
+Blue | Worried Waverers |
+Yellow | Considered Evacuators |
+Green | Community Guided |
+Pink | Responsibility Deniers |
+Orange | Threat Deniers |
+Red | Experienced Independents|
+
+Dots | Meaning |
+--- | --- |
+Blue | People at home |
+Pink | People deliberating/preparing (lag time before driving)
+Purple | People at Invac/Evac place |
+White | People at Dependents place |
+
+
 ## Commit `0cf4242` | 10 Jul, 2019
 
 Debugged some behaviours related to dependents.
