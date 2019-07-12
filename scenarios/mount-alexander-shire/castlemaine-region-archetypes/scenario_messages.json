@@ -54,23 +54,45 @@
       }
     },
     {
-      "type" : "EVACUATE_NOW",
-      "content" : "Harcourt,255934,5901133,Evacuate now if safe to do so",
+      "type" : "EMERGENCY_WARNING",
+      "content" : "Bushfire NW of Maldon is threatening homes and lives. You are in danger and need to act immediately to survive.",
       "broadcastHHMM" : "1230",
       "broadcastZones" : {
+        "20202102802" : null,
+        "20202102803" : null,
+        "20202102804" : null,
+        "20202102809" : null,
         "20202102810" : null,
+        "20202102811" : null,
+        "20202102812" : null,
+        "20202102813" : null,
         "20202102817" : null,
         "20202102818" : null,
-        "20202102821" : null
+        "20202102820" : null,
+        "20202102821" : null,
+        "20202102822" : null,
+        "20202102824" : null
       }
     },
     {
       "type" : "EVACUATE_NOW",
-      "content" : "Harcourt,255934,5901133,Evacuate now if safe to do so",
+      "content" : "Harcourt,255934,5901133,It is strongly recommended that you evacuate now towards Calder Freeway to Harcourt.",
       "broadcastHHMM" : "1300",
       "broadcastZones" : {
+        "20202102802" : null,
+        "20202102803" : null,
+        "20202102804" : null,
         "20202102809" : null,
-        "20202102820" : null
+        "20202102810" : null,
+        "20202102811" : null,
+        "20202102812" : null,
+        "20202102813" : null,
+        "20202102817" : null,
+        "20202102818" : null,
+        "20202102820" : null,
+        "20202102821" : null,
+        "20202102822" : null,
+        "20202102824" : null
       }
     },
   ]
