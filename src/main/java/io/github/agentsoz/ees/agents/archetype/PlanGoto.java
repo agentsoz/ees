@@ -73,18 +73,20 @@ public class PlanGoto extends Plan {
 							+ destination + String.format(" %.0f", distToDest) + "m away"
 							+ " after " + tries + " tries"
 							+ " #" + getFullName());
-					agent.believe(Beliefname.isDriving.name(), new Boolean(false).toString());					drop();
+					agent.believe(Beliefname.isDriving.name(), new Boolean(false).toString());
+					drop();
 					return;
 				}
 				// Not there yet, so start driving
 				agent.out("will start driving to "
 						+ destination + String.format(" %.0f", distToDest) + "m away"
 						+ " #" + getFullName());
+				double replanningActivityDurationInMins = (tries==0) ? ((GoalGoto)getGoal()).getReplanningActivityDurationInMins() : 1;
 				Goal action = agent.prepareDrivingGoal(
 						destinationType,
 						destination,
 						Constants.EvacRoutingMode.carFreespeed,
-						tries>0);
+						(int)Math.round(replanningActivityDurationInMins));
 				tries++;
 				agent.believe(Beliefname.isDriving.name(), new Boolean(action != null).toString());
 				subgoal(action); // should be last call in any plan step

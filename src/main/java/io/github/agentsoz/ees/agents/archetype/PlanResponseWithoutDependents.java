@@ -69,7 +69,10 @@ public class PlanResponseWithoutDependents extends Plan {
 				if (willGoHomeBeforeLeaving) {
 					// Go home
 					agent.out("will go home to " + xyHome + " #" + getFullName());
-					subgoal(new GoalGoto(GoalGoto.class.getSimpleName(), xyHome, Constants.EvacActivity.Home));
+					subgoal(new GoalGoto(GoalGoto.class.getSimpleName(),
+							xyHome,
+							Constants.EvacActivity.Home,
+							Double.valueOf(agent.getBelief(ArchetypeAgent.Beliefname.LagTimeInMinsForInitialResponse.name()))));
 					// subgoal should be last call in any plan step
 				} else {
 					// Continue doing what it is doing

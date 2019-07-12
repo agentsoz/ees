@@ -120,6 +120,8 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
         ImpactFromVisibleFire("ImpactFromVisibleFire"),
         ImpactFromVisibleResponders("ImpactFromVisibleResponders"),
         ImpactFromVisibleSmoke("ImpactFromVisibleSmoke"),
+        LagTimeInMinsForInitialResponse("LagTimeInMinsForInitialResponse"),
+        LagTimeInMinsForFinalResponse("LagTimeInMinsForFinalResponse"),
         LocationEvacuationPreference("EvacLocationPreference"),
         LocationInvacPreference("InvacLocationPreference"),
         LocationHome("home"),
@@ -207,18 +209,26 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
         return dist;
     }
 
+    /**
+     * Prepares a goal to drive to a given activity
+     * @param activity the name of the destination activity
+     * @param location the location of the activity
+     * @param routingMode the routing mode to use
+     * @param replanningActivityDurationInMins add replanning activity of given duration prior to drive (or not if =< 0)
+     * @return
+     */
     Goal prepareDrivingGoal(Constants.EvacActivity activity,
                             Location location,
                             Constants.EvacRoutingMode routingMode,
-                            boolean addReplanningActivity) {
+                            int replanningActivityDurationInMins) {
         Object[] params = new Object[7];
         params[0] = Constants.DRIVETO;
         params[1] = location.getCoordinates();
         params[2] = getTime() + 5.0; // five secs from now;
         params[3] = routingMode;
         params[4] = activity.toString();
-        params[5] = addReplanningActivity; // add replan activity to mark location/time of replanning
-        params[6] = Global.getRandom().nextInt(reactionTimeInSecs);
+        params[5] = (replanningActivityDurationInMins>0); // add replan activity to mark location/time of replanning
+        params[6] = Global.getRandom().nextInt(replanningActivityDurationInMins*60);
         EnvironmentAction action = new EnvironmentAction(
                 Integer.toString(getId()),
                 Constants.DRIVETO, params);

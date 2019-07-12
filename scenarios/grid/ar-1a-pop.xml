@@ -18,6 +18,7 @@
       <attribute name="HasDependents" class="java.lang.String" >false</attribute>
       <attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>
       <attribute name="HouseholdId" class="java.lang.String" >202021028H1439</attribute>
+      <attribute name="Id" class="java.lang.String" >3186</attribute>
       <attribute name="ImpactFromFireDangerIndexRating" class="java.lang.String" >0.1</attribute>
       <attribute name="ImpactFromImmersionInSmoke" class="java.lang.String" >0.4</attribute>
       <attribute name="ImpactFromMessageAdvice" class="java.lang.String" >0.4</attribute>
@@ -31,9 +32,11 @@
       <attribute name="ImpactFromVisibleResponders" class="java.lang.String" >0.4</attribute>
       <attribute name="ImpactFromVisibleSmoke" class="java.lang.String" >0.3</attribute>
       <attribute name="InvacLocationPreference" class="java.lang.String" >NotSoFarAway,2500.0,2500.0</attribute>
+      <attribute name="LagTimeInMinsForFinalResponse" class="java.lang.String" >5.89</attribute>
+      <attribute name="LagTimeInMinsForInitialResponse" class="java.lang.String" >17.89</attribute>
       <attribute name="PrimaryFamilyType" class="java.lang.String" >COUPLE_ONLY</attribute>
-      <attribute name="ResponseThresholdFinal" class="java.lang.String" >0.19</attribute>
-      <attribute name="ResponseThresholdInitial" class="java.lang.String" >0.26</attribute>
+      <attribute name="ResponseThresholdFinal" class="java.lang.String" >0.38</attribute>
+      <attribute name="ResponseThresholdInitial" class="java.lang.String" >-0.02</attribute>
       <attribute name="SA1_7DIGCODE" class="java.lang.String" >2102819</attribute>
       <attribute name="SA2_MAINCODE" class="java.lang.String" >202021028</attribute>
       <attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.String" >false</attribute>

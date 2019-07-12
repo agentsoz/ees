@@ -77,7 +77,10 @@ public class PlanResponseWhenDependentsAfar extends Plan {
 				if (distHome > 0) {
 					// Go home now
 					agent.out("will go home to " + xyHome + " #" + getFullName());
-					subgoal(new GoalGoto(GoalGoto.class.getSimpleName(), xyHome, Constants.EvacActivity.Home));
+					subgoal(new GoalGoto(GoalGoto.class.getSimpleName(),
+							xyHome,
+							Constants.EvacActivity.Home,
+							Double.valueOf(agent.getBelief(ArchetypeAgent.Beliefname.LagTimeInMinsForInitialResponse.name()))));
 					// subgoal should be last call in any plan step
 				}
 			},
@@ -94,7 +97,7 @@ public class PlanResponseWhenDependentsAfar extends Plan {
 				}
 				// Go visits dependents now
 				agent.out("will go to dependents at " + xyDeps + " #" + getFullName());
-				subgoal(new GoalGoto(GoalGoto.class.getSimpleName(), xyDeps, Constants.EvacActivity.DependentsPlace));
+				subgoal(new GoalGoto(GoalGoto.class.getSimpleName(), xyDeps, Constants.EvacActivity.DependentsPlace, 5));
 				// subgoal should be last call in any plan step
 
 			},
@@ -110,7 +113,7 @@ public class PlanResponseWhenDependentsAfar extends Plan {
 					this.drop(); // all done, drop the remaining plan steps
 				} else {
 					agent.out("will go home to " + xyHome + " #" + getFullName());
-					subgoal(new GoalGoto(GoalGoto.class.getSimpleName(), xyHome, Constants.EvacActivity.Home));
+					subgoal(new GoalGoto(GoalGoto.class.getSimpleName(), xyHome, Constants.EvacActivity.Home, 5));
 					// subgoal should be last call in any plan step
 				}
 			},

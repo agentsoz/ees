@@ -35,11 +35,13 @@ import io.github.agentsoz.util.Location;
 public class GoalGoto extends Goal {
     private Location destination;
     private Constants.EvacActivity type;
+    private double replanningActivityDurationInMins;
 
-    public GoalGoto(String name, Location destination, Constants.EvacActivity type) {
+    public GoalGoto(String name, Location destination, Constants.EvacActivity type, double replanningActivityDurationInMins) {
         super(name);
         this.destination = destination;
         this.type = type;
+        this.replanningActivityDurationInMins = replanningActivityDurationInMins;
     }
 
     public Location getDestination() {
@@ -48,5 +50,9 @@ public class GoalGoto extends Goal {
 
     public Constants.EvacActivity getDestinationType() {
         return type;
+    }
+
+    public double getReplanningActivityDurationInMins() {
+        return replanningActivityDurationInMins;
     }
 }
