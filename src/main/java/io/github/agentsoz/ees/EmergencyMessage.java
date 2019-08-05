@@ -29,9 +29,11 @@ import java.util.TreeMap;
 
 public class EmergencyMessage {
 
-    public enum EmergencyMessageType { // FIXME: move to config
+    // FIXME: superceded by Constants.EmergencyMessage, however used still for loading object from JSON; Dhi Aug/19
+    public enum EmergencyMessageType {
         ADVICE(0.2),
         WATCH_AND_ACT(0.4),
+        EMERGENCY_WARNING(0.5),
         EVACUATE_NOW(0.6);
 
         private final double value;
