@@ -1,3 +1,8 @@
+## Commit `7106aca` | 6 Aug, 2019
+
+Fixes `EMERGENCY_WARNING` not propagating. The [latest video is here](https://cloudstor.aarnet.edu.au/plus/s/HyT1yZLybuX7xEP). Same colour scheme as below applies.
+
+
 ## Commit `23aba19` | 12 Jul, 2019
 
 * Changed messaging to
