@@ -79,7 +79,7 @@ public class Constants {
     public enum EmergencyMessage {
         Advice("ADVICE"),
         WatchAndAct("WATCH_AND_ACT"),
-        EmergencyMessage("EMERGENCY_MESSAGE"),
+        EmergencyWarning("EMERGENCY_WARNING"),
         EvacuateNow("EVACUATE_NOW")
         ;
 

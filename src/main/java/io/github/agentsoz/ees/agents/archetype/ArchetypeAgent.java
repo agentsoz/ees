@@ -362,7 +362,7 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
             } else if (WatchAndAct.getCommonName().equals(args[0])) {
                 effect = Double.valueOf(getBelief(State.futureValueOfMessageWatchAndAct.name()));
                 believe(State.futureValueOfMessageWatchAndAct.name(), "0.0");
-            } else if (EmergencyMessage.getCommonName().equals(args[0])) {
+            } else if (EmergencyWarning.getCommonName().equals(args[0])) {
                 effect = Double.valueOf(getBelief(State.futureValueOfMessageEmergencyWarning.name()));
                 believe(State.futureValueOfMessageEmergencyWarning.name(), "0.0");
             } else if (EvacuateNow.getCommonName().equals(args[0])) {
