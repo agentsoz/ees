@@ -88,7 +88,7 @@
       <!-- Messaging JSON file  -->
       <opt id="fileJson">scenarios/mount-alexander-shire/castlemaine-region-archetypes/scenario_messages.json</opt>
       <!-- Zones GeoJSON file mapping zone IDs to polygon shapes -->
-      <opt id="fileZonesGeoJson">scenarios/mount-alexander-shire/castlemaine-region-archetypes/MountAlexander_SA1s.json</opt>
+      <opt id="fileZonesGeoJson">scenarios/mount-alexander-shire/castlemaine-region-archetypes/MountAlexander_SA1s/all.geojson</opt>
     </model>
 
   </models>
