@@ -1,4 +1,4 @@
-### How to generate messages syntax from GeoJSON files
+### Script to generate messages syntax from GeoJSON files
 
 Do something like
 ```
@@ -26,4 +26,4 @@ to get something like
 "20202102727" : null,
 ```
 
-that can be pasrted directly into the scenario messages JSON file.
+that can be pasted directly into the [scenario messages JSON file](../scenario_messages.json).
