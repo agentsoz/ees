@@ -98,7 +98,7 @@
     {
       "type" : "ADVICE",
       "content" : "Bushfire NW of Maldon; stay up to date in case the situation changes.",
-      "broadcastHHMM" : "1300",
+      "broadcastHHMM" : "1330",
       "broadcastZones" : {
         "20202102701" : null,
         "20202102702" : null,
@@ -153,7 +153,7 @@
         "20202102723" : null,
         "20202102724" : null,
         "20202102726" : null,
-        "20202102727" : null,
+        "20202102727" : null
       }
     },
     {
