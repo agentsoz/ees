@@ -1,3 +1,63 @@
+## Commit `?` | 16 Aug, 2019
+
+Note that the EES model (actually the underlying BDI-ABM action/percept model) does not support sending two messages (percepts) of the same type at the same time to an agent. Therefore the timing of the different messages should be unique. The [final messaging regime](./scenario_messages.json ) is as follows:
+
+Message | Time sent | Zones sent to |
+--- | --- | --- |
+`ADVICE`  |  `1110hrs` | [western SA1s](MountAlexander_SA1s/west.geojson)
+`WATCH_AND_ACT` | `1200hrs` | [western SA1s](MountAlexander_SA1s/west.geojson)
+`EMERGENCY_WARNING` | `1230hrs` | [western SA1s](MountAlexander_SA1s/west.geojson)
+`EVACUATE_NOW` | `1300hrs` | [western SA1s](MountAlexander_SA1s/west.geojson)
+`ADVICE` | `1330hrs` | [inner SA1s](MountAlexander_SA1s/inner.geojson)
+`EMERGENCY_WARNING` | `1500hrs` | [inner west SA1s](MountAlexander_SA1s/inner-west.geojson)
+`WATCH_AND_ACT` | `1600hrs` | [inner SA1s](MountAlexander_SA1s/inner.geojson)
+
+Desired response rates for the different message types are:
+* For `ADVICE` messages, `1%` of those who received should respond.
+* For `WATCH_AND_ACT` messages, `5%` of those who received should respond.
+* For `EMERGENCY_WARNING` messages, `30%` of those who received should respond.
+* For `EVACUATE_NOW` messages, `40%` of those who received should respond.
+
+Model parameters are now calibrated to achieve close to the above response rates. This is done easily by using something like `qnorm(0.01,mean=0.3,sd=0.1)` in R which gives the parameter value at which 1% of values will be less than the values of the normal distribution with mean=0.3 and sd=0.1. Based on this the following parameter values were changed (in bold) against the initial threshold distribution:
+
+Parameter | TD	| RD	| CG	| WW	| DE	| CE	| EI
+--- | --- | --- | --- | --- | --- | --- | ---
+ResponseThresholdInitial.Numeric | 0.6 | 0.4 | 0.3 | 0.3 | 0.3 | 0.3 | 0.4
+ImpactFromMessageAdvice.Literal | 0 | 0 | **0.095** | **0.091** | 0 | **0.097** | 0
+ImpactFromMessageWatchAndAct.Literal | 0 | 0 | **0.172** | **0.167** | 0 | **0.176** | 0
+ImpactFromMessageEmergencyWarning.Literal | 0 | 0 | **0.326** | **0.313** | 0 | **0.337** | 0
+ImpactFromMessageEvacuateNow.Literal | 0 | **0.356** | **0.295** | **0.285** | 0 | **0.302** | **0.437**
+
+After changing the parameters as above, the response rates were verified individually by removing the fire/embers and all other messages, and sending a single message to the entire region, so that that full extent of the response could be attributed to that particular message. The individually tested response rates thus achieved were:
+
+Message | Initial response rate | Calibrated response rate |
+--- | --- | --- |
+| commit `d6b9a2e` | commit `5ab51eb`
+`ADVICE` | `1767/10814 = 16.3%` | `117/10814 = 1.1%`
+`WATCH_AND_ACT` | `1767/10814 = 16.3%` | `577/10814 = 5.3%`
+`EMERGENCY_WARNING` | `3443/10814 = 31.8%` | `3310/10814 = 30.6%`
+`EVACUATE_NOW` | `4867/10814 = 45%` | `4702/10814 = 43.5%`
+
+Here are some convenience commands to verify the above.
+
+To check how many people received a message, say `ADVICE @ 1110hrs`, do:
+```
+zless jill.out | grep "ADVICE" | grep "|11:10" | cut -f3 -d'|' | sort | wc -l
+2739
+```
+To get the number of people who responded to that message do (note the matching time stamp):
+```
+zless jill.out | grep "responseThresholdInitialReached=true" | grep "|11:10" | cut -f3 -d'|' | sort | wc -l
+420
+```
+To understand the makeup of people who responded to that message do:
+```
+zless jill.out  | grep "responseThresholdInitialReached=true" | grep "|11:10" | cut -f3 -d'|' | sort | uniq -c | sort -rn
+260 ConsideredEvacuator
+84 CommunityGuided
+76 WorriedWaverer
+```
+
 ## Commit `7106aca` | 6 Aug, 2019
 
 Fixes `EMERGENCY_WARNING` not propagating. The [latest video is here](https://cloudstor.aarnet.edu.au/plus/s/HyT1yZLybuX7xEP). Same colour scheme as below applies.
