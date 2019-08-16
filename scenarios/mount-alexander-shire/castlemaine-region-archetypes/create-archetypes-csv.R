@@ -25,7 +25,7 @@ close(con)
 persons<-rbind(persons1,persons2)
 df<-persons
 
-# Remove all Unknown types for now 
+# Remove all Unknown types for now
 filter<-df$Archetype!="Unknown.Type"
 df<-df[filter,]
 
@@ -74,7 +74,7 @@ df<-df[filter,]
 
 # Ensure that the initial threshold is never greater than the final threshold
 filter<-df$ResponseThresholdInitial > df$ResponseThresholdFinal
-df[filter,]$ResponseThresholdInitial<-df[filter,]$ResponseThresholdFinal
+df[filter,]$ResponseThresholdFinal<-df[filter,]$ResponseThresholdInitial
 
 # Change logicals to Java boolean
 filter<-df$WillGoHomeAfterVisitingDependents==1
