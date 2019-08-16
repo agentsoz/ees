@@ -1,4 +1,6 @@
-## Commit `?` | 16 Aug, 2019
+## Commit `5ab51eb` | 17 Aug, 2019
+
+The [latest video is here](https://cloudstor.aarnet.edu.au/plus/s/5WW3Mqun43hlQLq). Same colour scheme as below applies.
 
 Note that the EES model (actually the underlying BDI-ABM action/percept model) does not support sending two messages (percepts) of the same type at the same time to an agent. Therefore the timing of the different messages should be unique. The [final messaging regime](./scenario_messages.json ) is as follows:
 
@@ -32,7 +34,7 @@ After changing the parameters as above, the response rates were verified individ
 
 Message | Initial response rate | Calibrated response rate |
 --- | --- | --- |
-| commit `d6b9a2e` | commit `5ab51eb`
+*Commit* | `d6b9a2e` | `5ab51eb`
 `ADVICE` | `1767/10814 = 16.3%` | `117/10814 = 1.1%`
 `WATCH_AND_ACT` | `1767/10814 = 16.3%` | `577/10814 = 5.3%`
 `EMERGENCY_WARNING` | `3443/10814 = 31.8%` | `3310/10814 = 30.6%`
