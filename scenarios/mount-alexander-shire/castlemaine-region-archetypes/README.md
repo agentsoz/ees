@@ -1,6 +1,6 @@
-## Commit `5ab51eb` | 17 Aug, 2019
+## Commit `495a7f8` | 9 Sep, 2019
 
-The [latest video is here](https://cloudstor.aarnet.edu.au/plus/s/5WW3Mqun43hlQLq). Same colour scheme as below applies.
+The [latest video is here](https://cloudstor.aarnet.edu.au/plus/s/phuCz9Q3suj9slb). Same colour scheme as below applies.
 
 Note that the EES model (actually the underlying BDI-ABM action/percept model) does not support sending two messages (percepts) of the same type at the same time to an agent. Therefore the timing of the different messages should be unique. The [final messaging regime](./scenario_messages.json ) is as follows:
 
@@ -25,20 +25,20 @@ Model parameters are now calibrated to achieve close to the above response rates
 Parameter | TD	| RD	| CG	| WW	| DE	| CE	| EI
 --- | --- | --- | --- | --- | --- | --- | ---
 ResponseThresholdInitial.Numeric | 0.6 | 0.4 | 0.3 | 0.3 | 0.3 | 0.3 | 0.4
-ImpactFromMessageAdvice.Literal | 0 | 0 | **0.095** | **0.091** | 0 | **0.097** | 0
-ImpactFromMessageWatchAndAct.Literal | 0 | 0 | **0.172** | **0.167** | 0 | **0.176** | 0
+ImpactFromMessageAdvice.Literal | 0 | 0 | **0.091** | **0.088** | 0 | **0.103** | 0
+ImpactFromMessageWatchAndAct.Literal | 0 | 0 | **0.167** | **0.163** | 0 | **0.184** | 0
 ImpactFromMessageEmergencyWarning.Literal | 0 | 0 | **0.326** | **0.313** | 0 | **0.337** | 0
-ImpactFromMessageEvacuateNow.Literal | 0 | **0.356** | **0.295** | **0.285** | 0 | **0.302** | **0.437**
+ImpactFromMessageEvacuateNow.Literal | 0 | **0.327** | **0.346** | **0.311** | 0 | **0.358** | **0.325**
 
 After changing the parameters as above, the response rates were verified individually by removing the fire/embers and all other messages, and sending a single message to the entire region, so that that full extent of the response could be attributed to that particular message. The individually tested response rates thus achieved were:
 
 Message | Initial response rate | Calibrated response rate |
 --- | --- | --- |
 *Commit* | `d6b9a2e` | `5ab51eb`
-`ADVICE` | `1767/10814 = 16.3%` | `117/10814 = 1.1%`
-`WATCH_AND_ACT` | `1767/10814 = 16.3%` | `577/10814 = 5.3%`
-`EMERGENCY_WARNING` | `3443/10814 = 31.8%` | `3310/10814 = 30.6%`
-`EVACUATE_NOW` | `4867/10814 = 45%` | `4702/10814 = 43.5%`
+`ADVICE` | `1767/10814 = 16.3%` | `110/10814 = 1.0%`
+`WATCH_AND_ACT` | `1767/10814 = 16.3%` | `555/10814 = 5.1%`
+`EMERGENCY_WARNING` | `3443/10814 = 31.8%` | `3408/10814 = 31.5%`
+`EVACUATE_NOW` | `4867/10814 = 45%` | `4556/10814 = 42.1%`
 
 Here are some convenience commands to verify the above.
 
