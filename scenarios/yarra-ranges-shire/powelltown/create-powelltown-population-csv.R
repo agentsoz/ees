@@ -142,7 +142,7 @@ reassign_dependant_evacuators<-function(pp) {
   filter<-df$HasDependents==1 & df$HasDependentsAtLocation==""
   latslons<-as.numeric(unlist(strsplit(gsub('\\[|\\]| ','',sample(df[filter,]$Geographical.Coordinate)),",")))
   latslons<-cbind(latslons[seq(1, length(latslons), 2)], latslons[seq(2, length(latslons), 2)])
-  rand_dests<-getRandomCoordsWithinRadius(latslons,5000)
+  rand_dests<-getRandomCoordsWithinRadius(latslons,2000) # somewhere within a few kms
   df[filter,]$HasDependentsAtLocation<-sprintf("[%f,%f]", rand_dests[,1], rand_dests[,2])
   
   # Remove all the dependent evacuators now (have been accounted for in pickups as best we can)
@@ -177,12 +177,29 @@ assign_ids<-function(df) {
   df<-df[,c(ncol(df),1:(ncol(df)-1))]
   return(df)
 }
+
+assign_evacuation_locations <- function(df) {
+  evac_locs<-c("Little Yarra CFA Station,381640,5812770", "Yarra Junction,377890,5817590") # evac destinations
+  split<-c(0.8, 0.2) # split of evac destinations
+  df<-pp
+  count<-nrow(df)
+  split1<-round(count * split[1]) 
+  split<-c(split1, count - split1)
+  locs<-c(rep(evac_locs[1],split[1]), rep(evac_locs[2],split[2])) # create all the destination instances
+  locs<-sample(locs,length(locs),replace = FALSE) # randomly sample all (shuffle)
+  df$EvacLocationPreference<-locs
+  df$InvacLocationPreference<-"Powelltown Oval,389980,5808490"
+  return(df)
+}
+
+# STARTS HERE
+
 # Scenario variables
 popn<-data.frame(matrix(0, ncol = 0, nrow = 3))
 popn$Town<-c('POWELLTOWN', 'THREE BRIDGES', 'GLADYSDALE')
 popn$Persons<-c(217,199,444) # Dwellings (ABS)
 popn$Cars<-c(round(96*1.9), round(80*2.5), round(170*2.6)) # Dwellings x Avg. Motor Vehicles per Dwelling (ABS)
-popn$CarsMobilised<-round(popn$Cars * 0.8) # 80% of all vehicles will be in use
+popn$CarsMobilised<-round(popn$Cars * 0.8) # 80% of all vehicles that will be in use
 
 # Load the addresses for the relevant suburbs
 addresses<-load_street_addresses()
@@ -193,6 +210,7 @@ pp<-assign_home_coordinates(pp, popn, addresses)
 pp<-assign_archetypes(pp)
 pp<-assign_archetypes_attributes(pp)
 pp<-reassign_dependant_evacuators(pp)
+pp<-assign_evacuation_locations(pp)
 pp<-logicals_to_java_boolean(pp)
 pp<-assign_ids(pp)
 
