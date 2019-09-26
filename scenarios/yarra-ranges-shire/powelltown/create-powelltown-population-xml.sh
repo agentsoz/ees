@@ -4,7 +4,7 @@ INCSV=$DIR/population-archetypes.csv
 OUTXML=$DIR/population-archetypes.xml
 
 
-#Rscript --vanilla "$DIR/create-powelltown-population-csv.R"
+Rscript --vanilla "$DIR/create-powelltown-population-csv.R"
 
 cp $DIR/$INCSV $DIR/_csv
 gzip -f $DIR/_csv

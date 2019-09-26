@@ -77,8 +77,10 @@ assign_home_coordinates<-function(pp, popn, addresses) {
 
 assign_archetypes<-function(pp) {
   # assign the archetypes using the same distribution as strahan's original paper
-  archetypes<-c("Considered.Evacuator", "Community.Guided", "Threat.Denier", "Worried.Waverer", "Responsibility.Denier", "Dependent.Evacuator", "Experienced.Independent", "Unknown.Type")
-  archetypes_dist<-c(11.9,13,9.8,9.3,9.4,6.5,17.1,23) # archetyipal makeup in strahan's paper
+  # The 23% Unknonw types are not included in the vector below.
+  # Those will therefore be assigned one of the other archetypes in the realtive proportion.
+  archetypes<-c("Considered.Evacuator", "Community.Guided", "Threat.Denier", "Worried.Waverer", "Responsibility.Denier", "Dependent.Evacuator", "Experienced.Independent")
+  archetypes_dist<-c(11.9,13,9.8,9.3,9.4,6.5,17.1) # archetyipal makeup in strahan's paper
   archetypesClass<-paste0("io.github.agentsoz.ees.agents.archetype.", gsub("\\.", "", archetypes))
   pp$Archetype<-NULL; pp$BDIAgentType<-NULL
   probs<-archetypes_dist
