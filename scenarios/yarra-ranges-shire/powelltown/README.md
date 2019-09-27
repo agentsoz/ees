@@ -32,7 +32,7 @@ Simulation Time | Message Type | Message Content |
 
 ## Population
 
-* The resident population of only the following towns is considered [Powelltown (`217` persons, `96` dwellings, `1.9` vehicles per dwelling)](https://quickstats.censusdata.abs.gov.au/census_services/getproduct/census/2016/quickstat/SSC22103), [Gladysdale (`444` persons, `170` dwellings, `2.6` vehicles per dwelling)](https://quickstats.censusdata.abs.gov.au/census_services/getproduct/census/2016/quickstat/SSC20998?opendocument), and [Three Bridges (`199` persons, `80` dwellings, `2.5` vehicles per dwelling)](https://quickstats.censusdata.abs.gov.au/census_services/getproduct/census/2016/quickstat/SSC20998?opendocument).
+* The resident population of only the following towns is considered [Powelltown (`217` persons, `96` dwellings, `1.9` vehicles per dwelling)](https://quickstats.censusdata.abs.gov.au/census_services/getproduct/census/2016/quickstat/SSC22103), [Gladysdale (`444` persons, `170` dwellings, `2.6` vehicles per dwelling)](https://quickstats.censusdata.abs.gov.au/census_services/getproduct/census/2016/quickstat/SSC20998?opendocument), and [Three Bridges (`199` persons, `80` dwellings, `2.5` vehicles per dwelling)](https://quickstats.censusdata.abs.gov.au/census_services/getproduct/census/2016/quickstat/SSC22501?opendocument).
 
 * The number of dwellings and average vehicles per dwelling is used to first calculation the number of vehicles in the area. Of these, it is assumed that `80%` are likely to be mobilised, giving a total of `660` vehicles (persons) as a starting figure.
 
