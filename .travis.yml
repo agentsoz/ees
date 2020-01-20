@@ -1,5 +1,5 @@
 language: java
-jdk: openjdk8
+jdk: openjdk11
 #sudo: required # enabled 30/aug/18 due to travis issue #6593 causing failure
 
 before_install:
