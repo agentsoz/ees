@@ -586,8 +586,30 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
             boolean found = false;
             for(Beliefname beliefname : Beliefname.values()) {
                 if (key.equals(beliefname.getCommonName())) {
-                    believe(beliefname.name(), value);
                     found = true;
+                    switch (beliefname) {
+                        case Age:
+                        case AgentId:
+                        case ArchetypeAge:
+                        case ArchetypeHousehold:
+                        case AgentType:
+                        case Address:
+                        case AddressCoordinates:
+                        case Gender:
+                        case HouseholdId:
+                        case Id:
+                        case PrimaryFamilyType:
+                        case Sa1:
+                        case Sa2:
+                            // Discard all known key/values that we do not actually use.
+                            // This greatly speeds up Jill belief storage which can be costly
+                            // if the belief cardinality is high and the belief value uptake across
+                            // agents is low.
+                            break;
+                        default:
+                            // store all the other know key/values
+                            believe(beliefname.name(), value);
+                    }
                 }
             }
             if (!found) {
