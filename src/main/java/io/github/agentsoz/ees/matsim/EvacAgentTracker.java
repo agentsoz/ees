@@ -35,6 +35,7 @@ import org.matsim.core.events.algorithms.Vehicle2DriverEventHandler;
 import org.matsim.core.events.handler.BasicEventHandler;
 import org.matsim.vehicles.Vehicle;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -54,11 +55,13 @@ public class EvacAgentTracker implements
 	private final EvacConfig evacConfig;
 	private Map<Id<Vehicle>,VehicleTrackingData> linkEnterEventsMap = Collections.synchronizedMap( new LinkedHashMap<>() );
 	private Vehicle2DriverEventHandler vehicle2Driver = new Vehicle2DriverEventHandler() ;
+	private DeckglTripsData deckglTripsData;
 
-	public EvacAgentTracker(EvacConfig evacConfig, Network network, EventsManager events) {
+	public EvacAgentTracker(EvacConfig evacConfig, Network network, EventsManager events, DeckglTripsData deckglTripsData) {
 		this.evacConfig = evacConfig;
 		this.network = network ;
 		this.events = events ;
+		this.deckglTripsData = deckglTripsData;
 	}
 	
 	double getDelay(Id<Person> personId, double now) {
@@ -98,6 +101,10 @@ public class EvacAgentTracker implements
 		vehicleData.setEstArrivalTimeAtCurrentLinkEnd(vehicleData.getEstArrivalTimeAtCurrentLinkEnd()
 				+ Math.ceil(link.getLength() / link.getFreespeed(event.getTime())));
 		linkEnterEventsMap.put(event.getVehicleId(), vehicleData);
+		deckglTripsData.addEvent(Double.valueOf(event.getTime()).intValue(),
+				vehicleId.toString(),
+				Arrays.asList(link.getFromNode().getCoord().getX(), link.getFromNode().getCoord().getX()),
+				Arrays.asList(255, 165, 0));
 	}
 	
 	@Override
@@ -131,6 +138,10 @@ public class EvacAgentTracker implements
 				linkEnterEventsMap.remove(vehicleId) ;
 			}
 		}
+		deckglTripsData.addEvent(Double.valueOf(event.getTime()).intValue(),
+				vehicleId.toString(),
+				Arrays.asList(link.getFromNode().getCoord().getX(), link.getFromNode().getCoord().getX()),
+				Arrays.asList(255, 165, 0));
 	}
 	
 	@Override

@@ -27,6 +27,7 @@ import io.github.agentsoz.bdiabm.QueryPerceptInterface;
 import io.github.agentsoz.bdiabm.v2.AgentDataContainer;
 import io.github.agentsoz.dataInterface.DataClient;
 import io.github.agentsoz.dataInterface.DataServer;
+import io.github.agentsoz.ees.matsim.DeckglTripsData;
 import io.github.agentsoz.ees.matsim.EvacAgentTracker;
 import io.github.agentsoz.ees.matsim.EvacConfig;
 import io.github.agentsoz.ees.matsim.MATSimEvacModel;
@@ -147,6 +148,9 @@ public class Run implements DataClient {
         jillmodel.init(Utils.getAsSortedStringArray(bdiMap.keySet()));
         jillmodel.start();
 
+        // --- DeckGL event writer
+        DeckglTripsData deckglTripsData = new DeckglTripsData();
+
         // --- initialize and start MATSim
         log.info("Starting MATSim model");
         matsimEvacModel.setAgentDataContainer(adc_from_abm);
@@ -155,7 +159,10 @@ public class Run implements DataClient {
         {
             // yyyy try to replace this by injection. because otherwise it again needs to be added "late enough", which we
             // wanted to get rid of.  kai, dec'17
-            EvacAgentTracker tracker = new EvacAgentTracker(evacConfig, matsimEvacModel.getScenario().getNetwork(), matsimEvacModel.getEvents());
+            EvacAgentTracker tracker = new EvacAgentTracker(evacConfig,
+                    matsimEvacModel.getScenario().getNetwork(),
+                    matsimEvacModel.getEvents(),
+                    deckglTripsData);
             matsimEvacModel.getEvents().addHandler(tracker);
         }
 
@@ -186,6 +193,7 @@ public class Run implements DataClient {
         jillmodel.finish();
         matsimEvacModel.finish() ;
         diffusionModel.finish();
+        deckglTripsData.saveToFile(cfg.getGlobalConfig(Config.eGlobalDeckGlOutFile));
         DataServer.cleanup() ;
         log.info("All done");
     }

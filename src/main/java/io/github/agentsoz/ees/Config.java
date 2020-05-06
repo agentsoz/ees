@@ -66,6 +66,7 @@ public class Config {
 	static final String eGlobalCoordinateSystem= "crs";
 	static final String eGlobalStartHhMm = "startHHMM";
 	static final String eGlobalTimeStep = "timestepInSecs";
+	static final String eGlobalDeckGlOutFile = "deckGlOutFile";
 	// Model IDs in XML
 	static final String eModelFire = "phoenix";
 	static final String eModelDisruption = "disruption";
