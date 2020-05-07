@@ -101,12 +101,6 @@ public class EvacAgentTracker implements
 		vehicleData.setEstArrivalTimeAtCurrentLinkEnd(vehicleData.getEstArrivalTimeAtCurrentLinkEnd()
 				+ Math.ceil(link.getLength() / link.getFreespeed(event.getTime())));
 		linkEnterEventsMap.put(event.getVehicleId(), vehicleData);
-		if (deckglTripsData != null) {
-			deckglTripsData.addEvent(Double.valueOf(event.getTime()).intValue(),
-					vehicleId.toString(),
-					link.getFromNode().getCoord(),
-					Arrays.asList(255, 165, 0));
-		}
 	}
 	
 	@Override
@@ -139,6 +133,18 @@ public class EvacAgentTracker implements
 				// remove this vehicle from the map so that we can start tracking it in the next interval afresh
 				linkEnterEventsMap.remove(vehicleId) ;
 			}
+			// Calculate speed relative to freespeed
+			double ltime = event.getTime() - vehicleData.getTrackingStartTime();
+			double ldist = link.getLength();
+			double lspeed = ldist/ltime;
+			double relativeSpeed = lspeed/link.getFreespeed();
+			if (deckglTripsData != null) {
+				deckglTripsData.addEvent(Double.valueOf(event.getTime()).intValue(),
+						vehicleId.toString(),
+						link.getFromNode().getCoord(),
+						relativeSpeed);
+			}
+
 		}
 	}
 	

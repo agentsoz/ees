@@ -32,10 +32,12 @@ import org.matsim.core.utils.geometry.transformations.GeotoolsTransformation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.awt.*;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.List;
 
 public class DeckglTripsData {
 
@@ -46,6 +48,10 @@ public class DeckglTripsData {
     private Map<String, List<List<Integer>>> coloursMap;
     private final CoordinateTransformation ct;
 
+    private final Color colorGreen = new Color(0, 255, 0);
+    private final Color colorRed = new Color(255, 0, 0);
+    private final Color colorAmber = new Color(255, 191, 0);
+
     public DeckglTripsData(String crs) {
         coordsMap = new HashMap<>();
         timesMap = new HashMap<>();
@@ -53,16 +59,12 @@ public class DeckglTripsData {
         ct = new GeotoolsTransformation(crs, "EPSG:4326");
     }
 
-    public void addEvent(Integer timeInSecs, String vehicleId, Coord coord, List<Integer> colour) {
-        if (timeInSecs == null ||
-                vehicleId == null ||
-                coord == null ||
-                colour == null || colour.size() != 3) {
+    public void addEvent(Integer timeInSecs, String vehicleId, Coord coord, double relativeSpeed) {
+        if (timeInSecs == null || vehicleId == null || coord == null) {
             log.warn("Ignoring invalid DeckGl event: " +
                     "timeInSecs=["+timeInSecs+"]" +
                     "vehicleId=["+vehicleId+"]" +
-                    "coord=["+coord+"]" +
-                    "colour=["+(colour==null?"null":colour.size())+"]");
+                    "coord=["+coord+"]");
             return;
         }
         // add the timestamp to the vehicle's path timestamps
@@ -82,7 +84,8 @@ public class DeckglTripsData {
         // add the colour to the vehicle's path colours
         List<List<Integer>> colours = coloursMap.get(vehicleId);
         if (colours == null) { colours = new ArrayList<>(); }
-        colours.add(colour);
+        Color colour = mixColors(colorRed, colorAmber, colorGreen, relativeSpeed);
+        colours.add(Arrays.asList(colour.getRed(), colour.getGreen(), colour.getBlue()));
         coloursMap.put(vehicleId, colours);
 
     }
@@ -138,6 +141,29 @@ public class DeckglTripsData {
             throw new RuntimeException("Config file " + str + " not found: " + e.getMessage());
         }
         return obj;
+    }
+
+    /**
+     * Interpolates between low and high colour, optionally using an interim mid colour.
+     * @param low
+     * @param mid
+     * @param high
+     * @param highPercent
+     * @return
+     */
+    public Color mixColors(Color low, Color mid, Color high, double highPercent){
+        if (highPercent < 0 || highPercent > 1 || low == null || high == null) {
+            return new Color(255, 0, 255);
+        }
+        double hp = (highPercent <= 0.5) ? highPercent/0.5 : (highPercent-0.5)/0.5;
+        double lp = 1.0 - hp;
+        Color c1 = (highPercent <= 0.5) ? low : ((mid != null) ? mid : low);
+        Color c2 = (highPercent <= 0.5) ? ((mid != null) ? mid : high) : high;
+        int r = (int) (c1.getRed()*lp + c2.getRed()*hp);
+        int g = (int) (c1.getGreen()*lp + c2.getGreen()*hp);
+        int b = (int) (c1.getBlue()*lp + c2.getBlue()*hp);
+        Color c3 = new Color(r, g, b);
+        return c3;
     }
 
     public static void main(String[] args) {
