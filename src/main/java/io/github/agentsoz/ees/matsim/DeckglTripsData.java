@@ -26,40 +26,42 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
+import org.matsim.api.core.v01.Coord;
+import org.matsim.core.utils.geometry.CoordinateTransformation;
+import org.matsim.core.utils.geometry.transformations.GeotoolsTransformation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class DeckglTripsData {
 
     private static final Logger log = LoggerFactory.getLogger(DeckglTripsData.class);
 
-    Map<String, List<List<Double>>> coordsMap;
-    Map<String, List<Integer>> timesMap;
-    Map<String, List<List<Integer>>> coloursMap;
+    private Map<String, List<List<Double>>> coordsMap;
+    private Map<String, List<Integer>> timesMap;
+    private Map<String, List<List<Integer>>> coloursMap;
+    private final CoordinateTransformation ct;
 
-    public DeckglTripsData() {
+    public DeckglTripsData(String crs) {
         coordsMap = new HashMap<>();
         timesMap = new HashMap<>();
         coloursMap = new HashMap<>();
+        ct = new GeotoolsTransformation(crs, "EPSG:4326");
     }
 
-    public void addEvent(Integer timeInSecs, String vehicleId, List<Double> latlon, List<Integer> colour) {
+    public void addEvent(Integer timeInSecs, String vehicleId, Coord coord, List<Integer> colour) {
         if (timeInSecs == null ||
                 vehicleId == null ||
-                latlon == null || latlon.size() != 2 ||
+                coord == null ||
                 colour == null || colour.size() != 3) {
             log.warn("Ignoring invalid DeckGl event: " +
                     "timeInSecs=["+timeInSecs+"]" +
                     "vehicleId=["+vehicleId+"]" +
-                    "latlon=["+(latlon==null?"null":latlon.size())+"]" +
+                    "coord=["+coord+"]" +
                     "colour=["+(colour==null?"null":colour.size())+"]");
             return;
         }
@@ -72,7 +74,9 @@ public class DeckglTripsData {
         // add the coordinates to the vehicle's path
         List<List<Double>> coords = coordsMap.get(vehicleId);
         if (coords == null) { coords = new ArrayList<>(); }
-        coords.add(latlon);
+
+        Coord xy = ct.transform(coord);
+        coords.add(Arrays.asList(xy.getX(), xy.getY()));
         coordsMap.put(vehicleId, coords);
 
         // add the colour to the vehicle's path colours
@@ -83,10 +87,30 @@ public class DeckglTripsData {
 
     }
 
+    public DeckglTrip[] trips() {
+        String[] vehicles = coordsMap.keySet().toArray(new String[0]);
+        Arrays.sort(vehicles);
+        DeckglTrip[] trips = new DeckglTrip[vehicles.length+1];
+        int minStart = Integer.MAX_VALUE, maxFinish = Integer.MIN_VALUE;
+        for(int i = 0; i < vehicles.length; i++) {
+            int start = Integer.MAX_VALUE, finish = Integer.MIN_VALUE;
+            Integer[] times = timesMap.get(vehicles[i]).toArray(new Integer[0]);
+            Arrays.sort(times);
+            if (times[0] < start) start = times[0];
+            if (times[times.length-1] > finish) finish = times[times.length-1];
+            trips[i] = new DeckglTrip(start, finish, vehicles[i],
+                    coordsMap.get(vehicles[i]), timesMap.get(vehicles[i]), coloursMap.get(vehicles[i]));
+            if (minStart > start) minStart = start;
+            if (maxFinish < finish) maxFinish = finish;
+        }
+        trips[trips.length-1] = new DeckglTrip(minStart, maxFinish, "",
+                new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+        return trips;
+    }
+
     public void saveToFile(String str) {
         if (str == null || str.isEmpty()) return;
-        DeckglTrip[] trips = new DeckglTrip[0];
-        saveToFile(str, trips);
+        saveToFile(str, trips());
     }
 
     private void saveToFile(String str, DeckglTrip[] trips) {
@@ -117,7 +141,7 @@ public class DeckglTripsData {
     }
 
     public static void main(String[] args) {
-        DeckglTripsData deckglTripsData = new DeckglTripsData();
+        DeckglTripsData deckglTripsData = new DeckglTripsData("EPSG:4326");
         DeckglTrip[] trips = deckglTripsData.loadFromFile("/Users/sin122/Documents/work/ees/tmp/output_events_maldon.json");
         deckglTripsData.saveToFile("/Users/sin122/Documents/work/ees/tmp/output_events_maldon_2.json", trips);
         System.out.println(trips.length);
@@ -135,6 +159,20 @@ public class DeckglTripsData {
             path = new ArrayList<>();
             timestamps = new ArrayList<>();
             colours = new ArrayList<>();
+        }
+
+        public DeckglTrip(Integer start,
+                          Integer finish,
+                          String vehicle,
+                          List<List<Double>> path,
+                          List<Integer> timestamps,
+                          List<List<Integer>> colours) {
+            this.start = start;
+            this.finish = finish;
+            this.vehicle = vehicle;
+            this.path = path;
+            this.timestamps = timestamps;
+            this.colours = colours;
         }
     }
 

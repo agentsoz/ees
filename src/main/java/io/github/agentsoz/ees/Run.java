@@ -149,7 +149,11 @@ public class Run implements DataClient {
         jillmodel.start();
 
         // --- DeckGL event writer
-        DeckglTripsData deckglTripsData = new DeckglTripsData();
+        DeckglTripsData deckglTripsData = null;
+        String deckglCfg = cfg.getGlobalConfig(Config.eGlobalDeckGlOutFile);
+        if (deckglCfg != null) {
+            deckglTripsData = new DeckglTripsData(cfg.getGlobalConfig(Config.eGlobalCoordinateSystem));
+        }
 
         // --- initialize and start MATSim
         log.info("Starting MATSim model");
@@ -193,7 +197,10 @@ public class Run implements DataClient {
         jillmodel.finish();
         matsimEvacModel.finish() ;
         diffusionModel.finish();
-        deckglTripsData.saveToFile(cfg.getGlobalConfig(Config.eGlobalDeckGlOutFile));
+        if (deckglCfg != null) {
+            log.info("Writing trips in DeckGL format to: " + deckglCfg);
+            deckglTripsData.saveToFile(cfg.getGlobalConfig(Config.eGlobalDeckGlOutFile));
+        }
         DataServer.cleanup() ;
         log.info("All done");
     }
