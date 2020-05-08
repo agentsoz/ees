@@ -133,12 +133,14 @@ public class EvacAgentTracker implements
 				// remove this vehicle from the map so that we can start tracking it in the next interval afresh
 				linkEnterEventsMap.remove(vehicleId) ;
 			}
-			// Calculate speed relative to freespeed
-			double ltime = event.getTime() - vehicleData.getTrackingStartTime();
-			double ldist = link.getLength();
-			double lspeed = ldist/ltime;
-			double relativeSpeed = lspeed/link.getFreespeed();
 			if (deckglTripsData != null) {
+				// Calculate the relative speed in this interval
+				double totalDelayInThisInterval = event.getTime() - vehicleData.getEstArrivalTimeAtCurrentLinkEnd();
+				double totalTimeInThisInterval = vehicleData.getTimeSinceStart();
+				double expectedTimeInThisInterval = totalTimeInThisInterval - totalDelayInThisInterval;
+				// Below we amplify the relative speed difference (squared)
+				// to make the colours more sensitive to drops in speed
+				double relativeSpeed = Math.pow(expectedTimeInThisInterval/totalTimeInThisInterval,2);
 				deckglTripsData.addEvent(Double.valueOf(event.getTime()).intValue(),
 						vehicleId.toString(),
 						link.getFromNode().getCoord(),
