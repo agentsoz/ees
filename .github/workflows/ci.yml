@@ -1,0 +1,85 @@
+name: EES CI
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-18.04
+
+    steps:
+
+    - name: Set up JDK 11.0.2
+      uses: actions/setup-java@v1
+      with:
+        java-version: '11.0.2'
+
+    - name: Cache Maven packages
+      uses: actions/cache@v2
+      with:
+        path: ~/.m2
+        key: cache-${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+        restore-keys: cache-${{ runner.os }}-m2
+
+    - name: Clone agentsoz/ees 
+      uses: actions/checkout@v2
+      with:
+        repository: agentsoz/ees
+        path: ees
+
+    - name: Clone agentsoz/jill
+      uses: actions/checkout@v2
+      with:
+        repository: agentsoz/jill
+        path: jill
+        ref: dev
+
+    - name: Clone agentsoz/diffusion-model
+      uses: actions/checkout@v2
+      with:
+        repository: agentsoz/diffusion-model
+        path: diffusion-model
+
+    - name: Clone agentsoz/bdi-abm-integration 
+      uses: actions/checkout@v2
+      with:
+        repository: agentsoz/bdi-abm-integration
+        path: bdi-abm-integration
+
+    - name: List all cloned repositories
+      run: |
+        echo $GITHUB_WORKSPACE
+        ls -la $GITHUB_WORKSPACE
+
+    - name: Build agentsoz/jill
+      run: |
+        cd jill && mvn clean install -N && cd -
+        cd jill/jill && mvn clean install -DskipTests && cd -
+
+    - name: Build agentsoz/diffusion-model
+      run: |
+        cd diffusion-model && mvn clean install -DskipTests
+
+    - name: Build agentsoz/bdi-abm-integration
+      run: |
+        cd bdi-abm-integration && mvn clean install -N && cd -
+        cd bdi-abm-integration/util && mvn clean install -DskipTests && cd -
+        cd bdi-abm-integration/integrations/bdi-abm && mvn clean install -DskipTests && cd -
+        cd bdi-abm-integration/integrations/abm-jill && mvn clean install -DskipTests && cd -
+        cd bdi-abm-integration/integrations/bdi-matsim && mvn clean install -DskipTests && cd -
+        
+    - name: Build agentsoz/ees
+      run: |
+        cd ees && mvn package -B -Dmatsim.preferLocalDtds=true -DskipTests && cd -
+        mkdir staging && cp ees/target/*.zip staging
+
+    - name: Upload EES build artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        path: staging
+
