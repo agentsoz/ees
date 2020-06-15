@@ -23,17 +23,17 @@ package io.github.agentsoz.ees.agents.bushfire;
  */
 
 
+import io.github.agentsoz.ees.agents.archetype.ArchetypeAgent;
 import io.github.agentsoz.jill.lang.AgentInfo;
 
 @AgentInfo(hasGoals={
+        "io.github.agentsoz.ees.agents.archetype.GoalFullResponse",
+        "io.github.agentsoz.ees.agents.archetype.GoalInitialResponse",
+        "io.github.agentsoz.ees.agents.archetype.GoalFinalResponse",
+        "io.github.agentsoz.ees.agents.archetype.GoalGoto",
         "io.github.agentsoz.abmjill.genact.EnvironmentAction",
-        "io.github.agentsoz.ees.agents.bushfire.GoalInitialResponse",
-        "io.github.agentsoz.ees.agents.bushfire.GoalActNow",
-        "io.github.agentsoz.ees.agents.bushfire.GoalGoHome",
-        "io.github.agentsoz.ees.agents.bushfire.GoalGotoDependents",
-        "io.github.agentsoz.ees.agents.bushfire.GoalGotoInvacPlace",
-        "io.github.agentsoz.ees.agents.bushfire.GoalGotoEvacPlace"})
-public class VisitorRegular extends BushfireAgent {
+})
+public class VisitorRegular extends ArchetypeAgent {
 
     private Prefix prefix = new VisitorRegular.Prefix();
 

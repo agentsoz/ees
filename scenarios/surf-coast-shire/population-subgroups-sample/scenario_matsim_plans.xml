@@ -6,12 +6,12 @@
        using the "BDIAgentType" tag that specifies the agent's type
        i.e., the Jill agent's Java class.
   -->
-  <!-- InitialResponseThreshold and FinalResponseThreshold are
+  <!-- ResponseThresholdInitial and ResponseThresholdFinal are
        threshold values (between 0.0 - 1.0) that control the
        agent's two-stage response to an unfolding situation, with lower
        values indicating a propensity to respond sooner to information
        (i.e., evacuation messages, visibility of smoke/fire, and such).z
-       Always InitialResponseThreshold =< FinalResponseThreshold.
+       Always ResponseThresholdInitial =< ResponseThresholdFinal.
   -->
   <!-- IMPORTANT: KEEP ALL AGENTS OF THE SAME TYPE TOGETHER (CONSEQUTIVE)
        otherwise the mapping in jill will be all messed up. At some point
@@ -36,10 +36,11 @@
 
   <person id= "0" >
     <attributes>
-      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.Resident</attribute>
+      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.archetype.ArchetypeAgent</attribute>
+      <attribute name="HasDependents" class="java.lang.String" >false</attribute>
       <attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>
-      <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.8</attribute>
-      <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.8</attribute>
+      <attribute name="ResponseThresholdInitial" class="java.lang.Double" >0.8</attribute>
+      <attribute name="ResponseThresholdFinal"   class="java.lang.Double" >0.8</attribute>
       <attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.Boolean" >false</attribute>
       <attribute name="WillGoHomeBeforeLeaving" class="java.lang.Boolean" >false</attribute>
       <attribute name="EvacLocationPreference" class="java.lang.String">Torquay Foreshore,790771,5752462</attribute>
@@ -62,10 +63,11 @@
   -->
   <person id= "1" >
     <attributes>
-      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.Resident</attribute>
+      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.archetype.ArchetypeAgent</attribute>
+      <attribute name="HasDependents" class="java.lang.String" >true</attribute>
       <attribute name="HasDependentsAtLocation" class="java.lang.String" >776562.41,5743690.74</attribute>
-      <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.2</attribute>
-      <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.5</attribute>
+      <attribute name="ResponseThresholdInitial" class="java.lang.Double" >0.2</attribute>
+      <attribute name="ResponseThresholdFinal"   class="java.lang.Double" >0.5</attribute>
       <attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.Boolean" >true</attribute>
       <attribute name="WillGoHomeBeforeLeaving" class="java.lang.Boolean" >false</attribute>
       <attribute name="EvacLocationPreference" class="java.lang.String">Torquay Foreshore,790771,5752462</attribute>
@@ -92,10 +94,11 @@
   -->
   <person id= "2" >
     <attributes>
-      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.Resident</attribute>
+      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.archetype.ArchetypeAgent</attribute>
+      <attribute name="HasDependents" class="java.lang.String" >false</attribute>
       <attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>
-      <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.2</attribute>
-      <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.5</attribute>
+      <attribute name="ResponseThresholdInitial" class="java.lang.Double" >0.2</attribute>
+      <attribute name="ResponseThresholdFinal"   class="java.lang.Double" >0.5</attribute>
       <attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.Boolean" >false</attribute>
       <attribute name="WillGoHomeBeforeLeaving" class="java.lang.Boolean" >true</attribute>
       <attribute name="EvacLocationPreference" class="java.lang.String">Torquay Foreshore,790771,5752462</attribute>
@@ -124,10 +127,11 @@
   -->
   <person id= "3" >
     <attributes>
-      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.Resident</attribute>
+      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.archetype.ArchetypeAgent</attribute>
+      <attribute name="HasDependents" class="java.lang.String" >true</attribute>
       <attribute name="HasDependentsAtLocation" class="java.lang.String" >778707.91,5745384.49</attribute>
-      <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.2</attribute>
-      <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.3</attribute>
+      <attribute name="ResponseThresholdInitial" class="java.lang.Double" >0.2</attribute>
+      <attribute name="ResponseThresholdFinal"   class="java.lang.Double" >0.3</attribute>
       <attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.Boolean" >false</attribute>
       <attribute name="WillGoHomeBeforeLeaving" class="java.lang.Boolean" >false</attribute>
       <attribute name="EvacLocationPreference" class="java.lang.String">Torquay Foreshore,790771,5752462</attribute>
@@ -155,10 +159,11 @@
   -->
   <person id= "4" >
     <attributes>
-      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.Resident</attribute>
+      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.archetype.ArchetypeAgent</attribute>
+      <attribute name="HasDependents" class="java.lang.String" >true</attribute>
       <attribute name="HasDependentsAtLocation" class="java.lang.String" >778707.91,5745384.49</attribute>
-      <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.2</attribute>
-      <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.3</attribute>
+      <attribute name="ResponseThresholdInitial" class="java.lang.Double" >0.2</attribute>
+      <attribute name="ResponseThresholdFinal"   class="java.lang.Double" >0.3</attribute>
       <attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.Boolean" >true</attribute>
       <attribute name="WillGoHomeBeforeLeaving" class="java.lang.Boolean" >false</attribute>
       <attribute name="EvacLocationPreference" class="java.lang.String">Torquay Foreshore,790771,5752462</attribute>
@@ -184,10 +189,11 @@
   -->
   <person id= "5" >
     <attributes>
-      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.Resident</attribute>
+      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.archetype.ArchetypeAgent</attribute>
+      <attribute name="HasDependents" class="java.lang.String" >true</attribute>
       <attribute name="HasDependentsAtLocation" class="java.lang.String" >778707.91,5745384.49</attribute>
-      <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.2</attribute>
-      <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.7</attribute>
+      <attribute name="ResponseThresholdInitial" class="java.lang.Double" >0.2</attribute>
+      <attribute name="ResponseThresholdFinal"   class="java.lang.Double" >0.7</attribute>
       <attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.Boolean" >true</attribute>
       <attribute name="WillGoHomeBeforeLeaving" class="java.lang.Boolean" >false</attribute>
       <attribute name="EvacLocationPreference" class="java.lang.String">Torquay Foreshore,790771,5752462</attribute>
@@ -211,10 +217,11 @@
   -->
   <person id= "6" >
     <attributes>
-      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.Resident</attribute>
+      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.archetype.ArchetypeAgent</attribute>
+      <attribute name="HasDependents" class="java.lang.String" >true</attribute>
       <attribute name="HasDependentsAtLocation" class="java.lang.String" >778707.91,5745384.49</attribute>
-      <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.2</attribute>
-      <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.3</attribute>
+      <attribute name="ResponseThresholdInitial" class="java.lang.Double" >0.2</attribute>
+      <attribute name="ResponseThresholdFinal"   class="java.lang.Double" >0.3</attribute>
       <attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.Boolean" >false</attribute>
       <attribute name="WillGoHomeBeforeLeaving" class="java.lang.Boolean" >true</attribute>
       <attribute name="EvacLocationPreference" class="java.lang.String">Torquay Foreshore,790771,5752462</attribute>
@@ -236,10 +243,11 @@
 
   <person id= "7" >
     <attributes>
-      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.Resident</attribute>
+      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.archetype.ArchetypeAgent</attribute>
+      <attribute name="HasDependents" class="java.lang.String" >false</attribute>
       <attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>
-      <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.3</attribute>
-      <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.4</attribute>
+      <attribute name="ResponseThresholdInitial" class="java.lang.Double" >0.3</attribute>
+      <attribute name="ResponseThresholdFinal"   class="java.lang.Double" >0.4</attribute>
       <attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.Boolean" >false</attribute>
       <attribute name="WillGoHomeBeforeLeaving" class="java.lang.Boolean" >false</attribute>
       <attribute name="EvacLocationPreference" class="java.lang.String">Torquay Foreshore,790771,5752462</attribute>
@@ -266,9 +274,10 @@ JR: verified
   <person id= "8" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.ResidentPartTime</attribute>
+      <attribute name="HasDependents" class="java.lang.String" >false</attribute>
       <attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>
-      <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.4</attribute>
-      <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.7</attribute>
+      <attribute name="ResponseThresholdInitial" class="java.lang.Double" >0.4</attribute>
+      <attribute name="ResponseThresholdFinal"   class="java.lang.Double" >0.7</attribute>
       <attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.Boolean" >false</attribute>
       <attribute name="WillGoHomeBeforeLeaving" class="java.lang.Boolean" >true</attribute>
       <attribute name="EvacLocationPreference" class="java.lang.String">Lorne 30,758783.204945714,5730096.01981458</attribute>
@@ -302,9 +311,10 @@ JR: verified
   <person id= "9" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorDaytime</attribute>
+      <attribute name="HasDependents" class="java.lang.String" >false</attribute>
       <attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>
-      <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.7</attribute>
-      <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.7</attribute>
+      <attribute name="ResponseThresholdInitial" class="java.lang.Double" >0.7</attribute>
+      <attribute name="ResponseThresholdFinal"   class="java.lang.Double" >0.7</attribute>
       <attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.Boolean" >false</attribute>
       <attribute name="WillGoHomeBeforeLeaving" class="java.lang.Boolean" >false</attribute>
       <attribute name="EvacLocationPreference" class="java.lang.String">Torquay Foreshore,790771,5752462</attribute>
@@ -337,9 +347,10 @@ JR: verified
   <person id= "10" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorDaytime</attribute>
+      <attribute name="HasDependents" class="java.lang.String" >false</attribute>
       <attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>
-      <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.3</attribute>
-      <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.3</attribute>
+      <attribute name="ResponseThresholdInitial" class="java.lang.Double" >0.3</attribute>
+      <attribute name="ResponseThresholdFinal"   class="java.lang.Double" >0.3</attribute>
       <attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.Boolean" >false</attribute>
       <attribute name="WillGoHomeBeforeLeaving" class="java.lang.Boolean" >false</attribute>
       <attribute name="EvacLocationPreference" class="java.lang.String">Melbourne,841924.6,5808324.9</attribute>
@@ -370,9 +381,10 @@ JR: verified
   <person id= "11" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorOvernight</attribute>
+      <attribute name="HasDependents" class="java.lang.String" >false</attribute>
       <attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>
-      <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.5</attribute>
-      <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.5</attribute>
+      <attribute name="ResponseThresholdInitial" class="java.lang.Double" >0.5</attribute>
+      <attribute name="ResponseThresholdFinal"   class="java.lang.Double" >0.5</attribute>
       <attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.Boolean" >false</attribute>
       <attribute name="WillGoHomeBeforeLeaving" class="java.lang.Boolean" >true</attribute>
       <attribute name="EvacLocationPreference" class="java.lang.String">Torquay Foreshore,790771,5752462</attribute>
@@ -404,9 +416,10 @@ JR: verified
   <person id= "12" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorOvernight</attribute>
+      <attribute name="HasDependents" class="java.lang.String" >false</attribute>
       <attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>
-      <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.2</attribute>
-      <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.2</attribute>
+      <attribute name="ResponseThresholdInitial" class="java.lang.Double" >0.2</attribute>
+      <attribute name="ResponseThresholdFinal"   class="java.lang.Double" >0.2</attribute>
       <attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.Boolean" >false</attribute>
       <attribute name="WillGoHomeBeforeLeaving" class="java.lang.Boolean" >true</attribute>
       <attribute name="EvacLocationPreference" class="java.lang.String">Melbourne,841924.6,5808324.9</attribute>
@@ -436,9 +449,10 @@ JR: verified
   <person id= "13" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorRegular</attribute>
+      <attribute name="HasDependents" class="java.lang.String" >false</attribute>
       <attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>
-      <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.0</attribute>
-      <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.0</attribute>
+      <attribute name="ResponseThresholdInitial" class="java.lang.Double" >0.0</attribute>
+      <attribute name="ResponseThresholdFinal"   class="java.lang.Double" >0.0</attribute>
       <attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.Boolean" >false</attribute>
       <attribute name="WillGoHomeBeforeLeaving" class="java.lang.Boolean" >false</attribute>
       <attribute name="EvacLocationPreference" class="java.lang.String">Torquay Foreshore,790771,5752462</attribute>
@@ -464,9 +478,10 @@ JR: verified
   <person id= "14" >
     <attributes>
       <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorRegular</attribute>
+      <attribute name="HasDependents" class="java.lang.String" >false</attribute>
       <attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>
-      <attribute name="InitialResponseThreshold" class="java.lang.Double" >0.3</attribute>
-      <attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.7</attribute>
+      <attribute name="ResponseThresholdInitial" class="java.lang.Double" >0.3</attribute>
+      <attribute name="ResponseThresholdFinal"   class="java.lang.Double" >0.7</attribute>
       <attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.Boolean" >false</attribute>
       <attribute name="WillGoHomeBeforeLeaving" class="java.lang.Boolean" >true</attribute>
       <attribute name="EvacLocationPreference" class="java.lang.String">Torquay Foreshore,790771,5752462</attribute>
@@ -499,8 +514,8 @@ JR: verified
   <!--<attributes>-->
   <!--<attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorDaytime</attribute>-->
   <!--<attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>-->
-  <!--<attribute name="InitialResponseThreshold" class="java.lang.Double" >1.0</attribute>-->
-  <!--<attribute name="FinalResponseThreshold"   class="java.lang.Double" >1.0</attribute>-->
+  <!--<attribute name="ResponseThresholdInitial" class="java.lang.Double" >1.0</attribute>-->
+  <!--<attribute name="ResponseThresholdFinal"   class="java.lang.Double" >1.0</attribute>-->
   <!--<attribute name="EvacLocationPreference" class="java.lang.String">Torquay Foreshore,790771,5752462</attribute>-->
   <!--<attribute name="InvacLocationPreference" class="java.lang.String">Anglesea Shops,777471,5742412</attribute>-->
   <!--</attributes>-->
@@ -534,8 +549,8 @@ JR: verified
   <!--<attributes>-->
   <!--<attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorOvernight</attribute>-->
   <!--<attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>-->
-  <!--<attribute name="InitialResponseThreshold" class="java.lang.Double" >0.6</attribute>-->
-  <!--<attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.6</attribute>-->
+  <!--<attribute name="ResponseThresholdInitial" class="java.lang.Double" >0.6</attribute>-->
+  <!--<attribute name="ResponseThresholdFinal"   class="java.lang.Double" >0.6</attribute>-->
   <!--<attribute name="EvacLocationPreference" class="java.lang.String">Torquay Foreshore,790771,5752462</attribute>-->
   <!--<attribute name="InvacLocationPreference" class="java.lang.String">Anglesea Shops,777471,5742412</attribute>-->
   <!--</attributes>-->
@@ -570,8 +585,8 @@ JR: verified
   <!--<attributes>-->
   <!--<attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorOvernight</attribute>-->
   <!--<attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>-->
-  <!--<attribute name="InitialResponseThreshold" class="java.lang.Double" >0.5</attribute>-->
-  <!--<attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.5</attribute>-->
+  <!--<attribute name="ResponseThresholdInitial" class="java.lang.Double" >0.5</attribute>-->
+  <!--<attribute name="ResponseThresholdFinal"   class="java.lang.Double" >0.5</attribute>-->
   <!--<attribute name="EvacLocationPreference" class="java.lang.String">Torquay Foreshore,790771,5752462</attribute>-->
   <!--<attribute name="InvacLocationPreference" class="java.lang.String">Anglesea Shops,777471,5742412</attribute>-->
   <!--</attributes>-->
@@ -596,8 +611,8 @@ JR: verified
   <!--<attributes>-->
   <!--<attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorOvernight</attribute>-->
   <!--<attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>-->
-  <!--<attribute name="InitialResponseThreshold" class="java.lang.Double" >0.3</attribute>-->
-  <!--<attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.3</attribute>-->
+  <!--<attribute name="ResponseThresholdInitial" class="java.lang.Double" >0.3</attribute>-->
+  <!--<attribute name="ResponseThresholdFinal"   class="java.lang.Double" >0.3</attribute>-->
   <!--<attribute name="EvacLocationPreference" class="java.lang.String">Torquay Foreshore,790771,5752462</attribute>-->
   <!--<attribute name="InvacLocationPreference" class="java.lang.String">Anglesea Shops,777471,5742412</attribute>-->
   <!--</attributes>-->

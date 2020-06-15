@@ -524,22 +524,36 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
     }
 
     private void initialiseBeliefs() {
+        String b;
+        //
         believe(State.anxietyFromSituation.name(), "0.0");
         believe(State.anxietyFromSocialMessages.name(), "0.0");
         believe(State.anxietyFromEmergencyMessages.name(), "0.0");
         //
-        believe(State.futureValueOfFireDangerIndexRating.name(), getBelief(Beliefname.ImpactFromFireDangerIndexRating.name()));
-        believe(State.futureValueOfSmokeImmersion.name(), getBelief(Beliefname.ImpactFromImmersionInSmoke.name()));
-        believe(State.futureValueOfMessageAdvice.name(), getBelief(Beliefname.ImpactFromMessageAdvice.name()));
-        believe(State.futureValueOfMessageEmergencyWarning.name(), getBelief(Beliefname.ImpactFromMessageEmergencyWarning.name()));
-        believe(State.futureValueOfMessageEvacuateNow.name(), getBelief(Beliefname.ImpactFromMessageEvacuateNow.name()));
-        believe(State.futureValueOfMessageRespondersAttending.name(), getBelief(Beliefname.ImpactFromMessageRespondersAttending.name()));
-        believe(State.futureValueOfMessageWatchAndAct.name(), getBelief(Beliefname.ImpactFromMessageWatchAndAct.name()));
-        believe(State.futureValueOfMessageSocial.name(), getBelief(Beliefname.ImpactFromSocialMessage.name()));
-        believe(State.futureValueOfVisibleEmbers.name(), getBelief(Beliefname.ImpactFromVisibleEmbers.name()));
-        believe(State.futureValueOfVisibleResponders.name(), getBelief(Beliefname.ImpactFromVisibleResponders.name()));
-        believe(State.futureValueOfVisibleFire.name(), getBelief(Beliefname.ImpactFromVisibleFire.name()));
-        believe(State.futureValueOfVisibleSmoke.name(), getBelief(Beliefname.ImpactFromVisibleSmoke.name()));
+        b = getBelief(Beliefname.ImpactFromFireDangerIndexRating.name());
+        believe(State.futureValueOfFireDangerIndexRating.name(), b == null ? "0.0" : b);
+        b = getBelief(Beliefname.ImpactFromImmersionInSmoke.name());
+        believe(State.futureValueOfSmokeImmersion.name(), b == null ? "0.0" : b);
+        b = getBelief(Beliefname.ImpactFromMessageAdvice.name());
+        believe(State.futureValueOfMessageAdvice.name(), b == null ? "0.0" : b);
+        b = getBelief(Beliefname.ImpactFromMessageEmergencyWarning.name());
+        believe(State.futureValueOfMessageEmergencyWarning.name(), b == null ? "0.0" : b);
+        b = getBelief(Beliefname.ImpactFromMessageEvacuateNow.name());
+        believe(State.futureValueOfMessageEvacuateNow.name(), b == null ? "0.0" : b);
+        b = getBelief(Beliefname.ImpactFromMessageRespondersAttending.name());
+        believe(State.futureValueOfMessageRespondersAttending.name(), b == null ? "0.0" : b);
+        b = getBelief(Beliefname.ImpactFromMessageWatchAndAct.name());
+        believe(State.futureValueOfMessageWatchAndAct.name(), b == null ? "0.0" : b);
+        b = getBelief(Beliefname.ImpactFromSocialMessage.name());
+        believe(State.futureValueOfMessageSocial.name(), b == null ? "0.0" : b);
+        b = getBelief(Beliefname.ImpactFromVisibleEmbers.name());
+        believe(State.futureValueOfVisibleEmbers.name(), b == null ? "0.0" : b);
+        b = getBelief(Beliefname.ImpactFromVisibleResponders.name());
+        believe(State.futureValueOfVisibleResponders.name(), b == null ? "0.0" : b);
+        b = getBelief(Beliefname.ImpactFromVisibleFire.name());
+        believe(State.futureValueOfVisibleFire.name(), b == null ? "0.0" : b);
+        b = getBelief(Beliefname.ImpactFromVisibleSmoke.name());
+        believe(State.futureValueOfVisibleSmoke.name(), b == null ? "0.0" : b);
         //
         believe(State.responseThresholdInitialReached.name(), null);
         believe(State.responseThresholdFinalReached.name(), null);
