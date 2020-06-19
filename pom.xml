@@ -252,7 +252,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>license-maven-plugin</artifactId>
-        <version>1.14</version>
+        <version>2.0.0</version>
         <configuration>
           <organizationName>AgentsOZ</organizationName>
           <copyrightOwners>by its authors. See AUTHORS file.</copyrightOwners>
@@ -261,6 +261,9 @@
           <licenseName>lgpl_v3</licenseName>
           <outputDirectory>${project.basedir}</outputDirectory>
           <thirdPartyFilename>THIRD-PARTY.txt</thirdPartyFilename>
+          <canUpdateLicense>true</canUpdateLicense>
+          <canUpdateCopyright>true</canUpdateCopyright>
+          <canUpdateDescription>true</canUpdateDescription>
         </configuration>
         <executions>
           <execution>
