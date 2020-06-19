@@ -43,7 +43,7 @@ public class ResidentPartTime extends ArchetypeAgent {
 
     class Prefix{
         public String toString() {
-            return String.format("Time %05.0f ResidentPartTime %-1s : ", getTime(), getId());
+            return String.format("%05.0f|%s|%s|%s|", getTime(), getTimeString(), ResidentPartTime.class.getSimpleName(), getId());
         }
     }
 

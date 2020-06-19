@@ -43,7 +43,7 @@ public class VisitorOvernight extends ArchetypeAgent {
 
     class Prefix{
         public String toString() {
-            return String.format("Time %05.0f VisitorOvernight %-1s : ", getTime(), getId());
+            return String.format("%05.0f|%s|%s|%s|", getTime(), getTimeString(), VisitorOvernight.class.getSimpleName(), getId());
         }
     }
 

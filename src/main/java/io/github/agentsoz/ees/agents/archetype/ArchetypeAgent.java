@@ -840,7 +840,7 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
     //region Logging
     //===============================================================================
 
-    String getTimeString() {
+    protected String getTimeString() {
         return writeTime(getTime(), "HH:mm:ss");
     }
     class Prefix{
