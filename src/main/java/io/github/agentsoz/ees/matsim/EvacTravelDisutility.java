@@ -97,7 +97,7 @@ public final class EvacTravelDisutility implements TravelDisutility {
 			log.debug("found link in fire area:" + link.getId() );
 			factor = result ;
 		}
-		return factor * this.travelTime.getLinkTravelTime(link, Time.UNDEFINED_TIME, null, null);
+		return factor * this.travelTime.getLinkTravelTime(link, Time.MIDNIGHT, null, null);
 	}
 	
 	public static final class Factory implements TravelDisutilityFactory {

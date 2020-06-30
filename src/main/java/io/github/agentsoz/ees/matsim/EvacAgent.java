@@ -63,6 +63,7 @@ import org.matsim.core.mobsim.qsim.interfaces.Netsim;
 import org.matsim.core.router.TripRouter;
 import org.matsim.core.router.TripStructureUtils;
 import org.matsim.core.router.TripStructureUtils.Trip;
+import org.matsim.core.utils.misc.OptionalTime;
 import org.matsim.facilities.Facility;
 import org.matsim.vehicles.Vehicle;
 import org.matsim.withinday.utils.EditTrips;
@@ -93,7 +94,7 @@ class EvacAgent implements MobsimDriverAgent, HasPerson, PlanAgent, HasModifiabl
 		this.basicAgentDelegate = new BasicPlanAgentImpl(selectedPlan, simulation.getScenario(), simulation.getEventsManager(),
 				simulation.getSimTimer() ) ;
 		this.driverAgentDelegate = new PlanBasedDriverAgentImpl(basicAgentDelegate) ;
-		this.editTrips = new EditTrips(tripRouter, simulation.getScenario() ) ;
+		this.editTrips = new EditTrips(tripRouter, simulation.getScenario(), null ) ;
 		this.network = simulation.getScenario().getNetwork() ;
 		this.simTimer = simulation.getSimTimer() ;
 		this.eventsManager = simulation.getEventsManager() ;
@@ -137,17 +138,15 @@ class EvacAgent implements MobsimDriverAgent, HasPerson, PlanAgent, HasModifiabl
 						((Leg)nextPlanElement).getRoute()==null ) {
 					log.trace("leg has no route; recomputing next trip") ;
 					Activity act = (Activity) basicAgentDelegate.getCurrentPlanElement() ;
-					if ( !tripRouter.getStageActivityTypes().isStageActivity(act.getType()) ) {
+					if ( !TripStructureUtils.isStageActivityType(act.getType())) {
 						// (= we just ended a "real" activity)
 
-						Trip trip = TripStructureUtils.findTripStartingAtActivity(act, this.getModifiablePlan(), 
-								tripRouter.getStageActivityTypes() ) ;
-						String mainMode = tripRouter.getMainModeIdentifier().identifyMainMode(trip.getTripElements()) ;
+						Trip trip = TripStructureUtils.findTripStartingAtActivity(act, this.getModifiablePlan()) ;
+						String mainMode = TripStructureUtils.identifyMainMode(trip.getTripElements()) ;
 						log.debug("identified main mode=" + mainMode ) ;
 						editTrips.replanFutureTrip(trip, this.getModifiablePlan(), mainMode, now ) ;
 						
-						Trip newTrip = TripStructureUtils.findTripStartingAtActivity(act, this.getModifiablePlan(), 
-								tripRouter.getStageActivityTypes() ) ;
+						Trip newTrip = TripStructureUtils.findTripStartingAtActivity(act, this.getModifiablePlan()) ;
 
 						// something in the following is a null pointer ... which is triggered even
 						// when the log level is above debug.  kai, dec'17
@@ -177,7 +176,7 @@ class EvacAgent implements MobsimDriverAgent, HasPerson, PlanAgent, HasModifiabl
 	}
 
 	@Override
-	public final Double getExpectedTravelTime() {
+	public final OptionalTime getExpectedTravelTime() {
 		return basicAgentDelegate.getExpectedTravelTime();
 	}
 

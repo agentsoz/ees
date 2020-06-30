@@ -62,10 +62,10 @@ public final class Replanner {
 		{
 			TravelTime travelTime = TravelTimeUtils.createFreeSpeedTravelTime();
 			TravelDisutility travelDisutility = TravelDisutilityUtils.createFreespeedTravelTimeAndDisutility(scenario.getConfig().planCalcScore());
-			LeastCostPathCalculator pathCalculator = new FastAStarLandmarksFactory().createPathCalculator(scenario.getNetwork(), travelDisutility, travelTime);
+			LeastCostPathCalculator pathCalculator = new FastAStarLandmarksFactory(1).createPathCalculator(scenario.getNetwork(), travelDisutility, travelTime);
 			this.editRoutes = new EditRoutes(scenario.getNetwork(), pathCalculator, scenario.getPopulation().getFactory());
 		}
-		this.editTrips = new EditTrips(tripRouter, qSim2.getScenario() ) ;
+		this.editTrips = new EditTrips(tripRouter, qSim2.getScenario(), null ) ;
 		this.editPlans = new EditPlans(qSim2, tripRouter, editTrips, scenario.getPopulation().getFactory() ) ;
 	}
 

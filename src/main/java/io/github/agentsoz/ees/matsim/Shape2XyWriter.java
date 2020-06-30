@@ -31,7 +31,9 @@ import org.matsim.core.utils.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.PrintStream;
+import java.net.MalformedURLException;
 
 class Shape2XyWriter {
 	private static final Logger log = LoggerFactory.getLogger( Shape2XyWriter.class);
@@ -47,8 +49,12 @@ class Shape2XyWriter {
 		if ( writer == null) {
 			final String filename = config.controler().getOutputDirectory() + "/output_" + name + "Coords.txt.gz";
 			log.info("writing " + name + " data to " + filename);
-			writer = IOUtils.getPrintStream(filename);
-			writer.println("time\tx\ty");
+			try {
+				writer = IOUtils.getPrintStream(new File(filename).toURI().toURL());
+				writer.println("time\tx\ty");
+			} catch (MalformedURLException e) {
+				throw new RuntimeException(e);
+			}
 		}
 		// can't do this earlier since the output directories are not yet prepared by the controler.  kai, dec'17
 		

@@ -31,7 +31,9 @@ import org.matsim.core.utils.misc.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.PrintStream;
+import java.net.MalformedURLException;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
@@ -50,8 +52,12 @@ class DisruptionWriter {
 		if (writer == null) {
 			final String filename = config.controler().getOutputDirectory() + "/output_disruptionCoords.txt.gz";
 			log.warn("writing disruption data to " + filename);
-			writer = IOUtils.getPrintStream(filename);
-			writer.println("time\tlinkId\tx\ty\tnewSpeed");
+			try {
+				writer = IOUtils.getPrintStream(new File(filename).toURI().toURL());
+				writer.println("time\tlinkId\tx\ty\tnewSpeed");
+			} catch (MalformedURLException e) {
+				throw new RuntimeException(e);
+			}
 		}
 		// can't do this earlier since the output directories are not yet prepared by the controler.  kai, dec'17
 		// Since we are memorizing the records towards the very end, could as well just open and close the writer there.
