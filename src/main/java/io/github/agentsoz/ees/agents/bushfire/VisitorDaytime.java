@@ -26,6 +26,9 @@ package io.github.agentsoz.ees.agents.bushfire;
 import io.github.agentsoz.ees.agents.archetype.ArchetypeAgent;
 import io.github.agentsoz.jill.lang.AgentInfo;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @AgentInfo(hasGoals={
         "io.github.agentsoz.ees.agents.archetype.GoalFullResponse",
         "io.github.agentsoz.ees.agents.archetype.GoalInitialResponse",
@@ -50,6 +53,35 @@ public class VisitorDaytime extends ArchetypeAgent {
     @Override
     public String logPrefix() {
         return prefix.toString();
+    }
+
+    @Override
+    protected void parseArgs(String[] args) {
+        List<String> baseArgs = new ArrayList<>();
+        for (int i = 0; args!= null && i < args.length; i++) {
+            String key = args[i];
+            String value = null;
+            if (i + 1 < args.length) {
+                i++;
+                value = args[i];
+            }
+            switch (key) {
+                case "beach":
+                case "shops":
+                case "other":
+                case "sharesInfoWithSocialNetwork":
+                    // do something with these if needed
+                    break;
+                default:
+                    // keep all other args for the base class
+                    baseArgs.add(key);
+                    if (value != null) {
+                        baseArgs.add(value);
+                    }
+                    break;
+            }
+        }
+        super.parseArgs(baseArgs.toArray(new String[0]));
     }
 
 }

@@ -36,7 +36,7 @@
 
   <person id= "0" >
     <attributes>
-      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.archetype.ArchetypeAgent</attribute>
+      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.ResidentFullTime</attribute>
       <attribute name="HasDependents" class="java.lang.String" >false</attribute>
       <attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>
       <attribute name="ResponseThresholdInitial" class="java.lang.Double" >0.8</attribute>
@@ -63,7 +63,7 @@
   -->
   <person id= "1" >
     <attributes>
-      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.archetype.ArchetypeAgent</attribute>
+      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.ResidentFullTime</attribute>
       <attribute name="HasDependents" class="java.lang.String" >true</attribute>
       <attribute name="HasDependentsAtLocation" class="java.lang.String" >776562.41,5743690.74</attribute>
       <attribute name="ResponseThresholdInitial" class="java.lang.Double" >0.2</attribute>
@@ -94,7 +94,7 @@
   -->
   <person id= "2" >
     <attributes>
-      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.archetype.ArchetypeAgent</attribute>
+      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.ResidentFullTime</attribute>
       <attribute name="HasDependents" class="java.lang.String" >false</attribute>
       <attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>
       <attribute name="ResponseThresholdInitial" class="java.lang.Double" >0.2</attribute>
@@ -127,7 +127,7 @@
   -->
   <person id= "3" >
     <attributes>
-      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.archetype.ArchetypeAgent</attribute>
+      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.ResidentFullTime</attribute>
       <attribute name="HasDependents" class="java.lang.String" >true</attribute>
       <attribute name="HasDependentsAtLocation" class="java.lang.String" >778707.91,5745384.49</attribute>
       <attribute name="ResponseThresholdInitial" class="java.lang.Double" >0.2</attribute>
@@ -159,7 +159,7 @@
   -->
   <person id= "4" >
     <attributes>
-      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.archetype.ArchetypeAgent</attribute>
+      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.ResidentFullTime</attribute>
       <attribute name="HasDependents" class="java.lang.String" >true</attribute>
       <attribute name="HasDependentsAtLocation" class="java.lang.String" >778707.91,5745384.49</attribute>
       <attribute name="ResponseThresholdInitial" class="java.lang.Double" >0.2</attribute>
@@ -189,7 +189,7 @@
   -->
   <person id= "5" >
     <attributes>
-      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.archetype.ArchetypeAgent</attribute>
+      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.ResidentFullTime</attribute>
       <attribute name="HasDependents" class="java.lang.String" >true</attribute>
       <attribute name="HasDependentsAtLocation" class="java.lang.String" >778707.91,5745384.49</attribute>
       <attribute name="ResponseThresholdInitial" class="java.lang.Double" >0.2</attribute>
@@ -217,7 +217,7 @@
   -->
   <person id= "6" >
     <attributes>
-      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.archetype.ArchetypeAgent</attribute>
+      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.ResidentFullTime</attribute>
       <attribute name="HasDependents" class="java.lang.String" >true</attribute>
       <attribute name="HasDependentsAtLocation" class="java.lang.String" >778707.91,5745384.49</attribute>
       <attribute name="ResponseThresholdInitial" class="java.lang.Double" >0.2</attribute>
@@ -243,7 +243,7 @@
 
   <person id= "7" >
     <attributes>
-      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.archetype.ArchetypeAgent</attribute>
+      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.ResidentFullTime</attribute>
       <attribute name="HasDependents" class="java.lang.String" >false</attribute>
       <attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>
       <attribute name="ResponseThresholdInitial" class="java.lang.Double" >0.3</attribute>

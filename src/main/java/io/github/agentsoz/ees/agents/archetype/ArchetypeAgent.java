@@ -589,7 +589,7 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
     //region Arguments parsing
     //===============================================================================
 
-    private void parseArgs(String[] args) {
+    protected void parseArgs(String[] args) {
         for (int i = 0; args!= null && i < args.length; i++) {
             String key = args[i];
             String value = null;

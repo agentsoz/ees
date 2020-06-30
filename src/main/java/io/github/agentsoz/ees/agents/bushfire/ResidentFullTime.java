@@ -36,17 +36,17 @@ import java.util.List;
         "io.github.agentsoz.ees.agents.archetype.GoalGoto",
         "io.github.agentsoz.abmjill.genact.EnvironmentAction",
 })
-public class ResidentPartTime extends ArchetypeAgent {
+public class ResidentFullTime extends ArchetypeAgent {
 
-    private Prefix prefix = new ResidentPartTime.Prefix();
+    private Prefix prefix = new ResidentFullTime.Prefix();
 
-    public ResidentPartTime(String id) {
+    public ResidentFullTime(String id) {
         super(id);
     }
 
     class Prefix{
         public String toString() {
-            return String.format("%05.0f|%s|%s|%s|", getTime(), getTimeString(), ResidentPartTime.class.getSimpleName(), getId());
+            return String.format("%05.0f|%s|%s|%s|", getTime(), getTimeString(), ResidentFullTime.class.getSimpleName(), getId());
         }
     }
 
