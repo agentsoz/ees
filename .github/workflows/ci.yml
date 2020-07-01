@@ -4,7 +4,7 @@ name: EES CI
 # events but only for the master branch
 on:
   push:
-    branches: [ master ]
+    branches: [ master, matsim12 ]
   pull_request:
     branches: [ master ]
 
