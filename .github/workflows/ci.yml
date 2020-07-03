@@ -53,22 +53,22 @@ jobs:
         ref: matsim12
         path: bdi-abm-integration
 
-    - name: Clone matsim-org/matsim-libs
-      uses: actions/checkout@v2
-      with:
-        repository: matsim-org/matsim-libs
-        ref: agentsoz
-        path: matsim-libs
+    #- name: Clone matsim-org/matsim-libs
+    #  uses: actions/checkout@v2
+    #  with:
+    #    repository: matsim-org/matsim-libs
+    #    ref: agentsoz
+    #    path: matsim-libs
 
     - name: List all cloned repositories
       run: |
         echo $GITHUB_WORKSPACE
         ls -la $GITHUB_WORKSPACE
 
-    - name: Build matsim-org/matsim-libs
-      run: |
-        cd matsim-libs && mvn clean install -N && cd -
-        cd matsim-libs/matsim && mvn clean install -DskipTests && cd -
+    #- name: Build matsim-org/matsim-libs
+    #  run: |
+    #    cd matsim-libs && mvn clean install -N && cd -
+    #    cd matsim-libs/matsim && mvn clean install -DskipTests && cd -
 
     - name: Build agentsoz/jill
       run: |
