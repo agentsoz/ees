@@ -38,10 +38,9 @@ import org.locationtech.jts.precision.GeometryPrecisionReducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
+import java.util.zip.GZIPInputStream;
 
 public class PhoenixGridModel implements DataSource<Geometry> {
 
@@ -123,8 +122,11 @@ public class PhoenixGridModel implements DataSource<Geometry> {
 		logger.info("Loading GeoJSON file: " + file);
 		// Create the JSON parsor
 		JSONParser parser = new JSONParser();
+		Reader reader = (file.endsWith(".gz")) ?
+				new InputStreamReader(new GZIPInputStream(new FileInputStream(file))) :
+				new FileReader(file);
 		// Read in the JSON file
-		json = (JSONObject) (parser.parse(new FileReader(file)));
+		json = (JSONObject) (parser.parse(reader));
 		// Loop through the features (which contains the time-stamped embers
 		// shapes)
 		JSONArray features = (JSONArray) json.get("features");
