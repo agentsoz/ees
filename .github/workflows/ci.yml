@@ -50,7 +50,6 @@ jobs:
       uses: actions/checkout@v2
       with:
         repository: agentsoz/bdi-abm-integration
-        ref: matsim12
         path: bdi-abm-integration
 
     #- name: Clone matsim-org/matsim-libs
