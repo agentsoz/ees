@@ -35,7 +35,7 @@
     <!-- coordinate reference system in EPSG format to be used for all models; see http://spatialreference.org -->
     <opt id="crs">EPSG:28355</opt>
     <!-- simulation start time in HH:MM format -->
-    <opt id="startHHMM">13:00</opt>
+    <opt id="startHHMM">12:00</opt>
     <!-- Output file for trips written in DeckGL format -->
     <opt id="deckGlOutFile">test/output/io/github/agentsoz/ees/MainMaldon600Test/test/trips.deckgl.json</opt>
   </global>
@@ -78,11 +78,11 @@
 
     <model id="phoenix">
       <!-- Phoenix start time in HH:MM format; used to calculate absolute values for hour_spot and hour_burnt -->
-      <opt id="ignitionHHMM">00:00</opt>
-      <!-- Phoenix fire GeoJSON file -->
-      <opt id="fireGeoJson">scenarios/mount-alexander-shire/maldon-600/scenario_fire.json</opt>
-      <!-- Phoenix smoke (embers) GeoJSON file -->
-      <opt id="smokeGeoJson"></opt>
+      <opt id="ignitionHHMM">12:30</opt>
+      <!-- Phoenix grid GeoJSON file -->
+      <opt id="gridGeoJson">scenarios/mount-alexander-shire/maldon-600/20181109_mountalex_evac_ffdi75d_grid.shp.json</opt>
+      <!-- Phoenix grid square size (in meteres) -->
+      <opt id="gridSquareSideInMetres">180</opt>
     </model>
 
     <model id="disruption">
