@@ -127,6 +127,8 @@ public class PhoenixGridModel implements DataSource<Geometry> {
 				new FileReader(file);
 		// Read in the JSON file
 		json = (JSONObject) (parser.parse(reader));
+		// close the reader
+		reader.close();
 		// Loop through the features (which contains the time-stamped embers
 		// shapes)
 		JSONArray features = (JSONArray) json.get("features");
