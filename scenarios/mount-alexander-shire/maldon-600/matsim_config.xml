@@ -37,7 +37,7 @@
 	</module>
 
 	<module name="plans">
-		<param name="inputPlansFile" value="scenario_matsim_plans_reduced.xml" />
+		<param name="inputPlansFile" value="matsim_plans.xml" />
 	</module>
 
 	<module name="controler">
