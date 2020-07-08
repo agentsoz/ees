@@ -1,0 +1,457 @@
+<?xml version="1.0" encoding="utf-8"?>
+  <!DOCTYPE population SYSTEM "http://www.matsim.org/files/dtd/population_v6.dtd">
+  <population>
+  <!-- ====================================================================== -->
+
+ <person id= "0" >
+    <attributes>
+      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.ResidentFullTime</attribute>
+      <attribute name="HasDependents" class="java.lang.String" >false</attribute>
+      <attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>
+      <attribute name="ResponseThresholdInitial" class="java.lang.Double" >0.3</attribute>
+      <attribute name="ResponseThresholdFinal"   class="java.lang.Double" >0.3</attribute>
+      <attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.Boolean" >false</attribute>
+      <attribute name="WillGoHomeBeforeLeaving" class="java.lang.Boolean" >true</attribute>
+      <attribute name="EvacLocationPreference" class="java.lang.String">,725946.634709856,5753152.68589706</attribute>
+      <attribute name="InvacLocationPreference" class="java.lang.String">,755325.003794339,5751738.31114336</attribute>
+      <attribute name="Archetype" class="java.lang.String" >MadeUpArchetype</attribute>
+      <attribute name="ImpactFromFireDangerIndexRating" class="java.lang.String" >0.04</attribute>
+      <attribute name="ImpactFromImmersionInSmoke" class="java.lang.String" >0.2</attribute>
+      <attribute name="ImpactFromMessageAdvice" class="java.lang.String" >0.04</attribute>
+      <attribute name="ImpactFromMessageEmergencyWarning" class="java.lang.String" >0.14</attribute>
+      <attribute name="ImpactFromMessageEvacuateNow" class="java.lang.String" >0.24</attribute>
+      <attribute name="ImpactFromMessageRespondersAttending" class="java.lang.String" >0.01</attribute>
+      <attribute name="ImpactFromMessageWatchAndAct" class="java.lang.String" >0.07</attribute>
+      <attribute name="ImpactFromSocialMessage" class="java.lang.String" >0.29</attribute>
+      <attribute name="ImpactFromVisibleEmbers" class="java.lang.String" >0.3</attribute>
+      <attribute name="ImpactFromVisibleFire" class="java.lang.String" >0.5</attribute>
+      <attribute name="ImpactFromVisibleResponders" class="java.lang.String" >0.1</attribute>
+      <attribute name="ImpactFromVisibleSmoke" class="java.lang.String" >0.11</attribute>
+      <attribute name="LagTimeInMinsForFinalResponse" class="java.lang.String" >12.86</attribute>
+      <attribute name="LagTimeInMinsForInitialResponse" class="java.lang.String" >15</attribute>
+      <attribute name="WillStay" class="java.lang.String" >false</attribute>
+    </attributes>
+    <plan selected="yes">
+      <activity type="home" x="755325.003191571" y="5751738.31129458" end_time="13:06:00" />
+      <leg mode="car" />
+      <activity type="work" x="759242.842466952" y="5730260.94977307" end_time="21:43:00" />
+      <leg mode="car" />
+      <activity type="other" x="789861.480645674" y="5753138.57302227" end_time="23:32:00" />
+      <leg mode="car" />
+      <activity type="home" x="755325.003191571" y="5751738.31129458" />
+    </plan>
+  </person>
+
+  
+
+ <person id= "1" >
+    <attributes>
+      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.ResidentFullTime</attribute>
+      <attribute name="HasDependents" class="java.lang.String" >false</attribute>
+      <attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>
+      <attribute name="ResponseThresholdInitial" class="java.lang.Double" >0.5</attribute>
+      <attribute name="ResponseThresholdFinal"   class="java.lang.Double" >0.5</attribute>
+      <attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.Boolean" >false</attribute>
+      <attribute name="WillGoHomeBeforeLeaving" class="java.lang.Boolean" >true</attribute>
+      <attribute name="EvacLocationPreference" class="java.lang.String">Main Beach,759621.645704915,5730564.32432918</attribute>
+      <attribute name="InvacLocationPreference" class="java.lang.String">,775720.066179197,5759341.61175385</attribute>
+      <attribute name="Archetype" class="java.lang.String" >MadeUpArchetype</attribute>
+      <attribute name="ImpactFromFireDangerIndexRating" class="java.lang.String" >0.04</attribute>
+      <attribute name="ImpactFromImmersionInSmoke" class="java.lang.String" >0.2</attribute>
+      <attribute name="ImpactFromMessageAdvice" class="java.lang.String" >0.04</attribute>
+      <attribute name="ImpactFromMessageEmergencyWarning" class="java.lang.String" >0.14</attribute>
+      <attribute name="ImpactFromMessageEvacuateNow" class="java.lang.String" >0.24</attribute>
+      <attribute name="ImpactFromMessageRespondersAttending" class="java.lang.String" >0.01</attribute>
+      <attribute name="ImpactFromMessageWatchAndAct" class="java.lang.String" >0.07</attribute>
+      <attribute name="ImpactFromSocialMessage" class="java.lang.String" >0.29</attribute>
+      <attribute name="ImpactFromVisibleEmbers" class="java.lang.String" >0.3</attribute>
+      <attribute name="ImpactFromVisibleFire" class="java.lang.String" >0.5</attribute>
+      <attribute name="ImpactFromVisibleResponders" class="java.lang.String" >0.1</attribute>
+      <attribute name="ImpactFromVisibleSmoke" class="java.lang.String" >0.11</attribute>
+      <attribute name="LagTimeInMinsForFinalResponse" class="java.lang.String" >12.86</attribute>
+      <attribute name="LagTimeInMinsForInitialResponse" class="java.lang.String" >15</attribute>
+      <attribute name="WillStay" class="java.lang.String" >false</attribute>
+    </attributes>
+    <plan selected="yes">
+      <activity type="home" x="775720.065156579" y="5759341.6119029" end_time="08:38:00" />
+      <leg mode="car" />
+      <activity type="work" x="789843.273387893" y="5754750.85158653" end_time="17:33:00" />
+      <leg mode="car" />
+      <activity type="home" x="775720.065156579" y="5759341.6119029" end_time="18:03:00" />
+      <leg mode="car" />
+      <activity type="other" x="789861.480645674" y="5753138.57302227" end_time="21:38:00" />
+      <leg mode="car" />
+      <activity type="home" x="775720.065156579" y="5759341.6119029" />
+    </plan>
+  </person>
+
+  
+
+ <person id= "2" >
+    <attributes>
+      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.ResidentPartTime</attribute>
+      <attribute name="HasDependents" class="java.lang.String" >false</attribute>
+      <attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>
+      <attribute name="ResponseThresholdInitial" class="java.lang.Double" >0.1</attribute>
+      <attribute name="ResponseThresholdFinal"   class="java.lang.Double" >0.1</attribute>
+      <attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.Boolean" >false</attribute>
+      <attribute name="WillGoHomeBeforeLeaving" class="java.lang.Boolean" >false</attribute>
+      <attribute name="EvacLocationPreference" class="java.lang.String">Anglesea Shops,778567.629793594,5744455.95718697</attribute>
+      <attribute name="InvacLocationPreference" class="java.lang.String">,787477.26712826,5769702.61150125</attribute>
+      <attribute name="Archetype" class="java.lang.String" >MadeUpArchetype</attribute>
+      <attribute name="ImpactFromFireDangerIndexRating" class="java.lang.String" >0.04</attribute>
+      <attribute name="ImpactFromImmersionInSmoke" class="java.lang.String" >0.2</attribute>
+      <attribute name="ImpactFromMessageAdvice" class="java.lang.String" >0.04</attribute>
+      <attribute name="ImpactFromMessageEmergencyWarning" class="java.lang.String" >0.14</attribute>
+      <attribute name="ImpactFromMessageEvacuateNow" class="java.lang.String" >0.24</attribute>
+      <attribute name="ImpactFromMessageRespondersAttending" class="java.lang.String" >0.01</attribute>
+      <attribute name="ImpactFromMessageWatchAndAct" class="java.lang.String" >0.07</attribute>
+      <attribute name="ImpactFromSocialMessage" class="java.lang.String" >0.29</attribute>
+      <attribute name="ImpactFromVisibleEmbers" class="java.lang.String" >0.3</attribute>
+      <attribute name="ImpactFromVisibleFire" class="java.lang.String" >0.5</attribute>
+      <attribute name="ImpactFromVisibleResponders" class="java.lang.String" >0.1</attribute>
+      <attribute name="ImpactFromVisibleSmoke" class="java.lang.String" >0.11</attribute>
+      <attribute name="LagTimeInMinsForFinalResponse" class="java.lang.String" >12.86</attribute>
+      <attribute name="LagTimeInMinsForInitialResponse" class="java.lang.String" >15</attribute>
+      <attribute name="WillStay" class="java.lang.String" >false</attribute>
+    </attributes>
+    <plan selected="yes">
+      <activity type="home" x="793381.815034226" y="5766114.300827" end_time="11:44:00" />
+      <leg mode="car" />
+      <activity type="shops" x="790638.050911312" y="5752234.06713154" end_time="13:43:00" />
+      <leg mode="car" />
+      <activity type="work" x="790178.316247884" y="5754605.44712746" end_time="17:34:00" />
+      <leg mode="car" />
+      <activity type="home" x="793381.815034226" y="5766114.300827" end_time="22:04:00" />
+      <leg mode="car" />
+      <activity type="shops" x="790590.045474375" y="5751761.08697407" end_time="23:59:00" />
+      <leg mode="car" />
+      <activity type="home" x="793381.815034226" y="5766114.300827" />
+    </plan>
+  </person>
+
+  
+
+ <person id= "3" >
+    <attributes>
+      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorRegular</attribute>
+      <attribute name="HasDependents" class="java.lang.String" >false</attribute>
+      <attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>
+      <attribute name="ResponseThresholdInitial" class="java.lang.Double" >0.4</attribute>
+      <attribute name="ResponseThresholdFinal"   class="java.lang.Double" >0.4</attribute>
+      <attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.Boolean" >false</attribute>
+      <attribute name="WillGoHomeBeforeLeaving" class="java.lang.Boolean" >false</attribute>
+      <attribute name="EvacLocationPreference" class="java.lang.String">,790515.310544487,5753801.66301497</attribute>
+      <attribute name="InvacLocationPreference" class="java.lang.String">Big Hill 1,763450.076940714,5735571.44005708</attribute>
+      <attribute name="Archetype" class="java.lang.String" >MadeUpArchetype</attribute>
+      <attribute name="ImpactFromFireDangerIndexRating" class="java.lang.String" >0.04</attribute>
+      <attribute name="ImpactFromImmersionInSmoke" class="java.lang.String" >0.2</attribute>
+      <attribute name="ImpactFromMessageAdvice" class="java.lang.String" >0.04</attribute>
+      <attribute name="ImpactFromMessageEmergencyWarning" class="java.lang.String" >0.14</attribute>
+      <attribute name="ImpactFromMessageEvacuateNow" class="java.lang.String" >0.24</attribute>
+      <attribute name="ImpactFromMessageRespondersAttending" class="java.lang.String" >0.01</attribute>
+      <attribute name="ImpactFromMessageWatchAndAct" class="java.lang.String" >0.07</attribute>
+      <attribute name="ImpactFromSocialMessage" class="java.lang.String" >0.29</attribute>
+      <attribute name="ImpactFromVisibleEmbers" class="java.lang.String" >0.3</attribute>
+      <attribute name="ImpactFromVisibleFire" class="java.lang.String" >0.5</attribute>
+      <attribute name="ImpactFromVisibleResponders" class="java.lang.String" >0.1</attribute>
+      <attribute name="ImpactFromVisibleSmoke" class="java.lang.String" >0.11</attribute>
+      <attribute name="LagTimeInMinsForFinalResponse" class="java.lang.String" >12.86</attribute>
+      <attribute name="LagTimeInMinsForInitialResponse" class="java.lang.String" >15</attribute>
+      <attribute name="WillStay" class="java.lang.String" >false</attribute>
+    </attributes>
+    <plan selected="yes">
+      <activity type="home" x="763685.793221646" y="5735611.44417213" end_time="02:04:00" />
+      <leg mode="car" />
+      <activity type="other" x="778559.299427463" y="5744473.47815365" end_time="04:42:00" />
+      <leg mode="car" />
+      <activity type="home" x="763685.793221646" y="5735611.44417213" end_time="15:37:00" />
+      <leg mode="car" />
+      <activity type="beach" x="790560.824945767" y="5751343.63519774" end_time="17:21:00" />
+      <leg mode="car" />
+      <activity type="other" x="778559.299427463" y="5744473.47815365" end_time="19:39:00" />
+      <leg mode="car" />
+      <activity type="shops" x="790330.833186088" y="5752142.2955515" end_time="21:00:00" />
+      <leg mode="car" />
+      <activity type="home" x="763685.793221646" y="5735611.44417213" />
+    </plan>
+  </person>
+
+  
+
+ <person id= "4" >
+    <attributes>
+      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorOvernight</attribute>
+      <attribute name="HasDependents" class="java.lang.String" >false</attribute>
+      <attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>
+      <attribute name="ResponseThresholdInitial" class="java.lang.Double" >0.4</attribute>
+      <attribute name="ResponseThresholdFinal"   class="java.lang.Double" >0.4</attribute>
+      <attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.Boolean" >false</attribute>
+      <attribute name="WillGoHomeBeforeLeaving" class="java.lang.Boolean" >true</attribute>
+      <attribute name="EvacLocationPreference" class="java.lang.String">,743345.54165134,5752749.80696866</attribute>
+      <attribute name="InvacLocationPreference" class="java.lang.String">Anglesea 8,778670.39660523,5743864.67721122</attribute>
+      <attribute name="Archetype" class="java.lang.String" >MadeUpArchetype</attribute>
+      <attribute name="ImpactFromFireDangerIndexRating" class="java.lang.String" >0.04</attribute>
+      <attribute name="ImpactFromImmersionInSmoke" class="java.lang.String" >0.2</attribute>
+      <attribute name="ImpactFromMessageAdvice" class="java.lang.String" >0.04</attribute>
+      <attribute name="ImpactFromMessageEmergencyWarning" class="java.lang.String" >0.14</attribute>
+      <attribute name="ImpactFromMessageEvacuateNow" class="java.lang.String" >0.24</attribute>
+      <attribute name="ImpactFromMessageRespondersAttending" class="java.lang.String" >0.01</attribute>
+      <attribute name="ImpactFromMessageWatchAndAct" class="java.lang.String" >0.07</attribute>
+      <attribute name="ImpactFromSocialMessage" class="java.lang.String" >0.29</attribute>
+      <attribute name="ImpactFromVisibleEmbers" class="java.lang.String" >0.3</attribute>
+      <attribute name="ImpactFromVisibleFire" class="java.lang.String" >0.5</attribute>
+      <attribute name="ImpactFromVisibleResponders" class="java.lang.String" >0.1</attribute>
+      <attribute name="ImpactFromVisibleSmoke" class="java.lang.String" >0.11</attribute>
+      <attribute name="LagTimeInMinsForFinalResponse" class="java.lang.String" >12.86</attribute>
+      <attribute name="LagTimeInMinsForInitialResponse" class="java.lang.String" >15</attribute>
+      <attribute name="WillStay" class="java.lang.String" >false</attribute>
+    </attributes>
+    <plan selected="yes">
+      <activity type="home" x="778657.979428599" y="5743913.51606254" end_time="09:35:00" />
+      <leg mode="car" />
+      <activity type="shops" x="790650.206539271" y="5752107.66188351" end_time="10:05:00" />
+      <leg mode="car" />
+      <activity type="beach" x="790813.932219314" y="5752646.56536696" end_time="15:55:00" />
+      <leg mode="car" />
+      <activity type="other" x="778559.299427463" y="5744473.47815365" end_time="19:51:00" />
+      <leg mode="car" />
+      <activity type="shops" x="790476.699557791" y="5752088.1686397" end_time="23:48:00" />
+      <leg mode="car" />
+      <activity type="home" x="778657.979428599" y="5743913.51606254" />
+    </plan>
+  </person>
+
+  
+
+ <person id= "5" >
+    <attributes>
+      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorOvernight</attribute>
+      <attribute name="HasDependents" class="java.lang.String" >false</attribute>
+      <attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>
+      <attribute name="ResponseThresholdInitial" class="java.lang.Double" >0.2</attribute>
+      <attribute name="ResponseThresholdFinal"   class="java.lang.Double" >0.2</attribute>
+      <attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.Boolean" >false</attribute>
+      <attribute name="WillGoHomeBeforeLeaving" class="java.lang.Boolean" >true</attribute>
+      <attribute name="EvacLocationPreference" class="java.lang.String">Aireys Pub,770925.250436505,5738417.25117341</attribute>
+      <attribute name="InvacLocationPreference" class="java.lang.String">Anglesea 7,778900.119543865,5744244.88141647</attribute>
+      <attribute name="Archetype" class="java.lang.String" >MadeUpArchetype</attribute>
+      <attribute name="ImpactFromFireDangerIndexRating" class="java.lang.String" >0.04</attribute>
+      <attribute name="ImpactFromImmersionInSmoke" class="java.lang.String" >0.2</attribute>
+      <attribute name="ImpactFromMessageAdvice" class="java.lang.String" >0.04</attribute>
+      <attribute name="ImpactFromMessageEmergencyWarning" class="java.lang.String" >0.14</attribute>
+      <attribute name="ImpactFromMessageEvacuateNow" class="java.lang.String" >0.24</attribute>
+      <attribute name="ImpactFromMessageRespondersAttending" class="java.lang.String" >0.01</attribute>
+      <attribute name="ImpactFromMessageWatchAndAct" class="java.lang.String" >0.07</attribute>
+      <attribute name="ImpactFromSocialMessage" class="java.lang.String" >0.29</attribute>
+      <attribute name="ImpactFromVisibleEmbers" class="java.lang.String" >0.3</attribute>
+      <attribute name="ImpactFromVisibleFire" class="java.lang.String" >0.5</attribute>
+      <attribute name="ImpactFromVisibleResponders" class="java.lang.String" >0.1</attribute>
+      <attribute name="ImpactFromVisibleSmoke" class="java.lang.String" >0.11</attribute>
+      <attribute name="LagTimeInMinsForFinalResponse" class="java.lang.String" >12.86</attribute>
+      <attribute name="LagTimeInMinsForInitialResponse" class="java.lang.String" >15</attribute>
+      <attribute name="WillStay" class="java.lang.String" >false</attribute>
+    </attributes>
+    <plan selected="yes">
+      <activity type="home" x="788520" y="5750951.7" end_time="07:12:00" />
+      <leg mode="car" />
+      <activity type="shops" x="790475.985572195" y="5752082.83157055" end_time="08:33:00" />
+      <leg mode="car" />
+      <activity type="beach" x="790672.762749222" y="5751729.94020213" end_time="14:18:00" />
+      <leg mode="car" />
+      <activity type="other" x="778559.299427463" y="5744473.47815365" end_time="19:04:00" />
+      <leg mode="car" />
+      <activity type="home" x="788520" y="5750951.7" />
+    </plan>
+  </person>
+
+  
+
+ <person id= "6" >
+    <attributes>
+      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorOvernight</attribute>
+      <attribute name="HasDependents" class="java.lang.String" >false</attribute>
+      <attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>
+      <attribute name="ResponseThresholdInitial" class="java.lang.Double" >0.2</attribute>
+      <attribute name="ResponseThresholdFinal"   class="java.lang.Double" >0.2</attribute>
+      <attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.Boolean" >false</attribute>
+      <attribute name="WillGoHomeBeforeLeaving" class="java.lang.Boolean" >true</attribute>
+      <attribute name="EvacLocationPreference" class="java.lang.String">,791118.102569293,5753461.09876635</attribute>
+      <attribute name="InvacLocationPreference" class="java.lang.String">Moggs Creek 1,767117.436616738,5737857.31181404</attribute>
+      <attribute name="Archetype" class="java.lang.String" >MadeUpArchetype</attribute>
+      <attribute name="ImpactFromFireDangerIndexRating" class="java.lang.String" >0.04</attribute>
+      <attribute name="ImpactFromImmersionInSmoke" class="java.lang.String" >0.2</attribute>
+      <attribute name="ImpactFromMessageAdvice" class="java.lang.String" >0.04</attribute>
+      <attribute name="ImpactFromMessageEmergencyWarning" class="java.lang.String" >0.14</attribute>
+      <attribute name="ImpactFromMessageEvacuateNow" class="java.lang.String" >0.24</attribute>
+      <attribute name="ImpactFromMessageRespondersAttending" class="java.lang.String" >0.01</attribute>
+      <attribute name="ImpactFromMessageWatchAndAct" class="java.lang.String" >0.07</attribute>
+      <attribute name="ImpactFromSocialMessage" class="java.lang.String" >0.29</attribute>
+      <attribute name="ImpactFromVisibleEmbers" class="java.lang.String" >0.3</attribute>
+      <attribute name="ImpactFromVisibleFire" class="java.lang.String" >0.5</attribute>
+      <attribute name="ImpactFromVisibleResponders" class="java.lang.String" >0.1</attribute>
+      <attribute name="ImpactFromVisibleSmoke" class="java.lang.String" >0.11</attribute>
+      <attribute name="LagTimeInMinsForFinalResponse" class="java.lang.String" >12.86</attribute>
+      <attribute name="LagTimeInMinsForInitialResponse" class="java.lang.String" >15</attribute>
+      <attribute name="WillStay" class="java.lang.String" >false</attribute>
+    </attributes>
+    <plan selected="yes">
+      <activity type="home" x="767176.7" y="5737906.4" end_time="11:06:00" />
+      <leg mode="car" />
+      <activity type="shops" x="790251.07186009" y="5752186.88566304" end_time="12:53:00" />
+      <leg mode="car" />
+      <activity type="beach" x="790568.951774962" y="5751325.2355685" end_time="16:11:00" />
+      <leg mode="car" />
+      <activity type="shops" x="790730.420839839" y="5752033.17961219" end_time="20:01:00" />
+      <leg mode="car" />
+      <activity type="home" x="767176.7" y="5737906.4" />
+    </plan>
+  </person>
+
+  
+
+ <person id= "7" >
+    <attributes>
+      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorDaytime</attribute>
+      <attribute name="HasDependents" class="java.lang.String" >false</attribute>
+      <attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>
+      <attribute name="ResponseThresholdInitial" class="java.lang.Double" >0.7</attribute>
+      <attribute name="ResponseThresholdFinal"   class="java.lang.Double" >0.7</attribute>
+      <attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.Boolean" >false</attribute>
+      <attribute name="WillGoHomeBeforeLeaving" class="java.lang.Boolean" >false</attribute>
+      <attribute name="EvacLocationPreference" class="java.lang.String">Anglesea Shops,778567.629793594,5744455.95718697</attribute>
+      <attribute name="InvacLocationPreference" class="java.lang.String">,725946.634709856,5753152.68589706</attribute>
+      <attribute name="Archetype" class="java.lang.String" >MadeUpArchetype</attribute>
+      <attribute name="ImpactFromFireDangerIndexRating" class="java.lang.String" >0.04</attribute>
+      <attribute name="ImpactFromImmersionInSmoke" class="java.lang.String" >0.2</attribute>
+      <attribute name="ImpactFromMessageAdvice" class="java.lang.String" >0.04</attribute>
+      <attribute name="ImpactFromMessageEmergencyWarning" class="java.lang.String" >0.14</attribute>
+      <attribute name="ImpactFromMessageEvacuateNow" class="java.lang.String" >0.24</attribute>
+      <attribute name="ImpactFromMessageRespondersAttending" class="java.lang.String" >0.01</attribute>
+      <attribute name="ImpactFromMessageWatchAndAct" class="java.lang.String" >0.07</attribute>
+      <attribute name="ImpactFromSocialMessage" class="java.lang.String" >0.29</attribute>
+      <attribute name="ImpactFromVisibleEmbers" class="java.lang.String" >0.3</attribute>
+      <attribute name="ImpactFromVisibleFire" class="java.lang.String" >0.5</attribute>
+      <attribute name="ImpactFromVisibleResponders" class="java.lang.String" >0.1</attribute>
+      <attribute name="ImpactFromVisibleSmoke" class="java.lang.String" >0.11</attribute>
+      <attribute name="LagTimeInMinsForFinalResponse" class="java.lang.String" >12.86</attribute>
+      <attribute name="LagTimeInMinsForInitialResponse" class="java.lang.String" >15</attribute>
+      <attribute name="WillStay" class="java.lang.String" >false</attribute>
+    </attributes>
+    <plan selected="yes">
+      <activity type="home" x="725868.5478" y="5753291.5198" end_time="09:10:00" />
+      <leg mode="car" />
+      <activity type="shops" x="790623.908636152" y="5751913.49720664" end_time="11:59:00" />
+      <leg mode="car" />
+      <activity type="beach" x="790767.229202907" y="5751238.71465189" end_time="13:27:00" />
+      <leg mode="car" />
+      <activity type="other" x="778559.299427463" y="5744473.47815365" end_time="15:08:00" />
+      <leg mode="car" />
+      <activity type="beach" x="777653.935985867" y="5741894.63303192" end_time="16:14:00" />
+      <leg mode="car" />
+      <activity type="shops" x="790488.955947208" y="5752111.83920002" end_time="18:42:00" />
+      <leg mode="car" />
+      <activity type="beach" x="790560.824945767" y="5751343.63519774" end_time="21:50:00" />
+      <leg mode="car" />
+      <activity type="home" x="725868.5478" y="5753291.5198" />
+    </plan>
+  </person>
+
+  
+
+ <person id= "8" >
+    <attributes>
+      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorDaytime</attribute>
+      <attribute name="HasDependents" class="java.lang.String" >false</attribute>
+      <attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>
+      <attribute name="ResponseThresholdInitial" class="java.lang.Double" >0.7</attribute>
+      <attribute name="ResponseThresholdFinal"   class="java.lang.Double" >0.7</attribute>
+      <attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.Boolean" >false</attribute>
+      <attribute name="WillGoHomeBeforeLeaving" class="java.lang.Boolean" >false</attribute>
+      <attribute name="EvacLocationPreference" class="java.lang.String">,792241.980747176,5754059.19193522</attribute>
+      <attribute name="InvacLocationPreference" class="java.lang.String">,773043.540809071,5759999.36645554</attribute>
+      <attribute name="Archetype" class="java.lang.String" >MadeUpArchetype</attribute>
+      <attribute name="ImpactFromFireDangerIndexRating" class="java.lang.String" >0.04</attribute>
+      <attribute name="ImpactFromImmersionInSmoke" class="java.lang.String" >0.2</attribute>
+      <attribute name="ImpactFromMessageAdvice" class="java.lang.String" >0.04</attribute>
+      <attribute name="ImpactFromMessageEmergencyWarning" class="java.lang.String" >0.14</attribute>
+      <attribute name="ImpactFromMessageEvacuateNow" class="java.lang.String" >0.24</attribute>
+      <attribute name="ImpactFromMessageRespondersAttending" class="java.lang.String" >0.01</attribute>
+      <attribute name="ImpactFromMessageWatchAndAct" class="java.lang.String" >0.07</attribute>
+      <attribute name="ImpactFromSocialMessage" class="java.lang.String" >0.29</attribute>
+      <attribute name="ImpactFromVisibleEmbers" class="java.lang.String" >0.3</attribute>
+      <attribute name="ImpactFromVisibleFire" class="java.lang.String" >0.5</attribute>
+      <attribute name="ImpactFromVisibleResponders" class="java.lang.String" >0.1</attribute>
+      <attribute name="ImpactFromVisibleSmoke" class="java.lang.String" >0.11</attribute>
+      <attribute name="LagTimeInMinsForFinalResponse" class="java.lang.String" >12.86</attribute>
+      <attribute name="LagTimeInMinsForInitialResponse" class="java.lang.String" >15</attribute>
+      <attribute name="WillStay" class="java.lang.String" >false</attribute>
+    </attributes>
+    <plan selected="yes">
+      <activity type="home" x="726428.318729701" y="5706161.2320688" end_time="07:45:00" />
+      <leg mode="car" />
+      <activity type="beach" x="790560.824945767" y="5751343.63519774" end_time="11:22:00" />
+      <leg mode="car" />
+      <activity type="shops" x="790330.833186088" y="5752142.2955515" end_time="13:03:00" />
+      <leg mode="car" />
+      <activity type="beach" x="790560.824945767" y="5751343.63519774" end_time="14:47:00" />
+      <leg mode="car" />
+      <activity type="shops" x="790487.349779004" y="5752086.17791823" end_time="17:27:00" />
+      <leg mode="car" />
+      <activity type="beach" x="777653.935985867" y="5741894.63303192" end_time="18:51:00" />
+      <leg mode="car" />
+      <activity type="home" x="726428.318729701" y="5706161.2320688" />
+    </plan>
+  </person>
+
+  
+
+ <person id= "9" >
+    <attributes>
+      <attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.VisitorDaytime</attribute>
+      <attribute name="HasDependents" class="java.lang.String" >false</attribute>
+      <attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>
+      <attribute name="ResponseThresholdInitial" class="java.lang.Double" >0.5</attribute>
+      <attribute name="ResponseThresholdFinal"   class="java.lang.Double" >0.5</attribute>
+      <attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.Boolean" >false</attribute>
+      <attribute name="WillGoHomeBeforeLeaving" class="java.lang.Boolean" >false</attribute>
+      <attribute name="EvacLocationPreference" class="java.lang.String">,791277.478874657,5753976.97934263</attribute>
+      <attribute name="InvacLocationPreference" class="java.lang.String">,756838.002519764,5756577.64160881</attribute>
+      <attribute name="Archetype" class="java.lang.String" >MadeUpArchetype</attribute>
+      <attribute name="ImpactFromFireDangerIndexRating" class="java.lang.String" >0.04</attribute>
+      <attribute name="ImpactFromImmersionInSmoke" class="java.lang.String" >0.2</attribute>
+      <attribute name="ImpactFromMessageAdvice" class="java.lang.String" >0.04</attribute>
+      <attribute name="ImpactFromMessageEmergencyWarning" class="java.lang.String" >0.14</attribute>
+      <attribute name="ImpactFromMessageEvacuateNow" class="java.lang.String" >0.24</attribute>
+      <attribute name="ImpactFromMessageRespondersAttending" class="java.lang.String" >0.01</attribute>
+      <attribute name="ImpactFromMessageWatchAndAct" class="java.lang.String" >0.07</attribute>
+      <attribute name="ImpactFromSocialMessage" class="java.lang.String" >0.29</attribute>
+      <attribute name="ImpactFromVisibleEmbers" class="java.lang.String" >0.3</attribute>
+      <attribute name="ImpactFromVisibleFire" class="java.lang.String" >0.5</attribute>
+      <attribute name="ImpactFromVisibleResponders" class="java.lang.String" >0.1</attribute>
+      <attribute name="ImpactFromVisibleSmoke" class="java.lang.String" >0.11</attribute>
+      <attribute name="LagTimeInMinsForFinalResponse" class="java.lang.String" >12.86</attribute>
+      <attribute name="LagTimeInMinsForInitialResponse" class="java.lang.String" >15</attribute>
+      <attribute name="WillStay" class="java.lang.String" >false</attribute>
+    </attributes>
+    <plan selected="yes">
+      <activity type="home" x="841924.6" y="5808324.9" end_time="06:18:00" />
+      <leg mode="car" />
+      <activity type="other" x="770405.645119356" y="5738027.40230863" end_time="09:22:00" />
+      <leg mode="car" />
+      <activity type="beach" x="790560.824945767" y="5751343.63519774" end_time="14:16:00" />
+      <leg mode="car" />
+      <activity type="other" x="778559.299427463" y="5744473.47815365" end_time="17:01:00" />
+      <leg mode="car" />
+      <activity type="home" x="841924.6" y="5808324.9" end_time="21:23:00" />
+      <leg mode="car" />
+      <activity type="shops" x="790748.619616264" y="5752130.65449767" end_time="22:34:00" />
+      <leg mode="car" />
+      <activity type="home" x="841924.6" y="5808324.9" />
+    </plan>
+  </person>
+
+  
+<!-- ====================================================================== -->
+  
+  </population>
