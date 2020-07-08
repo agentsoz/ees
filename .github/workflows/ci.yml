@@ -4,7 +4,7 @@ name: EES CI
 # events but only for the master branch
 on:
   push:
-    branches: [ master, matsim12 ]
+    branches: [ master ]
   pull_request:
     branches: [ master ]
 
@@ -30,7 +30,6 @@ jobs:
       uses: actions/checkout@v2
       with:
         repository: agentsoz/ees
-        ref: matsim12
         path: ees
 
     - name: Clone agentsoz/jill
