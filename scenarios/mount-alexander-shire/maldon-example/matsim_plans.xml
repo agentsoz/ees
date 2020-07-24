@@ -1,0 +1,1599 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE population SYSTEM "http://www.matsim.org/files/dtd/population_v6.dtd">
+
+<population>
+
+
+
+<!-- ====================================================================== -->
+
+	<person id="0">
+		<attributes>
+			<attribute name="Age" class="java.lang.String" >86</attribute>
+			<attribute name="AgentId" class="java.lang.String" >202021028P6295</attribute>
+			<attribute name="Archetype" class="java.lang.String" >Worried.Waverer</attribute>
+			<attribute name="Archetypes.Age" class="java.lang.String" >75 years +</attribute>
+			<attribute name="Archetypes.Household" class="java.lang.String" >Ssingle person without dependents living at home</attribute>
+			<attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.archetype.WorriedWaverer</attribute>
+			<attribute name="EZI_ADD" class="java.lang.String" >164 BACK CEMETERY ROAD MALDON 3463</attribute>
+			<attribute name="EvacLocationPreference" class="java.lang.String" >Elphinstone,262869,5890813</attribute>
+			<attribute name="Gender" class="java.lang.String" >Male</attribute>
+			<attribute name="Geographical.Coordinate" class="java.lang.String" >[144.0669, -36.9823]</attribute>
+			<attribute name="HasDependents" class="java.lang.String" >false</attribute>
+			<attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>
+			<attribute name="HouseholdId" class="java.lang.String" >202021028H5</attribute>
+			<attribute name="Id" class="java.lang.String" >10036</attribute>
+			<attribute name="ImpactFromFireDangerIndexRating" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromImmersionInSmoke" class="java.lang.String" >0.2</attribute>
+			<attribute name="ImpactFromMessageAdvice" class="java.lang.String" >0.088</attribute>
+			<attribute name="ImpactFromMessageEmergencyWarning" class="java.lang.String" >0.313</attribute>
+			<attribute name="ImpactFromMessageEvacuateNow" class="java.lang.String" >0.311</attribute>
+			<attribute name="ImpactFromMessageRespondersAttending" class="java.lang.String" >-0.1</attribute>
+			<attribute name="ImpactFromMessageWatchAndAct" class="java.lang.String" >0.163</attribute>
+			<attribute name="ImpactFromSocialMessage" class="java.lang.String" >0.4</attribute>
+			<attribute name="ImpactFromVisibleEmbers" class="java.lang.String" >0.4</attribute>
+			<attribute name="ImpactFromVisibleFire" class="java.lang.String" >0.5</attribute>
+			<attribute name="ImpactFromVisibleResponders" class="java.lang.String" >0.3</attribute>
+			<attribute name="ImpactFromVisibleSmoke" class="java.lang.String" >0.1</attribute>
+			<attribute name="InvacLocationPreference" class="java.lang.String" >Castlemaine,252140,5894312</attribute>
+			<attribute name="LagTimeInMinsForFinalResponse" class="java.lang.String" >17.32</attribute>
+			<attribute name="LagTimeInMinsForInitialResponse" class="java.lang.String" >15.45</attribute>
+			<attribute name="PrimaryFamilyType" class="java.lang.String" >LONE_PERSON</attribute>
+			<attribute name="ResponseThresholdFinal" class="java.lang.String" >0.61</attribute>
+			<attribute name="ResponseThresholdInitial" class="java.lang.String" >0.31</attribute>
+			<attribute name="SA1_7DIGCODE" class="java.lang.String" >2102817</attribute>
+			<attribute name="SA2_MAINCODE" class="java.lang.String" >202021028</attribute>
+			<attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.String" >false</attribute>
+			<attribute name="WillGoHomeBeforeLeaving" class="java.lang.String" >true</attribute>
+			<attribute name="WillStay" class="java.lang.String" >false</attribute>
+		</attributes>
+		<plan selected="yes">
+			<activity type="home" x="238932.0408903792" y="5903069.247946098" end_time="23:59:59" >
+			</activity>
+			<leg mode="car">
+			</leg>
+			<activity type="home" x="238932.0408903792" y="5903069.247946098" >
+			</activity>
+		</plan>
+
+	</person>
+
+<!-- ====================================================================== -->
+
+	<person id="1">
+		<attributes>
+			<attribute name="Age" class="java.lang.String" >87</attribute>
+			<attribute name="AgentId" class="java.lang.String" >202021028P6313</attribute>
+			<attribute name="Archetype" class="java.lang.String" >Worried.Waverer</attribute>
+			<attribute name="Archetypes.Age" class="java.lang.String" >75 years +</attribute>
+			<attribute name="Archetypes.Household" class="java.lang.String" >Ssingle person without dependents living at home</attribute>
+			<attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.archetype.WorriedWaverer</attribute>
+			<attribute name="EZI_ADD" class="java.lang.String" >1/11 HOSPITAL STREET MALDON 3463</attribute>
+			<attribute name="EvacLocationPreference" class="java.lang.String" >Elphinstone,262869,5890813</attribute>
+			<attribute name="Gender" class="java.lang.String" >Male</attribute>
+			<attribute name="Geographical.Coordinate" class="java.lang.String" >[144.0633, -36.9949]</attribute>
+			<attribute name="HasDependents" class="java.lang.String" >true</attribute>
+			<attribute name="HasDependentsAtLocation" class="java.lang.String" >[238654.693529,5886721.094209]</attribute>
+			<attribute name="HouseholdId" class="java.lang.String" >202021028H23</attribute>
+			<attribute name="Id" class="java.lang.String" >10044</attribute>
+			<attribute name="ImpactFromFireDangerIndexRating" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromImmersionInSmoke" class="java.lang.String" >0.2</attribute>
+			<attribute name="ImpactFromMessageAdvice" class="java.lang.String" >0.088</attribute>
+			<attribute name="ImpactFromMessageEmergencyWarning" class="java.lang.String" >0.313</attribute>
+			<attribute name="ImpactFromMessageEvacuateNow" class="java.lang.String" >0.311</attribute>
+			<attribute name="ImpactFromMessageRespondersAttending" class="java.lang.String" >-0.1</attribute>
+			<attribute name="ImpactFromMessageWatchAndAct" class="java.lang.String" >0.163</attribute>
+			<attribute name="ImpactFromSocialMessage" class="java.lang.String" >0.4</attribute>
+			<attribute name="ImpactFromVisibleEmbers" class="java.lang.String" >0.4</attribute>
+			<attribute name="ImpactFromVisibleFire" class="java.lang.String" >0.5</attribute>
+			<attribute name="ImpactFromVisibleResponders" class="java.lang.String" >0.3</attribute>
+			<attribute name="ImpactFromVisibleSmoke" class="java.lang.String" >0.1</attribute>
+			<attribute name="InvacLocationPreference" class="java.lang.String" >Castlemaine,252140,5894312</attribute>
+			<attribute name="LagTimeInMinsForFinalResponse" class="java.lang.String" >21.12</attribute>
+			<attribute name="LagTimeInMinsForInitialResponse" class="java.lang.String" >24.7</attribute>
+			<attribute name="PrimaryFamilyType" class="java.lang.String" >LONE_PERSON</attribute>
+			<attribute name="ResponseThresholdFinal" class="java.lang.String" >0.66</attribute>
+			<attribute name="ResponseThresholdInitial" class="java.lang.String" >0.16</attribute>
+			<attribute name="SA1_7DIGCODE" class="java.lang.String" >2102810</attribute>
+			<attribute name="SA2_MAINCODE" class="java.lang.String" >202021028</attribute>
+			<attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.String" >true</attribute>
+			<attribute name="WillGoHomeBeforeLeaving" class="java.lang.String" >true</attribute>
+			<attribute name="WillStay" class="java.lang.String" >false</attribute>
+		</attributes>
+		<plan selected="yes">
+			<activity type="home" x="238654.69352886715" y="5901661.095737949" end_time="23:59:59" >
+			</activity>
+			<leg mode="car">
+			</leg>
+			<activity type="home" x="238654.69352886715" y="5901661.095737949" >
+			</activity>
+		</plan>
+
+	</person>
+
+<!-- ====================================================================== -->
+
+	<person id="2">
+		<attributes>
+			<attribute name="Age" class="java.lang.String" >83</attribute>
+			<attribute name="AgentId" class="java.lang.String" >202021028P6324</attribute>
+			<attribute name="Archetype" class="java.lang.String" >Worried.Waverer</attribute>
+			<attribute name="Archetypes.Age" class="java.lang.String" >75 years +</attribute>
+			<attribute name="Archetypes.Household" class="java.lang.String" >Ssingle person without dependents living at home</attribute>
+			<attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.archetype.WorriedWaverer</attribute>
+			<attribute name="EZI_ADD" class="java.lang.String" >53 FRANKLIN STREET MALDON 3463</attribute>
+			<attribute name="EvacLocationPreference" class="java.lang.String" >Elphinstone,262869,5890813</attribute>
+			<attribute name="Gender" class="java.lang.String" >Male</attribute>
+			<attribute name="Geographical.Coordinate" class="java.lang.String" >[144.0598, -36.9876]</attribute>
+			<attribute name="HasDependents" class="java.lang.String" >false</attribute>
+			<attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>
+			<attribute name="HouseholdId" class="java.lang.String" >202021028H34</attribute>
+			<attribute name="Id" class="java.lang.String" >10045</attribute>
+			<attribute name="ImpactFromFireDangerIndexRating" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromImmersionInSmoke" class="java.lang.String" >0.2</attribute>
+			<attribute name="ImpactFromMessageAdvice" class="java.lang.String" >0.088</attribute>
+			<attribute name="ImpactFromMessageEmergencyWarning" class="java.lang.String" >0.313</attribute>
+			<attribute name="ImpactFromMessageEvacuateNow" class="java.lang.String" >0.311</attribute>
+			<attribute name="ImpactFromMessageRespondersAttending" class="java.lang.String" >-0.1</attribute>
+			<attribute name="ImpactFromMessageWatchAndAct" class="java.lang.String" >0.163</attribute>
+			<attribute name="ImpactFromSocialMessage" class="java.lang.String" >0.4</attribute>
+			<attribute name="ImpactFromVisibleEmbers" class="java.lang.String" >0.4</attribute>
+			<attribute name="ImpactFromVisibleFire" class="java.lang.String" >0.5</attribute>
+			<attribute name="ImpactFromVisibleResponders" class="java.lang.String" >0.3</attribute>
+			<attribute name="ImpactFromVisibleSmoke" class="java.lang.String" >0.1</attribute>
+			<attribute name="InvacLocationPreference" class="java.lang.String" >Castlemaine,252140,5894312</attribute>
+			<attribute name="LagTimeInMinsForFinalResponse" class="java.lang.String" >22.3</attribute>
+			<attribute name="LagTimeInMinsForInitialResponse" class="java.lang.String" >12.08</attribute>
+			<attribute name="PrimaryFamilyType" class="java.lang.String" >LONE_PERSON</attribute>
+			<attribute name="ResponseThresholdFinal" class="java.lang.String" >0.58</attribute>
+			<attribute name="ResponseThresholdInitial" class="java.lang.String" >0.26</attribute>
+			<attribute name="SA1_7DIGCODE" class="java.lang.String" >2102818</attribute>
+			<attribute name="SA2_MAINCODE" class="java.lang.String" >202021028</attribute>
+			<attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.String" >true</attribute>
+			<attribute name="WillGoHomeBeforeLeaving" class="java.lang.String" >true</attribute>
+			<attribute name="WillStay" class="java.lang.String" >false</attribute>
+		</attributes>
+		<plan selected="yes">
+			<activity type="home" x="238318.10705737158" y="5902461.58071565" end_time="23:59:59" >
+			</activity>
+			<leg mode="car">
+			</leg>
+			<activity type="home" x="238318.10705737158" y="5902461.58071565" >
+			</activity>
+		</plan>
+
+	</person>
+
+<!-- ====================================================================== -->
+
+	<person id="3">
+		<attributes>
+			<attribute name="Age" class="java.lang.String" >77</attribute>
+			<attribute name="AgentId" class="java.lang.String" >202021028P6357</attribute>
+			<attribute name="Archetype" class="java.lang.String" >Worried.Waverer</attribute>
+			<attribute name="Archetypes.Age" class="java.lang.String" >75 years +</attribute>
+			<attribute name="Archetypes.Household" class="java.lang.String" >Ssingle person without dependents living at home</attribute>
+			<attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.archetype.WorriedWaverer</attribute>
+			<attribute name="EZI_ADD" class="java.lang.String" >47B CHURCH STREET MALDON 3463</attribute>
+			<attribute name="EvacLocationPreference" class="java.lang.String" >Elphinstone,262869,5890813</attribute>
+			<attribute name="Gender" class="java.lang.String" >Male</attribute>
+			<attribute name="Geographical.Coordinate" class="java.lang.String" >[144.0672, -36.9873]</attribute>
+			<attribute name="HasDependents" class="java.lang.String" >false</attribute>
+			<attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>
+			<attribute name="HouseholdId" class="java.lang.String" >202021028H67</attribute>
+			<attribute name="Id" class="java.lang.String" >10052</attribute>
+			<attribute name="ImpactFromFireDangerIndexRating" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromImmersionInSmoke" class="java.lang.String" >0.2</attribute>
+			<attribute name="ImpactFromMessageAdvice" class="java.lang.String" >0.088</attribute>
+			<attribute name="ImpactFromMessageEmergencyWarning" class="java.lang.String" >0.313</attribute>
+			<attribute name="ImpactFromMessageEvacuateNow" class="java.lang.String" >0.311</attribute>
+			<attribute name="ImpactFromMessageRespondersAttending" class="java.lang.String" >-0.1</attribute>
+			<attribute name="ImpactFromMessageWatchAndAct" class="java.lang.String" >0.163</attribute>
+			<attribute name="ImpactFromSocialMessage" class="java.lang.String" >0.4</attribute>
+			<attribute name="ImpactFromVisibleEmbers" class="java.lang.String" >0.4</attribute>
+			<attribute name="ImpactFromVisibleFire" class="java.lang.String" >0.5</attribute>
+			<attribute name="ImpactFromVisibleResponders" class="java.lang.String" >0.3</attribute>
+			<attribute name="ImpactFromVisibleSmoke" class="java.lang.String" >0.1</attribute>
+			<attribute name="InvacLocationPreference" class="java.lang.String" >Castlemaine,252140,5894312</attribute>
+			<attribute name="LagTimeInMinsForFinalResponse" class="java.lang.String" >16.91</attribute>
+			<attribute name="LagTimeInMinsForInitialResponse" class="java.lang.String" >10.73</attribute>
+			<attribute name="PrimaryFamilyType" class="java.lang.String" >LONE_PERSON</attribute>
+			<attribute name="ResponseThresholdFinal" class="java.lang.String" >0.55</attribute>
+			<attribute name="ResponseThresholdInitial" class="java.lang.String" >0.42</attribute>
+			<attribute name="SA1_7DIGCODE" class="java.lang.String" >2102817</attribute>
+			<attribute name="SA2_MAINCODE" class="java.lang.String" >202021028</attribute>
+			<attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.String" >true</attribute>
+			<attribute name="WillGoHomeBeforeLeaving" class="java.lang.String" >true</attribute>
+			<attribute name="WillStay" class="java.lang.String" >false</attribute>
+		</attributes>
+		<plan selected="yes">
+			<activity type="home" x="238975.85143076803" y="5902515.203976823" end_time="23:59:59" >
+			</activity>
+			<leg mode="car">
+			</leg>
+			<activity type="home" x="238975.85143076803" y="5902515.203976823" >
+			</activity>
+		</plan>
+
+	</person>
+
+<!-- ====================================================================== -->
+
+	<person id="4">
+		<attributes>
+			<attribute name="Age" class="java.lang.String" >84</attribute>
+			<attribute name="AgentId" class="java.lang.String" >202021028P6365</attribute>
+			<attribute name="Archetype" class="java.lang.String" >Worried.Waverer</attribute>
+			<attribute name="Archetypes.Age" class="java.lang.String" >75 years +</attribute>
+			<attribute name="Archetypes.Household" class="java.lang.String" >Ssingle person without dependents living at home</attribute>
+			<attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.archetype.WorriedWaverer</attribute>
+			<attribute name="EZI_ADD" class="java.lang.String" >165 HIGH STREET MALDON 3463</attribute>
+			<attribute name="EvacLocationPreference" class="java.lang.String" >Elphinstone,262869,5890813</attribute>
+			<attribute name="Gender" class="java.lang.String" >Male</attribute>
+			<attribute name="Geographical.Coordinate" class="java.lang.String" >[144.0635, -36.9873]</attribute>
+			<attribute name="HasDependents" class="java.lang.String" >false</attribute>
+			<attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>
+			<attribute name="HouseholdId" class="java.lang.String" >202021028H75</attribute>
+			<attribute name="Id" class="java.lang.String" >10054</attribute>
+			<attribute name="ImpactFromFireDangerIndexRating" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromImmersionInSmoke" class="java.lang.String" >0.2</attribute>
+			<attribute name="ImpactFromMessageAdvice" class="java.lang.String" >0.088</attribute>
+			<attribute name="ImpactFromMessageEmergencyWarning" class="java.lang.String" >0.313</attribute>
+			<attribute name="ImpactFromMessageEvacuateNow" class="java.lang.String" >0.311</attribute>
+			<attribute name="ImpactFromMessageRespondersAttending" class="java.lang.String" >-0.1</attribute>
+			<attribute name="ImpactFromMessageWatchAndAct" class="java.lang.String" >0.163</attribute>
+			<attribute name="ImpactFromSocialMessage" class="java.lang.String" >0.4</attribute>
+			<attribute name="ImpactFromVisibleEmbers" class="java.lang.String" >0.4</attribute>
+			<attribute name="ImpactFromVisibleFire" class="java.lang.String" >0.5</attribute>
+			<attribute name="ImpactFromVisibleResponders" class="java.lang.String" >0.3</attribute>
+			<attribute name="ImpactFromVisibleSmoke" class="java.lang.String" >0.1</attribute>
+			<attribute name="InvacLocationPreference" class="java.lang.String" >Castlemaine,252140,5894312</attribute>
+			<attribute name="LagTimeInMinsForFinalResponse" class="java.lang.String" >17</attribute>
+			<attribute name="LagTimeInMinsForInitialResponse" class="java.lang.String" >13.21</attribute>
+			<attribute name="PrimaryFamilyType" class="java.lang.String" >LONE_PERSON</attribute>
+			<attribute name="ResponseThresholdFinal" class="java.lang.String" >0.6</attribute>
+			<attribute name="ResponseThresholdInitial" class="java.lang.String" >0.36</attribute>
+			<attribute name="SA1_7DIGCODE" class="java.lang.String" >2102817</attribute>
+			<attribute name="SA2_MAINCODE" class="java.lang.String" >202021028</attribute>
+			<attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.String" >true</attribute>
+			<attribute name="WillGoHomeBeforeLeaving" class="java.lang.String" >true</attribute>
+			<attribute name="WillStay" class="java.lang.String" >false</attribute>
+		</attributes>
+		<plan selected="yes">
+			<activity type="home" x="238646.46501224782" y="5902505.044817631" end_time="23:59:59" >
+			</activity>
+			<leg mode="car">
+			</leg>
+			<activity type="home" x="238646.46501224782" y="5902505.044817631" >
+			</activity>
+		</plan>
+
+	</person>
+
+<!-- ====================================================================== -->
+
+	<person id="5">
+		<attributes>
+			<attribute name="Age" class="java.lang.String" >78</attribute>
+			<attribute name="AgentId" class="java.lang.String" >202021028P6371</attribute>
+			<attribute name="Archetype" class="java.lang.String" >Worried.Waverer</attribute>
+			<attribute name="Archetypes.Age" class="java.lang.String" >75 years +</attribute>
+			<attribute name="Archetypes.Household" class="java.lang.String" >Ssingle person without dependents living at home</attribute>
+			<attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.archetype.WorriedWaverer</attribute>
+			<attribute name="EZI_ADD" class="java.lang.String" >20 TEMPLETON STREET MALDON 3463</attribute>
+			<attribute name="EvacLocationPreference" class="java.lang.String" >Elphinstone,262869,5890813</attribute>
+			<attribute name="Gender" class="java.lang.String" >Male</attribute>
+			<attribute name="Geographical.Coordinate" class="java.lang.String" >[144.0677, -36.9921]</attribute>
+			<attribute name="HasDependents" class="java.lang.String" >true</attribute>
+			<attribute name="HasDependentsAtLocation" class="java.lang.String" >[239036.779873,5882774.120664]</attribute>
+			<attribute name="HouseholdId" class="java.lang.String" >202021028H81</attribute>
+			<attribute name="Id" class="java.lang.String" >10055</attribute>
+			<attribute name="ImpactFromFireDangerIndexRating" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromImmersionInSmoke" class="java.lang.String" >0.2</attribute>
+			<attribute name="ImpactFromMessageAdvice" class="java.lang.String" >0.088</attribute>
+			<attribute name="ImpactFromMessageEmergencyWarning" class="java.lang.String" >0.313</attribute>
+			<attribute name="ImpactFromMessageEvacuateNow" class="java.lang.String" >0.311</attribute>
+			<attribute name="ImpactFromMessageRespondersAttending" class="java.lang.String" >-0.1</attribute>
+			<attribute name="ImpactFromMessageWatchAndAct" class="java.lang.String" >0.163</attribute>
+			<attribute name="ImpactFromSocialMessage" class="java.lang.String" >0.4</attribute>
+			<attribute name="ImpactFromVisibleEmbers" class="java.lang.String" >0.4</attribute>
+			<attribute name="ImpactFromVisibleFire" class="java.lang.String" >0.5</attribute>
+			<attribute name="ImpactFromVisibleResponders" class="java.lang.String" >0.3</attribute>
+			<attribute name="ImpactFromVisibleSmoke" class="java.lang.String" >0.1</attribute>
+			<attribute name="InvacLocationPreference" class="java.lang.String" >Castlemaine,252140,5894312</attribute>
+			<attribute name="LagTimeInMinsForFinalResponse" class="java.lang.String" >24.68</attribute>
+			<attribute name="LagTimeInMinsForInitialResponse" class="java.lang.String" >16.03</attribute>
+			<attribute name="PrimaryFamilyType" class="java.lang.String" >LONE_PERSON</attribute>
+			<attribute name="ResponseThresholdFinal" class="java.lang.String" >0.71</attribute>
+			<attribute name="ResponseThresholdInitial" class="java.lang.String" >0.51</attribute>
+			<attribute name="SA1_7DIGCODE" class="java.lang.String" >2102810</attribute>
+			<attribute name="SA2_MAINCODE" class="java.lang.String" >202021028</attribute>
+			<attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.String" >true</attribute>
+			<attribute name="WillGoHomeBeforeLeaving" class="java.lang.String" >true</attribute>
+			<attribute name="WillStay" class="java.lang.String" >false</attribute>
+		</attributes>
+		<plan selected="yes">
+			<activity type="home" x="239036.77987307432" y="5901983.903113384" end_time="23:59:59" >
+			</activity>
+			<leg mode="car">
+			</leg>
+			<activity type="home" x="239036.77987307432" y="5901983.903113384" >
+			</activity>
+		</plan>
+
+	</person>
+
+<!-- ====================================================================== -->
+
+	<person id="6">
+		<attributes>
+			<attribute name="Age" class="java.lang.String" >75</attribute>
+			<attribute name="AgentId" class="java.lang.String" >202021028P6374</attribute>
+			<attribute name="Archetype" class="java.lang.String" >Worried.Waverer</attribute>
+			<attribute name="Archetypes.Age" class="java.lang.String" >75 years +</attribute>
+			<attribute name="Archetypes.Household" class="java.lang.String" >Ssingle person without dependents living at home</attribute>
+			<attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.archetype.WorriedWaverer</attribute>
+			<attribute name="EZI_ADD" class="java.lang.String" >47 FRANKLIN STREET MALDON 3463</attribute>
+			<attribute name="EvacLocationPreference" class="java.lang.String" >Elphinstone,262869,5890813</attribute>
+			<attribute name="Gender" class="java.lang.String" >Male</attribute>
+			<attribute name="Geographical.Coordinate" class="java.lang.String" >[144.0601, -36.9876]</attribute>
+			<attribute name="HasDependents" class="java.lang.String" >false</attribute>
+			<attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>
+			<attribute name="HouseholdId" class="java.lang.String" >202021028H84</attribute>
+			<attribute name="Id" class="java.lang.String" >10057</attribute>
+			<attribute name="ImpactFromFireDangerIndexRating" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromImmersionInSmoke" class="java.lang.String" >0.2</attribute>
+			<attribute name="ImpactFromMessageAdvice" class="java.lang.String" >0.088</attribute>
+			<attribute name="ImpactFromMessageEmergencyWarning" class="java.lang.String" >0.313</attribute>
+			<attribute name="ImpactFromMessageEvacuateNow" class="java.lang.String" >0.311</attribute>
+			<attribute name="ImpactFromMessageRespondersAttending" class="java.lang.String" >-0.1</attribute>
+			<attribute name="ImpactFromMessageWatchAndAct" class="java.lang.String" >0.163</attribute>
+			<attribute name="ImpactFromSocialMessage" class="java.lang.String" >0.4</attribute>
+			<attribute name="ImpactFromVisibleEmbers" class="java.lang.String" >0.4</attribute>
+			<attribute name="ImpactFromVisibleFire" class="java.lang.String" >0.5</attribute>
+			<attribute name="ImpactFromVisibleResponders" class="java.lang.String" >0.3</attribute>
+			<attribute name="ImpactFromVisibleSmoke" class="java.lang.String" >0.1</attribute>
+			<attribute name="InvacLocationPreference" class="java.lang.String" >Castlemaine,252140,5894312</attribute>
+			<attribute name="LagTimeInMinsForFinalResponse" class="java.lang.String" >23.75</attribute>
+			<attribute name="LagTimeInMinsForInitialResponse" class="java.lang.String" >9.13</attribute>
+			<attribute name="PrimaryFamilyType" class="java.lang.String" >LONE_PERSON</attribute>
+			<attribute name="ResponseThresholdFinal" class="java.lang.String" >0.6</attribute>
+			<attribute name="ResponseThresholdInitial" class="java.lang.String" >0.27</attribute>
+			<attribute name="SA1_7DIGCODE" class="java.lang.String" >2102818</attribute>
+			<attribute name="SA2_MAINCODE" class="java.lang.String" >202021028</attribute>
+			<attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.String" >true</attribute>
+			<attribute name="WillGoHomeBeforeLeaving" class="java.lang.String" >true</attribute>
+			<attribute name="WillStay" class="java.lang.String" >false</attribute>
+		</attributes>
+		<plan selected="yes">
+			<activity type="home" x="238344.81399489663" y="5902462.4059532415" end_time="23:59:59" >
+			</activity>
+			<leg mode="car">
+			</leg>
+			<activity type="home" x="238344.81399489663" y="5902462.4059532415" >
+			</activity>
+		</plan>
+
+	</person>
+
+	<!-- ====================================================================== -->
+
+	<person id="7">
+		<attributes>
+			<attribute name="Age" class="java.lang.String" >70</attribute>
+			<attribute name="AgentId" class="java.lang.String" >202021028P6875</attribute>
+			<attribute name="Archetype" class="java.lang.String" >Worried.Waverer</attribute>
+			<attribute name="Archetypes.Age" class="java.lang.String" >65-74 years</attribute>
+			<attribute name="Archetypes.Household" class="java.lang.String" >Ssingle person without dependents living at home</attribute>
+			<attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.archetype.WorriedWaverer</attribute>
+			<attribute name="EZI_ADD" class="java.lang.String" >11 WARNOCK STREET MALDON 3463</attribute>
+			<attribute name="EvacLocationPreference" class="java.lang.String" >Elphinstone,262869,5890813</attribute>
+			<attribute name="Gender" class="java.lang.String" >Female</attribute>
+			<attribute name="Geographical.Coordinate" class="java.lang.String" >[144.0619, -36.9912]</attribute>
+			<attribute name="HasDependents" class="java.lang.String" >false</attribute>
+			<attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>
+			<attribute name="HouseholdId" class="java.lang.String" >202021028H585</attribute>
+			<attribute name="Id" class="java.lang.String" >10072</attribute>
+			<attribute name="ImpactFromFireDangerIndexRating" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromImmersionInSmoke" class="java.lang.String" >0.2</attribute>
+			<attribute name="ImpactFromMessageAdvice" class="java.lang.String" >0.088</attribute>
+			<attribute name="ImpactFromMessageEmergencyWarning" class="java.lang.String" >0.313</attribute>
+			<attribute name="ImpactFromMessageEvacuateNow" class="java.lang.String" >0.311</attribute>
+			<attribute name="ImpactFromMessageRespondersAttending" class="java.lang.String" >-0.1</attribute>
+			<attribute name="ImpactFromMessageWatchAndAct" class="java.lang.String" >0.163</attribute>
+			<attribute name="ImpactFromSocialMessage" class="java.lang.String" >0.4</attribute>
+			<attribute name="ImpactFromVisibleEmbers" class="java.lang.String" >0.4</attribute>
+			<attribute name="ImpactFromVisibleFire" class="java.lang.String" >0.5</attribute>
+			<attribute name="ImpactFromVisibleResponders" class="java.lang.String" >0.3</attribute>
+			<attribute name="ImpactFromVisibleSmoke" class="java.lang.String" >0.1</attribute>
+			<attribute name="InvacLocationPreference" class="java.lang.String" >Castlemaine,252140,5894312</attribute>
+			<attribute name="LagTimeInMinsForFinalResponse" class="java.lang.String" >15.2</attribute>
+			<attribute name="LagTimeInMinsForInitialResponse" class="java.lang.String" >11.69</attribute>
+			<attribute name="PrimaryFamilyType" class="java.lang.String" >LONE_PERSON</attribute>
+			<attribute name="ResponseThresholdFinal" class="java.lang.String" >0.67</attribute>
+			<attribute name="ResponseThresholdInitial" class="java.lang.String" >0.18</attribute>
+			<attribute name="SA1_7DIGCODE" class="java.lang.String" >2102818</attribute>
+			<attribute name="SA2_MAINCODE" class="java.lang.String" >202021028</attribute>
+			<attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.String" >true</attribute>
+			<attribute name="WillGoHomeBeforeLeaving" class="java.lang.String" >true</attribute>
+			<attribute name="WillStay" class="java.lang.String" >false</attribute>
+		</attributes>
+		<plan selected="yes">
+			<activity type="home" x="238517.39249723087" y="5902067.85049209" end_time="23:59:59" >
+			</activity>
+			<leg mode="car">
+			</leg>
+			<activity type="home" x="238517.39249723087" y="5902067.85049209" >
+			</activity>
+		</plan>
+
+	</person>
+
+	<!-- ====================================================================== -->
+
+	<person id="8">
+		<attributes>
+			<attribute name="Age" class="java.lang.String" >76</attribute>
+			<attribute name="AgentId" class="java.lang.String" >202021028P6403</attribute>
+			<attribute name="Archetype" class="java.lang.String" >Worried.Waverer</attribute>
+			<attribute name="Archetypes.Age" class="java.lang.String" >75 years +</attribute>
+			<attribute name="Archetypes.Household" class="java.lang.String" >Ssingle person without dependents living at home</attribute>
+			<attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.archetype.WorriedWaverer</attribute>
+			<attribute name="EZI_ADD" class="java.lang.String" >67 CASTLEMAINE ROAD MALDON 3463</attribute>
+			<attribute name="EvacLocationPreference" class="java.lang.String" >Elphinstone,262869,5890813</attribute>
+			<attribute name="Gender" class="java.lang.String" >Male</attribute>
+			<attribute name="Geographical.Coordinate" class="java.lang.String" >[144.0786, -37.0114]</attribute>
+			<attribute name="HasDependents" class="java.lang.String" >true</attribute>
+			<attribute name="HasDependentsAtLocation" class="java.lang.String" >[240072.853050,5890599.713226]</attribute>
+			<attribute name="HouseholdId" class="java.lang.String" >202021028H113</attribute>
+			<attribute name="Id" class="java.lang.String" >10063</attribute>
+			<attribute name="ImpactFromFireDangerIndexRating" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromImmersionInSmoke" class="java.lang.String" >0.2</attribute>
+			<attribute name="ImpactFromMessageAdvice" class="java.lang.String" >0.088</attribute>
+			<attribute name="ImpactFromMessageEmergencyWarning" class="java.lang.String" >0.313</attribute>
+			<attribute name="ImpactFromMessageEvacuateNow" class="java.lang.String" >0.311</attribute>
+			<attribute name="ImpactFromMessageRespondersAttending" class="java.lang.String" >-0.1</attribute>
+			<attribute name="ImpactFromMessageWatchAndAct" class="java.lang.String" >0.163</attribute>
+			<attribute name="ImpactFromSocialMessage" class="java.lang.String" >0.4</attribute>
+			<attribute name="ImpactFromVisibleEmbers" class="java.lang.String" >0.4</attribute>
+			<attribute name="ImpactFromVisibleFire" class="java.lang.String" >0.5</attribute>
+			<attribute name="ImpactFromVisibleResponders" class="java.lang.String" >0.3</attribute>
+			<attribute name="ImpactFromVisibleSmoke" class="java.lang.String" >0.1</attribute>
+			<attribute name="InvacLocationPreference" class="java.lang.String" >Castlemaine,252140,5894312</attribute>
+			<attribute name="LagTimeInMinsForFinalResponse" class="java.lang.String" >20.7</attribute>
+			<attribute name="LagTimeInMinsForInitialResponse" class="java.lang.String" >14.79</attribute>
+			<attribute name="PrimaryFamilyType" class="java.lang.String" >LONE_PERSON</attribute>
+			<attribute name="ResponseThresholdFinal" class="java.lang.String" >0.83</attribute>
+			<attribute name="ResponseThresholdInitial" class="java.lang.String" >0.46</attribute>
+			<attribute name="SA1_7DIGCODE" class="java.lang.String" >2102820</attribute>
+			<attribute name="SA2_MAINCODE" class="java.lang.String" >202021028</attribute>
+			<attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.String" >false</attribute>
+			<attribute name="WillGoHomeBeforeLeaving" class="java.lang.String" >true</attribute>
+			<attribute name="WillStay" class="java.lang.String" >false</attribute>
+		</attributes>
+		<plan selected="yes">
+			<activity type="home" x="240072.8530502314" y="5899871.967394522" end_time="23:59:59" >
+			</activity>
+			<leg mode="car">
+			</leg>
+			<activity type="home" x="240072.8530502314" y="5899871.967394522" >
+			</activity>
+		</plan>
+
+	</person>
+
+<!-- ====================================================================== -->
+
+	<person id="9">
+		<attributes>
+			<attribute name="Age" class="java.lang.String" >81</attribute>
+			<attribute name="AgentId" class="java.lang.String" >202021028P6415</attribute>
+			<attribute name="Archetype" class="java.lang.String" >Worried.Waverer</attribute>
+			<attribute name="Archetypes.Age" class="java.lang.String" >75 years +</attribute>
+			<attribute name="Archetypes.Household" class="java.lang.String" >Ssingle person without dependents living at home</attribute>
+			<attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.archetype.WorriedWaverer</attribute>
+			<attribute name="EZI_ADD" class="java.lang.String" >BELLS REEF ROAD MALDON 3463</attribute>
+			<attribute name="EvacLocationPreference" class="java.lang.String" >Elphinstone,262869,5890813</attribute>
+			<attribute name="Gender" class="java.lang.String" >Male</attribute>
+			<attribute name="Geographical.Coordinate" class="java.lang.String" >[144.0778, -36.9727]</attribute>
+			<attribute name="HasDependents" class="java.lang.String" >true</attribute>
+			<attribute name="HasDependentsAtLocation" class="java.lang.String" >[239869.746605,5892499.730682]</attribute>
+			<attribute name="HouseholdId" class="java.lang.String" >202021028H125</attribute>
+			<attribute name="Id" class="java.lang.String" >10066</attribute>
+			<attribute name="ImpactFromFireDangerIndexRating" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromImmersionInSmoke" class="java.lang.String" >0.2</attribute>
+			<attribute name="ImpactFromMessageAdvice" class="java.lang.String" >0.088</attribute>
+			<attribute name="ImpactFromMessageEmergencyWarning" class="java.lang.String" >0.313</attribute>
+			<attribute name="ImpactFromMessageEvacuateNow" class="java.lang.String" >0.311</attribute>
+			<attribute name="ImpactFromMessageRespondersAttending" class="java.lang.String" >-0.1</attribute>
+			<attribute name="ImpactFromMessageWatchAndAct" class="java.lang.String" >0.163</attribute>
+			<attribute name="ImpactFromSocialMessage" class="java.lang.String" >0.4</attribute>
+			<attribute name="ImpactFromVisibleEmbers" class="java.lang.String" >0.4</attribute>
+			<attribute name="ImpactFromVisibleFire" class="java.lang.String" >0.5</attribute>
+			<attribute name="ImpactFromVisibleResponders" class="java.lang.String" >0.3</attribute>
+			<attribute name="ImpactFromVisibleSmoke" class="java.lang.String" >0.1</attribute>
+			<attribute name="InvacLocationPreference" class="java.lang.String" >Castlemaine,252140,5894312</attribute>
+			<attribute name="LagTimeInMinsForFinalResponse" class="java.lang.String" >24.4</attribute>
+			<attribute name="LagTimeInMinsForInitialResponse" class="java.lang.String" >15.52</attribute>
+			<attribute name="PrimaryFamilyType" class="java.lang.String" >LONE_PERSON</attribute>
+			<attribute name="ResponseThresholdFinal" class="java.lang.String" >0.77</attribute>
+			<attribute name="ResponseThresholdInitial" class="java.lang.String" >0.18</attribute>
+			<attribute name="SA1_7DIGCODE" class="java.lang.String" >2102817</attribute>
+			<attribute name="SA2_MAINCODE" class="java.lang.String" >202021028</attribute>
+			<attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.String" >true</attribute>
+			<attribute name="WillGoHomeBeforeLeaving" class="java.lang.String" >true</attribute>
+			<attribute name="WillStay" class="java.lang.String" >false</attribute>
+		</attributes>
+		<plan selected="yes">
+			<activity type="home" x="239869.74660478908" y="5904164.444402305" end_time="23:59:59" >
+			</activity>
+			<leg mode="car">
+			</leg>
+			<activity type="home" x="239869.74660478908" y="5904164.444402305" >
+			</activity>
+		</plan>
+
+	</person>
+
+<!-- ====================================================================== -->
+
+	<person id="10">
+		<attributes>
+			<attribute name="Age" class="java.lang.String" >78</attribute>
+			<attribute name="AgentId" class="java.lang.String" >202021028P6882</attribute>
+			<attribute name="Archetype" class="java.lang.String" >Community.Guided</attribute>
+			<attribute name="Archetypes.Age" class="java.lang.String" >75 years +</attribute>
+			<attribute name="Archetypes.Household" class="java.lang.String" >Ssingle person without dependents living at home</attribute>
+			<attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.archetype.CommunityGuided</attribute>
+			<attribute name="EZI_ADD" class="java.lang.String" >31 PARKER STREET MALDON 3463</attribute>
+			<attribute name="EvacLocationPreference" class="java.lang.String" >Elphinstone,262869,5890813</attribute>
+			<attribute name="Gender" class="java.lang.String" >Female</attribute>
+			<attribute name="Geographical.Coordinate" class="java.lang.String" >[144.0637, -36.9903]</attribute>
+			<attribute name="HasDependents" class="java.lang.String" >true</attribute>
+			<attribute name="HasDependentsAtLocation" class="java.lang.String" >[238674.543999,5901195.908183]</attribute>
+			<attribute name="HouseholdId" class="java.lang.String" >202021028H592</attribute>
+			<attribute name="Id" class="java.lang.String" >1007</attribute>
+			<attribute name="ImpactFromFireDangerIndexRating" class="java.lang.String" >0.1</attribute>
+			<attribute name="ImpactFromImmersionInSmoke" class="java.lang.String" >0.3</attribute>
+			<attribute name="ImpactFromMessageAdvice" class="java.lang.String" >0.091</attribute>
+			<attribute name="ImpactFromMessageEmergencyWarning" class="java.lang.String" >0.326</attribute>
+			<attribute name="ImpactFromMessageEvacuateNow" class="java.lang.String" >0.346</attribute>
+			<attribute name="ImpactFromMessageRespondersAttending" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromMessageWatchAndAct" class="java.lang.String" >0.167</attribute>
+			<attribute name="ImpactFromSocialMessage" class="java.lang.String" >0.4</attribute>
+			<attribute name="ImpactFromVisibleEmbers" class="java.lang.String" >0.4</attribute>
+			<attribute name="ImpactFromVisibleFire" class="java.lang.String" >0.5</attribute>
+			<attribute name="ImpactFromVisibleResponders" class="java.lang.String" >0.3</attribute>
+			<attribute name="ImpactFromVisibleSmoke" class="java.lang.String" >0.2</attribute>
+			<attribute name="InvacLocationPreference" class="java.lang.String" >Castlemaine,252140,5894312</attribute>
+			<attribute name="LagTimeInMinsForFinalResponse" class="java.lang.String" >15.93</attribute>
+			<attribute name="LagTimeInMinsForInitialResponse" class="java.lang.String" >18.45</attribute>
+			<attribute name="PrimaryFamilyType" class="java.lang.String" >LONE_PERSON</attribute>
+			<attribute name="ResponseThresholdFinal" class="java.lang.String" >0.5</attribute>
+			<attribute name="ResponseThresholdInitial" class="java.lang.String" >0.19</attribute>
+			<attribute name="SA1_7DIGCODE" class="java.lang.String" >2102818</attribute>
+			<attribute name="SA2_MAINCODE" class="java.lang.String" >202021028</attribute>
+			<attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.String" >false</attribute>
+			<attribute name="WillGoHomeBeforeLeaving" class="java.lang.String" >true</attribute>
+			<attribute name="WillStay" class="java.lang.String" >false</attribute>
+		</attributes>
+		<plan selected="yes">
+			<activity type="home" x="238674.54399937848" y="5902172.6735351775" end_time="23:59:59" >
+			</activity>
+			<leg mode="car">
+			</leg>
+			<activity type="home" x="238674.54399937848" y="5902172.6735351775" >
+			</activity>
+		</plan>
+
+	</person>
+
+	<!-- ====================================================================== -->
+
+	<person id="11">
+		<attributes>
+			<attribute name="Age" class="java.lang.String" >77</attribute>
+			<attribute name="AgentId" class="java.lang.String" >202021028P6873</attribute>
+			<attribute name="Archetype" class="java.lang.String" >Community.Guided</attribute>
+			<attribute name="Archetypes.Age" class="java.lang.String" >75 years +</attribute>
+			<attribute name="Archetypes.Household" class="java.lang.String" >Ssingle person without dependents living at home</attribute>
+			<attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.archetype.CommunityGuided</attribute>
+			<attribute name="EZI_ADD" class="java.lang.String" >20 ADAIR STREET MALDON 3463</attribute>
+			<attribute name="EvacLocationPreference" class="java.lang.String" >Elphinstone,262869,5890813</attribute>
+			<attribute name="Gender" class="java.lang.String" >Female</attribute>
+			<attribute name="Geographical.Coordinate" class="java.lang.String" >[144.0693, -36.9907]</attribute>
+			<attribute name="HasDependents" class="java.lang.String" >false</attribute>
+			<attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>
+			<attribute name="HouseholdId" class="java.lang.String" >202021028H583</attribute>
+			<attribute name="Id" class="java.lang.String" >1006</attribute>
+			<attribute name="ImpactFromFireDangerIndexRating" class="java.lang.String" >0.1</attribute>
+			<attribute name="ImpactFromImmersionInSmoke" class="java.lang.String" >0.3</attribute>
+			<attribute name="ImpactFromMessageAdvice" class="java.lang.String" >0.091</attribute>
+			<attribute name="ImpactFromMessageEmergencyWarning" class="java.lang.String" >0.326</attribute>
+			<attribute name="ImpactFromMessageEvacuateNow" class="java.lang.String" >0.346</attribute>
+			<attribute name="ImpactFromMessageRespondersAttending" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromMessageWatchAndAct" class="java.lang.String" >0.167</attribute>
+			<attribute name="ImpactFromSocialMessage" class="java.lang.String" >0.4</attribute>
+			<attribute name="ImpactFromVisibleEmbers" class="java.lang.String" >0.4</attribute>
+			<attribute name="ImpactFromVisibleFire" class="java.lang.String" >0.5</attribute>
+			<attribute name="ImpactFromVisibleResponders" class="java.lang.String" >0.3</attribute>
+			<attribute name="ImpactFromVisibleSmoke" class="java.lang.String" >0.2</attribute>
+			<attribute name="InvacLocationPreference" class="java.lang.String" >Castlemaine,252140,5894312</attribute>
+			<attribute name="LagTimeInMinsForFinalResponse" class="java.lang.String" >13.76</attribute>
+			<attribute name="LagTimeInMinsForInitialResponse" class="java.lang.String" >11.66</attribute>
+			<attribute name="PrimaryFamilyType" class="java.lang.String" >LONE_PERSON</attribute>
+			<attribute name="ResponseThresholdFinal" class="java.lang.String" >0.5</attribute>
+			<attribute name="ResponseThresholdInitial" class="java.lang.String" >0.15</attribute>
+			<attribute name="SA1_7DIGCODE" class="java.lang.String" >2102818</attribute>
+			<attribute name="SA2_MAINCODE" class="java.lang.String" >202021028</attribute>
+			<attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.String" >true</attribute>
+			<attribute name="WillGoHomeBeforeLeaving" class="java.lang.String" >true</attribute>
+			<attribute name="WillStay" class="java.lang.String" >false</attribute>
+		</attributes>
+		<plan selected="yes">
+			<activity type="home" x="239174.4223518426" y="5902143.654600607" end_time="23:59:59" >
+			</activity>
+			<leg mode="car">
+			</leg>
+			<activity type="home" x="239174.4223518426" y="5902143.654600607" >
+			</activity>
+		</plan>
+
+	</person>
+<!-- ====================================================================== -->
+
+	<person id="12">
+		<attributes>
+			<attribute name="Age" class="java.lang.String" >65</attribute>
+			<attribute name="AgentId" class="java.lang.String" >202021028P7131</attribute>
+			<attribute name="Archetype" class="java.lang.String" >Community.Guided</attribute>
+			<attribute name="Archetypes.Age" class="java.lang.String" >65-74 years</attribute>
+			<attribute name="Archetypes.Household" class="java.lang.String" >Ssingle person without dependents living at home</attribute>
+			<attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.archetype.CommunityGuided</attribute>
+			<attribute name="EZI_ADD" class="java.lang.String" >27 MAIN STREET MALDON 3463</attribute>
+			<attribute name="EvacLocationPreference" class="java.lang.String" >Elphinstone,262869,5890813</attribute>
+			<attribute name="Gender" class="java.lang.String" >Female</attribute>
+			<attribute name="Geographical.Coordinate" class="java.lang.String" >[144.0691, -36.9969]</attribute>
+			<attribute name="HasDependents" class="java.lang.String" >true</attribute>
+			<attribute name="HasDependentsAtLocation" class="java.lang.String" >[239177.815385,5892119.704196]</attribute>
+			<attribute name="HouseholdId" class="java.lang.String" >202021028H841</attribute>
+			<attribute name="Id" class="java.lang.String" >1035</attribute>
+			<attribute name="ImpactFromFireDangerIndexRating" class="java.lang.String" >0.1</attribute>
+			<attribute name="ImpactFromImmersionInSmoke" class="java.lang.String" >0.3</attribute>
+			<attribute name="ImpactFromMessageAdvice" class="java.lang.String" >0.091</attribute>
+			<attribute name="ImpactFromMessageEmergencyWarning" class="java.lang.String" >0.326</attribute>
+			<attribute name="ImpactFromMessageEvacuateNow" class="java.lang.String" >0.346</attribute>
+			<attribute name="ImpactFromMessageRespondersAttending" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromMessageWatchAndAct" class="java.lang.String" >0.167</attribute>
+			<attribute name="ImpactFromSocialMessage" class="java.lang.String" >0.4</attribute>
+			<attribute name="ImpactFromVisibleEmbers" class="java.lang.String" >0.4</attribute>
+			<attribute name="ImpactFromVisibleFire" class="java.lang.String" >0.5</attribute>
+			<attribute name="ImpactFromVisibleResponders" class="java.lang.String" >0.3</attribute>
+			<attribute name="ImpactFromVisibleSmoke" class="java.lang.String" >0.2</attribute>
+			<attribute name="InvacLocationPreference" class="java.lang.String" >Castlemaine,252140,5894312</attribute>
+			<attribute name="LagTimeInMinsForFinalResponse" class="java.lang.String" >15.97</attribute>
+			<attribute name="LagTimeInMinsForInitialResponse" class="java.lang.String" >11.78</attribute>
+			<attribute name="PrimaryFamilyType" class="java.lang.String" >LONE_PERSON</attribute>
+			<attribute name="ResponseThresholdFinal" class="java.lang.String" >0.57</attribute>
+			<attribute name="ResponseThresholdInitial" class="java.lang.String" >0.24</attribute>
+			<attribute name="SA1_7DIGCODE" class="java.lang.String" >2102810</attribute>
+			<attribute name="SA2_MAINCODE" class="java.lang.String" >202021028</attribute>
+			<attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.String" >true</attribute>
+			<attribute name="WillGoHomeBeforeLeaving" class="java.lang.String" >false</attribute>
+			<attribute name="WillStay" class="java.lang.String" >false</attribute>
+		</attributes>
+		<plan selected="yes">
+			<activity type="home" x="239177.81538451987" y="5901455.070427552" end_time="23:59:59" >
+			</activity>
+			<leg mode="car">
+			</leg>
+			<activity type="home" x="239177.81538451987" y="5901455.070427552" >
+			</activity>
+		</plan>
+
+	</person>
+
+<!-- ====================================================================== -->
+
+	<person id="13">
+		<attributes>
+			<attribute name="Age" class="java.lang.String" >57</attribute>
+			<attribute name="AgentId" class="java.lang.String" >202021028P2552</attribute>
+			<attribute name="Archetype" class="java.lang.String" >Community.Guided</attribute>
+			<attribute name="Archetypes.Age" class="java.lang.String" >55-64 years</attribute>
+			<attribute name="Archetypes.Household" class="java.lang.String" >Couple without dependents living at home</attribute>
+			<attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.archetype.CommunityGuided</attribute>
+			<attribute name="EZI_ADD" class="java.lang.String" >42/11 HOSPITAL STREET MALDON 3463</attribute>
+			<attribute name="EvacLocationPreference" class="java.lang.String" >Elphinstone,262869,5890813</attribute>
+			<attribute name="Gender" class="java.lang.String" >Female</attribute>
+			<attribute name="Geographical.Coordinate" class="java.lang.String" >[144.0627, -36.9946]</attribute>
+			<attribute name="HasDependents" class="java.lang.String" >false</attribute>
+			<attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>
+			<attribute name="HouseholdId" class="java.lang.String" >202021028H1352</attribute>
+			<attribute name="Id" class="java.lang.String" >1162</attribute>
+			<attribute name="ImpactFromFireDangerIndexRating" class="java.lang.String" >0.1</attribute>
+			<attribute name="ImpactFromImmersionInSmoke" class="java.lang.String" >0.3</attribute>
+			<attribute name="ImpactFromMessageAdvice" class="java.lang.String" >0.091</attribute>
+			<attribute name="ImpactFromMessageEmergencyWarning" class="java.lang.String" >0.326</attribute>
+			<attribute name="ImpactFromMessageEvacuateNow" class="java.lang.String" >0.346</attribute>
+			<attribute name="ImpactFromMessageRespondersAttending" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromMessageWatchAndAct" class="java.lang.String" >0.167</attribute>
+			<attribute name="ImpactFromSocialMessage" class="java.lang.String" >0.4</attribute>
+			<attribute name="ImpactFromVisibleEmbers" class="java.lang.String" >0.4</attribute>
+			<attribute name="ImpactFromVisibleFire" class="java.lang.String" >0.5</attribute>
+			<attribute name="ImpactFromVisibleResponders" class="java.lang.String" >0.3</attribute>
+			<attribute name="ImpactFromVisibleSmoke" class="java.lang.String" >0.2</attribute>
+			<attribute name="InvacLocationPreference" class="java.lang.String" >Castlemaine,252140,5894312</attribute>
+			<attribute name="LagTimeInMinsForFinalResponse" class="java.lang.String" >13.1</attribute>
+			<attribute name="LagTimeInMinsForInitialResponse" class="java.lang.String" >15.81</attribute>
+			<attribute name="PrimaryFamilyType" class="java.lang.String" >COUPLE_ONLY</attribute>
+			<attribute name="ResponseThresholdFinal" class="java.lang.String" >0.36</attribute>
+			<attribute name="ResponseThresholdInitial" class="java.lang.String" >0.36</attribute>
+			<attribute name="SA1_7DIGCODE" class="java.lang.String" >2102810</attribute>
+			<attribute name="SA2_MAINCODE" class="java.lang.String" >202021028</attribute>
+			<attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.String" >true</attribute>
+			<attribute name="WillGoHomeBeforeLeaving" class="java.lang.String" >false</attribute>
+			<attribute name="WillStay" class="java.lang.String" >false</attribute>
+		</attributes>
+		<plan selected="yes">
+			<activity type="home" x="238600.25689198382" y="5901692.738966883" end_time="23:59:59" >
+			</activity>
+			<leg mode="car">
+			</leg>
+			<activity type="home" x="238600.25689198382" y="5901692.738966883" >
+			</activity>
+		</plan>
+
+	</person>
+
+<!-- ====================================================================== -->
+
+	<person id="14">
+		<attributes>
+			<attribute name="Age" class="java.lang.String" >53</attribute>
+			<attribute name="AgentId" class="java.lang.String" >202021028P3589</attribute>
+			<attribute name="Archetype" class="java.lang.String" >Community.Guided</attribute>
+			<attribute name="Archetypes.Age" class="java.lang.String" >45-54 years</attribute>
+			<attribute name="Archetypes.Household" class="java.lang.String" >Couple without dependents living at home</attribute>
+			<attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.archetype.CommunityGuided</attribute>
+			<attribute name="EZI_ADD" class="java.lang.String" >16 HARKER STREET MALDON 3463</attribute>
+			<attribute name="EvacLocationPreference" class="java.lang.String" >Elphinstone,262869,5890813</attribute>
+			<attribute name="Gender" class="java.lang.String" >Female</attribute>
+			<attribute name="Geographical.Coordinate" class="java.lang.String" >[144.0698, -36.9902]</attribute>
+			<attribute name="HasDependents" class="java.lang.String" >false</attribute>
+			<attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>
+			<attribute name="HouseholdId" class="java.lang.String" >202021028H1695</attribute>
+			<attribute name="Id" class="java.lang.String" >1292</attribute>
+			<attribute name="ImpactFromFireDangerIndexRating" class="java.lang.String" >0.1</attribute>
+			<attribute name="ImpactFromImmersionInSmoke" class="java.lang.String" >0.3</attribute>
+			<attribute name="ImpactFromMessageAdvice" class="java.lang.String" >0.091</attribute>
+			<attribute name="ImpactFromMessageEmergencyWarning" class="java.lang.String" >0.326</attribute>
+			<attribute name="ImpactFromMessageEvacuateNow" class="java.lang.String" >0.346</attribute>
+			<attribute name="ImpactFromMessageRespondersAttending" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromMessageWatchAndAct" class="java.lang.String" >0.167</attribute>
+			<attribute name="ImpactFromSocialMessage" class="java.lang.String" >0.4</attribute>
+			<attribute name="ImpactFromVisibleEmbers" class="java.lang.String" >0.4</attribute>
+			<attribute name="ImpactFromVisibleFire" class="java.lang.String" >0.5</attribute>
+			<attribute name="ImpactFromVisibleResponders" class="java.lang.String" >0.3</attribute>
+			<attribute name="ImpactFromVisibleSmoke" class="java.lang.String" >0.2</attribute>
+			<attribute name="InvacLocationPreference" class="java.lang.String" >Castlemaine,252140,5894312</attribute>
+			<attribute name="LagTimeInMinsForFinalResponse" class="java.lang.String" >15.51</attribute>
+			<attribute name="LagTimeInMinsForInitialResponse" class="java.lang.String" >11.19</attribute>
+			<attribute name="PrimaryFamilyType" class="java.lang.String" >COUPLE_ONLY</attribute>
+			<attribute name="ResponseThresholdFinal" class="java.lang.String" >0.57</attribute>
+			<attribute name="ResponseThresholdInitial" class="java.lang.String" >0.27</attribute>
+			<attribute name="SA1_7DIGCODE" class="java.lang.String" >2102818</attribute>
+			<attribute name="SA2_MAINCODE" class="java.lang.String" >202021028</attribute>
+			<attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.String" >true</attribute>
+			<attribute name="WillGoHomeBeforeLeaving" class="java.lang.String" >true</attribute>
+			<attribute name="WillStay" class="java.lang.String" >false</attribute>
+		</attributes>
+		<plan selected="yes">
+			<activity type="home" x="239217.2231117578" y="5902200.512256868" end_time="23:59:59" >
+			</activity>
+			<leg mode="car">
+			</leg>
+			<activity type="home" x="239217.2231117578" y="5902200.512256868" >
+			</activity>
+		</plan>
+
+	</person>
+
+<!-- ====================================================================== -->
+
+	<person id="15">
+		<attributes>
+			<attribute name="Age" class="java.lang.String" >64</attribute>
+			<attribute name="AgentId" class="java.lang.String" >202021028P7031</attribute>
+			<attribute name="Archetype" class="java.lang.String" >Considered.Evacuator</attribute>
+			<attribute name="Archetypes.Age" class="java.lang.String" >55-64 years</attribute>
+			<attribute name="Archetypes.Household" class="java.lang.String" >Ssingle person without dependents living at home</attribute>
+			<attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.archetype.ConsideredEvacuator</attribute>
+			<attribute name="EZI_ADD" class="java.lang.String" >15 SOUTH GERMAN ROAD MALDON 3463</attribute>
+			<attribute name="EvacLocationPreference" class="java.lang.String" >Elphinstone,262869,5890813</attribute>
+			<attribute name="Gender" class="java.lang.String" >Female</attribute>
+			<attribute name="Geographical.Coordinate" class="java.lang.String" >[144.0737, -37.0072]</attribute>
+			<attribute name="HasDependents" class="java.lang.String" >false</attribute>
+			<attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>
+			<attribute name="HouseholdId" class="java.lang.String" >202021028H741</attribute>
+			<attribute name="Id" class="java.lang.String" >3005</attribute>
+			<attribute name="ImpactFromFireDangerIndexRating" class="java.lang.String" >0.1</attribute>
+			<attribute name="ImpactFromImmersionInSmoke" class="java.lang.String" >0.4</attribute>
+			<attribute name="ImpactFromMessageAdvice" class="java.lang.String" >0.103</attribute>
+			<attribute name="ImpactFromMessageEmergencyWarning" class="java.lang.String" >0.337</attribute>
+			<attribute name="ImpactFromMessageEvacuateNow" class="java.lang.String" >0.358</attribute>
+			<attribute name="ImpactFromMessageRespondersAttending" class="java.lang.String" >0.2</attribute>
+			<attribute name="ImpactFromMessageWatchAndAct" class="java.lang.String" >0.184</attribute>
+			<attribute name="ImpactFromSocialMessage" class="java.lang.String" >0.5</attribute>
+			<attribute name="ImpactFromVisibleEmbers" class="java.lang.String" >0.5</attribute>
+			<attribute name="ImpactFromVisibleFire" class="java.lang.String" >0.6</attribute>
+			<attribute name="ImpactFromVisibleResponders" class="java.lang.String" >0.4</attribute>
+			<attribute name="ImpactFromVisibleSmoke" class="java.lang.String" >0.3</attribute>
+			<attribute name="InvacLocationPreference" class="java.lang.String" >Castlemaine,252140,5894312</attribute>
+			<attribute name="LagTimeInMinsForFinalResponse" class="java.lang.String" >12.13</attribute>
+			<attribute name="LagTimeInMinsForInitialResponse" class="java.lang.String" >15.09</attribute>
+			<attribute name="PrimaryFamilyType" class="java.lang.String" >LONE_PERSON</attribute>
+			<attribute name="ResponseThresholdFinal" class="java.lang.String" >0.39</attribute>
+			<attribute name="ResponseThresholdInitial" class="java.lang.String" >0.39</attribute>
+			<attribute name="SA1_7DIGCODE" class="java.lang.String" >2102821</attribute>
+			<attribute name="SA2_MAINCODE" class="java.lang.String" >202021028</attribute>
+			<attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.String" >false</attribute>
+			<attribute name="WillGoHomeBeforeLeaving" class="java.lang.String" >true</attribute>
+			<attribute name="WillStay" class="java.lang.String" >false</attribute>
+		</attributes>
+		<plan selected="yes">
+			<activity type="home" x="239622.43611271726" y="5900324.648864288" end_time="23:59:59" >
+			</activity>
+			<leg mode="car">
+			</leg>
+			<activity type="home" x="239622.43611271726" y="5900324.648864288" >
+			</activity>
+		</plan>
+
+	</person>
+
+<!-- ====================================================================== -->
+
+	<person id="16">
+		<attributes>
+			<attribute name="Age" class="java.lang.String" >63</attribute>
+			<attribute name="AgentId" class="java.lang.String" >202021028P7039</attribute>
+			<attribute name="Archetype" class="java.lang.String" >Considered.Evacuator</attribute>
+			<attribute name="Archetypes.Age" class="java.lang.String" >55-64 years</attribute>
+			<attribute name="Archetypes.Household" class="java.lang.String" >Ssingle person without dependents living at home</attribute>
+			<attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.archetype.ConsideredEvacuator</attribute>
+			<attribute name="EZI_ADD" class="java.lang.String" >26 PARKINS REEF ROAD MALDON 3463</attribute>
+			<attribute name="EvacLocationPreference" class="java.lang.String" >Elphinstone,262869,5890813</attribute>
+			<attribute name="Gender" class="java.lang.String" >Female</attribute>
+			<attribute name="Geographical.Coordinate" class="java.lang.String" >[144.0637, -37.0066]</attribute>
+			<attribute name="HasDependents" class="java.lang.String" >true</attribute>
+			<attribute name="HasDependentsAtLocation" class="java.lang.String" >[238730.380288,5895581.151109]</attribute>
+			<attribute name="HouseholdId" class="java.lang.String" >202021028H749</attribute>
+			<attribute name="Id" class="java.lang.String" >3008</attribute>
+			<attribute name="ImpactFromFireDangerIndexRating" class="java.lang.String" >0.1</attribute>
+			<attribute name="ImpactFromImmersionInSmoke" class="java.lang.String" >0.4</attribute>
+			<attribute name="ImpactFromMessageAdvice" class="java.lang.String" >0.103</attribute>
+			<attribute name="ImpactFromMessageEmergencyWarning" class="java.lang.String" >0.337</attribute>
+			<attribute name="ImpactFromMessageEvacuateNow" class="java.lang.String" >0.358</attribute>
+			<attribute name="ImpactFromMessageRespondersAttending" class="java.lang.String" >0.2</attribute>
+			<attribute name="ImpactFromMessageWatchAndAct" class="java.lang.String" >0.184</attribute>
+			<attribute name="ImpactFromSocialMessage" class="java.lang.String" >0.5</attribute>
+			<attribute name="ImpactFromVisibleEmbers" class="java.lang.String" >0.5</attribute>
+			<attribute name="ImpactFromVisibleFire" class="java.lang.String" >0.6</attribute>
+			<attribute name="ImpactFromVisibleResponders" class="java.lang.String" >0.4</attribute>
+			<attribute name="ImpactFromVisibleSmoke" class="java.lang.String" >0.3</attribute>
+			<attribute name="InvacLocationPreference" class="java.lang.String" >Castlemaine,252140,5894312</attribute>
+			<attribute name="LagTimeInMinsForFinalResponse" class="java.lang.String" >12.08</attribute>
+			<attribute name="LagTimeInMinsForInitialResponse" class="java.lang.String" >15.68</attribute>
+			<attribute name="PrimaryFamilyType" class="java.lang.String" >LONE_PERSON</attribute>
+			<attribute name="ResponseThresholdFinal" class="java.lang.String" >0.35</attribute>
+			<attribute name="ResponseThresholdInitial" class="java.lang.String" >0.35</attribute>
+			<attribute name="SA1_7DIGCODE" class="java.lang.String" >2102821</attribute>
+			<attribute name="SA2_MAINCODE" class="java.lang.String" >202021028</attribute>
+			<attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.String" >false</attribute>
+			<attribute name="WillGoHomeBeforeLeaving" class="java.lang.String" >false</attribute>
+			<attribute name="WillStay" class="java.lang.String" >false</attribute>
+		</attributes>
+		<plan selected="yes">
+			<activity type="home" x="238730.38028816215" y="5900363.801927822" end_time="23:59:59" >
+			</activity>
+			<leg mode="car">
+			</leg>
+			<activity type="home" x="238730.38028816215" y="5900363.801927822" >
+			</activity>
+		</plan>
+
+	</person>
+
+<!-- ====================================================================== -->
+
+	<person id="17">
+		<attributes>
+			<attribute name="Age" class="java.lang.String" >61</attribute>
+			<attribute name="AgentId" class="java.lang.String" >202021028P7048</attribute>
+			<attribute name="Archetype" class="java.lang.String" >Considered.Evacuator</attribute>
+			<attribute name="Archetypes.Age" class="java.lang.String" >55-64 years</attribute>
+			<attribute name="Archetypes.Household" class="java.lang.String" >Ssingle person without dependents living at home</attribute>
+			<attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.archetype.ConsideredEvacuator</attribute>
+			<attribute name="EZI_ADD" class="java.lang.String" >59 CHURCH STREET MALDON 3463</attribute>
+			<attribute name="EvacLocationPreference" class="java.lang.String" >Elphinstone,262869,5890813</attribute>
+			<attribute name="Gender" class="java.lang.String" >Female</attribute>
+			<attribute name="Geographical.Coordinate" class="java.lang.String" >[144.0676, -36.9854]</attribute>
+			<attribute name="HasDependents" class="java.lang.String" >true</attribute>
+			<attribute name="HasDependentsAtLocation" class="java.lang.String" >[239004.962728,5894134.246213]</attribute>
+			<attribute name="HouseholdId" class="java.lang.String" >202021028H758</attribute>
+			<attribute name="Id" class="java.lang.String" >3012</attribute>
+			<attribute name="ImpactFromFireDangerIndexRating" class="java.lang.String" >0.1</attribute>
+			<attribute name="ImpactFromImmersionInSmoke" class="java.lang.String" >0.4</attribute>
+			<attribute name="ImpactFromMessageAdvice" class="java.lang.String" >0.103</attribute>
+			<attribute name="ImpactFromMessageEmergencyWarning" class="java.lang.String" >0.337</attribute>
+			<attribute name="ImpactFromMessageEvacuateNow" class="java.lang.String" >0.358</attribute>
+			<attribute name="ImpactFromMessageRespondersAttending" class="java.lang.String" >0.2</attribute>
+			<attribute name="ImpactFromMessageWatchAndAct" class="java.lang.String" >0.184</attribute>
+			<attribute name="ImpactFromSocialMessage" class="java.lang.String" >0.5</attribute>
+			<attribute name="ImpactFromVisibleEmbers" class="java.lang.String" >0.5</attribute>
+			<attribute name="ImpactFromVisibleFire" class="java.lang.String" >0.6</attribute>
+			<attribute name="ImpactFromVisibleResponders" class="java.lang.String" >0.4</attribute>
+			<attribute name="ImpactFromVisibleSmoke" class="java.lang.String" >0.3</attribute>
+			<attribute name="InvacLocationPreference" class="java.lang.String" >Castlemaine,252140,5894312</attribute>
+			<attribute name="LagTimeInMinsForFinalResponse" class="java.lang.String" >10.42</attribute>
+			<attribute name="LagTimeInMinsForInitialResponse" class="java.lang.String" >14.85</attribute>
+			<attribute name="PrimaryFamilyType" class="java.lang.String" >LONE_PERSON</attribute>
+			<attribute name="ResponseThresholdFinal" class="java.lang.String" >0.35</attribute>
+			<attribute name="ResponseThresholdInitial" class="java.lang.String" >0.16</attribute>
+			<attribute name="SA1_7DIGCODE" class="java.lang.String" >2102817</attribute>
+			<attribute name="SA2_MAINCODE" class="java.lang.String" >202021028</attribute>
+			<attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.String" >false</attribute>
+			<attribute name="WillGoHomeBeforeLeaving" class="java.lang.String" >false</attribute>
+			<attribute name="WillStay" class="java.lang.String" >false</attribute>
+		</attributes>
+		<plan selected="yes">
+			<activity type="home" x="239004.96272849373" y="5902727.151037769" end_time="23:59:59" >
+			</activity>
+			<leg mode="car">
+			</leg>
+			<activity type="home" x="239004.96272849373" y="5902727.151037769" >
+			</activity>
+		</plan>
+
+	</person>
+
+<!-- ====================================================================== -->
+
+	<person id="18">
+		<attributes>
+			<attribute name="Age" class="java.lang.String" >56</attribute>
+			<attribute name="AgentId" class="java.lang.String" >202021028P2655</attribute>
+			<attribute name="Archetype" class="java.lang.String" >Considered.Evacuator</attribute>
+			<attribute name="Archetypes.Age" class="java.lang.String" >55-64 years</attribute>
+			<attribute name="Archetypes.Household" class="java.lang.String" >Couple without dependents living at home</attribute>
+			<attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.archetype.ConsideredEvacuator</attribute>
+			<attribute name="EZI_ADD" class="java.lang.String" >12 ADAIR STREET MALDON 3463</attribute>
+			<attribute name="EvacLocationPreference" class="java.lang.String" >Elphinstone,262869,5890813</attribute>
+			<attribute name="Gender" class="java.lang.String" >Female</attribute>
+			<attribute name="Geographical.Coordinate" class="java.lang.String" >[144.0708, -36.9903]</attribute>
+			<attribute name="HasDependents" class="java.lang.String" >false</attribute>
+			<attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>
+			<attribute name="HouseholdId" class="java.lang.String" >202021028H1690</attribute>
+			<attribute name="Id" class="java.lang.String" >3251</attribute>
+			<attribute name="ImpactFromFireDangerIndexRating" class="java.lang.String" >0.1</attribute>
+			<attribute name="ImpactFromImmersionInSmoke" class="java.lang.String" >0.4</attribute>
+			<attribute name="ImpactFromMessageAdvice" class="java.lang.String" >0.103</attribute>
+			<attribute name="ImpactFromMessageEmergencyWarning" class="java.lang.String" >0.337</attribute>
+			<attribute name="ImpactFromMessageEvacuateNow" class="java.lang.String" >0.358</attribute>
+			<attribute name="ImpactFromMessageRespondersAttending" class="java.lang.String" >0.2</attribute>
+			<attribute name="ImpactFromMessageWatchAndAct" class="java.lang.String" >0.184</attribute>
+			<attribute name="ImpactFromSocialMessage" class="java.lang.String" >0.5</attribute>
+			<attribute name="ImpactFromVisibleEmbers" class="java.lang.String" >0.5</attribute>
+			<attribute name="ImpactFromVisibleFire" class="java.lang.String" >0.6</attribute>
+			<attribute name="ImpactFromVisibleResponders" class="java.lang.String" >0.4</attribute>
+			<attribute name="ImpactFromVisibleSmoke" class="java.lang.String" >0.3</attribute>
+			<attribute name="InvacLocationPreference" class="java.lang.String" >Castlemaine,252140,5894312</attribute>
+			<attribute name="LagTimeInMinsForFinalResponse" class="java.lang.String" >10.92</attribute>
+			<attribute name="LagTimeInMinsForInitialResponse" class="java.lang.String" >13.78</attribute>
+			<attribute name="PrimaryFamilyType" class="java.lang.String" >COUPLE_ONLY</attribute>
+			<attribute name="ResponseThresholdFinal" class="java.lang.String" >0.57</attribute>
+			<attribute name="ResponseThresholdInitial" class="java.lang.String" >0.57</attribute>
+			<attribute name="SA1_7DIGCODE" class="java.lang.String" >2102818</attribute>
+			<attribute name="SA2_MAINCODE" class="java.lang.String" >202021028</attribute>
+			<attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.String" >false</attribute>
+			<attribute name="WillGoHomeBeforeLeaving" class="java.lang.String" >true</attribute>
+			<attribute name="WillStay" class="java.lang.String" >false</attribute>
+		</attributes>
+		<plan selected="yes">
+			<activity type="home" x="239306.5846262501" y="5902192.156071564" end_time="23:59:59" >
+			</activity>
+			<leg mode="car">
+			</leg>
+			<activity type="home" x="239306.5846262501" y="5902192.156071564" >
+			</activity>
+		</plan>
+
+	</person>
+
+<!-- ====================================================================== -->
+
+	<person id="19">
+		<attributes>
+			<attribute name="Age" class="java.lang.String" >83</attribute>
+			<attribute name="AgentId" class="java.lang.String" >202021028P6332</attribute>
+			<attribute name="Archetype" class="java.lang.String" >Experienced.Independent</attribute>
+			<attribute name="Archetypes.Age" class="java.lang.String" >75 years +</attribute>
+			<attribute name="Archetypes.Household" class="java.lang.String" >Ssingle person without dependents living at home</attribute>
+			<attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.archetype.ExperiencedIndependent</attribute>
+			<attribute name="EZI_ADD" class="java.lang.String" >3 NELSON STREET MALDON 3463</attribute>
+			<attribute name="EvacLocationPreference" class="java.lang.String" >Elphinstone,262869,5890813</attribute>
+			<attribute name="Gender" class="java.lang.String" >Male</attribute>
+			<attribute name="Geographical.Coordinate" class="java.lang.String" >[144.0718, -37.0098]</attribute>
+			<attribute name="HasDependents" class="java.lang.String" >false</attribute>
+			<attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>
+			<attribute name="HouseholdId" class="java.lang.String" >202021028H42</attribute>
+			<attribute name="Id" class="java.lang.String" >5256</attribute>
+			<attribute name="ImpactFromFireDangerIndexRating" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromImmersionInSmoke" class="java.lang.String" >0.2</attribute>
+			<attribute name="ImpactFromMessageAdvice" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromMessageEmergencyWarning" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromMessageEvacuateNow" class="java.lang.String" >0.325</attribute>
+			<attribute name="ImpactFromMessageRespondersAttending" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromMessageWatchAndAct" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromSocialMessage" class="java.lang.String" >0.1</attribute>
+			<attribute name="ImpactFromVisibleEmbers" class="java.lang.String" >0.3</attribute>
+			<attribute name="ImpactFromVisibleFire" class="java.lang.String" >0.4</attribute>
+			<attribute name="ImpactFromVisibleResponders" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromVisibleSmoke" class="java.lang.String" >0</attribute>
+			<attribute name="InvacLocationPreference" class="java.lang.String" >Castlemaine,252140,5894312</attribute>
+			<attribute name="LagTimeInMinsForFinalResponse" class="java.lang.String" >4.67</attribute>
+			<attribute name="LagTimeInMinsForInitialResponse" class="java.lang.String" >17.65</attribute>
+			<attribute name="PrimaryFamilyType" class="java.lang.String" >LONE_PERSON</attribute>
+			<attribute name="ResponseThresholdFinal" class="java.lang.String" >0.73</attribute>
+			<attribute name="ResponseThresholdInitial" class="java.lang.String" >0.47</attribute>
+			<attribute name="SA1_7DIGCODE" class="java.lang.String" >2102821</attribute>
+			<attribute name="SA2_MAINCODE" class="java.lang.String" >202021028</attribute>
+			<attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.String" >false</attribute>
+			<attribute name="WillGoHomeBeforeLeaving" class="java.lang.String" >true</attribute>
+			<attribute name="WillStay" class="java.lang.String" >true</attribute>
+		</attributes>
+		<plan selected="yes">
+			<activity type="home" x="239462.22011417095" y="5900030.912697811" end_time="23:59:59" >
+			</activity>
+			<leg mode="car">
+			</leg>
+			<activity type="home" x="239462.22011417095" y="5900030.912697811" >
+			</activity>
+		</plan>
+
+	</person>
+
+<!-- ====================================================================== -->
+
+	<person id="20">
+		<attributes>
+			<attribute name="Age" class="java.lang.String" >72</attribute>
+			<attribute name="AgentId" class="java.lang.String" >202021028P6352</attribute>
+			<attribute name="Archetype" class="java.lang.String" >Experienced.Independent</attribute>
+			<attribute name="Archetypes.Age" class="java.lang.String" >65-74 years</attribute>
+			<attribute name="Archetypes.Household" class="java.lang.String" >Ssingle person without dependents living at home</attribute>
+			<attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.archetype.ExperiencedIndependent</attribute>
+			<attribute name="EZI_ADD" class="java.lang.String" >18 CHURCH STREET MALDON 3463</attribute>
+			<attribute name="EvacLocationPreference" class="java.lang.String" >Elphinstone,262869,5890813</attribute>
+			<attribute name="Gender" class="java.lang.String" >Male</attribute>
+			<attribute name="Geographical.Coordinate" class="java.lang.String" >[144.0681, -36.9898]</attribute>
+			<attribute name="HasDependents" class="java.lang.String" >false</attribute>
+			<attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>
+			<attribute name="HouseholdId" class="java.lang.String" >202021028H62</attribute>
+			<attribute name="Id" class="java.lang.String" >5271</attribute>
+			<attribute name="ImpactFromFireDangerIndexRating" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromImmersionInSmoke" class="java.lang.String" >0.2</attribute>
+			<attribute name="ImpactFromMessageAdvice" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromMessageEmergencyWarning" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromMessageEvacuateNow" class="java.lang.String" >0.325</attribute>
+			<attribute name="ImpactFromMessageRespondersAttending" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromMessageWatchAndAct" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromSocialMessage" class="java.lang.String" >0.1</attribute>
+			<attribute name="ImpactFromVisibleEmbers" class="java.lang.String" >0.3</attribute>
+			<attribute name="ImpactFromVisibleFire" class="java.lang.String" >0.4</attribute>
+			<attribute name="ImpactFromVisibleResponders" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromVisibleSmoke" class="java.lang.String" >0</attribute>
+			<attribute name="InvacLocationPreference" class="java.lang.String" >Castlemaine,252140,5894312</attribute>
+			<attribute name="LagTimeInMinsForFinalResponse" class="java.lang.String" >4.2</attribute>
+			<attribute name="LagTimeInMinsForInitialResponse" class="java.lang.String" >20.54</attribute>
+			<attribute name="PrimaryFamilyType" class="java.lang.String" >LONE_PERSON</attribute>
+			<attribute name="ResponseThresholdFinal" class="java.lang.String" >0.87</attribute>
+			<attribute name="ResponseThresholdInitial" class="java.lang.String" >0.29</attribute>
+			<attribute name="SA1_7DIGCODE" class="java.lang.String" >2102818</attribute>
+			<attribute name="SA2_MAINCODE" class="java.lang.String" >202021028</attribute>
+			<attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.String" >true</attribute>
+			<attribute name="WillGoHomeBeforeLeaving" class="java.lang.String" >true</attribute>
+			<attribute name="WillStay" class="java.lang.String" >true</attribute>
+		</attributes>
+		<plan selected="yes">
+			<activity type="home" x="239064.52141750496" y="5902240.239531733" end_time="23:59:59" >
+			</activity>
+			<leg mode="car">
+			</leg>
+			<activity type="home" x="239064.52141750496" y="5902240.239531733" >
+			</activity>
+		</plan>
+
+	</person>
+
+<!-- ====================================================================== -->
+
+	<person id="21">
+		<attributes>
+			<attribute name="Age" class="java.lang.String" >76</attribute>
+			<attribute name="AgentId" class="java.lang.String" >202021028P6353</attribute>
+			<attribute name="Archetype" class="java.lang.String" >Experienced.Independent</attribute>
+			<attribute name="Archetypes.Age" class="java.lang.String" >75 years +</attribute>
+			<attribute name="Archetypes.Household" class="java.lang.String" >Ssingle person without dependents living at home</attribute>
+			<attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.archetype.ExperiencedIndependent</attribute>
+			<attribute name="EZI_ADD" class="java.lang.String" >147 HIGH STREET MALDON 3463</attribute>
+			<attribute name="EvacLocationPreference" class="java.lang.String" >Elphinstone,262869,5890813</attribute>
+			<attribute name="Gender" class="java.lang.String" >Male</attribute>
+			<attribute name="Geographical.Coordinate" class="java.lang.String" >[144.0644, -36.9896]</attribute>
+			<attribute name="HasDependents" class="java.lang.String" >false</attribute>
+			<attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>
+			<attribute name="HouseholdId" class="java.lang.String" >202021028H63</attribute>
+			<attribute name="Id" class="java.lang.String" >5272</attribute>
+			<attribute name="ImpactFromFireDangerIndexRating" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromImmersionInSmoke" class="java.lang.String" >0.2</attribute>
+			<attribute name="ImpactFromMessageAdvice" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromMessageEmergencyWarning" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromMessageEvacuateNow" class="java.lang.String" >0.325</attribute>
+			<attribute name="ImpactFromMessageRespondersAttending" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromMessageWatchAndAct" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromSocialMessage" class="java.lang.String" >0.1</attribute>
+			<attribute name="ImpactFromVisibleEmbers" class="java.lang.String" >0.3</attribute>
+			<attribute name="ImpactFromVisibleFire" class="java.lang.String" >0.4</attribute>
+			<attribute name="ImpactFromVisibleResponders" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromVisibleSmoke" class="java.lang.String" >0</attribute>
+			<attribute name="InvacLocationPreference" class="java.lang.String" >Castlemaine,252140,5894312</attribute>
+			<attribute name="LagTimeInMinsForFinalResponse" class="java.lang.String" >5.58</attribute>
+			<attribute name="LagTimeInMinsForInitialResponse" class="java.lang.String" >16.64</attribute>
+			<attribute name="PrimaryFamilyType" class="java.lang.String" >LONE_PERSON</attribute>
+			<attribute name="ResponseThresholdFinal" class="java.lang.String" >0.86</attribute>
+			<attribute name="ResponseThresholdInitial" class="java.lang.String" >0.43</attribute>
+			<attribute name="SA1_7DIGCODE" class="java.lang.String" >2102818</attribute>
+			<attribute name="SA2_MAINCODE" class="java.lang.String" >202021028</attribute>
+			<attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.String" >true</attribute>
+			<attribute name="WillGoHomeBeforeLeaving" class="java.lang.String" >true</attribute>
+			<attribute name="WillStay" class="java.lang.String" >true</attribute>
+		</attributes>
+		<plan selected="yes">
+			<activity type="home" x="238734.46108366273" y="5902252.277956698" end_time="23:59:59" >
+			</activity>
+			<leg mode="car">
+			</leg>
+			<activity type="home" x="238734.46108366273" y="5902252.277956698" >
+			</activity>
+		</plan>
+
+	</person>
+
+<!-- ====================================================================== -->
+
+	<person id="22">
+		<attributes>
+			<attribute name="Age" class="java.lang.String" >79</attribute>
+			<attribute name="AgentId" class="java.lang.String" >202021028P6354</attribute>
+			<attribute name="Archetype" class="java.lang.String" >Experienced.Independent</attribute>
+			<attribute name="Archetypes.Age" class="java.lang.String" >75 years +</attribute>
+			<attribute name="Archetypes.Household" class="java.lang.String" >Ssingle person without dependents living at home</attribute>
+			<attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.archetype.ExperiencedIndependent</attribute>
+			<attribute name="EZI_ADD" class="java.lang.String" >14A LOWTHER STREET MALDON 3463</attribute>
+			<attribute name="EvacLocationPreference" class="java.lang.String" >Elphinstone,262869,5890813</attribute>
+			<attribute name="Gender" class="java.lang.String" >Male</attribute>
+			<attribute name="Geographical.Coordinate" class="java.lang.String" >[144.0684, -36.9862]</attribute>
+			<attribute name="HasDependents" class="java.lang.String" >false</attribute>
+			<attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>
+			<attribute name="HouseholdId" class="java.lang.String" >202021028H64</attribute>
+			<attribute name="Id" class="java.lang.String" >5273</attribute>
+			<attribute name="ImpactFromFireDangerIndexRating" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromImmersionInSmoke" class="java.lang.String" >0.2</attribute>
+			<attribute name="ImpactFromMessageAdvice" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromMessageEmergencyWarning" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromMessageEvacuateNow" class="java.lang.String" >0.325</attribute>
+			<attribute name="ImpactFromMessageRespondersAttending" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromMessageWatchAndAct" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromSocialMessage" class="java.lang.String" >0.1</attribute>
+			<attribute name="ImpactFromVisibleEmbers" class="java.lang.String" >0.3</attribute>
+			<attribute name="ImpactFromVisibleFire" class="java.lang.String" >0.4</attribute>
+			<attribute name="ImpactFromVisibleResponders" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromVisibleSmoke" class="java.lang.String" >0</attribute>
+			<attribute name="InvacLocationPreference" class="java.lang.String" >Castlemaine,252140,5894312</attribute>
+			<attribute name="LagTimeInMinsForFinalResponse" class="java.lang.String" >4.33</attribute>
+			<attribute name="LagTimeInMinsForInitialResponse" class="java.lang.String" >17.81</attribute>
+			<attribute name="PrimaryFamilyType" class="java.lang.String" >LONE_PERSON</attribute>
+			<attribute name="ResponseThresholdFinal" class="java.lang.String" >0.85</attribute>
+			<attribute name="ResponseThresholdInitial" class="java.lang.String" >0.23</attribute>
+			<attribute name="SA1_7DIGCODE" class="java.lang.String" >2102817</attribute>
+			<attribute name="SA2_MAINCODE" class="java.lang.String" >202021028</attribute>
+			<attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.String" >true</attribute>
+			<attribute name="WillGoHomeBeforeLeaving" class="java.lang.String" >false</attribute>
+			<attribute name="WillStay" class="java.lang.String" >true</attribute>
+		</attributes>
+		<plan selected="yes">
+			<activity type="home" x="239078.91837180106" y="5902640.566851355" end_time="23:59:59" >
+			</activity>
+			<leg mode="car">
+			</leg>
+			<activity type="home" x="239078.91837180106" y="5902640.566851355" >
+			</activity>
+		</plan>
+
+	</person>
+
+<!-- ====================================================================== -->
+
+	<person id="23">
+		<attributes>
+			<attribute name="Age" class="java.lang.String" >75</attribute>
+			<attribute name="AgentId" class="java.lang.String" >202021028P6406</attribute>
+			<attribute name="Archetype" class="java.lang.String" >Experienced.Independent</attribute>
+			<attribute name="Archetypes.Age" class="java.lang.String" >75 years +</attribute>
+			<attribute name="Archetypes.Household" class="java.lang.String" >Ssingle person without dependents living at home</attribute>
+			<attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.archetype.ExperiencedIndependent</attribute>
+			<attribute name="EZI_ADD" class="java.lang.String" >6A HIGH STREET MALDON 3463</attribute>
+			<attribute name="EvacLocationPreference" class="java.lang.String" >Elphinstone,262869,5890813</attribute>
+			<attribute name="Gender" class="java.lang.String" >Male</attribute>
+			<attribute name="Geographical.Coordinate" class="java.lang.String" >[144.0687, -36.9994]</attribute>
+			<attribute name="HasDependents" class="java.lang.String" >false</attribute>
+			<attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>
+			<attribute name="HouseholdId" class="java.lang.String" >202021028H116</attribute>
+			<attribute name="Id" class="java.lang.String" >5311</attribute>
+			<attribute name="ImpactFromFireDangerIndexRating" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromImmersionInSmoke" class="java.lang.String" >0.2</attribute>
+			<attribute name="ImpactFromMessageAdvice" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromMessageEmergencyWarning" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromMessageEvacuateNow" class="java.lang.String" >0.325</attribute>
+			<attribute name="ImpactFromMessageRespondersAttending" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromMessageWatchAndAct" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromSocialMessage" class="java.lang.String" >0.1</attribute>
+			<attribute name="ImpactFromVisibleEmbers" class="java.lang.String" >0.3</attribute>
+			<attribute name="ImpactFromVisibleFire" class="java.lang.String" >0.4</attribute>
+			<attribute name="ImpactFromVisibleResponders" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromVisibleSmoke" class="java.lang.String" >0</attribute>
+			<attribute name="InvacLocationPreference" class="java.lang.String" >Castlemaine,252140,5894312</attribute>
+			<attribute name="LagTimeInMinsForFinalResponse" class="java.lang.String" >4.09</attribute>
+			<attribute name="LagTimeInMinsForInitialResponse" class="java.lang.String" >13.55</attribute>
+			<attribute name="PrimaryFamilyType" class="java.lang.String" >LONE_PERSON</attribute>
+			<attribute name="ResponseThresholdFinal" class="java.lang.String" >0.8</attribute>
+			<attribute name="ResponseThresholdInitial" class="java.lang.String" >0.42</attribute>
+			<attribute name="SA1_7DIGCODE" class="java.lang.String" >2102810</attribute>
+			<attribute name="SA2_MAINCODE" class="java.lang.String" >202021028</attribute>
+			<attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.String" >true</attribute>
+			<attribute name="WillGoHomeBeforeLeaving" class="java.lang.String" >true</attribute>
+			<attribute name="WillStay" class="java.lang.String" >true</attribute>
+		</attributes>
+		<plan selected="yes">
+			<activity type="home" x="239150.7597328702" y="5901176.5394250415" end_time="23:59:59" >
+			</activity>
+			<leg mode="car">
+			</leg>
+			<activity type="home" x="239150.7597328702" y="5901176.5394250415" >
+			</activity>
+		</plan>
+
+	</person>
+
+<!-- ====================================================================== -->
+
+	<person id="24">
+		<attributes>
+			<attribute name="Age" class="java.lang.String" >73</attribute>
+			<attribute name="AgentId" class="java.lang.String" >202021028P6407</attribute>
+			<attribute name="Archetype" class="java.lang.String" >Experienced.Independent</attribute>
+			<attribute name="Archetypes.Age" class="java.lang.String" >65-74 years</attribute>
+			<attribute name="Archetypes.Household" class="java.lang.String" >Ssingle person without dependents living at home</attribute>
+			<attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.archetype.ExperiencedIndependent</attribute>
+			<attribute name="EZI_ADD" class="java.lang.String" >LAWRENCE STREET MALDON 3463</attribute>
+			<attribute name="EvacLocationPreference" class="java.lang.String" >Elphinstone,262869,5890813</attribute>
+			<attribute name="Gender" class="java.lang.String" >Male</attribute>
+			<attribute name="Geographical.Coordinate" class="java.lang.String" >[144.0631, -36.9945]</attribute>
+			<attribute name="HasDependents" class="java.lang.String" >false</attribute>
+			<attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>
+			<attribute name="HouseholdId" class="java.lang.String" >202021028H117</attribute>
+			<attribute name="Id" class="java.lang.String" >5312</attribute>
+			<attribute name="ImpactFromFireDangerIndexRating" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromImmersionInSmoke" class="java.lang.String" >0.2</attribute>
+			<attribute name="ImpactFromMessageAdvice" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromMessageEmergencyWarning" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromMessageEvacuateNow" class="java.lang.String" >0.325</attribute>
+			<attribute name="ImpactFromMessageRespondersAttending" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromMessageWatchAndAct" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromSocialMessage" class="java.lang.String" >0.1</attribute>
+			<attribute name="ImpactFromVisibleEmbers" class="java.lang.String" >0.3</attribute>
+			<attribute name="ImpactFromVisibleFire" class="java.lang.String" >0.4</attribute>
+			<attribute name="ImpactFromVisibleResponders" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromVisibleSmoke" class="java.lang.String" >0</attribute>
+			<attribute name="InvacLocationPreference" class="java.lang.String" >Castlemaine,252140,5894312</attribute>
+			<attribute name="LagTimeInMinsForFinalResponse" class="java.lang.String" >5.1</attribute>
+			<attribute name="LagTimeInMinsForInitialResponse" class="java.lang.String" >13.75</attribute>
+			<attribute name="PrimaryFamilyType" class="java.lang.String" >LONE_PERSON</attribute>
+			<attribute name="ResponseThresholdFinal" class="java.lang.String" >1.01</attribute>
+			<attribute name="ResponseThresholdInitial" class="java.lang.String" >0.5</attribute>
+			<attribute name="SA1_7DIGCODE" class="java.lang.String" >2102810</attribute>
+			<attribute name="SA2_MAINCODE" class="java.lang.String" >202021028</attribute>
+			<attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.String" >true</attribute>
+			<attribute name="WillGoHomeBeforeLeaving" class="java.lang.String" >true</attribute>
+			<attribute name="WillStay" class="java.lang.String" >true</attribute>
+		</attributes>
+		<plan selected="yes">
+			<activity type="home" x="238635.52024878492" y="5901704.935622156" end_time="23:59:59" >
+			</activity>
+			<leg mode="car">
+			</leg>
+			<activity type="home" x="238635.52024878492" y="5901704.935622156" >
+			</activity>
+		</plan>
+
+	</person>
+
+<!-- ====================================================================== -->
+
+	<person id="25">
+		<attributes>
+			<attribute name="Age" class="java.lang.String" >67</attribute>
+			<attribute name="AgentId" class="java.lang.String" >202021028P2728</attribute>
+			<attribute name="Archetype" class="java.lang.String" >Experienced.Independent</attribute>
+			<attribute name="Archetypes.Age" class="java.lang.String" >65-74 years</attribute>
+			<attribute name="Archetypes.Household" class="java.lang.String" >Couple without dependents living at home</attribute>
+			<attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.archetype.ExperiencedIndependent</attribute>
+			<attribute name="EZI_ADD" class="java.lang.String" >836 MALDON-NEWSTEAD ROAD MALDON 3463</attribute>
+			<attribute name="EvacLocationPreference" class="java.lang.String" >Elphinstone,262869,5890813</attribute>
+			<attribute name="Gender" class="java.lang.String" >Female</attribute>
+			<attribute name="Geographical.Coordinate" class="java.lang.String" >[144.0552, -37.0397]</attribute>
+			<attribute name="HasDependents" class="java.lang.String" >false</attribute>
+			<attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>
+			<attribute name="HouseholdId" class="java.lang.String" >202021028H1534</attribute>
+			<attribute name="Id" class="java.lang.String" >5852</attribute>
+			<attribute name="ImpactFromFireDangerIndexRating" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromImmersionInSmoke" class="java.lang.String" >0.2</attribute>
+			<attribute name="ImpactFromMessageAdvice" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromMessageEmergencyWarning" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromMessageEvacuateNow" class="java.lang.String" >0.325</attribute>
+			<attribute name="ImpactFromMessageRespondersAttending" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromMessageWatchAndAct" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromSocialMessage" class="java.lang.String" >0.1</attribute>
+			<attribute name="ImpactFromVisibleEmbers" class="java.lang.String" >0.3</attribute>
+			<attribute name="ImpactFromVisibleFire" class="java.lang.String" >0.4</attribute>
+			<attribute name="ImpactFromVisibleResponders" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromVisibleSmoke" class="java.lang.String" >0</attribute>
+			<attribute name="InvacLocationPreference" class="java.lang.String" >Castlemaine,252140,5894312</attribute>
+			<attribute name="LagTimeInMinsForFinalResponse" class="java.lang.String" >5.22</attribute>
+			<attribute name="LagTimeInMinsForInitialResponse" class="java.lang.String" >12.11</attribute>
+			<attribute name="PrimaryFamilyType" class="java.lang.String" >COUPLE_ONLY</attribute>
+			<attribute name="ResponseThresholdFinal" class="java.lang.String" >0.85</attribute>
+			<attribute name="ResponseThresholdInitial" class="java.lang.String" >0.46</attribute>
+			<attribute name="SA1_7DIGCODE" class="java.lang.String" >2102820</attribute>
+			<attribute name="SA2_MAINCODE" class="java.lang.String" >202021028</attribute>
+			<attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.String" >true</attribute>
+			<attribute name="WillGoHomeBeforeLeaving" class="java.lang.String" >true</attribute>
+			<attribute name="WillStay" class="java.lang.String" >true</attribute>
+		</attributes>
+		<plan selected="yes">
+			<activity type="home" x="238087.65229824162" y="5896667.162639866" end_time="23:59:59" >
+			</activity>
+			<leg mode="car">
+			</leg>
+			<activity type="home" x="238087.65229824162" y="5896667.162639866" >
+			</activity>
+		</plan>
+
+	</person>
+
+<!-- ====================================================================== -->
+
+	<person id="26">
+		<attributes>
+			<attribute name="Age" class="java.lang.String" >81</attribute>
+			<attribute name="AgentId" class="java.lang.String" >202021028P6889</attribute>
+			<attribute name="Archetype" class="java.lang.String" >Responsibility.Denier</attribute>
+			<attribute name="Archetypes.Age" class="java.lang.String" >75 years +</attribute>
+			<attribute name="Archetypes.Household" class="java.lang.String" >Ssingle person without dependents living at home</attribute>
+			<attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.archetype.ResponsibilityDenier</attribute>
+			<attribute name="EZI_ADD" class="java.lang.String" >GRAY STREET MALDON 3463</attribute>
+			<attribute name="EvacLocationPreference" class="java.lang.String" >Elphinstone,262869,5890813</attribute>
+			<attribute name="Gender" class="java.lang.String" >Female</attribute>
+			<attribute name="Geographical.Coordinate" class="java.lang.String" >[144.0681, -37.0052]</attribute>
+			<attribute name="HasDependents" class="java.lang.String" >false</attribute>
+			<attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>
+			<attribute name="HouseholdId" class="java.lang.String" >202021028H599</attribute>
+			<attribute name="Id" class="java.lang.String" >7154</attribute>
+			<attribute name="ImpactFromFireDangerIndexRating" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromImmersionInSmoke" class="java.lang.String" >0.1</attribute>
+			<attribute name="ImpactFromMessageAdvice" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromMessageEmergencyWarning" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromMessageEvacuateNow" class="java.lang.String" >0.327</attribute>
+			<attribute name="ImpactFromMessageRespondersAttending" class="java.lang.String" >-0.2</attribute>
+			<attribute name="ImpactFromMessageWatchAndAct" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromSocialMessage" class="java.lang.String" >0.1</attribute>
+			<attribute name="ImpactFromVisibleEmbers" class="java.lang.String" >0.2</attribute>
+			<attribute name="ImpactFromVisibleFire" class="java.lang.String" >0.3</attribute>
+			<attribute name="ImpactFromVisibleResponders" class="java.lang.String" >-0.3</attribute>
+			<attribute name="ImpactFromVisibleSmoke" class="java.lang.String" >0</attribute>
+			<attribute name="InvacLocationPreference" class="java.lang.String" >Castlemaine,252140,5894312</attribute>
+			<attribute name="LagTimeInMinsForFinalResponse" class="java.lang.String" >11.99</attribute>
+			<attribute name="LagTimeInMinsForInitialResponse" class="java.lang.String" >21.22</attribute>
+			<attribute name="PrimaryFamilyType" class="java.lang.String" >LONE_PERSON</attribute>
+			<attribute name="ResponseThresholdFinal" class="java.lang.String" >0.32</attribute>
+			<attribute name="ResponseThresholdInitial" class="java.lang.String" >0.27</attribute>
+			<attribute name="SA1_7DIGCODE" class="java.lang.String" >2102821</attribute>
+			<attribute name="SA2_MAINCODE" class="java.lang.String" >202021028</attribute>
+			<attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.String" >true</attribute>
+			<attribute name="WillGoHomeBeforeLeaving" class="java.lang.String" >false</attribute>
+			<attribute name="WillStay" class="java.lang.String" >false</attribute>
+		</attributes>
+		<plan selected="yes">
+			<activity type="home" x="239117.1943088557" y="5900531.246337932" end_time="23:59:59" >
+			</activity>
+			<leg mode="car">
+			</leg>
+			<activity type="home" x="239117.1943088557" y="5900531.246337932" >
+			</activity>
+		</plan>
+
+	</person>
+
+<!-- ====================================================================== -->
+
+	<person id="27">
+		<attributes>
+			<attribute name="Age" class="java.lang.String" >62</attribute>
+			<attribute name="AgentId" class="java.lang.String" >202021028P7003</attribute>
+			<attribute name="Archetype" class="java.lang.String" >Responsibility.Denier</attribute>
+			<attribute name="Archetypes.Age" class="java.lang.String" >55-64 years</attribute>
+			<attribute name="Archetypes.Household" class="java.lang.String" >Ssingle person without dependents living at home</attribute>
+			<attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.archetype.ResponsibilityDenier</attribute>
+			<attribute name="EZI_ADD" class="java.lang.String" >3 FOUNTAIN STREET MALDON 3463</attribute>
+			<attribute name="EvacLocationPreference" class="java.lang.String" >Elphinstone,262869,5890813</attribute>
+			<attribute name="Gender" class="java.lang.String" >Female</attribute>
+			<attribute name="Geographical.Coordinate" class="java.lang.String" >[144.0666, -36.9971]</attribute>
+			<attribute name="HasDependents" class="java.lang.String" >false</attribute>
+			<attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>
+			<attribute name="HouseholdId" class="java.lang.String" >202021028H713</attribute>
+			<attribute name="Id" class="java.lang.String" >7174</attribute>
+			<attribute name="ImpactFromFireDangerIndexRating" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromImmersionInSmoke" class="java.lang.String" >0.1</attribute>
+			<attribute name="ImpactFromMessageAdvice" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromMessageEmergencyWarning" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromMessageEvacuateNow" class="java.lang.String" >0.327</attribute>
+			<attribute name="ImpactFromMessageRespondersAttending" class="java.lang.String" >-0.2</attribute>
+			<attribute name="ImpactFromMessageWatchAndAct" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromSocialMessage" class="java.lang.String" >0.1</attribute>
+			<attribute name="ImpactFromVisibleEmbers" class="java.lang.String" >0.2</attribute>
+			<attribute name="ImpactFromVisibleFire" class="java.lang.String" >0.3</attribute>
+			<attribute name="ImpactFromVisibleResponders" class="java.lang.String" >-0.3</attribute>
+			<attribute name="ImpactFromVisibleSmoke" class="java.lang.String" >0</attribute>
+			<attribute name="InvacLocationPreference" class="java.lang.String" >Castlemaine,252140,5894312</attribute>
+			<attribute name="LagTimeInMinsForFinalResponse" class="java.lang.String" >10.59</attribute>
+			<attribute name="LagTimeInMinsForInitialResponse" class="java.lang.String" >15.72</attribute>
+			<attribute name="PrimaryFamilyType" class="java.lang.String" >LONE_PERSON</attribute>
+			<attribute name="ResponseThresholdFinal" class="java.lang.String" >0.34</attribute>
+			<attribute name="ResponseThresholdInitial" class="java.lang.String" >0.33</attribute>
+			<attribute name="SA1_7DIGCODE" class="java.lang.String" >2102810</attribute>
+			<attribute name="SA2_MAINCODE" class="java.lang.String" >202021028</attribute>
+			<attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.String" >false</attribute>
+			<attribute name="WillGoHomeBeforeLeaving" class="java.lang.String" >false</attribute>
+			<attribute name="WillStay" class="java.lang.String" >false</attribute>
+		</attributes>
+		<plan selected="yes">
+			<activity type="home" x="238955.96960244243" y="5901426.016608815" end_time="23:59:59" >
+			</activity>
+			<leg mode="car">
+			</leg>
+			<activity type="home" x="238955.96960244243" y="5901426.016608815" >
+			</activity>
+		</plan>
+
+	</person>
+
+<!-- ====================================================================== -->
+
+	<person id="28">
+		<attributes>
+			<attribute name="Age" class="java.lang.String" >59</attribute>
+			<attribute name="AgentId" class="java.lang.String" >202021028P7151</attribute>
+			<attribute name="Archetype" class="java.lang.String" >Responsibility.Denier</attribute>
+			<attribute name="Archetypes.Age" class="java.lang.String" >55-64 years</attribute>
+			<attribute name="Archetypes.Household" class="java.lang.String" >Ssingle person without dependents living at home</attribute>
+			<attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.archetype.ResponsibilityDenier</attribute>
+			<attribute name="EZI_ADD" class="java.lang.String" >122 BRIDGEWATER-MALDON ROAD MALDON 3463</attribute>
+			<attribute name="EvacLocationPreference" class="java.lang.String" >Elphinstone,262869,5890813</attribute>
+			<attribute name="Gender" class="java.lang.String" >Female</attribute>
+			<attribute name="Geographical.Coordinate" class="java.lang.String" >[144.0505, -36.9797]</attribute>
+			<attribute name="HasDependents" class="java.lang.String" >false</attribute>
+			<attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>
+			<attribute name="HouseholdId" class="java.lang.String" >202021028H861</attribute>
+			<attribute name="Id" class="java.lang.String" >7228</attribute>
+			<attribute name="ImpactFromFireDangerIndexRating" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromImmersionInSmoke" class="java.lang.String" >0.1</attribute>
+			<attribute name="ImpactFromMessageAdvice" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromMessageEmergencyWarning" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromMessageEvacuateNow" class="java.lang.String" >0.327</attribute>
+			<attribute name="ImpactFromMessageRespondersAttending" class="java.lang.String" >-0.2</attribute>
+			<attribute name="ImpactFromMessageWatchAndAct" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromSocialMessage" class="java.lang.String" >0.1</attribute>
+			<attribute name="ImpactFromVisibleEmbers" class="java.lang.String" >0.2</attribute>
+			<attribute name="ImpactFromVisibleFire" class="java.lang.String" >0.3</attribute>
+			<attribute name="ImpactFromVisibleResponders" class="java.lang.String" >-0.3</attribute>
+			<attribute name="ImpactFromVisibleSmoke" class="java.lang.String" >0</attribute>
+			<attribute name="InvacLocationPreference" class="java.lang.String" >Castlemaine,252140,5894312</attribute>
+			<attribute name="LagTimeInMinsForFinalResponse" class="java.lang.String" >10.08</attribute>
+			<attribute name="LagTimeInMinsForInitialResponse" class="java.lang.String" >11.17</attribute>
+			<attribute name="PrimaryFamilyType" class="java.lang.String" >LONE_PERSON</attribute>
+			<attribute name="ResponseThresholdFinal" class="java.lang.String" >0.47</attribute>
+			<attribute name="ResponseThresholdInitial" class="java.lang.String" >0.33</attribute>
+			<attribute name="SA1_7DIGCODE" class="java.lang.String" >2102817</attribute>
+			<attribute name="SA2_MAINCODE" class="java.lang.String" >202021028</attribute>
+			<attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.String" >false</attribute>
+			<attribute name="WillGoHomeBeforeLeaving" class="java.lang.String" >false</attribute>
+			<attribute name="WillStay" class="java.lang.String" >false</attribute>
+		</attributes>
+		<plan selected="yes">
+			<activity type="home" x="237463.01665354095" y="5903312.650120037" end_time="23:59:59" >
+			</activity>
+			<leg mode="car">
+			</leg>
+			<activity type="home" x="237463.01665354095" y="5903312.650120037" >
+			</activity>
+		</plan>
+
+	</person>
+
+<!-- ====================================================================== -->
+
+	<person id="29">
+		<attributes>
+			<attribute name="Age" class="java.lang.String" >39</attribute>
+			<attribute name="AgentId" class="java.lang.String" >202021028P3762</attribute>
+			<attribute name="Archetype" class="java.lang.String" >Responsibility.Denier</attribute>
+			<attribute name="Archetypes.Age" class="java.lang.String" >35-44 years</attribute>
+			<attribute name="Archetypes.Household" class="java.lang.String" >Couple without dependents living at home</attribute>
+			<attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.archetype.ResponsibilityDenier</attribute>
+			<attribute name="EZI_ADD" class="java.lang.String" >17 CHURCH STREET MALDON 3463</attribute>
+			<attribute name="EvacLocationPreference" class="java.lang.String" >Elphinstone,262869,5890813</attribute>
+			<attribute name="Gender" class="java.lang.String" >Female</attribute>
+			<attribute name="Geographical.Coordinate" class="java.lang.String" >[144.0685, -36.9923]</attribute>
+			<attribute name="HasDependents" class="java.lang.String" >false</attribute>
+			<attribute name="HasDependentsAtLocation" class="java.lang.String" ></attribute>
+			<attribute name="HouseholdId" class="java.lang.String" >202021028H1123</attribute>
+			<attribute name="Id" class="java.lang.String" >7264</attribute>
+			<attribute name="ImpactFromFireDangerIndexRating" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromImmersionInSmoke" class="java.lang.String" >0.1</attribute>
+			<attribute name="ImpactFromMessageAdvice" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromMessageEmergencyWarning" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromMessageEvacuateNow" class="java.lang.String" >0.327</attribute>
+			<attribute name="ImpactFromMessageRespondersAttending" class="java.lang.String" >-0.2</attribute>
+			<attribute name="ImpactFromMessageWatchAndAct" class="java.lang.String" >0</attribute>
+			<attribute name="ImpactFromSocialMessage" class="java.lang.String" >0.1</attribute>
+			<attribute name="ImpactFromVisibleEmbers" class="java.lang.String" >0.2</attribute>
+			<attribute name="ImpactFromVisibleFire" class="java.lang.String" >0.3</attribute>
+			<attribute name="ImpactFromVisibleResponders" class="java.lang.String" >-0.3</attribute>
+			<attribute name="ImpactFromVisibleSmoke" class="java.lang.String" >0</attribute>
+			<attribute name="InvacLocationPreference" class="java.lang.String" >Castlemaine,252140,5894312</attribute>
+			<attribute name="LagTimeInMinsForFinalResponse" class="java.lang.String" >13.26</attribute>
+			<attribute name="LagTimeInMinsForInitialResponse" class="java.lang.String" >15.41</attribute>
+			<attribute name="PrimaryFamilyType" class="java.lang.String" >COUPLE_ONLY</attribute>
+			<attribute name="ResponseThresholdFinal" class="java.lang.String" >0.54</attribute>
+			<attribute name="ResponseThresholdInitial" class="java.lang.String" >0.42</attribute>
+			<attribute name="SA1_7DIGCODE" class="java.lang.String" >2102810</attribute>
+			<attribute name="SA2_MAINCODE" class="java.lang.String" >202021028</attribute>
+			<attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.String" >true</attribute>
+			<attribute name="WillGoHomeBeforeLeaving" class="java.lang.String" >false</attribute>
+			<attribute name="WillStay" class="java.lang.String" >false</attribute>
+		</attributes>
+		<plan selected="yes">
+			<activity type="home" x="239108.6779050494" y="5901963.903030623" end_time="23:59:59" >
+			</activity>
+			<leg mode="car">
+			</leg>
+			<activity type="home" x="239108.6779050494" y="5901963.903030623" >
+			</activity>
+		</plan>
+
+	</person>
+
+<!-- ====================================================================== -->
+
+</population>

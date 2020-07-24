@@ -43,6 +43,7 @@ import org.slf4j.LoggerFactory;
 import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 
 import static io.github.agentsoz.ees.Constants.EmergencyMessage.*;
@@ -158,6 +159,7 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
     private PrintStream writer = null;
     private double time = -1;
     private ArchetypeAgent.Prefix prefix = new ArchetypeAgent.Prefix();
+    private Random rand = new Random(0);
 
     //===============================================================================
     //endregion
@@ -228,7 +230,7 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
         params[3] = routingMode;
         params[4] = activity.toString();
         params[5] = (replanningActivityDurationInMins>0); // add replan activity to mark location/time of replanning
-        params[6] = Global.getRandom().nextInt(replanningActivityDurationInMins*60);
+        params[6] = rand.nextInt(replanningActivityDurationInMins*60);
         EnvironmentAction action = new EnvironmentAction(
                 Integer.toString(getId()),
                 Constants.DRIVETO, params);
