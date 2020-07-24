@@ -34,10 +34,10 @@ import org.slf4j.LoggerFactory;
  * @author dsingh
  *
  */
-public class BlockageCampbellsCreek01Test {
+public class Maldon600Test {
 	// have tests in separate classes so that they run, at least under maven, in separate JVMs.  kai, nov'17
-
-	private static final Logger log = LoggerFactory.getLogger(BlockageCampbellsCreek01Test.class) ;
+	
+	private static final Logger log = LoggerFactory.getLogger(Maldon600Test.class) ;
 
 	@Rule public MatsimTestUtils utils = new MatsimTestUtils() ;
 
@@ -46,7 +46,7 @@ public class BlockageCampbellsCreek01Test {
 
 		utils.getOutputDirectory(); // creates a clean one so need to call this first
 		String[] args = {
-				"--config", "scenarios/mount-alexander-shire/campbells-creek-1/ees.xml",
+				"--config", "scenarios/mount-alexander-shire/maldon-600/ees.xml",
 		};
 		Run.main(args);
 

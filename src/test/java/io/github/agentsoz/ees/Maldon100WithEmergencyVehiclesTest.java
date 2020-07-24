@@ -44,7 +44,7 @@ public class Maldon100WithEmergencyVehiclesTest {
 	@Rule public MatsimTestUtils utils = new MatsimTestUtils() ;
 
 	@Test
-	public void testMaldon10WithEmergencyVehiclesV2() {
+	public void test() {
 
 		utils.getOutputDirectory(); // creates a clean one so need to call this first
 		String[] args = {

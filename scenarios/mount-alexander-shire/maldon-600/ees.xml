@@ -37,7 +37,7 @@
     <!-- simulation start time in HH:MM format -->
     <opt id="startHHMM">12:00</opt>
     <!-- Output file for trips written in DeckGL format -->
-    <opt id="deckGlOutFile">test/output/io/github/agentsoz/ees/MainMaldon600Test/test/trips.deckgl.json</opt>
+    <opt id="deckGlOutFile">test/output/io/github/agentsoz/ees/Maldon600Test/test/trips.deckgl.json</opt>
   </global>
 
   <!-- model specific configuration -->
@@ -48,14 +48,14 @@
       <opt id="jPlanSelectionPolicy">FIRST</opt>
       <opt id="jAgents"></opt>
       <opt id="jLogLevel">WARN</opt>
-      <opt id="jLogFile">test/output/io/github/agentsoz/ees/MainMaldon600Test/test/jill.log</opt>
-      <opt id="jOutFile">test/output/io/github/agentsoz/ees/MainMaldon600Test/test/jill.out</opt>
+      <opt id="jLogFile">test/output/io/github/agentsoz/ees/Maldon600Test/test/jill.log</opt>
+      <opt id="jOutFile">test/output/io/github/agentsoz/ees/Maldon600Test/test/jill.out</opt>
       <!--<opt id="jNumThreads">1</opt>-->
     </model>
 
     <model id="matsim">
       <!-- MATSim output directory relative to examples/bushfire directory (will overrule the setting in MATSim config) -->
-      <opt id="outputDir">test/output/io/github/agentsoz/ees/MainMaldon600Test/test/matsim</opt>
+      <opt id="outputDir">test/output/io/github/agentsoz/ees/Maldon600Test/test/matsim</opt>
       <!-- MATSim XML config XML file relative to examples/bushfire directory -->
       <opt id="configXml">scenarios/mount-alexander-shire/maldon-600/matsim_config.xml</opt>
       <!-- Maximum distance at which the fire can be seen (in metres)-->

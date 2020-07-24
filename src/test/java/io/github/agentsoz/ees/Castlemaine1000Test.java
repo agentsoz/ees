@@ -44,7 +44,7 @@ public class Castlemaine1000Test {
 	@Rule public MatsimTestUtils utils = new MatsimTestUtils() ;
 
 	@Test
-	public void testCastlemaine1000ReducedV2() {
+	public void test() {
 
 		utils.getOutputDirectory(); // creates a clean one so need to call this first
 		String[] args = {
