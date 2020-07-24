@@ -12,5 +12,5 @@ To run the included example scenario do:
 java -Xms2g -Xmx2g \
   -cp libs/*:ees-2.1.1-SNAPSHOT.jar \
   io.github.agentsoz.ees.Run \
-  --config scenarios/mount-alexander-shire/maldon-600/ees.xml
+  --config scenarios/mount-alexander-shire/maldon-example/ees.xml
 ```

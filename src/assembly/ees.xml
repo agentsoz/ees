@@ -38,7 +38,7 @@
 			</excludes>
 			<includes>
 				<include>scenarios/mount-alexander-shire/mount_alexander_shire_network_2018.xml.gz</include>
-				<include>scenarios/mount-alexander-shire/maldon-600/*.*</include>
+				<include>scenarios/mount-alexander-shire/maldon-example/*.*</include>
 				<include>scenarios/template/*.*</include>
 				<include>scenarios/xsd/*.*</include>
 			</includes>
