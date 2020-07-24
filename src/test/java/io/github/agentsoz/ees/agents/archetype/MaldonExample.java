@@ -1,5 +1,5 @@
 
-package io.github.agentsoz.ees;
+package io.github.agentsoz.ees.agents.archetype;
 
 /*-
  * #%L
@@ -23,6 +23,7 @@ package io.github.agentsoz.ees;
  * #L%
  */
 
+import io.github.agentsoz.ees.Run;
 import io.github.agentsoz.util.TestUtils;
 import org.junit.Rule;
 import org.junit.Test;
