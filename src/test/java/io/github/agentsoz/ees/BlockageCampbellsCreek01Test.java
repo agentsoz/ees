@@ -37,7 +37,7 @@ import org.slf4j.LoggerFactory;
 public class BlockageCampbellsCreek01Test {
 	// have tests in separate classes so that they run, at least under maven, in separate JVMs.  kai, nov'17
 
-	private static final Logger log = LoggerFactory.getLogger(BlockageCampbellsCreek50Test.class) ;
+	private static final Logger log = LoggerFactory.getLogger(BlockageCampbellsCreek01Test.class) ;
 
 	@Rule public MatsimTestUtils utils = new MatsimTestUtils() ;
 
