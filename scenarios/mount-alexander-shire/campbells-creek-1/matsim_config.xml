@@ -27,8 +27,6 @@
 	<module name="global">
 		<param name="randomSeed" value="482564" />
 		<param name="coordinateSystem" value="EPSG:28355" />
-		<param name="numberOfThreads" value="1" />
-		<!--using 1 thread for testing; could be a different number for deployment. kai, nov'17-->
 	</module>
 
 	<module name="network">
@@ -38,7 +36,7 @@
 	</module>
 
 	<module name="plans">
-		<param name="inputPlansFile" value="scenario_matsim_plans.xml" />
+		<param name="inputPlansFile" value="matsim_plans.xml" />
 	</module>
 
 	<module name="controler">
@@ -56,15 +54,12 @@
 	<module name="qsim">
 		<!-- "start/endTime" of MobSim (00:00:00 == take earliest activity time/ run as long as active vehicles exist) -->
 		<param name="startTime" value="00:00:00" />
-		<param name="endTime" value="07:00:00" />
+		<!--<param name="endTime" value="00:59:59" />-->
 
 		<param name = "snapshotperiod"	value = "00:00:00"/> <!-- 00:00:00 means NO snapshot writing, 00:00:30 means every 30 secs -->
 
 		<param name= "flowCapacityFactor" value= "1.0" />
 		<param name= "storageCapacityFactor" value= "1.0" />
-
-		<param name="numberOfThreads" value="1" />
-		<!--setting this to 1 for testing; could be set to a higher number for deployment.  kai, nov'17-->
 
 	</module>
 
@@ -117,10 +112,6 @@
 			<param name="strategyName" value="ReRoute"/>
 			<param name="weight" value="0.1"/>
 		</parameterset>
-	</module>
-
-	<module name="parallelEventHandling" >
-		<param name="numberOfThreads" value="1" />
 	</module>
 
 </config>

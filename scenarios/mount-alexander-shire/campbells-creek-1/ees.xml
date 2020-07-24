@@ -55,7 +55,7 @@
       <!-- MATSim output directory relative to examples/bushfire directory (will overrule the setting in MATSim config) -->
       <opt id="outputDir">test/output/io/github/agentsoz/ees/BlockageCampbellsCreek01Test/test/matsim</opt>
       <!-- MATSim XML config XML file relative to examples/bushfire directory -->
-      <opt id="configXml">scenarios/mount-alexander-shire/campbells-creek-1/scenario_matsim_main.xml</opt>
+      <opt id="configXml">scenarios/mount-alexander-shire/campbells-creek-1/matsim_config.xml</opt>
       <!-- Maximum distance at which the fire can be seen (in metres)-->
       <opt id="maxDistanceForFireVisual">1000</opt>
       <!-- Maximum distance at which smoke can be seen (in metres)-->
@@ -73,22 +73,16 @@
     </model>
 
     <model id="phoenix">
-      <!-- Phoenix start time in HH:MM format; used to calculate absolute values for hour_spot and hour_burnt -->
-      <opt id="ignitionHHMM">00:00</opt>
-      <!-- Phoenix fire GeoJSON file -->
-      <opt id="fireGeoJson">scenarios/mount-alexander-shire/campbells-creek-1/scenario_fire.json</opt>
-      <!-- Phoenix smoke (embers) GeoJSON file -->
-      <opt id="smokeGeoJson"></opt>
     </model>
 
     <model id="disruption">
       <!-- Disruptions JSON file relative to examples/bushfire directory -->
-      <opt id="fileJson">scenarios/mount-alexander-shire/campbells-creek-1/scenario_disruptions.json</opt>
+      <opt id="fileJson">scenarios/mount-alexander-shire/campbells-creek-1/disruptions.json</opt>
     </model>
 
     <model id="messaging">
       <!-- Messaging JSON file  -->
-      <opt id="fileJson">scenarios/mount-alexander-shire/campbells-creek-1/scenario_messages.json</opt>
+      <opt id="fileJson">scenarios/mount-alexander-shire/campbells-creek-1/messages.json</opt>
       <!-- Zones GeoJSON file mapping zone IDs to polygon shapes -->
       <opt id="fileZonesGeoJson">scenarios/mount-alexander-shire/campbells-creek-1/MountAlexander_SA1s.json</opt>
     </model>

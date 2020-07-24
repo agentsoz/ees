@@ -55,7 +55,7 @@
       <!-- MATSim output directory relative to examples/bushfire directory (will overrule the setting in MATSim config) -->
       <opt id="outputDir">test/output/io/github/agentsoz/ees/BradfordNewsteadFireCrossing400Test/test/matsim</opt>
       <!-- MATSim XML config XML file relative to examples/bushfire directory -->
-      <opt id="configXml">scenarios/mount-alexander-shire/bradford-newstead-fire-crossing-400/scenario_matsim_main_reduced.xml</opt>
+      <opt id="configXml">scenarios/mount-alexander-shire/bradford-newstead-fire-crossing-400/matsim_config.xml</opt>
       <!-- Maximum distance at which the fire can be seen (in metres)-->
       <opt id="maxDistanceForFireVisual">1000</opt>
       <!-- Maximum distance at which smoke can be seen (in metres)-->
@@ -88,7 +88,7 @@
 
     <model id="messaging">
       <!-- Messaging JSON file  -->
-      <opt id="fileJson">scenarios/mount-alexander-shire/bradford-newstead-fire-crossing-400/scenario_messages.json</opt>
+      <opt id="fileJson">scenarios/mount-alexander-shire/bradford-newstead-fire-crossing-400/messages.json</opt>
       <!-- Zones GeoJSON file mapping zone IDs to polygon shapes -->
       <opt id="fileZonesGeoJson">scenarios/mount-alexander-shire/bradford-newstead-fire-crossing-400/MountAlexander_SA1s.json</opt>
     </model>
