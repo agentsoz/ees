@@ -46,6 +46,7 @@ public class Torquay3000CongestionTest {
     public MatsimTestUtils utils = new MatsimTestUtils();
 
     @Test
+    @Ignore
     public void testTorquay3000CongestionReducedV2() {
 
         utils.getOutputDirectory(); // creates a clean one so need to call this first
