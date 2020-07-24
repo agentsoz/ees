@@ -85,7 +85,7 @@
       <!-- accept delays of txI secs, where tolerance t=0.5 -->
       <opt id="congestionToleranceThreshold">0.5</opt>
       <!-- likelihood of taking action if congestion threshold is reached -->
-      <opt id="congestionReactionProbability">0.10</opt>
+      <opt id="congestionReactionProbability">0.0</opt>
     </model>
 
     <model id="phoenix">
