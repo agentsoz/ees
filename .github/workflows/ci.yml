@@ -26,65 +26,17 @@ jobs:
         key: cache-${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
         restore-keys: cache-${{ runner.os }}-m2
 
-    - name: Clone agentsoz/ees 
+    - name: Clone agentsoz/ees
       uses: actions/checkout@v2
       with:
         repository: agentsoz/ees
         path: ees
 
-    - name: Clone agentsoz/jill
-      uses: actions/checkout@v2
+    - name: Checkout submodules
+      uses: srt32/git-actions@v0.0.3
       with:
-        repository: agentsoz/jill
-        path: jill
-        ref: dev
+        args: git submodule update --init --recursive
 
-    - name: Clone agentsoz/diffusion-model
-      uses: actions/checkout@v2
-      with:
-        repository: agentsoz/diffusion-model
-        path: diffusion-model
-
-    - name: Clone agentsoz/bdi-abm-integration 
-      uses: actions/checkout@v2
-      with:
-        repository: agentsoz/bdi-abm-integration
-        path: bdi-abm-integration
-
-    #- name: Clone matsim-org/matsim-libs
-    #  uses: actions/checkout@v2
-    #  with:
-    #    repository: matsim-org/matsim-libs
-    #    ref: agentsoz
-    #    path: matsim-libs
-
-    - name: List all cloned repositories
-      run: |
-        echo $GITHUB_WORKSPACE
-        ls -la $GITHUB_WORKSPACE
-
-    #- name: Build matsim-org/matsim-libs
-    #  run: |
-    #    cd matsim-libs && mvn clean install -N && cd -
-    #    cd matsim-libs/matsim && mvn clean install -DskipTests && cd -
-
-    - name: Build agentsoz/jill
-      run: |
-        cd jill && mvn clean install -N && cd -
-        cd jill/jill && mvn clean install -DskipTests && cd -
-
-    - name: Build agentsoz/diffusion-model
-      run: |
-        cd diffusion-model && mvn clean install -DskipTests
-
-    - name: Build agentsoz/bdi-abm-integration
-      run: |
-        cd bdi-abm-integration && mvn clean install -N && cd -
-        cd bdi-abm-integration/util && mvn clean install -DskipTests && cd -
-        cd bdi-abm-integration/integrations/bdi-abm && mvn clean install -DskipTests && cd -
-        cd bdi-abm-integration/integrations/abm-jill && mvn clean install -DskipTests && cd -
-        cd bdi-abm-integration/integrations/bdi-matsim && mvn clean install -DskipTests && cd -
-        
     - name: Build agentsoz/ees
       run: |
         cd ees && mvn package -B -Dmatsim.preferLocalDtds=true && cd -
@@ -94,4 +46,3 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         path: staging
-
