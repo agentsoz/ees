@@ -1,12 +1,12 @@
 [submodule "libs/diffusion-model"]
 	path = libs/diffusion-model
-	url = git@github.com:agentsoz/diffusion-model.git
+	url = ../diffusion-model.git
 	branch = master
 [submodule "libs/jill"]
 	path = libs/jill
-	url = git@github.com:agentsoz/jill.git
+	url = ../jill.git
 	branch = dev
 [submodule "libs/bdi-abm-integration"]
 	path = libs/bdi-abm-integration
-	url = git@github.com:agentsoz/bdi-abm-integration.git
+	url = ../bdi-abm-integration.git
 	branch = master
