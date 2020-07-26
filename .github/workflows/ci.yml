@@ -37,6 +37,13 @@ jobs:
       with:
         args: cd ees && git submodule update --init --recursive
 
+    - name: List all cloned repositories
+      run: |
+        echo $GITHUB_WORKSPACE
+        ls -la $GITHUB_WORKSPACE
+        ls -la $GITHUB_WORKSPACE/ees
+        ls -la $GITHUB_WORKSPACE/ees/libs
+
     - name: Build agentsoz/ees
       run: |
         cd ees && mvn package -B -Dmatsim.preferLocalDtds=true && cd -
