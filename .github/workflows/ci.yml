@@ -39,6 +39,7 @@ jobs:
 
     - name: List all cloned repositories
       run: |
+        sudo chown -R $USER:$USER $GITHUB_WORKSPACE/ees
         echo $GITHUB_WORKSPACE
         ls -la $GITHUB_WORKSPACE
         ls -la $GITHUB_WORKSPACE/ees
