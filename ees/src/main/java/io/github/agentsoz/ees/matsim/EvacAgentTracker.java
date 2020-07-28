@@ -100,6 +100,8 @@ public class EvacAgentTracker implements
 		// Track estimated time to end of this link
 		vehicleData.setEstArrivalTimeAtCurrentLinkEnd(vehicleData.getEstArrivalTimeAtCurrentLinkEnd()
 				+ Math.ceil(link.getLength() / link.getFreespeed(event.getTime())));
+		// Also record the time we entered this link
+		vehicleData.setLastLinkEnterTime(event.getTime());
 		linkEnterEventsMap.put(event.getVehicleId(), vehicleData);
 	}
 	
@@ -138,12 +140,18 @@ public class EvacAgentTracker implements
 				double totalDelayInThisInterval = event.getTime() - vehicleData.getEstArrivalTimeAtCurrentLinkEnd();
 				double totalTimeInThisInterval = vehicleData.getTimeSinceStart();
 				double expectedTimeInThisInterval = totalTimeInThisInterval - totalDelayInThisInterval;
+				double relativeSpeed2 = expectedTimeInThisInterval/totalTimeInThisInterval;
+
+				double expectedTimeOnLink = Math.ceil(link.getLength() / link.getFreespeed(event.getTime()));
+				double actualTimeOnLink = event.getTime() - vehicleData.getLastLinkEnterTime();
+				double relativeSpeed = expectedTimeOnLink/actualTimeOnLink;
+
 				// Below we amplify the relative speed difference (squared)
 				// to make the colours more sensitive to drops in speed
-				double relativeSpeed = Math.pow(expectedTimeInThisInterval/totalTimeInThisInterval,2);
+				//relativeSpeed = Math.pow(relativeSpeed,2);
 				deckglTripsData.addEvent(Double.valueOf(event.getTime()).intValue(),
 						vehicleId.toString(),
-						link.getFromNode().getCoord(),
+						link.getToNode().getCoord(),
 						relativeSpeed);
 			}
 
@@ -171,11 +179,13 @@ public class EvacAgentTracker implements
 		private double distanceSinceStart;
 		private double timeSinceStart;
 		private double estArrivalTimeAtCurrentLinkEnd;
+		private double lastLinkEnterTime;
 
 		public VehicleTrackingData(Id<Vehicle> vehicleIid, double trackingStartTime) {
 			this.vehicleIid = vehicleIid;
 			this.trackingStartTime = trackingStartTime;
 			this.estArrivalTimeAtCurrentLinkEnd = trackingStartTime;
+			lastLinkEnterTime = trackingStartTime;
 		}
 
 		public Id<Vehicle> getVehicleIid() {
@@ -212,6 +222,14 @@ public class EvacAgentTracker implements
 
 		public void setEstArrivalTimeAtCurrentLinkEnd(double estTimeToLinkEnd) {
 			this.estArrivalTimeAtCurrentLinkEnd = estTimeToLinkEnd;
+		}
+
+		public double getLastLinkEnterTime() {
+			return lastLinkEnterTime;
+		}
+
+		public void setLastLinkEnterTime(double lastLinkEnterTime) {
+			this.lastLinkEnterTime = lastLinkEnterTime;
 		}
 	}
 	
