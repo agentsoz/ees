@@ -36,9 +36,9 @@ import org.slf4j.LoggerFactory;
  * @author Dhi Singh
  *
  */
-public class SCSArchetypesBasicTest {
+public class SCSAireysTest {
 
-    private static final Logger log = LoggerFactory.getLogger(SCSArchetypesBasicTest.class);
+    private static final Logger log = LoggerFactory.getLogger(SCSAireysTest.class);
 
     @Rule
     public MatsimTestUtils utils = new MatsimTestUtils() ;
@@ -49,20 +49,10 @@ public class SCSArchetypesBasicTest {
 
         utils.getOutputDirectory(); // creates a clean one so need to call this first
         String[] args = {
-                "--config", "scenarios/surf-coast-shire/archetypes-basic/ees.xml",
+                // assumes working dir is ees/scenarios/surf-coast-shire/aireys/base/
+                "--config", "ees.xml",
         };
         Run.main(args);
-
-        final String actualEventsFilename = utils.getOutputDirectory() + "/output_events.xml.gz";
-        final String primaryExpectedEventsFilename = utils.getInputDirectory() + "/output_events.xml.gz";
-        // TestUtils.compareFullEvents(primaryExpectedEventsFilename,actualEventsFilename, true);
-        // If the full events comparison fails (possibly due to multi-threading differences on travis/other),
-        // then use the checks below, adjusting slack as needed,
-        // but ideally keeping it below 10 secs; dhi 28/may/19
-        TestUtils.comparingDepartures(primaryExpectedEventsFilename,actualEventsFilename,1.);
-        TestUtils.comparingArrivals(primaryExpectedEventsFilename,actualEventsFilename,1.);
-        TestUtils.comparingActivityStarts(primaryExpectedEventsFilename,actualEventsFilename, 1.);
-
     }
 }
 
