@@ -230,7 +230,7 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
         params[3] = routingMode;
         params[4] = activity.toString();
         params[5] = (replanningActivityDurationInMins>0); // add replan activity to mark location/time of replanning
-        params[6] = rand.nextInt(replanningActivityDurationInMins*60);
+        params[6] = (replanningActivityDurationInMins>0) ? rand.nextInt(replanningActivityDurationInMins*60) : 0;
         EnvironmentAction action = new EnvironmentAction(
                 Integer.toString(getId()),
                 Constants.DRIVETO, params);
@@ -556,6 +556,19 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
         believe(State.futureValueOfVisibleFire.name(), b == null ? "0.0" : b);
         b = getBelief(Beliefname.ImpactFromVisibleSmoke.name());
         believe(State.futureValueOfVisibleSmoke.name(), b == null ? "0.0" : b);
+        //
+        b = getBelief(Beliefname.ResponseThresholdInitial.name());
+        believe(Beliefname.ResponseThresholdInitial.name(), b == null ? "0.0" : b);
+        b = getBelief(Beliefname.ResponseThresholdFinal.name());
+        believe(Beliefname.ResponseThresholdFinal.name(), b == null ? "0.0" : b);
+        //
+        b = getBelief(Beliefname.LagTimeInMinsForInitialResponse.name());
+        believe(Beliefname.LagTimeInMinsForInitialResponse.name(), b == null ? "1.0" : b);
+        b = getBelief(Beliefname.LagTimeInMinsForFinalResponse.name());
+        believe(Beliefname.LagTimeInMinsForFinalResponse.name(), b == null ? "1.0" : b);
+        //
+        b = getBelief(Beliefname.Archetype.name());
+        believe(Beliefname.Archetype.name(), b == null ? "Some.Archetype" : b);
         //
         believe(State.responseThresholdInitialReached.name(), null);
         believe(State.responseThresholdFinalReached.name(), null);

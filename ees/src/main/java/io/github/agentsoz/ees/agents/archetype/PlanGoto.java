@@ -67,7 +67,8 @@ public class PlanGoto extends Plan {
 				// or were driving but the last bdi action (presumably the drive action) was dropped
 				if (distToDest <= 0.0 ||
 						tries >= maximumTries ||
-						(!ActionContent.State.DROPPED.equals(agent.getLastBdiActionState())
+						(!ActionContent.State.DROPPED.equals(agent.getLastBdiActionState()) &&
+								!ActionContent.State.FAILED.equals(agent.getLastBdiActionState())
 								&& agent.hasBelief(Beliefname.isDriving.name(), new Boolean(true).toString()))) {
 					agent.out("finished driving to "
 							+ destination + String.format(" %.0f", distToDest) + "m away"
@@ -85,7 +86,7 @@ public class PlanGoto extends Plan {
 				Goal action = agent.prepareDrivingGoal(
 						destinationType,
 						destination,
-						Constants.EvacRoutingMode.carFreespeed,
+						((tries==0)) ? Constants.EvacRoutingMode.carFreespeed : Constants.EvacRoutingMode.carGlobalInformation,
 						(int)Math.round(replanningActivityDurationInMins));
 				tries++;
 				agent.believe(Beliefname.isDriving.name(), new Boolean(action != null).toString());
