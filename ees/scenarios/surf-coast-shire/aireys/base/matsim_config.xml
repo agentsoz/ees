@@ -6,7 +6,7 @@
 	<module name="global">
 		<param name="randomSeed" value="482564" />
 		<param name="coordinateSystem" value="EPSG:32754" />
-		<param name="numberOfThreads" value="1" />
+		<param name="numberOfThreads" value="8" />
 		<!--using 1 thread for testing; could be a different number for deployment. kai, nov'17-->
 	</module>
 
@@ -42,7 +42,7 @@
 		<param name= "flowCapacityFactor" value= "1.0" />
 		<param name= "storageCapacityFactor" value= "1.0" />
 
-		<param name="numberOfThreads" value="1" />
+		<param name="numberOfThreads" value="8" />
 		<!--setting this to 1 for testing; could be set to a higher number for deployment.  kai, nov'17-->
 
 	</module>
@@ -123,7 +123,7 @@
 	</module>
 
 	<module name="parallelEventHandling" >
-		<param name="numberOfThreads" value="1" />
+		<param name="numberOfThreads" value="8" />
 	</module>
 
 </config>
