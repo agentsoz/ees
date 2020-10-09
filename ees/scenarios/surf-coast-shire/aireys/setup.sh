@@ -18,11 +18,20 @@ fi
 
 # Create the ensemble runs using the base scenario as the template
 for i in $(seq 1 20); do
-  rdir=$dir/r.$i
-  #cmd="rm -rf $rdir"; echo $cmd && eval $cmd
+  rdir=$dir/r.base.$i
   cmd="mkdir -p $rdir"; echo $cmd && eval $cmd
-  cmd="cp $dir/base/ees.xml $rdir"; echo $cmd && eval $cmd
-  cmd="cp $dir/base/matsim_config.xml $rdir"; echo $cmd && eval $cmd
-  cmd="cp $dir/base/run.sh $rdir"; echo $cmd && eval $cmd
+  cmd="cp $dir/base/*.xml $rdir"; echo $cmd && eval $cmd
+  cmd="cp $dir/base/*.json $rdir"; echo $cmd && eval $cmd
+  cmd="cp $dir/base/*.sh $rdir"; echo $cmd && eval $cmd
+  cmd="cp $ees_data_repo/surf-coast-shire/plans/2020/plans-60k-$i.xml.gz $rdir/plans.xml.gz"; echo $cmd && eval $cmd
+done
+
+# Create the ensemble runs using the msg1 scenario as the template
+for i in $(seq 1 20); do
+  rdir=$dir/r.msg1.$i
+  cmd="mkdir -p $rdir"; echo $cmd && eval $cmd
+  cmd="cp $dir/base/*.xml $rdir"; echo $cmd && eval $cmd
+  cmd="cp $dir/base/*.json $rdir"; echo $cmd && eval $cmd
+  cmd="cp $dir/base/*.sh $rdir"; echo $cmd && eval $cmd
   cmd="cp $ees_data_repo/surf-coast-shire/plans/2020/plans-60k-$i.xml.gz $rdir/plans.xml.gz"; echo $cmd && eval $cmd
 done
