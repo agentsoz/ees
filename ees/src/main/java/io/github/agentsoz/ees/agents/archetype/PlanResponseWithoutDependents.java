@@ -55,7 +55,7 @@ public class PlanResponseWithoutDependents extends Plan {
 		setName(this.getClass().getSimpleName()); // give this plan a user friendly name for logging purposes
 		boolean hasDependents = Boolean.valueOf(agent.getBelief(ArchetypeAgent.Beliefname.HasDependents.name()));
 		if (!hasDependents) {
-			xyHome = agent.parseLocation(agent.getBelief(ArchetypeAgent.Beliefname.LocationHome.name()));
+			xyHome = agent.getHomeLocation();
 			double distHome = agent.getDrivingDistanceTo(xyHome);
 			applicable = distHome > 0;
 		}

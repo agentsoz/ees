@@ -129,6 +129,7 @@ public class MessagingModel implements DataSource<SortedMap<Double, EmergencyMes
 			}
 			message.setBroadcastZones(map);
 			// save it
+			// FIXME: will overwrite any previous message scheduled for the same time!
 			messages.put(minutes, message);
 		}
 	}

@@ -59,8 +59,8 @@ public class PlanResponseWhenDependentsNearby extends Plan {
 		boolean applicable = false;
 		boolean hasDependents = Boolean.valueOf(agent.getBelief(ArchetypeAgent.Beliefname.HasDependents.name()));
 		if (hasDependents) {
-			xyHome = agent.parseLocation(agent.getBelief(ArchetypeAgent.Beliefname.LocationHome.name()));
-			xyDeps = agent.parseLocation(agent.getBelief(ArchetypeAgent.Beliefname.HasDependentsAtLocation.name()));
+			xyHome = agent.getHomeLocation();
+			xyDeps = agent.getDependentsLocation();
 			if (xyHome != null && xyDeps != null) {
 				// Using beeline distance which is more natural and not computationally expensive
 				distHome = agent.getDrivingDistanceTo(xyHome);

@@ -55,7 +55,7 @@ public class PlanStayAndDefend extends Plan {
 
 	PlanStep[] steps = {
 			() -> {
-				xyHome = agent.parseLocation(agent.getBelief(ArchetypeAgent.Beliefname.LocationHome.name()));
+				xyHome = agent.getHomeLocation();
 				double distHome = agent.getDrivingDistanceTo(xyHome);
 				boolean atHome = (distHome <= 0);
 				if (!atHome) {

@@ -58,7 +58,7 @@ public class PlanLeaveNow extends Plan {
 	PlanStep[] steps = {
 			() -> {
 				// Leave for evac location
-				xyEvac = agent.parseLocation(agent.getBelief(ArchetypeAgent.Beliefname.LocationEvacuationPreference.name()));
+				xyEvac = agent.getEvacLocation();
 				dest = xyEvac;
 				agent.out("will go to evac location " + xyEvac + " #" + getFullName());
 				subgoal(new GoalGoto(GoalGoto.class.getSimpleName(),
@@ -77,7 +77,7 @@ public class PlanLeaveNow extends Plan {
 					this.drop(); // all done, drop the remaining plan steps
 				} else {
 					agent.out("is stuck between locations " + xy[0] + " and " + xy[1] + " #" + getFullName());
-					xyInvac = agent.parseLocation(agent.getBelief(ArchetypeAgent.Beliefname.LocationInvacPreference.name()));
+					xyInvac = agent.getInvacLocation();
 					if (Location.distanceBetween(xy[0],xyEvac) > Location.distanceBetween(xy[0],xyInvac)) {
 						dest = xyInvac;
 						// Try invac location
@@ -103,7 +103,7 @@ public class PlanLeaveNow extends Plan {
 					this.drop(); // all done, drop the remaining plan steps
 				} else {
 					agent.out("is stuck between locations " + xy[0] + " and " + xy[1] + " #" + getFullName());
-					xyHome = agent.parseLocation(agent.getBelief(ArchetypeAgent.Beliefname.LocationHome.name()));
+					xyHome = agent.getHomeLocation();
 					if (Location.distanceBetween(xy[0],xyInvac) > Location.distanceBetween(xy[0],xyHome)) {
 						dest = xyHome;
 						// Try home

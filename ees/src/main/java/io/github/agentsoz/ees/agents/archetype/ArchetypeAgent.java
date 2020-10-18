@@ -41,10 +41,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.PrintStream;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 import static io.github.agentsoz.ees.Constants.EmergencyMessage.*;
 import static org.matsim.core.utils.misc.Time.writeTime;
@@ -160,6 +157,14 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
     private double time = -1;
     private ArchetypeAgent.Prefix prefix = new ArchetypeAgent.Prefix();
     private Random rand = new Random(0);
+
+    private Location dependentsLocation;
+    private Location evacLocation;
+    private Location invacLocation;
+    private Location homeLocation;
+    private Location workLocation;
+
+
 
     //===============================================================================
     //endregion
@@ -370,6 +375,10 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
             } else if (EvacuateNow.getCommonName().equals(args[0])) {
                 effect = Double.valueOf(getBelief(State.futureValueOfMessageEvacuateNow.name()));
                 believe(State.futureValueOfMessageEvacuateNow.name(), "0.0");
+                if (args.length >= 4) { // we have three more args being name,x,y
+                    String loc = args[1] + "," + args[2] + "," + args[3];
+                    evacLocation = parseLocation(loc);
+                }
             }
             double barometer = Double.valueOf(getBelief(State.anxietyFromEmergencyMessages.name()));
             believe(State.anxietyFromEmergencyMessages.name(), Double.toString(barometer+effect));
@@ -594,6 +603,25 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
 
     }
 
+    public Location getDependentsLocation() {
+        return dependentsLocation;
+    }
+
+    public Location getEvacLocation() {
+        return evacLocation;
+    }
+
+    public Location getInvacLocation() {
+        return invacLocation;
+    }
+
+    public Location getHomeLocation() {
+        return homeLocation;
+    }
+
+    public Location getWorkLocation() {
+        return workLocation;
+    }
 
     //===============================================================================
     //endregion
@@ -605,43 +633,57 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
     //===============================================================================
 
     protected void parseArgs(String[] args) {
-        for (int i = 0; args!= null && i < args.length; i++) {
+
+        Set discard = new HashSet();
+        discard.add(Beliefname.Age.getCommonName());
+        discard.add(Beliefname.AgentId.getCommonName());
+        discard.add(Beliefname.ArchetypeAge.getCommonName());
+        discard.add(Beliefname.ArchetypeHousehold.getCommonName());
+        discard.add(Beliefname.AgentType.getCommonName());
+        discard.add(Beliefname.Address.getCommonName());
+        discard.add(Beliefname.AddressCoordinates.getCommonName());
+        discard.add(Beliefname.Gender.getCommonName());
+        discard.add(Beliefname.HouseholdId.getCommonName());
+        discard.add(Beliefname.Id.getCommonName());
+        discard.add(Beliefname.PrimaryFamilyType.getCommonName());
+        discard.add(Beliefname.Sa1.getCommonName());
+        discard.add(Beliefname.Sa2.getCommonName());
+
+        Map<String, Beliefname> commonNames = new HashMap();
+        for (Beliefname beliefname : Beliefname.values()) {
+            commonNames.put(beliefname.getCommonName(), beliefname);
+        }
+
+        for (int i = 0; args != null && i < args.length; i++) {
             String key = args[i];
             String value = null;
             if (i + 1 < args.length) {
                 i++;
                 value = args[i];
             }
-            boolean found = false;
-            for(Beliefname beliefname : Beliefname.values()) {
-                if (key.equals(beliefname.getCommonName())) {
-                    found = true;
-                    switch (beliefname) {
-                        case Age:
-                        case AgentId:
-                        case ArchetypeAge:
-                        case ArchetypeHousehold:
-                        case AgentType:
-                        case Address:
-                        case AddressCoordinates:
-                        case Gender:
-                        case HouseholdId:
-                        case Id:
-                        case PrimaryFamilyType:
-                        case Sa1:
-                        case Sa2:
-                            // Discard all known key/values that we do not actually use.
-                            // This greatly speeds up Jill belief storage which can be costly
-                            // if the belief cardinality is high and the belief value uptake across
-                            // agents is low.
-                            break;
-                        default:
-                            // store all the other know key/values
-                            believe(beliefname.name(), value);
-                    }
-                }
-            }
-            if (!found) {
+            if (discard.contains(key)) {
+                continue; // discard key/values we don't care about
+
+            } else if (Beliefname.HasDependentsAtLocation.getCommonName().equals(key)) {
+                dependentsLocation = parseLocation(value);
+
+            } else if (Beliefname.LocationEvacuationPreference.getCommonName().equals(key)) {
+                evacLocation = parseLocation(value);
+
+            } else if (Beliefname.LocationInvacPreference.getCommonName().equals(key)) {
+                invacLocation = parseLocation(value);
+
+            } else if (Beliefname.LocationHome.getCommonName().equals(key)) {
+                homeLocation = parseLocation(value);
+
+            } else if (Beliefname.LocationWork.getCommonName().equals(key)) {
+                workLocation = parseLocation(value);
+
+            } else if (commonNames.containsKey(key)) {
+                // store all the other know key/values
+                believe(commonNames.get(key).name(), value);
+
+            } else {
                 String s = "Ignoring unknown key/value: " + key + "=" + value;
                 out(s);
                 logger.warn(s);
