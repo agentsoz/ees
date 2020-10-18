@@ -23,8 +23,10 @@ for i in $(seq 1 20); do
   cmd="cp $dir/base/*.xml $rdir"; echo $cmd && eval $cmd
   cmd="cp $dir/base/*.json $rdir"; echo $cmd && eval $cmd
   cmd="cp $dir/base/*.sh $rdir"; echo $cmd && eval $cmd
-  cmd="cp $ees_data_repo/surf-coast-shire/plans/2020/plans-60k-$i.xml.gz $rdir/plans.xml.gz"; echo $cmd && eval $cmd
+  cmd="cp $ees_data_repo/surf-coast-shire/plans/2020/plans-30k-$i.xml.gz $rdir/plans.xml.gz"; echo $cmd && eval $cmd
 done
+
+exit 
 
 # Create the ensemble runs using the msg1 scenario as the template
 for i in $(seq 1 20); do
@@ -33,5 +35,5 @@ for i in $(seq 1 20); do
   cmd="cp $dir/base/*.xml $rdir"; echo $cmd && eval $cmd
   cmd="cp $dir/base/*.json $rdir"; echo $cmd && eval $cmd
   cmd="cp $dir/base/*.sh $rdir"; echo $cmd && eval $cmd
-  cmd="cp $ees_data_repo/surf-coast-shire/plans/2020/plans-60k-$i.xml.gz $rdir/plans.xml.gz"; echo $cmd && eval $cmd
+  cmd="cp $ees_data_repo/surf-coast-shire/plans/2020/plans-30k-$i.xml.gz $rdir/plans.xml.gz"; echo $cmd && eval $cmd
 done

@@ -3,9 +3,9 @@
     "List of emergency messages to inject into the simulation",
     "{",
       "type: one of ADVICE, WATCH_AND_ACT, EVACUATE_NOW",
-      "broadcastHHMM : the time in HHMM format when this mesage is to be sent",
+      "broadcastHHMM : the time in HHMM format when this message is to be sent",
       "broadcastZones: list of zones IDs to which this message should be sent",
-    "}"
+      "}"
   ],
 
   "spatialReferenceEPSG" : "EPSG:32754",
@@ -13,46 +13,29 @@
   "messages" : [
     {
       "type" : "EVACUATE_NOW",
-      "content" : "Waurn Ponds,789654,5764865,Evacuate now if safe to do so",
-      "broadcastHHMM" : "1230",
+      "content" : "Colac,731000,5756000,Evacuate now if safe to do so",
+      "broadcastHHMM" : "1300",
       "broadcastZones" :
       {
-        "20303105301": null,
-        "20303105302": null,
-        "20303105303": null,
-        "20303105304": null,
-        "20303105305": null,
-        "20303105306": null,
-        "20303105307": null,
-        "20303105308": null,
-        "20303105309": null,
-        "20303105310": null,
-        "20303105311": null,
-        "20303105312": null,
-        "20303105313": null,
-        "20303105314": null,
-        "20303105315": null,
-        "20303105317": null,
-        "20303105318": null,
-        "20303105319": null,
-        "20303105320": null,
-        "20303105321": null,
-        "20303105322": null,
-        "20303105323": null,
-        "20303105324": null,
-        "20303105325": null,
-        "20303105326": null,
-        "20303105327": null,
-        "20303105328": null,
-        "20303105329": null,
-        "20303105330": null,
-        "20303105331": null,
-        "20303105333": null,
-        "20303105334": null,
-        "20303105335": null,
-        "20303105336": null,
-        "20303105337": null,
-        "20303105338": null
+        "20303104907": null,
+        "20303104908": null,
+        "20303104902": null,
+        "20303104901": null,
+        "20303104903": null,
+        "20303104911": null
+      }
+    },
+    {
+      "type" : "EVACUATE_NOW",
+      "content" : "Geelong,794000,5770000,Evacuate now if safe to do so",
+      "broadcastHHMM" : "1310",
+      "broadcastZones" :
+      {
+        "20303104910": null,
+        "20303104909": null,
+        "20303104906": null,
+        "20303104905": null,
+        "20303104904": null
       }
     }
   ]
