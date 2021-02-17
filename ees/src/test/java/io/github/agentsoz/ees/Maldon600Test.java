@@ -59,6 +59,11 @@ public class Maldon600Test {
 		TestUtils.comparingDepartures(primaryExpectedEventsFilename,actualEventsFilename,1.);
 		TestUtils.comparingArrivals(primaryExpectedEventsFilename,actualEventsFilename,1.);
 		TestUtils.comparingActivityStarts(primaryExpectedEventsFilename,actualEventsFilename, 1.);
+
+		// Check that the DeckGL output was created correctly
+		TestUtils.compareFiles(
+				utils.getInputDirectory() + "trips.deckgl.json",
+				utils.getOutputDirectory() + "../trips.deckgl.json");
 	}
 
 }
