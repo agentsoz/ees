@@ -64,6 +64,12 @@ public class Maldon600Test {
 		TestUtils.compareFiles(
 				utils.getInputDirectory() + "trips.deckgl.json",
 				utils.getOutputDirectory() + "../trips.deckgl.json");
+
+		// Check that the evacuation metrics output was created correctly
+		TestUtils.compareFiles(
+				utils.getInputDirectory() + "metrics.json",
+				utils.getOutputDirectory() + "../metrics.json");
+
 	}
 
 }

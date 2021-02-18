@@ -38,6 +38,10 @@
     <opt id="startHHMM">12:00</opt>
     <!-- Output file for trips written in DeckGL format -->
     <opt id="deckGlOutFile">test/output/io/github/agentsoz/ees/Maldon600Test/test/trips.deckgl.json</opt>
+    <!-- Output file for evacuation metrics -->
+    <opt id="metricsOutFile">test/output/io/github/agentsoz/ees/Maldon600Test/test/metrics.json</opt>
+    <!-- Time bin size in seconds for collected evacuation metrics -->
+    <opt id="metricsBinSizeInSecs">3600</opt>
   </global>
 
   <!-- model specific configuration -->

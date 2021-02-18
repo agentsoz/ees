@@ -27,10 +27,7 @@ import io.github.agentsoz.bdiabm.QueryPerceptInterface;
 import io.github.agentsoz.bdiabm.v2.AgentDataContainer;
 import io.github.agentsoz.dataInterface.DataClient;
 import io.github.agentsoz.dataInterface.DataServer;
-import io.github.agentsoz.ees.matsim.DeckglTripsData;
-import io.github.agentsoz.ees.matsim.EvacAgentTracker;
-import io.github.agentsoz.ees.matsim.EvacConfig;
-import io.github.agentsoz.ees.matsim.MATSimEvacModel;
+import io.github.agentsoz.ees.matsim.*;
 import io.github.agentsoz.ees.util.Utils;
 import io.github.agentsoz.util.Global;
 import io.github.agentsoz.util.Time;
@@ -170,6 +167,19 @@ public class Run implements DataClient {
             matsimEvacModel.getEvents().addHandler(tracker);
         }
 
+        // Evacuation metrics writer
+        EvacMetricsTracker metrics = null;
+        String metricsCfg = cfg.getGlobalConfig(Config.eGlobalMetricsOutFile);
+        if (metricsCfg != null) {
+            metrics = new EvacMetricsTracker(
+                    matsimEvacModel.getScenario().getConfig().global().getCoordinateSystem(),
+                    matsimEvacModel.getScenario().getNetwork(),
+                    Integer.parseInt(cfg.getGlobalConfig(Config.eGlobalMetricsBinSizeInSecs)));
+            matsimEvacModel.getEvents().addHandler(metrics);
+        }
+
+
+
         // start the main simulation loop
         log.info("Starting the simulation loop");
         jillmodel.useSequenceLock(sequenceLock);
@@ -201,6 +211,10 @@ public class Run implements DataClient {
             log.info("Writing trips in DeckGL format to: " + deckglCfg);
             deckglTripsData.saveToFile(cfg.getGlobalConfig(Config.eGlobalDeckGlOutFile));
         }
+        if (metricsCfg != null) {
+            metrics.saveToFile(cfg.getGlobalConfig(Config.eGlobalMetricsOutFile));
+        }
+
         DataServer.cleanup() ;
         log.info("All done");
     }

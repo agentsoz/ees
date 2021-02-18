@@ -1,0 +1,4566 @@
+{
+  "43200": {
+    "98315-98317-98319": {
+      "from": {
+        "x": 144.0647474999565,
+        "y": -36.989820874241865,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.06400309995644,
+        "y": -36.98787217423744,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 0,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 1
+    },
+    "177361": {
+      "from": {
+        "x": 144.0606408999562,
+        "y": -36.99298247424864,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.06120859995616,
+        "y": -36.99283867424835,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 0,
+      "vehiclesExited": 6,
+      "activitiesStarted": 0,
+      "activitiesEnded": 6
+    },
+    "92472-92470-92468-92466-92464-92462": {
+      "from": {
+        "x": 144.26152609997015,
+        "y": -36.991869974258755,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.2611502999701,
+        "y": -36.99447517426457,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 1,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "24870-24868": {
+      "from": {
+        "x": 144.0905142999585,
+        "y": -36.987093474237604,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.09271859995872,
+        "y": -36.989229574242565,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 2,
+      "vehiclesExited": 2,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "135697-40964-40966-40968-40970-40972-40974-40976": {
+      "from": {
+        "x": 144.1582525999634,
+        "y": -36.8443135739195,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.1560619999632,
+        "y": -36.8405073739107,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 4,
+      "vehiclesExited": 4,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "92326-92324-92322-92320-92318-92316-92314-92312": {
+      "from": {
+        "x": 144.26163819997012,
+        "y": -36.99018727425501,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.26152609997015,
+        "y": -36.991869974258755,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 1,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "81550-81548-81546-81544-81542-81540-81538": {
+      "from": {
+        "x": 144.07535869995732,
+        "y": -37.000864474267374,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.0748666999573,
+        "y": -36.99685507425836,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 1,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "116923-116921-116914": {
+      "from": {
+        "x": 144.2611502999701,
+        "y": -36.99447517426457,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.26108249997014,
+        "y": -36.995526274266936,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 1,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "137431-137433-137435": {
+      "from": {
+        "x": 144.09638559995898,
+        "y": -36.986460874236606,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.09739069995905,
+        "y": -36.984773474232895,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 15,
+      "vehiclesExited": 14,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "167869-167870-167871": {
+      "from": {
+        "x": 144.26108249997014,
+        "y": -36.995526274266936,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.2610199999701,
+        "y": -36.996412774268926,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 1,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "84434-84432": {
+      "from": {
+        "x": 144.07559509995733,
+        "y": -36.993016874249804,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.07735729995747,
+        "y": -36.993170774250295,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 10,
+      "vehiclesExited": 10,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "84516-84514": {
+      "from": {
+        "x": 144.0825410999579,
+        "y": -36.99286307424997,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.0877624999583,
+        "y": -36.99141187424709,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 15,
+      "vehiclesExited": 15,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "177379-177381": {
+      "from": {
+        "x": 144.06408779995644,
+        "y": -36.99217217424709,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.06549159995654,
+        "y": -36.9918181742464,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 11,
+      "vehiclesExited": 10,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "83435-83437-83439-83441-83443-83445": {
+      "from": {
+        "x": 144.15593709996318,
+        "y": -36.83992517390937,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.1547860999631,
+        "y": -36.840678973911004,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 4,
+      "vehiclesExited": 0,
+      "activitiesStarted": 4,
+      "activitiesEnded": 0
+    },
+    "19285-19287-19289-19291": {
+      "from": {
+        "x": 144.07416999995726,
+        "y": -36.98628397423461,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.07597569995738,
+        "y": -36.98619647423455,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 1,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "54695-54693": {
+      "from": {
+        "x": 144.0677890999567,
+        "y": -37.00281857427121,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.0680457999568,
+        "y": -37.00299807427163,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 1,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "137547-137549": {
+      "from": {
+        "x": 144.1251108999611,
+        "y": -36.95804957417474,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.12609999996118,
+        "y": -36.95231007416187,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 9,
+      "vehiclesExited": 9,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "25126-25124-25122-25120-25118-25116": {
+      "from": {
+        "x": 144.0685754999568,
+        "y": -36.99789327426023,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.06846849995677,
+        "y": -36.999101374262935,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 1,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "79939": {
+      "from": {
+        "x": 144.16176439996372,
+        "y": -36.96523457419325,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.16222769996372,
+        "y": -36.965079874192924,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 2,
+      "vehiclesExited": 2,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "102208-102206-102204": {
+      "from": {
+        "x": 144.2381057999687,
+        "y": -36.956253474177494,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.2390270999687,
+        "y": -36.95718307417963,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 2,
+      "vehiclesExited": 2,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "168720-168721-168722-168723": {
+      "from": {
+        "x": 144.23584689996858,
+        "y": -36.955649974176,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.2362478999686,
+        "y": -36.95548917417567,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 2,
+      "vehiclesExited": 2,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "86785-86786-86787-86788-86789": {
+      "from": {
+        "x": 144.2610199999701,
+        "y": -36.996412774268926,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.26052069997013,
+        "y": -36.999541474275915,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 1,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "137625-137627-137629-137631-137633-137635": {
+      "from": {
+        "x": 144.1427999999623,
+        "y": -36.88791007401751,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.14583339996253,
+        "y": -36.879686673999075,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 6,
+      "vehiclesExited": 6,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "137637": {
+      "from": {
+        "x": 144.14583339996253,
+        "y": -36.879686673999075,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.1466183999626,
+        "y": -36.87753827399425,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 6,
+      "vehiclesExited": 6,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "177307-177309": {
+      "from": {
+        "x": 144.07265389995715,
+        "y": -36.98854647423957,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.07248409995714,
+        "y": -36.98911907424085,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 1,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "93783": {
+      "from": {
+        "x": 144.06974549995692,
+        "y": -36.99081427424447,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.07047549995693,
+        "y": -36.99279827424895,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 12,
+      "vehiclesExited": 10,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "137443-137445-137447-137449": {
+      "from": {
+        "x": 144.09847129995913,
+        "y": -36.98354447423021,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.10030529995927,
+        "y": -36.98234347422762,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 14,
+      "vehiclesExited": 14,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "137358": {
+      "from": {
+        "x": 144.1126733999602,
+        "y": -36.97773407421813,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.12145539996087,
+        "y": -36.975480874213666,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 3,
+      "vehiclesExited": 3,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "137350-137348-137346-137344-137342-137340-137338-137336": {
+      "from": {
+        "x": 144.12780869996135,
+        "y": -36.97354177420973,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.1383753999621,
+        "y": -36.97111837420498,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 3,
+      "vehiclesExited": 3,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "92152-92150-92148-92146": {
+      "from": {
+        "x": 144.25688529996984,
+        "y": -36.98270567423797,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.2575584999699,
+        "y": -36.98376407424036,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 1,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "93781": {
+      "from": {
+        "x": 144.06895999995686,
+        "y": -36.98879027423984,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.06974549995692,
+        "y": -36.99081427424447,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 0,
+      "vehiclesExited": 2,
+      "activitiesStarted": 0,
+      "activitiesEnded": 2
+    },
+    "25142-25140-25138": {
+      "from": {
+        "x": 144.0682813999568,
+        "y": -37.000099274265146,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.0677890999567,
+        "y": -37.00281857427121,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 1,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "81439": {
+      "from": {
+        "x": 144.07491939995734,
+        "y": -37.001252074268216,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.07535869995732,
+        "y": -37.000864474267374,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 1,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "40978": {
+      "from": {
+        "x": 144.1560619999632,
+        "y": -36.8405073739107,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.15593709996318,
+        "y": -36.83992517390937,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 4,
+      "vehiclesExited": 4,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "168169-168167-168165-168163-168161-168159-168157-168155-168153": {
+      "from": {
+        "x": 144.22895989996815,
+        "y": -36.958420074181866,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.23489069996853,
+        "y": -36.95658447417808,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 2,
+      "vehiclesExited": 2,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "168239": {
+      "from": {
+        "x": 144.16249959996375,
+        "y": -36.96503677419286,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.1628247999638,
+        "y": -36.96498757419277,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 2,
+      "vehiclesExited": 2,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "24894-24892-24890-24888-24886": {
+      "from": {
+        "x": 144.07652649995745,
+        "y": -36.98853227423985,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.0796299999577,
+        "y": -36.988293074239515,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 1,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "79921": {
+      "from": {
+        "x": 144.16222769996372,
+        "y": -36.965079874192924,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.16249959996375,
+        "y": -36.96503677419286,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 2,
+      "vehiclesExited": 2,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "24876-24874-24872": {
+      "from": {
+        "x": 144.08788999995832,
+        "y": -36.98728727423787,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.0905142999585,
+        "y": -36.987093474237604,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 2,
+      "vehiclesExited": 2,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "137322-137320": {
+      "from": {
+        "x": 144.14316259996244,
+        "y": -36.96989597420254,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.1440840999625,
+        "y": -36.96996017420275,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 3,
+      "vehiclesExited": 3,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "39140-39138-39136-39134-39132-39130": {
+      "from": {
+        "x": 144.06333289995638,
+        "y": -36.9901584742425,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.0647474999565,
+        "y": -36.989820874241865,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 1,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "68803-68805-68807": {
+      "from": {
+        "x": 144.25815999996996,
+        "y": -37.004153174286124,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.25508239996978,
+        "y": -37.003571374284654,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 1,
+      "vehiclesExited": 0,
+      "activitiesStarted": 1,
+      "activitiesEnded": 0
+    },
+    "137661-137663-137665-137667": {
+      "from": {
+        "x": 144.15475249996317,
+        "y": -36.85136017393532,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.15541299996318,
+        "y": -36.84822067392822,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 5,
+      "vehiclesExited": 5,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "168205-168203-168201-168199-168197-168195-168193-168191-168189": {
+      "from": {
+        "x": 144.18620289996542,
+        "y": -36.9630427741898,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.1968633999661,
+        "y": -36.96475417419429,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 2,
+      "vehiclesExited": 2,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "34520-34522-34524-34526-34528-34530": {
+      "from": {
+        "x": 144.07047549995693,
+        "y": -36.99279827424895,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.06909209995686,
+        "y": -36.99315717424964,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 0,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 1
+    },
+    "177363-177365-177367": {
+      "from": {
+        "x": 144.06120859995616,
+        "y": -36.99283867424835,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.06151949995623,
+        "y": -36.99274197424817,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 9,
+      "vehiclesExited": 9,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "98257-98259-98261-98263-98265-98267-98269": {
+      "from": {
+        "x": 144.06604299995658,
+        "y": -36.99692207425788,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.06851209995682,
+        "y": -36.997134974258536,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 1,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "177383": {
+      "from": {
+        "x": 144.06549159995654,
+        "y": -36.9918181742464,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.06689339995665,
+        "y": -36.99149147424577,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 15,
+      "vehiclesExited": 10,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "175241-175239-175237": {
+      "from": {
+        "x": 144.06048919995618,
+        "y": -36.99083697424383,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.06120859995616,
+        "y": -36.99283867424835,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 3,
+      "vehiclesExited": 3,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "137483-137485-137487-137489": {
+      "from": {
+        "x": 144.1060999999597,
+        "y": -36.97383007420894,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.10827999995985,
+        "y": -36.96843007419693,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 11,
+      "vehiclesExited": 10,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "70560-70562": {
+      "from": {
+        "x": 144.0719507999571,
+        "y": -37.00733087428161,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.0723394999571,
+        "y": -37.00751947428207,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 1,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "19440": {
+      "from": {
+        "x": 144.0784432999576,
+        "y": -36.99452747425341,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.07857289995763,
+        "y": -36.993245074250574,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 5,
+      "vehiclesExited": 5,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "34417-34415-34413-34411-34409-34407": {
+      "from": {
+        "x": 144.0672829999567,
+        "y": -36.98825017423853,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.0675418999567,
+        "y": -36.98913547424054,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 1,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "166854-166856-166858-166860-166862-166864": {
+      "from": {
+        "x": 144.26110659997013,
+        "y": -37.00082387427882,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.25855089996995,
+        "y": -37.00062527427823,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 1,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "167092-167090-167088-167086": {
+      "from": {
+        "x": 144.25857559997,
+        "y": -37.00272857428295,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.25815999996996,
+        "y": -37.004153174286124,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 1,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "98276-98274-98272": {
+      "from": {
+        "x": 144.06851209995682,
+        "y": -36.997134974258536,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.0685754999568,
+        "y": -36.99789327426023,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 1,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "79945-79943-79941": {
+      "from": {
+        "x": 144.15337559996314,
+        "y": -36.967738774198345,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.16176439996372,
+        "y": -36.96523457419325,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 3,
+      "vehiclesExited": 2,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "92174-92172-92170-92168-92166-92164-92162-92160-92158-92156-92154": {
+      "from": {
+        "x": 144.25496749996975,
+        "y": -36.978979574229506,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.25688529996984,
+        "y": -36.98270567423797,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 1,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "137457-137459-137461-137463-137465-137467": {
+      "from": {
+        "x": 144.10148699995935,
+        "y": -36.980986574224694,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.1023515999594,
+        "y": -36.97879497421981,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 11,
+      "vehiclesExited": 11,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "59865-59863-59861-59859-79951-79949-79947": {
+      "from": {
+        "x": 144.14687039996272,
+        "y": -36.97003777420311,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.15337559996314,
+        "y": -36.967738774198345,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 3,
+      "vehiclesExited": 3,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "177333-177335-177337-177339": {
+      "from": {
+        "x": 144.07109689995698,
+        "y": -36.99376147425115,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.07119259995702,
+        "y": -36.993916374251505,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 12,
+      "vehiclesExited": 10,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "92360-92358-92356-92354-92352-92350-92348-92346-92344-92342-92340-92338-92336-92334-92332-92330-92328": {
+      "from": {
+        "x": 144.26008779997005,
+        "y": -36.98638437424637,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.26163819997012,
+        "y": -36.99018727425501,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 1,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "168187-168185-168183": {
+      "from": {
+        "x": 144.1968633999661,
+        "y": -36.96475417419429,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.20862559996687,
+        "y": -36.96382437419287,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 2,
+      "vehiclesExited": 2,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "93244-93242-93240-93238-93236-93234-93246-102668": {
+      "from": {
+        "x": 144.2390270999687,
+        "y": -36.95718307417963,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.24311749996903,
+        "y": -36.96168387418998,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 2,
+      "vehiclesExited": 2,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "177279-177281-177283-177285-177287-177289": {
+      "from": {
+        "x": 144.07470499995728,
+        "y": -36.981269474223396,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.07416999995726,
+        "y": -36.98628397423461,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 0,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 1
+    },
+    "137318-137316": {
+      "from": {
+        "x": 144.1440840999625,
+        "y": -36.96996017420275,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.1463241999627,
+        "y": -36.97010497420322,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 3,
+      "vehiclesExited": 3,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "142960-142962-142964-142966-142968-142970-142972-142974-142976-142978-142980-142982-142984-142986-142988-142990": {
+      "from": {
+        "x": 144.07367639995724,
+        "y": -36.99037547424376,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.07633199995743,
+        "y": -36.98977447424261,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 1,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "137491-137493-137495-137497-137499-137501-137503": {
+      "from": {
+        "x": 144.10827999995985,
+        "y": -36.96843007419693,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.11399999996027,
+        "y": -36.96411007418763,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 10,
+      "vehiclesExited": 10,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "168213-168211-168209-168207": {
+      "from": {
+        "x": 144.18158049996507,
+        "y": -36.96345077419045,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.18620289996542,
+        "y": -36.9630427741898,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 2,
+      "vehiclesExited": 2,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "137659": {
+      "from": {
+        "x": 144.15435999996308,
+        "y": -36.85343737393998,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.15475249996317,
+        "y": -36.85136017393532,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 5,
+      "vehiclesExited": 5,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "34531-34529-34527-34525-34523-34521": {
+      "from": {
+        "x": 144.06909209995686,
+        "y": -36.99315717424964,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.07047549995693,
+        "y": -36.99279827424895,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 1,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "79592-79590": {
+      "from": {
+        "x": 144.06245079995628,
+        "y": -36.98772447423702,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.06400309995644,
+        "y": -36.98787217423744,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 2,
+      "vehiclesExited": 2,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "70539-70537-70535-70533-70531-70529-70527-70525-70523-70521-70519-70517-70515-70513-70511-70509-70507-70505": {
+      "from": {
+        "x": 144.07370419995723,
+        "y": -37.00740627428191,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.0741609999573,
+        "y": -37.00427867427496,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 1,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "137334-137332-137330-137328-137326-137324": {
+      "from": {
+        "x": 144.1383753999621,
+        "y": -36.97111837420498,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.14316259996244,
+        "y": -36.96989597420254,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 3,
+      "vehiclesExited": 3,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "98320-98318-98316": {
+      "from": {
+        "x": 144.06400309995644,
+        "y": -36.98787217423744,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.0647474999565,
+        "y": -36.989820874241865,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 4,
+      "vehiclesExited": 4,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "166877": {
+      "from": {
+        "x": 144.26117239997012,
+        "y": -37.00080347427876,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.26110659997013,
+        "y": -37.00082387427882,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 1,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "24884": {
+      "from": {
+        "x": 144.0796299999577,
+        "y": -36.988293074239515,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.08188919995786,
+        "y": -36.98801787423906,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 2,
+      "vehiclesExited": 2,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "168181-168179-168177-168175-168173": {
+      "from": {
+        "x": 144.20862559996687,
+        "y": -36.96382437419287,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.21826279996745,
+        "y": -36.96139817418797,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 2,
+      "vehiclesExited": 2,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "142938-142940-142942-142944-142946-142948-142950-142952-142954-142956-142958": {
+      "from": {
+        "x": 144.07263209995713,
+        "y": -36.99012257424312,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.07367639995724,
+        "y": -36.99037547424376,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 0,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 1
+    },
+    "41406": {
+      "from": {
+        "x": 144.0697489999569,
+        "y": -36.99584667425572,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.07011929995693,
+        "y": -36.99624007425666,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 3,
+      "vehiclesExited": 3,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "137419-137421-137423-137425-137427-137429": {
+      "from": {
+        "x": 144.09271859995872,
+        "y": -36.989229574242565,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.09638559995898,
+        "y": -36.986460874236606,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 17,
+      "vehiclesExited": 15,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "137370-137368-137366-137364-137362-137360": {
+      "from": {
+        "x": 144.10148699995935,
+        "y": -36.980986574224694,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.1126733999602,
+        "y": -36.97773407421813,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 3,
+      "vehiclesExited": 3,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "92204-92202-92200-92198-92196-92194-92192": {
+      "from": {
+        "x": 144.25004699996944,
+        "y": -36.97116907421168,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.25180789996952,
+        "y": -36.97357657421718,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 1,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "92144-92142-92140-92138-92136-92134-92132-92130": {
+      "from": {
+        "x": 144.2575584999699,
+        "y": -36.98376407424036,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.25965739997002,
+        "y": -36.98588837424525,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 1,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "93821-93823-93825-93827-93829": {
+      "from": {
+        "x": 144.07062469995697,
+        "y": -36.987855374237895,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.07277919995715,
+        "y": -36.988109674238615,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 0,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 1
+    },
+    "137607-137609-137611-137613": {
+      "from": {
+        "x": 144.13774999996195,
+        "y": -36.9043300740544,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.13862999996203,
+        "y": -36.89946007404339,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 7,
+      "vehiclesExited": 7,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "81393-81395": {
+      "from": {
+        "x": 144.07045979995698,
+        "y": -36.9965528742574,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.07069629995698,
+        "y": -36.99689787425817,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 3,
+      "vehiclesExited": 3,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "137557-137559": {
+      "from": {
+        "x": 144.12710999996125,
+        "y": -36.946110074147974,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.12800999996128,
+        "y": -36.94101007413656,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 9,
+      "vehiclesExited": 9,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "168225-168223-168221": {
+      "from": {
+        "x": 144.17268099996448,
+        "y": -36.96589987419541,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.1761997999647,
+        "y": -36.96519657419406,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 2,
+      "vehiclesExited": 2,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "25146-25144": {
+      "from": {
+        "x": 144.06846849995677,
+        "y": -36.999101374262935,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.0682813999568,
+        "y": -37.000099274265146,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 1,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "142843": {
+      "from": {
+        "x": 144.06191019995626,
+        "y": -36.99048697424315,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.06332639995634,
+        "y": -36.990139074242485,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 1,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "137505-137507-137509-137511-137513-137515-137517-137519-137521": {
+      "from": {
+        "x": 144.11399999996027,
+        "y": -36.96411007418763,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.1207170999608,
+        "y": -36.96264377418476,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 10,
+      "vehiclesExited": 10,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "98298-98296-98294-98292-98290": {
+      "from": {
+        "x": 144.0670376999567,
+        "y": -36.994795474253195,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.06826889995682,
+        "y": -36.99617747425636,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 2,
+      "vehiclesExited": 2,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "54677-54675-54673-54671-54669-54667": {
+      "from": {
+        "x": 144.0699813999569,
+        "y": -37.00584097427815,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.0719507999571,
+        "y": -37.00733087428161,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 1,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "156024-156026": {
+      "from": {
+        "x": 144.06761969995674,
+        "y": -36.98625197423407,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.06311399995639,
+        "y": -36.985737074232574,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 0,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 1
+    },
+    "19419-19421-19423-19425": {
+      "from": {
+        "x": 144.0748828999573,
+        "y": -36.99682767425832,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.07654969995747,
+        "y": -36.996677074258095,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 5,
+      "vehiclesExited": 5,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "137639-137641": {
+      "from": {
+        "x": 144.1466183999626,
+        "y": -36.87753827399425,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.1498406999628,
+        "y": -36.86860767397418,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 6,
+      "vehiclesExited": 5,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "177255-177257-177259-177261": {
+      "from": {
+        "x": 144.0611600999562,
+        "y": -36.988508874238654,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.06191019995626,
+        "y": -36.99048697424315,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 0,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 1
+    },
+    "19429-19431-19433-19435-19437": {
+      "from": {
+        "x": 144.07654969995747,
+        "y": -36.996677074258095,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.07720309995747,
+        "y": -36.99446097425317,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 5,
+      "vehiclesExited": 5,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "177369-177371-177373": {
+      "from": {
+        "x": 144.06151949995623,
+        "y": -36.99274197424817,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.06265069995635,
+        "y": -36.99249137424768,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 9,
+      "vehiclesExited": 9,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "137577-137579-137581-137583-137585-137587-137589-137591": {
+      "from": {
+        "x": 144.12956709996138,
+        "y": -36.933169174118966,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.13457999996174,
+        "y": -36.92255007409532,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 9,
+      "vehiclesExited": 8,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "137302": {
+      "from": {
+        "x": 144.1463241999627,
+        "y": -36.97010497420322,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.14687039996272,
+        "y": -36.97003777420311,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 3,
+      "vehiclesExited": 3,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "84470-84468-84466-84464-84462-84460-84458-84456-84454": {
+      "from": {
+        "x": 144.07119259995702,
+        "y": -36.993916374251505,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.0736101999572,
+        "y": -36.99293817424948,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 10,
+      "vehiclesExited": 10,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "137437-137439-137441": {
+      "from": {
+        "x": 144.09739069995905,
+        "y": -36.984773474232895,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.09847129995913,
+        "y": -36.98354447423021,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 14,
+      "vehiclesExited": 14,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "168171": {
+      "from": {
+        "x": 144.21826279996745,
+        "y": -36.96139817418797,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.22895989996815,
+        "y": -36.958420074181866,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 2,
+      "vehiclesExited": 2,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "162479-162469-162471-162473-162475-162477": {
+      "from": {
+        "x": 144.15622729996323,
+        "y": -36.84658587392456,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.1582525999634,
+        "y": -36.8443135739195,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 5,
+      "vehiclesExited": 4,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "137469-137471-137473-137475-137477-137479-137481": {
+      "from": {
+        "x": 144.1023515999594,
+        "y": -36.97879497421981,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.1060999999597,
+        "y": -36.97383007420894,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 11,
+      "vehiclesExited": 11,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "84518": {
+      "from": {
+        "x": 144.0816042999579,
+        "y": -36.993109274250465,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.0825410999579,
+        "y": -36.99286307424997,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 15,
+      "vehiclesExited": 15,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "137643-137645-137647-137649": {
+      "from": {
+        "x": 144.1498406999628,
+        "y": -36.86860767397418,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.15254419996296,
+        "y": -36.861155173957435,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 5,
+      "vehiclesExited": 5,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "81536": {
+      "from": {
+        "x": 144.0748666999573,
+        "y": -36.99685507425836,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.0748828999573,
+        "y": -36.99682767425832,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 5,
+      "vehiclesExited": 5,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "168724-168725-168726-168727-168728-168729-168730-168731-168732-168733-168734-168735-168736": {
+      "from": {
+        "x": 144.2362478999686,
+        "y": -36.95548917417567,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.2379418999687,
+        "y": -36.95605257417704,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 2,
+      "vehiclesExited": 2,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "168219-168217-168215": {
+      "from": {
+        "x": 144.1761997999647,
+        "y": -36.96519657419406,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.18158049996507,
+        "y": -36.96345077419045,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 2,
+      "vehiclesExited": 2,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "175242-175244-175246-175248": {
+      "from": {
+        "x": 144.06048919995618,
+        "y": -36.99083697424383,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.05976219995608,
+        "y": -36.98886787423936,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 0,
+      "vehiclesExited": 2,
+      "activitiesStarted": 0,
+      "activitiesEnded": 2
+    },
+    "84534-84532-84530-84528-84526-84524-84522-84520": {
+      "from": {
+        "x": 144.07857289995763,
+        "y": -36.993245074250574,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.0816042999579,
+        "y": -36.993109274250465,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 15,
+      "vehiclesExited": 15,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "70553-70551-70549-70547-70545-70543-70541": {
+      "from": {
+        "x": 144.0723394999571,
+        "y": -37.00751947428207,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.07370419995723,
+        "y": -37.00740627428191,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 1,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "177313": {
+      "from": {
+        "x": 144.07214149995707,
+        "y": -36.9902166742433,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.07213119995708,
+        "y": -36.99025427424338,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 1,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "92232-92230-92228-92226-92224-92222-92220-92218": {
+      "from": {
+        "x": 144.2462703999692,
+        "y": -36.967700674203684,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.24827099996932,
+        "y": -36.96951337420787,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 2,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "90041-90043-90045-90047-90049-90051-90053-90055-90057": {
+      "from": {
+        "x": 144.06488099995653,
+        "y": -36.99426247425182,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.06408779995644,
+        "y": -36.99217217424709,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 0,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 1
+    },
+    "166947-166949": {
+      "from": {
+        "x": 144.07633199995743,
+        "y": -36.98977447424261,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.07635749995742,
+        "y": -36.98975207424256,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 1,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "177311": {
+      "from": {
+        "x": 144.07248409995714,
+        "y": -36.98911907424085,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.07214149995707,
+        "y": -36.9902166742433,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 1,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "177315-177317-177319-177321": {
+      "from": {
+        "x": 144.07213119995708,
+        "y": -36.99025427424338,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.07164759995706,
+        "y": -36.99195137424715,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 1,
+      "vehiclesExited": 2,
+      "activitiesStarted": 0,
+      "activitiesEnded": 1
+    },
+    "137561-137563-137565-137567-137569-137571-137573-137575": {
+      "from": {
+        "x": 144.12800999996128,
+        "y": -36.94101007413656,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.12956709996138,
+        "y": -36.933169174118966,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 9,
+      "vehiclesExited": 9,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "92244-92242-92240-92238-92236-92234": {
+      "from": {
+        "x": 144.24544159996918,
+        "y": -36.966509174200965,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.2462703999692,
+        "y": -36.967700674203684,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 2,
+      "vehiclesExited": 2,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "137451-137453-137455": {
+      "from": {
+        "x": 144.10030529995927,
+        "y": -36.98234347422762,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.10148699995935,
+        "y": -36.980986574224694,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 14,
+      "vehiclesExited": 14,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "177391": {
+      "from": {
+        "x": 144.0683288999568,
+        "y": -36.991153574245125,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.06974549995692,
+        "y": -36.99081427424447,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 11,
+      "vehiclesExited": 10,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "41410-41408": {
+      "from": {
+        "x": 144.0692150999569,
+        "y": -36.995198474254245,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.0697489999569,
+        "y": -36.99584667425572,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 1,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "38876-38878": {
+      "from": {
+        "x": 144.06659459995663,
+        "y": -36.99563547425502,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.0649364999565,
+        "y": -36.9954430742545,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 0,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 1
+    },
+    "177325-177327-177329-177331": {
+      "from": {
+        "x": 144.07147279995704,
+        "y": -36.9925656742485,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.07109689995698,
+        "y": -36.99376147425115,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 2,
+      "vehiclesExited": 2,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "175249-175247-175245-175243": {
+      "from": {
+        "x": 144.05976219995608,
+        "y": -36.98886787423936,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.06048919995618,
+        "y": -36.99083697424383,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 3,
+      "vehiclesExited": 3,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "70503-70501-70499-70497-70495-70493-70491-70489": {
+      "from": {
+        "x": 144.0741609999573,
+        "y": -37.00427867427496,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.07442629995725,
+        "y": -37.00199167426985,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 1,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "70487-70485-70483-70481-70479": {
+      "from": {
+        "x": 144.07442629995725,
+        "y": -37.00199167426985,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.07473479995727,
+        "y": -37.00114707426796,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 1,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "177385-177387-177389": {
+      "from": {
+        "x": 144.06689339995665,
+        "y": -36.99149147424577,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.0683288999568,
+        "y": -36.991153574245125,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 10,
+      "vehiclesExited": 10,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "137523-137525-137527-137529-137531-137533-137535-137537-137539-137541-137543-137545": {
+      "from": {
+        "x": 144.1207170999608,
+        "y": -36.96264377418476,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.1251108999611,
+        "y": -36.95804957417474,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 10,
+      "vehiclesExited": 9,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "137356-137354-137352": {
+      "from": {
+        "x": 144.12145539996087,
+        "y": -36.975480874213666,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.12780869996135,
+        "y": -36.97354177420973,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 3,
+      "vehiclesExited": 3,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "90070": {
+      "from": {
+        "x": 144.06332639995634,
+        "y": -36.990139074242485,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.06333289995638,
+        "y": -36.9901584742425,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 1,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "102658-102656-102654-102652-102650": {
+      "from": {
+        "x": 144.24426549996912,
+        "y": -36.96332987419374,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.24494539996914,
+        "y": -36.96541077419845,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 2,
+      "vehiclesExited": 2,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "137669-137671": {
+      "from": {
+        "x": 144.15541299996318,
+        "y": -36.84822067392822,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.15622729996323,
+        "y": -36.84658587392456,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 5,
+      "vehiclesExited": 5,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "167102-167100-167098-167096-167094": {
+      "from": {
+        "x": 144.25855089996995,
+        "y": -37.00062527427823,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.25857559997,
+        "y": -37.00272857428295,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 1,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "81389-81391": {
+      "from": {
+        "x": 144.07011929995693,
+        "y": -36.99624007425666,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.07045979995698,
+        "y": -36.9965528742574,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 3,
+      "vehiclesExited": 3,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "38879-38877": {
+      "from": {
+        "x": 144.0649364999565,
+        "y": -36.9954430742545,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.06659459995663,
+        "y": -36.99563547425502,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 1,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "167105-167107": {
+      "from": {
+        "x": 144.06910009995684,
+        "y": -36.99317447424969,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.06765069995674,
+        "y": -36.993493374250285,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 0,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 1
+    },
+    "41426-41424-41422-41420-41418-41416-41414-41412": {
+      "from": {
+        "x": 144.06765069995674,
+        "y": -36.993493374250285,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.0692150999569,
+        "y": -36.995198474254245,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 1,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "177305": {
+      "from": {
+        "x": 144.07277919995715,
+        "y": -36.988109674238615,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.07265389995715,
+        "y": -36.98854647423957,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 1,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "102666-102664-102662-102660": {
+      "from": {
+        "x": 144.24311749996903,
+        "y": -36.96168387418998,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.24426549996912,
+        "y": -36.96332987419374,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 2,
+      "vehiclesExited": 2,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "34419": {
+      "from": {
+        "x": 144.0676018999567,
+        "y": -36.98631307423421,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.0672829999567,
+        "y": -36.98825017423853,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 1,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "34418": {
+      "from": {
+        "x": 144.0672829999567,
+        "y": -36.98825017423853,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.0676018999567,
+        "y": -36.98631307423421,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 0,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 1
+    },
+    "137413-137415-137417": {
+      "from": {
+        "x": 144.0877624999583,
+        "y": -36.99141187424709,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.09271859995872,
+        "y": -36.989229574242565,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 15,
+      "vehiclesExited": 15,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "93785-93787-93789-93791-93793-93795-93797-93799": {
+      "from": {
+        "x": 144.07047549995693,
+        "y": -36.99279827424895,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.07109689995698,
+        "y": -36.99376147425115,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 11,
+      "vehiclesExited": 10,
+      "activitiesStarted": 0,
+      "activitiesEnded": 1
+    },
+    "137593-137595-137597": {
+      "from": {
+        "x": 144.13457999996174,
+        "y": -36.92255007409532,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.13649659996187,
+        "y": -36.91164457407084,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 8,
+      "vehiclesExited": 8,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "38866-38867-38868-38869-38870-38871-38872-38873-38874-38875": {
+      "from": {
+        "x": 144.06659459995663,
+        "y": -36.99563547425502,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.0670376999567,
+        "y": -36.994795474253195,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 1,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "81315-81317-81319-81321-81323": {
+      "from": {
+        "x": 144.0748666999573,
+        "y": -36.99685507425836,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.07069629995698,
+        "y": -36.99689787425817,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 0,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 1
+    },
+    "92190-92188-92186-92184-92182-92180-92178-92176": {
+      "from": {
+        "x": 144.25180789996952,
+        "y": -36.97357657421718,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.25496749996975,
+        "y": -36.978979574229506,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 1,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "176826-176828-176830": {
+      "from": {
+        "x": 144.07635749995742,
+        "y": -36.98975207424256,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.07652649995745,
+        "y": -36.98853227423985,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 1,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "79593": {
+      "from": {
+        "x": 144.06245079995628,
+        "y": -36.98772447423702,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.06075649995617,
+        "y": -36.98752977423643,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 0,
+      "vehiclesExited": 2,
+      "activitiesStarted": 0,
+      "activitiesEnded": 2
+    },
+    "79594": {
+      "from": {
+        "x": 144.06075649995617,
+        "y": -36.98752977423643,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.06245079995628,
+        "y": -36.98772447423702,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 2,
+      "vehiclesExited": 2,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "137551-137553-137555": {
+      "from": {
+        "x": 144.12609999996118,
+        "y": -36.95231007416187,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.12710999996125,
+        "y": -36.946110074147974,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 9,
+      "vehiclesExited": 9,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "168124-168125-168126-168127": {
+      "from": {
+        "x": 144.23489069996853,
+        "y": -36.95658447417808,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.23584689996858,
+        "y": -36.955649974176,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 2,
+      "vehiclesExited": 2,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "19281-19283": {
+      "from": {
+        "x": 144.07720309995747,
+        "y": -36.99446097425317,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.0784432999576,
+        "y": -36.99452747425341,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 5,
+      "vehiclesExited": 5,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "81437": {
+      "from": {
+        "x": 144.07473479995727,
+        "y": -37.00114707426796,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.07491939995734,
+        "y": -37.001252074268216,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 1,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "152715-152716": {
+      "from": {
+        "x": 144.26052069997013,
+        "y": -36.999541474275915,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.26117239997012,
+        "y": -37.00080347427876,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 1,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "92366-92364-92362": {
+      "from": {
+        "x": 144.25965739997002,
+        "y": -36.98588837424525,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.26008779997005,
+        "y": -36.98638437424637,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 1,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "98314-98312-98310": {
+      "from": {
+        "x": 144.0647474999565,
+        "y": -36.989820874241865,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.06549159995654,
+        "y": -36.9918181742464,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 5,
+      "vehiclesExited": 5,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "168237-168235-168233-168231-168229-168227": {
+      "from": {
+        "x": 144.1628247999638,
+        "y": -36.96498757419277,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.17268099996448,
+        "y": -36.96589987419541,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 2,
+      "vehiclesExited": 2,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "24882-24880-24878": {
+      "from": {
+        "x": 144.08188919995786,
+        "y": -36.98801787423906,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.08788999995832,
+        "y": -36.98728727423787,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 2,
+      "vehiclesExited": 2,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "137615-137617-137619": {
+      "from": {
+        "x": 144.13862999996203,
+        "y": -36.89946007404339,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.14003189996214,
+        "y": -36.89548437403448,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 7,
+      "vehiclesExited": 7,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "103625": {
+      "from": {
+        "x": 144.06906799995684,
+        "y": -36.995995574256014,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.0697489999569,
+        "y": -36.99584667425572,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 2,
+      "vehiclesExited": 2,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "72520-72522-72524-72526-72528-72530-72532-72534": {
+      "from": {
+        "x": 144.0635549999564,
+        "y": -36.99613457425591,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.06604299995658,
+        "y": -36.99692207425788,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 0,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 1
+    },
+    "137599-137601-137603-137605": {
+      "from": {
+        "x": 144.13649659996187,
+        "y": -36.91164457407084,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.13774999996195,
+        "y": -36.9043300740544,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 8,
+      "vehiclesExited": 7,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "19293-19295-19297-19299-19301-19303-19305-19307-19309": {
+      "from": {
+        "x": 144.07597569995738,
+        "y": -36.98619647423455,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.0796299999577,
+        "y": -36.988293074239515,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 1,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "34405": {
+      "from": {
+        "x": 144.0675418999567,
+        "y": -36.98913547424054,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.0683288999568,
+        "y": -36.991153574245125,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 1,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "98330-98328-98326-98324-98322": {
+      "from": {
+        "x": 144.06311399995639,
+        "y": -36.985737074232574,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.06400309995644,
+        "y": -36.98787217423744,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 1,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "137621-137623": {
+      "from": {
+        "x": 144.14003189996214,
+        "y": -36.89548437403448,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.1427999999623,
+        "y": -36.88791007401751,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 7,
+      "vehiclesExited": 6,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "98289-98291-98293-98295-98297": {
+      "from": {
+        "x": 144.06826889995682,
+        "y": -36.99617747425636,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.0670376999567,
+        "y": -36.994795474253195,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 0,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 1
+    },
+    "177375-177377": {
+      "from": {
+        "x": 144.06265069995635,
+        "y": -36.99249137424768,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.06408779995644,
+        "y": -36.99217217424709,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 9,
+      "vehiclesExited": 10,
+      "activitiesStarted": 0,
+      "activitiesEnded": 1
+    },
+    "54691-54689-54687-54685-54683-54681-54679": {
+      "from": {
+        "x": 144.0680457999568,
+        "y": -37.00299807427163,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.0699813999569,
+        "y": -37.00584097427815,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 1,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "84452-84450-84448-84446-84444-84442-84440-84438-84436": {
+      "from": {
+        "x": 144.0736101999572,
+        "y": -36.99293817424948,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.07559509995733,
+        "y": -36.993016874249804,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 10,
+      "vehiclesExited": 10,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "92216-92214-92212-92210-92208-92206": {
+      "from": {
+        "x": 144.24827099996932,
+        "y": -36.96951337420787,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.25004699996944,
+        "y": -36.97116907421168,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 1,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "92252-92250-92248-92246": {
+      "from": {
+        "x": 144.24494539996914,
+        "y": -36.96541077419845,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.24544159996918,
+        "y": -36.966509174200965,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 2,
+      "vehiclesExited": 2,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "84536": {
+      "from": {
+        "x": 144.07735729995747,
+        "y": -36.993170774250295,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.07857289995763,
+        "y": -36.993245074250574,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 10,
+      "vehiclesExited": 10,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "81324-81322-81320-81318-81316": {
+      "from": {
+        "x": 144.07069629995698,
+        "y": -36.99689787425817,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.0748666999573,
+        "y": -36.99685507425836,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 4,
+      "vehiclesExited": 4,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "137651-137653-137655-137657": {
+      "from": {
+        "x": 144.15254419996296,
+        "y": -36.861155173957435,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.15435999996308,
+        "y": -36.85343737393998,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 5,
+      "vehiclesExited": 5,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "177209": {
+      "from": {
+        "x": 144.05916449995607,
+        "y": -36.989011474239646,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.05976219995608,
+        "y": -36.98886787423936,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 0,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 1
+    },
+    "103621-103623": {
+      "from": {
+        "x": 144.06826889995682,
+        "y": -36.99617747425636,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.06906799995684,
+        "y": -36.995995574256014,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 2,
+      "vehiclesExited": 2,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "168737": {
+      "from": {
+        "x": 144.2379418999687,
+        "y": -36.95605257417704,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.2381057999687,
+        "y": -36.956253474177494,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 2,
+      "vehiclesExited": 2,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "177323": {
+      "from": {
+        "x": 144.07164759995706,
+        "y": -36.99195137424715,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.07147279995704,
+        "y": -36.9925656742485,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 2,
+      "vehiclesExited": 2,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    }
+  },
+  "46800": {
+    "92472-92470-92468-92466-92464-92462": {
+      "from": {
+        "x": 144.26152609997015,
+        "y": -36.991869974258755,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.2611502999701,
+        "y": -36.99447517426457,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 5,
+      "vehiclesExited": 5,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "135697-40964-40966-40968-40970-40972-40974-40976": {
+      "from": {
+        "x": 144.1582525999634,
+        "y": -36.8443135739195,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.1560619999632,
+        "y": -36.8405073739107,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 20,
+      "vehiclesExited": 20,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "92326-92324-92322-92320-92318-92316-92314-92312": {
+      "from": {
+        "x": 144.26163819997012,
+        "y": -36.99018727425501,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.26152609997015,
+        "y": -36.991869974258755,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 5,
+      "vehiclesExited": 5,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "116923-116921-116914": {
+      "from": {
+        "x": 144.2611502999701,
+        "y": -36.99447517426457,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.26108249997014,
+        "y": -36.995526274266936,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 5,
+      "vehiclesExited": 5,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "137431-137433-137435": {
+      "from": {
+        "x": 144.09638559995898,
+        "y": -36.986460874236606,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.09739069995905,
+        "y": -36.984773474232895,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 15,
+      "vehiclesExited": 16,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "167869-167870-167871": {
+      "from": {
+        "x": 144.26108249997014,
+        "y": -36.995526274266936,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.2610199999701,
+        "y": -36.996412774268926,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 5,
+      "vehiclesExited": 5,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "84434-84432": {
+      "from": {
+        "x": 144.07559509995733,
+        "y": -36.993016874249804,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.07735729995747,
+        "y": -36.993170774250295,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 13,
+      "vehiclesExited": 13,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "84516-84514": {
+      "from": {
+        "x": 144.0825410999579,
+        "y": -36.99286307424997,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.0877624999583,
+        "y": -36.99141187424709,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 13,
+      "vehiclesExited": 13,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "177379-177381": {
+      "from": {
+        "x": 144.06408779995644,
+        "y": -36.99217217424709,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.06549159995654,
+        "y": -36.9918181742464,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 0,
+      "vehiclesExited": 1,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "83435-83437-83439-83441-83443-83445": {
+      "from": {
+        "x": 144.15593709996318,
+        "y": -36.83992517390937,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.1547860999631,
+        "y": -36.840678973911004,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 20,
+      "vehiclesExited": 0,
+      "activitiesStarted": 20,
+      "activitiesEnded": 0
+    },
+    "137547-137549": {
+      "from": {
+        "x": 144.1251108999611,
+        "y": -36.95804957417474,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.12609999996118,
+        "y": -36.95231007416187,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 15,
+      "vehiclesExited": 15,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "79939": {
+      "from": {
+        "x": 144.16176439996372,
+        "y": -36.96523457419325,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.16222769996372,
+        "y": -36.965079874192924,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 4,
+      "vehiclesExited": 4,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "102208-102206-102204": {
+      "from": {
+        "x": 144.2381057999687,
+        "y": -36.956253474177494,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.2390270999687,
+        "y": -36.95718307417963,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 4,
+      "vehiclesExited": 4,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "86785-86786-86787-86788-86789": {
+      "from": {
+        "x": 144.2610199999701,
+        "y": -36.996412774268926,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.26052069997013,
+        "y": -36.999541474275915,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 5,
+      "vehiclesExited": 5,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "168720-168721-168722-168723": {
+      "from": {
+        "x": 144.23584689996858,
+        "y": -36.955649974176,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.2362478999686,
+        "y": -36.95548917417567,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 4,
+      "vehiclesExited": 4,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "137625-137627-137629-137631-137633-137635": {
+      "from": {
+        "x": 144.1427999999623,
+        "y": -36.88791007401751,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.14583339996253,
+        "y": -36.879686673999075,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 18,
+      "vehiclesExited": 18,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "137637": {
+      "from": {
+        "x": 144.14583339996253,
+        "y": -36.879686673999075,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.1466183999626,
+        "y": -36.87753827399425,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 18,
+      "vehiclesExited": 18,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "93783": {
+      "from": {
+        "x": 144.06974549995692,
+        "y": -36.99081427424447,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.07047549995693,
+        "y": -36.99279827424895,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 7,
+      "vehiclesExited": 9,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "137443-137445-137447-137449": {
+      "from": {
+        "x": 144.09847129995913,
+        "y": -36.98354447423021,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.10030529995927,
+        "y": -36.98234347422762,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 16,
+      "vehiclesExited": 16,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "137358": {
+      "from": {
+        "x": 144.1126733999602,
+        "y": -36.97773407421813,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.12145539996087,
+        "y": -36.975480874213666,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 3,
+      "vehiclesExited": 3,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "92152-92150-92148-92146": {
+      "from": {
+        "x": 144.25688529996984,
+        "y": -36.98270567423797,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.2575584999699,
+        "y": -36.98376407424036,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 5,
+      "vehiclesExited": 5,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "137350-137348-137346-137344-137342-137340-137338-137336": {
+      "from": {
+        "x": 144.12780869996135,
+        "y": -36.97354177420973,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.1383753999621,
+        "y": -36.97111837420498,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 3,
+      "vehiclesExited": 3,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "40978": {
+      "from": {
+        "x": 144.1560619999632,
+        "y": -36.8405073739107,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.15593709996318,
+        "y": -36.83992517390937,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 20,
+      "vehiclesExited": 20,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "168169-168167-168165-168163-168161-168159-168157-168155-168153": {
+      "from": {
+        "x": 144.22895989996815,
+        "y": -36.958420074181866,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.23489069996853,
+        "y": -36.95658447417808,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 4,
+      "vehiclesExited": 4,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "168239": {
+      "from": {
+        "x": 144.16249959996375,
+        "y": -36.96503677419286,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.1628247999638,
+        "y": -36.96498757419277,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 4,
+      "vehiclesExited": 4,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "79921": {
+      "from": {
+        "x": 144.16222769996372,
+        "y": -36.965079874192924,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.16249959996375,
+        "y": -36.96503677419286,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 4,
+      "vehiclesExited": 4,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "137322-137320": {
+      "from": {
+        "x": 144.14316259996244,
+        "y": -36.96989597420254,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.1440840999625,
+        "y": -36.96996017420275,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 3,
+      "vehiclesExited": 3,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "68803-68805-68807": {
+      "from": {
+        "x": 144.25815999996996,
+        "y": -37.004153174286124,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.25508239996978,
+        "y": -37.003571374284654,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 5,
+      "vehiclesExited": 0,
+      "activitiesStarted": 5,
+      "activitiesEnded": 0
+    },
+    "137661-137663-137665-137667": {
+      "from": {
+        "x": 144.15475249996317,
+        "y": -36.85136017393532,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.15541299996318,
+        "y": -36.84822067392822,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 19,
+      "vehiclesExited": 19,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "168205-168203-168201-168199-168197-168195-168193-168191-168189": {
+      "from": {
+        "x": 144.18620289996542,
+        "y": -36.9630427741898,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.1968633999661,
+        "y": -36.96475417419429,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 4,
+      "vehiclesExited": 4,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "177383": {
+      "from": {
+        "x": 144.06549159995654,
+        "y": -36.9918181742464,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.06689339995665,
+        "y": -36.99149147424577,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 1,
+      "vehiclesExited": 6,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "137483-137485-137487-137489": {
+      "from": {
+        "x": 144.1060999999597,
+        "y": -36.97383007420894,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.10827999995985,
+        "y": -36.96843007419693,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 13,
+      "vehiclesExited": 14,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "166854-166856-166858-166860-166862-166864": {
+      "from": {
+        "x": 144.26110659997013,
+        "y": -37.00082387427882,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.25855089996995,
+        "y": -37.00062527427823,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 5,
+      "vehiclesExited": 5,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "167092-167090-167088-167086": {
+      "from": {
+        "x": 144.25857559997,
+        "y": -37.00272857428295,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.25815999996996,
+        "y": -37.004153174286124,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 5,
+      "vehiclesExited": 5,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "79945-79943-79941": {
+      "from": {
+        "x": 144.15337559996314,
+        "y": -36.967738774198345,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.16176439996372,
+        "y": -36.96523457419325,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 3,
+      "vehiclesExited": 4,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "92174-92172-92170-92168-92166-92164-92162-92160-92158-92156-92154": {
+      "from": {
+        "x": 144.25496749996975,
+        "y": -36.978979574229506,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.25688529996984,
+        "y": -36.98270567423797,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 5,
+      "vehiclesExited": 5,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "137457-137459-137461-137463-137465-137467": {
+      "from": {
+        "x": 144.10148699995935,
+        "y": -36.980986574224694,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.1023515999594,
+        "y": -36.97879497421981,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 13,
+      "vehiclesExited": 13,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "59865-59863-59861-59859-79951-79949-79947": {
+      "from": {
+        "x": 144.14687039996272,
+        "y": -36.97003777420311,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.15337559996314,
+        "y": -36.967738774198345,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 3,
+      "vehiclesExited": 3,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "177333-177335-177337-177339": {
+      "from": {
+        "x": 144.07109689995698,
+        "y": -36.99376147425115,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.07119259995702,
+        "y": -36.993916374251505,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 11,
+      "vehiclesExited": 13,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "92360-92358-92356-92354-92352-92350-92348-92346-92344-92342-92340-92338-92336-92334-92332-92330-92328": {
+      "from": {
+        "x": 144.26008779997005,
+        "y": -36.98638437424637,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.26163819997012,
+        "y": -36.99018727425501,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 5,
+      "vehiclesExited": 5,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "168187-168185-168183": {
+      "from": {
+        "x": 144.1968633999661,
+        "y": -36.96475417419429,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.20862559996687,
+        "y": -36.96382437419287,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 4,
+      "vehiclesExited": 4,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "93244-93242-93240-93238-93236-93234-93246-102668": {
+      "from": {
+        "x": 144.2390270999687,
+        "y": -36.95718307417963,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.24311749996903,
+        "y": -36.96168387418998,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 4,
+      "vehiclesExited": 4,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "137318-137316": {
+      "from": {
+        "x": 144.1440840999625,
+        "y": -36.96996017420275,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.1463241999627,
+        "y": -36.97010497420322,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 3,
+      "vehiclesExited": 3,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "137491-137493-137495-137497-137499-137501-137503": {
+      "from": {
+        "x": 144.10827999995985,
+        "y": -36.96843007419693,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.11399999996027,
+        "y": -36.96411007418763,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 14,
+      "vehiclesExited": 14,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "168213-168211-168209-168207": {
+      "from": {
+        "x": 144.18158049996507,
+        "y": -36.96345077419045,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.18620289996542,
+        "y": -36.9630427741898,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 4,
+      "vehiclesExited": 4,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "137659": {
+      "from": {
+        "x": 144.15435999996308,
+        "y": -36.85343737393998,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.15475249996317,
+        "y": -36.85136017393532,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 19,
+      "vehiclesExited": 19,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "137334-137332-137330-137328-137326-137324": {
+      "from": {
+        "x": 144.1383753999621,
+        "y": -36.97111837420498,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.14316259996244,
+        "y": -36.96989597420254,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 3,
+      "vehiclesExited": 3,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "166877": {
+      "from": {
+        "x": 144.26117239997012,
+        "y": -37.00080347427876,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.26110659997013,
+        "y": -37.00082387427882,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 5,
+      "vehiclesExited": 5,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "168181-168179-168177-168175-168173": {
+      "from": {
+        "x": 144.20862559996687,
+        "y": -36.96382437419287,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.21826279996745,
+        "y": -36.96139817418797,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 4,
+      "vehiclesExited": 4,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "137419-137421-137423-137425-137427-137429": {
+      "from": {
+        "x": 144.09271859995872,
+        "y": -36.989229574242565,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.09638559995898,
+        "y": -36.986460874236606,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 13,
+      "vehiclesExited": 15,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "92204-92202-92200-92198-92196-92194-92192": {
+      "from": {
+        "x": 144.25004699996944,
+        "y": -36.97116907421168,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.25180789996952,
+        "y": -36.97357657421718,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 5,
+      "vehiclesExited": 5,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "92144-92142-92140-92138-92136-92134-92132-92130": {
+      "from": {
+        "x": 144.2575584999699,
+        "y": -36.98376407424036,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.25965739997002,
+        "y": -36.98588837424525,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 5,
+      "vehiclesExited": 5,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "137370-137368-137366-137364-137362-137360": {
+      "from": {
+        "x": 144.10148699995935,
+        "y": -36.980986574224694,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.1126733999602,
+        "y": -36.97773407421813,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 3,
+      "vehiclesExited": 3,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "137607-137609-137611-137613": {
+      "from": {
+        "x": 144.13774999996195,
+        "y": -36.9043300740544,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.13862999996203,
+        "y": -36.89946007404339,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 17,
+      "vehiclesExited": 17,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "137557-137559": {
+      "from": {
+        "x": 144.12710999996125,
+        "y": -36.946110074147974,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.12800999996128,
+        "y": -36.94101007413656,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 15,
+      "vehiclesExited": 15,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "168225-168223-168221": {
+      "from": {
+        "x": 144.17268099996448,
+        "y": -36.96589987419541,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.1761997999647,
+        "y": -36.96519657419406,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 4,
+      "vehiclesExited": 4,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "137505-137507-137509-137511-137513-137515-137517-137519-137521": {
+      "from": {
+        "x": 144.11399999996027,
+        "y": -36.96411007418763,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.1207170999608,
+        "y": -36.96264377418476,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 14,
+      "vehiclesExited": 14,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "137639-137641": {
+      "from": {
+        "x": 144.1466183999626,
+        "y": -36.87753827399425,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.1498406999628,
+        "y": -36.86860767397418,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 18,
+      "vehiclesExited": 19,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "137577-137579-137581-137583-137585-137587-137589-137591": {
+      "from": {
+        "x": 144.12956709996138,
+        "y": -36.933169174118966,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.13457999996174,
+        "y": -36.92255007409532,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 15,
+      "vehiclesExited": 16,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "137302": {
+      "from": {
+        "x": 144.1463241999627,
+        "y": -36.97010497420322,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.14687039996272,
+        "y": -36.97003777420311,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 3,
+      "vehiclesExited": 3,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "137437-137439-137441": {
+      "from": {
+        "x": 144.09739069995905,
+        "y": -36.984773474232895,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.09847129995913,
+        "y": -36.98354447423021,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 16,
+      "vehiclesExited": 16,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "84470-84468-84466-84464-84462-84460-84458-84456-84454": {
+      "from": {
+        "x": 144.07119259995702,
+        "y": -36.993916374251505,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.0736101999572,
+        "y": -36.99293817424948,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 13,
+      "vehiclesExited": 13,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "162479-162469-162471-162473-162475-162477": {
+      "from": {
+        "x": 144.15622729996323,
+        "y": -36.84658587392456,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.1582525999634,
+        "y": -36.8443135739195,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 19,
+      "vehiclesExited": 20,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "168171": {
+      "from": {
+        "x": 144.21826279996745,
+        "y": -36.96139817418797,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.22895989996815,
+        "y": -36.958420074181866,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 4,
+      "vehiclesExited": 4,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "137469-137471-137473-137475-137477-137479-137481": {
+      "from": {
+        "x": 144.1023515999594,
+        "y": -36.97879497421981,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.1060999999597,
+        "y": -36.97383007420894,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 13,
+      "vehiclesExited": 13,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "84518": {
+      "from": {
+        "x": 144.0816042999579,
+        "y": -36.993109274250465,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.0825410999579,
+        "y": -36.99286307424997,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 13,
+      "vehiclesExited": 13,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "137643-137645-137647-137649": {
+      "from": {
+        "x": 144.1498406999628,
+        "y": -36.86860767397418,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.15254419996296,
+        "y": -36.861155173957435,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 19,
+      "vehiclesExited": 19,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "168724-168725-168726-168727-168728-168729-168730-168731-168732-168733-168734-168735-168736": {
+      "from": {
+        "x": 144.2362478999686,
+        "y": -36.95548917417567,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.2379418999687,
+        "y": -36.95605257417704,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 4,
+      "vehiclesExited": 4,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "168219-168217-168215": {
+      "from": {
+        "x": 144.1761997999647,
+        "y": -36.96519657419406,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.18158049996507,
+        "y": -36.96345077419045,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 4,
+      "vehiclesExited": 4,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "84534-84532-84530-84528-84526-84524-84522-84520": {
+      "from": {
+        "x": 144.07857289995763,
+        "y": -36.993245074250574,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.0816042999579,
+        "y": -36.993109274250465,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 13,
+      "vehiclesExited": 13,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "92232-92230-92228-92226-92224-92222-92220-92218": {
+      "from": {
+        "x": 144.2462703999692,
+        "y": -36.967700674203684,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.24827099996932,
+        "y": -36.96951337420787,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 4,
+      "vehiclesExited": 5,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "137561-137563-137565-137567-137569-137571-137573-137575": {
+      "from": {
+        "x": 144.12800999996128,
+        "y": -36.94101007413656,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.12956709996138,
+        "y": -36.933169174118966,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 15,
+      "vehiclesExited": 15,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "92244-92242-92240-92238-92236-92234": {
+      "from": {
+        "x": 144.24544159996918,
+        "y": -36.966509174200965,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.2462703999692,
+        "y": -36.967700674203684,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 4,
+      "vehiclesExited": 4,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "137451-137453-137455": {
+      "from": {
+        "x": 144.10030529995927,
+        "y": -36.98234347422762,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.10148699995935,
+        "y": -36.980986574224694,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 16,
+      "vehiclesExited": 16,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "177391": {
+      "from": {
+        "x": 144.0683288999568,
+        "y": -36.991153574245125,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.06974549995692,
+        "y": -36.99081427424447,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 6,
+      "vehiclesExited": 7,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "137523-137525-137527-137529-137531-137533-137535-137537-137539-137541-137543-137545": {
+      "from": {
+        "x": 144.1207170999608,
+        "y": -36.96264377418476,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.1251108999611,
+        "y": -36.95804957417474,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 14,
+      "vehiclesExited": 15,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "177385-177387-177389": {
+      "from": {
+        "x": 144.06689339995665,
+        "y": -36.99149147424577,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.0683288999568,
+        "y": -36.991153574245125,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 6,
+      "vehiclesExited": 6,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "137356-137354-137352": {
+      "from": {
+        "x": 144.12145539996087,
+        "y": -36.975480874213666,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.12780869996135,
+        "y": -36.97354177420973,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 3,
+      "vehiclesExited": 3,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "102658-102656-102654-102652-102650": {
+      "from": {
+        "x": 144.24426549996912,
+        "y": -36.96332987419374,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.24494539996914,
+        "y": -36.96541077419845,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 4,
+      "vehiclesExited": 4,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "137669-137671": {
+      "from": {
+        "x": 144.15541299996318,
+        "y": -36.84822067392822,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.15622729996323,
+        "y": -36.84658587392456,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 19,
+      "vehiclesExited": 19,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "167102-167100-167098-167096-167094": {
+      "from": {
+        "x": 144.25855089996995,
+        "y": -37.00062527427823,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.25857559997,
+        "y": -37.00272857428295,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 5,
+      "vehiclesExited": 5,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "102666-102664-102662-102660": {
+      "from": {
+        "x": 144.24311749996903,
+        "y": -36.96168387418998,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.24426549996912,
+        "y": -36.96332987419374,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 4,
+      "vehiclesExited": 4,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "137413-137415-137417": {
+      "from": {
+        "x": 144.0877624999583,
+        "y": -36.99141187424709,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.09271859995872,
+        "y": -36.989229574242565,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 13,
+      "vehiclesExited": 13,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "137593-137595-137597": {
+      "from": {
+        "x": 144.13457999996174,
+        "y": -36.92255007409532,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.13649659996187,
+        "y": -36.91164457407084,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 16,
+      "vehiclesExited": 16,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "93785-93787-93789-93791-93793-93795-93797-93799": {
+      "from": {
+        "x": 144.07047549995693,
+        "y": -36.99279827424895,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.07109689995698,
+        "y": -36.99376147425115,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 9,
+      "vehiclesExited": 11,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "92190-92188-92186-92184-92182-92180-92178-92176": {
+      "from": {
+        "x": 144.25180789996952,
+        "y": -36.97357657421718,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.25496749996975,
+        "y": -36.978979574229506,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 5,
+      "vehiclesExited": 5,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "137551-137553-137555": {
+      "from": {
+        "x": 144.12609999996118,
+        "y": -36.95231007416187,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.12710999996125,
+        "y": -36.946110074147974,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 15,
+      "vehiclesExited": 15,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "168124-168125-168126-168127": {
+      "from": {
+        "x": 144.23489069996853,
+        "y": -36.95658447417808,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.23584689996858,
+        "y": -36.955649974176,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 4,
+      "vehiclesExited": 4,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "152715-152716": {
+      "from": {
+        "x": 144.26052069997013,
+        "y": -36.999541474275915,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.26117239997012,
+        "y": -37.00080347427876,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 5,
+      "vehiclesExited": 5,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "92366-92364-92362": {
+      "from": {
+        "x": 144.25965739997002,
+        "y": -36.98588837424525,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.26008779997005,
+        "y": -36.98638437424637,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 5,
+      "vehiclesExited": 5,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "168237-168235-168233-168231-168229-168227": {
+      "from": {
+        "x": 144.1628247999638,
+        "y": -36.96498757419277,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.17268099996448,
+        "y": -36.96589987419541,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 4,
+      "vehiclesExited": 4,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "137615-137617-137619": {
+      "from": {
+        "x": 144.13862999996203,
+        "y": -36.89946007404339,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.14003189996214,
+        "y": -36.89548437403448,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 17,
+      "vehiclesExited": 17,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "137599-137601-137603-137605": {
+      "from": {
+        "x": 144.13649659996187,
+        "y": -36.91164457407084,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.13774999996195,
+        "y": -36.9043300740544,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 16,
+      "vehiclesExited": 17,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "137621-137623": {
+      "from": {
+        "x": 144.14003189996214,
+        "y": -36.89548437403448,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.1427999999623,
+        "y": -36.88791007401751,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 17,
+      "vehiclesExited": 18,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "92216-92214-92212-92210-92208-92206": {
+      "from": {
+        "x": 144.24827099996932,
+        "y": -36.96951337420787,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.25004699996944,
+        "y": -36.97116907421168,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 5,
+      "vehiclesExited": 5,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "84452-84450-84448-84446-84444-84442-84440-84438-84436": {
+      "from": {
+        "x": 144.0736101999572,
+        "y": -36.99293817424948,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.07559509995733,
+        "y": -36.993016874249804,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 13,
+      "vehiclesExited": 13,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "92252-92250-92248-92246": {
+      "from": {
+        "x": 144.24494539996914,
+        "y": -36.96541077419845,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.24544159996918,
+        "y": -36.966509174200965,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 4,
+      "vehiclesExited": 4,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "84536": {
+      "from": {
+        "x": 144.07735729995747,
+        "y": -36.993170774250295,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.07857289995763,
+        "y": -36.993245074250574,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 13,
+      "vehiclesExited": 13,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "137651-137653-137655-137657": {
+      "from": {
+        "x": 144.15254419996296,
+        "y": -36.861155173957435,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.15435999996308,
+        "y": -36.85343737393998,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 19,
+      "vehiclesExited": 19,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    },
+    "168737": {
+      "from": {
+        "x": 144.2379418999687,
+        "y": -36.95605257417704,
+        "z": -Infinity
+      },
+      "to": {
+        "x": 144.2381057999687,
+        "y": -36.956253474177494,
+        "z": -Infinity
+      },
+      "vehiclesEntered": 4,
+      "vehiclesExited": 4,
+      "activitiesStarted": 0,
+      "activitiesEnded": 0
+    }
+  }
+}
