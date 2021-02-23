@@ -115,7 +115,9 @@ public class EvacMetricsTracker implements
 					crs, TransformationFactory.WGS84);
 			Coord from = transform.transform(link.getFromNode().getCoord());
 			Coord to = transform.transform(link.getToNode().getCoord());
-			linksMap.put(hasLinkId.getLinkId(), new LinkData(from, to));
+			linksMap.put(hasLinkId.getLinkId(), new LinkData(
+					new Coord(from.getX(), from.getY(), 0),
+					new Coord(to.getX(), to.getY(), 0)));
 		}
 		return linksMap.get(hasLinkId.getLinkId());
 	}
@@ -126,7 +128,6 @@ public class EvacMetricsTracker implements
 			Writer writer = Files.newBufferedWriter(Paths.get(str));
 			Gson gson = new GsonBuilder()
 					.setPrettyPrinting()
-					.serializeSpecialFloatingPointValues()
 					.create();
 			gson.toJson(store, writer);
 			writer.close();
