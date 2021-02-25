@@ -118,7 +118,8 @@ public class EvacMetricsTracker implements
 			linksMap.put(hasLinkId.getLinkId(), new LinkData(
 					new Coord(from.getX(), from.getY(), 0),
 					new Coord(to.getX(), to.getY(), 0),
-					(int)link.getCapacity()));
+					Math.round(link.getCapacity()*100.0)/100.0,
+					Math.round(link.getFreespeed()*100.0)/100.0));
 		}
 		return linksMap.get(hasLinkId.getLinkId());
 	}
@@ -141,16 +142,18 @@ public class EvacMetricsTracker implements
 	class LinkData {
 		final private Coord from;
 		final private Coord to;
-		final private int capacity;
+		final private double capacity;
+		final private double freespeed;
 		private int vehiclesEntered;
 		private int vehiclesExited;
 		private int activitiesStarted;
 		private int activitiesEnded;
 
-		public LinkData(Coord from, Coord to, int capacity) {
+		public LinkData(Coord from, Coord to, double capacity, double freespeed) {
 			this.from = from;
 			this.to = to;
 			this.capacity = capacity;
+			this.freespeed = freespeed;
 		}
 
 		public int getVehiclesEntered() {
