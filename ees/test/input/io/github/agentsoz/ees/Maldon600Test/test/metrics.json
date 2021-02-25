@@ -11,6 +11,8 @@
         "y": -36.98787217423744,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 16.67,
       "vehiclesEntered": 0,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -27,6 +29,8 @@
         "y": -36.99283867424835,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 13.89,
       "vehiclesEntered": 0,
       "vehiclesExited": 6,
       "activitiesStarted": 0,
@@ -43,6 +47,8 @@
         "y": -36.99447517426457,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 25.0,
       "vehiclesEntered": 1,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -59,6 +65,8 @@
         "y": -36.989229574242565,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 6.94,
       "vehiclesEntered": 2,
       "vehiclesExited": 2,
       "activitiesStarted": 0,
@@ -75,6 +83,8 @@
         "y": -36.8405073739107,
         "z": 0.0
       },
+      "capacity": 2000.0,
+      "freespeed": 22.22,
       "vehiclesEntered": 4,
       "vehiclesExited": 4,
       "activitiesStarted": 0,
@@ -91,6 +101,8 @@
         "y": -36.991869974258755,
         "z": 0.0
       },
+      "capacity": 900.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 1,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -107,6 +119,8 @@
         "y": -36.99685507425836,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 1,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -123,6 +137,8 @@
         "y": -36.995526274266936,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 19.44,
       "vehiclesEntered": 1,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -139,6 +155,8 @@
         "y": -36.984773474232895,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 15,
       "vehiclesExited": 14,
       "activitiesStarted": 0,
@@ -155,6 +173,8 @@
         "y": -36.996412774268926,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 19.44,
       "vehiclesEntered": 1,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -171,6 +191,8 @@
         "y": -36.993170774250295,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 13.89,
       "vehiclesEntered": 10,
       "vehiclesExited": 10,
       "activitiesStarted": 0,
@@ -187,6 +209,8 @@
         "y": -36.99141187424709,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 22.22,
       "vehiclesEntered": 15,
       "vehiclesExited": 15,
       "activitiesStarted": 0,
@@ -203,6 +227,8 @@
         "y": -36.9918181742464,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 13.89,
       "vehiclesEntered": 11,
       "vehiclesExited": 10,
       "activitiesStarted": 0,
@@ -219,6 +245,8 @@
         "y": -36.840678973911004,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 4,
       "vehiclesExited": 0,
       "activitiesStarted": 4,
@@ -235,6 +263,8 @@
         "y": -36.98619647423455,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 1,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -251,6 +281,8 @@
         "y": -37.00299807427163,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 8.33,
       "vehiclesEntered": 1,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -267,6 +299,8 @@
         "y": -36.95231007416187,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 9,
       "vehiclesExited": 9,
       "activitiesStarted": 0,
@@ -283,6 +317,8 @@
         "y": -36.999101374262935,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 16.67,
       "vehiclesEntered": 1,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -299,6 +335,8 @@
         "y": -36.965079874192924,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 2,
       "vehiclesExited": 2,
       "activitiesStarted": 0,
@@ -315,6 +353,8 @@
         "y": -36.95718307417963,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 2,
       "vehiclesExited": 2,
       "activitiesStarted": 0,
@@ -331,6 +371,8 @@
         "y": -36.95548917417567,
         "z": 0.0
       },
+      "capacity": 1500.0,
+      "freespeed": 22.22,
       "vehiclesEntered": 2,
       "vehiclesExited": 2,
       "activitiesStarted": 0,
@@ -347,6 +389,8 @@
         "y": -36.999541474275915,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 19.44,
       "vehiclesEntered": 1,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -363,6 +407,8 @@
         "y": -36.879686673999075,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 6,
       "vehiclesExited": 6,
       "activitiesStarted": 0,
@@ -379,6 +425,8 @@
         "y": -36.87753827399425,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 6,
       "vehiclesExited": 6,
       "activitiesStarted": 0,
@@ -395,6 +443,8 @@
         "y": -36.98911907424085,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 1,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -411,6 +461,8 @@
         "y": -36.99279827424895,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 12,
       "vehiclesExited": 10,
       "activitiesStarted": 0,
@@ -427,6 +479,8 @@
         "y": -36.98234347422762,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 14,
       "vehiclesExited": 14,
       "activitiesStarted": 0,
@@ -443,6 +497,8 @@
         "y": -36.975480874213666,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 3,
       "vehiclesExited": 3,
       "activitiesStarted": 0,
@@ -459,6 +515,8 @@
         "y": -36.97111837420498,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 3,
       "vehiclesExited": 3,
       "activitiesStarted": 0,
@@ -475,6 +533,8 @@
         "y": -36.98376407424036,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 1,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -491,6 +551,8 @@
         "y": -36.99081427424447,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 0,
       "vehiclesExited": 2,
       "activitiesStarted": 0,
@@ -507,6 +569,8 @@
         "y": -37.00281857427121,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 16.67,
       "vehiclesEntered": 1,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -523,6 +587,8 @@
         "y": -37.000864474267374,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 1,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -539,6 +605,8 @@
         "y": -36.83992517390937,
         "z": 0.0
       },
+      "capacity": 2000.0,
+      "freespeed": 22.22,
       "vehiclesEntered": 4,
       "vehiclesExited": 4,
       "activitiesStarted": 0,
@@ -555,6 +623,8 @@
         "y": -36.95658447417808,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 2,
       "vehiclesExited": 2,
       "activitiesStarted": 0,
@@ -571,6 +641,8 @@
         "y": -36.96498757419277,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 2,
       "vehiclesExited": 2,
       "activitiesStarted": 0,
@@ -587,6 +659,8 @@
         "y": -36.988293074239515,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 6.94,
       "vehiclesEntered": 1,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -603,6 +677,8 @@
         "y": -36.96503677419286,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 22.22,
       "vehiclesEntered": 2,
       "vehiclesExited": 2,
       "activitiesStarted": 0,
@@ -619,6 +695,8 @@
         "y": -36.987093474237604,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 6.94,
       "vehiclesEntered": 2,
       "vehiclesExited": 2,
       "activitiesStarted": 0,
@@ -635,6 +713,8 @@
         "y": -36.96996017420275,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 3,
       "vehiclesExited": 3,
       "activitiesStarted": 0,
@@ -651,6 +731,8 @@
         "y": -36.989820874241865,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 13.89,
       "vehiclesEntered": 1,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -667,6 +749,8 @@
         "y": -37.003571374284654,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 1,
       "vehiclesExited": 0,
       "activitiesStarted": 1,
@@ -683,6 +767,8 @@
         "y": -36.84822067392822,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 5,
       "vehiclesExited": 5,
       "activitiesStarted": 0,
@@ -699,6 +785,8 @@
         "y": -36.96475417419429,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 2,
       "vehiclesExited": 2,
       "activitiesStarted": 0,
@@ -715,6 +803,8 @@
         "y": -36.99315717424964,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 0,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -731,6 +821,8 @@
         "y": -36.99274197424817,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 13.89,
       "vehiclesEntered": 9,
       "vehiclesExited": 9,
       "activitiesStarted": 0,
@@ -747,6 +839,8 @@
         "y": -36.997134974258536,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 1,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -763,6 +857,8 @@
         "y": -36.99149147424577,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 13.89,
       "vehiclesEntered": 15,
       "vehiclesExited": 10,
       "activitiesStarted": 0,
@@ -779,6 +875,8 @@
         "y": -36.99283867424835,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 3,
       "vehiclesExited": 3,
       "activitiesStarted": 0,
@@ -795,6 +893,8 @@
         "y": -36.96843007419693,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 11,
       "vehiclesExited": 10,
       "activitiesStarted": 0,
@@ -811,6 +911,8 @@
         "y": -37.00751947428207,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 1,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -827,6 +929,8 @@
         "y": -36.993245074250574,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 5,
       "vehiclesExited": 5,
       "activitiesStarted": 0,
@@ -843,6 +947,8 @@
         "y": -36.98913547424054,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 1,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -859,6 +965,8 @@
         "y": -37.00062527427823,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 13.89,
       "vehiclesEntered": 1,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -875,6 +983,8 @@
         "y": -37.004153174286124,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 1,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -891,6 +1001,8 @@
         "y": -36.99789327426023,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 16.67,
       "vehiclesEntered": 1,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -907,6 +1019,8 @@
         "y": -36.96523457419325,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 3,
       "vehiclesExited": 2,
       "activitiesStarted": 0,
@@ -923,6 +1037,8 @@
         "y": -36.98270567423797,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 1,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -939,6 +1055,8 @@
         "y": -36.97879497421981,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 11,
       "vehiclesExited": 11,
       "activitiesStarted": 0,
@@ -955,6 +1073,8 @@
         "y": -36.967738774198345,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 3,
       "vehiclesExited": 3,
       "activitiesStarted": 0,
@@ -971,6 +1091,8 @@
         "y": -36.993916374251505,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 12,
       "vehiclesExited": 10,
       "activitiesStarted": 0,
@@ -987,6 +1109,8 @@
         "y": -36.99018727425501,
         "z": 0.0
       },
+      "capacity": 900.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 1,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -1003,6 +1127,8 @@
         "y": -36.96382437419287,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 2,
       "vehiclesExited": 2,
       "activitiesStarted": 0,
@@ -1019,6 +1145,8 @@
         "y": -36.96168387418998,
         "z": 0.0
       },
+      "capacity": 900.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 2,
       "vehiclesExited": 2,
       "activitiesStarted": 0,
@@ -1035,6 +1163,8 @@
         "y": -36.98628397423461,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 0,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -1051,6 +1181,8 @@
         "y": -36.97010497420322,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 3,
       "vehiclesExited": 3,
       "activitiesStarted": 0,
@@ -1067,6 +1199,8 @@
         "y": -36.98977447424261,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 1,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -1083,6 +1217,8 @@
         "y": -36.96411007418763,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 10,
       "vehiclesExited": 10,
       "activitiesStarted": 0,
@@ -1099,6 +1235,8 @@
         "y": -36.9630427741898,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 2,
       "vehiclesExited": 2,
       "activitiesStarted": 0,
@@ -1115,6 +1253,8 @@
         "y": -36.85136017393532,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 5,
       "vehiclesExited": 5,
       "activitiesStarted": 0,
@@ -1131,6 +1271,8 @@
         "y": -36.99279827424895,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 1,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -1147,6 +1289,8 @@
         "y": -36.98787217423744,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 2,
       "vehiclesExited": 2,
       "activitiesStarted": 0,
@@ -1163,6 +1307,8 @@
         "y": -37.00427867427496,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 1,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -1179,6 +1325,8 @@
         "y": -36.96989597420254,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 3,
       "vehiclesExited": 3,
       "activitiesStarted": 0,
@@ -1195,6 +1343,8 @@
         "y": -36.989820874241865,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 16.67,
       "vehiclesEntered": 4,
       "vehiclesExited": 4,
       "activitiesStarted": 0,
@@ -1211,6 +1361,8 @@
         "y": -37.00082387427882,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 6.94,
       "vehiclesEntered": 1,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -1227,6 +1379,8 @@
         "y": -36.98801787423906,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 6.94,
       "vehiclesEntered": 2,
       "vehiclesExited": 2,
       "activitiesStarted": 0,
@@ -1243,6 +1397,8 @@
         "y": -36.96139817418797,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 2,
       "vehiclesExited": 2,
       "activitiesStarted": 0,
@@ -1259,6 +1415,8 @@
         "y": -36.99037547424376,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 0,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -1275,6 +1433,8 @@
         "y": -36.99624007425666,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 3,
       "vehiclesExited": 3,
       "activitiesStarted": 0,
@@ -1291,6 +1451,8 @@
         "y": -36.986460874236606,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 17,
       "vehiclesExited": 15,
       "activitiesStarted": 0,
@@ -1307,6 +1469,8 @@
         "y": -36.97773407421813,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 3,
       "vehiclesExited": 3,
       "activitiesStarted": 0,
@@ -1323,6 +1487,8 @@
         "y": -36.97357657421718,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 1,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -1339,6 +1505,8 @@
         "y": -36.98588837424525,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 1,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -1355,6 +1523,8 @@
         "y": -36.988109674238615,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 0,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -1371,6 +1541,8 @@
         "y": -36.89946007404339,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 7,
       "vehiclesExited": 7,
       "activitiesStarted": 0,
@@ -1387,6 +1559,8 @@
         "y": -36.99689787425817,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 3,
       "vehiclesExited": 3,
       "activitiesStarted": 0,
@@ -1403,6 +1577,8 @@
         "y": -36.94101007413656,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 9,
       "vehiclesExited": 9,
       "activitiesStarted": 0,
@@ -1419,6 +1595,8 @@
         "y": -36.96519657419406,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 2,
       "vehiclesExited": 2,
       "activitiesStarted": 0,
@@ -1435,6 +1613,8 @@
         "y": -37.000099274265146,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 16.67,
       "vehiclesEntered": 1,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -1451,6 +1631,8 @@
         "y": -36.990139074242485,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 1,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -1467,6 +1649,8 @@
         "y": -36.96264377418476,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 10,
       "vehiclesExited": 10,
       "activitiesStarted": 0,
@@ -1483,6 +1667,8 @@
         "y": -36.99617747425636,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 16.67,
       "vehiclesEntered": 2,
       "vehiclesExited": 2,
       "activitiesStarted": 0,
@@ -1499,6 +1685,8 @@
         "y": -37.00733087428161,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 8.33,
       "vehiclesEntered": 1,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -1515,6 +1703,8 @@
         "y": -36.985737074232574,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 6.94,
       "vehiclesEntered": 0,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -1531,6 +1721,8 @@
         "y": -36.996677074258095,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 5,
       "vehiclesExited": 5,
       "activitiesStarted": 0,
@@ -1547,6 +1739,8 @@
         "y": -36.86860767397418,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 6,
       "vehiclesExited": 5,
       "activitiesStarted": 0,
@@ -1563,6 +1757,8 @@
         "y": -36.99048697424315,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 0,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -1579,6 +1775,8 @@
         "y": -36.99446097425317,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 5,
       "vehiclesExited": 5,
       "activitiesStarted": 0,
@@ -1595,6 +1793,8 @@
         "y": -36.99249137424768,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 13.89,
       "vehiclesEntered": 9,
       "vehiclesExited": 9,
       "activitiesStarted": 0,
@@ -1611,6 +1811,8 @@
         "y": -36.92255007409532,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 9,
       "vehiclesExited": 8,
       "activitiesStarted": 0,
@@ -1627,6 +1829,8 @@
         "y": -36.97003777420311,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 22.22,
       "vehiclesEntered": 3,
       "vehiclesExited": 3,
       "activitiesStarted": 0,
@@ -1643,6 +1847,8 @@
         "y": -36.99293817424948,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 13.89,
       "vehiclesEntered": 10,
       "vehiclesExited": 10,
       "activitiesStarted": 0,
@@ -1659,6 +1865,8 @@
         "y": -36.98354447423021,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 14,
       "vehiclesExited": 14,
       "activitiesStarted": 0,
@@ -1675,6 +1883,8 @@
         "y": -36.958420074181866,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 2,
       "vehiclesExited": 2,
       "activitiesStarted": 0,
@@ -1691,6 +1901,8 @@
         "y": -36.8443135739195,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 8.33,
       "vehiclesEntered": 5,
       "vehiclesExited": 4,
       "activitiesStarted": 0,
@@ -1707,6 +1919,8 @@
         "y": -36.97383007420894,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 11,
       "vehiclesExited": 11,
       "activitiesStarted": 0,
@@ -1723,6 +1937,8 @@
         "y": -36.99286307424997,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 22.22,
       "vehiclesEntered": 15,
       "vehiclesExited": 15,
       "activitiesStarted": 0,
@@ -1739,6 +1955,8 @@
         "y": -36.861155173957435,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 5,
       "vehiclesExited": 5,
       "activitiesStarted": 0,
@@ -1755,6 +1973,8 @@
         "y": -36.99682767425832,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 5,
       "vehiclesExited": 5,
       "activitiesStarted": 0,
@@ -1771,6 +1991,8 @@
         "y": -36.95605257417704,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 2,
       "vehiclesExited": 2,
       "activitiesStarted": 0,
@@ -1787,6 +2009,8 @@
         "y": -36.96345077419045,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 2,
       "vehiclesExited": 2,
       "activitiesStarted": 0,
@@ -1803,6 +2027,8 @@
         "y": -36.98886787423936,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 0,
       "vehiclesExited": 2,
       "activitiesStarted": 0,
@@ -1819,6 +2045,8 @@
         "y": -36.993109274250465,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 22.22,
       "vehiclesEntered": 15,
       "vehiclesExited": 15,
       "activitiesStarted": 0,
@@ -1835,6 +2063,8 @@
         "y": -37.00740627428191,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 1,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -1851,6 +2081,8 @@
         "y": -36.99025427424338,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 1,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -1867,6 +2099,8 @@
         "y": -36.96951337420787,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 2,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -1883,6 +2117,8 @@
         "y": -36.99217217424709,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 0,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -1899,6 +2135,8 @@
         "y": -36.98975207424256,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 1,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -1915,6 +2153,8 @@
         "y": -36.9902166742433,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 1,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -1931,6 +2171,8 @@
         "y": -36.99195137424715,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 1,
       "vehiclesExited": 2,
       "activitiesStarted": 0,
@@ -1947,6 +2189,8 @@
         "y": -36.933169174118966,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 9,
       "vehiclesExited": 9,
       "activitiesStarted": 0,
@@ -1963,6 +2207,8 @@
         "y": -36.967700674203684,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 2,
       "vehiclesExited": 2,
       "activitiesStarted": 0,
@@ -1979,6 +2225,8 @@
         "y": -36.980986574224694,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 14,
       "vehiclesExited": 14,
       "activitiesStarted": 0,
@@ -1995,6 +2243,8 @@
         "y": -36.99081427424447,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 13.89,
       "vehiclesEntered": 11,
       "vehiclesExited": 10,
       "activitiesStarted": 0,
@@ -2011,6 +2261,8 @@
         "y": -36.99584667425572,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 1,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -2027,6 +2279,8 @@
         "y": -36.9954430742545,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 0,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -2043,6 +2297,8 @@
         "y": -36.99376147425115,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 2,
       "vehiclesExited": 2,
       "activitiesStarted": 0,
@@ -2059,6 +2315,8 @@
         "y": -36.99083697424383,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 3,
       "vehiclesExited": 3,
       "activitiesStarted": 0,
@@ -2075,6 +2333,8 @@
         "y": -37.00199167426985,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 1,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -2091,6 +2351,8 @@
         "y": -37.00114707426796,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 1,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -2107,6 +2369,8 @@
         "y": -36.991153574245125,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 13.89,
       "vehiclesEntered": 10,
       "vehiclesExited": 10,
       "activitiesStarted": 0,
@@ -2123,6 +2387,8 @@
         "y": -36.95804957417474,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 10,
       "vehiclesExited": 9,
       "activitiesStarted": 0,
@@ -2139,6 +2405,8 @@
         "y": -36.97354177420973,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 3,
       "vehiclesExited": 3,
       "activitiesStarted": 0,
@@ -2155,6 +2423,8 @@
         "y": -36.9901584742425,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 1,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -2171,6 +2441,8 @@
         "y": -36.96541077419845,
         "z": 0.0
       },
+      "capacity": 900.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 2,
       "vehiclesExited": 2,
       "activitiesStarted": 0,
@@ -2187,6 +2459,8 @@
         "y": -36.84658587392456,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 5,
       "vehiclesExited": 5,
       "activitiesStarted": 0,
@@ -2203,6 +2477,8 @@
         "y": -37.00272857428295,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 1,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -2219,6 +2495,8 @@
         "y": -36.9965528742574,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 3,
       "vehiclesExited": 3,
       "activitiesStarted": 0,
@@ -2235,6 +2513,8 @@
         "y": -36.99563547425502,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 1,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -2251,6 +2531,8 @@
         "y": -36.993493374250285,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 0,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -2267,6 +2549,8 @@
         "y": -36.995198474254245,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 1,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -2283,6 +2567,8 @@
         "y": -36.98854647423957,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 1,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -2299,6 +2585,8 @@
         "y": -36.96332987419374,
         "z": 0.0
       },
+      "capacity": 900.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 2,
       "vehiclesExited": 2,
       "activitiesStarted": 0,
@@ -2315,6 +2603,8 @@
         "y": -36.98825017423853,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 1,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -2331,6 +2621,8 @@
         "y": -36.98631307423421,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 0,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -2347,6 +2639,8 @@
         "y": -36.989229574242565,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 15,
       "vehiclesExited": 15,
       "activitiesStarted": 0,
@@ -2363,6 +2657,8 @@
         "y": -36.99376147425115,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 11,
       "vehiclesExited": 10,
       "activitiesStarted": 0,
@@ -2379,6 +2675,8 @@
         "y": -36.91164457407084,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 8,
       "vehiclesExited": 8,
       "activitiesStarted": 0,
@@ -2395,6 +2693,8 @@
         "y": -36.994795474253195,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 1,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -2411,6 +2711,8 @@
         "y": -36.99689787425817,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 0,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -2427,6 +2729,8 @@
         "y": -36.978979574229506,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 1,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -2443,6 +2747,8 @@
         "y": -36.98853227423985,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 1,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -2459,6 +2765,8 @@
         "y": -36.98752977423643,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 0,
       "vehiclesExited": 2,
       "activitiesStarted": 0,
@@ -2475,6 +2783,8 @@
         "y": -36.98772447423702,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 2,
       "vehiclesExited": 2,
       "activitiesStarted": 0,
@@ -2491,6 +2801,8 @@
         "y": -36.946110074147974,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 9,
       "vehiclesExited": 9,
       "activitiesStarted": 0,
@@ -2507,6 +2819,8 @@
         "y": -36.955649974176,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 6.94,
       "vehiclesEntered": 2,
       "vehiclesExited": 2,
       "activitiesStarted": 0,
@@ -2523,6 +2837,8 @@
         "y": -36.99452747425341,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 5,
       "vehiclesExited": 5,
       "activitiesStarted": 0,
@@ -2539,6 +2855,8 @@
         "y": -37.001252074268216,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 1,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -2555,6 +2873,8 @@
         "y": -37.00080347427876,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 19.44,
       "vehiclesEntered": 1,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -2571,6 +2891,8 @@
         "y": -36.98638437424637,
         "z": 0.0
       },
+      "capacity": 900.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 1,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -2587,6 +2909,8 @@
         "y": -36.9918181742464,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 16.67,
       "vehiclesEntered": 5,
       "vehiclesExited": 5,
       "activitiesStarted": 0,
@@ -2603,6 +2927,8 @@
         "y": -36.96589987419541,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 2,
       "vehiclesExited": 2,
       "activitiesStarted": 0,
@@ -2619,6 +2945,8 @@
         "y": -36.98728727423787,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 6.94,
       "vehiclesEntered": 2,
       "vehiclesExited": 2,
       "activitiesStarted": 0,
@@ -2635,6 +2963,8 @@
         "y": -36.89548437403448,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 7,
       "vehiclesExited": 7,
       "activitiesStarted": 0,
@@ -2651,6 +2981,8 @@
         "y": -36.99584667425572,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 2,
       "vehiclesExited": 2,
       "activitiesStarted": 0,
@@ -2667,6 +2999,8 @@
         "y": -36.99692207425788,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 0,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -2683,6 +3017,8 @@
         "y": -36.9043300740544,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 8,
       "vehiclesExited": 7,
       "activitiesStarted": 0,
@@ -2699,6 +3035,8 @@
         "y": -36.988293074239515,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 1,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -2715,6 +3053,8 @@
         "y": -36.991153574245125,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 1,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -2731,6 +3071,8 @@
         "y": -36.98787217423744,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 16.67,
       "vehiclesEntered": 1,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -2747,6 +3089,8 @@
         "y": -36.88791007401751,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 7,
       "vehiclesExited": 6,
       "activitiesStarted": 0,
@@ -2763,6 +3107,8 @@
         "y": -36.994795474253195,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 16.67,
       "vehiclesEntered": 0,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -2779,6 +3125,8 @@
         "y": -36.99217217424709,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 13.89,
       "vehiclesEntered": 9,
       "vehiclesExited": 10,
       "activitiesStarted": 0,
@@ -2795,6 +3143,8 @@
         "y": -37.00584097427815,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 8.33,
       "vehiclesEntered": 1,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -2811,6 +3161,8 @@
         "y": -36.993016874249804,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 13.89,
       "vehiclesEntered": 10,
       "vehiclesExited": 10,
       "activitiesStarted": 0,
@@ -2827,6 +3179,8 @@
         "y": -36.97116907421168,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 1,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -2843,6 +3197,8 @@
         "y": -36.966509174200965,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 2,
       "vehiclesExited": 2,
       "activitiesStarted": 0,
@@ -2859,6 +3215,8 @@
         "y": -36.993245074250574,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 22.22,
       "vehiclesEntered": 10,
       "vehiclesExited": 10,
       "activitiesStarted": 0,
@@ -2875,6 +3233,8 @@
         "y": -36.99685507425836,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 4,
       "vehiclesExited": 4,
       "activitiesStarted": 0,
@@ -2891,6 +3251,8 @@
         "y": -36.85343737393998,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 5,
       "vehiclesExited": 5,
       "activitiesStarted": 0,
@@ -2907,6 +3269,8 @@
         "y": -36.98886787423936,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 0,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -2923,6 +3287,8 @@
         "y": -36.995995574256014,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 2,
       "vehiclesExited": 2,
       "activitiesStarted": 0,
@@ -2939,6 +3305,8 @@
         "y": -36.956253474177494,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 2,
       "vehiclesExited": 2,
       "activitiesStarted": 0,
@@ -2955,6 +3323,8 @@
         "y": -36.9925656742485,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 2,
       "vehiclesExited": 2,
       "activitiesStarted": 0,
@@ -2973,6 +3343,8 @@
         "y": -36.99447517426457,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 25.0,
       "vehiclesEntered": 5,
       "vehiclesExited": 5,
       "activitiesStarted": 0,
@@ -2989,6 +3361,8 @@
         "y": -36.8405073739107,
         "z": 0.0
       },
+      "capacity": 2000.0,
+      "freespeed": 22.22,
       "vehiclesEntered": 20,
       "vehiclesExited": 20,
       "activitiesStarted": 0,
@@ -3005,6 +3379,8 @@
         "y": -36.991869974258755,
         "z": 0.0
       },
+      "capacity": 900.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 5,
       "vehiclesExited": 5,
       "activitiesStarted": 0,
@@ -3021,6 +3397,8 @@
         "y": -36.995526274266936,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 19.44,
       "vehiclesEntered": 5,
       "vehiclesExited": 5,
       "activitiesStarted": 0,
@@ -3037,6 +3415,8 @@
         "y": -36.984773474232895,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 15,
       "vehiclesExited": 16,
       "activitiesStarted": 0,
@@ -3053,6 +3433,8 @@
         "y": -36.996412774268926,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 19.44,
       "vehiclesEntered": 5,
       "vehiclesExited": 5,
       "activitiesStarted": 0,
@@ -3069,6 +3451,8 @@
         "y": -36.993170774250295,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 13.89,
       "vehiclesEntered": 13,
       "vehiclesExited": 13,
       "activitiesStarted": 0,
@@ -3085,6 +3469,8 @@
         "y": -36.99141187424709,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 22.22,
       "vehiclesEntered": 13,
       "vehiclesExited": 13,
       "activitiesStarted": 0,
@@ -3101,6 +3487,8 @@
         "y": -36.9918181742464,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 13.89,
       "vehiclesEntered": 0,
       "vehiclesExited": 1,
       "activitiesStarted": 0,
@@ -3117,6 +3505,8 @@
         "y": -36.840678973911004,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 20,
       "vehiclesExited": 0,
       "activitiesStarted": 20,
@@ -3133,6 +3523,8 @@
         "y": -36.95231007416187,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 15,
       "vehiclesExited": 15,
       "activitiesStarted": 0,
@@ -3149,6 +3541,8 @@
         "y": -36.965079874192924,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 4,
       "vehiclesExited": 4,
       "activitiesStarted": 0,
@@ -3165,6 +3559,8 @@
         "y": -36.95718307417963,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 4,
       "vehiclesExited": 4,
       "activitiesStarted": 0,
@@ -3181,6 +3577,8 @@
         "y": -36.999541474275915,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 19.44,
       "vehiclesEntered": 5,
       "vehiclesExited": 5,
       "activitiesStarted": 0,
@@ -3197,6 +3595,8 @@
         "y": -36.95548917417567,
         "z": 0.0
       },
+      "capacity": 1500.0,
+      "freespeed": 22.22,
       "vehiclesEntered": 4,
       "vehiclesExited": 4,
       "activitiesStarted": 0,
@@ -3213,6 +3613,8 @@
         "y": -36.879686673999075,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 18,
       "vehiclesExited": 18,
       "activitiesStarted": 0,
@@ -3229,6 +3631,8 @@
         "y": -36.87753827399425,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 18,
       "vehiclesExited": 18,
       "activitiesStarted": 0,
@@ -3245,6 +3649,8 @@
         "y": -36.99279827424895,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 7,
       "vehiclesExited": 9,
       "activitiesStarted": 0,
@@ -3261,6 +3667,8 @@
         "y": -36.98234347422762,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 16,
       "vehiclesExited": 16,
       "activitiesStarted": 0,
@@ -3277,6 +3685,8 @@
         "y": -36.975480874213666,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 3,
       "vehiclesExited": 3,
       "activitiesStarted": 0,
@@ -3293,6 +3703,8 @@
         "y": -36.98376407424036,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 5,
       "vehiclesExited": 5,
       "activitiesStarted": 0,
@@ -3309,6 +3721,8 @@
         "y": -36.97111837420498,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 3,
       "vehiclesExited": 3,
       "activitiesStarted": 0,
@@ -3325,6 +3739,8 @@
         "y": -36.83992517390937,
         "z": 0.0
       },
+      "capacity": 2000.0,
+      "freespeed": 22.22,
       "vehiclesEntered": 20,
       "vehiclesExited": 20,
       "activitiesStarted": 0,
@@ -3341,6 +3757,8 @@
         "y": -36.95658447417808,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 4,
       "vehiclesExited": 4,
       "activitiesStarted": 0,
@@ -3357,6 +3775,8 @@
         "y": -36.96498757419277,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 4,
       "vehiclesExited": 4,
       "activitiesStarted": 0,
@@ -3373,6 +3793,8 @@
         "y": -36.96503677419286,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 22.22,
       "vehiclesEntered": 4,
       "vehiclesExited": 4,
       "activitiesStarted": 0,
@@ -3389,6 +3811,8 @@
         "y": -36.96996017420275,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 3,
       "vehiclesExited": 3,
       "activitiesStarted": 0,
@@ -3405,6 +3829,8 @@
         "y": -37.003571374284654,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 5,
       "vehiclesExited": 0,
       "activitiesStarted": 5,
@@ -3421,6 +3847,8 @@
         "y": -36.84822067392822,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 19,
       "vehiclesExited": 19,
       "activitiesStarted": 0,
@@ -3437,6 +3865,8 @@
         "y": -36.96475417419429,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 4,
       "vehiclesExited": 4,
       "activitiesStarted": 0,
@@ -3453,6 +3883,8 @@
         "y": -36.99149147424577,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 13.89,
       "vehiclesEntered": 1,
       "vehiclesExited": 6,
       "activitiesStarted": 0,
@@ -3469,6 +3901,8 @@
         "y": -36.96843007419693,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 13,
       "vehiclesExited": 14,
       "activitiesStarted": 0,
@@ -3485,6 +3919,8 @@
         "y": -37.00062527427823,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 13.89,
       "vehiclesEntered": 5,
       "vehiclesExited": 5,
       "activitiesStarted": 0,
@@ -3501,6 +3937,8 @@
         "y": -37.004153174286124,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 5,
       "vehiclesExited": 5,
       "activitiesStarted": 0,
@@ -3517,6 +3955,8 @@
         "y": -36.96523457419325,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 3,
       "vehiclesExited": 4,
       "activitiesStarted": 0,
@@ -3533,6 +3973,8 @@
         "y": -36.98270567423797,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 5,
       "vehiclesExited": 5,
       "activitiesStarted": 0,
@@ -3549,6 +3991,8 @@
         "y": -36.97879497421981,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 13,
       "vehiclesExited": 13,
       "activitiesStarted": 0,
@@ -3565,6 +4009,8 @@
         "y": -36.967738774198345,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 3,
       "vehiclesExited": 3,
       "activitiesStarted": 0,
@@ -3581,6 +4027,8 @@
         "y": -36.993916374251505,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 11,
       "vehiclesExited": 13,
       "activitiesStarted": 0,
@@ -3597,6 +4045,8 @@
         "y": -36.99018727425501,
         "z": 0.0
       },
+      "capacity": 900.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 5,
       "vehiclesExited": 5,
       "activitiesStarted": 0,
@@ -3613,6 +4063,8 @@
         "y": -36.96382437419287,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 4,
       "vehiclesExited": 4,
       "activitiesStarted": 0,
@@ -3629,6 +4081,8 @@
         "y": -36.96168387418998,
         "z": 0.0
       },
+      "capacity": 900.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 4,
       "vehiclesExited": 4,
       "activitiesStarted": 0,
@@ -3645,6 +4099,8 @@
         "y": -36.97010497420322,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 3,
       "vehiclesExited": 3,
       "activitiesStarted": 0,
@@ -3661,6 +4117,8 @@
         "y": -36.96411007418763,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 14,
       "vehiclesExited": 14,
       "activitiesStarted": 0,
@@ -3677,6 +4135,8 @@
         "y": -36.9630427741898,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 4,
       "vehiclesExited": 4,
       "activitiesStarted": 0,
@@ -3693,6 +4153,8 @@
         "y": -36.85136017393532,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 19,
       "vehiclesExited": 19,
       "activitiesStarted": 0,
@@ -3709,6 +4171,8 @@
         "y": -36.96989597420254,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 3,
       "vehiclesExited": 3,
       "activitiesStarted": 0,
@@ -3725,6 +4189,8 @@
         "y": -37.00082387427882,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 6.94,
       "vehiclesEntered": 5,
       "vehiclesExited": 5,
       "activitiesStarted": 0,
@@ -3741,6 +4207,8 @@
         "y": -36.96139817418797,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 4,
       "vehiclesExited": 4,
       "activitiesStarted": 0,
@@ -3757,6 +4225,8 @@
         "y": -36.986460874236606,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 13,
       "vehiclesExited": 15,
       "activitiesStarted": 0,
@@ -3773,6 +4243,8 @@
         "y": -36.97357657421718,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 5,
       "vehiclesExited": 5,
       "activitiesStarted": 0,
@@ -3789,6 +4261,8 @@
         "y": -36.98588837424525,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 5,
       "vehiclesExited": 5,
       "activitiesStarted": 0,
@@ -3805,6 +4279,8 @@
         "y": -36.97773407421813,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 3,
       "vehiclesExited": 3,
       "activitiesStarted": 0,
@@ -3821,6 +4297,8 @@
         "y": -36.89946007404339,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 17,
       "vehiclesExited": 17,
       "activitiesStarted": 0,
@@ -3837,6 +4315,8 @@
         "y": -36.94101007413656,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 15,
       "vehiclesExited": 15,
       "activitiesStarted": 0,
@@ -3853,6 +4333,8 @@
         "y": -36.96519657419406,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 4,
       "vehiclesExited": 4,
       "activitiesStarted": 0,
@@ -3869,6 +4351,8 @@
         "y": -36.96264377418476,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 14,
       "vehiclesExited": 14,
       "activitiesStarted": 0,
@@ -3885,6 +4369,8 @@
         "y": -36.86860767397418,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 18,
       "vehiclesExited": 19,
       "activitiesStarted": 0,
@@ -3901,6 +4387,8 @@
         "y": -36.92255007409532,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 15,
       "vehiclesExited": 16,
       "activitiesStarted": 0,
@@ -3917,6 +4405,8 @@
         "y": -36.97003777420311,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 22.22,
       "vehiclesEntered": 3,
       "vehiclesExited": 3,
       "activitiesStarted": 0,
@@ -3933,6 +4423,8 @@
         "y": -36.98354447423021,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 16,
       "vehiclesExited": 16,
       "activitiesStarted": 0,
@@ -3949,6 +4441,8 @@
         "y": -36.99293817424948,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 13.89,
       "vehiclesEntered": 13,
       "vehiclesExited": 13,
       "activitiesStarted": 0,
@@ -3965,6 +4459,8 @@
         "y": -36.8443135739195,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 8.33,
       "vehiclesEntered": 19,
       "vehiclesExited": 20,
       "activitiesStarted": 0,
@@ -3981,6 +4477,8 @@
         "y": -36.958420074181866,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 4,
       "vehiclesExited": 4,
       "activitiesStarted": 0,
@@ -3997,6 +4495,8 @@
         "y": -36.97383007420894,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 13,
       "vehiclesExited": 13,
       "activitiesStarted": 0,
@@ -4013,6 +4513,8 @@
         "y": -36.99286307424997,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 22.22,
       "vehiclesEntered": 13,
       "vehiclesExited": 13,
       "activitiesStarted": 0,
@@ -4029,6 +4531,8 @@
         "y": -36.861155173957435,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 19,
       "vehiclesExited": 19,
       "activitiesStarted": 0,
@@ -4045,6 +4549,8 @@
         "y": -36.95605257417704,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 4,
       "vehiclesExited": 4,
       "activitiesStarted": 0,
@@ -4061,6 +4567,8 @@
         "y": -36.96345077419045,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 4,
       "vehiclesExited": 4,
       "activitiesStarted": 0,
@@ -4077,6 +4585,8 @@
         "y": -36.993109274250465,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 22.22,
       "vehiclesEntered": 13,
       "vehiclesExited": 13,
       "activitiesStarted": 0,
@@ -4093,6 +4603,8 @@
         "y": -36.96951337420787,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 4,
       "vehiclesExited": 5,
       "activitiesStarted": 0,
@@ -4109,6 +4621,8 @@
         "y": -36.933169174118966,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 15,
       "vehiclesExited": 15,
       "activitiesStarted": 0,
@@ -4125,6 +4639,8 @@
         "y": -36.967700674203684,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 4,
       "vehiclesExited": 4,
       "activitiesStarted": 0,
@@ -4141,6 +4657,8 @@
         "y": -36.980986574224694,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 16,
       "vehiclesExited": 16,
       "activitiesStarted": 0,
@@ -4157,6 +4675,8 @@
         "y": -36.99081427424447,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 13.89,
       "vehiclesEntered": 6,
       "vehiclesExited": 7,
       "activitiesStarted": 0,
@@ -4173,6 +4693,8 @@
         "y": -36.95804957417474,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 14,
       "vehiclesExited": 15,
       "activitiesStarted": 0,
@@ -4189,6 +4711,8 @@
         "y": -36.991153574245125,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 13.89,
       "vehiclesEntered": 6,
       "vehiclesExited": 6,
       "activitiesStarted": 0,
@@ -4205,6 +4729,8 @@
         "y": -36.97354177420973,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 3,
       "vehiclesExited": 3,
       "activitiesStarted": 0,
@@ -4221,6 +4747,8 @@
         "y": -36.96541077419845,
         "z": 0.0
       },
+      "capacity": 900.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 4,
       "vehiclesExited": 4,
       "activitiesStarted": 0,
@@ -4237,6 +4765,8 @@
         "y": -36.84658587392456,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 19,
       "vehiclesExited": 19,
       "activitiesStarted": 0,
@@ -4253,6 +4783,8 @@
         "y": -37.00272857428295,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 5,
       "vehiclesExited": 5,
       "activitiesStarted": 0,
@@ -4269,6 +4801,8 @@
         "y": -36.96332987419374,
         "z": 0.0
       },
+      "capacity": 900.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 4,
       "vehiclesExited": 4,
       "activitiesStarted": 0,
@@ -4285,6 +4819,8 @@
         "y": -36.989229574242565,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 13,
       "vehiclesExited": 13,
       "activitiesStarted": 0,
@@ -4301,6 +4837,8 @@
         "y": -36.91164457407084,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 16,
       "vehiclesExited": 16,
       "activitiesStarted": 0,
@@ -4317,6 +4855,8 @@
         "y": -36.99376147425115,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 4.17,
       "vehiclesEntered": 9,
       "vehiclesExited": 11,
       "activitiesStarted": 0,
@@ -4333,6 +4873,8 @@
         "y": -36.978979574229506,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 5,
       "vehiclesExited": 5,
       "activitiesStarted": 0,
@@ -4349,6 +4891,8 @@
         "y": -36.946110074147974,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 15,
       "vehiclesExited": 15,
       "activitiesStarted": 0,
@@ -4365,6 +4909,8 @@
         "y": -36.955649974176,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 6.94,
       "vehiclesEntered": 4,
       "vehiclesExited": 4,
       "activitiesStarted": 0,
@@ -4381,6 +4927,8 @@
         "y": -37.00080347427876,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 19.44,
       "vehiclesEntered": 5,
       "vehiclesExited": 5,
       "activitiesStarted": 0,
@@ -4397,6 +4945,8 @@
         "y": -36.98638437424637,
         "z": 0.0
       },
+      "capacity": 900.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 5,
       "vehiclesExited": 5,
       "activitiesStarted": 0,
@@ -4413,6 +4963,8 @@
         "y": -36.96589987419541,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 4,
       "vehiclesExited": 4,
       "activitiesStarted": 0,
@@ -4429,6 +4981,8 @@
         "y": -36.89548437403448,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 17,
       "vehiclesExited": 17,
       "activitiesStarted": 0,
@@ -4445,6 +4999,8 @@
         "y": -36.9043300740544,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 16,
       "vehiclesExited": 17,
       "activitiesStarted": 0,
@@ -4461,6 +5017,8 @@
         "y": -36.88791007401751,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 17,
       "vehiclesExited": 18,
       "activitiesStarted": 0,
@@ -4477,6 +5035,8 @@
         "y": -36.97116907421168,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 5,
       "vehiclesExited": 5,
       "activitiesStarted": 0,
@@ -4493,6 +5053,8 @@
         "y": -36.993016874249804,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 13.89,
       "vehiclesEntered": 13,
       "vehiclesExited": 13,
       "activitiesStarted": 0,
@@ -4509,6 +5071,8 @@
         "y": -36.966509174200965,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 4,
       "vehiclesExited": 4,
       "activitiesStarted": 0,
@@ -4525,6 +5089,8 @@
         "y": -36.993245074250574,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 22.22,
       "vehiclesEntered": 13,
       "vehiclesExited": 13,
       "activitiesStarted": 0,
@@ -4541,6 +5107,8 @@
         "y": -36.85343737393998,
         "z": 0.0
       },
+      "capacity": 1000.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 19,
       "vehiclesExited": 19,
       "activitiesStarted": 0,
@@ -4557,6 +5125,8 @@
         "y": -36.956253474177494,
         "z": 0.0
       },
+      "capacity": 600.0,
+      "freespeed": 27.78,
       "vehiclesEntered": 4,
       "vehiclesExited": 4,
       "activitiesStarted": 0,
