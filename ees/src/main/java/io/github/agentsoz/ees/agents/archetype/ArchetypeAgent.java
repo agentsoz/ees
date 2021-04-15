@@ -35,7 +35,6 @@ import io.github.agentsoz.jill.core.beliefbase.BeliefSetField;
 import io.github.agentsoz.jill.lang.Agent;
 import io.github.agentsoz.jill.lang.AgentInfo;
 import io.github.agentsoz.jill.lang.Goal;
-import io.github.agentsoz.util.Global;
 import io.github.agentsoz.util.Location;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -89,6 +88,8 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
         //
         responseThresholdInitialReached,
         responseThresholdFinalReached,
+        //
+        status,
     }
     
     enum Beliefname {
@@ -144,6 +145,11 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
             return commonName;
         }
     };
+
+    enum StatusValue {
+       to,
+       at,
+    }
 
     //===============================================================================
     //endregion
@@ -283,6 +289,22 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
         } catch (Exception e) {}
     }
 
+    public Location getCurrentLocation() {
+        String status = getBelief(State.status.name());
+        if (status == null) {
+            status = Constants.EvacActivity.UnknownPlace.name();
+        }
+        Location location = (Location)getQueryPerceptInterface().queryPercept( String.valueOf(getId()), Constants.REQUEST_LOCATION, null);
+        return location;
+    }
+
+    public String getCurrentStatus() {
+        String status = getBelief(State.status.name());
+        if (status == null) {
+            status = Constants.EvacActivity.UnknownPlace.name();
+        }
+        return status;
+    }
 
     //===============================================================================
     //endregion

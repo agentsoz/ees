@@ -68,10 +68,10 @@ public class Constants {
     // Evacuation-related activity names (added dynamically to MATSim)
     public enum EvacActivity {
         Home,
-        DrivePlace,
         EvacPlace,
         InvacPlace,
-        DependentsPlace
+        DependentsPlace,
+        UnknownPlace,
     }
 
     public enum EvacRoutingMode {carFreespeed, carGlobalInformation, emergencyVehicle}

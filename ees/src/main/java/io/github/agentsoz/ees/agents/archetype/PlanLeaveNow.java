@@ -99,7 +99,7 @@ public class PlanLeaveNow extends Plan {
 						String.valueOf(agent.getId()), Constants.REQUEST_LOCATION, null));
 				if (Location.distanceBetween(xy[0],dest) == 0.0 || Location.distanceBetween(xy[1],dest) == 0.0 ||
 						ActionContent.State.PASSED.equals(agent.getLastBdiActionState())) {
-					agent.out("reached invac location " + xyInvac + " #" + getFullName());
+					agent.out("reached destination " + dest + " #" + getFullName());
 					this.drop(); // all done, drop the remaining plan steps
 				} else {
 					agent.out("is stuck between locations " + xy[0] + " and " + xy[1] + " #" + getFullName());

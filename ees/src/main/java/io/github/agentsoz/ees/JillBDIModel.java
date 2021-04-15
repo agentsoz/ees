@@ -22,16 +22,24 @@ package io.github.agentsoz.ees;
  * #L%
  */
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import io.github.agentsoz.abmjill.JillModel;
 import io.github.agentsoz.bdiabm.QueryPerceptInterface;
 import io.github.agentsoz.bdiabm.v2.AgentDataContainer;
 import io.github.agentsoz.dataInterface.DataClient;
 import io.github.agentsoz.dataInterface.DataServer;
+import io.github.agentsoz.ees.agents.archetype.ArchetypeAgent;
 import io.github.agentsoz.ees.util.Utils;
 import io.github.agentsoz.jill.lang.Agent;
+import io.github.agentsoz.util.Location;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.io.Writer;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 
 
@@ -52,6 +60,8 @@ public class JillBDIModel extends JillModel implements DataClient {
 	static final String eLogFile = "jLogFile";
 	static final String eOutFile = "jOutFile";
 	static final String eNumThreads = "jNumThreads";
+	static final String eMetricsFile = "bdiMetricsFile";
+	static final String eMetricsFrequencyInSecs = "bdiMetricsFrequencyInSeconds";
 	// Model option defaults
 	private String oRandomSeed = null;
 	private String oPlanSelectionPolicy = null;
@@ -60,6 +70,10 @@ public class JillBDIModel extends JillModel implements DataClient {
 	private String oLogFile = null;
 	private String oOutFile = null;
 	private String oNumThreads = null;
+	private String oMetricsFile = null;
+	private int oMetricsFrequencyInSecs = 900; // 15mins
+	private int metricCountdown = 0;
+	private int lastTime = -1;
 
 
 	private DataServer dataServer;
@@ -76,6 +90,8 @@ public class JillBDIModel extends JillModel implements DataClient {
 	private Map<String,String> mapMATsimToJillIds;
     // Reverse map of Jill agent IDs to MATSim agent IDs (for convinience)
     private Map<String,String> mapJillToMATsimIds;
+    // Map of agent metrics over time
+	private Map<Integer,Map<Integer,AgentMetricData>> metrics;
 
 	// Map<Time,Agent> of scheduled fire alertPercepts
 	private PriorityQueue<TimedAlert> alertPercepts;
@@ -96,6 +112,7 @@ public class JillBDIModel extends JillModel implements DataClient {
 		informedAgents = new HashMap<>();
 		mapMATsimToJillIds = new LinkedHashMap<String,String>();
 		mapJillToMATsimIds = new LinkedHashMap<String,String>();
+		metrics = new LinkedHashMap<>();
 		this.initArgs = initArgs;
 	}
 
@@ -196,6 +213,12 @@ public class JillBDIModel extends JillModel implements DataClient {
 					break;
 				case eNumThreads:
 					oNumThreads = opts.get(opt);
+					break;
+				case eMetricsFile:
+					oMetricsFile = opts.get(opt);
+					break;
+				case eMetricsFrequencyInSecs:
+					oMetricsFrequencyInSecs = Integer.parseInt(opts.get(opt));
 					break;
 				default:
 					logger.warn("Ignoring option: " + opt + "=" + opts.get(opt));
@@ -464,6 +487,7 @@ public class JillBDIModel extends JillModel implements DataClient {
 			synchronized (getSequenceLock()) {
 				getAgentDataContainer().clear();
 				takeControl(time, data);
+				recordMetrics(time);
 				dataServer.publish(Constants.AGENT_DATA_CONTAINER_FROM_BDI, getAgentDataContainer());
 			}
 		});
@@ -482,6 +506,42 @@ public class JillBDIModel extends JillModel implements DataClient {
 
 		return listeners;
 	}
+
+	private void recordMetrics(double time) {
+		int now = (int)time;
+		if (oMetricsFile == null) {
+			return;
+		}
+		if (metricCountdown < 1) {
+			metricCountdown = oMetricsFrequencyInSecs;
+			// record the metrics
+			Map<Integer,AgentMetricData> agentsMetrics = new LinkedHashMap();
+			for(String sid : mapJillToMATsimIds.keySet()) {
+				int id = Integer.valueOf(sid);
+				ArchetypeAgent agent = (ArchetypeAgent) getAgent(Integer.valueOf(id));
+				AgentMetricData metric = new AgentMetricData(id, agent.getCurrentStatus(), agent.getCurrentLocation());
+				agentsMetrics.put(id, metric);
+			}
+			metrics.put(now, agentsMetrics);
+		}
+		lastTime = (lastTime == -1) ? now : lastTime;
+		metricCountdown -= now - lastTime;
+	}
+
+	public void writeMetrics(String str) {
+		try {
+			Writer writer = Files.newBufferedWriter(Paths.get(str));
+			Gson gson = new GsonBuilder()
+					.setPrettyPrinting()
+					.create();
+			gson.toJson(metrics, writer);
+			writer.close();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	public void useSequenceLock(Object sequenceLock) {
 		this.sequenceLock = sequenceLock;
 	}
@@ -490,4 +550,15 @@ public class JillBDIModel extends JillModel implements DataClient {
 		return sequenceLock;
 	}
 
+	class AgentMetricData {
+		final private int id;
+		final private String status;
+		final private Location currentLocation;
+
+		public AgentMetricData(int id, String status, Location currentLocation) {
+			this.id = id;
+			this.status = status;
+			this.currentLocation = currentLocation;
+		}
+	}
 }

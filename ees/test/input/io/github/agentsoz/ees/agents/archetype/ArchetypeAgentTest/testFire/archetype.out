@@ -79,6 +79,7 @@
 03745|01:02:25|ArchetypeAgent|0|will go to evac location (FarFarAway, coords=5000.0,0.0) #GoalFinalResponse~>PlanLeaveNow
 03745|01:02:25|ArchetypeAgent|0|thinks GoalGoto~>PlanGoto is applicable
 03745|01:02:25|ArchetypeAgent|0|will start driving to (FarFarAway, coords=5000.0,0.0) 7000m away #GoalGoto~>PlanGoto
+03745|01:02:25|ArchetypeAgent|0|believes status=to:EvacPlace @@
 03745|01:02:25|ArchetypeAgent|0|believes isDriving=true @@
 03780|01:03:00|ArchetypeAgent|0|stopped driving @@
 03780|01:03:00|ArchetypeAgent|0|started activity Replan @@
@@ -90,5 +91,6 @@
 04348|01:12:28|ArchetypeAgent|0|stopped driving @@
 04348|01:12:28|ArchetypeAgent|0|started activity EvacPlace @@
 04348|01:12:28|ArchetypeAgent|0|finished driving to (FarFarAway, coords=5000.0,0.0) 0m away after 1 tries #GoalGoto~>PlanGoto
+04348|01:12:28|ArchetypeAgent|0|believes status=at:EvacPlace @@
 04348|01:12:28|ArchetypeAgent|0|believes isDriving=false @@
 04348|01:12:28|ArchetypeAgent|0|reached evac location (FarFarAway, coords=5000.0,0.0) #GoalFinalResponse~>PlanLeaveNow

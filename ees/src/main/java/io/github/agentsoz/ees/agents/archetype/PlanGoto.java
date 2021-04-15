@@ -74,6 +74,11 @@ public class PlanGoto extends Plan {
 							+ destination + String.format(" %.0f", distToDest) + "m away"
 							+ " after " + tries + " tries"
 							+ " #" + getFullName());
+					if (distToDest <= 0.0) {
+						agent.believe(ArchetypeAgent.State.status.toString(), ArchetypeAgent.StatusValue.at.name() + ":" + destinationType.name());
+					} else {
+						agent.believe(ArchetypeAgent.State.status.toString(), ArchetypeAgent.StatusValue.at.name() + ":" + Constants.EvacActivity.UnknownPlace.name());
+					}
 					agent.believe(Beliefname.isDriving.name(), new Boolean(false).toString());
 					drop();
 					return;
@@ -89,6 +94,7 @@ public class PlanGoto extends Plan {
 						((tries==0)) ? Constants.EvacRoutingMode.carFreespeed : Constants.EvacRoutingMode.carGlobalInformation,
 						(int)Math.round(replanningActivityDurationInMins));
 				tries++;
+				agent.believe(ArchetypeAgent.State.status.toString(), ArchetypeAgent.StatusValue.to.name() + ":" + destinationType.name());
 				agent.believe(Beliefname.isDriving.name(), new Boolean(action != null).toString());
 				subgoal(action); // should be last call in any plan step
 			},
