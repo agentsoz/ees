@@ -49,6 +49,10 @@
       <opt id="jLogFile">test/output/io/github/agentsoz/ees/agents/archetype/ArchetypeAgentTest/testFire/archetype.log</opt>
       <opt id="jOutFile">test/output/io/github/agentsoz/ees/agents/archetype/ArchetypeAgentTest/testFire/archetype.out</opt>
       <!--<opt id="jNumThreads">1</opt>-->
+      <!-- Output file for evacuation metrics -->
+      <opt id="bdiMetricsFile">test/output/io/github/agentsoz/ees/agents/archetype/ArchetypeAgentTest/testFire/archetype.metrics.json</opt>
+      <!-- Time bin size in seconds for collected evacuation metrics -->
+      <opt id="bdiMetricsFrequencyInSeconds">600</opt>
     </model>
 
     <model id="matsim">

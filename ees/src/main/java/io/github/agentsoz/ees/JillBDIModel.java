@@ -91,7 +91,7 @@ public class JillBDIModel extends JillModel implements DataClient {
     // Reverse map of Jill agent IDs to MATSim agent IDs (for convinience)
     private Map<String,String> mapJillToMATsimIds;
     // Map of agent metrics over time
-	private Map<Integer,Map<Integer,AgentMetricData>> metrics;
+	private SimulationMetrics metrics;
 
 	// Map<Time,Agent> of scheduled fire alertPercepts
 	private PriorityQueue<TimedAlert> alertPercepts;
@@ -112,7 +112,6 @@ public class JillBDIModel extends JillModel implements DataClient {
 		informedAgents = new HashMap<>();
 		mapMATsimToJillIds = new LinkedHashMap<String,String>();
 		mapJillToMATsimIds = new LinkedHashMap<String,String>();
-		metrics = new LinkedHashMap<>();
 		this.initArgs = initArgs;
 	}
 
@@ -123,6 +122,7 @@ public class JillBDIModel extends JillModel implements DataClient {
 		this.agentsInitMap = agentsInitMap;
 		this.setQueryPerceptInterface(qpi);
 		initArgs = buildJillConfig(agentsInitMap);
+		metrics = new SimulationMetrics(opts.get(Config.eGlobalCoordinateSystem));
 	}
 
 	private String[] buildJillConfig(Map<Integer, List<String[]>> agentsInitMap) {
@@ -512,23 +512,35 @@ public class JillBDIModel extends JillModel implements DataClient {
 		if (oMetricsFile == null) {
 			return;
 		}
-		if (metricCountdown < 1) {
+		lastTime = (lastTime == -1) ? now : lastTime;
+		metricCountdown -= now - lastTime;
+		lastTime = now;
+		if (metricCountdown <= 0) {
 			metricCountdown = oMetricsFrequencyInSecs;
-			// record the metrics
+			Map<Integer,MetricData> metric = metrics.getTimeData();
+
+			// record agent metrics
 			Map<Integer,AgentMetricData> agentsMetrics = new LinkedHashMap();
 			for(String sid : mapJillToMATsimIds.keySet()) {
 				int id = Integer.valueOf(sid);
-				ArchetypeAgent agent = (ArchetypeAgent) getAgent(Integer.valueOf(id));
-				AgentMetricData metric = new AgentMetricData(id, agent.getCurrentStatus(), agent.getCurrentLocation());
-				agentsMetrics.put(id, metric);
+				Agent thisAgent = (Agent)getAgent(Integer.valueOf(id));
+				if (thisAgent instanceof ArchetypeAgent) {
+					ArchetypeAgent agent = (ArchetypeAgent) getAgent(Integer.valueOf(id));
+					Location[] fromTo = agent.getCurrentLocation();
+					agentsMetrics.put(id, new AgentMetricData(id, agent.getCurrentStatus(), fromTo[0], fromTo[1]));
+				}
 			}
-			metrics.put(now, agentsMetrics);
+			// record link metrics
+			Map<Integer,LinkMetricData> linksMetrics = new LinkedHashMap<>();
+
+			// store combined metrics
+			if (!agentsMetrics.isEmpty() || !linksMetrics.isEmpty()) {
+				metric.put(now, new MetricData(agentsMetrics, linksMetrics));
+			}
 		}
-		lastTime = (lastTime == -1) ? now : lastTime;
-		metricCountdown -= now - lastTime;
 	}
 
-	public void writeMetrics(String str) {
+	private void writeMetrics(String str) {
 		try {
 			Writer writer = Files.newBufferedWriter(Paths.get(str));
 			Gson gson = new GsonBuilder()
@@ -550,15 +562,71 @@ public class JillBDIModel extends JillModel implements DataClient {
 		return sequenceLock;
 	}
 
+	@Override
+	public void finish() {
+		super.finish();
+		if (oMetricsFile != null) {
+			// record metrics one last time at the end of the simulation
+			metricCountdown = 0;
+			recordMetrics(lastTime);
+			// save to file
+			writeMetrics(oMetricsFile);
+		}
+	}
+
 	class AgentMetricData {
 		final private int id;
 		final private String status;
-		final private Location currentLocation;
+		final private Location from;
+		final private Location to;
 
-		public AgentMetricData(int id, String status, Location currentLocation) {
+		public AgentMetricData(int id, String status, Location from, Location to) {
 			this.id = id;
 			this.status = status;
-			this.currentLocation = currentLocation;
+			this.from = from;
+			this.to = to;
+		}
+	}
+
+	class LinkMetricData {
+		final private int id;
+		final private Location from;
+		final private Location to;
+		private int agentsDriving;
+		private int agentsInActivities;
+
+		public LinkMetricData(int id, Location from, Location to) {
+			this.id = id;
+			this.from = from;
+			this.to = to;
+		}
+	}
+
+	class MetricData {
+		private final Map<Integer,AgentMetricData> agents;
+		private final Map<Integer,LinkMetricData> links;
+
+		public MetricData(Map<Integer,AgentMetricData> agents, Map<Integer,LinkMetricData> links) {
+			this.agents = agents;
+			this.links = links;
+		}
+	}
+
+	class SimulationMetrics {
+		private final String crs;
+		Map<Integer,MetricData> timeData;
+
+		public SimulationMetrics(String crs){
+			this.crs = crs;
+			timeData = new LinkedHashMap<>();
+		}
+
+		public Map<Integer, MetricData> getTimeData() {
+			return timeData;
+		}
+
+		public void setTimeData(Map<Integer, MetricData> timeData) {
+			this.timeData = timeData;
 		}
 	}
 }

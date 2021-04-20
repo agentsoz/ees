@@ -289,19 +289,15 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
         } catch (Exception e) {}
     }
 
-    public Location getCurrentLocation() {
-        String status = getBelief(State.status.name());
-        if (status == null) {
-            status = Constants.EvacActivity.UnknownPlace.name();
-        }
-        Location location = (Location)getQueryPerceptInterface().queryPercept( String.valueOf(getId()), Constants.REQUEST_LOCATION, null);
-        return location;
+    public Location[] getCurrentLocation() {
+        Location[] fromTo = (Location[])getQueryPerceptInterface().queryPercept( String.valueOf(getId()), Constants.REQUEST_LOCATION, null);
+        return fromTo;
     }
 
     public String getCurrentStatus() {
         String status = getBelief(State.status.name());
         if (status == null) {
-            status = Constants.EvacActivity.UnknownPlace.name();
+            status = ArchetypeAgent.StatusValue.at.name() + ":" + Constants.EvacActivity.UnknownPlace.name();
         }
         return status;
     }
