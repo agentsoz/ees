@@ -1,0 +1,329 @@
+{
+  "crs": "EPSG:28355",
+  "timeData": {
+    "61": {
+      "agents": {
+        "0": {
+          "agentId": 0,
+          "linkId": "0-1",
+          "nodeFrom": {
+            "name": "0-1:0",
+            "x": 0.0,
+            "y": 0.0
+          },
+          "nodeTo": {
+            "name": "0-1:1",
+            "x": 1000.0,
+            "y": 0.0
+          },
+          "status": "at:UnknownPlace"
+        }
+      },
+      "links": {
+        "0-1": {
+          "linkId": "0-1",
+          "from": {
+            "name": "0-1:0",
+            "x": 0.0,
+            "y": 0.0
+          },
+          "to": {
+            "name": "0-1:1",
+            "x": 1000.0,
+            "y": 0.0
+          },
+          "agentsDriving": 0,
+          "agentsInActivities": 1
+        }
+      }
+    },
+    "661": {
+      "agents": {
+        "0": {
+          "agentId": 0,
+          "linkId": "0-1",
+          "nodeFrom": {
+            "name": "0-1:0",
+            "x": 0.0,
+            "y": 0.0
+          },
+          "nodeTo": {
+            "name": "0-1:1",
+            "x": 1000.0,
+            "y": 0.0
+          },
+          "status": "at:UnknownPlace"
+        }
+      },
+      "links": {
+        "0-1": {
+          "linkId": "0-1",
+          "from": {
+            "name": "0-1:0",
+            "x": 0.0,
+            "y": 0.0
+          },
+          "to": {
+            "name": "0-1:1",
+            "x": 1000.0,
+            "y": 0.0
+          },
+          "agentsDriving": 0,
+          "agentsInActivities": 1
+        }
+      }
+    },
+    "1261": {
+      "agents": {
+        "0": {
+          "agentId": 0,
+          "linkId": "0-1",
+          "nodeFrom": {
+            "name": "0-1:0",
+            "x": 0.0,
+            "y": 0.0
+          },
+          "nodeTo": {
+            "name": "0-1:1",
+            "x": 1000.0,
+            "y": 0.0
+          },
+          "status": "at:UnknownPlace"
+        }
+      },
+      "links": {
+        "0-1": {
+          "linkId": "0-1",
+          "from": {
+            "name": "0-1:0",
+            "x": 0.0,
+            "y": 0.0
+          },
+          "to": {
+            "name": "0-1:1",
+            "x": 1000.0,
+            "y": 0.0
+          },
+          "agentsDriving": 0,
+          "agentsInActivities": 1
+        }
+      }
+    },
+    "1861": {
+      "agents": {
+        "0": {
+          "agentId": 0,
+          "linkId": "0-1",
+          "nodeFrom": {
+            "name": "0-1:0",
+            "x": 0.0,
+            "y": 0.0
+          },
+          "nodeTo": {
+            "name": "0-1:1",
+            "x": 1000.0,
+            "y": 0.0
+          },
+          "status": "at:UnknownPlace"
+        }
+      },
+      "links": {
+        "0-1": {
+          "linkId": "0-1",
+          "from": {
+            "name": "0-1:0",
+            "x": 0.0,
+            "y": 0.0
+          },
+          "to": {
+            "name": "0-1:1",
+            "x": 1000.0,
+            "y": 0.0
+          },
+          "agentsDriving": 0,
+          "agentsInActivities": 1
+        }
+      }
+    },
+    "2461": {
+      "agents": {
+        "0": {
+          "agentId": 0,
+          "linkId": "0-1",
+          "nodeFrom": {
+            "name": "0-1:0",
+            "x": 0.0,
+            "y": 0.0
+          },
+          "nodeTo": {
+            "name": "0-1:1",
+            "x": 1000.0,
+            "y": 0.0
+          },
+          "status": "at:UnknownPlace"
+        }
+      },
+      "links": {
+        "0-1": {
+          "linkId": "0-1",
+          "from": {
+            "name": "0-1:0",
+            "x": 0.0,
+            "y": 0.0
+          },
+          "to": {
+            "name": "0-1:1",
+            "x": 1000.0,
+            "y": 0.0
+          },
+          "agentsDriving": 0,
+          "agentsInActivities": 1
+        }
+      }
+    },
+    "3061": {
+      "agents": {
+        "0": {
+          "agentId": 0,
+          "linkId": "0-1",
+          "nodeFrom": {
+            "name": "0-1:0",
+            "x": 0.0,
+            "y": 0.0
+          },
+          "nodeTo": {
+            "name": "0-1:1",
+            "x": 1000.0,
+            "y": 0.0
+          },
+          "status": "at:UnknownPlace"
+        }
+      },
+      "links": {
+        "0-1": {
+          "linkId": "0-1",
+          "from": {
+            "name": "0-1:0",
+            "x": 0.0,
+            "y": 0.0
+          },
+          "to": {
+            "name": "0-1:1",
+            "x": 1000.0,
+            "y": 0.0
+          },
+          "agentsDriving": 0,
+          "agentsInActivities": 1
+        }
+      }
+    },
+    "3661": {
+      "agents": {
+        "0": {
+          "agentId": 0,
+          "linkId": "7-13",
+          "nodeFrom": {
+            "name": "7-13:7",
+            "x": 1000.0,
+            "y": 1000.0
+          },
+          "nodeTo": {
+            "name": "7-13:13",
+            "x": 1000.0,
+            "y": 2000.0
+          },
+          "status": "at:UnknownPlace"
+        }
+      },
+      "links": {
+        "7-13": {
+          "linkId": "7-13",
+          "from": {
+            "name": "7-13:7",
+            "x": 1000.0,
+            "y": 1000.0
+          },
+          "to": {
+            "name": "7-13:13",
+            "x": 1000.0,
+            "y": 2000.0
+          },
+          "agentsDriving": 0,
+          "agentsInActivities": 1
+        }
+      }
+    },
+    "4261": {
+      "agents": {
+        "0": {
+          "agentId": 0,
+          "linkId": "3-4",
+          "nodeFrom": {
+            "name": "3-4:3",
+            "x": 3000.0,
+            "y": 0.0
+          },
+          "nodeTo": {
+            "name": "3-4:4",
+            "x": 4000.0,
+            "y": 0.0
+          },
+          "status": "to:EvacPlace"
+        }
+      },
+      "links": {
+        "3-4": {
+          "linkId": "3-4",
+          "from": {
+            "name": "3-4:3",
+            "x": 3000.0,
+            "y": 0.0
+          },
+          "to": {
+            "name": "3-4:4",
+            "x": 4000.0,
+            "y": 0.0
+          },
+          "agentsDriving": 1,
+          "agentsInActivities": 0
+        }
+      }
+    },
+    "4348": {
+      "agents": {
+        "0": {
+          "agentId": 0,
+          "linkId": "4-5",
+          "nodeFrom": {
+            "name": "4-5:4",
+            "x": 4000.0,
+            "y": 0.0
+          },
+          "nodeTo": {
+            "name": "4-5:5",
+            "x": 5000.0,
+            "y": 0.0
+          },
+          "status": "at:EvacPlace"
+        }
+      },
+      "links": {
+        "4-5": {
+          "linkId": "4-5",
+          "from": {
+            "name": "4-5:4",
+            "x": 4000.0,
+            "y": 0.0
+          },
+          "to": {
+            "name": "4-5:5",
+            "x": 5000.0,
+            "y": 0.0
+          },
+          "agentsDriving": 0,
+          "agentsInActivities": 1
+        }
+      }
+    }
+  }
+}

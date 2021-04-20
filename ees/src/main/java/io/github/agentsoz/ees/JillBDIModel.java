@@ -519,20 +519,37 @@ public class JillBDIModel extends JillModel implements DataClient {
 			metricCountdown = oMetricsFrequencyInSecs;
 			Map<Integer,MetricData> metric = metrics.getTimeData();
 
-			// record agent metrics
+			// record metrics
 			Map<Integer,AgentMetricData> agentsMetrics = new LinkedHashMap();
+			Map<String,LinkMetricData> linksMetrics = new LinkedHashMap<>();
 			for(String sid : mapJillToMATsimIds.keySet()) {
 				int id = Integer.valueOf(sid);
 				Agent thisAgent = (Agent)getAgent(Integer.valueOf(id));
 				if (thisAgent instanceof ArchetypeAgent) {
 					ArchetypeAgent agent = (ArchetypeAgent) getAgent(Integer.valueOf(id));
 					Location[] fromTo = agent.getCurrentLocation();
-					agentsMetrics.put(id, new AgentMetricData(id, agent.getCurrentStatus(), fromTo[0], fromTo[1]));
+					String linkId = fromTo[0].getName().split(":")[0];
+					String status = agent.getCurrentStatus();
+					agentsMetrics.put(id, new AgentMetricData(id, status, linkId, fromTo[0], fromTo[1]));
+
+					String statusType = status.split(":")[0];
+					LinkMetricData linkMetricData = linksMetrics.containsKey(linkId) ?
+							linksMetrics.get(linkId) :
+							new LinkMetricData(linkId, fromTo[0], fromTo[1]);
+					switch (statusType) {
+						case "at":
+							linkMetricData.setAgentsInActivities(linkMetricData.getAgentsInActivities()+1);
+							break;
+						case "to":
+							linkMetricData.setAgentsDriving(linkMetricData.getAgentsDriving()+1);
+							break;
+						default:
+							// ignore the rest
+							break;
+					}
+					linksMetrics.put(linkId, linkMetricData);
 				}
 			}
-			// record link metrics
-			Map<Integer,LinkMetricData> linksMetrics = new LinkedHashMap<>();
-
 			// store combined metrics
 			if (!agentsMetrics.isEmpty() || !linksMetrics.isEmpty()) {
 				metric.put(now, new MetricData(agentsMetrics, linksMetrics));
@@ -575,38 +592,56 @@ public class JillBDIModel extends JillModel implements DataClient {
 	}
 
 	class AgentMetricData {
-		final private int id;
+		final private int agentId;
+		final private String linkId;
+		final private Location nodeFrom;
+		final private Location nodeTo;
 		final private String status;
-		final private Location from;
-		final private Location to;
 
-		public AgentMetricData(int id, String status, Location from, Location to) {
-			this.id = id;
+		public AgentMetricData(int agentId, String status, String linkId, Location nodeFrom, Location nodeTo) {
+			this.agentId = agentId;
 			this.status = status;
-			this.from = from;
-			this.to = to;
+			this.linkId = linkId;
+			this.nodeFrom = nodeFrom;
+			this.nodeTo = nodeTo;
 		}
 	}
 
 	class LinkMetricData {
-		final private int id;
+		final private String linkId;
 		final private Location from;
 		final private Location to;
 		private int agentsDriving;
 		private int agentsInActivities;
 
-		public LinkMetricData(int id, Location from, Location to) {
-			this.id = id;
+		public LinkMetricData(String linkId, Location from, Location to) {
+			this.linkId = linkId;
 			this.from = from;
 			this.to = to;
+		}
+
+		public int getAgentsDriving() {
+			return agentsDriving;
+		}
+
+		public void setAgentsDriving(int agentsDriving) {
+			this.agentsDriving = agentsDriving;
+		}
+
+		public int getAgentsInActivities() {
+			return agentsInActivities;
+		}
+
+		public void setAgentsInActivities(int agentsInActivities) {
+			this.agentsInActivities = agentsInActivities;
 		}
 	}
 
 	class MetricData {
 		private final Map<Integer,AgentMetricData> agents;
-		private final Map<Integer,LinkMetricData> links;
+		private final Map<String,LinkMetricData> links;
 
-		public MetricData(Map<Integer,AgentMetricData> agents, Map<Integer,LinkMetricData> links) {
+		public MetricData(Map<Integer,AgentMetricData> agents, Map<String,LinkMetricData> links) {
 			this.agents = agents;
 			this.links = links;
 		}

@@ -25,9 +25,11 @@ package io.github.agentsoz.ees.agents.archetype;
 
 import io.github.agentsoz.ees.Run;
 import io.github.agentsoz.ees.util.TestUtils;
+import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
+import org.matsim.core.utils.misc.CRCChecksum;
 import org.matsim.testcases.MatsimTestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,6 +56,10 @@ public class ArchetypeAgentTest {
                 matsimUtils.getInputDirectory() + "archetype.out",
                 "@@$",
                 1);
+        final String expected = matsimUtils.getInputDirectory() + "archetype.metrics.json";
+        final String actual = matsimUtils.getOutputDirectory() + "../archetype.metrics.json";
+        Assert.assertEquals("Files "+ expected + " and " + actual + " differ",
+                CRCChecksum.getCRCFromFile(expected), CRCChecksum.getCRCFromFile(actual));
     }
 
     @Test
