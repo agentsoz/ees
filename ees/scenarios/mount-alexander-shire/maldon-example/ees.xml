@@ -37,7 +37,7 @@
     <!-- simulation start time in HH:MM format -->
     <opt id="startHHMM">12:00</opt>
     <!-- Output file for trips written in DeckGL format -->
-    <opt id="deckGlOutFile">test/output/io/github/agentsoz/ees/MaldonExample/test/trips.deckgl.json</opt>
+    <opt id="deckGlOutFile">test/output/io/github/agentsoz/ees/agents/MaldonExample/test/trips.deckgl.json</opt>
   </global>
 
   <!-- model specific configuration -->
