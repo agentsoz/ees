@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE population SYSTEM "http://www.matsim.org/files/dtd/population_v6.dtd">
+
+<population>
+
+	<attributes>
+		<attribute name="coordinateReferenceSystem" class="java.lang.String">Atlantis</attribute>
+	</attributes>
+
+
+<!-- ====================================================================== -->
+
+	<person id="0">
+		<attributes>
+			<attribute name="BDIAgentType" class="java.lang.String">io.github.agentsoz.ees.agents.archetype.ArchetypeAgent</attribute>
+			<attribute name="ImpactFromMessageEvacuateNow" class="java.lang.String">0.7</attribute>
+			<attribute name="ResponseThresholdFinal" class="java.lang.String">0.38</attribute>
+			<attribute name="ResponseThresholdInitial" class="java.lang.String">-0.02</attribute>
+			<attribute name="EvacLocationPreference" class="java.lang.String">FarFarAway,5000.0,0000.0</attribute>
+			<attribute name="InvacLocationPreference" class="java.lang.String">NotSoFarAway,2500.0,2500.0</attribute>
+		</attributes>
+		<plan selected="yes">
+			<activity type="home" link="0-1" x="0.0" y="0.0" end_time="01:00:00" >
+			</activity>
+			<leg mode="car" dep_time="01:00:00" trav_time="00:05:56">
+				<attributes>
+					<attribute name="routingMode" class="java.lang.String">car</attribute>
+				</attributes>
+				<!--<route type="links" start_link="0-1" end_link="29-35" trav_time="00:05:56" distance="9000.0" vehicleRefId="0">0-1 1-7 7-13 13-19 19-25 25-26 26-27 27-28 28-29 29-35</route>-->
+				<!-- Specifying a broken route below to force stuckAndAbort -->
+				<route type="links" start_link="0-1" end_link="29-35" trav_time="00:05:56" distance="9000.0" vehicleRefId="0">0-1 1-7 7-13 13-19 19-25 26-27 27-28 28-29 29-35</route>
+			</leg>
+			<activity type="work" link="29-35" x="5000.0" y="5000.0" end_time="01:10:00" >
+			</activity>
+			<leg mode="car" dep_time="01:10:00" trav_time="00:06:49">
+				<attributes>
+					<attribute name="routingMode" class="java.lang.String">car</attribute>
+				</attributes>
+				<route type="links" start_link="29-35" end_link="0-1" trav_time="00:06:49" distance="11000.0" vehicleRefId="0">29-35 34-35r 33-34r 32-33r 31-32r 30-31r 24-30r 18-24r 12-18r 6-12r 0-6r 0-1</route>
+			</leg>
+			<activity type="home" link="0-1" x="0.0" y="0.0" >
+			</activity>
+		</plan>
+
+	</person>
+
+<!-- ====================================================================== -->
+
+	<person id="1">
+		<attributes>
+			<attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.archetype.ArchetypeAgent</attribute>
+			<attribute name="ImpactFromMessageEvacuateNow" class="java.lang.String" >1.0</attribute>
+			<attribute name="ResponseThresholdFinal" class="java.lang.String" >0.0</attribute>
+			<attribute name="ResponseThresholdInitial" class="java.lang.String" >0.0</attribute>
+			<attribute name="EvacLocationPreference" class="java.lang.String" >FarFarAway,0000.0,5000.0</attribute>
+			<attribute name="InvacLocationPreference" class="java.lang.String" >NotFarAway,0000.0,5000.0</attribute>
+
+		</attributes>
+		<plan selected="yes">
+			<activity type="home" x="5000.0" y="4000.0" end_time="23:59:59" />
+		</plan>
+	</person>
+
+	<!-- ====================================================================== -->
+
+</population>

@@ -90,5 +90,16 @@ public class ArchetypeAgentTest {
                 "@@$",
                 1);
     }
+
+    @Test
+    public void testStuck() {
+        matsimUtils.getOutputDirectory(); // creates a clean one so need to call this first
+        Run.main(new String[] {"--config", "scenarios/grid/ar-2a-ees-stuck.xml"});
+//        new TestUtils().compareLineByLine(
+//                matsimUtils.getOutputDirectory() + "../archetype.out",
+//                matsimUtils.getInputDirectory() + "archetype.out",
+//                "@@$",
+//                1);
+    }
 }
 
