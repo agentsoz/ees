@@ -22,7 +22,6 @@ package io.github.agentsoz.ees;
  * #L%
  */
 
-import io.github.agentsoz.util.PerceptList;
 
 public class Constants {
     // Actions
@@ -32,12 +31,12 @@ public class Constants {
 
     // Percepts
     public static final String ARRIVED = io.github.agentsoz.util.PerceptList.ARRIVED;
-    public static final String ACTIVITY_STARTED = PerceptList.ACTIVITY_STARTED;
-    public static final String ACTIVITY_ENDED = PerceptList.ACTIVITY_ENDED;
+    public static final String ACTIVITY_STARTED = io.github.agentsoz.util.PerceptList.ACTIVITY_STARTED;
+    public static final String ACTIVITY_ENDED = io.github.agentsoz.util.PerceptList.ACTIVITY_ENDED;
     public static final String BLOCKED = io.github.agentsoz.util.PerceptList.BLOCKED;
     public static final String BROADCAST = io.github.agentsoz.util.PerceptList.BROADCAST;
     public static final String CONGESTION = io.github.agentsoz.util.PerceptList.CONGESTION;
-    public static final String DEPARTED = PerceptList.DEPARTED;
+    public static final String DEPARTED = io.github.agentsoz.util.PerceptList.DEPARTED;
     public static final String DISRUPTION = "disruption";
     public static final String EMERGENCY_MESSAGE = "emergency_message";
     public static final String FIELD_OF_VIEW = "field_of-view";
@@ -47,6 +46,7 @@ public class Constants {
     public static final String FIRE_DATA  = "fire_data";
     public static final String SIGHTED_EMBERS= "embers";
     public static final String SIGHTED_FIRE= "fire";
+    public static final String STUCK =io.github.agentsoz.util.PerceptList.STUCK;
     public static final String TIME = io.github.agentsoz.util.PerceptList.TIME;
 
     // BDI Query Percept  strings

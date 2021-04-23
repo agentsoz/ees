@@ -408,6 +408,10 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
     private void handleSocialNetworkMessage(Object parameters) {
     }
 
+    private void handleStuck(Object parameters) {
+        record("got stuck " + parameters);
+    }
+
 
     //===============================================================================
     //endregion
@@ -750,7 +754,8 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
                         Constants.ARRIVED,
                         Constants.DEPARTED,
                         Constants.ACTIVITY_STARTED,
-                        Constants.ACTIVITY_ENDED});
+                        Constants.ACTIVITY_ENDED,
+                        Constants.STUCK});
         post(action);
         addActiveEnvironmentAction(action);
     }
@@ -870,6 +875,8 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
             case Constants.SOCIAL_NETWORK_MSG:
                 handleSocialNetworkMessage(parameters);
                 break;
+            case Constants.STUCK:
+                handleStuck(parameters);
             default:
                 logger.warn("{} received unknown percept '{}'", logPrefix(), perceptID);
 
