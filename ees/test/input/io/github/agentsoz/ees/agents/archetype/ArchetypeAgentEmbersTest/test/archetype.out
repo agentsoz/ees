@@ -9,7 +9,7 @@
 -0001|-00:00:01|ArchetypeAgent|0|believes Gender=null #Gender @@
 -0001|-00:00:01|ArchetypeAgent|0|believes AddressCoordinates=null #Geographical.Coordinate @@
 -0001|-00:00:01|ArchetypeAgent|0|believes HasDependents=false #HasDependents @@
--0001|-00:00:01|ArchetypeAgent|0|believes HasDependentsAtLocation=null #HasDependentsAtLocation @@
+-0001|-00:00:01|ArchetypeAgent|0|believes HasDependentsAtLocation= #HasDependentsAtLocation @@
 -0001|-00:00:01|ArchetypeAgent|0|believes HouseholdId=null #HouseholdId @@
 -0001|-00:00:01|ArchetypeAgent|0|believes isDriving=false #isDriving @@
 -0001|-00:00:01|ArchetypeAgent|0|believes Id=null #Id @@
@@ -27,10 +27,10 @@
 -0001|-00:00:01|ArchetypeAgent|0|believes ImpactFromVisibleSmoke=0.3 #ImpactFromVisibleSmoke @@
 -0001|-00:00:01|ArchetypeAgent|0|believes LagTimeInMinsForInitialResponse=17.89 #LagTimeInMinsForInitialResponse @@
 -0001|-00:00:01|ArchetypeAgent|0|believes LagTimeInMinsForFinalResponse=5.89 #LagTimeInMinsForFinalResponse @@
--0001|-00:00:01|ArchetypeAgent|0|believes LocationEvacuationPreference=null #EvacLocationPreference @@
--0001|-00:00:01|ArchetypeAgent|0|believes LocationInvacPreference=null #InvacLocationPreference @@
--0001|-00:00:01|ArchetypeAgent|0|believes LocationHome=null #home @@
--0001|-00:00:01|ArchetypeAgent|0|believes LocationWork=null #work @@
+-0001|-00:00:01|ArchetypeAgent|0|believes LocationEvacuationPreference=FarFarAway,5000.0,0000.0 #EvacLocationPreference @@
+-0001|-00:00:01|ArchetypeAgent|0|believes LocationInvacPreference=NotSoFarAway,2500.0,2500.0 #InvacLocationPreference @@
+-0001|-00:00:01|ArchetypeAgent|0|believes LocationHome=0.000000,0.000000 #home @@
+-0001|-00:00:01|ArchetypeAgent|0|believes LocationWork=5000.000000,5000.000000 #work @@
 -0001|-00:00:01|ArchetypeAgent|0|believes PrimaryFamilyType=null #PrimaryFamilyType @@
 -0001|-00:00:01|ArchetypeAgent|0|believes ResponseThresholdFinal=0.38 #ResponseThresholdFinal @@
 -0001|-00:00:01|ArchetypeAgent|0|believes ResponseThresholdInitial=-0.02 #ResponseThresholdInitial @@
@@ -63,34 +63,50 @@
 -0001|-00:00:01|ArchetypeAgent|0|believes responseThresholdFinalReached=null @@
 03600|01:00:00|ArchetypeAgent|0|started driving to work @@
 03600|01:00:00|ArchetypeAgent|0|finished activity home @@
-03745|01:02:25|ArchetypeAgent|0|saw fire @@
-03745|01:02:25|ArchetypeAgent|0|believes anxietyFromSituation=0.6 @@
-03745|01:02:25|ArchetypeAgent|0|believes futureValueOfVisibleFire=0.0 @@
-03745|01:02:25|ArchetypeAgent|0|believes responseThresholdInitialReached=true @@
-03745|01:02:25|ArchetypeAgent|0|believes responseThresholdFinalReached=true @@
-03745|01:02:25|ArchetypeAgent|0|thinks GoalFullResponse~>PlanFullResponse is applicable
-03745|01:02:25|ArchetypeAgent|0|thinks GoalInitialResponse~>PlanResponseWhenDependentsAfar is not applicable
-03745|01:02:25|ArchetypeAgent|0|thinks GoalInitialResponse~>PlanResponseWhenDependentsNearby is not applicable
-03745|01:02:25|ArchetypeAgent|0|thinks GoalInitialResponse~>PlanResponseWithoutDependents is applicable
-03745|01:02:25|ArchetypeAgent|0|thinks GoalInitialResponse~>PlanDoNothing is applicable
-03745|01:02:25|ArchetypeAgent|0|will wait and see #GoalInitialResponse~>PlanResponseWithoutDependents
-03745|01:02:25|ArchetypeAgent|0|thinks GoalFinalResponse~>PlanLeaveNow is applicable
-03745|01:02:25|ArchetypeAgent|0|thinks GoalFinalResponse~>PlanStayAndDefend is not applicable
-03745|01:02:25|ArchetypeAgent|0|will go to evac location (FarFarAway, coords=5000.0,0.0) #GoalFinalResponse~>PlanLeaveNow
-03745|01:02:25|ArchetypeAgent|0|thinks GoalGoto~>PlanGoto is applicable
-03745|01:02:25|ArchetypeAgent|0|will start driving to (FarFarAway, coords=5000.0,0.0) 7000m away #GoalGoto~>PlanGoto
-03745|01:02:25|ArchetypeAgent|0|believes status=to:EvacPlace @@
-03745|01:02:25|ArchetypeAgent|0|believes isDriving=true @@
-03780|01:03:00|ArchetypeAgent|0|stopped driving @@
-03780|01:03:00|ArchetypeAgent|0|started activity Replan @@
-03961|01:06:01|ArchetypeAgent|0|saw fire @@
-03961|01:06:01|ArchetypeAgent|0|believes anxietyFromSituation=0.6 @@
-03961|01:06:01|ArchetypeAgent|0|believes futureValueOfVisibleFire=0.0 @@
-03986|01:06:26|ArchetypeAgent|0|started driving to EvacPlace @@
-03986|01:06:26|ArchetypeAgent|0|finished activity Replan @@
-04348|01:12:28|ArchetypeAgent|0|stopped driving @@
-04348|01:12:28|ArchetypeAgent|0|started activity EvacPlace @@
-04348|01:12:28|ArchetypeAgent|0|finished driving to (FarFarAway, coords=5000.0,0.0) 0m away after 1 tries #GoalGoto~>PlanGoto
-04348|01:12:28|ArchetypeAgent|0|believes status=at:EvacPlace @@
-04348|01:12:28|ArchetypeAgent|0|believes isDriving=false @@
-04348|01:12:28|ArchetypeAgent|0|reached evac location (FarFarAway, coords=5000.0,0.0) #GoalFinalResponse~>PlanLeaveNow
+04030|01:07:10|ArchetypeAgent|0|stopped driving @@
+04030|01:07:10|ArchetypeAgent|0|started activity work @@
+04200|01:10:00|ArchetypeAgent|0|started driving to home @@
+04200|01:10:00|ArchetypeAgent|0|finished activity work @@
+04333|01:12:13|ArchetypeAgent|0|saw embers @@
+04333|01:12:13|ArchetypeAgent|0|believes anxietyFromSituation=0.5 @@
+04333|01:12:13|ArchetypeAgent|0|believes futureValueOfVisibleEmbers=0.0 @@
+04333|01:12:13|ArchetypeAgent|0|believes responseThresholdInitialReached=true @@
+04333|01:12:13|ArchetypeAgent|0|believes responseThresholdFinalReached=true @@
+04333|01:12:13|ArchetypeAgent|0|thinks GoalFullResponse~>PlanFullResponse is applicable
+04333|01:12:13|ArchetypeAgent|0|thinks GoalInitialResponse~>PlanResponseWhenDependentsAfar is not applicable
+04333|01:12:13|ArchetypeAgent|0|thinks GoalInitialResponse~>PlanResponseWhenDependentsNearby is not applicable
+04333|01:12:13|ArchetypeAgent|0|thinks GoalInitialResponse~>PlanResponseWithoutDependents is applicable
+04333|01:12:13|ArchetypeAgent|0|thinks GoalInitialResponse~>PlanDoNothing is applicable
+04333|01:12:13|ArchetypeAgent|0|will wait and see #GoalInitialResponse~>PlanResponseWithoutDependents
+04333|01:12:13|ArchetypeAgent|0|thinks GoalFinalResponse~>PlanLeaveNow is applicable
+04333|01:12:13|ArchetypeAgent|0|thinks GoalFinalResponse~>PlanStayAndDefend is not applicable
+04333|01:12:13|ArchetypeAgent|0|will go to evac location (FarFarAway, coords=5000.0,0.0) #GoalFinalResponse~>PlanLeaveNow
+04333|01:12:13|ArchetypeAgent|0|thinks GoalGoto~>PlanGoto is applicable
+04333|01:12:13|ArchetypeAgent|0|will start driving to (FarFarAway, coords=5000.0,0.0) 6000m away #GoalGoto~>PlanGoto
+04333|01:12:13|ArchetypeAgent|0|believes status=to:EvacPlace @@
+04333|01:12:13|ArchetypeAgent|0|believes isDriving=true @@
+04378|01:12:58|ArchetypeAgent|0|stopped driving @@
+04378|01:12:58|ArchetypeAgent|0|started activity Replan @@
+04574|01:16:14|ArchetypeAgent|0|started driving to EvacPlace @@
+04574|01:16:14|ArchetypeAgent|0|finished activity Replan @@
+04575|01:16:15|ArchetypeAgent|0|saw embers @@
+04575|01:16:15|ArchetypeAgent|0|believes anxietyFromSituation=0.5 @@
+04575|01:16:15|ArchetypeAgent|0|believes futureValueOfVisibleEmbers=0.0 @@
+04621|01:17:01|ArchetypeAgent|0|saw embers @@
+04621|01:17:01|ArchetypeAgent|0|believes anxietyFromSituation=0.5 @@
+04621|01:17:01|ArchetypeAgent|0|believes futureValueOfVisibleEmbers=0.0 @@
+04681|01:18:01|ArchetypeAgent|0|saw embers @@
+04681|01:18:01|ArchetypeAgent|0|believes anxietyFromSituation=0.5 @@
+04681|01:18:01|ArchetypeAgent|0|believes futureValueOfVisibleEmbers=0.0 @@
+04741|01:19:01|ArchetypeAgent|0|saw embers @@
+04741|01:19:01|ArchetypeAgent|0|believes anxietyFromSituation=0.5 @@
+04741|01:19:01|ArchetypeAgent|0|believes futureValueOfVisibleEmbers=0.0 @@
+04801|01:20:01|ArchetypeAgent|0|saw embers @@
+04801|01:20:01|ArchetypeAgent|0|believes anxietyFromSituation=0.5 @@
+04801|01:20:01|ArchetypeAgent|0|believes futureValueOfVisibleEmbers=0.0 @@
+05052|01:24:12|ArchetypeAgent|0|stopped driving @@
+05052|01:24:12|ArchetypeAgent|0|started activity EvacPlace @@
+05052|01:24:12|ArchetypeAgent|0|finished driving to (FarFarAway, coords=5000.0,0.0) 0m away after 1 tries #GoalGoto~>PlanGoto
+05052|01:24:12|ArchetypeAgent|0|believes status=at:EvacPlace @@
+05052|01:24:12|ArchetypeAgent|0|believes isDriving=false @@
+05052|01:24:12|ArchetypeAgent|0|reached evac location (FarFarAway, coords=5000.0,0.0) #GoalFinalResponse~>PlanLeaveNow

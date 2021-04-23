@@ -46,11 +46,11 @@
       <opt id="jPlanSelectionPolicy">FIRST</opt>
       <opt id="jAgents"></opt>
       <opt id="jLogLevel">WARN</opt>
-      <opt id="jLogFile">test/output/io/github/agentsoz/ees/agents/archetype/ArchetypeAgentTest/testStuck/archetype.log</opt>
-      <opt id="jOutFile">test/output/io/github/agentsoz/ees/agents/archetype/ArchetypeAgentTest/testStuck/archetype.out</opt>
+      <opt id="jLogFile">test/output/io/github/agentsoz/ees/agents/archetype/ArchetypeAgentStuckTest/test/archetype.log</opt>
+      <opt id="jOutFile">test/output/io/github/agentsoz/ees/agents/archetype/ArchetypeAgentStuckTest/test/archetype.out</opt>
       <!--<opt id="jNumThreads">1</opt>-->
       <!-- Output file for evacuation metrics -->
-      <opt id="bdiMetricsFile">test/output/io/github/agentsoz/ees/agents/archetype/ArchetypeAgentTest/testStuck/archetype.metrics.json</opt>
+      <opt id="bdiMetricsFile">test/output/io/github/agentsoz/ees/agents/archetype/ArchetypeAgentStuckTest/test/archetype.metrics.json</opt>
       <!-- Time bin size in seconds for collected evacuation metrics -->
       <opt id="bdiMetricsFrequencyInSeconds">60</opt>
 
@@ -58,7 +58,7 @@
 
     <model id="matsim">
       <!-- MATSim output directory relative to examples/bushfire directory (will overrule the setting in MATSim config) -->
-      <opt id="outputDir">test/output/io/github/agentsoz/ees/agents/archetype/ArchetypeAgentTest/testStuck/matsim</opt>
+      <opt id="outputDir">test/output/io/github/agentsoz/ees/agents/archetype/ArchetypeAgentStuckTest/test/matsim</opt>
       <!-- MATSim XML config XML file relative to examples/bushfire directory -->
       <opt id="configXml">scenarios/grid/ar-2a-mat.xml</opt>
     </model>

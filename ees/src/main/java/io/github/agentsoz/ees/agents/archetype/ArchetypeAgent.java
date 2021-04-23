@@ -685,8 +685,8 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
             }
             if (discard.contains(key)) {
                 continue; // discard key/values we don't care about
-
-            } else if (Beliefname.HasDependentsAtLocation.getCommonName().equals(key)) {
+            }
+            if (Beliefname.HasDependentsAtLocation.getCommonName().equals(key)) {
                 dependentsLocation = parseLocation(value);
 
             } else if (Beliefname.LocationEvacuationPreference.getCommonName().equals(key)) {
@@ -701,7 +701,8 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
             } else if (Beliefname.LocationWork.getCommonName().equals(key)) {
                 workLocation = parseLocation(value);
 
-            } else if (commonNames.containsKey(key)) {
+            }
+            if (commonNames.containsKey(key)) {
                 // store all the other know key/values
                 believe(commonNames.get(key).name(), value);
 
