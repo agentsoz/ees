@@ -25,7 +25,6 @@ package io.github.agentsoz.ees.agents.archetype;
 
 import io.github.agentsoz.ees.Run;
 import io.github.agentsoz.util.TestUtils;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.matsim.testcases.MatsimTestUtils;
@@ -44,7 +43,6 @@ public class SCSArchetypesBasicTest {
     public MatsimTestUtils utils = new MatsimTestUtils() ;
 
     @Test
-    @Ignore
     public void test() {
 
         utils.getOutputDirectory(); // creates a clean one so need to call this first
