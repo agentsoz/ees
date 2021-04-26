@@ -90,6 +90,7 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
         responseThresholdFinalReached,
         //
         status,
+        isStuck,
     }
     
     enum Beliefname {
@@ -169,6 +170,7 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
     private Location invacLocation;
     private Location homeLocation;
     private Location workLocation;
+    private Location[] stuckLocation;
 
 
 
@@ -290,8 +292,12 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
     }
 
     public Location[] getCurrentLocation() {
-        Location[] fromTo = (Location[])getQueryPerceptInterface().queryPercept( String.valueOf(getId()), Constants.REQUEST_LOCATION, null);
-        return fromTo;
+        if (Boolean.valueOf(getBelief(ArchetypeAgent.State.isStuck.name()))) {
+            return stuckLocation;
+        } else {
+            Location[] fromTo = (Location[]) getQueryPerceptInterface().queryPercept(String.valueOf(getId()), Constants.REQUEST_LOCATION, null);
+            return fromTo;
+        }
     }
 
     public String getCurrentStatus() {
@@ -409,7 +415,12 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
     }
 
     private void handleStuck(Object parameters) {
-        record("got stuck " + parameters);
+        believe(State.isStuck.name(), Boolean.toString(true));
+        believe(State.status.name(), ArchetypeAgent.StatusValue.at.name() + ":" + Constants.EvacActivity.StuckPlace.name());
+        Object[] args = (Object[])parameters;
+        stuckLocation = new Location[2];
+        stuckLocation[0] = new Location((String)args[0], (double)args[1], (double)args[2]);
+        stuckLocation[1] = new Location((String)args[3], (double)args[4], (double)args[5]);
     }
 
 

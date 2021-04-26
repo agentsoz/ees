@@ -24,8 +24,6 @@ package io.github.agentsoz.ees.agents.archetype;
 
 import io.github.agentsoz.bdiabm.data.ActionContent;
 import io.github.agentsoz.ees.Constants;
-import io.github.agentsoz.ees.agents.bushfire.BushfireAgent;
-import io.github.agentsoz.ees.agents.bushfire.GoalGoHome;
 import io.github.agentsoz.jill.lang.*;
 import io.github.agentsoz.util.Location;
 
@@ -53,6 +51,10 @@ public class PlanResponseWithoutDependents extends Plan {
 	public boolean context() {
 		boolean applicable = false;
 		setName(this.getClass().getSimpleName()); // give this plan a user friendly name for logging purposes
+		boolean isStuck = Boolean.valueOf(agent.getBelief(ArchetypeAgent.State.isStuck.name()));
+		if (isStuck) {
+			return false;
+		}
 		boolean hasDependents = Boolean.valueOf(agent.getBelief(ArchetypeAgent.Beliefname.HasDependents.name()));
 		if (!hasDependents) {
 			xyHome = agent.getHomeLocation();

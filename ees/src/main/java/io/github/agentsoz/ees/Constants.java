@@ -71,6 +71,7 @@ public class Constants {
         EvacPlace,
         InvacPlace,
         DependentsPlace,
+        StuckPlace,
         UnknownPlace,
     }
 

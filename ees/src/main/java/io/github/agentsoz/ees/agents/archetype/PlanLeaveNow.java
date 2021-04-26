@@ -50,7 +50,8 @@ public class PlanLeaveNow extends Plan {
 	public boolean context() {
 		setName(this.getClass().getSimpleName()); // give this plan a user friendly name for logging purposes
 		boolean isExperienced = agent.getBelief(ArchetypeAgent.Beliefname.Archetype.name()).equals("ExperiencedIndependent");
-		boolean applicable = !isExperienced;
+		boolean isStuck = Boolean.valueOf(agent.getBelief(ArchetypeAgent.State.isStuck.name()));
+		boolean applicable = !isStuck && !isExperienced;
 		agent.out("thinks " + getFullName() + " is " + (applicable ? "" : "not ") + "applicable");
 		return applicable;
 	}

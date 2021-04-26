@@ -54,7 +54,8 @@ public class PlanGoto extends Plan {
 
 	public boolean context() {
 		setName(this.getClass().getSimpleName()); // give this plan a user friendly name for logging purposes
-		boolean applicable = true;
+		boolean isStuck = Boolean.valueOf(agent.getBelief(ArchetypeAgent.State.isStuck.name()));
+		boolean applicable = !isStuck;
 		agent.out("thinks " + getFullName() + " is " + (applicable ? "" : "not ") + "applicable");
 		return applicable;
 	}
@@ -65,11 +66,13 @@ public class PlanGoto extends Plan {
 				// All done if already at the destination,
 				// or tried enough times,
 				// or were driving but the last bdi action (presumably the drive action) was dropped
+				// or is stuck
 				if (distToDest <= 0.0 ||
 						tries >= maximumTries ||
 						(!ActionContent.State.DROPPED.equals(agent.getLastBdiActionState()) &&
 								!ActionContent.State.FAILED.equals(agent.getLastBdiActionState())
-								&& agent.hasBelief(Beliefname.isDriving.name(), new Boolean(true).toString()))) {
+								&& agent.hasBelief(Beliefname.isDriving.name(), new Boolean(true).toString())) ||
+						Boolean.valueOf(agent.getBelief(ArchetypeAgent.State.isStuck.name()))) {
 					agent.out("finished driving to "
 							+ destination + String.format(" %.0f", distToDest) + "m away"
 							+ " after " + tries + " tries"

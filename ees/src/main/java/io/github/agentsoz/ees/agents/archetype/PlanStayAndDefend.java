@@ -46,6 +46,10 @@ public class PlanStayAndDefend extends Plan {
 
 	public boolean context() {
 		setName(this.getClass().getSimpleName()); // give this plan a user friendly name for logging purposes
+		boolean isStuck = Boolean.valueOf(agent.getBelief(ArchetypeAgent.State.isStuck.name()));
+		if (isStuck) {
+			return false;
+		}
 		boolean hasDependents = Boolean.valueOf(agent.getBelief(ArchetypeAgent.Beliefname.HasDependents.name()));
 		boolean isExperienced = agent.getBelief(ArchetypeAgent.Beliefname.Archetype.name()).equals("Experienced.Independent");
 		boolean applicable = isExperienced && !hasDependents;

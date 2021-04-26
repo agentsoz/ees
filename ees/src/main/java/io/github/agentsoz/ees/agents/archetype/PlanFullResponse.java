@@ -42,7 +42,8 @@ public class PlanFullResponse extends Plan {
 
 	public boolean context() {
 		setName(this.getClass().getSimpleName()); // give this plan a user friendly name for logging purposes
-		boolean applicable = true;
+		boolean isStuck = Boolean.valueOf(agent.getBelief(ArchetypeAgent.State.isStuck.name()));
+		boolean applicable = !isStuck;
 		agent.out("thinks " + getFullName() + " is " + (applicable ? "" : "not ") + "applicable");
 		return applicable;
 	}
