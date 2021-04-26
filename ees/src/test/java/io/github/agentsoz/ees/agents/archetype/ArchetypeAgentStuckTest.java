@@ -24,6 +24,7 @@ package io.github.agentsoz.ees.agents.archetype;
  */
 
 import io.github.agentsoz.ees.Run;
+import io.github.agentsoz.ees.util.TestUtils;
 import org.junit.Rule;
 import org.junit.Test;
 import org.matsim.testcases.MatsimTestUtils;
@@ -47,11 +48,11 @@ public class ArchetypeAgentStuckTest {
     public void test() {
         matsimUtils.getOutputDirectory(); // creates a clean one so need to call this first
         Run.main(new String[] {"--config", "scenarios/grid/ar-2a-ees-stuck.xml"});
-//        new TestUtils().compareLineByLine(
-//                matsimUtils.getOutputDirectory() + "../archetype.out",
-//                matsimUtils.getInputDirectory() + "archetype.out",
-//                "@@$",
-//                1);
+        new TestUtils().compareLineByLine(
+                matsimUtils.getOutputDirectory() + "../archetype.out",
+                matsimUtils.getInputDirectory() + "archetype.out",
+                "@@$",
+                1);
     }
 }
 
