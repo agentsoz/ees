@@ -216,7 +216,7 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
     }
 
     double getDrivingDistanceTo(Location location) {
-        double dist = (location == null) ? -1 :
+        double dist = (location == null || Boolean.valueOf(getBelief(ArchetypeAgent.State.isStuck.name()))) ? -1 :
                 (double) getQueryPerceptInterface().queryPercept(
                         String.valueOf(getId()),
                         Constants.REQUEST_DRIVING_DISTANCE_TO,
@@ -889,9 +889,10 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
                 break;
             case Constants.STUCK:
                 handleStuck(parameters);
+                break;
             default:
                 logger.warn("{} received unknown percept '{}'", logPrefix(), perceptID);
-
+                break;
         }
 
         // evaluate the situation always

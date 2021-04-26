@@ -77,6 +77,11 @@ public class PlanStayAndDefend extends Plan {
 				}
 			},
 			() -> {
+				// Abort if we are stuck
+				if(Boolean.valueOf(agent.getBelief(ArchetypeAgent.State.isStuck.name()))) {
+					drop();
+					return;
+				}
 				// Check if we have arrived
 				if (ActionContent.State.PASSED.equals(agent.getLastBdiActionState())) {
 					agent.out("will stay and defend now #" + getFullName());

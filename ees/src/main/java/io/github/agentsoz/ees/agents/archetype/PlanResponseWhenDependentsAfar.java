@@ -86,6 +86,11 @@ public class PlanResponseWhenDependentsAfar extends Plan {
 				}
 			},
 			() -> {
+				// Abort if we are stuck
+				if(Boolean.valueOf(agent.getBelief(ArchetypeAgent.State.isStuck.name()))) {
+					drop();
+					return;
+				}
 				// Check if we have arrived
 				distHome = agent.getDrivingDistanceTo(xyHome);
 				boolean reached = (distHome <= 0);
@@ -103,6 +108,11 @@ public class PlanResponseWhenDependentsAfar extends Plan {
 
 			},
 			() -> {
+				// Abort if we are stuck
+				if(Boolean.valueOf(agent.getBelief(ArchetypeAgent.State.isStuck.name()))) {
+					drop();
+					return;
+				}
 				// Check if we have arrived
 				distDeps = agent.getDrivingDistanceTo(xyDeps);
 				boolean reached = (distDeps <= 0);
@@ -119,6 +129,11 @@ public class PlanResponseWhenDependentsAfar extends Plan {
 				}
 			},
 			() -> {
+				// Abort if we are stuck
+				if(Boolean.valueOf(agent.getBelief(ArchetypeAgent.State.isStuck.name()))) {
+					drop();
+					return;
+				}
 				// Check if we have arrived
 				if (ActionContent.State.PASSED.equals(agent.getLastBdiActionState())) {
 					agent.out("reached home at " + xyHome + " #" + getFullName());

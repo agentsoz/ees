@@ -69,6 +69,11 @@ public class PlanLeaveNow extends Plan {
 				// subgoal should be last call in any plan step
 			},
 			() -> {
+			    // Abort if we are stuck
+				if(Boolean.valueOf(agent.getBelief(ArchetypeAgent.State.isStuck.name()))) {
+					drop();
+					return;
+				}
 				// Check if we have arrived
 				Location[] xy = ((Location[])agent.getQueryPerceptInterface().queryPercept(
 						String.valueOf(agent.getId()), Constants.REQUEST_LOCATION, null));
@@ -95,6 +100,11 @@ public class PlanLeaveNow extends Plan {
 				}
 			},
 			() -> {
+				// Abort if we are stuck
+				if(Boolean.valueOf(agent.getBelief(ArchetypeAgent.State.isStuck.name()))) {
+					drop();
+					return;
+				}
 				// Check if we have arrived
 				Location[] xy = ((Location[])agent.getQueryPerceptInterface().queryPercept(
 						String.valueOf(agent.getId()), Constants.REQUEST_LOCATION, null));
@@ -121,6 +131,11 @@ public class PlanLeaveNow extends Plan {
 				}
 			},
 			() -> {
+				// Abort if we are stuck
+				if(Boolean.valueOf(agent.getBelief(ArchetypeAgent.State.isStuck.name()))) {
+					drop();
+					return;
+				}
 				// Check if we have arrived
 				Location[] xy = ((Location[])agent.getQueryPerceptInterface().queryPercept(
 						String.valueOf(agent.getId()), Constants.REQUEST_LOCATION, null));
