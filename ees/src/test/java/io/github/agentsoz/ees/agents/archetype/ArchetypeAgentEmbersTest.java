@@ -25,6 +25,7 @@ package io.github.agentsoz.ees.agents.archetype;
 
 import io.github.agentsoz.ees.Run;
 import io.github.agentsoz.ees.util.TestUtils;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.matsim.testcases.MatsimTestUtils;
@@ -45,6 +46,7 @@ public class ArchetypeAgentEmbersTest {
     public MatsimTestUtils matsimUtils = new MatsimTestUtils();
 
     @Test
+    @Ignore
     public void test() {
         matsimUtils.getOutputDirectory(); // creates a clean one so need to call this first
         Run.main(new String[] {"--config", "scenarios/grid/ar-1a-ees-embers.xml"});
