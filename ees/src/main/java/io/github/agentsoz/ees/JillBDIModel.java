@@ -560,6 +560,8 @@ public class JillBDIModel extends JillModel implements DataClient {
 			if (!agentsMetrics.isEmpty() || !linksMetrics.isEmpty()) {
 				metric.put(now, new MetricData(agentsMetrics, linksMetrics));
 			}
+			// save to file
+			writeMetrics(oMetricsFile);
 		}
 	}
 
@@ -597,8 +599,6 @@ public class JillBDIModel extends JillModel implements DataClient {
 			// record metrics one last time at the end of the simulation
 			metricCountdown = 0;
 			recordMetrics(lastTime);
-			// save to file
-			writeMetrics(oMetricsFile);
 		}
 	}
 
