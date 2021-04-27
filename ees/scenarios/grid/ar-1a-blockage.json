@@ -20,7 +20,7 @@
       "endHHMM" : "2359",
       "effectiveSpeed" : "0",
       "effectiveSpeedUnit" : "KMPH",
-      "impactedLinks" : ["18-24r","24-30r","30-31r"]
+      "impactedLinks" : ["24-30r"]
     }
   ]
 }
