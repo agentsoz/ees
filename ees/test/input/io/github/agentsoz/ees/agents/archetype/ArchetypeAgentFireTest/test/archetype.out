@@ -62,7 +62,7 @@
 -0001|-00:00:01|ArchetypeAgent|0|believes responseThresholdInitialReached=null @@
 -0001|-00:00:01|ArchetypeAgent|0|believes responseThresholdFinalReached=null @@
 03600|01:00:00|ArchetypeAgent|0|started driving to work @@
-03600|01:00:00|ArchetypeAgent|0|believes status=to:UnknownPlace @@
+03600|01:00:00|ArchetypeAgent|0|believes status=to:work @@
 03600|01:00:00|ArchetypeAgent|0|finished activity home @@
 03745|01:02:25|ArchetypeAgent|0|saw fire @@
 03745|01:02:25|ArchetypeAgent|0|believes anxietyFromSituation=0.6 @@
@@ -85,16 +85,16 @@
 03745|01:02:25|ArchetypeAgent|0|believes isDriving=true @@
 03780|01:03:00|ArchetypeAgent|0|stopped driving @@
 03780|01:03:00|ArchetypeAgent|0|started activity Replan @@
-03780|01:03:00|ArchetypeAgent|0|believes status=at:UnknownPlace @@
+03780|01:03:00|ArchetypeAgent|0|believes status=at:Replan @@
 03961|01:06:01|ArchetypeAgent|0|saw fire @@
 03961|01:06:01|ArchetypeAgent|0|believes anxietyFromSituation=0.6 @@
 03961|01:06:01|ArchetypeAgent|0|believes futureValueOfVisibleFire=0.0 @@
 03986|01:06:26|ArchetypeAgent|0|started driving to EvacPlace @@
-03986|01:06:26|ArchetypeAgent|0|believes status=to:UnknownPlace @@
+03986|01:06:26|ArchetypeAgent|0|believes status=to:EvacPlace @@
 03986|01:06:26|ArchetypeAgent|0|finished activity Replan @@
 04348|01:12:28|ArchetypeAgent|0|stopped driving @@
 04348|01:12:28|ArchetypeAgent|0|started activity EvacPlace @@
-04348|01:12:28|ArchetypeAgent|0|believes status=at:UnknownPlace @@
+04348|01:12:28|ArchetypeAgent|0|believes status=at:EvacPlace @@
 04348|01:12:28|ArchetypeAgent|0|finished driving to (FarFarAway, coords=5000.0,0.0) 0m away after 1 tries #GoalGoto~>PlanGoto
 04348|01:12:28|ArchetypeAgent|0|believes status=at:EvacPlace @@
 04348|01:12:28|ArchetypeAgent|0|believes isDriving=false @@

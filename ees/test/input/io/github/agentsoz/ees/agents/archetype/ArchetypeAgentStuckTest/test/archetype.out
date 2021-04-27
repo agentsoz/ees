@@ -125,7 +125,7 @@
 -0001|-00:00:01|ArchetypeAgent|1|believes responseThresholdInitialReached=null @@
 -0001|-00:00:01|ArchetypeAgent|1|believes responseThresholdFinalReached=null @@
 03600|01:00:00|ArchetypeAgent|0|started driving to work @@
-03600|01:00:00|ArchetypeAgent|0|believes status=to:UnknownPlace @@
+03600|01:00:00|ArchetypeAgent|0|believes status=to:work @@
 03600|01:00:00|ArchetypeAgent|0|finished activity home @@
 03745|01:02:25|ArchetypeAgent|0|believes isStuck=true @@
 03745|01:02:25|ArchetypeAgent|0|believes status=at:StuckPlace @@

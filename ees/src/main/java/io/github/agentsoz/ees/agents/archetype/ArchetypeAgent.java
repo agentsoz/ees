@@ -334,8 +334,7 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
     private void handleDeparted(Object parameters) {
         String type = ((Map<String,String>)parameters).get("actType");
         record("started driving to " + type);
-        Constants.EvacActivity act = type.toLowerCase().equals("home") ? Constants.EvacActivity.Home : Constants.EvacActivity.UnknownPlace;
-        believe(State.status.name(), ArchetypeAgent.StatusValue.to.name() + ":" + act);
+        believe(State.status.name(), ArchetypeAgent.StatusValue.to.name() + ":" + type);
 
 
     }
@@ -343,8 +342,7 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
     private void handleActivityStarted(Object parameters) {
         String type = ((Map<String,String>)parameters).get("actType");
         record("started activity " + type);
-        Constants.EvacActivity act = type.toLowerCase().equals("home") ? Constants.EvacActivity.Home : Constants.EvacActivity.UnknownPlace;
-        believe(State.status.name(), ArchetypeAgent.StatusValue.at.name() + ":" + act);
+        believe(State.status.name(), ArchetypeAgent.StatusValue.at.name() + ":" + type);
 
     }
 
