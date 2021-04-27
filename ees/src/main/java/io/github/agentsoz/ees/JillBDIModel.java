@@ -527,10 +527,11 @@ public class JillBDIModel extends JillModel implements DataClient {
 				Agent thisAgent = (Agent)getAgent(Integer.valueOf(id));
 				if (thisAgent instanceof ArchetypeAgent) {
 					ArchetypeAgent agent = (ArchetypeAgent) getAgent(Integer.valueOf(id));
+					String type = thisAgent.getClass().getSimpleName();
 					Location[] fromTo = agent.getCurrentLocation();
 					String linkId = fromTo[0].getName().split(":")[0];
 					String status = agent.getCurrentStatus();
-					agentsMetrics.put(id, new AgentMetricData(id, status, linkId, fromTo[0], fromTo[1]));
+					agentsMetrics.put(id, new AgentMetricData(id, type, status, linkId, fromTo[0], fromTo[1]));
 
 					String statusType = status.split(":")[0];
 					LinkMetricData linkMetricData = linksMetrics.containsKey(linkId) ?
@@ -593,13 +594,15 @@ public class JillBDIModel extends JillModel implements DataClient {
 
 	class AgentMetricData {
 		final private int agentId;
+		final private String agentType;
 		final private String linkId;
 		final private Location nodeFrom;
 		final private Location nodeTo;
 		final private String status;
 
-		public AgentMetricData(int agentId, String status, String linkId, Location nodeFrom, Location nodeTo) {
+		public AgentMetricData(int agentId, String type, String status, String linkId, Location nodeFrom, Location nodeTo) {
 			this.agentId = agentId;
+			this.agentType = type;
 			this.status = status;
 			this.linkId = linkId;
 			this.nodeFrom = nodeFrom;
