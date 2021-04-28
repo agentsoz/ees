@@ -62,7 +62,6 @@ public class JillBDIModel extends JillModel implements DataClient {
 	static final String eNumThreads = "jNumThreads";
 	static final String eMetricsFile = "bdiMetricsFile";
 	static final String eMetricsFrequencyInSecs = "bdiMetricsFrequencyInSeconds";
-	static final String eMetricsCompress = "bdiMetricsCompression";
 	// Model option defaults
 	private String oRandomSeed = null;
 	private String oPlanSelectionPolicy = null;
@@ -73,7 +72,6 @@ public class JillBDIModel extends JillModel implements DataClient {
 	private String oNumThreads = null;
 	private String oMetricsFile = null;
 	private int oMetricsFrequencyInSecs = 900; // 15mins
-	private boolean oMetricsCompression = false; // default is not to compress metrics file
 	private int metricCountdown = 0;
 	private int lastTime = -1;
 
@@ -221,9 +219,6 @@ public class JillBDIModel extends JillModel implements DataClient {
 					break;
 				case eMetricsFrequencyInSecs:
 					oMetricsFrequencyInSecs = Integer.parseInt(opts.get(opt));
-					break;
-				case eMetricsCompress:
-					oMetricsCompression = Boolean.valueOf(opts.get(opt));
 					break;
 				default:
 					logger.warn("Ignoring option: " + opt + "=" + opts.get(opt));
@@ -567,11 +562,11 @@ public class JillBDIModel extends JillModel implements DataClient {
 
 	private void writeMetrics(String str) {
 		try {
-			Writer writer = oMetricsCompression ?
+			Writer writer = str.endsWith(".gz") ?
 					new BufferedWriter(
 							new OutputStreamWriter(
 									new GZIPOutputStream(
-											new FileOutputStream(new File(str+".gz"))), "UTF-8")) :
+											new FileOutputStream(new File(str))), "UTF-8")) :
 					Files.newBufferedWriter(Paths.get(str));
 			Gson gson = new GsonBuilder()
 					.setPrettyPrinting()

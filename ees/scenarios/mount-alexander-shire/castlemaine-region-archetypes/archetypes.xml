@@ -48,9 +48,15 @@
       <opt id="jPlanSelectionPolicy">FIRST</opt>
       <opt id="jAgents"></opt>
       <opt id="jLogLevel">WARN</opt>
-      <opt id="jLogFile">test/output/io/github/agentsoz/ees/agents/archetype/CastlemaineRegionArchetypesIT/testCastlemaineRegionArchetypes/jill.log</opt>
-      <opt id="jOutFile">test/output/io/github/agentsoz/ees/agents/archetype/CastlemaineRegionArchetypesIT/testCastlemaineRegionArchetypes/jill.out</opt>
+      <opt id="jLogFile">test/output/io/github/agentsoz/ees/agents/archetype/CastlemaineRegionArchetypesIT/testCastlemaineRegionArchetypes/archetype.log</opt>
+      <opt id="jOutFile">test/output/io/github/agentsoz/ees/agents/archetype/CastlemaineRegionArchetypesIT/testCastlemaineRegionArchetypes/archetype.out</opt>
       <!--<opt id="jNumThreads">1</opt>-->
+      <!-- Output file for evacuation metrics -->
+      <opt id="bdiMetricsFile">test/output/io/github/agentsoz/ees/agents/archetype/CastlemaineRegionArchetypesIT/testCastlemaineRegionArchetypes/archetype.metrics.json</opt>
+      <!-- Time bin size in seconds for collected evacuation metrics -->
+      <opt id="bdiMetricsFrequencyInSeconds">3600</opt>
+      <!-- Whether to compress the metrics file (appends .gz to filename) or not -->
+      <opt id="bdiMetricsCompression">true</opt>
     </model>
 
     <model id="matsim">
