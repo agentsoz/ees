@@ -1,5 +1,5 @@
 
-package io.github.agentsoz.ees.it;
+package io.github.agentsoz.ees.agents.archetype.it;
 
 /*-
  * #%L
