@@ -38,7 +38,7 @@
 	</module>
 
 	<module name="plans">
-		<param name="inputPlansFile" value="plans-50k.xml.gz" />
+		<param name="inputPlansFile" value="plans-10k.xml.gz" />
 	</module>
 
 	<module name="controler">
