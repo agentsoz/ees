@@ -61,14 +61,12 @@
       <opt id="jAgents"></opt>
       <opt id="jLogLevel">WARN</opt>
         <opt id="jLogFile">test/output/io/github/agentsoz/ees/it/SCSArchetypesBasic10kIT/test/archetype.log</opt>
-      <opt id="jOutFile">test/output/io/github/agentsoz/ees/it/SCSArchetypesBasic10kIT/test/archetype.out</opt>
+      <opt id="jOutFile">test/output/io/github/agentsoz/ees/it/SCSArchetypesBasic10kIT/test/archetype.out.gz</opt>
       <!--<opt id="jNumThreads">1</opt>-->
       <!-- Output file for evacuation metrics -->
-      <opt id="bdiMetricsFile">test/output/io/github/agentsoz/ees/it/SCSArchetypesBasic10kIT/test/archetype.metrics.json</opt>
+      <opt id="bdiMetricsFile">test/output/io/github/agentsoz/ees/it/SCSArchetypesBasic10kIT/test/archetype.metrics.json.gz</opt>
       <!-- Time bin size in seconds for collected evacuation metrics -->
       <opt id="bdiMetricsFrequencyInSeconds">3600</opt>
-      <!-- Whether to compress the metrics file (appends .gz to filename) or not -->
-      <opt id="bdiMetricsCompression">true</opt>
     </model>
 
     <model id="matsim">
