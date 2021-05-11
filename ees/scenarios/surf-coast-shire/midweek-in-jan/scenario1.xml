@@ -73,7 +73,7 @@
       <!-- MATSim output directory relative to examples/bushfire directory (will overrule the setting in MATSim config) -->
       <opt id="outputDir">test/output/io/github/agentsoz/ees/agents/archetype/it/SCSMidweekInJanScenario1IT/test/matsim</opt>
       <!-- MATSim XML config XML file relative to examples/bushfire directory -->
-      <opt id="configXml">scenarios/surf-coast-shire/midweek-in-jan/scenario1-matsim-config.xml</opt>
+      <opt id="configXml">scenarios/surf-coast-shire/midweek-in-jan/matsim-config.xml</opt>
       <!-- Maximum distance at which the fire can be seen (in metres)-->
       <opt id="maxDistanceForFireVisual">1000</opt>
       <!-- Maximum distance at which smoke can be seen (in metres)-->

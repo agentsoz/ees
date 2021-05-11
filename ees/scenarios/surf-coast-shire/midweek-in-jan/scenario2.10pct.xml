@@ -60,18 +60,18 @@
       <opt id="jPlanSelectionPolicy">FIRST</opt>
       <opt id="jAgents"></opt>
       <opt id="jLogLevel">WARN</opt>
-      <opt id="jLogFile">test/output/io/github/agentsoz/ees/agents/archetype/it/SCSMidweekInJanScenario1Pct10IT/test/archetype.log</opt>
-      <opt id="jOutFile">test/output/io/github/agentsoz/ees/agents/archetype/it/SCSMidweekInJanScenario1Pct10IT/test/archetype.out.gz</opt>
+      <opt id="jLogFile">test/output/io/github/agentsoz/ees/agents/archetype/it/SCSMidweekInJanScenario2Pct10IT/test/archetype.log</opt>
+      <opt id="jOutFile">test/output/io/github/agentsoz/ees/agents/archetype/it/SCSMidweekInJanScenario2Pct10IT/test/archetype.out.gz</opt>
       <!--<opt id="jNumThreads">1</opt>-->
       <!-- Output file for evacuation metrics -->
-      <opt id="bdiMetricsFile">test/output/io/github/agentsoz/ees/agents/archetype/it/SCSMidweekInJanScenario1Pct10IT/test/archetype.metrics.json.gz</opt>
+      <opt id="bdiMetricsFile">test/output/io/github/agentsoz/ees/agents/archetype/it/SCSMidweekInJanScenario2Pct10IT/test/archetype.metrics.json.gz</opt>
       <!-- Time bin size in seconds for collected evacuation metrics -->
       <opt id="bdiMetricsFrequencyInSeconds">3600</opt>
     </model>
 
     <model id="matsim">
       <!-- MATSim output directory relative to examples/bushfire directory (will overrule the setting in MATSim config) -->
-      <opt id="outputDir">test/output/io/github/agentsoz/ees/agents/archetype/it/SCSMidweekInJanScenario1Pct10IT/test/matsim</opt>
+      <opt id="outputDir">test/output/io/github/agentsoz/ees/agents/archetype/it/SCSMidweekInJanScenario2Pct10IT/test/matsim</opt>
       <!-- MATSim XML config XML file relative to examples/bushfire directory -->
       <opt id="configXml">scenarios/surf-coast-shire/midweek-in-jan/matsim-config.10pct.xml</opt>
       <!-- Maximum distance at which the fire can be seen (in metres)-->
@@ -99,6 +99,12 @@
       <!-- Phoenix grid square size (in meteres) -->
       <opt id="gridSquareSideInMetres">180</opt>
     </model>
+
+    <model id="disruption">
+      <!-- Disruptions JSON file  -->
+      <opt id="fileJson">scenarios/surf-coast-shire/midweek-in-jan/traffic-mgt-points.json</opt>
+    </model>
+
   </models>
 
 </simulation>
