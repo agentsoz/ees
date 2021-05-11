@@ -7,4 +7,6 @@
 /*.iml
 .DS_Store
 *.iml
+*.ipr
+*.iws
 .Rproj.user
