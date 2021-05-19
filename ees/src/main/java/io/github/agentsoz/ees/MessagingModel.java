@@ -46,9 +46,11 @@ public class MessagingModel implements DataSource<SortedMap<Double, EmergencyMes
 
 	private static final String eJsonFile = "fileJson";
 	private static final String eZonesFile = "fileZonesGeoJson";
+	private static final String eZonesFileIdColumnName = "zoneIdColumnName";
 
 	private String optJsonFile = null;
-	private String optGeoJsonZonesFile = null;
+	private String optZonesFile = null;
+	private String optZonesFileIdColumnName = null;
 
 	private double startTimeInSeconds = -1;
 	private DataServer dataServer = null;
@@ -82,7 +84,10 @@ public class MessagingModel implements DataSource<SortedMap<Double, EmergencyMes
 					optJsonFile = opts.get(opt);
 					break;
 				case eZonesFile:
-					optGeoJsonZonesFile = opts.get(opt);
+					optZonesFile = opts.get(opt);
+					break;
+				case eZonesFileIdColumnName:
+					optZonesFileIdColumnName = opts.get(opt);
 					break;
 				case Config.eGlobalStartHhMm:
 					String[] tokens = opts.get(opt).split(":");
@@ -163,6 +168,9 @@ public class MessagingModel implements DataSource<SortedMap<Double, EmergencyMes
 			String zoneId = (properties.get("SA1_MAIN11") != null) ?
 					(String) properties.get("SA1_MAIN11") :
 					(String) properties.get("SA1_MAIN16");
+			if (optZonesFileIdColumnName != null) {
+				zoneId = (String) properties.get(optZonesFileIdColumnName);
+			}
 			if (zoneId == null) {
 				logger.warn("Feature has no property named SA1_MAIN11 or SA1_MAIN16; discarding");
 				continue;
@@ -215,9 +223,9 @@ public class MessagingModel implements DataSource<SortedMap<Double, EmergencyMes
 	}
 
 	public void start() {
-		if (optGeoJsonZonesFile !=null && !optGeoJsonZonesFile.isEmpty() && optJsonFile != null && !optJsonFile.isEmpty()) {
+		if (optZonesFile !=null && !optZonesFile.isEmpty() && optJsonFile != null && !optJsonFile.isEmpty()) {
 			try {
-				loadJsonMessagesForZones(optJsonFile, optGeoJsonZonesFile);
+				loadJsonMessagesForZones(optJsonFile, optZonesFile);
 				dataServer.registerTimedUpdate(Constants.EMERGENCY_MESSAGE, this, Time.convertTime(startTimeInSeconds, Time.TimestepUnit.SECONDS, timestepUnit));
 			} catch (Exception e) {
 				throw new RuntimeException("Could not load json from [" + optJsonFile + "]", e);
