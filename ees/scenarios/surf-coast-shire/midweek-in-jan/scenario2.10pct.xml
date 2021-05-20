@@ -100,9 +100,18 @@
       <opt id="gridSquareSideInMetres">180</opt>
     </model>
 
+    <model id="messaging">
+      <!-- Messaging JSON file  -->
+      <opt id="fileJson">scenarios/surf-coast-shire/midweek-in-jan/messages.s2.json</opt>
+      <!-- Zones GeoJSON file mapping zone IDs to polygon shapes -->
+      <opt id="fileZonesGeoJson">scenarios/surf-coast-shire/midweek-in-jan/zones-epsg4326.geojson</opt>
+      <opt id="zoneIdColumnName">ID_Name</opt>
+    </model>
+
     <model id="disruption">
       <!-- Disruptions JSON file  -->
-      <opt id="fileJson">scenarios/surf-coast-shire/midweek-in-jan/traffic-mgt-points.json</opt>
+      <!-- FIXME: MATSim hangs in trying to find impossible routes to destinations due to road closures -->
+      <!--<opt id="fileJson">scenarios/surf-coast-shire/midweek-in-jan/traffic-mgt-points.json</opt>-->
     </model>
 
   </models>
