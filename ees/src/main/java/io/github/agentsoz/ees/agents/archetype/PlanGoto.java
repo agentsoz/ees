@@ -22,6 +22,7 @@ package io.github.agentsoz.ees.agents.archetype;
  * #L%
  */
 
+import io.github.agentsoz.bdiabm.v3.AgentNotFoundException;
 import io.github.agentsoz.ees.Constants;
 import io.github.agentsoz.ees.agents.archetype.ArchetypeAgent.Beliefname;
 import io.github.agentsoz.bdiabm.data.ActionContent;
@@ -62,7 +63,14 @@ public class PlanGoto extends Plan {
 
 	PlanStep[] steps = {
 			() -> {
-				double distToDest = agent.getDrivingDistanceTo(destination);
+				double distToDest = -1;
+				try {
+					distToDest = agent.getDrivingDistanceTo(destination);
+				} catch (AgentNotFoundException e) {
+					agent.handleAgentNotFoundException(e.getMessage());
+					drop();
+					return;
+				}
 				// All done if already at the destination,
 				// or tried enough times,
 				// or were driving but the last bdi action (presumably the drive action) was dropped

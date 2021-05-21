@@ -75,14 +75,19 @@ public final class EvacDrivetoActionHandlerV2 implements BDIActionHandler {
 		+ "; agentId=" + agentID + "; routing mode " + args[3] ) ;
 
 		// preparations:
-		
+
+		MobsimAgent mobsimAgent = model.getMobsimAgentFromIdString(agentID) ;
+		if (mobsimAgent == null) {
+			log.error("MobsimAgent " + agentID +
+					" no longer exists (was likely removed from QSim); will ignore " + actionID +
+					" request");
+			return ActionContent.State.FAILED;
+		}
+
 		final Link nearestLink = NetworkUtils.getNearestLink(model.getScenario().getNetwork(), coord );
 		Gbl.assertNotNull(nearestLink);
 		Id<Link> newLinkId = nearestLink.getId();
 		//  could give just coordinates to matsim, but for time being need the linkId in the percept anyways
-		
-		MobsimAgent mobsimAgent = model.getMobsimAgentFromIdString(agentID) ;
-		Gbl.assertNotNull(mobsimAgent) ;
 		
 		// new departure time:
 		if ( model.getReplanner().editPlans().isAtRealActivity(mobsimAgent) ) {

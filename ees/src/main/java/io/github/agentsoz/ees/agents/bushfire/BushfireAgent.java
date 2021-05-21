@@ -26,7 +26,8 @@ package io.github.agentsoz.ees.agents.bushfire;
 
 import io.github.agentsoz.abmjill.genact.EnvironmentAction;
 import io.github.agentsoz.bdiabm.EnvironmentActionInterface;
-import io.github.agentsoz.bdiabm.QueryPerceptInterface;
+import io.github.agentsoz.bdiabm.v3.AgentNotFoundException;
+import io.github.agentsoz.bdiabm.v3.QueryPerceptInterface;
 import io.github.agentsoz.bdiabm.data.ActionContent;
 import io.github.agentsoz.dataInterface.DataServer;
 import io.github.agentsoz.ees.Constants;
@@ -468,10 +469,14 @@ public abstract class BushfireAgent extends  Agent implements io.github.agentsoz
     }
 
     double getTravelDistanceTo(Location location) {
-        return (double) getQueryPerceptInterface().queryPercept(
-                    String.valueOf(getId()),
-                    Constants.REQUEST_DRIVING_DISTANCE_TO,
-                    location.getCoordinates());
+        try {
+            return (double) getQueryPerceptInterface().queryPercept(
+                        String.valueOf(getId()),
+                        Constants.REQUEST_DRIVING_DISTANCE_TO,
+                        location.getCoordinates());
+        } catch (AgentNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private EmergencyMessage.EmergencyMessageType getEmergencyMessageType(Object msg) {

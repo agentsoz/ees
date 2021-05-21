@@ -26,7 +26,8 @@ package io.github.agentsoz.ees.agents.archetype;
 
 import io.github.agentsoz.abmjill.genact.EnvironmentAction;
 import io.github.agentsoz.bdiabm.EnvironmentActionInterface;
-import io.github.agentsoz.bdiabm.QueryPerceptInterface;
+import io.github.agentsoz.bdiabm.v3.AgentNotFoundException;
+import io.github.agentsoz.bdiabm.v3.QueryPerceptInterface;
 import io.github.agentsoz.bdiabm.data.ActionContent;
 import io.github.agentsoz.ees.Constants;
 import io.github.agentsoz.jill.core.beliefbase.Belief;
@@ -215,12 +216,12 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
         return null;
     }
 
-    double getDrivingDistanceTo(Location location) {
+    double getDrivingDistanceTo(Location location) throws AgentNotFoundException {
         double dist = (location == null || Boolean.valueOf(getBelief(ArchetypeAgent.State.isStuck.name()))) ? -1 :
-                (double) getQueryPerceptInterface().queryPercept(
-                        String.valueOf(getId()),
-                        Constants.REQUEST_DRIVING_DISTANCE_TO,
-                        location.getCoordinates());
+                (double)getQueryPerceptInterface().queryPercept(
+                    String.valueOf(getId()),
+                    Constants.REQUEST_DRIVING_DISTANCE_TO,
+                    location.getCoordinates());
         return dist;
     }
 
@@ -295,8 +296,12 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
         if (Boolean.valueOf(getBelief(ArchetypeAgent.State.isStuck.name()))) {
             return stuckLocation;
         } else {
-            Location[] fromTo = (Location[]) getQueryPerceptInterface().queryPercept(String.valueOf(getId()), Constants.REQUEST_LOCATION, null);
-            return fromTo;
+            try {
+                return (Location[]) getQueryPerceptInterface().queryPercept(String.valueOf(getId()), Constants.REQUEST_LOCATION, null);
+            } catch (AgentNotFoundException e) {
+                handleAgentNotFoundException("disconnected with physical agent");
+                return stuckLocation;
+            }
         }
     }
 
@@ -428,6 +433,15 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
         stuckLocation = new Location[2];
         stuckLocation[0] = new Location((String)args[0], (double)args[1], (double)args[2]);
         stuckLocation[1] = new Location((String)args[3], (double)args[4], (double)args[5]);
+    }
+
+    void handleAgentNotFoundException(String errorMessage) {
+        believe(State.isStuck.name(), Boolean.toString(true));
+        believe(State.status.name(), ArchetypeAgent.StatusValue.at.name() + ":" + Constants.EvacActivity.StuckPlace.name());
+        out("disconnected with physical agent: " + errorMessage);
+        stuckLocation = new Location[2];
+        stuckLocation[0] = new Location("unknown:unknown", -1, -1);
+        stuckLocation[1] = new Location("unknown:unknown", -1, -1);
     }
 
 

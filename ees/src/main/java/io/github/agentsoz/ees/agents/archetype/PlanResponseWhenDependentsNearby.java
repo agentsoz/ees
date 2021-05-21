@@ -23,6 +23,7 @@ package io.github.agentsoz.ees.agents.archetype;
  */
 
 import io.github.agentsoz.bdiabm.data.ActionContent;
+import io.github.agentsoz.bdiabm.v3.AgentNotFoundException;
 import io.github.agentsoz.ees.Constants;
 import io.github.agentsoz.jill.lang.*;
 import io.github.agentsoz.util.Location;
@@ -63,10 +64,14 @@ public class PlanResponseWhenDependentsNearby extends Plan {
 			xyHome = agent.getHomeLocation();
 			xyDeps = agent.getDependentsLocation();
 			if (xyHome != null && xyDeps != null) {
-				// Using beeline distance which is more natural and not computationally expensive
-				distHome = agent.getDrivingDistanceTo(xyHome);
-				distDeps = agent.getDrivingDistanceTo(xyDeps);
-				applicable = (distDeps <= distHome);
+				try {
+					// Using beeline distance which is more natural and not computationally expensive
+					distHome = agent.getDrivingDistanceTo(xyHome);
+					distDeps = agent.getDrivingDistanceTo(xyDeps);
+					applicable = (distDeps <= distHome);
+				}  catch (AgentNotFoundException e) {
+					agent.handleAgentNotFoundException(e.getMessage());
+				}
 			}
 		}
 		agent.out("thinks " + getFullName() + " is " + (applicable ? "" : "not ") + "applicable");
@@ -92,7 +97,13 @@ public class PlanResponseWhenDependentsNearby extends Plan {
 					return;
 				}
 				// Check if we have arrived
-				distDeps = agent.getDrivingDistanceTo(xyDeps);
+                try {
+					distDeps = agent.getDrivingDistanceTo(xyDeps);
+				}  catch (AgentNotFoundException e) {
+					agent.handleAgentNotFoundException(e.getMessage());
+					drop();
+					return;
+				}
 				boolean reached = (distDeps <= 0);
 				agent.out((reached ? "is with" : "did not reach") + " dependents at " + xyDeps + " #" + getFullName());
 				// Decide if we will go home from here
@@ -116,9 +127,13 @@ public class PlanResponseWhenDependentsNearby extends Plan {
 				if (ActionContent.State.PASSED.equals(agent.getLastBdiActionState())) {
 					agent.out("reached home at " + xyHome + " #" + getFullName());
 				} else {
-					Location[] xy = ((Location[])agent.getQueryPerceptInterface().queryPercept(
-							String.valueOf(agent.getId()), Constants.REQUEST_LOCATION, null));
-					agent.out("is stuck between locations " + xy[0] + " and " + xy[1] + " #" + getFullName());
+				    try {
+						Location[] xy = ((Location[]) agent.getQueryPerceptInterface().queryPercept(
+								String.valueOf(agent.getId()), Constants.REQUEST_LOCATION, null));
+						agent.out("is stuck between locations " + xy[0] + " and " + xy[1] + " #" + getFullName());
+					}  catch (AgentNotFoundException e) {
+						agent.handleAgentNotFoundException(e.getMessage());
+					}
 				}
 			},
 	};

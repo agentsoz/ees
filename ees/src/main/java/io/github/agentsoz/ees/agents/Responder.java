@@ -23,7 +23,7 @@ package io.github.agentsoz.ees.agents;
  */
 
 import io.github.agentsoz.bdiabm.EnvironmentActionInterface;
-import io.github.agentsoz.bdiabm.QueryPerceptInterface;
+import io.github.agentsoz.bdiabm.v3.QueryPerceptInterface;
 import io.github.agentsoz.bdiabm.data.ActionContent;
 import io.github.agentsoz.bdiabm.data.ActionContent.State;
 import io.github.agentsoz.ees.Constants;

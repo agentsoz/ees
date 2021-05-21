@@ -22,6 +22,7 @@ package io.github.agentsoz.ees.agents.bushfire;
  * #L%
  */
 
+import io.github.agentsoz.bdiabm.v3.AgentNotFoundException;
 import io.github.agentsoz.ees.Constants;
 import io.github.agentsoz.jill.lang.Agent;
 import io.github.agentsoz.jill.lang.Goal;
@@ -53,12 +54,16 @@ public class PlanGotoDependentsIfNearby extends Plan {
 			Location homeLocation = agent.getLocations().get(agent.LOCATION_HOME);
 			Location dependentsLocation = agent.getDependentInfo().getLocation();
 			if (!(homeLocation == null || dependentsLocation == null)) {
-				Location from = ((Location[])agent.getQueryPerceptInterface().queryPercept(
-						String.valueOf(agent.getId()), Constants.REQUEST_LOCATION, null))[0];
-				// Using beeline distance which is more natural and not computationally expensive
-				double distanceToHome = Location.distanceBetween(from,homeLocation);
-				double distanceToDependents = Location.distanceBetween(from,dependentsLocation);
-				applicable = (distanceToDependents < distanceToHome);
+				try {
+					Location from = ((Location[]) agent.getQueryPerceptInterface().queryPercept(
+							String.valueOf(agent.getId()), Constants.REQUEST_LOCATION, null))[0];
+					// Using beeline distance which is more natural and not computationally expensive
+					double distanceToHome = Location.distanceBetween(from, homeLocation);
+					double distanceToDependents = Location.distanceBetween(from, dependentsLocation);
+					applicable = (distanceToDependents < distanceToHome);
+				}  catch (AgentNotFoundException e) {
+					agent.log(e.getMessage());
+				}
 			}
 		}
 		agent.memorise(BushfireAgent.MemoryEventType.DECIDED.name(), BushfireAgent.MemoryEventValue.IS_PLAN_APPLICABLE.name()

@@ -25,7 +25,7 @@ package io.github.agentsoz.ees;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.github.agentsoz.abmjill.JillModel;
-import io.github.agentsoz.bdiabm.QueryPerceptInterface;
+import io.github.agentsoz.bdiabm.v3.QueryPerceptInterface;
 import io.github.agentsoz.bdiabm.v2.AgentDataContainer;
 import io.github.agentsoz.dataInterface.DataClient;
 import io.github.agentsoz.dataInterface.DataServer;

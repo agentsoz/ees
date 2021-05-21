@@ -23,6 +23,7 @@ package io.github.agentsoz.ees.agents.archetype;
  */
 
 import io.github.agentsoz.bdiabm.data.ActionContent;
+import io.github.agentsoz.bdiabm.v3.AgentNotFoundException;
 import io.github.agentsoz.ees.Constants;
 import io.github.agentsoz.jill.lang.*;
 import io.github.agentsoz.util.Location;
@@ -60,20 +61,25 @@ public class PlanStayAndDefend extends Plan {
 	PlanStep[] steps = {
 			() -> {
 				xyHome = agent.getHomeLocation();
-				double distHome = agent.getDrivingDistanceTo(xyHome);
-				boolean atHome = (distHome <= 0);
-				if (!atHome) {
-					// Go home first
-					agent.out("will go home to " + xyHome + " #" + getFullName());
-					subgoal(new GoalGoto(GoalGoto.class.getSimpleName(),
-							xyHome,
-							Constants.EvacActivity.Home,
-							Double.valueOf(agent.getBelief(ArchetypeAgent.Beliefname.LagTimeInMinsForInitialResponse.name()))));
-					// subgoal should be last call in any plan step
-				}
-				else {
-					agent.out("will stay and defend now #" + getFullName());
-					this.drop(); // all done, drop the remaining plan steps
+				try {
+					double distHome = agent.getDrivingDistanceTo(xyHome);
+					boolean atHome = (distHome <= 0);
+					if (!atHome) {
+						// Go home first
+						agent.out("will go home to " + xyHome + " #" + getFullName());
+						subgoal(new GoalGoto(GoalGoto.class.getSimpleName(),
+								xyHome,
+								Constants.EvacActivity.Home,
+								Double.valueOf(agent.getBelief(ArchetypeAgent.Beliefname.LagTimeInMinsForInitialResponse.name()))));
+						// subgoal should be last call in any plan step
+					} else {
+						agent.out("will stay and defend now #" + getFullName());
+						this.drop(); // all done, drop the remaining plan steps
+					}
+				} catch (AgentNotFoundException e) {
+					agent.handleAgentNotFoundException(e.getMessage());
+					drop();
+					return;
 				}
 			},
 			() -> {
@@ -86,9 +92,13 @@ public class PlanStayAndDefend extends Plan {
 				if (ActionContent.State.PASSED.equals(agent.getLastBdiActionState())) {
 					agent.out("will stay and defend now #" + getFullName());
 				} else {
-					Location[] xy = ((Location[])agent.getQueryPerceptInterface().queryPercept(
-							String.valueOf(agent.getId()), Constants.REQUEST_LOCATION, null));
-					agent.out("is stuck between locations " + xy[0] + " and " + xy[1] + " #" + getFullName());
+					try {
+						Location[] xy = ((Location[]) agent.getQueryPerceptInterface().queryPercept(
+								String.valueOf(agent.getId()), Constants.REQUEST_LOCATION, null));
+						agent.out("is stuck between locations " + xy[0] + " and " + xy[1] + " #" + getFullName());
+					}  catch (AgentNotFoundException e) {
+						agent.handleAgentNotFoundException(e.getMessage());
+					}
 				}
 			},
 	};

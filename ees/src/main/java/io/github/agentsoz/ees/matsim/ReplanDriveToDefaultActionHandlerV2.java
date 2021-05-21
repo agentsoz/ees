@@ -43,7 +43,13 @@ public final class ReplanDriveToDefaultActionHandlerV2 implements BDIActionHandl
 	public ActionContent.State handle(String agentID, String actionID, Object[] args) {
 		// assertions:
 		MobsimAgent mobsimAgent = model.getMobsimAgentFromIdString(agentID) ;
-		Gbl.assertNotNull(mobsimAgent) ;
+		if (mobsimAgent == null) {
+			log.error("MobsimAgent " + agentID +
+					" no longer exists (was likely removed from QSim); will ignore " + actionID +
+					" request");
+			return ActionContent.State.FAILED;
+		}
+
 		Gbl.assertIf( args.length >= 1 );
 		Gbl.assertIf( args[0] instanceof Constants.EvacRoutingMode) ; // could have some default
 		Constants.EvacRoutingMode routingMode = (Constants.EvacRoutingMode)args[0];

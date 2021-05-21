@@ -25,9 +25,11 @@ package io.github.agentsoz.ees.matsim;
 import com.google.common.collect.ObjectArrays;
 import com.google.gson.Gson;
 import io.github.agentsoz.bdiabm.ABMServerInterface;
-import io.github.agentsoz.bdiabm.QueryPerceptInterface;
+import io.github.agentsoz.bdiabm.v3.QueryPerceptInterface;
+import io.github.agentsoz.bdiabm.data.ActionContent;
 import io.github.agentsoz.bdiabm.data.PerceptContent;
 import io.github.agentsoz.bdiabm.v2.AgentDataContainer;
+import io.github.agentsoz.bdiabm.v3.AgentNotFoundException;
 import io.github.agentsoz.bdimatsim.MATSimModel;
 import io.github.agentsoz.bdimatsim.Replanner;
 import io.github.agentsoz.dataInterface.DataClient;
@@ -161,7 +163,7 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
     }
 
     @Override
-    public Object queryPercept(String agentID, String perceptID, Object args) {
+    public Object queryPercept(String agentID, String perceptID, Object args) throws AgentNotFoundException {
         return matsimModel.queryPercept(agentID, perceptID, args);
     }
 

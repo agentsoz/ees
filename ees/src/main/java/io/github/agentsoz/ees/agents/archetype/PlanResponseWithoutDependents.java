@@ -23,6 +23,7 @@ package io.github.agentsoz.ees.agents.archetype;
  */
 
 import io.github.agentsoz.bdiabm.data.ActionContent;
+import io.github.agentsoz.bdiabm.v3.AgentNotFoundException;
 import io.github.agentsoz.ees.Constants;
 import io.github.agentsoz.jill.lang.*;
 import io.github.agentsoz.util.Location;
@@ -58,8 +59,12 @@ public class PlanResponseWithoutDependents extends Plan {
 		boolean hasDependents = Boolean.valueOf(agent.getBelief(ArchetypeAgent.Beliefname.HasDependents.name()));
 		if (!hasDependents) {
 			xyHome = agent.getHomeLocation();
-			double distHome = agent.getDrivingDistanceTo(xyHome);
-			applicable = distHome > 0;
+			try {
+				double distHome = agent.getDrivingDistanceTo(xyHome);
+				applicable = distHome > 0;
+			}  catch (AgentNotFoundException e) {
+				agent.handleAgentNotFoundException(e.getMessage());
+			}
 		}
 		agent.out("thinks " + getFullName() + " is " + (applicable ? "" : "not ") + "applicable");
 		return applicable;
@@ -78,8 +83,6 @@ public class PlanResponseWithoutDependents extends Plan {
 					// subgoal should be last call in any plan step
 				} else {
 					// Continue doing what it is doing
-					Location[] xy = ((Location[])agent.getQueryPerceptInterface().queryPercept(
-							String.valueOf(agent.getId()), Constants.REQUEST_LOCATION, null));
 					agent.out("will wait and see #" + getFullName());
 					this.drop(); // all done, drop the remaining plan steps
 				}
@@ -94,9 +97,13 @@ public class PlanResponseWithoutDependents extends Plan {
 				if (ActionContent.State.PASSED.equals(agent.getLastBdiActionState())) {
 					agent.out("reached home at " + xyHome + " #" + getFullName());
 				} else {
-					Location[] xy = ((Location[])agent.getQueryPerceptInterface().queryPercept(
-							String.valueOf(agent.getId()), Constants.REQUEST_LOCATION, null));
-					agent.out("is stuck between locations " + xy[0] + " and " + xy[1] + " #" + getFullName());
+				    try {
+						Location[] xy = ((Location[]) agent.getQueryPerceptInterface().queryPercept(
+								String.valueOf(agent.getId()), Constants.REQUEST_LOCATION, null));
+						agent.out("is stuck between locations " + xy[0] + " and " + xy[1] + " #" + getFullName());
+					}  catch (AgentNotFoundException e) {
+						agent.handleAgentNotFoundException(e.getMessage());
+					}
 				}
 			},
 	};
