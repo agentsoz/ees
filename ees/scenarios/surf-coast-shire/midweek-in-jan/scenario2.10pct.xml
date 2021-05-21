@@ -110,8 +110,7 @@
 
     <model id="disruption">
       <!-- Disruptions JSON file  -->
-      <!-- FIXME: MATSim hangs in trying to find impossible routes to destinations due to road closures -->
-      <!--<opt id="fileJson">scenarios/surf-coast-shire/midweek-in-jan/traffic-mgt-points.json</opt>-->
+      <opt id="fileJson">scenarios/surf-coast-shire/midweek-in-jan/traffic-mgt-points.json</opt>
     </model>
 
   </models>
