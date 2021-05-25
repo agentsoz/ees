@@ -70,30 +70,13 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
     private final int reactionTimeInSecs = 30;
 
     enum State {
-        anxietyFromSituation,
-        anxietyFromEmergencyMessages,
-        anxietyFromSocialMessages,
-        //
-        futureValueOfFireDangerIndexRating,
-        futureValueOfVisibleFire,
-        futureValueOfVisibleSmoke,
-        futureValueOfSmokeImmersion,
-        futureValueOfVisibleEmbers,
-        futureValueOfVisibleResponders,
-        futureValueOfMessageRespondersAttending,
-        futureValueOfMessageAdvice,
-        futureValueOfMessageWatchAndAct,
-        futureValueOfMessageEmergencyWarning,
-        futureValueOfMessageEvacuateNow,
-        futureValueOfMessageSocial,
-        //
         responseThresholdInitialReached,
         responseThresholdFinalReached,
         //
         status,
         isStuck,
     }
-    
+
     enum Beliefname {
         Age("Age"),
         AgentId("AgentId"),
@@ -173,7 +156,25 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
     private Location workLocation;
     private Location[] stuckLocation;
 
+    private double responseThresholdInitial = 1.0;
+    private double responseThresholdFinal = 1.0;
 
+    private double futureValueOfFireDangerIndexRating = 0.0;
+    private double futureValueOfVisibleFire = 0.0;
+    private double futureValueOfVisibleSmoke = 0.0;
+    private double futureValueOfSmokeImmersion = 0.0;
+    private double futureValueOfVisibleEmbers = 0.0;
+    private double futureValueOfVisibleResponders = 0.0;
+    private double futureValueOfMessageRespondersAttending = 0.0;
+    private double futureValueOfMessageAdvice = 0.0;
+    private double futureValueOfMessageWatchAndAct = 0.0;
+    private double futureValueOfMessageEmergencyWarning = 0.0;
+    private double futureValueOfMessageEvacuateNow = 0.0;
+    private double futureValueOfMessageSocial = 0.0;
+    //
+    private double anxietyFromSituation = 0.0;
+    private double anxietyFromEmergencyMessages = 0.0;
+    private double anxietyFromSocialMessages = 0.0;
 
     //===============================================================================
     //endregion
@@ -255,18 +256,15 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
     private void evaluateSituation() {
         try {
             // get values of anxiety and the thresholds
-            double anxiety = Double.valueOf(getBelief(State.anxietyFromSituation.name()))
-                    + Double.valueOf(getBelief(State.anxietyFromEmergencyMessages.name()))
-                    + Double.valueOf(getBelief(State.anxietyFromSocialMessages.name()));
+            double anxiety = anxietyFromSituation
+                    + anxietyFromEmergencyMessages
+                    + anxietyFromSocialMessages;
             if (anxiety > 0) {
-                double initialResponseThreshold = Double.valueOf(getBelief(Beliefname.ResponseThresholdInitial.name()));
-                double finalResponseThreshold = Double.valueOf(getBelief(Beliefname.ResponseThresholdFinal.name()));
-
                 // and whether we already know if the thresholds are reached
                 boolean initialThresholdAlreadyReached = Boolean.valueOf(getBelief(State.responseThresholdInitialReached.name()));
                 boolean finalThresholdAlreadyReached = Boolean.valueOf(getBelief(State.responseThresholdFinalReached.name()));
-                boolean initialThresholdJustReached = !initialThresholdAlreadyReached && anxiety >= initialResponseThreshold ;
-                boolean finalThresholdJustReached = !finalThresholdAlreadyReached && anxiety >= finalResponseThreshold;
+                boolean initialThresholdJustReached = !initialThresholdAlreadyReached && anxiety >= responseThresholdInitial;
+                boolean finalThresholdJustReached = !finalThresholdAlreadyReached && anxiety >= responseThresholdFinal;
 
                 // if either threshold was just reached, then react now
                 if (initialThresholdJustReached || finalThresholdJustReached) {
@@ -378,16 +376,12 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
     private void handleFieldOfView(Object view) {
         record("saw " + view);
         if (Constants.SIGHTED_EMBERS.equalsIgnoreCase(view.toString())) {
-            double effect = Double.valueOf(getBelief(State.futureValueOfVisibleEmbers.name()));
-            double barometer = Double.valueOf(getBelief(State.anxietyFromSituation.name()));
-            believe(State.anxietyFromSituation.name(), Double.toString(barometer+effect));
-            believe(State.futureValueOfVisibleEmbers.name(), "0.0");
+            anxietyFromSituation += futureValueOfVisibleEmbers;
+            futureValueOfVisibleEmbers = 0.0;
 
         } else if (Constants.SIGHTED_FIRE.equalsIgnoreCase(view.toString())) {
-            double effect = Double.valueOf(getBelief(State.futureValueOfVisibleFire.name()));
-            double barometer = Double.valueOf(getBelief(State.anxietyFromSituation.name()));
-            believe(State.anxietyFromSituation.name(), Double.toString(barometer+effect));
-            believe(State.futureValueOfVisibleFire.name(), "0.0");
+            anxietyFromSituation += futureValueOfVisibleFire;
+            futureValueOfVisibleFire = 0.0;
         } else {
             logger.error("{} ignoring field of view percept: {}", logPrefix(), view);
             return;
@@ -400,24 +394,23 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
             double effect = 0.0;
             String[] args = ((String)parameters).split(",");
             if (Advice.getCommonName().equals(args[0])) {
-                effect = Double.valueOf(getBelief(State.futureValueOfMessageAdvice.name()));
-                believe(State.futureValueOfMessageAdvice.name(), "0.0");
+                effect = futureValueOfMessageAdvice;
+                futureValueOfMessageAdvice = 0.0;
             } else if (WatchAndAct.getCommonName().equals(args[0])) {
-                effect = Double.valueOf(getBelief(State.futureValueOfMessageWatchAndAct.name()));
-                believe(State.futureValueOfMessageWatchAndAct.name(), "0.0");
+                effect = futureValueOfMessageWatchAndAct;
+                futureValueOfMessageWatchAndAct = 0.0;
             } else if (EmergencyWarning.getCommonName().equals(args[0])) {
-                effect = Double.valueOf(getBelief(State.futureValueOfMessageEmergencyWarning.name()));
-                believe(State.futureValueOfMessageEmergencyWarning.name(), "0.0");
+                effect = futureValueOfMessageEmergencyWarning;
+                futureValueOfMessageEmergencyWarning = 0.0;
             } else if (EvacuateNow.getCommonName().equals(args[0])) {
-                effect = Double.valueOf(getBelief(State.futureValueOfMessageEvacuateNow.name()));
-                believe(State.futureValueOfMessageEvacuateNow.name(), "0.0");
+                effect = futureValueOfMessageEvacuateNow;
+                futureValueOfMessageEvacuateNow = 0.0;
                 if (args.length >= 4) { // we have three more args being name,x,y
                     String loc = args[1] + "," + args[2] + "," + args[3];
                     evacLocation = parseLocation(loc);
                 }
             }
-            double barometer = Double.valueOf(getBelief(State.anxietyFromEmergencyMessages.name()));
-            believe(State.anxietyFromEmergencyMessages.name(), Double.toString(barometer+effect));
+            anxietyFromEmergencyMessages += effect;
         } catch (Exception e) {
             logger.warn(logPrefix() + "failed to parse " + parameters);
         }
@@ -591,40 +584,6 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
     private void initialiseBeliefs() {
         String b;
         //
-        believe(State.anxietyFromSituation.name(), "0.0");
-        believe(State.anxietyFromSocialMessages.name(), "0.0");
-        believe(State.anxietyFromEmergencyMessages.name(), "0.0");
-        //
-        b = getBelief(Beliefname.ImpactFromFireDangerIndexRating.name());
-        believe(State.futureValueOfFireDangerIndexRating.name(), b == null ? "0.0" : b);
-        b = getBelief(Beliefname.ImpactFromImmersionInSmoke.name());
-        believe(State.futureValueOfSmokeImmersion.name(), b == null ? "0.0" : b);
-        b = getBelief(Beliefname.ImpactFromMessageAdvice.name());
-        believe(State.futureValueOfMessageAdvice.name(), b == null ? "0.0" : b);
-        b = getBelief(Beliefname.ImpactFromMessageEmergencyWarning.name());
-        believe(State.futureValueOfMessageEmergencyWarning.name(), b == null ? "0.0" : b);
-        b = getBelief(Beliefname.ImpactFromMessageEvacuateNow.name());
-        believe(State.futureValueOfMessageEvacuateNow.name(), b == null ? "0.0" : b);
-        b = getBelief(Beliefname.ImpactFromMessageRespondersAttending.name());
-        believe(State.futureValueOfMessageRespondersAttending.name(), b == null ? "0.0" : b);
-        b = getBelief(Beliefname.ImpactFromMessageWatchAndAct.name());
-        believe(State.futureValueOfMessageWatchAndAct.name(), b == null ? "0.0" : b);
-        b = getBelief(Beliefname.ImpactFromSocialMessage.name());
-        believe(State.futureValueOfMessageSocial.name(), b == null ? "0.0" : b);
-        b = getBelief(Beliefname.ImpactFromVisibleEmbers.name());
-        believe(State.futureValueOfVisibleEmbers.name(), b == null ? "0.0" : b);
-        b = getBelief(Beliefname.ImpactFromVisibleResponders.name());
-        believe(State.futureValueOfVisibleResponders.name(), b == null ? "0.0" : b);
-        b = getBelief(Beliefname.ImpactFromVisibleFire.name());
-        believe(State.futureValueOfVisibleFire.name(), b == null ? "0.0" : b);
-        b = getBelief(Beliefname.ImpactFromVisibleSmoke.name());
-        believe(State.futureValueOfVisibleSmoke.name(), b == null ? "0.0" : b);
-        //
-        b = getBelief(Beliefname.ResponseThresholdInitial.name());
-        believe(Beliefname.ResponseThresholdInitial.name(), b == null ? "0.0" : b);
-        b = getBelief(Beliefname.ResponseThresholdFinal.name());
-        believe(Beliefname.ResponseThresholdFinal.name(), b == null ? "0.0" : b);
-        //
         b = getBelief(Beliefname.LagTimeInMinsForInitialResponse.name());
         believe(Beliefname.LagTimeInMinsForInitialResponse.name(), b == null ? "1.0" : b);
         b = getBelief(Beliefname.LagTimeInMinsForFinalResponse.name());
@@ -718,7 +677,14 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
             if (discard.contains(key)) {
                 continue; // discard key/values we don't care about
             }
-            if (Beliefname.HasDependentsAtLocation.getCommonName().equals(key)) {
+            
+            if (Beliefname.ResponseThresholdInitial.getCommonName().equals(key)) {
+                responseThresholdInitial = Double.parseDouble(value);
+
+            } else if (Beliefname.ResponseThresholdFinal.getCommonName().equals(key)) {
+                responseThresholdFinal = Double.parseDouble(value);
+
+            } else if (Beliefname.HasDependentsAtLocation.getCommonName().equals(key)) {
                 dependentsLocation = parseLocation(value);
 
             } else if (Beliefname.LocationEvacuationPreference.getCommonName().equals(key)) {
@@ -733,9 +699,44 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
             } else if (Beliefname.LocationWork.getCommonName().equals(key)) {
                 workLocation = parseLocation(value);
 
-            }
-            if (commonNames.containsKey(key)) {
-                // store all the other know key/values
+            } else if (Beliefname.ImpactFromFireDangerIndexRating.getCommonName().equals(key)) {
+                futureValueOfFireDangerIndexRating = Double.parseDouble(value);
+
+            } else if (Beliefname.ImpactFromImmersionInSmoke.getCommonName().equals(key)) {
+                futureValueOfSmokeImmersion = Double.parseDouble(value);
+
+            } else if (Beliefname.ImpactFromMessageAdvice.getCommonName().equals(key)) {
+                futureValueOfMessageAdvice = Double.parseDouble(value);
+
+            } else if (Beliefname.ImpactFromMessageEmergencyWarning.getCommonName().equals(key)) {
+                futureValueOfMessageEmergencyWarning = Double.parseDouble(value);
+
+            } else if (Beliefname.ImpactFromMessageEvacuateNow.getCommonName().equals(key)) {
+                futureValueOfMessageEvacuateNow = Double.parseDouble(value);
+
+            } else if (Beliefname.ImpactFromMessageRespondersAttending.getCommonName().equals(key)) {
+                futureValueOfMessageRespondersAttending = Double.parseDouble(value);
+
+            } else if (Beliefname.ImpactFromMessageWatchAndAct.getCommonName().equals(key)) {
+                futureValueOfMessageWatchAndAct = Double.parseDouble(value);
+
+            } else if (Beliefname.ImpactFromSocialMessage.getCommonName().equals(key)) {
+                futureValueOfMessageSocial = Double.parseDouble(value);
+
+            } else if (Beliefname.ImpactFromVisibleEmbers.getCommonName().equals(key)) {
+                futureValueOfVisibleEmbers = Double.parseDouble(value);
+
+            } else if (Beliefname.ImpactFromVisibleFire.getCommonName().equals(key)) {
+                futureValueOfVisibleFire = Double.parseDouble(value);
+
+            } else if (Beliefname.ImpactFromVisibleResponders.getCommonName().equals(key)) {
+                futureValueOfVisibleResponders = Double.parseDouble(value);
+
+            } else if (Beliefname.ImpactFromVisibleSmoke.getCommonName().equals(key)) {
+                futureValueOfVisibleSmoke = Double.parseDouble(value);
+
+            } else if (commonNames.containsKey(key)) {
+                // store all the other known key/values
                 believe(commonNames.get(key).name(), value);
 
             } else {

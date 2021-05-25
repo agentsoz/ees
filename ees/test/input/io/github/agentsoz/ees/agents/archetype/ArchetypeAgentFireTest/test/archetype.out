@@ -9,53 +9,36 @@
 -0001|-00:00:01|ArchetypeAgent|0|believes Gender=null #Gender @@
 -0001|-00:00:01|ArchetypeAgent|0|believes AddressCoordinates=null #Geographical.Coordinate @@
 -0001|-00:00:01|ArchetypeAgent|0|believes HasDependents=false #HasDependents @@
--0001|-00:00:01|ArchetypeAgent|0|believes HasDependentsAtLocation= #HasDependentsAtLocation @@
+-0001|-00:00:01|ArchetypeAgent|0|believes HasDependentsAtLocation=null #HasDependentsAtLocation @@
 -0001|-00:00:01|ArchetypeAgent|0|believes HouseholdId=null #HouseholdId @@
 -0001|-00:00:01|ArchetypeAgent|0|believes isDriving=false #isDriving @@
 -0001|-00:00:01|ArchetypeAgent|0|believes Id=null #Id @@
--0001|-00:00:01|ArchetypeAgent|0|believes ImpactFromFireDangerIndexRating=0.1 #ImpactFromFireDangerIndexRating @@
--0001|-00:00:01|ArchetypeAgent|0|believes ImpactFromImmersionInSmoke=0.4 #ImpactFromImmersionInSmoke @@
--0001|-00:00:01|ArchetypeAgent|0|believes ImpactFromMessageAdvice=0.4 #ImpactFromMessageAdvice @@
--0001|-00:00:01|ArchetypeAgent|0|believes ImpactFromMessageEmergencyWarning=0.6 #ImpactFromMessageEmergencyWarning @@
--0001|-00:00:01|ArchetypeAgent|0|believes ImpactFromMessageEvacuateNow=0.7 #ImpactFromMessageEvacuateNow @@
--0001|-00:00:01|ArchetypeAgent|0|believes ImpactFromMessageRespondersAttending=0.2 #ImpactFromMessageRespondersAttending @@
--0001|-00:00:01|ArchetypeAgent|0|believes ImpactFromMessageWatchAndAct=0.5 #ImpactFromMessageWatchAndAct @@
--0001|-00:00:01|ArchetypeAgent|0|believes ImpactFromSocialMessage=0.5 #ImpactFromSocialMessage @@
--0001|-00:00:01|ArchetypeAgent|0|believes ImpactFromVisibleEmbers=0.5 #ImpactFromVisibleEmbers @@
--0001|-00:00:01|ArchetypeAgent|0|believes ImpactFromVisibleFire=0.6 #ImpactFromVisibleFire @@
--0001|-00:00:01|ArchetypeAgent|0|believes ImpactFromVisibleResponders=0.4 #ImpactFromVisibleResponders @@
--0001|-00:00:01|ArchetypeAgent|0|believes ImpactFromVisibleSmoke=0.3 #ImpactFromVisibleSmoke @@
+-0001|-00:00:01|ArchetypeAgent|0|believes ImpactFromFireDangerIndexRating=null #ImpactFromFireDangerIndexRating @@
+-0001|-00:00:01|ArchetypeAgent|0|believes ImpactFromImmersionInSmoke=null #ImpactFromImmersionInSmoke @@
+-0001|-00:00:01|ArchetypeAgent|0|believes ImpactFromMessageAdvice=null #ImpactFromMessageAdvice @@
+-0001|-00:00:01|ArchetypeAgent|0|believes ImpactFromMessageEmergencyWarning=null #ImpactFromMessageEmergencyWarning @@
+-0001|-00:00:01|ArchetypeAgent|0|believes ImpactFromMessageEvacuateNow=null #ImpactFromMessageEvacuateNow @@
+-0001|-00:00:01|ArchetypeAgent|0|believes ImpactFromMessageRespondersAttending=null #ImpactFromMessageRespondersAttending @@
+-0001|-00:00:01|ArchetypeAgent|0|believes ImpactFromMessageWatchAndAct=null #ImpactFromMessageWatchAndAct @@
+-0001|-00:00:01|ArchetypeAgent|0|believes ImpactFromSocialMessage=null #ImpactFromSocialMessage @@
+-0001|-00:00:01|ArchetypeAgent|0|believes ImpactFromVisibleEmbers=null #ImpactFromVisibleEmbers @@
+-0001|-00:00:01|ArchetypeAgent|0|believes ImpactFromVisibleFire=null #ImpactFromVisibleFire @@
+-0001|-00:00:01|ArchetypeAgent|0|believes ImpactFromVisibleResponders=null #ImpactFromVisibleResponders @@
+-0001|-00:00:01|ArchetypeAgent|0|believes ImpactFromVisibleSmoke=null #ImpactFromVisibleSmoke @@
 -0001|-00:00:01|ArchetypeAgent|0|believes LagTimeInMinsForInitialResponse=17.89 #LagTimeInMinsForInitialResponse @@
 -0001|-00:00:01|ArchetypeAgent|0|believes LagTimeInMinsForFinalResponse=5.89 #LagTimeInMinsForFinalResponse @@
--0001|-00:00:01|ArchetypeAgent|0|believes LocationEvacuationPreference=FarFarAway,5000.0,0000.0 #EvacLocationPreference @@
--0001|-00:00:01|ArchetypeAgent|0|believes LocationInvacPreference=NotSoFarAway,2500.0,2500.0 #InvacLocationPreference @@
--0001|-00:00:01|ArchetypeAgent|0|believes LocationHome=0.000000,0.000000 #home @@
--0001|-00:00:01|ArchetypeAgent|0|believes LocationWork=5000.000000,5000.000000 #work @@
+-0001|-00:00:01|ArchetypeAgent|0|believes LocationEvacuationPreference=null #EvacLocationPreference @@
+-0001|-00:00:01|ArchetypeAgent|0|believes LocationInvacPreference=null #InvacLocationPreference @@
+-0001|-00:00:01|ArchetypeAgent|0|believes LocationHome=null #home @@
+-0001|-00:00:01|ArchetypeAgent|0|believes LocationWork=null #work @@
 -0001|-00:00:01|ArchetypeAgent|0|believes PrimaryFamilyType=null #PrimaryFamilyType @@
--0001|-00:00:01|ArchetypeAgent|0|believes ResponseThresholdFinal=0.38 #ResponseThresholdFinal @@
--0001|-00:00:01|ArchetypeAgent|0|believes ResponseThresholdInitial=-0.02 #ResponseThresholdInitial @@
+-0001|-00:00:01|ArchetypeAgent|0|believes ResponseThresholdFinal=null #ResponseThresholdFinal @@
+-0001|-00:00:01|ArchetypeAgent|0|believes ResponseThresholdInitial=null #ResponseThresholdInitial @@
 -0001|-00:00:01|ArchetypeAgent|0|believes Sa1=null #SA1_7DIGCODE @@
 -0001|-00:00:01|ArchetypeAgent|0|believes Sa2=null #SA2_MAINCODE @@
 -0001|-00:00:01|ArchetypeAgent|0|believes WillGoHomeAfterVisitingDependents=false #WillGoHomeAfterVisitingDependents @@
 -0001|-00:00:01|ArchetypeAgent|0|believes WillGoHomeBeforeLeaving=false #WillGoHomeBeforeLeaving @@
 -0001|-00:00:01|ArchetypeAgent|0|believes WillStay=false #WillStay @@
--0001|-00:00:01|ArchetypeAgent|0|believes anxietyFromSituation=0.0 @@
--0001|-00:00:01|ArchetypeAgent|0|believes anxietyFromSocialMessages=0.0 @@
--0001|-00:00:01|ArchetypeAgent|0|believes anxietyFromEmergencyMessages=0.0 @@
--0001|-00:00:01|ArchetypeAgent|0|believes futureValueOfFireDangerIndexRating=0.1 @@
--0001|-00:00:01|ArchetypeAgent|0|believes futureValueOfSmokeImmersion=0.4 @@
--0001|-00:00:01|ArchetypeAgent|0|believes futureValueOfMessageAdvice=0.4 @@
--0001|-00:00:01|ArchetypeAgent|0|believes futureValueOfMessageEmergencyWarning=0.6 @@
--0001|-00:00:01|ArchetypeAgent|0|believes futureValueOfMessageEvacuateNow=0.7 @@
--0001|-00:00:01|ArchetypeAgent|0|believes futureValueOfMessageRespondersAttending=0.2 @@
--0001|-00:00:01|ArchetypeAgent|0|believes futureValueOfMessageWatchAndAct=0.5 @@
--0001|-00:00:01|ArchetypeAgent|0|believes futureValueOfMessageSocial=0.5 @@
--0001|-00:00:01|ArchetypeAgent|0|believes futureValueOfVisibleEmbers=0.5 @@
--0001|-00:00:01|ArchetypeAgent|0|believes futureValueOfVisibleResponders=0.4 @@
--0001|-00:00:01|ArchetypeAgent|0|believes futureValueOfVisibleFire=0.6 @@
--0001|-00:00:01|ArchetypeAgent|0|believes futureValueOfVisibleSmoke=0.3 @@
--0001|-00:00:01|ArchetypeAgent|0|believes ResponseThresholdInitial=-0.02 @@
--0001|-00:00:01|ArchetypeAgent|0|believes ResponseThresholdFinal=0.38 @@
 -0001|-00:00:01|ArchetypeAgent|0|believes LagTimeInMinsForInitialResponse=17.89 @@
 -0001|-00:00:01|ArchetypeAgent|0|believes LagTimeInMinsForFinalResponse=5.89 @@
 -0001|-00:00:01|ArchetypeAgent|0|believes Archetype=Considered.Evacuator @@
@@ -65,8 +48,6 @@
 03600|01:00:00|ArchetypeAgent|0|believes status=to:work @@
 03600|01:00:00|ArchetypeAgent|0|finished activity home @@
 03745|01:02:25|ArchetypeAgent|0|saw fire @@
-03745|01:02:25|ArchetypeAgent|0|believes anxietyFromSituation=0.6 @@
-03745|01:02:25|ArchetypeAgent|0|believes futureValueOfVisibleFire=0.0 @@
 03745|01:02:25|ArchetypeAgent|0|believes responseThresholdInitialReached=true @@
 03745|01:02:25|ArchetypeAgent|0|believes responseThresholdFinalReached=true @@
 03745|01:02:25|ArchetypeAgent|0|thinks GoalFullResponse~>PlanFullResponse is applicable
@@ -87,8 +68,6 @@
 03780|01:03:00|ArchetypeAgent|0|started activity Replan @@
 03780|01:03:00|ArchetypeAgent|0|believes status=at:Replan @@
 03961|01:06:01|ArchetypeAgent|0|saw fire @@
-03961|01:06:01|ArchetypeAgent|0|believes anxietyFromSituation=0.6 @@
-03961|01:06:01|ArchetypeAgent|0|believes futureValueOfVisibleFire=0.0 @@
 03986|01:06:26|ArchetypeAgent|0|started driving to EvacPlace @@
 03986|01:06:26|ArchetypeAgent|0|believes status=to:EvacPlace @@
 03986|01:06:26|ArchetypeAgent|0|finished activity Replan @@
