@@ -551,11 +551,15 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
         try {
             if (eval(query)) {
                 Set<Belief> beliefs = getLastResults();
-                for (Belief belief : beliefs) {
-                    try {
-                        removeBelief(belief);
-                    } catch (BeliefBaseException e){
-                        logger.error("Could not remove belief:  " + belief, e);
+                synchronized (beliefs) {
+                    Iterator<Belief> it = beliefs.iterator();
+                    while(it.hasNext()) {
+                        Belief belief = it.next();
+                        try {
+                            removeBelief(belief);
+                        } catch (BeliefBaseException e) {
+                            logger.error("Could not remove belief:  " + belief, e);
+                        }
                     }
                 }
             }
