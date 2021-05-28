@@ -31,6 +31,7 @@ import io.github.agentsoz.util.Location;
 
 @GoalInfo(hasPlans={
         "io.github.agentsoz.ees.agents.archetype.PlanGoto",
+        "io.github.agentsoz.ees.agents.archetype.PlanDoNothing"
         })
 public class GoalGoto extends Goal {
     private Location destination;
