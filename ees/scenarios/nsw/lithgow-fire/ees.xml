@@ -90,6 +90,14 @@
       <!-- likelihood of taking action if congestion threshold is reached -->
       <opt id="congestionReactionProbability">0.1</opt>
     </model>
-  </models>
 
+    <model id="messaging">
+      <!-- Messaging JSON file  -->
+      <opt id="fileJson">scenarios/nsw/lithgow-fire//messages.json</opt>
+      <!-- Zones GeoJSON file mapping zone IDs to polygon shapes -->
+      <opt id="fileZonesGeoJson">scenarios/nsw/lithgow-fire/lithgow_surrounds_zones_epsg4326.geojson</opt>
+      <opt id="zoneIdColumnName">SA1_CODE21</opt>
+    </model>
+
+  </models>
 </simulation>

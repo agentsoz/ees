@@ -176,6 +176,10 @@ public class MessagingModel implements DataSource<SortedMap<Double, EmergencyMes
 				continue;
 			}
 			JSONObject geometry = (JSONObject) feature.get("geometry");
+			String jtype = (String)geometry.get("type");
+			if (!jtype.toLowerCase().equals("polygon")) {
+				throw new RuntimeException("GeoJSON file " + file + " has geometry " + jtype + " but was expecting POLYGON");
+			}
 			JSONArray jcoords = (JSONArray) geometry.get("coordinates");
 			JSONArray coords = (JSONArray) jcoords.get(0);
 			Double[][] polygon = new Double[coords.size()][2];
