@@ -46,7 +46,7 @@ public class LithgowFireIT {
 
         utils.getOutputDirectory(); // creates a clean one so need to call this first
         String[] args = {
-                "--config", "scenarios/blue-mountains-and-lithgow-lgas/lithgow-fire/ees.xml",
+                "--config", "scenarios/nsw/lithgow-fire/ees.xml",
         };
         Run.main(args);
     }

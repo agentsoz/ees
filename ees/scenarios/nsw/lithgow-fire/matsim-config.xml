@@ -32,13 +32,13 @@
 	</module>
 
 	<module name="network">
-		<param name="inputNetworkFile" value="../blue_mountains_and_lithgow_lgas_network.xml.gz" />
+		<param name="inputNetworkFile" value="lithgow_surrounds_network_epsg7855.xml.gz" />
 		<param name= "timeVariantNetwork" value= "false" />
 		<!--<param name= "inputChangeEventsFile" value= "scenario_matsim_network_change_events.xml" />-->
 	</module>
 
 	<module name="plans">
-		<param name="inputPlansFile" value="population.xml.gz" />
+		<param name="inputPlansFile" value="lithgow_surrounds_population_epsg7855.xml.gz" />
 	</module>
 
 	<module name="controler">
