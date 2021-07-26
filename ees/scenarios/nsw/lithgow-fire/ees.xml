@@ -99,5 +99,12 @@
       <opt id="zoneIdColumnName">SA1_CODE21</opt>
     </model>
 
+    <model id="spark">
+      <!-- Spark start time in HH:MM format; used to calculate absolute values for hour_spot and hour_burnt -->
+      <opt id="ignitionHHMM">13:00</opt>
+      <!-- Spark output file -->
+      <opt id="csv">scenarios/nsw/lithgow-fire/timeseries_180m_lithgow_20131017_1159_EPSG4326.csv.gz</opt>
+    </model>
+
   </models>
 </simulation>

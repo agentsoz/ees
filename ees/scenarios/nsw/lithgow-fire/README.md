@@ -2,9 +2,9 @@
 
 ## Inputs
 
-Details on how the scenario inputs were created are [here](https://github.com/agentsoz/ees-data/tree/f216aed4c878c253387bddc847cc5cb77b452df1/nsw/blue-mountains-lithgow#readme).
+Details on how the scenario inputs were created are [here](https://github.com/agentsoz/ees-data/tree/master/nsw/blue-mountains-lithgow#readme).
 
-![Data](https://raw.githubusercontent.com/agentsoz/ees-data/f216aed4c878c253387bddc847cc5cb77b452df1/nsw/blue-mountains-lithgow/data.png)
+![Data](https://raw.githubusercontent.com/agentsoz/ees-data/master/nsw/blue-mountains-lithgow/data.png)
 
 **TIP**: To get a sorted list of zones to paste into the messages file, do:
 ```
