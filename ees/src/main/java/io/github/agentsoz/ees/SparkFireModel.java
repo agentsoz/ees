@@ -24,19 +24,24 @@ package io.github.agentsoz.ees;
 
 import io.github.agentsoz.dataInterface.DataServer;
 import io.github.agentsoz.dataInterface.DataSource;
+import io.github.agentsoz.util.Location;
 import io.github.agentsoz.util.Time;
 import org.geotools.geometry.jts.GeometryBuilder;
+import org.geotools.geometry.jts.JTS;
+import org.geotools.referencing.CRS;
 import org.locationtech.jts.algorithm.ConvexHull;
+import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.PrecisionModel;
 import org.locationtech.jts.precision.GeometryPrecisionReducer;
+import org.opengis.referencing.operation.MathTransform;
+import org.opengis.referencing.operation.TransformException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.io.*;
+import java.util.*;
+import java.util.zip.GZIPInputStream;
 
 public class SparkFireModel implements DataSource<Geometry> {
 
@@ -45,9 +50,14 @@ public class SparkFireModel implements DataSource<Geometry> {
     // Model options in ESS config XML
     private final String eIgnitionHHMM = "ignitionHHMM";
     private final String eCsvFile = "csv";
+    private final String eCsvDelimiter = "csvDelimiter";
+    private final String eGridSizeInMetres = "gridSizeInMetres";
 
     // Model options' values
     private String optCsvFile = null;
+    private int optGridSizeInMetres = -1;
+    private String optCsvDelimiter = ",";
+    private String optCrs = "EPSG:4326";
 
     private TreeMap<Double, Geometry> fire;
     private DataServer dataServer = null;
@@ -71,9 +81,18 @@ public class SparkFireModel implements DataSource<Geometry> {
                 case eCsvFile:
                     optCsvFile = opts.get(opt);
                     break;
+                case eCsvDelimiter:
+                    optCsvDelimiter = opts.get(opt);
+                    break;
+                case eGridSizeInMetres:
+                    optGridSizeInMetres = Integer.parseInt(opts.get(opt));
+                    break;
                 case Config.eGlobalStartHhMm:
                     String[] tokens = opts.get(opt).split(":");
                     setStartHHMM(new int[]{Integer.parseInt(tokens[0]),Integer.parseInt(tokens[1])});
+                    break;
+                case Config.eGlobalCoordinateSystem:
+                    optCrs = opts.get(opt);
                     break;
                 case eIgnitionHHMM:
                     String[] hhmm = opts.get(opt).split(":");
@@ -83,6 +102,9 @@ public class SparkFireModel implements DataSource<Geometry> {
                 default:
                     logger.warn("Ignoring option: " + opt + "=" + opts.get(opt));
             }
+        }
+        if (optGridSizeInMetres == -1) {
+            new RuntimeException("Spark model required option '" + eGridSizeInMetres + "' not found");
         }
     }
 
@@ -126,14 +148,20 @@ public class SparkFireModel implements DataSource<Geometry> {
         return polygon;
     }
 
-    private Geometry getGeometryFromSquareCentroids(Double[][] pairs, double squareSideInMetres) {
+    private Geometry getGeometryFromSquareCentroids(MathTransform utmTransform, MathTransform latlonTransform, List<Location> centroids, double squareSideInMetres) throws TransformException {
         Geometry shape = null ;
         int i = 0;
-        for (Double[] pair : pairs) {
+        for (Location centroid : centroids) {
             double delta = squareSideInMetres/2;
+            Coordinate coord = new Coordinate(centroid.getX(), centroid.getY());
+            JTS.transform(coord, coord, utmTransform);
+            Coordinate cornerA = new Coordinate(coord.getX()-delta, coord.getY()-delta);
+            Coordinate cornerB = new Coordinate(coord.getX()+delta, coord.getY()+delta);
+            JTS.transform(cornerA, cornerA, latlonTransform);
+            JTS.transform(cornerB, cornerB, latlonTransform);
             Geometry gridCell = new GeometryBuilder().box(
-                    pair[0]-delta, pair[1]-delta,
-                    pair[0]+delta, pair[1]+delta);
+                    cornerA.getX(), cornerA.getY(),
+                    cornerB.getX(), cornerB.getY());
             // Fix for JTS #288 requires reduction to floating.
             // https://github.com/locationtech/jts/issues/288#issuecomment-396647804
             shape = (shape==null) ?
@@ -167,9 +195,35 @@ public class SparkFireModel implements DataSource<Geometry> {
         timestepUnit = unit;
     }
 
-    public void loadSparkCsv(String filename) throws IOException {
-     }
+    public void loadSparkCsv(String file) throws Exception {
+        MathTransform utmTransform = CRS.findMathTransform(CRS.decode("EPSG:4326"), CRS.decode(optCrs), false);
+        MathTransform latlonTransform = CRS.findMathTransform(CRS.decode(optCrs), CRS.decode("EPSG:4326"), false);
 
+        BufferedReader reader = new BufferedReader((file.endsWith(".gz")) ?
+                new InputStreamReader(new GZIPInputStream(new FileInputStream(file))) :
+                new FileReader(file));
+        Map<Double, List<Location>> map = new TreeMap<>();
+        String line;
+        while ((line = reader.readLine()) != null) {
+            String[] columns = line.split(optCsvDelimiter);
+            Location centroid = new Location(
+                    columns[2], // using time as name
+                    Double.parseDouble(columns[1]),
+                    Double.parseDouble(columns[0]));
+            Double time = Double.parseDouble(columns[2]);
+            if (time >= 0) {
+                List<Location> centroids = (map.containsKey(time)) ?
+                        map.get(time) : new ArrayList<>();
+                centroids.add(centroid);
+                map.put(time, centroids);
+            }
+        }
 
-
+        for (double time : map.keySet()) {
+            List<Location> centroids = map.get(time);
+            Geometry shape = getGeometryFromSquareCentroids(utmTransform, latlonTransform, centroids, optGridSizeInMetres);
+            double secs = Math.floor(ignitionTimeInSecs + time);
+            fire.put(secs, shape);
+        }
+    }
 }

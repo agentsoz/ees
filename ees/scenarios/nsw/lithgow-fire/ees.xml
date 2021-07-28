@@ -47,7 +47,7 @@
     <!-- random seed to be used for all models; set to -1 if not used -->
     <opt id="randomSeed">123456</opt>
     <!-- coordinate reference system in EPSG format to be used for all models; see http://spatialreference.org -->
-    <opt id="crs">EPSG:4326</opt>
+    <opt id="crs">EPSG:28355</opt>
     <!-- simulation start time in HH:MM format -->
     <opt id="startHHMM">00:00</opt>
   </global>
@@ -102,8 +102,12 @@
     <model id="spark">
       <!-- Spark start time in HH:MM format; used to calculate absolute values for hour_spot and hour_burnt -->
       <opt id="ignitionHHMM">13:00</opt>
+      <!-- Spark raster grid size in metres -->
+      <opt id="gridSizeInMetres">180</opt>
       <!-- Spark output file -->
       <opt id="csv">scenarios/nsw/lithgow-fire/timeseries_180m_lithgow_20131017_1159_EPSG4326.csv.gz</opt>
+      <!-- space as csv delimiter character -->
+      <opt id="csvDelimiter"> </opt>
     </model>
 
   </models>
