@@ -104,7 +104,7 @@
       <opt id="ignitionHHMM">13:00</opt>
       <!-- Spark raster grid size in metres -->
       <opt id="gridSizeInMetres">180</opt>
-      <!-- Spark output file -->
+      <!-- Spark output CSV file converted from GeoTiff (MUST BE IN EPSG:4326) -->
       <opt id="csv">scenarios/nsw/lithgow-fire/timeseries_180m_lithgow_20131017_1159_EPSG4326.csv.gz</opt>
       <!-- space as csv delimiter character -->
       <opt id="csvDelimiter"> </opt>

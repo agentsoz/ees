@@ -148,7 +148,7 @@ public class SparkFireModel implements DataSource<Geometry> {
         return polygon;
     }
 
-    private Geometry getGeometryFromSquareCentroids(MathTransform utmTransform, MathTransform latlonTransform, List<Location> centroids, double squareSideInMetres) throws TransformException {
+    private Geometry getGeometryFromSquareCentroids(MathTransform utmTransform, List<Location> centroids, double squareSideInMetres) throws TransformException {
         Geometry shape = null ;
         int i = 0;
         for (Location centroid : centroids) {
@@ -157,8 +157,6 @@ public class SparkFireModel implements DataSource<Geometry> {
             JTS.transform(coord, coord, utmTransform);
             Coordinate cornerA = new Coordinate(coord.getX()-delta, coord.getY()-delta);
             Coordinate cornerB = new Coordinate(coord.getX()+delta, coord.getY()+delta);
-            JTS.transform(cornerA, cornerA, latlonTransform);
-            JTS.transform(cornerB, cornerB, latlonTransform);
             Geometry gridCell = new GeometryBuilder().box(
                     cornerA.getX(), cornerA.getY(),
                     cornerB.getX(), cornerB.getY());
@@ -177,6 +175,7 @@ public class SparkFireModel implements DataSource<Geometry> {
     public void start() {
         if (optCsvFile != null && !optCsvFile.isEmpty()) {
             try {
+                logger.info("Loading Spark fire from " + optCsvFile);
                 loadSparkCsv(optCsvFile);
                 dataServer.registerTimedUpdate(Constants.FIRE_DATA, this, startTimeInSeconds);
             } catch (Exception e) {
@@ -197,7 +196,6 @@ public class SparkFireModel implements DataSource<Geometry> {
 
     public void loadSparkCsv(String file) throws Exception {
         MathTransform utmTransform = CRS.findMathTransform(CRS.decode("EPSG:4326"), CRS.decode(optCrs), false);
-        MathTransform latlonTransform = CRS.findMathTransform(CRS.decode(optCrs), CRS.decode("EPSG:4326"), false);
 
         BufferedReader reader = new BufferedReader((file.endsWith(".gz")) ?
                 new InputStreamReader(new GZIPInputStream(new FileInputStream(file))) :
@@ -221,8 +219,8 @@ public class SparkFireModel implements DataSource<Geometry> {
 
         for (double time : map.keySet()) {
             List<Location> centroids = map.get(time);
-            Geometry shape = getGeometryFromSquareCentroids(utmTransform, latlonTransform, centroids, optGridSizeInMetres);
-            double secs = Math.floor(ignitionTimeInSecs + time);
+            Geometry shape = getGeometryFromSquareCentroids(utmTransform, centroids, optGridSizeInMetres);
+            double secs = ignitionTimeInSecs + time;
             fire.put(secs, shape);
         }
     }
