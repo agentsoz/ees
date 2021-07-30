@@ -14,7 +14,7 @@
     {
       "type" : "EVACUATE_NOW",
       "content" : "Evacuate if safe to do so",
-      "broadcastHHMM" : "1400",
+      "broadcastHHMM" : "1200",
       "broadcastZones" : {
         "10301106115" : null,
         "10303107001" : null,
