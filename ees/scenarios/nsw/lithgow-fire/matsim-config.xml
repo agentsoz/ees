@@ -26,7 +26,7 @@
 
 	<module name="global">
 		<param name="randomSeed" value="148256" />
-		<param name="coordinateSystem" value="EPSG:7855" />
+		<param name="coordinateSystem" value="EPSG:28355" />
 		<param name="numberOfThreads" value="1" />
 		<!--using 1 thread for testing; could be a different number for deployment. kai, nov'17-->
 	</module>
