@@ -800,31 +800,20 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
         record("believes " + beliefname + "=" + homeLocation + " #" + beliefname);
         beliefname = Beliefname.LocationWork.getCommonName();
         record("believes " + beliefname + "=" + workLocation + " #" + beliefname);
-        beliefname = "futureValueOfFireDangerIndexRating";
-        record("believes " + beliefname + "=" + futureValueOfFireDangerIndexRating + " #" + beliefname);
-        beliefname = "futureValueOfSmokeImmersion";
-        record("believes " + beliefname + "=" + futureValueOfSmokeImmersion + " #" + beliefname);
-        beliefname = "futureValueOfMessageAdvice";
-        record("believes " + beliefname + "=" + futureValueOfMessageAdvice + " #" + beliefname);
-        beliefname = "futureValueOfMessageEmergencyWarning";
-        record("believes " + beliefname + "=" + futureValueOfMessageEmergencyWarning + " #" + beliefname);
-        beliefname = "futureValueOfMessageEvacuateNow";
-        record("believes " + beliefname + "=" + futureValueOfMessageEvacuateNow + " #" + beliefname);
-        beliefname = "futureValueOfMessageRespondersAttending";
-        record("believes " + beliefname + "=" + futureValueOfMessageRespondersAttending + " #" + beliefname);
-        beliefname = "futureValueOfMessageWatchAndAct";
-        record("believes " + beliefname + "=" + futureValueOfMessageWatchAndAct + " #" + beliefname);
-        beliefname = "futureValueOfMessageSocial";
-        record("believes " + beliefname + "=" + futureValueOfMessageSocial + " #" + beliefname);
-        beliefname = "futureValueOfVisibleEmbers";
-        record("believes " + beliefname + "=" + futureValueOfVisibleEmbers + " #" + beliefname);
-        beliefname = "futureValueOfVisibleFire";
-        record("believes " + beliefname + "=" + futureValueOfVisibleFire + " #" + beliefname);
-        beliefname = "futureValueOfVisibleResponders";
-        record("believes " + beliefname + "=" + futureValueOfVisibleResponders + " #" + beliefname);
-        beliefname = "futureValueOfVisibleSmoke";
-        record("believes futureValueOfVisibleSmoke=" + futureValueOfVisibleSmoke + " #" + beliefname);
 
+        record("believes futureValueOfFireDangerIndexRating=" + futureValueOfFireDangerIndexRating);
+        record("believes futureValueOfSmokeImmersion=" + futureValueOfSmokeImmersion);
+        record("believes futureValueOfMessageAdvice=" + futureValueOfMessageAdvice);
+        record("believes futureValueOfMessageEmergencyWarning=" + futureValueOfMessageEmergencyWarning);
+        record("believes futureValueOfMessageEvacuateNow=" + futureValueOfMessageEvacuateNow);
+        record("believes futureValueOfMessageRespondersAttending=" + futureValueOfMessageRespondersAttending);
+        record("believes futureValueOfMessageWatchAndAct=" + futureValueOfMessageWatchAndAct);
+        record("believes futureValueOfMessageSocial=" + futureValueOfMessageSocial);
+        record("believes futureValueOfVisibleEmbers=" + futureValueOfVisibleEmbers);
+        record("believes futureValueOfVisibleFire=" + futureValueOfVisibleFire);
+        record("believes futureValueOfVisibleResponders=" + futureValueOfVisibleResponders);
+        record("believes futureValueOfVisibleSmoke=" + futureValueOfVisibleSmoke);
+        record("believes anxietyFromSituation=" + anxietyFromSituation);
 
         // Initialise behaviour attributes from initial beliefs
         initialiseBeliefs();
