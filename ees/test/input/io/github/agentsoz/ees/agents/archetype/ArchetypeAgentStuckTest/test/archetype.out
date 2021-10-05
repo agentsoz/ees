@@ -39,6 +39,25 @@
 -0001|-00:00:01|ArchetypeAgent|0|believes WillGoHomeAfterVisitingDependents=null #WillGoHomeAfterVisitingDependents @@
 -0001|-00:00:01|ArchetypeAgent|0|believes WillGoHomeBeforeLeaving=null #WillGoHomeBeforeLeaving @@
 -0001|-00:00:01|ArchetypeAgent|0|believes WillStay=null #WillStay @@
+-0001|-00:00:01|ArchetypeAgent|0|believes ResponseThresholdInitial=-0.02 #ResponseThresholdInitial @@
+-0001|-00:00:01|ArchetypeAgent|0|believes ResponseThresholdFinal=0.38 #ResponseThresholdFinal @@
+-0001|-00:00:01|ArchetypeAgent|0|believes HasDependentsAtLocation=null #HasDependentsAtLocation @@
+-0001|-00:00:01|ArchetypeAgent|0|believes EvacLocationPreference=(FarFarAway, coords=5000.0,0.0) #EvacLocationPreference @@
+-0001|-00:00:01|ArchetypeAgent|0|believes InvacLocationPreference=(NotSoFarAway, coords=2500.0,2500.0) #InvacLocationPreference @@
+-0001|-00:00:01|ArchetypeAgent|0|believes home=(, coords=0.0,0.0) #home @@
+-0001|-00:00:01|ArchetypeAgent|0|believes work=(, coords=5000.0,5000.0) #work @@
+-0001|-00:00:01|ArchetypeAgent|0|believes futureValueOfFireDangerIndexRating=0.0 #futureValueOfFireDangerIndexRating @@
+-0001|-00:00:01|ArchetypeAgent|0|believes futureValueOfSmokeImmersion=0.0 #futureValueOfSmokeImmersion @@
+-0001|-00:00:01|ArchetypeAgent|0|believes futureValueOfMessageAdvice=0.0 #futureValueOfMessageAdvice @@
+-0001|-00:00:01|ArchetypeAgent|0|believes futureValueOfMessageEmergencyWarning=0.0 #futureValueOfMessageEmergencyWarning @@
+-0001|-00:00:01|ArchetypeAgent|0|believes futureValueOfMessageEvacuateNow=0.7 #futureValueOfMessageEvacuateNow @@
+-0001|-00:00:01|ArchetypeAgent|0|believes futureValueOfMessageRespondersAttending=0.0 #futureValueOfMessageRespondersAttending @@
+-0001|-00:00:01|ArchetypeAgent|0|believes futureValueOfMessageWatchAndAct=0.0 #futureValueOfMessageWatchAndAct @@
+-0001|-00:00:01|ArchetypeAgent|0|believes futureValueOfMessageSocial=0.0 #futureValueOfMessageSocial @@
+-0001|-00:00:01|ArchetypeAgent|0|believes futureValueOfVisibleEmbers=0.0 #futureValueOfVisibleEmbers @@
+-0001|-00:00:01|ArchetypeAgent|0|believes futureValueOfVisibleFire=0.0 #futureValueOfVisibleFire @@
+-0001|-00:00:01|ArchetypeAgent|0|believes futureValueOfVisibleResponders=0.0 #futureValueOfVisibleResponders @@
+-0001|-00:00:01|ArchetypeAgent|0|believes futureValueOfVisibleSmoke=0.0 #futureValueOfVisibleSmoke @@
 -0001|-00:00:01|ArchetypeAgent|0|believes LagTimeInMinsForInitialResponse=1.0 @@
 -0001|-00:00:01|ArchetypeAgent|0|believes LagTimeInMinsForFinalResponse=1.0 @@
 -0001|-00:00:01|ArchetypeAgent|0|believes Archetype=Some.Archetype @@
@@ -85,6 +104,25 @@
 -0001|-00:00:01|ArchetypeAgent|1|believes WillGoHomeAfterVisitingDependents=null #WillGoHomeAfterVisitingDependents @@
 -0001|-00:00:01|ArchetypeAgent|1|believes WillGoHomeBeforeLeaving=null #WillGoHomeBeforeLeaving @@
 -0001|-00:00:01|ArchetypeAgent|1|believes WillStay=null #WillStay @@
+-0001|-00:00:01|ArchetypeAgent|1|believes ResponseThresholdInitial=0.0 #ResponseThresholdInitial @@
+-0001|-00:00:01|ArchetypeAgent|1|believes ResponseThresholdFinal=0.0 #ResponseThresholdFinal @@
+-0001|-00:00:01|ArchetypeAgent|1|believes HasDependentsAtLocation=null #HasDependentsAtLocation @@
+-0001|-00:00:01|ArchetypeAgent|1|believes EvacLocationPreference=(FarFarAway, coords=0.0,5000.0) #EvacLocationPreference @@
+-0001|-00:00:01|ArchetypeAgent|1|believes InvacLocationPreference=(NotFarAway, coords=0.0,5000.0) #InvacLocationPreference @@
+-0001|-00:00:01|ArchetypeAgent|1|believes home=(, coords=5000.0,4000.0) #home @@
+-0001|-00:00:01|ArchetypeAgent|1|believes work=null #work @@
+-0001|-00:00:01|ArchetypeAgent|1|believes futureValueOfFireDangerIndexRating=0.0 #futureValueOfFireDangerIndexRating @@
+-0001|-00:00:01|ArchetypeAgent|1|believes futureValueOfSmokeImmersion=0.0 #futureValueOfSmokeImmersion @@
+-0001|-00:00:01|ArchetypeAgent|1|believes futureValueOfMessageAdvice=0.0 #futureValueOfMessageAdvice @@
+-0001|-00:00:01|ArchetypeAgent|1|believes futureValueOfMessageEmergencyWarning=0.0 #futureValueOfMessageEmergencyWarning @@
+-0001|-00:00:01|ArchetypeAgent|1|believes futureValueOfMessageEvacuateNow=1.0 #futureValueOfMessageEvacuateNow @@
+-0001|-00:00:01|ArchetypeAgent|1|believes futureValueOfMessageRespondersAttending=0.0 #futureValueOfMessageRespondersAttending @@
+-0001|-00:00:01|ArchetypeAgent|1|believes futureValueOfMessageWatchAndAct=0.0 #futureValueOfMessageWatchAndAct @@
+-0001|-00:00:01|ArchetypeAgent|1|believes futureValueOfMessageSocial=0.0 #futureValueOfMessageSocial @@
+-0001|-00:00:01|ArchetypeAgent|1|believes futureValueOfVisibleEmbers=0.0 #futureValueOfVisibleEmbers @@
+-0001|-00:00:01|ArchetypeAgent|1|believes futureValueOfVisibleFire=0.0 #futureValueOfVisibleFire @@
+-0001|-00:00:01|ArchetypeAgent|1|believes futureValueOfVisibleResponders=0.0 #futureValueOfVisibleResponders @@
+-0001|-00:00:01|ArchetypeAgent|1|believes futureValueOfVisibleSmoke=0.0 #futureValueOfVisibleSmoke @@
 -0001|-00:00:01|ArchetypeAgent|1|believes LagTimeInMinsForInitialResponse=1.0 @@
 -0001|-00:00:01|ArchetypeAgent|1|believes LagTimeInMinsForFinalResponse=1.0 @@
 -0001|-00:00:01|ArchetypeAgent|1|believes Archetype=Some.Archetype @@
