@@ -72,7 +72,7 @@ public class PlanResponseWithoutDependents extends Plan {
 
 	PlanStep[] steps = {
 			() -> {
-				agent.out("will do " + getFullName());
+				agent.out("will do #" + getFullName());
 
 				boolean willGoHomeBeforeLeaving = Boolean.valueOf(agent.getBelief(ArchetypeAgent.Beliefname.WillGoHomeBeforeLeaving.name()));
 				if (willGoHomeBeforeLeaving) {

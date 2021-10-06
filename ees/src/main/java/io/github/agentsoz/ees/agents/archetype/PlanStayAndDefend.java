@@ -60,7 +60,7 @@ public class PlanStayAndDefend extends Plan {
 
 	PlanStep[] steps = {
 			() -> {
-				agent.out("will do " + getFullName());
+				agent.out("will do #" + getFullName());
 
 				xyHome = agent.getHomeLocation();
 				try {

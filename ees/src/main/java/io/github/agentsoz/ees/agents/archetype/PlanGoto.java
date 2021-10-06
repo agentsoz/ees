@@ -63,7 +63,7 @@ public class PlanGoto extends Plan {
 
 	PlanStep[] steps = {
 			() -> {
-				agent.out("will do " + getFullName());
+				agent.out("will do #" + getFullName());
 
 				double distToDest = -1;
 				try {
