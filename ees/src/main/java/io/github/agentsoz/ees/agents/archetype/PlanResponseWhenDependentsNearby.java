@@ -80,6 +80,8 @@ public class PlanResponseWhenDependentsNearby extends Plan {
 
 	PlanStep[] steps = {
 			() -> {
+				agent.out("will do " + getFullName());
+
 				if (distDeps > 0) {
 					// Go visits dependents now
 					agent.out("will go to dependents nearby at " + xyDeps + " #" + getFullName());

@@ -60,6 +60,8 @@ public class PlanStayAndDefend extends Plan {
 
 	PlanStep[] steps = {
 			() -> {
+				agent.out("will do " + getFullName());
+
 				xyHome = agent.getHomeLocation();
 				try {
 					double distHome = agent.getDrivingDistanceTo(xyHome);

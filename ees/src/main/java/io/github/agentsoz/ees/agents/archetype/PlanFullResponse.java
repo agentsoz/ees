@@ -50,6 +50,7 @@ public class PlanFullResponse extends Plan {
 
 	PlanStep[] steps = {
 			() -> {
+				agent.out("will do " + getFullName());
 				// Do initial response
 				subgoal(new GoalInitialResponse(GoalInitialResponse.class.getSimpleName()));
 				// subgoal should be last call in any plan step

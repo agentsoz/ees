@@ -50,6 +50,7 @@ public class PlanDoNothing extends Plan {
 
 	PlanStep[] steps = {
 			() -> {
+				agent.out("will do " + getFullName());
 				// Nothing to do
 			},
 	};

@@ -80,6 +80,8 @@ public class PlanResponseWhenDependentsAfar extends Plan {
 
 	PlanStep[] steps = {
 			() -> {
+				agent.out("will do " + getFullName());
+
 				if (distHome > 0) {
 					// Go home now
 					agent.out("will go home to " + xyHome + " #" + getFullName());

@@ -59,6 +59,8 @@ public class PlanLeaveNow extends Plan {
 
 	PlanStep[] steps = {
 			() -> {
+				agent.out("will do " + getFullName());
+
 				// Leave for evac location
 				xyEvac = agent.getEvacLocation();
 				dest = xyEvac;
