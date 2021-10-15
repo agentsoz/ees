@@ -430,10 +430,15 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
     private void handleStuck(Object parameters) {
         believe(State.isStuck.name(), Boolean.toString(true));
         believe(State.status.name(), ArchetypeAgent.StatusValue.at.name() + ":" + Constants.EvacActivity.StuckPlace.name());
-        Object[] args = (Object[])parameters;
         stuckLocation = new Location[2];
-        stuckLocation[0] = new Location((String)args[0], (double)args[1], (double)args[2]);
-        stuckLocation[1] = new Location((String)args[3], (double)args[4], (double)args[5]);
+        if(parameters != null) {
+            Object[] args = (Object[]) parameters;
+            stuckLocation[0] = new Location((String) args[0], (double) args[1], (double) args[2]);
+            stuckLocation[1] = new Location((String) args[3], (double) args[4], (double) args[5]);
+        } else {
+            stuckLocation[0] = new Location("unknown:unknown", -1, -1);
+            stuckLocation[1] = new Location("unknown:unknown", -1, -1);
+        }
     }
 
     void handleAgentNotFoundException(String errorMessage) {
