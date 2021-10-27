@@ -74,6 +74,7 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
         responseThresholdFinalReached,
         //
         status,
+        receivedMessages,
         isStuck,
     }
 
@@ -312,6 +313,14 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
         return status;
     }
 
+    public String getReceivedMessages() {
+        String val = getBelief(State.receivedMessages.name());
+        if (val == null) {
+            val = "na";
+        }
+        return val;
+    }
+
     //===============================================================================
     //endregion
     //===============================================================================
@@ -397,9 +406,12 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
             boolean willReceiveMessages = Boolean.valueOf(getBelief(Beliefname.WillReceiveMessages.name()));
             if(!willReceiveMessages) {
                 record("did not get message " + parameters);
+                believe(State.receivedMessages.name(), Boolean.toString(false));
                 return;
             }
             record("got message " + parameters);
+            believe(State.receivedMessages.name(), Boolean.toString(true));
+
             double effect = 0.0;
             String[] args = ((String)parameters).split(",");
             if (Advice.getCommonName().equals(args[0])) {
@@ -617,7 +629,8 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
         //
         believe(State.responseThresholdInitialReached.name(), null);
         believe(State.responseThresholdFinalReached.name(), null);
-
+        //
+        believe(State.receivedMessages.name(), null);
     }
 
     //===============================================================================
