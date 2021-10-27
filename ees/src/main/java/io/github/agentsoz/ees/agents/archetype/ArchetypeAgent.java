@@ -118,6 +118,7 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
         WillGoHomeAfterVisitingDependents("WillGoHomeAfterVisitingDependents"),
         WillGoHomeBeforeLeaving("WillGoHomeBeforeLeaving"),
         WillStay("WillStay"),
+        WillReceiveMessages("WillReceiveMessages")
         ;
 
         private final String commonName;
@@ -393,6 +394,11 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
 
     private void handleEmergencyMessage(Object parameters) {
         try{
+            boolean willReceiveMessages = Boolean.valueOf(getBelief(Beliefname.WillReceiveMessages.name()));
+            if(!willReceiveMessages) {
+                record("did not get message " + parameters);
+                return;
+            }
             record("got message " + parameters);
             double effect = 0.0;
             String[] args = ((String)parameters).split(",");
