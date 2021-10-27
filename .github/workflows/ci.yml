@@ -47,7 +47,7 @@ jobs:
 
     - name: Build agentsoz/ees
       run: |
-        ./mvnw -v
+        cd ees && ./mvnw -v
         cd ees && ./mvnw package -B -Dmatsim.preferLocalDtds=true && cd -
         mkdir staging && cp ees/ees/target/*.zip staging
 
