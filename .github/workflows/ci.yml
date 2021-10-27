@@ -47,8 +47,8 @@ jobs:
 
     - name: Build agentsoz/ees
       run: |
-        mvn -v
-        cd ees && mvn package -B -Dmatsim.preferLocalDtds=true && cd -
+        ./mvnw -v
+        cd ees && ./mvnw package -B -Dmatsim.preferLocalDtds=true && cd -
         mkdir staging && cp ees/ees/target/*.zip staging
 
     - name: Upload EES build artifacts

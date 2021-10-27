@@ -19,7 +19,7 @@ git submodule update --init --recursive
 ## How to build
 
 ```
-mvn package
+./mvnw package
 ```
 
 This will produce the EES release archive in `ees/target/ees-x.y.z-SNAPSHOT.zip`.
