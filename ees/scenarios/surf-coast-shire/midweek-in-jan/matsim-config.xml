@@ -38,7 +38,7 @@
 	</module>
 
 	<module name="plans">
-		<param name="inputPlansFile" value="typical-midweek-day-in-jan-plans-epsg32754.xml.gz" />
+		<param name="inputPlansFile" value="demand-seasonal-40000-epsg32754.xml.gz" />
 	</module>
 
 	<module name="controler">
@@ -115,7 +115,7 @@
 				<param name="minimalDuration" value="00:30:00" />
 			</parameterset>
 			<parameterset type="activityParams">
-				<param name="activityType"    value="shops" />
+				<param name="activityType"    value="shop" />
 				<param name="priority"        value="1" />
 				<param name="typicalDuration" value="01:00:00" />
 				<param name="minimalDuration" value="00:30:00" />
