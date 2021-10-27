@@ -1,11 +1,11 @@
 # Emergency Evacuation Simulator
 
+`master`![passing?](https://github.com/agentsoz/ees/actions/workflows/ci.yml/badge.svg?branch=master) `dev`![passing?](https://github.com/agentsoz/ees/actions/workflows/ci.yml/badge.svg?branch=dev)
 
 ## Dependencies
 
 This program depends on the following projects:
 * [BDI-ABM Integration](https://github.com/agentsoz/bdi-abm-integration)
-* [Jill BDI Engine](https://github.com/agentsoz/jill)
 * [Social Network Diffusion Model](https://github.com/agentsoz/diffusion-model)
 
 ## Setup
