@@ -13,7 +13,6 @@
 
   <modules>
     <module>libs/diffusion-model</module>
-    <module>libs/jill</module>
     <module>libs/bdi-abm-integration</module>
     <module>ees</module>
   </modules>

@@ -2,11 +2,7 @@
 	path = libs/diffusion-model
 	url = ../diffusion-model.git
 	branch = master
-[submodule "libs/jill"]
-	path = libs/jill
-	url = ../jill.git
-	branch = dev
 [submodule "libs/bdi-abm-integration"]
 	path = libs/bdi-abm-integration
 	url = ../bdi-abm-integration.git
-	branch = master
+	branch = dev
