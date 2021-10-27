@@ -38,7 +38,7 @@
 	</module>
 
 	<module name="plans">
-		<param name="inputPlansFile" value="demand-seasonal-40000-epsg32754.xml.gz" />
+		<param name="inputPlansFile" value="plan.xml" />
 	</module>
 
 	<module name="controler">

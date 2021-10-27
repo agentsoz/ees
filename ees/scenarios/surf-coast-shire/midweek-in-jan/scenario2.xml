@@ -66,7 +66,7 @@
       <!-- Output file for evacuation metrics -->
       <opt id="bdiMetricsFile">test/output/io/github/agentsoz/ees/agents/archetype/it/SCSMidweekInJanScenario2IT/test/archetype.metrics.json.gz</opt>
       <!-- Time bin size in seconds for collected evacuation metrics -->
-      <opt id="bdiMetricsFrequencyInSeconds">3600</opt>
+      <opt id="bdiMetricsFrequencyInSeconds">900</opt>
     </model>
 
     <model id="matsim">
@@ -77,7 +77,7 @@
       <!-- Maximum distance at which the fire can be seen (in metres)-->
       <opt id="maxDistanceForFireVisual">1000</opt>
       <!-- Maximum distance at which smoke can be seen (in metres)-->
-      <opt id="maxDistanceForSmokeVisual">5000</opt>
+      <opt id="maxDistanceForSmokeVisual">10000</opt>
       <!-- Fire avoidance buffer used for planning routes for regular vehicles (in metres)-->
       <opt id="fireAvoidanceBufferForVehicles">5000</opt>
       <!-- Fire avoidance buffer used for planning routes for emergency vehicles (in metres)-->
@@ -93,7 +93,7 @@
 
     <model id="phoenix">
       <!-- Phoenix start time in HH:MM format; used to calculate absolute values for hour_spot and hour_burnt -->
-      <opt id="ignitionHHMM">11:00</opt>
+      <opt id="ignitionHHMM">11:15</opt>
       <!-- Phoenix grid GeoJSON file -->
       <opt id="gridGeoJson">scenarios/surf-coast-shire/midweek-in-jan/fire-epsg32754.geojson.gz</opt>
       <!-- Phoenix grid square size (in meteres) -->
@@ -110,7 +110,7 @@
 
     <model id="disruption">
       <!-- Disruptions JSON file  -->
-      <opt id="fileJson">scenarios/surf-coast-shire/midweek-in-jan/traffic-mgt-points.json</opt>
+      <!--<opt id="fileJson">scenarios/surf-coast-shire/midweek-in-jan/traffic-mgt-points.json</opt>-->
     </model>
 
   </models>

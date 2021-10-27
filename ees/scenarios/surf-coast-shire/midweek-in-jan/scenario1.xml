@@ -66,7 +66,7 @@
       <!-- Output file for evacuation metrics -->
       <opt id="bdiMetricsFile">test/output/io/github/agentsoz/ees/agents/archetype/it/SCSMidweekInJanScenario1IT/test/archetype.metrics.json.gz</opt>
       <!-- Time bin size in seconds for collected evacuation metrics -->
-      <opt id="bdiMetricsFrequencyInSeconds">3600</opt>
+      <opt id="bdiMetricsFrequencyInSeconds">900</opt>
     </model>
 
     <model id="matsim">
@@ -93,7 +93,7 @@
 
     <model id="phoenix">
       <!-- Phoenix start time in HH:MM format; used to calculate absolute values for hour_spot and hour_burnt -->
-      <opt id="ignitionHHMM">11:00</opt>
+      <opt id="ignitionHHMM">11:15</opt>
       <!-- Phoenix grid GeoJSON file -->
       <opt id="gridGeoJson">scenarios/surf-coast-shire/midweek-in-jan/fire-epsg32754.geojson.gz</opt>
       <!-- Phoenix grid square size (in meteres) -->
