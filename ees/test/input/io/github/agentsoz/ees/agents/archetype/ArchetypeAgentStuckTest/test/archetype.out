@@ -65,6 +65,7 @@
 -0001|-00:00:01|ArchetypeAgent|0|believes Archetype=Some.Archetype @@
 -0001|-00:00:01|ArchetypeAgent|0|believes responseThresholdInitialReached=null @@
 -0001|-00:00:01|ArchetypeAgent|0|believes responseThresholdFinalReached=null @@
+-0001|-00:00:01|ArchetypeAgent|0|believes WillReceiveMessages=true @@
 -0001|-00:00:01|ArchetypeAgent|0|believes receivedMessages=null @@
 -0001|-00:00:01|ArchetypeAgent|1|believes isDriving=false @@
 -0001|-00:00:01|ArchetypeAgent|1|believes Age=null #Age @@
@@ -133,6 +134,7 @@
 -0001|-00:00:01|ArchetypeAgent|1|believes Archetype=Some.Archetype @@
 -0001|-00:00:01|ArchetypeAgent|1|believes responseThresholdInitialReached=null @@
 -0001|-00:00:01|ArchetypeAgent|1|believes responseThresholdFinalReached=null @@
+-0001|-00:00:01|ArchetypeAgent|1|believes WillReceiveMessages=true @@
 -0001|-00:00:01|ArchetypeAgent|1|believes receivedMessages=null @@
 03600|01:00:00|ArchetypeAgent|0|started driving to work @@
 03600|01:00:00|ArchetypeAgent|0|believes status=to:work @@

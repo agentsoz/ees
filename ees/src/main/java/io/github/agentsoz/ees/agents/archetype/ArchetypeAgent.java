@@ -630,6 +630,8 @@ public class ArchetypeAgent extends Agent implements io.github.agentsoz.bdiabm.A
         believe(State.responseThresholdInitialReached.name(), null);
         believe(State.responseThresholdFinalReached.name(), null);
         //
+        b = getBelief(Beliefname.WillReceiveMessages.name());
+        believe(Beliefname.WillReceiveMessages.name(), b == null ? "true" : b);
         believe(State.receivedMessages.name(), null);
     }
 
