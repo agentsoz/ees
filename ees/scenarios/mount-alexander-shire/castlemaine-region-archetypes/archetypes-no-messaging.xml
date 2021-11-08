@@ -50,7 +50,7 @@
     <!-- simulation start time in HH:MM format -->
     <opt id="startHHMM">00:00</opt>
     <!-- Output file for trips written in DeckGL format -->
-    <opt id="deckGlOutFile">test/output/io/github/agentsoz/ees/agents/archetype/it/CastlemaineRegionArchetypesIT/test/trips.deckgl.json</opt>
+    <opt id="deckGlOutFile">test/output/io/github/agentsoz/ees/agents/archetype/it/CastlemaineRegionArchetypesNoMessagengIT/test/trips.deckgl.json</opt>
   </global>
 
   <!-- model specific configuration -->
@@ -61,18 +61,18 @@
       <opt id="jPlanSelectionPolicy">FIRST</opt>
       <opt id="jAgents"></opt>
       <opt id="jLogLevel">WARN</opt>
-      <opt id="jLogFile">test/output/io/github/agentsoz/ees/agents/archetype/it/CastlemaineRegionArchetypesIT/test/archetype.log</opt>
-      <opt id="jOutFile">test/output/io/github/agentsoz/ees/agents/archetype/it/CastlemaineRegionArchetypesIT/test/archetype.out.gz</opt>
+      <opt id="jLogFile">test/output/io/github/agentsoz/ees/agents/archetype/it/CastlemaineRegionArchetypesNoMessagengIT/test/archetype.log</opt>
+      <opt id="jOutFile">test/output/io/github/agentsoz/ees/agents/archetype/it/CastlemaineRegionArchetypesNoMessagengIT/test/archetype.out.gz</opt>
       <!--<opt id="jNumThreads">1</opt>-->
       <!-- Output file for evacuation metrics -->
-      <opt id="bdiMetricsFile">test/output/io/github/agentsoz/ees/agents/archetype/it/CastlemaineRegionArchetypesIT/test/archetype.metrics.json.gz</opt>
+      <opt id="bdiMetricsFile">test/output/io/github/agentsoz/ees/agents/archetype/it/CastlemaineRegionArchetypesNoMessagengIT/test/archetype.metrics.json.gz</opt>
       <!-- Time bin size in seconds for collected evacuation metrics -->
       <opt id="bdiMetricsFrequencyInSeconds">900</opt>
     </model>
 
     <model id="matsim">
       <!-- MATSim output directory relative to examples/bushfire directory (will overrule the setting in MATSim config) -->
-      <opt id="outputDir">test/output/io/github/agentsoz/ees/agents/archetype/it/CastlemaineRegionArchetypesIT/test/matsim</opt>
+      <opt id="outputDir">test/output/io/github/agentsoz/ees/agents/archetype/it/CastlemaineRegionArchetypesNoMessagengIT/test/matsim</opt>
       <!-- MATSim XML config XML file relative to examples/bushfire directory -->
       <opt id="configXml">scenarios/mount-alexander-shire/castlemaine-region-archetypes/archetypes_matsim_main.xml</opt>
       <!-- Maximum distance at which the fire can be seen (in metres)-->
@@ -99,13 +99,6 @@
       <opt id="gridGeoJson">scenarios/mount-alexander-shire/castlemaine-region-archetypes/20181109_mountalex_evac_ffdi100d_grid.json</opt>
       <!-- Phoenix grid square size (in meteres) -->
       <opt id="gridSquareSideInMetres">180</opt>
-    </model>
-
-    <model id="messaging">
-      <!-- Messaging JSON file  -->
-      <opt id="fileJson">scenarios/mount-alexander-shire/castlemaine-region-archetypes/scenario_messages.json</opt>
-      <!-- Zones GeoJSON file mapping zone IDs to polygon shapes -->
-      <opt id="fileZonesGeoJson">scenarios/mount-alexander-shire/castlemaine-region-archetypes/MountAlexander_SA1s/all.geojson</opt>
     </model>
 
   </models>
