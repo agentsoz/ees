@@ -18,6 +18,9 @@ Traffic Management Points | [`Traffic Mgt Points.shp`](https://github.com/agents
 
 This is the baseline scenario with no intervention by the emergency services. In this case, the response of the population to the advancing threat is based on individuals' situation awareness over time (proximity to the progressing fire and embers front), their attitudes, and circumstance (such as their location at the time and whether they are responsible for dependants who may be located elsewhere).
 
+The population file ([`demand-seasonal-40k-50it-epsg32754-7886c91.xml.gz
+`](https://cloudstor.aarnet.edu.au/plus/s/poLPMcKNUZQz5mC?path=%2Fees%2Fscenarios%2Fsurf-coast-shire%2Fmidweek-in-jan)) is too large to store in GitHub and should first be downloaded and stored in the current dir.
+
 To run the full scenario (takes `~50 mins`), do the following. Alternatively, to run a 10% population sample scenario (takes `~7 mins`) substitute the test name below with `-Dtest=SCSMidweekInJanScenario1Pct10IT`.
 ```
 mvn test -Dskip.tests=true -Dskip.IT=false -Dtest=SCSMidweekInJanScenario1IT
