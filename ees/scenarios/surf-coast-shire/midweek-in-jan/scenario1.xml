@@ -47,7 +47,7 @@
     <!-- random seed to be used for all models; set to -1 if not used -->
     <opt id="randomSeed">123456</opt>
     <!-- coordinate reference system in EPSG format to be used for all models; see http://spatialreference.org -->
-    <opt id="crs">EPSG:4326</opt>
+    <opt id="crs">EPSG:32754</opt>
     <!-- simulation start time in HH:MM format -->
     <opt id="startHHMM">00:00</opt>
   </global>
@@ -66,7 +66,7 @@
       <!-- Output file for evacuation metrics -->
       <opt id="bdiMetricsFile">test/output/io/github/agentsoz/ees/agents/archetype/it/SCSMidweekInJanScenario1IT/test/archetype.metrics.json.gz</opt>
       <!-- Time bin size in seconds for collected evacuation metrics -->
-      <opt id="bdiMetricsFrequencyInSeconds">900</opt>
+      <opt id="bdiMetricsFrequencyInSeconds">1800</opt>
     </model>
 
     <model id="matsim">
@@ -84,11 +84,11 @@
       <opt id="fireAvoidanceBufferForEmergencyVehicles">1000</opt>
       <!-- Parameters used by vehicles to decide whether they are stuck in congestion -->
       <!-- check for congestion every I=300 secs-->
-      <opt id="congestionEvaluationInterval">300</opt>
+      <opt id="congestionEvaluationInterval">1200</opt>
       <!-- accept delays of txI secs, where tolerance t=0.5 -->
       <opt id="congestionToleranceThreshold">0.5</opt>
       <!-- likelihood of taking action if congestion threshold is reached -->
-      <opt id="congestionReactionProbability">0.0</opt>
+      <opt id="congestionReactionProbability">0.2</opt>
     </model>
 
     <model id="phoenix">
@@ -98,6 +98,11 @@
       <opt id="gridGeoJson">scenarios/surf-coast-shire/midweek-in-jan/fire-epsg32754.geojson.gz</opt>
       <!-- Phoenix grid square size (in meteres) -->
       <opt id="gridSquareSideInMetres">180</opt>
+    </model>
+
+    <model id="disruption">
+      <!-- Disruptions JSON file  -->
+      <opt id="fileJson">scenarios/surf-coast-shire/midweek-in-jan/traffic-mgt-points.s1.json</opt>
     </model>
   </models>
 
