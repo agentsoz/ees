@@ -1,29 +1,35 @@
 # Surf Coast Shire typical midweek evacuation scenario
 
-The scenario in this directory is built around population expectations for Surf Coast Shire (SCS) for a *typical midweek in January*. The fire spread modelled is similar to, though not strictly like, the Ash Wednesday fire of 1983. The raw inputs for the scenario are shown below and can be found [here](https://github.com/agentsoz/ees-data/tree/36cd139994b73d2c2d6ef4993caad023f92110a0/surf-coast-shire/from-scsc-20210506).
+The scenario in this directory is built around population expectations for Surf Coast Shire (SCS) for a *typical midweek in January*. The fire spread modelled is similar to, though not strictly like, the Ash Wednesday fire of 1983.
 
-![Scenario Inputs](https://raw.githubusercontent.com/agentsoz/ees-data/c5bcd3c081acd763c7517fc299e186a3be870ec3/surf-coast-shire/from-scsc-20210506/scs-scenario-inputs.png)
 
 ## Preparation of scenario files
 
 Type | Data used | Scenario file created | Process for creating
 -|-|-|-
-Fire | Phoenix fire run [`DSSrun2_grid.shp`](https://github.com/agentsoz/ees-data/tree/c5bcd3c081acd763c7517fc299e186a3be870ec3/surf-coast-shire/from-scsc-20210506) | [`fire-epsg32754.geojson.gz`](fire-epsg32754.geojson.gz) | Ran the command `ogr2ogr -f "GeoJson" -t_srs EPSG:32754 fire-epsg32754.geojson DSSrun2_grid.shp && gzip -9 fire-epsg32754.geojson`
-Population | Synthetic population scenario [`typical-midweek-day-in-jan`](https://github.com/agentsoz/ees-synthetic-population/tree/36cd139994b73d2c2d6ef4993caad023f92110a0/plan-algorithm/scenarios/typical-midweek-day-in-jan) based on [this initial rationale](https://github.com/agentsoz/ees-synthetic-population/blob/3ee29e8c6ab6986f3758e210479a57567bd2e227/plan-algorithm/scenarios/typical-midweek-day-in-jan/rationale.pdf) | [`typical-midweek-day-in-jan-plans-epsg32754.xml.gz`](typical-midweek-day-in-jan-plans-epsg32754.xml.gz) (and [this revision](https://github.com/agentsoz/ees-synthetic-population/blob/36cd139994b73d2c2d6ef4993caad023f92110a0/plan-algorithm/scenarios/typical-midweek-day-in-jan/rationale2.pdf)) | Ran the script [`run.sh`](https://github.com/agentsoz/ees-synthetic-population/blob/3ee29e8c6ab6986f3758e210479a57567bd2e227/plan-algorithm/run.sh) to construct the population `.xml`, compressed it using `gzip -9`, then renamed; 10% samples of the population were created using the MATSim Gui tool, and the person IDs of the resulting samples were fixed to be sequential using `awk '/person id=/{s=sprintf("\"%d\"", i++); gsub(/\".*\"/, s)} 1' plansin.xml > plansout.xml`
-Road | OpenStreetMap data Apr/2021| [`surf-coast-shire-network-2021-epsg32754.xml.gz`](../surf-coast-shire-network-2021-epsg32754.xml.gz) | Ran the script [`create-surf-coast-shire-network.sh`](https://github.com/agentsoz/ees-data/blob/36cd139994b73d2c2d6ef4993caad023f92110a0/surf-coast-shire/osm/create-surf-coast-shire-network.sh) to construct the road network `.xml`, compressed it using `gzip -9`, then renamed, then manually corrected by SCSC using the JOSM MATSim plugin
-Evacuation Zones | [`Evac Zones Risk.shp`](https://github.com/agentsoz/ees-data/tree/c5bcd3c081acd763c7517fc299e186a3be870ec3/surf-coast-shire/from-scsc-20210506) | [`zones-epsg4326.geojson`](zones-epsg4326.geojson) | Ran the command `ogr2ogr -f "GeoJson" -t_srs EPSG:4326 zones-epsg4326.geojson Evac\ Zones\ Risk.shp`
-Traffic Management Points | [`Traffic Mgt Points.shp`](https://github.com/agentsoz/ees-data/tree/c5bcd3c081acd763c7517fc299e186a3be870ec3/surf-coast-shire/from-scsc-20210506) | [`traffic-mgt-points.csv`](traffic-mgt-points.csv), [`traffic-mgt-points.json`](traffic-mgt-points.json) | Manually mapped traffic management points to MATSim network link IDs
+Fire | Phoenix fire run [`DSSrun2_grid.shp`](https://github.com/agentsoz/ees-data/tree/eb49b83ea462a29d511c0386c639395761c64a8b/surf-coast-shire/evac-exercise-202112) | [`fire-epsg32754.geojson.gz`](fire-epsg32754.geojson.gz) | Ran the command `ogr2ogr -f "GeoJson" -t_srs EPSG:32754 fire-epsg32754.geojson DSSrun2_grid.shp && gzip -9 fire-epsg32754.geojson`
+Road | OpenStreetMap data Apr/2021| [`surf-coast-shire-network-2021-epsg32754.xml.gz`](../surf-coast-shire-network-2021-epsg32754.xml.gz) | Ran the script [`create-surf-coast-shire-network.sh`](https://github.com/agentsoz/ees-data/blob/36cd139994b73d2c2d6ef4993caad023f92110a0/surf-coast-shire/osm/create-surf-coast-shire-network.sh) to construct the road network `.xml`; this was iteratively and manually corrected by SCSC using the JOSM MATSim plugin; and compressed using `gzip -9`
+Population | Used [`these population data input files`](https://github.com/eesim/demand-seasonal/tree/74ab981347a6fa6ae701c4e1c057f9d39d145a5b/tests/data) co-created with SCSC | [`demand-seasonal-40k-50it-epsg32754-7886c91.xml.gz`](https://cloudstor.aarnet.edu.au/plus/s/poLPMcKNUZQz5mC?path=%2Fees%2Fscenarios%2Fsurf-coast-shire%2Fmidweek-in-jan)  | In the [`demand-seasonal`](https://github.com/eesim/demand-seasonal/tree/74ab981347a6fa6ae701c4e1c057f9d39d145a5b) repository, ran the command `Rscript -e 'setwd("R"); source("main.R"); runDemandGenerationExample(num.agents=40000)'` to construct the population `.xml`; then ran the generated demand through MATSim using [`this config`](https://github.com/eesim/demand-seasonal/blob/74ab981347a6fa6ae701c4e1c057f9d39d145a5b/data/matsim/config.xml) for 50 iterations
+Evacuation Zones | [`Evac Zones 24 7-12-21 with Roads.shp`](https://github.com/agentsoz/ees-data/tree/eb49b83ea462a29d511c0386c639395761c64a8b/surf-coast-shire/evac-exercise-202112) | [`zones-epsg4326.geojson`](zones-epsg4326.geojson) | Ran the command `ogr2ogr -f "GeoJson" -t_srs EPSG:4326 zones-epsg4326.geojson Evac\ Zones\ 24 7-12-21\ with\ Roads.shp`
+Traffic Management Points | [`Traffic Mgt Points.shp`](https://github.com/agentsoz/ees-data/tree/eb49b83ea462a29d511c0386c639395761c64a8b/surf-coast-shire/evac-exercise-202112) | [`traffic-mgt-points.csv`](traffic-mgt-points.csv), [`traffic-mgt-points.json`](traffic-mgt-points.json) | Manually mapped traffic management points to MATSim network link IDs
 
-## Scenario 1
+*The population file ([`demand-seasonal-40k-50it-epsg32754-7886c91.xml.gz
+`](https://cloudstor.aarnet.edu.au/plus/s/poLPMcKNUZQz5mC?path=%2Fees%2Fscenarios%2Fsurf-coast-shire%2Fmidweek-in-jan)) is too large to store in GitHub and should first be downloaded and stored in the current dir.*
 
-This is the baseline scenario with no intervention by the emergency services. In this case, the response of the population to the advancing threat is based on individuals' situation awareness over time (proximity to the progressing fire and embers front), their attitudes, and circumstance (such as their location at the time and whether they are responsible for dependants who may be located elsewhere).
+## Scenarios
 
-The population file ([`demand-seasonal-40k-50it-epsg32754-7886c91.xml.gz
-`](https://cloudstor.aarnet.edu.au/plus/s/poLPMcKNUZQz5mC?path=%2Fees%2Fscenarios%2Fsurf-coast-shire%2Fmidweek-in-jan)) is too large to store in GitHub and should first be downloaded and stored in the current dir.
+### S1
 
-To run the full scenario (takes `~50 mins`), do the following. Alternatively, to run a 10% population sample scenario (takes `~7 mins`) substitute the test name below with `-Dtest=SCSMidweekInJanScenario1Pct10IT`.
+This is the baseline scenario with no intervention by the emergency services. In this case, the response of the population to the advancing threat is based on individuals' situation awareness over time (proximity to the progressing fire and embers front), their attitudes, and circumstance (such as their location at the time and whether they are responsible for dependants who may be located elsewhere). To run the full scenario (takes `~30 mins`), do the following from the ees module dir (`../../../`).
 ```
 mvn test -Dskip.tests=true -Dskip.IT=false -Dtest=SCSMidweekInJanScenario1IT
+```
+
+### S2
+
+This scenario is the same as S1 with the addition of an `EVACUATE_NOW` message at `1215 hrs` sent to all zones. To run, do the following from the ees module dir (`../../../`).
+```
+mvn test -Dskip.tests=true -Dskip.IT=false -Dtest=SCSMidweekInJanScenario2IT
 ```
 
 ## Misc
