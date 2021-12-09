@@ -34,9 +34,9 @@ import org.slf4j.LoggerFactory;
  * @author Dhi Singh
  *
  */
-public class SCSMidweekInJanScenario2Pct10IT {
+public class SCSMidweekInJanScenario3IT {
 
-    private static final Logger log = LoggerFactory.getLogger(SCSMidweekInJanScenario2Pct10IT.class);
+    private static final Logger log = LoggerFactory.getLogger(SCSMidweekInJanScenario3IT.class);
 
     @Rule
     public MatsimTestUtils utils = new MatsimTestUtils() ;
@@ -46,7 +46,7 @@ public class SCSMidweekInJanScenario2Pct10IT {
 
         utils.getOutputDirectory(); // creates a clean one so need to call this first
         String[] args = {
-                "--config", "scenarios/surf-coast-shire/midweek-in-jan/scenario2.10pct.xml",
+                "--config", "scenarios/surf-coast-shire/midweek-in-jan/scenario3.xml",
         };
         Run.main(args);
     }
