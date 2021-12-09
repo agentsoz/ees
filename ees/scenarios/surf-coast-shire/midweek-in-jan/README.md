@@ -18,7 +18,7 @@ Traffic Management Points | [`Traffic Mgt Points.shp`](https://github.com/agents
 
 ## Scenarios
 
-Scenario | Description | How to run |
+Scenario | Description | How to run from `../../../` |
 -|-|-|
 S1 | Roads near Lorne block when over-run by fire; no messaging or traffic management in place | `mvn test -Dskip.tests=true -Dskip.IT=false -Dtest=SCSMidweekInJanScenario1IT` |
 S2 | Send EVACUATE_NOW at 1215 hrs to all zones; roads near Lorne block when over-run by fire same as S1 | `mvn test -Dskip.tests=true -Dskip.IT=false -Dtest=SCSMidweekInJanScenario2IT` |
@@ -29,29 +29,11 @@ S6 | Send EVACUATE_NOW sequence to high risk areas: Aireys at 1215 hrs, Anglesea
 S7 | Send EVACUATE_NOW sequence to high risk areas: Lorne at 1215, Aireys at 1315 hrs, Anglesea at 1415 hrs; implement Traffic Management Plan at 1315 hrs; roads near Lorne block when over-run by fire same as S1 | `mvn test -Dskip.tests=true -Dskip.IT=false -Dtest=SCSMidweekInJanScenario7IT` |
 
 
-### S1
-
-This is the baseline scenario with no intervention by the emergency services. In this case, the response of the population to the advancing threat is based on individuals' situation awareness over time (proximity to the progressing fire and embers front), their attitudes, and circumstance (such as their location at the time and whether they are responsible for dependants who may be located elsewhere). To run the full scenario (takes `~30 mins`), do the following from the ees module dir (`../../../`).
-```
-mvn test -Dskip.tests=true -Dskip.IT=false -Dtest=SCSMidweekInJanScenario1IT
-```
-
-### S2
-
-This scenario is the same as S1 with the addition of an `EVACUATE_NOW` message at `1215 hrs` sent to all zones. To run, do the following from the ees module dir (`../../../`).
-```
-mvn test -Dskip.tests=true -Dskip.IT=false -Dtest=SCSMidweekInJanScenario2IT
-```
-
-### S3
-
-Send EVACUATE_NOW at 1215 hrs to all zones; implement Traffic Management Plan at 1315 hrs; roads near Lorne block when over-run by fire same as S1
-
 ## Miscellaneous
 
 ### Getting formatted list of zones for messages file
 
-To get a sorted list of zones to paste into the messages file, do:
+To get a sorted list of all zones to paste into the messages file, do:
 ```
 python -m json.tool zones-epsg4326.geojson |\
     grep "ID_Name" |\
@@ -72,6 +54,16 @@ This returns something like:
         "1-Birregurra" : null,
         "1-Colac" : null,
         ...
+```
+
+### Getting formatted list of high risk zones for messages file
+
+```
+cat zones-epsg4326.geojson |\
+    grep "Red Zone" |\
+    awk -F'"' '{print $22}' |\
+    sort |\
+    awk '{print "        \""$0"\" : null,"}'
 ```
 
 ### Pasting simulation movies side by side
