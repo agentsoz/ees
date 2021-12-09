@@ -36,7 +36,7 @@ S7 | Send EVACUATE_NOW sequence to high risk areas: Lorne at 1215, Aireys at 131
 To get a sorted list of all zones to paste into the messages file, do:
 ```
 python -m json.tool zones-epsg4326.geojson |\
-    grep "ID_Name" |\
+    grep "IDName" |\
     awk -F'"' '{print $4}' |\
     sort |\
     awk '{print "        \""$0"\" : null,"}'
