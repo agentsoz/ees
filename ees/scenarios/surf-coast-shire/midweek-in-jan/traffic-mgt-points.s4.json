@@ -1,0 +1,91 @@
+{
+  "help": [
+    "List of disruptions to inject into the MATSim network",
+    "{",
+      "description: information string, e.g., Accident on Main Road,",
+      "startHhMm : the time in HHMM format when this disruption takes effect,",
+      "endHhMm : the time in HHMM format when the disruption is removed",
+      "effectiveSpeed: a positive number to indicate the effective speed during the disruption,",
+      "effectiveSpeedUnit : one of: RELATIVE (i.e., percentage of free speed) or KMPH (kilometers per hour),",
+      "impactedLinks: list of links to which this disruption should be applied",
+    "}"
+  ],
+
+  "comments": "WARNING: effectiveSpeed should always be greater than zero to ensure a path can always be found",
+
+  "spatialReferenceEPSG" : "EPSG:4326",
+
+  "disruptions" : [
+    {
+      "description" : "Traffic Management Points VicPol (2,4,8,9,13-15) implemented at 1315 hrs",
+      "startHHMM" : "1315",
+      "endHHMM" : "2359",
+      "effectiveSpeed" : "0.001",
+      "effectiveSpeedUnit" : "KMPH",
+      "impactedLinks" : [
+        "900000041",
+        "6130-6132-6134-6136-6138-6140-6142-6144",
+        "12139-12141-12143-12145-12147-12149-12151-12153-12155-12157-12159-12161-12163-12165-12167-12169-12171-12173",
+        "4225",
+        "26143-26145-26147-26149-26151-26153-26155-26157-26159-26161-26163-26165-26167-26169-26171-26173-26175-26177-26179-26181-26183-26185-26187",
+        "25169-25170-25171-25172-25173-25174",
+        "22651-22653"
+      ]
+    },
+    {
+      "description" : "Benwerrin-Mt Sabine Road blocked by fire",
+      "startHHMM" : "1315",
+      "endHHMM" : "2359",
+      "effectiveSpeed" : "0.0000",
+      "effectiveSpeedUnit" : "KMPH",
+      "impactedLinks" : [
+        "15665-15663-15661-15659-15657-15655-15653-15651-15649-15647-15645-15643-15641-15639-15637-15635-15633-15631-15629",
+        "15628-15630-15632-15634-15636-15638-15640-15642-15644-15646-15648-15650-15652-15654-15656-15658-15660-15662-15664"
+      ]
+    },
+    {
+      "description" : "Erskine Falls Road blocked by fire",
+      "startHHMM" : "1330",
+      "endHHMM" : "2359",
+      "effectiveSpeed" : "0.0000",
+      "effectiveSpeedUnit" : "KMPH",
+      "impactedLinks" : [
+        "26836-26838-26840-26842-26844-26846-26848-26850-26852-26854",
+        "26855-26853-26851-26849-26847-26845-26843-26841-26839-26837"
+      ]
+    },
+    {
+      "description": "Great Ocean Road west of Lorne blocked by fire",
+      "startHHMM": "1410",
+      "endHHMM": "2359",
+      "effectiveSpeed": "0.0001",
+      "effectiveSpeedUnit": "KMPH",
+      "impactedLinks": [
+        "43860-43858-43856-43854-43852-43850-43848-43846-43844-43842-43840-43838-43836-43834-43832-43830-43828-43826-43824-43822-43820-43818-43816-43814-43812-43810-43808-43806-43804-43802",
+        "90000021"
+      ]
+    },
+    {
+      "description": "Deans Marsh - Lorne Road blocked by fire",
+      "startHHMM": "1430",
+      "endHHMM": "2359",
+      "effectiveSpeed": "0.0000",
+      "effectiveSpeedUnit": "KMPH",
+      "impactedLinks": [
+        "41124-41126-41128-41130-41132",
+        "41397-41395-41393-41391-41389-41387"
+      ]
+    },
+    {
+      "description" : "Great Ocean Road east of Lorne blocked by fire",
+      "startHHMM" : "1455",
+      "endHHMM" : "2359",
+      "effectiveSpeed" : "0.0000",
+      "effectiveSpeedUnit" : "KMPH",
+      "impactedLinks" : [
+        "42222-42224-42226-42228-42230-42232-42234-42236-42238-42240",
+        "42241-42239-42237-42235-42233-42231-42229-42227-42225-42223"
+      ]
+    }
+  ]
+}
