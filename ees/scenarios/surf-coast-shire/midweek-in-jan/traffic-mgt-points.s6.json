@@ -18,7 +18,7 @@
   "disruptions" : [
     {
       "description" : "Traffic Management Plan (Points 1-11) implemented at 1315 hrs",
-      "startHHMM" : "1315",
+      "startHHMM" : "1314",
       "endHHMM" : "2359",
       "effectiveSpeed" : "0.001",
       "effectiveSpeedUnit" : "KMPH",
