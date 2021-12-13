@@ -164,7 +164,11 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
 
     @Override
     public Object queryPercept(String agentID, String perceptID, Object args) throws AgentNotFoundException {
-        return matsimModel.queryPercept(agentID, perceptID, args);
+        try {
+            return matsimModel.queryPercept(agentID, perceptID, args);
+        } catch (Exception e) {
+            throw new AgentNotFoundException("MobsimAgent " + agentID + " not found");
+        }
     }
 
     private void registerDataServer( DataServer server ) {
