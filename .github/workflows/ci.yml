@@ -35,7 +35,7 @@ jobs:
     - name: Checkout submodules
       uses: srt32/git-actions@v0.0.3
       with:
-        args: git config --global --add safe.directory /github/workspace/ees --add safe.directory /github/workspace/ees/libs/bdi-abm-integration --add safe.directory /github/workspace/ees/libs/diffusion-model && cd ees && git submodule update --init --recursive
+        args: git config --global --add safe.directory /github/workspace/ees && git config --global --add safe.directory /github/workspace/ees/libs/bdi-abm-integration && git config --global --add safe.directory /github/workspace/ees/libs/diffusion-model && cd ees && git submodule update --init --recursive
 
     - name: Add write permissions to clone
       run: sudo chown -R $USER:$USER $GITHUB_WORKSPACE/ees
