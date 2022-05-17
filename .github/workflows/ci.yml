@@ -32,13 +32,10 @@ jobs:
         repository: agentsoz/ees
         path: ees
 
-    - name: work around permission issue
-      run: git config --global --add safe.directory /github/workspace/ees
-
     - name: Checkout submodules
       uses: srt32/git-actions@v0.0.3
       with:
-        args: cd ees && git submodule update --init --recursive
+        args: cd ees && git config --global --add safe.directory /github/workspace/ees && git submodule update --init --recursive
 
     - name: Add write permissions to clone
       run: sudo chown -R $USER:$USER $GITHUB_WORKSPACE/ees
