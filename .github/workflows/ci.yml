@@ -33,7 +33,7 @@ jobs:
         path: ees
 
     - name: work around permission issue
-        run: git config --global --add safe.directory /github/workspace/ees
+      run: git config --global --add safe.directory /github/workspace/ees
 
     - name: Checkout submodules
       uses: srt32/git-actions@v0.0.3
