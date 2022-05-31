@@ -48,7 +48,7 @@ public class SouthEastQld500Test {
     @Rule
     public MatsimTestUtils utils = new MatsimTestUtils() ;
 
-    @Test
+    @Ignore
     public void test() {
 
         utils.getOutputDirectory(); // creates a clean one so need to call this first
