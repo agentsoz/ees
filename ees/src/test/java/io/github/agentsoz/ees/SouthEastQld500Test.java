@@ -43,11 +43,12 @@ public class SouthEastQld500Test {
 
     // have tests in separate classes so that they run, at least under maven, in separate JVMs.  kai, nov'17
 
-    private static final Logger log = LoggerFactory.getLogger(Maldon600Test.class) ;
+    private static final Logger log = LoggerFactory.getLogger(SouthEastQld500Test.class) ;
 
     @Rule
     public MatsimTestUtils utils = new MatsimTestUtils() ;
 
+    @Test
     @Ignore
     public void test() {
 
