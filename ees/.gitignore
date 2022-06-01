@@ -2,4 +2,5 @@ THIRD-PARTY.txt
 /target/
 scenarios/qld/south_east_qld/south_east_qld_network_EPSG_7856.xml.gz
 scenarios/qld/south_east_qld/south_east_qld_population_EPSG_7856_test.xml
-scenarios/qld/south_east_qld/SA2_south_east_qld_EPSG_4326.geojson
+scenarios/qld/south_east_qld/cyclone_progression_EPSG_4326.geojson.gz
+scenarios/qld/south_east_qld/cyclone_progression_EPSG_4326_test.geojson.gz

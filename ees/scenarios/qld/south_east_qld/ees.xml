@@ -89,6 +89,13 @@
       <opt id="zoneIdColumnName">SA2_CODE21</opt>
     </model>
 
+    <model id="cyclone">
+      <!--  grid square size (in meteres) -->
+      <opt id="gridSquareSideInMetres">180</opt>
+      <!-- Disruptions JSON file relative to examples/bushfire directory -->
+      <opt id="fileGeoJson">scenarios/qld/south_east_qld/cyclone_progression_EPSG_4326.geojson.gz</opt>
+    </model>
+
     <model id="disruption">
       <!-- Disruptions JSON file relative to examples/bushfire directory -->
       <opt id="fileJson"></opt>

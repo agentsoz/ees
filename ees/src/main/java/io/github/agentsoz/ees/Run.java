@@ -106,6 +106,13 @@ public class Run implements DataClient {
             model.setTimestepUnit(Time.TimestepUnit.SECONDS);
             model.start();
         }
+        // initialise the cyclone model and register it as an active data source
+        {
+            log.info("Starting cyclone model ");
+            CycloneModel model = new CycloneModel(cfg.getModelConfig(Config.eModelCyclone), dataServer);
+            model.setTimestepUnit(Time.TimestepUnit.SECONDS);
+            model.start();
+        }
         {
             log.info("Starting Spark fire model");
             SparkFireModel model = new SparkFireModel(cfg.getModelConfig(Config.eModelFireSpark), dataServer);

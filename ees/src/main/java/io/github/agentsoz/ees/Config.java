@@ -70,6 +70,7 @@ public class Config {
 	static final String eGlobalMetricsOutFile = "metricsOutFile";
 	static final String eGlobalMetricsBinSizeInSecs = "metricsBinSizeInSecs";
 	// Model IDs in XML
+	static final String eModelCyclone = "cyclone";
 	static final String eModelFire = "phoenix";
 	static final String eModelFireSpark = "spark";
 	static final String eModelDisruption = "disruption";
