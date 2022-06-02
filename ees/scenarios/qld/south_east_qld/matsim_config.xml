@@ -37,7 +37,7 @@
 	</module>
 
 	<module name="plans">
-		<param name="inputPlansFile" value="south_east_qld_population_EPSG_7856.xml.gz" />
+		<param name="inputPlansFile" value="south_east_qld_population_EPSG_7856_test.xml" />
 	</module>
 
 	<module name="controler">

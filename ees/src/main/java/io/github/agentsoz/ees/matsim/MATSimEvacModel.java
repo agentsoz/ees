@@ -95,6 +95,7 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
     private final Map<Id<Link>,Double> penaltyFactorsOfLinks = new HashMap<>() ;
     private final Map<Id<Link>,Double> penaltyFactorsOfLinksForEmergencyVehicles = new HashMap<>() ;
 
+    private static final String eMaxDistanceForCycloneVisual = "maxDistanceForCycloneVisual";
     private static final String eMaxDistanceForFireVisual = "maxDistanceForFireVisual";
     private static final String eMaxDistanceForSmokeVisual = "maxDistanceForSmokeVisual";
     private static final String eFireAvoidanceBufferForVehicles = "fireAvoidanceBufferForVehicles";
@@ -106,7 +107,7 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
     MonitorPersonsInDangerZone monitorPersonsEnteringDangerZones;
 
     // Defaults
-
+    private double optMaxDistanceForCycloneVisual = 1000;
     private double optMaxDistanceForFireVisual = 1000;
     private double optMaxDistanceForSmokeVisual = 3000;
     private double optFireAvoidanceBufferForVehicles = 10000;
@@ -119,6 +120,7 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
         registerDataServer(server);
         this.fireWriter = new Shape2XyWriter( matsimModel.getConfig(), "fire" ) ;
         this.emberWriter = new Shape2XyWriter( matsimModel.getConfig(), "ember" ) ;
+        this.cycloneWriter = new Shape2XyWriter( matsimModel.getConfig(), "cyclone" ) ;
         this.disruptionWriter = new DisruptionWriter( matsimModel.getConfig() ) ;
         this.monitorPersonsEnteringDangerZones = new MonitorPersonsInDangerZone(getAgentManager());
 
@@ -130,6 +132,9 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
             switch(opt) {
                 case eMaxDistanceForFireVisual:
                     optMaxDistanceForFireVisual = Double.parseDouble(opts.get(opt));
+                    break;
+                case eMaxDistanceForCycloneVisual:
+                    optMaxDistanceForCycloneVisual = Double.parseDouble(opts.get(opt));
                     break;
                 case eMaxDistanceForSmokeVisual:
                     optMaxDistanceForSmokeVisual = Double.parseDouble(opts.get(opt));
@@ -177,7 +182,7 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
         server.subscribe(this, Constants.EMBERS_DATA);
         server.subscribe(this, Constants.DISRUPTION);
         server.subscribe(this, Constants.EMERGENCY_MESSAGE);
-//        server.subscribe(this,Constants.CYCLONE_DATA);
+        server.subscribe(this,Constants.CYCLONE_DATA);
     }
 
     @Override
@@ -202,6 +207,9 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
     private Map<String, DataClient> createDataListeners() {
         Map<String, DataClient> listeners = new  HashMap<>();
 
+        listeners.put(Constants.CYCLONE_DATA, (DataClient<Geometry>) (time, dataType, data)
+                -> processCycloneData(data, time, penaltyFactorsOfLinks, matsimModel.getScenario(), cycloneWriter));
+
         listeners.put(Constants.FIRE_DATA, (DataClient<Geometry>) (time, dataType, data)
                 -> processFireData(data, time, penaltyFactorsOfLinks, matsimModel.getScenario(),
                 penaltyFactorsOfLinksForEmergencyVehicles, fireWriter));
@@ -217,6 +225,28 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
 
         return listeners;
     }
+
+    private void processCycloneData(Geometry data, double now, Map<Id<Link>, Double> penaltyFactorsOfLinks, Scenario scenario, Shape2XyWriter cycloneWriter){
+        log.debug("received cyclone data: {}", data);
+        Geometry buffer = data.buffer(optMaxDistanceForCycloneVisual);
+        monitorPersonsEnteringDangerZones.setCycloneZone(getLinksWithin(scenario, buffer));
+        List<Id<Person>> personsMatched = getPersonsWithin(scenario, buffer);
+        if (!personsMatched.isEmpty()) {
+            log.info("Cyclone seen at time {} by {} persons ... use DEBUG to see full list",
+                    now, personsMatched.size());
+            log.debug("Cyclone seen by {} persons: {} ", personsMatched.size(), Arrays.toString(personsMatched.toArray()));
+        }
+        //https://stackoverflow.com/questions/38404095/how-to-calculate-the-distance-in-meters-between-a-geographic-point-and-a-given-p
+        {
+//            final double bufferWidth = optCycloneAvoidanceBufferForVehicles;
+//            Geometry buffer = data.buffer(bufferWidth);
+            penaltyFactorsOfLinks.clear();
+            Utils.penaltyMethod2(data, buffer, optMaxDistanceForCycloneVisual, penaltyFactorsOfLinks, scenario);
+//            Utils.penaltyMethod2(data, buffer, bufferWidth, penaltyFactorsOfLinks, scenario);
+        }
+        cycloneWriter.write( now, data);
+    }
+
 
     private void processEmbersData(Geometry data, double now, Scenario scenario, Shape2XyWriter emberWriter) {
         log.debug("received embers data: {}", data);

@@ -35,7 +35,7 @@
     <!-- coordinate reference system in EPSG format to be used for all models; see http://spatialreference.org -->
     <opt id="crs">EPSG:28356</opt>
     <!-- simulation start time in HH:MM format -->
-    <opt id="startHHMM">00:00</opt>
+    <opt id="startHHMM">20:30</opt>
     <!-- Output file for trips written in DeckGL format -->
     <opt id="deckGlOutFile">test/output/io/github/agentsoz/ees/agents/archetype/south_east_qld/test/trips.deckgl.json</opt>
   </global>
@@ -63,6 +63,8 @@
       <opt id="outputDir">test/output/io/github/agentsoz/ees/agents/archetype/south_east_qld/test/matsim</opt>
       <!-- MATSim XML config XML file relative to examples/bushfire directory -->
       <opt id="configXml">scenarios/qld/south_east_qld/matsim_config.xml</opt>
+      <!-- Maximum distance at which the cyclone can be seen (in metres)-->
+      <opt id="maxDistanceForCycloneVisual">1000</opt>
       <!-- Maximum distance at which the fire can be seen (in metres)-->
       <opt id="maxDistanceForFireVisual">1000</opt>
       <!-- Maximum distance at which smoke can be seen (in metres)-->

@@ -45,6 +45,7 @@ public class MonitorPersonsInDangerZone implements LinkEnterEventHandler {
 
     private Set<Id<Link>> linksInFireBuffer = new HashSet<>();
     private Set<Id<Link>> linksInEmbersBuffer = new HashSet<>();
+    private Set<Id<Link>> linksInCycloneBuffer = new HashSet<>();
 
     public MonitorPersonsInDangerZone(PAAgentManager agentManager) {
         this.agentManager = agentManager;
@@ -56,6 +57,10 @@ public class MonitorPersonsInDangerZone implements LinkEnterEventHandler {
 
     public void setEmbersZone(Set<Id<Link>> linksWithin) {
         linksInEmbersBuffer = linksWithin;
+    }
+
+    public void setCycloneZone(Set<Id<Link>> linksWithin) {
+        linksInCycloneBuffer = linksWithin;
     }
 
     @Override
@@ -72,4 +77,6 @@ public class MonitorPersonsInDangerZone implements LinkEnterEventHandler {
             }
         }
     }
+
+
 }
