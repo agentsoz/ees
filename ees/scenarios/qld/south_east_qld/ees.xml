@@ -33,7 +33,7 @@
     <!-- random seed to be used for all models; set to -1 if not used -->
     <opt id="randomSeed">12345</opt>
     <!-- coordinate reference system in EPSG format to be used for all models; see http://spatialreference.org -->
-    <opt id="crs">EPSG:28355</opt>
+    <opt id="crs">EPSG:28356</opt>
     <!-- simulation start time in HH:MM format -->
     <opt id="startHHMM">00:00</opt>
     <!-- Output file for trips written in DeckGL format -->

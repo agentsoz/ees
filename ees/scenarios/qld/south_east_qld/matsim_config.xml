@@ -26,7 +26,7 @@
 
 	<module name="global">
 		<param name="randomSeed" value="482564" />
-		<param name="coordinateSystem" value="EPSG:28355" />
+		<param name="coordinateSystem" value="EPSG:28356" />
 		<param name="numberOfThreads" value="1" />
 	</module>
 
@@ -37,7 +37,7 @@
 	</module>
 
 	<module name="plans">
-		<param name="inputPlansFile" value="south_east_qld_population_EPSG_7856_test.xml" />
+		<param name="inputPlansFile" value="south_east_qld_population_EPSG_7856.xml.gz" />
 	</module>
 
 	<module name="controler">

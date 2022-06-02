@@ -22,8 +22,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.zip.GZIPInputStream;
+
+import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
 public class CycloneModel implements DataSource<Geometry> {
 
@@ -36,7 +41,7 @@ public class CycloneModel implements DataSource<Geometry> {
     // Model options' values
     private String optGeoJsonFile = null;
     private JSONObject json = null;
-
+    private LocalDateTime startDate = null ;
     private TreeMap<Double, Geometry> cyclone;
     private String optCrs = "EPSG:4326";
 //    private String cycloneGeoJsonCRS = "EPSG:4326";
@@ -121,13 +126,35 @@ public class CycloneModel implements DataSource<Geometry> {
             JSONArray jcoords = (JSONArray) geometry.get("coordinates");
             if (timestamp != null) {
 
-                //extract time (hhmmss) from timestamp format, e.g.: 2076-02-14T23:45:00.000000000
-                double secs = getTimeInSeconds(timestamp.split("T")[1]);
+                double secs = getTimeInSeconds(timestamp);
                 Geometry shape = getGeometryFromSquareCentroids(getPolygonCoordinates(jcoords), optGridSquareSideInMetres);
                 cyclone.put(secs,shape);
             }
 
         }
+    }
+
+    // timestamp format, e.g.: 2076-02-14T23:45:00.000000000, convert to seconds also taking into account the day gap
+    private double getTimeInSeconds(String datetime) {
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+        LocalDateTime date = LocalDateTime.parse(datetime,formatter);
+
+        if(startDate == null) {
+            startDate =  date; // store first timestamp as startdate
+        }
+
+        double total_secs = 0.0;
+        int day_gap = date.getDayOfMonth() - startDate.getDayOfMonth();
+
+        if (day_gap > 0) {
+            total_secs += Time.convertTime(day_gap, Time.TimestepUnit.DAYS,timestepUnit);
+        }
+        total_secs +=     Time.convertTime(date.getHour(), Time.TimestepUnit.HOURS, timestepUnit) ;
+        total_secs +=  Time.convertTime(date.getMinute(), Time.TimestepUnit.MINUTES, timestepUnit) ;
+        total_secs += date.getSecond();
+
+        return total_secs;
+
     }
 
     private Geometry getGeometryFromSquareCentroids(Double[][] pairs, double squareSideInMetres) {
@@ -187,16 +214,7 @@ public class CycloneModel implements DataSource<Geometry> {
     }
 
 
-    // convert hh:mm:ss to seconds
-    private double getTimeInSeconds(String hhmmss) {
-        String[] time = hhmmss.split(":"); // remove decimals and split into hh,mm and ss
-        double hh =     Time.convertTime(Integer.parseInt(time[0]), Time.TimestepUnit.HOURS, timestepUnit) ;
-        double mm =   Time.convertTime(Integer.parseInt(time[1]), Time.TimestepUnit.MINUTES, timestepUnit) ;
-        double ss =  Double.parseDouble(time[2]);
 
-        return (hh + mm + ss);
-
-    }
 
     // returns a 2D array of all polygon points
     private Double[][] getPolygonCoordinates(JSONArray jcoords) {

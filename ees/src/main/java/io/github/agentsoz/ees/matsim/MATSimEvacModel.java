@@ -89,6 +89,7 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
 
     private Shape2XyWriter fireWriter;
     private Shape2XyWriter emberWriter;
+    private Shape2XyWriter cycloneWriter;
     private DisruptionWriter disruptionWriter;
 
     private final Map<Id<Link>,Double> penaltyFactorsOfLinks = new HashMap<>() ;
@@ -176,11 +177,13 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
         server.subscribe(this, Constants.EMBERS_DATA);
         server.subscribe(this, Constants.DISRUPTION);
         server.subscribe(this, Constants.EMERGENCY_MESSAGE);
+//        server.subscribe(this,Constants.CYCLONE_DATA);
     }
 
     @Override
     public void receiveData(double time, String dataType, Object data) {
         switch( dataType ) {
+            case Constants.CYCLONE_DATA:
             case Constants.FIRE_DATA:
             case Constants.EMBERS_DATA:
             case Constants.DISRUPTION:

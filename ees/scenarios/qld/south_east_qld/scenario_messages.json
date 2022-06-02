@@ -8,7 +8,7 @@
     "}"
   ],
 
-  "spatialReferenceEPSG" : "EPSG:4326",
+  "spatialReferenceEPSG" : "EPSG:7856",
 
   "messages" : [
     {
