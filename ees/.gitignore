@@ -4,3 +4,4 @@ scenarios/qld/south_east_qld/south_east_qld_network_EPSG_7856.xml.gz
 scenarios/qld/south_east_qld/south_east_qld_population_EPSG_7856_test.xml
 scenarios/qld/south_east_qld/cyclone_progression_EPSG_4326.geojson.gz
 scenarios/qld/south_east_qld/cyclone_progression_EPSG_4326_test.geojson.gz
+scenarios/qld/south_east_qld/flood_progression_EPSG_4326.geojson.gz

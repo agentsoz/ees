@@ -35,7 +35,7 @@
     <!-- coordinate reference system in EPSG format to be used for all models; see http://spatialreference.org -->
     <opt id="crs">EPSG:28356</opt>
     <!-- simulation start time in HH:MM format -->
-    <opt id="startHHMM">20:30</opt>
+    <opt id="startHHMM">23:00</opt>
     <!-- Output file for trips written in DeckGL format -->
     <opt id="deckGlOutFile">test/output/io/github/agentsoz/ees/agents/archetype/south_east_qld/test/trips.deckgl.json</opt>
   </global>

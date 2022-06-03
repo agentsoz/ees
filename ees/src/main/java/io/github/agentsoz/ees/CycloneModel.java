@@ -43,8 +43,8 @@ public class CycloneModel implements DataSource<Geometry> {
     private JSONObject json = null;
     private LocalDateTime startDate = null ;
     private TreeMap<Double, Geometry> cyclone;
-    private String optCrs = "EPSG:4326";
-//    private String cycloneGeoJsonCRS = "EPSG:4326";
+    private String optCrs = "EPSG:28356";
+    private String cycloneGeoJsonCRS = "EPSG:4326";
     private Time.TimestepUnit timestepUnit = Time.TimestepUnit.SECONDS;
     private double startTimeInSeconds = -1;
     private DataServer dataServer = null;
@@ -105,6 +105,9 @@ public class CycloneModel implements DataSource<Geometry> {
 
     private void loadCycloneFileGeoJson(String file) throws Exception {
         logger.info("Loading GeoJSON file: " + file);
+
+        MathTransform utmTransform = CRS.findMathTransform(CRS.decode(cycloneGeoJsonCRS), CRS.decode(optCrs), false);
+
         // Create the JSON parsor
         JSONParser parser = new JSONParser();
         Reader reader = (file.endsWith(".gz")) ?
@@ -127,7 +130,7 @@ public class CycloneModel implements DataSource<Geometry> {
             if (timestamp != null) {
 
                 double secs = getTimeInSeconds(timestamp);
-                Geometry shape = getGeometryFromSquareCentroids(getPolygonCoordinates(jcoords), optGridSquareSideInMetres);
+                Geometry shape = getGeometryFromSquareCentroids(utmTransform, getPolygonCoordinates(jcoords), optGridSquareSideInMetres);
                 cyclone.put(secs,shape);
             }
 
@@ -157,14 +160,16 @@ public class CycloneModel implements DataSource<Geometry> {
 
     }
 
-    private Geometry getGeometryFromSquareCentroids(Double[][] pairs, double squareSideInMetres) {
+    private Geometry getGeometryFromSquareCentroids(MathTransform utmTransform, Double[][] pairs, double squareSideInMetres) throws TransformException  {
         Geometry shape = null ;
         int i = 0;
         for (Double[] pair : pairs) {
             double delta = squareSideInMetres/2;
+            Coordinate coord = new Coordinate(pair[0], pair[1]);
+            JTS.transform(coord, coord, utmTransform);
             Geometry gridCell = new GeometryBuilder().box(
-                    pair[0]-delta, pair[1]-delta,
-                    pair[0]+delta, pair[1]+delta);
+                    coord.getX()-delta, coord.getY()-delta,
+                    coord.getX()+delta, coord.getY()+delta);
             // Fix for JTS #288 requires reduction to floating.
             // https://github.com/locationtech/jts/issues/288#issuecomment-396647804
             shape = (shape==null) ?

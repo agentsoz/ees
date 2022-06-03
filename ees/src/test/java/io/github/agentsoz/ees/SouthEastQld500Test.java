@@ -49,7 +49,7 @@ public class SouthEastQld500Test {
     public MatsimTestUtils utils = new MatsimTestUtils() ;
 
     @Test
-//    @Ignore
+    @Ignore
     public void test() {
 
         utils.getOutputDirectory(); // creates a clean one so need to call this first
