@@ -71,6 +71,7 @@ public class Config {
 	static final String eGlobalMetricsBinSizeInSecs = "metricsBinSizeInSecs";
 	// Model IDs in XML
 	static final String eModelCyclone = "cyclone";
+	static final String eModelFlood = "flood";
 	static final String eModelFire = "phoenix";
 	static final String eModelFireSpark = "spark";
 	static final String eModelDisruption = "disruption";

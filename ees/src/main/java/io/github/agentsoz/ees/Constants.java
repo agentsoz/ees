@@ -45,6 +45,7 @@ public class Constants {
     public static final String FIRE_ALERT = "fire_alert";
     public static final String FIRE_DATA  = "fire_data";
     public static final String CYCLONE_DATA  = "cylcone_data";
+    public static final String FLOOD_DATA  = "flood_data";
     public static final String SIGHTED_EMBERS= "embers";
     public static final String SIGHTED_FIRE= "fire";
     public static final String STUCK =io.github.agentsoz.util.PerceptList.STUCK;

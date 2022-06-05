@@ -114,6 +114,12 @@ public class Run implements DataClient {
             model.start();
         }
         {
+            log.info("Starting flood model ");
+            FloodModel model = new FloodModel(cfg.getModelConfig(Config.eModelFlood), dataServer);
+            model.setTimestepUnit(Time.TimestepUnit.SECONDS);
+            model.start();
+        }
+        {
             log.info("Starting Spark fire model");
             SparkFireModel model = new SparkFireModel(cfg.getModelConfig(Config.eModelFireSpark), dataServer);
             model.setTimestepUnit(Time.TimestepUnit.SECONDS);

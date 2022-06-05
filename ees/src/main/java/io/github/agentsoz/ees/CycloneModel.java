@@ -2,7 +2,6 @@ package io.github.agentsoz.ees;
 
 import io.github.agentsoz.dataInterface.DataServer;
 import io.github.agentsoz.dataInterface.DataSource;
-import io.github.agentsoz.util.Location;
 import io.github.agentsoz.util.Time;
 import org.geotools.geometry.jts.GeometryBuilder;
 import org.geotools.geometry.jts.JTS;
@@ -10,7 +9,6 @@ import org.geotools.referencing.CRS;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.locationtech.jts.algorithm.ConvexHull;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.Geometry;
@@ -21,14 +19,19 @@ import org.opengis.referencing.operation.TransformException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
-import java.time.LocalDate;
+import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import java.util.zip.GZIPInputStream;
 
-import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+
 
 public class CycloneModel implements DataSource<Geometry> {
 
@@ -87,7 +90,7 @@ public class CycloneModel implements DataSource<Geometry> {
 
 
     /**
-     * Start publishing embers data
+     * Start publishing cyclone data
      */
     public void start() {
         if (optGeoJsonFile != null && !optGeoJsonFile.isEmpty()) {
@@ -95,7 +98,7 @@ public class CycloneModel implements DataSource<Geometry> {
                 loadCycloneFileGeoJson(optGeoJsonFile);
                 dataServer.registerTimedUpdate(Constants.CYCLONE_DATA, this, startTimeInSeconds);
             } catch (Exception e) {
-                throw new RuntimeException("Could not load cyclone  geojson from [" + optGeoJsonFile + "]", e);
+                throw new RuntimeException("Could not load cyclone  geojson data from [" + optGeoJsonFile + "]", e);
             }
         }
         else if (json==null) {
@@ -105,7 +108,6 @@ public class CycloneModel implements DataSource<Geometry> {
 
     private void loadCycloneFileGeoJson(String file) throws Exception {
         logger.info("Loading GeoJSON file: " + file);
-
         MathTransform utmTransform = CRS.findMathTransform(CRS.decode(cycloneGeoJsonCRS), CRS.decode(optCrs), false);
 
         // Create the JSON parsor
@@ -117,7 +119,7 @@ public class CycloneModel implements DataSource<Geometry> {
         json = (JSONObject) (parser.parse(reader));
         // close the reader
         reader.close();
-        // Loop through the features (which contains the time-stamped embers
+        // Loop through the features (which contains the time-stamped cyclone
         // shapes)
         JSONArray features = (JSONArray) json.get("features");
         Iterator<JSONObject> iterator = features.iterator();
@@ -128,7 +130,6 @@ public class CycloneModel implements DataSource<Geometry> {
             JSONObject geometry = (JSONObject) feature.get("geometry");
             JSONArray jcoords = (JSONArray) geometry.get("coordinates");
             if (timestamp != null) {
-
                 double secs = getTimeInSeconds(timestamp);
                 Geometry shape = getGeometryFromSquareCentroids(utmTransform, getPolygonCoordinates(jcoords), optGridSquareSideInMetres);
                 cyclone.put(secs,shape);
