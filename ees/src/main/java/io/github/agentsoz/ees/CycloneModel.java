@@ -98,7 +98,7 @@ public class CycloneModel implements DataSource<Geometry> {
                 loadCycloneFileGeoJson(optGeoJsonFile);
                 dataServer.registerTimedUpdate(Constants.CYCLONE_DATA, this, startTimeInSeconds);
             } catch (Exception e) {
-                throw new RuntimeException("Could not load cyclone  geojson data from [" + optGeoJsonFile + "]", e);
+                throw new RuntimeException("Could not load cyclone data from [" + optGeoJsonFile + "]", e);
             }
         }
         else if (json==null) {

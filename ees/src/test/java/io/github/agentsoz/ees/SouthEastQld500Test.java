@@ -49,7 +49,7 @@ public class SouthEastQld500Test {
     public MatsimTestUtils utils = new MatsimTestUtils() ;
 
     @Test
-    @Ignore
+//    @Ignore
     public void test() {
 
         utils.getOutputDirectory(); // creates a clean one so need to call this first
@@ -58,8 +58,8 @@ public class SouthEastQld500Test {
         };
         Run.main(args);
 
-        final String actualEventsFilename = utils.getOutputDirectory() + "/output_events.xml.gz";
-        final String primaryExpectedEventsFilename = utils.getInputDirectory() + "/output_events.xml.gz";
+//        final String actualEventsFilename = utils.getOutputDirectory() + "/output_events.xml.gz";
+//        final String primaryExpectedEventsFilename = utils.getInputDirectory() + "/output_events.xml.gz";
 
 
         // TestUtils.compareFullEvents(primaryExpectedEventsFilename,actualEventsFilename, true);

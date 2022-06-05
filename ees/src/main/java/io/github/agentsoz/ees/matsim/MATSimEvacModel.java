@@ -90,6 +90,7 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
     private Shape2XyWriter fireWriter;
     private Shape2XyWriter emberWriter;
     private Shape2XyWriter cycloneWriter;
+    private Shape2XyWriter floodWriter;
     private DisruptionWriter disruptionWriter;
 
     private final Map<Id<Link>,Double> penaltyFactorsOfLinks = new HashMap<>() ;
@@ -107,6 +108,7 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
     MonitorPersonsInDangerZone monitorPersonsEnteringDangerZones;
 
     // Defaults
+    private double optMaxDistanceForFloodVisual = 10000;
     private double optMaxDistanceForCycloneVisual = 1000;
     private double optMaxDistanceForFireVisual = 1000;
     private double optMaxDistanceForSmokeVisual = 3000;
@@ -121,6 +123,7 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
         this.fireWriter = new Shape2XyWriter( matsimModel.getConfig(), "fire" ) ;
         this.emberWriter = new Shape2XyWriter( matsimModel.getConfig(), "ember" ) ;
         this.cycloneWriter = new Shape2XyWriter( matsimModel.getConfig(), "cyclone" ) ;
+        this.floodWriter = new Shape2XyWriter( matsimModel.getConfig(), "flood" ) ;
         this.disruptionWriter = new DisruptionWriter( matsimModel.getConfig() ) ;
         this.monitorPersonsEnteringDangerZones = new MonitorPersonsInDangerZone(getAgentManager());
 
@@ -182,13 +185,15 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
         server.subscribe(this, Constants.EMBERS_DATA);
         server.subscribe(this, Constants.DISRUPTION);
         server.subscribe(this, Constants.EMERGENCY_MESSAGE);
-        server.subscribe(this,Constants.CYCLONE_DATA);
+        server.subscribe(this, Constants.CYCLONE_DATA);
+        server.subscribe(this, Constants.FLOOD_DATA);
     }
 
     @Override
     public void receiveData(double time, String dataType, Object data) {
         switch( dataType ) {
             case Constants.CYCLONE_DATA:
+            case Constants.FLOOD_DATA:
             case Constants.FIRE_DATA:
             case Constants.EMBERS_DATA:
             case Constants.DISRUPTION:
@@ -210,6 +215,9 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
         listeners.put(Constants.CYCLONE_DATA, (DataClient<Geometry>) (time, dataType, data)
                 -> processCycloneData(data, time, penaltyFactorsOfLinks, matsimModel.getScenario(), cycloneWriter));
 
+        listeners.put(Constants.FLOOD_DATA, (DataClient<Geometry[]>) (time, dataType, data)
+                -> processFloodData(data, time, penaltyFactorsOfLinks, matsimModel.getScenario(), floodWriter));
+
         listeners.put(Constants.FIRE_DATA, (DataClient<Geometry>) (time, dataType, data)
                 -> processFireData(data, time, penaltyFactorsOfLinks, matsimModel.getScenario(),
                 penaltyFactorsOfLinksForEmergencyVehicles, fireWriter));
@@ -226,7 +234,27 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
         return listeners;
     }
 
-    private void processCycloneData(Geometry data, double now, Map<Id<Link>, Double> penaltyFactorsOfLinks, Scenario scenario, Shape2XyWriter cycloneWriter){
+
+    private void processFloodData(Geometry[] dataList, double now, Map<Id<Link>, Double> penaltyFactorsOfLinks, Scenario scenario, Shape2XyWriter floodWriter) {
+
+        log.debug("received flood data: {}", dataList);
+        for(Geometry floodPolygon: dataList){
+            Geometry buffer = floodPolygon.buffer(optMaxDistanceForFloodVisual);
+            monitorPersonsEnteringDangerZones.setFloodZone(getLinksWithin(scenario, buffer));
+            List<Id<Person>> personsMatched = getPersonsWithin(scenario, buffer);
+            if (!personsMatched.isEmpty()) {
+                log.info("Flood seen at time {} by {} persons ... use DEBUG to see full list",
+                        now, personsMatched.size());
+                log.debug("Flood seen by {} persons: {} ", personsMatched.size(), Arrays.toString(personsMatched.toArray()));
+            }
+            // apply panelties
+            penaltyFactorsOfLinks.clear();
+            Utils.penaltyMethod2(floodPolygon, buffer, optMaxDistanceForFloodVisual, penaltyFactorsOfLinks, scenario);
+            floodWriter.write( now, floodPolygon);
+        }
+
+    }
+        private void processCycloneData(Geometry data, double now, Map<Id<Link>, Double> penaltyFactorsOfLinks, Scenario scenario, Shape2XyWriter cycloneWriter){
         log.debug("received cyclone data: {}", data);
         Geometry buffer = data.buffer(optMaxDistanceForCycloneVisual);
         monitorPersonsEnteringDangerZones.setCycloneZone(getLinksWithin(scenario, buffer));
@@ -568,6 +596,12 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
         }
         if ( disruptionWriter!=null ) {
             disruptionWriter.finish(matsimModel.getTime());
+        }
+        if ( cycloneWriter !=null ) {
+            cycloneWriter.close();
+        }
+        if ( floodWriter !=null ) {
+            floodWriter.close();
         }
         matsimModel.finish();
     }

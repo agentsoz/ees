@@ -20,6 +20,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -86,10 +88,10 @@ public class FloodModel implements DataSource<Geometry[]> {
     public void start() {
         if (optGeoJsonFile != null && !optGeoJsonFile.isEmpty()) {
             try {
-                loadCycloneFileGeoJson(optGeoJsonFile);
+                loadFloodFileGeoJson(optGeoJsonFile);
                 dataServer.registerTimedUpdate(Constants.FLOOD_DATA, this, startTimeInSeconds);
             } catch (Exception e) {
-                throw new RuntimeException("Could not load flood  geojson data from [" + optGeoJsonFile + "]", e);
+                throw new RuntimeException("Could not load flood data from [" + optGeoJsonFile + "]", e);
             }
         }
         else if (json==null) {
@@ -97,7 +99,7 @@ public class FloodModel implements DataSource<Geometry[]> {
         }
     }
 
-    private void loadCycloneFileGeoJson(String file) throws Exception {
+    private void loadFloodFileGeoJson(String file) throws Exception {
         logger.info("Loading GeoJSON file: " + file);
 
         // Create the JSON parsor
@@ -120,20 +122,14 @@ public class FloodModel implements DataSource<Geometry[]> {
             JSONArray jcoords = (JSONArray) geometry.get("coordinates");
 
             //Iterator<JSONArray> it = jcoords.iterator();
-            JSONArray jArr = (JSONArray) jcoords.get(0); // get the next iterator
-            Double[][] coordinates = new Double[jArr.size()][2];
+            JSONArray jArr = (JSONArray) jcoords.get(0); // first element contains the coords
             Iterator<JSONArray>  it = jArr.iterator();
+            Double[][] coordinates = new Double[jArr.size()][2];
+
             int i = 0;
             while (it.hasNext()) {
                 coordinates[i++] = (Double[]) it.next().toArray(new Double[2]);
             }
-
-
-//            int i = 0;
-//            for(int j =0; j < jArr.size();j++) {
-//                coordinates[j] = (Double[]) jArr.get(j); //toArray(new Double[2]);
-//
-//            }
 
             if (end_time != null) {
                 double secs = getTimeInSeconds(end_time);
@@ -157,8 +153,8 @@ public class FloodModel implements DataSource<Geometry[]> {
         int o = 0;
         for (Double[] pair : pairs) {
 
-            Coordinate coord = new Coordinate(pair[0], pair[1]);
-            JTS.transform(coord, coord, utmTransform); // transform EPSG:4326 to global CRS EPSG: 28356
+            Coordinate coord = new Coordinate(pair[1],pair[0]);
+            JTS.transform(coord, coord, utmTransform); // transform EPSG:4326 to global CRS EPSG: 28356 (EPSSG:7856)
             flatarray[i++] = coord.getX();
             flatarray[i++] = coord.getY();
         }
@@ -166,60 +162,22 @@ public class FloodModel implements DataSource<Geometry[]> {
     }
 
 
-//    private Geometry getGeometryFromSquareCentroids(MathTransform utmTransform, Double[][] pairs, double squareSideInMetres) throws TransformException {
-//        Geometry shape = null ;
-//        int i = 0;
-//        for (Double[] pair : pairs) {
-//            double delta = squareSideInMetres/2;
-//            Coordinate coord = new Coordinate(pair[0], pair[1]);
-//            JTS.transform(coord, coord, utmTransform);
-//            Geometry gridCell = new GeometryBuilder().box(
-//                    coord.getX()-delta, coord.getY()-delta,
-//                    coord.getX()+delta, coord.getY()+delta);
-//            // Fix for JTS #288 requires reduction to floating.
-//            // https://github.com/locationtech/jts/issues/288#issuecomment-396647804
-//            shape = (shape==null) ?
-//                    gridCell :
-//                    GeometryPrecisionReducer.reduce(shape.union(gridCell),new PrecisionModel(PrecisionModel.FLOATING));
-//        }
-//        return shape;
-//    }
-
-    // returns a 2D array of all polygon points
-//    private Double[][] getPolygonCoordinates(JSONArray jcoords) {
-//        Double[][] coordinates = null;
-//        // has a [[[x,y],[x,y]]] form ie one extra nesting
-//        Iterator<JSONArray> it = jcoords.iterator();
-//        int i = 0;
-//        while (it.hasNext()) {
-//            JSONArray obj = it.next();
-//            coordinates = new Double[obj.size()][2];
-//            Iterator<JSONArray> cit = obj.iterator();
-//            while (cit.hasNext()) {
-//                coordinates[i++] = (Double[]) cit.next().toArray(new Double[2]);
-//            }
-//            break; // get the first element only of outer array
-//        }
-//        return coordinates;
-//    }
 
     private double getTimeInSeconds(String timestamp) {
 
-        String[] arr = timestamp.split(" "); // received format: 9/02/2076 00:00:00 (E. Australia Standard Time)
+        DateTimeFormatter format1 = DateTimeFormatter.ofPattern("d/MM/yyyy HH:mm:ss");
+        DateTimeFormatter  format2 = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
 
-        //reformat d/MM/yyyy to dd/MM/yyyy
-        String[] date_arr = arr[0].split("/");
-        if((date_arr[0]).length() == 1) {
-            date_arr[0] = "0".concat(date_arr[0]);
+        // received format e.g.: 9/02/2076 00:00:00 (E. Australia Standard Time)
+        String tt = String.join(" ", timestamp.split(" ")[0], timestamp.split(" ")[1]);
+
+        LocalDateTime date;
+        if(timestamp.split(" ")[0].split("/")[0].length() == 1) {
+             date = LocalDateTime.parse(tt,format1);
         }
-
-        //format to fit DateTimeFormatter.ISO_LOCAL_DATE_TIME: https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html
-        Collections.reverse(Arrays.asList(date_arr));
-        String  d = String.join("-", date_arr);
-        String datetime = String.join("T",d,arr[1]);
-
-        DateTimeFormatter formatter2 = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
-        LocalDateTime date = LocalDateTime.parse(datetime,formatter2);
+        else{
+             date = LocalDateTime.parse(tt,format2);
+        }
 
         if(startDate == null) {
             startDate =  date; // store first timestamp as startdate
@@ -241,7 +199,27 @@ public class FloodModel implements DataSource<Geometry[]> {
 
     @Override
     public Geometry[] sendData(double forTime, String dataType) {
-        return new Geometry[0];
+
+        ArrayList<Geometry> polygonList = new ArrayList<Geometry>();
+
+
+        if (Constants.FLOOD_DATA.equals(dataType)) {
+            double time = Time.convertTime(forTime, timestepUnit, Time.TimestepUnit.SECONDS);
+            SortedMap<Double, ArrayList<Geometry>> shapes = flood.subMap(0.0, time);
+            logger.debug("sending fire data at time {}: {}", forTime, shapes);
+
+            for (ArrayList<Geometry> list : shapes.values()) {
+                polygonList.addAll(list);
+            }
+            Double nextTime = flood.higherKey(time);
+            if (nextTime != null) {
+                dataServer.registerTimedUpdate(Constants.FLOOD_DATA, this, Time.convertTime(nextTime, Time.TimestepUnit.SECONDS, timestepUnit));
+            }
+            logger.info("sending {} flood polygons at time {}", polygonList.size(), forTime);
+            return  polygonList.toArray(new Geometry[polygonList.size()]);
+        }
+        return null;
+
     }
 
     public void setStartHHMM(int[] hhmm) {

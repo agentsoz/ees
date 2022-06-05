@@ -99,8 +99,6 @@
     <!--</model>-->
 
     <model id="flood">
-      <!--&lt;!&ndash;  grid square size (in meteres) &ndash;&gt;-->
-      <opt id="gridSquareSideInMetres">180</opt>
       <!-- flood JSON file relative to examples/bushfire directory -->
       <opt id="fileGeoJson">scenarios/qld/south_east_qld/flood_progression_EPSG_4326.geojson.gz</opt>
     </model>
