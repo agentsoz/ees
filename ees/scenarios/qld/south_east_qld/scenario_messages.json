@@ -14,7 +14,7 @@
     {
     "type" : "EVACUATE_NOW",
     "content" : "Toowoomba,381143, 6950644, It is strongly recommended that you evacuate now to Toowoomba Wellcamp Airport.",
-    "broadcastHHMM" : "2210",
+    "broadcastHHMM" : "1410",
     "broadcastZones" : {
       "301011001" : null,
       "301011002" : null,
@@ -281,7 +281,7 @@
   {
   "type" : "EVACUATE_NOW",
   "content" : "Woodford, 476399, 7022862, It is strongly recommended that you evacuate now  to Woodford Folk Festival area.",
-  "broadcastHHMM" : "2220",
+  "broadcastHHMM" : "1420",
   "broadcastZones" : {
     "313011362" : null,
     "313011363" : null,

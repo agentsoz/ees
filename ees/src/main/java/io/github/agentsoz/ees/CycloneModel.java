@@ -25,19 +25,15 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.zip.GZIPInputStream;
 
 
 
-public class CycloneModel implements DataSource<Geometry> {
+public class CycloneModel implements DataSource<Geometry[]> {
 
     // Model options in ESS config XML
     private final String efileGeoJson = "fileGeoJson";
-    private final String eGridSquareSideInMetres = "gridSquareSideInMetres";
     private final Logger logger = LoggerFactory.getLogger(CycloneModel.class);
 
 
@@ -45,7 +41,7 @@ public class CycloneModel implements DataSource<Geometry> {
     private String optGeoJsonFile = null;
     private JSONObject json = null;
     private LocalDateTime startDate = null ;
-    private TreeMap<Double, Geometry> cyclone;
+    private TreeMap<Double, ArrayList<Geometry>> cyclone;
     private String optCrs = "EPSG:28356";
     private String cycloneGeoJsonCRS = "EPSG:4326";
     private Time.TimestepUnit timestepUnit = Time.TimestepUnit.SECONDS;
@@ -70,9 +66,6 @@ public class CycloneModel implements DataSource<Geometry> {
             switch(opt) {
                 case efileGeoJson:
                     optGeoJsonFile = opts.get(opt);
-                    break;
-                case eGridSquareSideInMetres:
-                    optGridSquareSideInMetres = Double.parseDouble(opts.get(opt));
                     break;
                 case Config.eGlobalStartHhMm:
                     String[] tokens = opts.get(opt).split(":");
@@ -129,10 +122,22 @@ public class CycloneModel implements DataSource<Geometry> {
             String timestamp = (String) properties.get("timestamp");
             JSONObject geometry = (JSONObject) feature.get("geometry");
             JSONArray jcoords = (JSONArray) geometry.get("coordinates");
+
+
+            // create cyclone map
             if (timestamp != null) {
                 double secs = getTimeInSeconds(timestamp);
-                Geometry shape = getGeometryFromSquareCentroids(utmTransform, getPolygonCoordinates(jcoords), optGridSquareSideInMetres);
-                cyclone.put(secs,shape);
+                if(!cyclone.containsKey(secs)) {
+                    ArrayList<Geometry> polygonList = new  ArrayList<Geometry>();
+                    cyclone.put(secs,polygonList);
+                }
+                Iterator<JSONArray> it = jcoords.iterator();
+                while(it.hasNext()){
+                    Geometry shape = getGeometryFromCoords(getPolygonCoordinates(it.next()));
+                    ArrayList<Geometry> polyList = cyclone.get(secs);
+                    polyList.add(shape);
+                }
+
             }
 
         }
@@ -161,45 +166,51 @@ public class CycloneModel implements DataSource<Geometry> {
 
     }
 
-    private Geometry getGeometryFromSquareCentroids(MathTransform utmTransform, Double[][] pairs, double squareSideInMetres) throws TransformException  {
-        Geometry shape = null ;
-        int i = 0;
-        for (Double[] pair : pairs) {
-            double delta = squareSideInMetres/2;
-            Coordinate coord = new Coordinate(pair[0], pair[1]);
-            JTS.transform(coord, coord, utmTransform);
-            Geometry gridCell = new GeometryBuilder().box(
-                    coord.getX()-delta, coord.getY()-delta,
-                    coord.getX()+delta, coord.getY()+delta);
-            // Fix for JTS #288 requires reduction to floating.
-            // https://github.com/locationtech/jts/issues/288#issuecomment-396647804
-            shape = (shape==null) ?
-                    gridCell :
-                    GeometryPrecisionReducer.reduce(shape.union(gridCell),new PrecisionModel(PrecisionModel.FLOATING));
-        }
-        return shape;
-    }
+
 
 
     @Override
-    public Geometry sendData(double timestep, String dataType) {
+    public Geometry[] sendData(double timestep, String dataType) {
         double time = Time.convertTime(timestep, timestepUnit, Time.TimestepUnit.SECONDS);
+        ArrayList<Geometry> polygonList = new ArrayList<Geometry>();
+
+
         if (Constants.CYCLONE_DATA.equals(dataType)) {
-            SortedMap<Double, Geometry> shapes = cyclone.subMap(0.0, time);
-            Geometry shape = getGeometry(shapes);
-            shape = (shape==null) ? null : new ConvexHull(shape).getConvexHull();
-            while (shapes.size() > 1) {
+            SortedMap<Double, ArrayList<Geometry>> shapes = cyclone.subMap(0.0, time);
+            for (ArrayList<Geometry> list : shapes.values()) { // add all shapes into a list
+                polygonList.addAll(list);
+            }
+//            Geometry shape = getGeometry(shapes);
+//            shape = (shape==null) ? null : new ConvexHull(shape).getConvexHull();
+            while (shapes.size() >= 1) {
                 cyclone.remove(cyclone.firstKey());
             }
             Double nextTime = cyclone.higherKey(time);
             if (nextTime != null) {
                 dataServer.registerTimedUpdate(Constants.CYCLONE_DATA, this, Time.convertTime(nextTime, Time.TimestepUnit.SECONDS, timestepUnit));
             }
-            logger.debug("sending cyclone data at time {}: {}", timestep, shape);
-            return shape;
+            logger.info("sending {} cyclone polygons at time {}", polygonList.size(), timestep);
+            return  polygonList.toArray(new Geometry[polygonList.size()]);
 
         }
         return null;
+    }
+
+    // returns a 2D array of all json polygon points
+    private Double[][] getPolygonCoordinates(JSONArray jcoords) {
+        Double[][] coordinates = new Double[jcoords.size()][2];
+        // has a [[[x,y],[x,y]]] form ie one extra nesting
+        Iterator<JSONArray> it = jcoords.iterator();
+        int i = 0;
+        while (it.hasNext()) {
+            coordinates[i++] = (Double[]) it.next().toArray(new Double[2]);
+//            Iterator<JSONArray> cit = obj.iterator();
+//            while (cit.hasNext()) {
+//                coordinates[i++] = (Double[]) cit.next().toArray(new Double[2]);
+//            }
+//            break; // get the first element only of outer array
+        }
+        return coordinates;
     }
 
 
@@ -222,23 +233,22 @@ public class CycloneModel implements DataSource<Geometry> {
 
 
 
-    // returns a 2D array of all polygon points
-    private Double[][] getPolygonCoordinates(JSONArray jcoords) {
-        Double[][] coordinates = null;
-        // has a [[[x,y],[x,y]]] form ie one extra nesting
-        Iterator<JSONArray> it = jcoords.iterator();
+    private Geometry getGeometryFromCoords(Double[][] pairs) throws Exception{
+        MathTransform utmTransform = CRS.findMathTransform(CRS.decode(cycloneGeoJsonCRS), CRS.decode(optCrs), false);
+
         int i = 0;
-        while (it.hasNext()) {
-            JSONArray obj = it.next();
-            coordinates = new Double[obj.size()][2];
-            Iterator<JSONArray> cit = obj.iterator();
-            while (cit.hasNext()) {
-                coordinates[i++] = (Double[]) cit.next().toArray(new Double[2]);
-            }
-            break; // get the first element only of outer array
+        double[] flatarray = new double[pairs.length*2];
+        int o = 0;
+        for (Double[] pair : pairs) {
+
+            Coordinate coord = new Coordinate(pair[1],pair[0]); // lat,lon
+            JTS.transform(coord, coord, utmTransform); // transform EPSG:4326 to global CRS EPSG: 28356 (EPSSG:7856)
+            flatarray[i++] = coord.getX();
+            flatarray[i++] = coord.getY();
         }
-        return coordinates;
+        return new GeometryBuilder().polygon(flatarray);
     }
+
 
     public void setStartHHMM(int[] hhmm) {
         startTimeInSeconds = Time.convertTime(hhmm[0], Time.TimestepUnit.HOURS, timestepUnit)

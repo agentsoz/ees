@@ -108,7 +108,7 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
     MonitorPersonsInDangerZone monitorPersonsEnteringDangerZones;
 
     // Defaults
-    private double optMaxDistanceForFloodVisual = 10000;
+    private double optMaxDistanceForFloodVisual = 1000;
     private double optMaxDistanceForCycloneVisual = 1000;
     private double optMaxDistanceForFireVisual = 1000;
     private double optMaxDistanceForSmokeVisual = 3000;
@@ -212,7 +212,7 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
     private Map<String, DataClient> createDataListeners() {
         Map<String, DataClient> listeners = new  HashMap<>();
 
-        listeners.put(Constants.CYCLONE_DATA, (DataClient<Geometry>) (time, dataType, data)
+        listeners.put(Constants.CYCLONE_DATA, (DataClient<Geometry[]>) (time, dataType, data)
                 -> processCycloneData(data, time, penaltyFactorsOfLinks, matsimModel.getScenario(), cycloneWriter));
 
         listeners.put(Constants.FLOOD_DATA, (DataClient<Geometry[]>) (time, dataType, data)
@@ -254,25 +254,29 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
         }
 
     }
-        private void processCycloneData(Geometry data, double now, Map<Id<Link>, Double> penaltyFactorsOfLinks, Scenario scenario, Shape2XyWriter cycloneWriter){
-        log.debug("received cyclone data: {}", data);
-        Geometry buffer = data.buffer(optMaxDistanceForCycloneVisual);
-        monitorPersonsEnteringDangerZones.setCycloneZone(getLinksWithin(scenario, buffer));
-        List<Id<Person>> personsMatched = getPersonsWithin(scenario, buffer);
-        if (!personsMatched.isEmpty()) {
-            log.info("Cyclone seen at time {} by {} persons ... use DEBUG to see full list",
-                    now, personsMatched.size());
-            log.debug("Cyclone seen by {} persons: {} ", personsMatched.size(), Arrays.toString(personsMatched.toArray()));
-        }
-        //https://stackoverflow.com/questions/38404095/how-to-calculate-the-distance-in-meters-between-a-geographic-point-and-a-given-p
-        {
+        private void processCycloneData(Geometry[] polygonlist, double now, Map<Id<Link>, Double> penaltyFactorsOfLinks, Scenario scenario, Shape2XyWriter cycloneWriter){
+        log.debug("received cyclone data: {}", polygonlist);
+        for(Geometry poly: polygonlist) {
+            Geometry buffer = poly.buffer(optMaxDistanceForCycloneVisual);
+            monitorPersonsEnteringDangerZones.setCycloneZone(getLinksWithin(scenario, buffer));
+            List<Id<Person>> personsMatched = getPersonsWithin(scenario, buffer);
+            if (!personsMatched.isEmpty()) {
+                log.info("Cyclone seen at time {} by {} persons ... use DEBUG to see full list",
+                        now, personsMatched.size());
+                log.debug("Cyclone seen by {} persons: {} ", personsMatched.size(), Arrays.toString(personsMatched.toArray()));
+            }
+            //https://stackoverflow.com/questions/38404095/how-to-calculate-the-distance-in-meters-between-a-geographic-point-and-a-given-p
+            {
 //            final double bufferWidth = optCycloneAvoidanceBufferForVehicles;
 //            Geometry buffer = data.buffer(bufferWidth);
-            penaltyFactorsOfLinks.clear();
-            Utils.penaltyMethod2(data, buffer, optMaxDistanceForCycloneVisual, penaltyFactorsOfLinks, scenario);
+                penaltyFactorsOfLinks.clear();
+                Utils.penaltyMethod2(poly, buffer, optMaxDistanceForCycloneVisual, penaltyFactorsOfLinks, scenario);
 //            Utils.penaltyMethod2(data, buffer, bufferWidth, penaltyFactorsOfLinks, scenario);
+            }
+            cycloneWriter.write( now, poly);
         }
-        cycloneWriter.write( now, data);
+
+
     }
 
 

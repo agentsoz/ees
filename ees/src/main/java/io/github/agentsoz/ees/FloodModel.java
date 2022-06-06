@@ -1,6 +1,5 @@
 package io.github.agentsoz.ees;
 
-import com.google.common.collect.Iterators;
 import io.github.agentsoz.dataInterface.DataServer;
 import io.github.agentsoz.dataInterface.DataSource;
 import io.github.agentsoz.util.Time;
@@ -12,16 +11,11 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.Geometry;
-import org.locationtech.jts.geom.PrecisionModel;
-import org.locationtech.jts.precision.GeometryPrecisionReducer;
 import org.opengis.referencing.operation.MathTransform;
-import org.opengis.referencing.operation.TransformException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -41,7 +35,7 @@ public class FloodModel implements DataSource<Geometry[]> {
     private TreeMap<Double, ArrayList<Geometry>> flood;
     private LocalDateTime startDate = null ;
     private String optCrs = "EPSG:28356";
-    private String cycloneGeoJsonCRS = "EPSG:4326";
+    private String floodGeoJsonCRS = "EPSG:4326";
     private Time.TimestepUnit timestepUnit = Time.TimestepUnit.SECONDS;
     private double startTimeInSeconds = -1;
     private DataServer dataServer = null;
@@ -83,7 +77,7 @@ public class FloodModel implements DataSource<Geometry[]> {
     }
 
     /**
-     * Start publishing cyclone data
+     * Start publishing flood data
      */
     public void start() {
         if (optGeoJsonFile != null && !optGeoJsonFile.isEmpty()) {
@@ -146,7 +140,7 @@ public class FloodModel implements DataSource<Geometry[]> {
     }
 
     private Geometry getGeometryFromCoords(Double[][] pairs) throws Exception{
-        MathTransform utmTransform = CRS.findMathTransform(CRS.decode(cycloneGeoJsonCRS), CRS.decode(optCrs), false);
+        MathTransform utmTransform = CRS.findMathTransform(CRS.decode(floodGeoJsonCRS), CRS.decode(optCrs), false);
 
         int i = 0;
         double[] flatarray = new double[pairs.length*2];
