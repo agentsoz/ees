@@ -35,7 +35,7 @@
     <!-- coordinate reference system in EPSG format to be used for all models; see http://spatialreference.org -->
     <opt id="crs">EPSG:28356</opt>
     <!-- simulation start time in HH:MM format -->
-    <opt id="startHHMM">14:00</opt>
+    <opt id="startHHMM">00:00</opt>
     <!-- Output file for trips written in DeckGL format -->
     <opt id="deckGlOutFile">test/output/io/github/agentsoz/ees/agents/archetype/south_east_qld/test/trips.deckgl.json</opt>
   </global>
@@ -91,15 +91,15 @@
       <opt id="zoneIdColumnName">SA2_CODE21</opt>
     </model>
 
-    <!--<model id="cyclone">-->
-    <!--&lt;!&ndash; cyclone JSON file relative to examples/bushfire directory &ndash;&gt;-->
-    <!--<opt id="fileGeoJson">scenarios/qld/south_east_qld/cyclone_progression_EPSG_4326.geojson.gz</opt>-->
-  <!--</model>-->
+    <model id="cyclone">
+    <!-- cyclone JSON file relative to examples/bushfire directory -->
+    <opt id="fileGeoJson">scenarios/qld/south_east_qld/cyclone_progression_EPSG_4326.geojson.gz</opt>
+  </model>
 
-    <model id="flood">
-      <!-- flood JSON file relative to examples/bushfire directory -->
-      <opt id="fileGeoJson">scenarios/qld/south_east_qld/flood_progression_EPSG_4326.geojson.gz</opt>
-    </model>
+    <!--<model id="flood">-->
+      <!--&lt;!&ndash; flood JSON file relative to examples/bushfire directory &ndash;&gt;-->
+      <!--<opt id="fileGeoJson">scenarios/qld/south_east_qld/flood_progression_EPSG_4326.geojson.gz</opt>-->
+    <!--</model>-->
 
     <model id="disruption">
       <!-- Disruptions JSON file relative to examples/bushfire directory -->

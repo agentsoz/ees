@@ -32,12 +32,12 @@
 
 	<module name="network">
 		<param name="inputNetworkFile" value="south_east_qld_network_EPSG_7856.xml.gz" />
-		<param name= "timeVariantNetwork" value= "false" />
-		<!--<param name= "inputChangeEventsFile" value= "scenario_matsim_network_change_events.xml.gz" />-->
+		<param name= "timeVariantNetwork" value= "true" />
+		<param name= "inputChangeEventsFile" value= "network_change_events_flood.xml" />
 	</module>
 
 	<module name="plans">
-		<param name="inputPlansFile" value="south_east_qld_population_EPSG_7856.xml.gz" />
+		<param name="inputPlansFile" value="south_east_qld_population_point_five_EPSG_7856.xml.gz" />
 	</module>
 
 	<module name="controler">
@@ -55,12 +55,12 @@
 	<module name="qsim">
 		<!-- "start/endTime" of MobSim (00:00:00 == take earliest activity time/ run as long as active vehicles exist) -->
 		<param name="startTime" value="00:00:00" />
-		<param name="endTime" value="23:59:59" />
+		<param name="endTime" value="39:59:59" />
 
 		<param name = "snapshotperiod"	value = "00:00:20"/> <!-- 00:00:00 means NO snapshot writing, 00:00:30 means every 30 secs -->
 
-		<param name= "flowCapacityFactor" value= "1.0" />
-		<param name= "storageCapacityFactor" value= "1.0" />
+		<param name= "flowCapacityFactor" value= "0.2" />
+		<param name= "storageCapacityFactor" value= "0.3" />
 
 		<param name="numberOfThreads" value="1" />
 	</module>

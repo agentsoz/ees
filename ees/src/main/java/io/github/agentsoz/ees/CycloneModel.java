@@ -1,5 +1,27 @@
 package io.github.agentsoz.ees;
 
+/*-
+ * #%L
+ * Emergency Evacuation Simulator
+ * %%
+ * Copyright (C) 2014 - 2022 by its authors. See AUTHORS file.
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Lesser Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Lesser Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/lgpl-3.0.html>.
+ * #L%
+ */
+
 import io.github.agentsoz.dataInterface.DataServer;
 import io.github.agentsoz.dataInterface.DataSource;
 import io.github.agentsoz.util.Time;
@@ -9,13 +31,9 @@ import org.geotools.referencing.CRS;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.locationtech.jts.algorithm.ConvexHull;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.Geometry;
-import org.locationtech.jts.geom.PrecisionModel;
-import org.locationtech.jts.precision.GeometryPrecisionReducer;
 import org.opengis.referencing.operation.MathTransform;
-import org.opengis.referencing.operation.TransformException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,7 +65,7 @@ public class CycloneModel implements DataSource<Geometry[]> {
     private Time.TimestepUnit timestepUnit = Time.TimestepUnit.SECONDS;
     private double startTimeInSeconds = -1;
     private DataServer dataServer = null;
-    private double optGridSquareSideInMetres = 180;
+
 
     public CycloneModel(Map<String, String> opts, DataServer dataServer) {
         cyclone = new TreeMap<>();
@@ -116,6 +134,11 @@ public class CycloneModel implements DataSource<Geometry[]> {
         // shapes)
         JSONArray features = (JSONArray) json.get("features");
         Iterator<JSONObject> iterator = features.iterator();
+
+        //to set time for cyclone data
+        double offset = 33* 3600; // start time = L - 33h
+        int count = 0;
+        double increment = 15*60; // 15mins
         while (iterator.hasNext()) {
             JSONObject feature = iterator.next();
             JSONObject properties = (JSONObject) feature.get("properties");
@@ -126,7 +149,9 @@ public class CycloneModel implements DataSource<Geometry[]> {
 
             // create cyclone map
             if (timestamp != null) {
-                double secs = getTimeInSeconds(timestamp);
+                double secs = offset + (increment * count); //getTimeInSeconds(timestamp);
+                count ++;
+
                 if(!cyclone.containsKey(secs)) {
                     ArrayList<Geometry> polygonList = new  ArrayList<Geometry>();
                     cyclone.put(secs,polygonList);
@@ -212,24 +237,6 @@ public class CycloneModel implements DataSource<Geometry[]> {
         }
         return coordinates;
     }
-
-
-// return the union of all shape submaps for a specific timestamp
-
-    private Geometry getGeometry(SortedMap<Double, Geometry> shapes) {
-        Geometry polygon = null;
-        if (shapes != null && !shapes.isEmpty()) {
-            for (Geometry shape : shapes.values()) {
-                // Fix for JTS #288 requires reduction to floating.
-                // https://github.com/locationtech/jts/issues/288#issuecomment-396647804
-                polygon = (polygon==null) ?
-                        shape :
-                        GeometryPrecisionReducer.reduce(polygon.union(shape),new PrecisionModel(PrecisionModel.FLOATING));
-            }
-        }
-        return polygon;
-    }
-
 
 
 

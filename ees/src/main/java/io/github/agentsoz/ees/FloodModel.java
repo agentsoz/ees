@@ -1,5 +1,27 @@
 package io.github.agentsoz.ees;
 
+/*-
+ * #%L
+ * Emergency Evacuation Simulator
+ * %%
+ * Copyright (C) 2014 - 2022 by its authors. See AUTHORS file.
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Lesser Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Lesser Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/lgpl-3.0.html>.
+ * #L%
+ */
+
 import io.github.agentsoz.dataInterface.DataServer;
 import io.github.agentsoz.dataInterface.DataSource;
 import io.github.agentsoz.util.Time;
@@ -39,7 +61,6 @@ public class FloodModel implements DataSource<Geometry[]> {
     private Time.TimestepUnit timestepUnit = Time.TimestepUnit.SECONDS;
     private double startTimeInSeconds = -1;
     private DataServer dataServer = null;
-    private double optGridSquareSideInMetres = 180;
 
 
     public FloodModel(Map<String, String> opts, DataServer dataServer) {
@@ -58,9 +79,6 @@ public class FloodModel implements DataSource<Geometry[]> {
             switch(opt) {
                 case efileGeoJson:
                     optGeoJsonFile = opts.get(opt);
-                    break;
-                case eGridSquareSideInMetres:
-                    optGridSquareSideInMetres = Double.parseDouble(opts.get(opt));
                     break;
                 case Config.eGlobalStartHhMm:
                     String[] tokens = opts.get(opt).split(":");
@@ -126,7 +144,8 @@ public class FloodModel implements DataSource<Geometry[]> {
             }
 
             if (end_time != null) {
-                double secs = getTimeInSeconds(end_time);
+                //double secs = getTimeInSeconds(end_time);
+                double secs = 0.0; // flood model starts at time 0.0
                 if(!flood.containsKey(secs)) {
                     ArrayList<Geometry> polygonList = new  ArrayList<Geometry>();
                     flood.put(secs,polygonList);

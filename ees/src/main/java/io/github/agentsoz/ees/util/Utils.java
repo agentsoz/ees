@@ -241,7 +241,25 @@ public final class Utils {
 
 
 	}
-	
+
+	// applying panelties for flood and cyclones
+	public static void penaltyMethod3(Geometry[]  polyList,  double bufferWidth,
+									  Map<Id<Link>, Double> penaltyFactorsOfLinks, Scenario scenario) {
+
+		for ( Node node : scenario.getNetwork().getNodes().values() ) {
+			Point point = GeometryUtils.createGeotoolsPoint(node.getCoord());
+			for (Geometry poly: polyList) {
+				if (poly.contains(point)) {
+					log.debug("node {} is IN fire area ", node.getId());
+					// in links
+					for (Link link : node.getInLinks().values()) {
+						penaltyFactorsOfLinks.put( link.getId(), bufferWidth*bufferWidth) ;
+					}
+				}
+			}
+		}
+	}
+
 	public static void penaltyMethod2(Geometry fire, Geometry buffer, double bufferWidth,
 									  Map<Id<Link>, Double> penaltyFactorsOfLinks, Scenario scenario) {
 		// Starting thoughts:
@@ -290,7 +308,8 @@ public final class Utils {
 				for (Link link : node.getInLinks().values()) {
 					penaltyFactorsOfLinks.put( link.getId(), bufferWidth*bufferWidth) ;
 				}
-			} else if ( buffer.contains(point) ) {
+			}
+			else if ( buffer.contains(point) ) {
 				log.debug("node {} is IN buffer", node.getId());
 				// in links
 				for (Link link : node.getInLinks().values()) {
