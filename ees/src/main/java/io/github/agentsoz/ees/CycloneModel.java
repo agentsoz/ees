@@ -136,7 +136,7 @@ public class CycloneModel implements DataSource<Geometry[]> {
         Iterator<JSONObject> iterator = features.iterator();
 
         //to set time for cyclone data
-        double offset = 33* 3600; // start time = L - 33h
+        double offset = 38.5* 3600; // start time = L - 33h
         int count = 0;
         double increment = 15*60; // 15mins
         while (iterator.hasNext()) {
