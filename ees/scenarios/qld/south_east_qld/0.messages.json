@@ -14,7 +14,7 @@
     {
     "type" : "EVACUATE_NOW",
     "content" : "East of Toowoomba,413035,6952128",
-    "broadcastHHMM" : "0100",
+    "broadcastHHMM" : "0630",
     "broadcastZones" : {
       "301011001" : null,
       "301011002" : null,
@@ -335,7 +335,7 @@
     {
     "type" : "EVACUATE_NOW",
     "content" : "Woodford Showgrounds,477696,7019169",
-    "broadcastHHMM" : "0101",
+    "broadcastHHMM" : "0631",
     "broadcastZones" : {
       "313011362" : null,
       "313011362" : null,
