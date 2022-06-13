@@ -13,7 +13,7 @@
   "messages" : [
     {
     "type" : "EVACUATE_NOW",
-    "content" : "East of Toowoomba,413035,6952128",
+    "content" : "It is strongly recommended that you evacuate now",
     "broadcastHHMM" : "0630",
     "broadcastZones" : {
       "301011001" : null,
@@ -334,7 +334,7 @@
     },
     {
     "type" : "EVACUATE_NOW",
-    "content" : "Woodford Showgrounds,477696,7019169",
+    "content" : "It is strongly recommended that you evacuate now",
     "broadcastHHMM" : "0631",
     "broadcastZones" : {
       "313011362" : null,
