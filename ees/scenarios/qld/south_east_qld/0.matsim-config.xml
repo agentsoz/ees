@@ -57,7 +57,7 @@
 		<param name="startTime" value="00:00:00" />
 		<param name="endTime" value="39:59:59" />
 
-		<param name = "snapshotperiod"	value = "00:00:20"/> <!-- 00:00:00 means NO snapshot writing, 00:00:30 means every 30 secs -->
+		<param name = "snapshotperiod"	value = "00:00:00"/> <!-- 00:00:00 means NO snapshot writing, 00:00:30 means every 30 secs -->
 
 		<param name= "flowCapacityFactor" value= "0.02" />
 		<param name= "storageCapacityFactor" value= "0.03" />
