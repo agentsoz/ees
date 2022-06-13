@@ -244,7 +244,7 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
             floodWriter.write( now, floodPolygon);
         }
         penaltyFactorsOfLinks.clear();
-        Utils.penaltyMethod3(dataList, optMaxDistanceForFloodVisual, penaltyFactorsOfLinks, scenario);
+        Utils.reduceSpeed(dataList, now, 0.000001, scenario);
 
     }
         private void processCycloneData(Geometry[] polygonlist, double now, Map<Id<Link>, Double> penaltyFactorsOfLinks, Scenario scenario, Shape2XyWriter cycloneWriter){
@@ -254,8 +254,7 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
             cycloneWriter.write( now, poly);
         }
             {
-                penaltyFactorsOfLinks.clear();
-                Utils.penaltyMethod3(polygonlist, optMaxDistanceForCycloneVisual, penaltyFactorsOfLinks, scenario);
+                Utils.reduceSpeed(polygonlist, now, 0.000001, scenario);
             }
 
     }

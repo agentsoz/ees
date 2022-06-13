@@ -101,8 +101,8 @@
       <!-- Messaging JSON file  -->
       <opt id="fileJson">scenarios/qld/south_east_qld/0.messages.json</opt>
       <!-- Zones GeoJSON file mapping zone IDs to polygon shapes -->
-      <opt id="fileZonesGeoJson">scenarios/qld/south_east_qld/SA2_south_east_qld_EPSG_4326.geojson</opt>
-      <opt id="zoneIdColumnName">SA2_CODE21</opt>
+      <opt id="fileZonesGeoJson">scenarios/qld/south_east_qld/zones/seqld_sa2_2016.geojson</opt>
+      <opt id="zoneIdColumnName">SA2_MAIN16</opt>
     </model>
 
     <model id="cyclone">

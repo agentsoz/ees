@@ -34,6 +34,8 @@ import org.matsim.api.core.v01.network.Node;
 import org.matsim.api.core.v01.population.*;
 import org.matsim.core.config.Config;
 import org.matsim.core.config.ConfigUtils;
+import org.matsim.core.mobsim.framework.MobsimAgent;
+import org.matsim.core.network.NetworkChangeEvent;
 import org.matsim.core.network.NetworkUtils;
 import org.matsim.core.population.PopulationUtils;
 import org.matsim.core.scenario.ScenarioUtils;
@@ -242,18 +244,21 @@ public final class Utils {
 
 	}
 
-	// applying panelties for flood and cyclones
-	public static void penaltyMethod3(Geometry[]  polyList,  double bufferWidth,
-									  Map<Id<Link>, Double> penaltyFactorsOfLinks, Scenario scenario) {
+	// reduce speed on links within given list of polygons
+	public static void reduceSpeed(Geometry[]  polygons,
+								   double effectiveTime,
+								   double effectiveSpeed,
+								   Scenario scenario) {
 
-		for ( Node node : scenario.getNetwork().getNodes().values() ) {
-			Point point = GeometryUtils.createGeotoolsPoint(node.getCoord());
-			for (Geometry poly: polyList) {
+		for (Geometry poly: polygons) {
+			for ( Node node : scenario.getNetwork().getNodes().values() ) {
+				Point point = GeometryUtils.createGeotoolsPoint(node.getCoord());
 				if (poly.contains(point)) {
-					log.debug("node {} is IN fire area ", node.getId());
-					// in links
 					for (Link link : node.getInLinks().values()) {
-						penaltyFactorsOfLinks.put( link.getId(), bufferWidth*bufferWidth) ;
+						NetworkChangeEvent event = new NetworkChangeEvent( effectiveTime ) ;
+						event.setFreespeedChange(new NetworkChangeEvent.ChangeValue( NetworkChangeEvent.ChangeType.ABSOLUTE_IN_SI_UNITS,  effectiveSpeed ));
+						event.addLink(link);
+						NetworkUtils.addNetworkChangeEvent( scenario.getNetwork(),event);
 					}
 				}
 			}
