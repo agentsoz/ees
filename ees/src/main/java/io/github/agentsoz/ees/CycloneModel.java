@@ -41,6 +41,8 @@ import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -52,13 +54,15 @@ public class CycloneModel implements DataSource<Geometry[]> {
 
     // Model options in ESS config XML
     private final String efileGeoJson = "fileGeoJson";
+    private final String esimStartDate = "simStartDate";
     private final Logger logger = LoggerFactory.getLogger(CycloneModel.class);
 
 
     // Model options' values
     private String optGeoJsonFile = null;
     private JSONObject json = null;
-    private LocalDateTime startDate = null ;
+    private String optSimStartDate = null ;
+    private Date startDate = null ;
     private TreeMap<Double, ArrayList<Geometry>> cyclone;
     private String optCrs = "EPSG:28356";
     private String cycloneGeoJsonCRS = "EPSG:4326";
@@ -84,6 +88,9 @@ public class CycloneModel implements DataSource<Geometry[]> {
             switch(opt) {
                 case efileGeoJson:
                     optGeoJsonFile = opts.get(opt);
+                    break;
+                case esimStartDate:
+                    optSimStartDate = opts.get(opt);
                     break;
                 case Config.eGlobalStartHhMm:
                     String[] tokens = opts.get(opt).split(":");
@@ -135,10 +142,6 @@ public class CycloneModel implements DataSource<Geometry[]> {
         JSONArray features = (JSONArray) json.get("features");
         Iterator<JSONObject> iterator = features.iterator();
 
-        //to set time for cyclone data
-        double offset = 38.5* 3600; // start time = L - 33h
-        int count = 0;
-        double increment = 15*60; // 15mins
         while (iterator.hasNext()) {
             JSONObject feature = iterator.next();
             JSONObject properties = (JSONObject) feature.get("properties");
@@ -149,8 +152,7 @@ public class CycloneModel implements DataSource<Geometry[]> {
 
             // create cyclone map
             if (timestamp != null) {
-                double secs = offset + (increment * count); //getTimeInSeconds(timestamp);
-                count ++;
+                double secs = getTimeInSeconds(timestamp);
 
                 if(!cyclone.containsKey(secs)) {
                     ArrayList<Geometry> polygonList = new  ArrayList<Geometry>();
@@ -169,16 +171,23 @@ public class CycloneModel implements DataSource<Geometry[]> {
     }
 
     // timestamp format, e.g.: 2076-02-14T23:45:00.000000000, convert to seconds also taking into account the day gap
-    private double getTimeInSeconds(String datetime) {
+    private double getTimeInSeconds(String datetime) throws Exception{
+
+        Calendar calendar = Calendar.getInstance();
+
+        if(startDate == null) {
+            DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+            startDate = format.parse(optSimStartDate);
+            logger.info("Cyclone Model: initialised simulation start date as " + startDate.toString());
+
+        }
+
         DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
         LocalDateTime date = LocalDateTime.parse(datetime,formatter);
 
-        if(startDate == null) {
-            startDate =  date; // store first timestamp as startdate
-        }
-
         double total_secs = 0.0;
-        int day_gap = date.getDayOfMonth() - startDate.getDayOfMonth();
+        calendar.setTime(startDate);
+        int day_gap = date.getDayOfMonth() - calendar.get(Calendar.DAY_OF_MONTH);;
 
         if (day_gap > 0) {
             total_secs += Time.convertTime(day_gap, Time.TimestepUnit.DAYS,timestepUnit);

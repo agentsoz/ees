@@ -106,6 +106,8 @@
     </model>
 
     <model id="cyclone">
+      <!-- specify the simulation start date in  yyyy-MM-dd format, to calculate the offset required for the cylcone timestamps  -->
+      <opt id="simStartDate">2076-02-13</opt>
     <!-- cyclone JSON file relative to examples/bushfire directory -->
     <opt id="fileGeoJson">scenarios/qld/south_east_qld/cyclone_progression_EPSG_4326.geojson.gz</opt>
   </model>
