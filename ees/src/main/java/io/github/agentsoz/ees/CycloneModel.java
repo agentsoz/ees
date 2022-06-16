@@ -54,14 +54,14 @@ public class CycloneModel implements DataSource<Geometry[]> {
 
     // Model options in ESS config XML
     private final String efileGeoJson = "fileGeoJson";
-    private final String esimStartDate = "simStartDate";
+    private final String eoffsetFromSimStart = "offsetFromSimStart";
     private final Logger logger = LoggerFactory.getLogger(CycloneModel.class);
 
 
     // Model options' values
     private String optGeoJsonFile = null;
     private JSONObject json = null;
-    private String optSimStartDate = null ;
+    private String optOffsetFromSimStart = null ;
     private Date startDate = null ;
     private TreeMap<Double, ArrayList<Geometry>> cyclone;
     private String optCrs = "EPSG:28356";
@@ -89,8 +89,8 @@ public class CycloneModel implements DataSource<Geometry[]> {
                 case efileGeoJson:
                     optGeoJsonFile = opts.get(opt);
                     break;
-                case esimStartDate:
-                    optSimStartDate = opts.get(opt);
+                case eoffsetFromSimStart:
+                    optOffsetFromSimStart = opts.get(opt);
                     break;
                 case Config.eGlobalStartHhMm:
                     String[] tokens = opts.get(opt).split(":");
@@ -173,25 +173,18 @@ public class CycloneModel implements DataSource<Geometry[]> {
     // timestamp format, e.g.: 2076-02-14T23:45:00.000000000, convert to seconds also taking into account the day gap
     private double getTimeInSeconds(String datetime) throws Exception{
 
-        Calendar calendar = Calendar.getInstance();
-
-        if(startDate == null) {
-            DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-            startDate = format.parse(optSimStartDate);
-            logger.info("Cyclone Model: initialised simulation start date as " + startDate.toString());
-
-        }
 
         DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
         LocalDateTime date = LocalDateTime.parse(datetime,formatter);
 
         double total_secs = 0.0;
-        calendar.setTime(startDate);
-        int day_gap = date.getDayOfMonth() - calendar.get(Calendar.DAY_OF_MONTH);;
 
-        if (day_gap > 0) {
-            total_secs += Time.convertTime(day_gap, Time.TimestepUnit.DAYS,timestepUnit);
-        }
+        // add the time offset
+        Double  offsetHH = Double.valueOf(optOffsetFromSimStart.split(":")[0]);
+        Double  offsetMM = Double.valueOf(optOffsetFromSimStart.split(":")[1]);
+        total_secs +=  offsetHH * 3600 + offsetMM * 60;
+
+        // convert timestamp into secs
         total_secs +=     Time.convertTime(date.getHour(), Time.TimestepUnit.HOURS, timestepUnit) ;
         total_secs +=  Time.convertTime(date.getMinute(), Time.TimestepUnit.MINUTES, timestepUnit) ;
         total_secs += date.getSecond();
