@@ -14,7 +14,7 @@
     {
     "type" : "EVACUATE_NOW",
     "content" : "It is strongly recommended that you evacuate now",
-    "broadcastHHMM" : "0630",
+    "broadcastHHMM" : "0000",
     "broadcastZones" : {
       "301011001" : null,
       "301011002" : null,
@@ -335,7 +335,7 @@
     {
     "type" : "EVACUATE_NOW",
     "content" : "It is strongly recommended that you evacuate now",
-    "broadcastHHMM" : "0631",
+    "broadcastHHMM" : "0001",
     "broadcastZones" : {
       "313011362" : null,
       "313011362" : null,

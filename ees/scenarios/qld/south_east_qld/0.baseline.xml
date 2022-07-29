@@ -105,12 +105,12 @@
       <opt id="zoneIdColumnName">SA2_MAIN16</opt>
     </model>
 
-    <model id="cyclone">
-      <!-- specify the simulation time offset required to adjust the  timestamps of cyclone polygons -->
-      <opt id="offsetFromSimStart">33:00</opt>
-    <!-- cyclone JSON file relative to examples/bushfire directory -->
-    <opt id="fileGeoJson">scenarios/qld/south_east_qld/cyclone_progression_EPSG_4326.geojson.gz</opt>
-  </model>
+    <!--<model id="cyclone">-->
+      <!--&lt;!&ndash; specify the simulation time offset required to adjust the  timestamps of cyclone polygons &ndash;&gt;-->
+      <!--<opt id="offsetFromSimStart">33:00</opt>-->
+    <!--&lt;!&ndash; cyclone JSON file relative to examples/bushfire directory &ndash;&gt;-->
+    <!--<opt id="fileGeoJson">scenarios/qld/south_east_qld/cyclone_progression_EPSG_4326.geojson.gz</opt>-->
+  <!--</model>-->
 
     <!--<model id="flood">-->
       <!--&lt;!&ndash; flood JSON file relative to examples/bushfire directory &ndash;&gt;-->
