@@ -244,7 +244,7 @@ public final class MATSimEvacModel implements ABMServerInterface, QueryPerceptIn
             floodWriter.write( now, floodPolygon);
         }
         penaltyFactorsOfLinks.clear();
-        Utils.reduceSpeed(dataList, now, 0.000001, scenario);
+        Utils.reduceSpeed2(dataList, now, 0.000001, scenario);
 
     }
         private void processCycloneData(Geometry[] polygonlist, double now, Map<Id<Link>, Double> penaltyFactorsOfLinks, Scenario scenario, Shape2XyWriter cycloneWriter){

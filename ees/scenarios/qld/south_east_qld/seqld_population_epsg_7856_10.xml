@@ -1,0 +1,400 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE population SYSTEM "http://www.matsim.org/files/dtd/population_v6.dtd">
+<population>
+<person id="0">
+  <attributes>
+    <attribute name="Archetype" class="java.lang.String">Unknown.Type</attribute>
+    <attribute name="BDIAgentType" class="java.lang.String">io.github.agentsoz.ees.agents.archetype.ArchetypeAgent</attribute>
+    <attribute name="HasDependents" class="java.lang.String">false</attribute>
+    <attribute name="HasDependentsAtLocation" class="java.lang.String"></attribute>
+    <attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.String">false</attribute>
+    <attribute name="WillGoHomeBeforeLeaving" class="java.lang.String">false</attribute>
+    <attribute name="WillStay" class="java.lang.String">false</attribute>
+    <attribute name="WillReceiveMessages" class="java.lang.String">true</attribute>
+    <attribute name="ResponseThresholdInitial" class="java.lang.String">0</attribute>
+    <attribute name="ResponseThresholdFinal" class="java.lang.String">0</attribute>
+    <attribute name="LagTimeInMinsForFinalResponse" class="java.lang.String">11.56</attribute>
+    <attribute name="LagTimeInMinsForInitialResponse" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromFireDangerIndexRating" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromImmersionInSmoke" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromMessageAdvice" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromMessageEmergencyWarning" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromMessageEvacuateNow" class="java.lang.String">1</attribute>
+    <attribute name="ImpactFromMessageRespondersAttending" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromMessageWatchAndAct" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromSocialMessage" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromVisibleEmbers" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromVisibleFire" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromVisibleResponders" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromVisibleSmoke" class="java.lang.String">0</attribute>
+    <attribute name="hasVehicle" class="java.lang.String">true</attribute>
+    <attribute name="EvacLocationPreference" class="java.lang.String">East of Toowoomba,413035,6952128</attribute>
+    <attribute name="InvacLocationPreference" class="java.lang.String">East of Toowoomba,413035,6952128</attribute>
+  </attributes>
+  <plan selected="yes">
+    <activity type="home" x="495289.4257" y="6953335.0434" end_time="23:59:59"/>
+    <leg mode="car"/>
+    <activity type="home" x="495289.4257" y="6953335.0434"/>
+  </plan>
+</person>
+<person id="1">
+  <attributes>
+    <attribute name="Archetype" class="java.lang.String">Unknown.Type</attribute>
+    <attribute name="BDIAgentType" class="java.lang.String">io.github.agentsoz.ees.agents.archetype.ArchetypeAgent</attribute>
+    <attribute name="HasDependents" class="java.lang.String">false</attribute>
+    <attribute name="HasDependentsAtLocation" class="java.lang.String"></attribute>
+    <attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.String">false</attribute>
+    <attribute name="WillGoHomeBeforeLeaving" class="java.lang.String">false</attribute>
+    <attribute name="WillStay" class="java.lang.String">false</attribute>
+    <attribute name="WillReceiveMessages" class="java.lang.String">true</attribute>
+    <attribute name="ResponseThresholdInitial" class="java.lang.String">0</attribute>
+    <attribute name="ResponseThresholdFinal" class="java.lang.String">0</attribute>
+    <attribute name="LagTimeInMinsForFinalResponse" class="java.lang.String">10.93</attribute>
+    <attribute name="LagTimeInMinsForInitialResponse" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromFireDangerIndexRating" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromImmersionInSmoke" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromMessageAdvice" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromMessageEmergencyWarning" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromMessageEvacuateNow" class="java.lang.String">1</attribute>
+    <attribute name="ImpactFromMessageRespondersAttending" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromMessageWatchAndAct" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromSocialMessage" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromVisibleEmbers" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromVisibleFire" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromVisibleResponders" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromVisibleSmoke" class="java.lang.String">0</attribute>
+    <attribute name="hasVehicle" class="java.lang.String">true</attribute>
+    <attribute name="EvacLocationPreference" class="java.lang.String">Woodford Showgrounds,477696,7019169</attribute>
+    <attribute name="InvacLocationPreference" class="java.lang.String">Woodford Showgrounds,477696,7019169</attribute>
+  </attributes>
+  <plan selected="yes">
+    <activity type="home" x="495054.6537" y="6994162.2213" end_time="23:59:59"/>
+    <leg mode="car"/>
+    <activity type="home" x="495054.6537" y="6994162.2213"/>
+  </plan>
+</person>
+<person id="2">
+  <attributes>
+    <attribute name="Archetype" class="java.lang.String">Unknown.Type</attribute>
+    <attribute name="BDIAgentType" class="java.lang.String">io.github.agentsoz.ees.agents.archetype.ArchetypeAgent</attribute>
+    <attribute name="HasDependents" class="java.lang.String">false</attribute>
+    <attribute name="HasDependentsAtLocation" class="java.lang.String"></attribute>
+    <attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.String">false</attribute>
+    <attribute name="WillGoHomeBeforeLeaving" class="java.lang.String">false</attribute>
+    <attribute name="WillStay" class="java.lang.String">false</attribute>
+    <attribute name="WillReceiveMessages" class="java.lang.String">true</attribute>
+    <attribute name="ResponseThresholdInitial" class="java.lang.String">0</attribute>
+    <attribute name="ResponseThresholdFinal" class="java.lang.String">0</attribute>
+    <attribute name="LagTimeInMinsForFinalResponse" class="java.lang.String">8.95</attribute>
+    <attribute name="LagTimeInMinsForInitialResponse" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromFireDangerIndexRating" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromImmersionInSmoke" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromMessageAdvice" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromMessageEmergencyWarning" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromMessageEvacuateNow" class="java.lang.String">1</attribute>
+    <attribute name="ImpactFromMessageRespondersAttending" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromMessageWatchAndAct" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromSocialMessage" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromVisibleEmbers" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromVisibleFire" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromVisibleResponders" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromVisibleSmoke" class="java.lang.String">0</attribute>
+    <attribute name="hasVehicle" class="java.lang.String">true</attribute>
+    <attribute name="EvacLocationPreference" class="java.lang.String">East of Toowoomba,413035,6952128</attribute>
+    <attribute name="InvacLocationPreference" class="java.lang.String">East of Toowoomba,413035,6952128</attribute>
+  </attributes>
+  <plan selected="yes">
+    <activity type="home" x="538545.6047" y="6908854.2655" end_time="23:59:59"/>
+    <leg mode="car"/>
+    <activity type="home" x="538545.6047" y="6908854.2655"/>
+  </plan>
+</person>
+<person id="3">
+  <attributes>
+    <attribute name="Archetype" class="java.lang.String">Unknown.Type</attribute>
+    <attribute name="BDIAgentType" class="java.lang.String">io.github.agentsoz.ees.agents.archetype.ArchetypeAgent</attribute>
+    <attribute name="HasDependents" class="java.lang.String">false</attribute>
+    <attribute name="HasDependentsAtLocation" class="java.lang.String"></attribute>
+    <attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.String">false</attribute>
+    <attribute name="WillGoHomeBeforeLeaving" class="java.lang.String">false</attribute>
+    <attribute name="WillStay" class="java.lang.String">false</attribute>
+    <attribute name="WillReceiveMessages" class="java.lang.String">true</attribute>
+    <attribute name="ResponseThresholdInitial" class="java.lang.String">0</attribute>
+    <attribute name="ResponseThresholdFinal" class="java.lang.String">0</attribute>
+    <attribute name="LagTimeInMinsForFinalResponse" class="java.lang.String">9.8</attribute>
+    <attribute name="LagTimeInMinsForInitialResponse" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromFireDangerIndexRating" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromImmersionInSmoke" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromMessageAdvice" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromMessageEmergencyWarning" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromMessageEvacuateNow" class="java.lang.String">1</attribute>
+    <attribute name="ImpactFromMessageRespondersAttending" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromMessageWatchAndAct" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromSocialMessage" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromVisibleEmbers" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromVisibleFire" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromVisibleResponders" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromVisibleSmoke" class="java.lang.String">0</attribute>
+    <attribute name="hasVehicle" class="java.lang.String">true</attribute>
+    <attribute name="EvacLocationPreference" class="java.lang.String">East of Toowoomba,413035,6952128</attribute>
+    <attribute name="InvacLocationPreference" class="java.lang.String">East of Toowoomba,413035,6952128</attribute>
+  </attributes>
+  <plan selected="yes">
+    <activity type="home" x="503830.63" y="6968724.4305" end_time="23:59:59"/>
+    <leg mode="car"/>
+    <activity type="home" x="503830.63" y="6968724.4305"/>
+  </plan>
+</person>
+<person id="4">
+  <attributes>
+    <attribute name="Archetype" class="java.lang.String">Unknown.Type</attribute>
+    <attribute name="BDIAgentType" class="java.lang.String">io.github.agentsoz.ees.agents.archetype.ArchetypeAgent</attribute>
+    <attribute name="HasDependents" class="java.lang.String">false</attribute>
+    <attribute name="HasDependentsAtLocation" class="java.lang.String"></attribute>
+    <attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.String">false</attribute>
+    <attribute name="WillGoHomeBeforeLeaving" class="java.lang.String">false</attribute>
+    <attribute name="WillStay" class="java.lang.String">false</attribute>
+    <attribute name="WillReceiveMessages" class="java.lang.String">true</attribute>
+    <attribute name="ResponseThresholdInitial" class="java.lang.String">0</attribute>
+    <attribute name="ResponseThresholdFinal" class="java.lang.String">0</attribute>
+    <attribute name="LagTimeInMinsForFinalResponse" class="java.lang.String">9.49</attribute>
+    <attribute name="LagTimeInMinsForInitialResponse" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromFireDangerIndexRating" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromImmersionInSmoke" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromMessageAdvice" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromMessageEmergencyWarning" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromMessageEvacuateNow" class="java.lang.String">1</attribute>
+    <attribute name="ImpactFromMessageRespondersAttending" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromMessageWatchAndAct" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromSocialMessage" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromVisibleEmbers" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromVisibleFire" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromVisibleResponders" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromVisibleSmoke" class="java.lang.String">0</attribute>
+    <attribute name="hasVehicle" class="java.lang.String">true</attribute>
+    <attribute name="EvacLocationPreference" class="java.lang.String">East of Toowoomba,413035,6952128</attribute>
+    <attribute name="InvacLocationPreference" class="java.lang.String">East of Toowoomba,413035,6952128</attribute>
+  </attributes>
+  <plan selected="yes">
+    <activity type="home" x="507922.023" y="6934476.2136" end_time="23:59:59"/>
+    <leg mode="car"/>
+    <activity type="home" x="507922.023" y="6934476.2136"/>
+  </plan>
+</person>
+<person id="5">
+  <attributes>
+    <attribute name="Archetype" class="java.lang.String">Unknown.Type</attribute>
+    <attribute name="BDIAgentType" class="java.lang.String">io.github.agentsoz.ees.agents.archetype.ArchetypeAgent</attribute>
+    <attribute name="HasDependents" class="java.lang.String">false</attribute>
+    <attribute name="HasDependentsAtLocation" class="java.lang.String"></attribute>
+    <attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.String">false</attribute>
+    <attribute name="WillGoHomeBeforeLeaving" class="java.lang.String">false</attribute>
+    <attribute name="WillStay" class="java.lang.String">false</attribute>
+    <attribute name="WillReceiveMessages" class="java.lang.String">true</attribute>
+    <attribute name="ResponseThresholdInitial" class="java.lang.String">0</attribute>
+    <attribute name="ResponseThresholdFinal" class="java.lang.String">0</attribute>
+    <attribute name="LagTimeInMinsForFinalResponse" class="java.lang.String">7.71</attribute>
+    <attribute name="LagTimeInMinsForInitialResponse" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromFireDangerIndexRating" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromImmersionInSmoke" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromMessageAdvice" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromMessageEmergencyWarning" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromMessageEvacuateNow" class="java.lang.String">1</attribute>
+    <attribute name="ImpactFromMessageRespondersAttending" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromMessageWatchAndAct" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromSocialMessage" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromVisibleEmbers" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromVisibleFire" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromVisibleResponders" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromVisibleSmoke" class="java.lang.String">0</attribute>
+    <attribute name="hasVehicle" class="java.lang.String">true</attribute>
+    <attribute name="EvacLocationPreference" class="java.lang.String">East of Toowoomba,413035,6952128</attribute>
+    <attribute name="InvacLocationPreference" class="java.lang.String">East of Toowoomba,413035,6952128</attribute>
+  </attributes>
+  <plan selected="yes">
+    <activity type="home" x="535967.325" y="6907305.1143" end_time="23:59:59"/>
+    <leg mode="car"/>
+    <activity type="home" x="535967.325" y="6907305.1143"/>
+  </plan>
+</person>
+<person id="6">
+  <attributes>
+    <attribute name="Archetype" class="java.lang.String">Unknown.Type</attribute>
+    <attribute name="BDIAgentType" class="java.lang.String">io.github.agentsoz.ees.agents.archetype.ArchetypeAgent</attribute>
+    <attribute name="HasDependents" class="java.lang.String">false</attribute>
+    <attribute name="HasDependentsAtLocation" class="java.lang.String"></attribute>
+    <attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.String">false</attribute>
+    <attribute name="WillGoHomeBeforeLeaving" class="java.lang.String">false</attribute>
+    <attribute name="WillStay" class="java.lang.String">false</attribute>
+    <attribute name="WillReceiveMessages" class="java.lang.String">true</attribute>
+    <attribute name="ResponseThresholdInitial" class="java.lang.String">0</attribute>
+    <attribute name="ResponseThresholdFinal" class="java.lang.String">0</attribute>
+    <attribute name="LagTimeInMinsForFinalResponse" class="java.lang.String">9.43</attribute>
+    <attribute name="LagTimeInMinsForInitialResponse" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromFireDangerIndexRating" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromImmersionInSmoke" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromMessageAdvice" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromMessageEmergencyWarning" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromMessageEvacuateNow" class="java.lang.String">1</attribute>
+    <attribute name="ImpactFromMessageRespondersAttending" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromMessageWatchAndAct" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromSocialMessage" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromVisibleEmbers" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromVisibleFire" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromVisibleResponders" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromVisibleSmoke" class="java.lang.String">0</attribute>
+    <attribute name="hasVehicle" class="java.lang.String">true</attribute>
+    <attribute name="EvacLocationPreference" class="java.lang.String">Woodford Showgrounds,477696,7019169</attribute>
+    <attribute name="InvacLocationPreference" class="java.lang.String">Woodford Showgrounds,477696,7019169</attribute>
+  </attributes>
+  <plan selected="yes">
+    <activity type="home" x="501362.9724" y="6985516.8322" end_time="23:59:59"/>
+    <leg mode="car"/>
+    <activity type="home" x="501362.9724" y="6985516.8322"/>
+  </plan>
+</person>
+<person id="7">
+  <attributes>
+    <attribute name="Archetype" class="java.lang.String">Unknown.Type</attribute>
+    <attribute name="BDIAgentType" class="java.lang.String">io.github.agentsoz.ees.agents.archetype.ArchetypeAgent</attribute>
+    <attribute name="HasDependents" class="java.lang.String">false</attribute>
+    <attribute name="HasDependentsAtLocation" class="java.lang.String"></attribute>
+    <attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.String">false</attribute>
+    <attribute name="WillGoHomeBeforeLeaving" class="java.lang.String">false</attribute>
+    <attribute name="WillStay" class="java.lang.String">false</attribute>
+    <attribute name="WillReceiveMessages" class="java.lang.String">true</attribute>
+    <attribute name="ResponseThresholdInitial" class="java.lang.String">0</attribute>
+    <attribute name="ResponseThresholdFinal" class="java.lang.String">0</attribute>
+    <attribute name="LagTimeInMinsForFinalResponse" class="java.lang.String">9.67</attribute>
+    <attribute name="LagTimeInMinsForInitialResponse" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromFireDangerIndexRating" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromImmersionInSmoke" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromMessageAdvice" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromMessageEmergencyWarning" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromMessageEvacuateNow" class="java.lang.String">1</attribute>
+    <attribute name="ImpactFromMessageRespondersAttending" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromMessageWatchAndAct" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromSocialMessage" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromVisibleEmbers" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromVisibleFire" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromVisibleResponders" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromVisibleSmoke" class="java.lang.String">0</attribute>
+    <attribute name="hasVehicle" class="java.lang.String">true</attribute>
+    <attribute name="EvacLocationPreference" class="java.lang.String">East of Toowoomba,413035,6952128</attribute>
+    <attribute name="InvacLocationPreference" class="java.lang.String">East of Toowoomba,413035,6952128</attribute>
+  </attributes>
+  <plan selected="yes">
+    <activity type="home" x="493335.6414" y="6955743.9057" end_time="23:59:59"/>
+    <leg mode="car"/>
+    <activity type="home" x="493335.6414" y="6955743.9057"/>
+  </plan>
+</person>
+<person id="8">
+  <attributes>
+    <attribute name="Archetype" class="java.lang.String">Unknown.Type</attribute>
+    <attribute name="BDIAgentType" class="java.lang.String">io.github.agentsoz.ees.agents.archetype.ArchetypeAgent</attribute>
+    <attribute name="HasDependents" class="java.lang.String">false</attribute>
+    <attribute name="HasDependentsAtLocation" class="java.lang.String"></attribute>
+    <attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.String">false</attribute>
+    <attribute name="WillGoHomeBeforeLeaving" class="java.lang.String">false</attribute>
+    <attribute name="WillStay" class="java.lang.String">false</attribute>
+    <attribute name="WillReceiveMessages" class="java.lang.String">true</attribute>
+    <attribute name="ResponseThresholdInitial" class="java.lang.String">0</attribute>
+    <attribute name="ResponseThresholdFinal" class="java.lang.String">0</attribute>
+    <attribute name="LagTimeInMinsForFinalResponse" class="java.lang.String">10.9</attribute>
+    <attribute name="LagTimeInMinsForInitialResponse" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromFireDangerIndexRating" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromImmersionInSmoke" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromMessageAdvice" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromMessageEmergencyWarning" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromMessageEvacuateNow" class="java.lang.String">1</attribute>
+    <attribute name="ImpactFromMessageRespondersAttending" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromMessageWatchAndAct" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromSocialMessage" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromVisibleEmbers" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromVisibleFire" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromVisibleResponders" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromVisibleSmoke" class="java.lang.String">0</attribute>
+    <attribute name="hasVehicle" class="java.lang.String">true</attribute>
+    <attribute name="EvacLocationPreference" class="java.lang.String">East of Toowoomba,413035,6952128</attribute>
+    <attribute name="InvacLocationPreference" class="java.lang.String">East of Toowoomba,413035,6952128</attribute>
+  </attributes>
+  <plan selected="yes">
+    <activity type="home" x="510748.9193" y="6955661.5856" end_time="23:59:59"/>
+    <leg mode="car"/>
+    <activity type="home" x="510748.9193" y="6955661.5856"/>
+  </plan>
+</person>
+<person id="9">
+  <attributes>
+    <attribute name="Archetype" class="java.lang.String">Unknown.Type</attribute>
+    <attribute name="BDIAgentType" class="java.lang.String">io.github.agentsoz.ees.agents.archetype.ArchetypeAgent</attribute>
+    <attribute name="HasDependents" class="java.lang.String">false</attribute>
+    <attribute name="HasDependentsAtLocation" class="java.lang.String"></attribute>
+    <attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.String">false</attribute>
+    <attribute name="WillGoHomeBeforeLeaving" class="java.lang.String">false</attribute>
+    <attribute name="WillStay" class="java.lang.String">false</attribute>
+    <attribute name="WillReceiveMessages" class="java.lang.String">true</attribute>
+    <attribute name="ResponseThresholdInitial" class="java.lang.String">0</attribute>
+    <attribute name="ResponseThresholdFinal" class="java.lang.String">0</attribute>
+    <attribute name="LagTimeInMinsForFinalResponse" class="java.lang.String">8.16</attribute>
+    <attribute name="LagTimeInMinsForInitialResponse" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromFireDangerIndexRating" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromImmersionInSmoke" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromMessageAdvice" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromMessageEmergencyWarning" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromMessageEvacuateNow" class="java.lang.String">1</attribute>
+    <attribute name="ImpactFromMessageRespondersAttending" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromMessageWatchAndAct" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromSocialMessage" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromVisibleEmbers" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromVisibleFire" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromVisibleResponders" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromVisibleSmoke" class="java.lang.String">0</attribute>
+    <attribute name="hasVehicle" class="java.lang.String">true</attribute>
+    <attribute name="EvacLocationPreference" class="java.lang.String">East of Toowoomba,413035,6952128</attribute>
+    <attribute name="InvacLocationPreference" class="java.lang.String">East of Toowoomba,413035,6952128</attribute>
+  </attributes>
+  <plan selected="yes">
+    <activity type="home" x="496936.591" y="6945724.8001" end_time="23:59:59"/>
+    <leg mode="car"/>
+    <activity type="home" x="496936.591" y="6945724.8001"/>
+  </plan>
+</person>
+<person id="10">
+  <attributes>
+    <attribute name="Archetype" class="java.lang.String">Unknown.Type</attribute>
+    <attribute name="BDIAgentType" class="java.lang.String">io.github.agentsoz.ees.agents.archetype.ArchetypeAgent</attribute>
+    <attribute name="HasDependents" class="java.lang.String">false</attribute>
+    <attribute name="HasDependentsAtLocation" class="java.lang.String"></attribute>
+    <attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.String">false</attribute>
+    <attribute name="WillGoHomeBeforeLeaving" class="java.lang.String">false</attribute>
+    <attribute name="WillStay" class="java.lang.String">false</attribute>
+    <attribute name="WillReceiveMessages" class="java.lang.String">true</attribute>
+    <attribute name="ResponseThresholdInitial" class="java.lang.String">0</attribute>
+    <attribute name="ResponseThresholdFinal" class="java.lang.String">0</attribute>
+    <attribute name="LagTimeInMinsForFinalResponse" class="java.lang.String">10.71</attribute>
+    <attribute name="LagTimeInMinsForInitialResponse" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromFireDangerIndexRating" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromImmersionInSmoke" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromMessageAdvice" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromMessageEmergencyWarning" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromMessageEvacuateNow" class="java.lang.String">1</attribute>
+    <attribute name="ImpactFromMessageRespondersAttending" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromMessageWatchAndAct" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromSocialMessage" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromVisibleEmbers" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromVisibleFire" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromVisibleResponders" class="java.lang.String">0</attribute>
+    <attribute name="ImpactFromVisibleSmoke" class="java.lang.String">0</attribute>
+    <attribute name="hasVehicle" class="java.lang.String">true</attribute>
+    <attribute name="EvacLocationPreference" class="java.lang.String">East of Toowoomba,413035,6952128</attribute>
+    <attribute name="InvacLocationPreference" class="java.lang.String">East of Toowoomba,413035,6952128</attribute>
+  </attributes>
+  <plan selected="yes">
+    <activity type="home" x="506811.6356" y="6964773.012" end_time="23:59:59"/>
+    <leg mode="car"/>
+    <activity type="home" x="506811.6356" y="6964773.012"/>
+  </plan>
+</person>
+</population>

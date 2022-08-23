@@ -129,7 +129,7 @@ public class FloodModel implements DataSource<Geometry[]> {
         while (iterator.hasNext()) {
             JSONObject feature = iterator.next();
             JSONObject properties = (JSONObject) feature.get("properties");
-            String end_time = (String) properties.get("end_dt");
+            String end_time = (String) properties.get("timestamp");
             JSONObject geometry = (JSONObject) feature.get("geometry");
             JSONArray jcoords = (JSONArray) geometry.get("coordinates");
 

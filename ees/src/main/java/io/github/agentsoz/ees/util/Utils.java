@@ -244,7 +244,7 @@ public final class Utils {
 
 	}
 
-	// reduce speed on links within given list of polygons
+	// reduce speed on links by checking start/end nodes within any of the floodd polygons
 	public static void reduceSpeed(Geometry[]  polygons,
 								   double effectiveTime,
 								   double effectiveSpeed,
@@ -264,6 +264,34 @@ public final class Utils {
 			}
 		}
 	}
+
+
+	// reduce speed on  links  that intersect with the flood polygons
+	public static void reduceSpeed2(Geometry[]  polygons,
+								   double effectiveTime,
+								   double effectiveSpeed,
+								   Scenario scenario) {
+		ArrayList<Link> intersectingLinks = new ArrayList<Link>();
+		int ct = 0;
+
+		for (Geometry poly: polygons) {
+			for ( Link link : scenario.getNetwork().getLinks().values() ) {
+				LineString line = GeometryUtils.createGeotoolsLineString(link);
+				if (poly.intersects(line) && !intersectingLinks.contains(link)) {
+//					for (Link link : node.getInLinks().values()) {
+						NetworkChangeEvent event = new NetworkChangeEvent( effectiveTime ) ;
+						event.setFreespeedChange(new NetworkChangeEvent.ChangeValue( NetworkChangeEvent.ChangeType.ABSOLUTE_IN_SI_UNITS,  effectiveSpeed ));
+						event.addLink(link);
+						NetworkUtils.addNetworkChangeEvent( scenario.getNetwork(),event);
+						intersectingLinks.add(link);
+						ct++;
+//					}
+				}
+			}
+		}
+		log.info(" number of network change events added: {}", ct);
+	}
+
 
 	public static void penaltyMethod2(Geometry fire, Geometry buffer, double bufferWidth,
 									  Map<Id<Link>, Double> penaltyFactorsOfLinks, Scenario scenario) {
