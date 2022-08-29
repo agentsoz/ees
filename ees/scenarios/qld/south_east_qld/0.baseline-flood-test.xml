@@ -114,7 +114,11 @@
 
     <model id="flood">
       <!-- flood JSON file relative to examples/bushfire directory -->
-      <opt id="fileGeoJson">scenarios/qld/south_east_qld/flood_test.geojson</opt>
+      <opt id="fileGeoJson">scenarios/qld/south_east_qld/flood_test_hhmm.geojson</opt>
+      <!-- name of the column that contains the timestamps in the flood file-->
+      <opt id="timestampColumnName">timestamp</opt>
+      <!--flood start time, this offset is added to the timestamps from the floods file -->
+      <opt id="offsetFromSimStart">00:00</opt>
     </model>
 
     <model id="disruption">

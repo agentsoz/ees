@@ -47,12 +47,15 @@ public class FloodModel implements DataSource<Geometry[]> {
 
     // Model options in ESS config XML
     private final String efileGeoJson = "fileGeoJson";
-    private final String eGridSquareSideInMetres = "gridSquareSideInMetres";
+    private final String etimestampColumnName = "timestampColumnName";
+    private final String eoffsetFromSimStart = "offsetFromSimStart";
     private final Logger logger = LoggerFactory.getLogger(FloodModel.class);
 
 
     // Model options' values
     private String optGeoJsonFile = null;
+    private String optOffsetFromSimStart = null ;
+    private String timestampColumnName = "timestamp";
     private JSONObject json = null;
     private TreeMap<Double, ArrayList<Geometry>> flood;
     private LocalDateTime startDate = null ;
@@ -86,6 +89,12 @@ public class FloodModel implements DataSource<Geometry[]> {
                     break;
                 case Config.eGlobalCoordinateSystem:
                     optCrs = opts.get(opt);
+                    break;
+                case etimestampColumnName:
+                    timestampColumnName = opts.get(opt);
+                    break;
+                case eoffsetFromSimStart:
+                        optOffsetFromSimStart = opts.get(opt);
                     break;
                 default:
                     logger.warn("Ignoring option: " + opt + "=" + opts.get(opt));
@@ -129,7 +138,7 @@ public class FloodModel implements DataSource<Geometry[]> {
         while (iterator.hasNext()) {
             JSONObject feature = iterator.next();
             JSONObject properties = (JSONObject) feature.get("properties");
-            String end_time = (String) properties.get("timestamp");
+            String time = (String) properties.get(timestampColumnName);
             JSONObject geometry = (JSONObject) feature.get("geometry");
             JSONArray jcoords = (JSONArray) geometry.get("coordinates");
 
@@ -143,9 +152,9 @@ public class FloodModel implements DataSource<Geometry[]> {
                 coordinates[i++] = (Double[]) it.next().toArray(new Double[2]);
             }
 
-            if (end_time != null) {
-                //double secs = getTimeInSeconds(end_time);
-                double secs = 0.0; // flood model starts at time 0.0
+            if (time != null) {
+                double secs = getTimeInSeconds(time);
+                //double secs = 0.0; // flood model starts at time 0.0
                 if(!flood.containsKey(secs)) {
                     ArrayList<Geometry> polygonList = new  ArrayList<Geometry>();
                     flood.put(secs,polygonList);
@@ -176,35 +185,22 @@ public class FloodModel implements DataSource<Geometry[]> {
 
 
 
-    private double getTimeInSeconds(String timestamp) {
+    // timestamp format: HH:MM:SS
+    private double getTimeInSeconds(String datetime) throws Exception{
 
-        DateTimeFormatter format1 = DateTimeFormatter.ofPattern("d/MM/yyyy HH:mm:ss");
-        DateTimeFormatter  format2 = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
-
-        // received format e.g.: 9/02/2076 00:00:00 (E. Australia Standard Time)
-        String tt = String.join(" ", timestamp.split(" ")[0], timestamp.split(" ")[1]);
-
-        LocalDateTime date;
-        if(timestamp.split(" ")[0].split("/")[0].length() == 1) {
-             date = LocalDateTime.parse(tt,format1);
-        }
-        else{
-             date = LocalDateTime.parse(tt,format2);
-        }
-
-        if(startDate == null) {
-            startDate =  date; // store first timestamp as startdate
-        }
 
         double total_secs = 0.0;
-        int day_gap = date.getDayOfMonth() - startDate.getDayOfMonth();
 
-        if (day_gap > 0) {
-            total_secs += Time.convertTime(day_gap, Time.TimestepUnit.DAYS,timestepUnit);
-        }
-        total_secs +=     Time.convertTime(date.getHour(), Time.TimestepUnit.HOURS, timestepUnit) ;
-        total_secs +=  Time.convertTime(date.getMinute(), Time.TimestepUnit.MINUTES, timestepUnit) ;
-        total_secs += date.getSecond();
+        // get hours and minutes
+        Double  hh = Double.valueOf(datetime.split(":")[0]);
+        Double  mm = Double.valueOf(datetime.split(":")[1]);
+        total_secs +=  hh * 3600 + mm * 60;
+
+        // now add the time offset
+        Double  offsetHH = Double.valueOf(optOffsetFromSimStart.split(":")[0]);
+        Double  offsetMM = Double.valueOf(optOffsetFromSimStart.split(":")[1]);
+        total_secs +=  offsetHH * 3600 + offsetMM * 60;
+
 
         return total_secs;
 

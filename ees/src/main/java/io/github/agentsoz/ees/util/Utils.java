@@ -244,7 +244,7 @@ public final class Utils {
 
 	}
 
-	// reduce speed on links by checking start/end nodes within any of the floodd polygons
+	// reduce speed on links by checking start/end nodes within any of the flood polygons
 	public static void reduceSpeed(Geometry[]  polygons,
 								   double effectiveTime,
 								   double effectiveSpeed,
@@ -277,6 +277,7 @@ public final class Utils {
 		for (Geometry poly: polygons) {
 			for ( Link link : scenario.getNetwork().getLinks().values() ) {
 				LineString line = GeometryUtils.createGeotoolsLineString(link);
+				//https://javadoc.io/static/org.locationtech.jts/jts-core/1.16.0/org/locationtech/jts/geom/Geometry.html#intersects-org.locationtech.jts.geom.Geometry-
 				if (poly.intersects(line) && !intersectingLinks.contains(link)) {
 //					for (Link link : node.getInLinks().values()) {
 						NetworkChangeEvent event = new NetworkChangeEvent( effectiveTime ) ;
@@ -289,7 +290,7 @@ public final class Utils {
 				}
 			}
 		}
-		log.info(" number of network change events added: {}", ct);
+		log.info("{} network change events added at time {} ", ct, effectiveTime);
 	}
 
 
