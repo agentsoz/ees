@@ -170,24 +170,22 @@ public class CycloneModel implements DataSource<Geometry[]> {
         }
     }
 
-    // timestamp format, e.g.: 2076-02-14T23:45:00.000000000, convert to seconds also taking into account the day gap
-    private double getTimeInSeconds(String datetime) throws Exception{
+    // timestamp format: HH:MM:SS
+    private double getTimeInSeconds(String hhmm) throws Exception{
 
-
-        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
-        LocalDateTime date = LocalDateTime.parse(datetime,formatter);
 
         double total_secs = 0.0;
 
-        // add the time offset
+        // get hours and minutes
+        Double  hh = Double.valueOf(hhmm.split(":")[0]);
+        Double  mm = Double.valueOf(hhmm.split(":")[1]);
+        total_secs +=  hh * 3600 + mm * 60;
+
+        // now add the time offset
         Double  offsetHH = Double.valueOf(optOffsetFromSimStart.split(":")[0]);
         Double  offsetMM = Double.valueOf(optOffsetFromSimStart.split(":")[1]);
         total_secs +=  offsetHH * 3600 + offsetMM * 60;
 
-        // convert timestamp into secs
-        total_secs +=     Time.convertTime(date.getHour(), Time.TimestepUnit.HOURS, timestepUnit) ;
-        total_secs +=  Time.convertTime(date.getMinute(), Time.TimestepUnit.MINUTES, timestepUnit) ;
-        total_secs += date.getSecond();
 
         return total_secs;
 

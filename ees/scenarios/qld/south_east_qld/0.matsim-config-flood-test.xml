@@ -32,13 +32,13 @@
 
 	<module name="network">
 		<param name="inputNetworkFile" value="seqld_network_epsg_28356.xml.gz" />
-		<!--<param name= "timeVariantNetwork" value= "true" />-->
-		<!--<param name= "inputChangeEventsFile" value= "network_change_events_flood.xml" />-->
+		<param name= "timeVariantNetwork" value= "true" />
+		<param name= "inputChangeEventsFile" value= "seq_cyclone_timeseries_flood_extent_simplified_dissolved_network_change_events.xml" />
 	</module>
 
 	<module name="plans">
 		<!--<param name="inputPlansFile" value="seqld_population_epsg_7856_1pct.xml.gz" />-->
-		<param name="inputPlansFile" value="seqld_population_epsg_7856_10.xml" />
+		<param name="inputPlansFile" value="seqld_population_epsg_7856_1pct.xml.gz" />
 	</module>
 
 	<module name="controler">
@@ -56,7 +56,7 @@
 	<module name="qsim">
 		<!-- "start/endTime" of MobSim (00:00:00 == take earliest activity time/ run as long as active vehicles exist) -->
 		<param name="startTime" value="00:00:00" />
-		<param name="endTime" value="23:59:59" />
+		<param name="endTime" value="36:59:59" />
 
 		<param name = "snapshotperiod"	value = "00:00:00"/> <!-- 00:00:00 means NO snapshot writing, 00:00:30 means every 30 secs -->
 

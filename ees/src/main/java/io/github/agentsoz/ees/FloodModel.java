@@ -186,14 +186,14 @@ public class FloodModel implements DataSource<Geometry[]> {
 
 
     // timestamp format: HH:MM:SS
-    private double getTimeInSeconds(String datetime) throws Exception{
+    private double getTimeInSeconds(String hhmm) throws Exception{
 
 
         double total_secs = 0.0;
 
         // get hours and minutes
-        Double  hh = Double.valueOf(datetime.split(":")[0]);
-        Double  mm = Double.valueOf(datetime.split(":")[1]);
+        Double  hh = Double.valueOf(hhmm.split(":")[0]);
+        Double  mm = Double.valueOf(hhmm.split(":")[1]);
         total_secs +=  hh * 3600 + mm * 60;
 
         // now add the time offset
