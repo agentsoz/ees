@@ -106,6 +106,8 @@
     </model>
 
     <!--<model id="cyclone">-->
+    <!--Injecting network change events through the cyclone model may not be compatible with injecting
+ network change events using a MATSim network change events file. so use just one mechanism in a simulation when handling multiple disasters -->
       <!--&lt;!&ndash; specify the simulation time offset required to adjust the  timestamps of cyclone polygons &ndash;&gt;-->
       <!--<opt id="offsetFromSimStart">33:00</opt>-->
     <!--&lt;!&ndash; cyclone JSON file relative to examples/bushfire directory &ndash;&gt;-->
@@ -113,6 +115,8 @@
   <!--</model>-->
 
     <model id="flood">
+      <!--Injecting network change events through the flood model may not be compatible with injecting
+       network change events using a MATSim network change events file. so use just one mechanism in a simulation when handling multiple disasters -->
       <!-- flood JSON file relative to main directory -->
       <opt id="fileGeoJson">scenarios/qld/south_east_qld/flood_progression_EPSG_4326.geojson.gz</opt>
       <!-- name of the column that contains the timestamps in the flood file-->

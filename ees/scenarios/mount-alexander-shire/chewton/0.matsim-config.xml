@@ -31,7 +31,7 @@
 	</module>
 
 	<module name="network">
-		<param name="inputNetworkFile" value="chewton_network_epsg_28355.xml.gz" />
+		<param name="inputNetworkFile" value="chewton_network_epsg_28355_refined.xml.gz" />
 		<!--<param name= "timeVariantNetwork" value= "true" />-->
 		<!--<param name= "inputChangeEventsFile" value= "network_change_events_flood.xml" />-->
 	</module>
@@ -59,8 +59,8 @@
 
 		<param name = "snapshotperiod"	value = "00:00:00"/> <!-- 00:00:00 means NO snapshot writing, 00:00:30 means every 30 secs -->
 
-		<param name= "flowCapacityFactor" value= "0.3" />
-		<param name= "storageCapacityFactor" value= "0.3" />
+		<param name= "flowCapacityFactor" value= "0.9" />
+		<param name= "storageCapacityFactor" value= "0.9" />
 
 		<param name="numberOfThreads" value="1" />
 	</module>

@@ -51,7 +51,7 @@
         <!-- simulation start time in HH:MM format -->
         <opt id="startHHMM">00:00</opt>
         <!-- Output file for trips written in DeckGL format -->
-        <opt id="deckGlOutFile">test/output/io/github/agentsoz/ees/it/SouthEastQldFloodIT/test/trips.deckgl.json</opt>
+        <opt id="deckGlOutFile">test/output/io/github/agentsoz/ees/it/SouthEastQldNetworkChangeEventsTestIT/test/trips.deckgl.json</opt>
     </global>
 
     <!-- model specific configuration -->
@@ -62,11 +62,11 @@
             <opt id="jPlanSelectionPolicy">FIRST</opt>
             <opt id="jAgents"></opt>
             <opt id="jLogLevel">WARN</opt>
-            <opt id="jLogFile">test/output/io/github/agentsoz/ees/it/SouthEastQldFloodIT/test/jill.log</opt>
-            <opt id="jOutFile">test/output/io/github/agentsoz/ees/it/SouthEastQldFloodIT/test/jill.out.gz</opt>
+            <opt id="jLogFile">test/output/io/github/agentsoz/ees/it/SouthEastQldNetworkChangeEventsTestIT/test/jill.log</opt>
+            <opt id="jOutFile">test/output/io/github/agentsoz/ees/it/SouthEastQldNetworkChangeEventsTestIT/test/jill.out.gz</opt>
             <!--<opt id="jNumThreads">1</opt>-->
             <!-- Output file for evacuation metrics -->
-            <opt id="bdiMetricsFile">test/output/io/github/agentsoz/ees/it/SouthEastQldFloodIT/test/archetype.metrics.json.gz</opt>
+            <opt id="bdiMetricsFile">test/output/io/github/agentsoz/ees/it/SouthEastQldNetworkChangeEventsTestIT/test/archetype.metrics.json.gz</opt>
             <!-- Time bin size in seconds for collected evacuation metrics -->
             <opt id="bdiMetricsFrequencyInSeconds">3600</opt>
 
@@ -74,9 +74,9 @@
 
         <model id="matsim">
             <!-- MATSim output directory relative to examples/bushfire directory (will overrule the setting in MATSim config) -->
-            <opt id="outputDir">test/output/io/github/agentsoz/ees/it/SouthEastQldFloodIT/test/matsim</opt>
+            <opt id="outputDir">test/output/io/github/agentsoz/ees/it/SouthEastQldNetworkChangeEventsTestIT/test/matsim</opt>
             <!-- MATSim XML config XML file relative to examples/bushfire directory -->
-            <opt id="configXml">scenarios/qld/south_east_qld/0.matsim-config-flood-test.xml</opt>
+            <opt id="configXml">scenarios/qld/south_east_qld/0.matsim-config-network-change-events-test.xml</opt>
             <!-- Maximum distance at which the cyclone can be seen (in metres)-->
             <opt id="maxDistanceForCycloneVisual">1000</opt>
             <!-- Maximum distance at which the fire can be seen (in metres)-->
@@ -112,14 +112,14 @@
             <!--<opt id="fileGeoJson">scenarios/qld/south_east_qld/cyclone_progression_EPSG_4326_hhmm.geojson.gz</opt>-->
         <!--</model>-->
 
-        <model id="flood">
-        <!-- flood JSON file relative to examples/bushfire directory -->
-        <opt id="fileGeoJson">scenarios/qld/south_east_qld/flood_test_hhmm.geojson</opt>
-        <!-- name of the column that contains the timestamps in the flood file-->
-        <opt id="timestampColumnName">timestamp</opt>
-        <!--flood start time, this offset is added to the timestamps from the floods file -->
-        <opt id="offsetFromSimStart">00:00</opt>
-        </model>
+        <!--<model id="flood">-->
+        <!--&lt;!&ndash; flood JSON file relative to examples/bushfire directory &ndash;&gt;-->
+        <!--<opt id="fileGeoJson">scenarios/qld/south_east_qld/flood_test_hhmm.geojson</opt>-->
+        <!--&lt;!&ndash; name of the column that contains the timestamps in the flood file&ndash;&gt;-->
+        <!--<opt id="timestampColumnName">timestamp</opt>-->
+        <!--&lt;!&ndash;flood start time, this offset is added to the timestamps from the floods file &ndash;&gt;-->
+        <!--<opt id="offsetFromSimStart">00:00</opt>-->
+        <!--</model>-->
 
         <model id="disruption">
             <!-- Disruptions JSON file relative to examples/bushfire directory -->
