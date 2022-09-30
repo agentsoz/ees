@@ -14,9 +14,8 @@
     {
     "type" : "EVACUATE_NOW",
     "content" : "It is strongly recommended that you evacuate now",
-    "broadcastHHMM" : "0010",
+    "broadcastHHMM" : "1330",
     "broadcastZones" : {
-      "202021027" : null,
       "202021028" : null
     }
     }
