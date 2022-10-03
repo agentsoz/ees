@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE population SYSTEM "http://www.matsim.org/files/dtd/population_v6.dtd">
+<population>
+    <person id="0">
+        <attributes>
+            <attribute name="Id" class="java.lang.String">1</attribute>
+            <attribute name="BDIAgentType" class="java.lang.String">io.github.agentsoz.ees.agents.bushfire.ResidentFullTime</attribute>
+            <attribute name="Archetype" class="java.lang.String">UT</attribute>
+            <attribute name="HasDependents" class="java.lang.String">false</attribute>
+            <attribute name="WillGoHomeAfterVisitingDependents" class="java.lang.String">false</attribute>
+            <attribute name="WillGoHomeBeforeLeaving" class="java.lang.String">false</attribute>
+            <attribute name="WillStay" class="java.lang.String">true</attribute>
+            <attribute name="WillReceiveMessages" class="java.lang.String">true</attribute>
+            <attribute name="ResponseThresholdInitial" class="java.lang.String">0</attribute>
+            <attribute name="ResponseThresholdFinal" class="java.lang.String">0</attribute>
+            <attribute name="ImpactFromVisibleSmoke" class="java.lang.String">0</attribute>
+            <attribute name="ImpactFromImmersionInSmoke" class="java.lang.String">0</attribute>
+            <attribute name="ImpactFromVisibleEmbers" class="java.lang.String">0</attribute>
+            <attribute name="ImpactFromVisibleFire" class="java.lang.String">0</attribute>
+            <attribute name="ImpactFromVisibleResponders" class="java.lang.String">0</attribute>
+            <attribute name="ImpactFromMessageAdvice" class="java.lang.String">0</attribute>
+            <attribute name="ImpactFromMessageWatchAndAct" class="java.lang.String">0</attribute>
+            <attribute name="ImpactFromMessageEmergencyWarning" class="java.lang.String">0</attribute>
+            <attribute name="ImpactFromMessageEvacuateNow" class="java.lang.String">0</attribute>
+            <attribute name="ImpactFromMessageRespondersAttending" class="java.lang.String">0</attribute>
+            <attribute name="ImpactFromFireDangerIndexRating" class="java.lang.String">0</attribute>
+            <attribute name="ImpactFromSocialMessage" class="java.lang.String">0</attribute>
+            <attribute name="LagTimeInMinsForInitialResponse" class="java.lang.String">0</attribute>
+            <attribute name="LagTimeInMinsForFinalResponse" class="java.lang.String">19.73</attribute>
+            <attribute name="HasDependentsAtLocation" class="java.lang.String"></attribute>
+            <attribute name="EvacLocationPreference" class="java.lang.String">Calder-fwy,268498,5885739</attribute>
+            <attribute name="InvacLocationPreference" class="java.lang.String">Calder-fwy,268498,5885739</attribute>
+        </attributes>
+        <plan selected="yes">
+            <activity type="home" x="259140.3409" y="5893793.305" end_time="23:34:24"/>
+            <leg mode="car"/>
+            <activity type="home" x="259140.3409" y="5893793.305" end_time="23:34:24"/>
+        </plan>
+    </person>
+</population>
