@@ -12,12 +12,20 @@
 
   "messages" : [
     {
-    "type" : "EVACUATE_NOW",
-    "content" : "It is strongly recommended that you evacuate now",
+    "type" : "ADVICE",
+    "content" : "Bushfire near Castlemaine, stay on alert",
     "broadcastHHMM" : "1330",
     "broadcastZones" : {
       "202021028" : null
     }
+    },
+    {
+      "type" : "EVACUATE_NOW",
+      "content" : "It is strongly recommended that you evacuate now",
+      "broadcastHHMM" : "1500",
+      "broadcastZones" : {
+        "202021028" : null
+      }
     }
   ]
 }

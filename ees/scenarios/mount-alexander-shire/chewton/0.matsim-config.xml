@@ -37,7 +37,7 @@
 	</module>
 
 	<module name="plans">
-		<param name="inputPlansFile" value="chewton_population_epsg7855_v2.xml.gz" />
+		<param name="inputPlansFile" value="chewton_population_epsg7855.xml.gz" />
 	</module>
 
 	<module name="controler">
