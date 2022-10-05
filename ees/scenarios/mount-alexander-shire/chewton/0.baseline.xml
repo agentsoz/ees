@@ -82,14 +82,14 @@
       <!-- Maximum distance at which the fire can be seen (in metres)-->
       <opt id="maxDistanceForFireVisual">1000</opt>
       <!-- Maximum distance at which smoke can be seen (in metres)-->
-      <opt id="maxDistanceForSmokeVisual">5000</opt>
+      <opt id="maxDistanceForSmokeVisual">1000</opt>
       <!-- Fire avoidance buffer used for planning routes for regular vehicles (in metres)-->
-      <opt id="fireAvoidanceBufferForVehicles">5000</opt>
+      <opt id="fireAvoidanceBufferForVehicles">3000</opt>
       <!-- Fire avoidance buffer used for planning routes for emergency vehicles (in metres)-->
       <opt id="fireAvoidanceBufferForEmergencyVehicles">1000</opt>
       <!-- Parameters used by vehicles to decide whether they are stuck in congestion -->
       <!-- check for congestion every I=300 secs-->
-      <opt id="congestionEvaluationInterval">180</opt>
+      <opt id="congestionEvaluationInterval">900</opt>
       <!-- accept delays of txI secs, where tolerance t=0.5 -->
       <opt id="congestionToleranceThreshold">0.33</opt>
       <!-- likelihood of taking action if congestion threshold is reached -->
@@ -101,8 +101,8 @@
       <!-- Messaging JSON file  -->
       <opt id="fileJson">scenarios/mount-alexander-shire/chewton/0.messages.json</opt>
       <!-- Zones GeoJSON file mapping zone IDs to polygon shapes -->
-      <opt id="fileZonesGeoJson">scenarios/mount-alexander-shire/chewton/castlemaine_sa2.geojson</opt>
-      <opt id="zoneIdColumnName">SA2_CODE21</opt>
+      <opt id="fileZonesGeoJson">scenarios/mount-alexander-shire/chewton/MountAlexander_SA1s.json</opt>
+      <opt id="zoneIdColumnName">SA1_MAIN16</opt>
     </model>
 
 

@@ -59,8 +59,8 @@
 
 		<param name = "snapshotperiod"	value = "00:00:00"/> <!-- 00:00:00 means NO snapshot writing, 00:00:30 means every 30 secs -->
 
-		<param name= "flowCapacityFactor" value= "0.9" />
-		<param name= "storageCapacityFactor" value= "0.9" />
+		<param name= "flowCapacityFactor" value= "0.8" />
+		<param name= "storageCapacityFactor" value= "0.8" />
 
 		<param name="numberOfThreads" value="1" />
 	</module>
