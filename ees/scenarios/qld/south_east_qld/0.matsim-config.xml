@@ -55,12 +55,12 @@
 	<module name="qsim">
 		<!-- "start/endTime" of MobSim (00:00:00 == take earliest activity time/ run as long as active vehicles exist) -->
 		<param name="startTime" value="00:00:00" />
-		<param name="endTime" value="350:59:59" />
+		<param name="endTime" value="23:59:59" />
 
 		<param name = "snapshotperiod"	value = "00:00:00"/> <!-- 00:00:00 means NO snapshot writing, 00:00:30 means every 30 secs -->
 
-		<param name= "flowCapacityFactor" value= "0.02" />
-		<param name= "storageCapacityFactor" value= "0.03" />
+		<param name= "flowCapacityFactor" value= "0.06" />
+		<param name= "storageCapacityFactor" value= "0.06" />
 
 		<param name="numberOfThreads" value="1" />
 	</module>
