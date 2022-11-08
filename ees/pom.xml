@@ -81,10 +81,6 @@
       <name>Geotools repository</name>
       <url>https://repo.osgeo.org/repository/release</url>
     </repository>
-    <repository>
-      <id>ojo-snapshots</id>
-      <url>http://oss.jfrog.org/libs-snapshot</url>
-    </repository>
   </repositories>
 
   <dependencies>
@@ -140,7 +136,7 @@
     <dependency>
       <groupId>com.google.inject</groupId>
       <artifactId>guice</artifactId>
-      <version>4.2.2</version>
+      <version>5.1.0</version>
     </dependency>
     <!-- for easy CSV parsing -->
     <dependency>
@@ -189,10 +185,11 @@
       </configuration>
     </plugin>
     <plugin>
+      <groupId>org.apache.maven.plugins</groupId>
       <artifactId>maven-compiler-plugin</artifactId>
-      <version>3.8.0</version>
+      <version>3.10.1</version>
       <configuration>
-        <release>11</release>
+        <release>17</release>
       </configuration>
     </plugin>
       <plugin>

@@ -2,7 +2,9 @@
 	path = libs/diffusion-model
 	url = ../diffusion-model.git
 	branch = master
+	update = merge
 [submodule "libs/bdi-abm-integration"]
 	path = libs/bdi-abm-integration
 	url = ../bdi-abm-integration.git
 	branch = dev
+	update = merge

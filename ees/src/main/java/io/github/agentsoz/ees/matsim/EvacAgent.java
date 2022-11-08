@@ -64,6 +64,7 @@ import org.matsim.core.router.TripRouter;
 import org.matsim.core.router.TripStructureUtils;
 import org.matsim.core.router.TripStructureUtils.Trip;
 import org.matsim.core.utils.misc.OptionalTime;
+import org.matsim.core.utils.timing.TimeInterpretation;
 import org.matsim.facilities.Facility;
 import org.matsim.vehicles.Vehicle;
 import org.matsim.withinday.utils.EditTrips;
@@ -90,11 +91,12 @@ class EvacAgent implements MobsimDriverAgent, HasPerson, PlanAgent, HasModifiabl
 	private double expectedLinkLeaveTime;
 	
 	EvacAgent(final Plan selectedPlan, final Netsim simulation, TripRouter tripRouter) {
+		TimeInterpretation timeInterpretation = TimeInterpretation.create(simulation.getScenario().getConfig());
 		this.tripRouter = tripRouter;
 		this.basicAgentDelegate = new BasicPlanAgentImpl(selectedPlan, simulation.getScenario(), simulation.getEventsManager(),
-				simulation.getSimTimer() ) ;
+				simulation.getSimTimer(), timeInterpretation) ;
 		this.driverAgentDelegate = new PlanBasedDriverAgentImpl(basicAgentDelegate) ;
-		this.editTrips = new EditTrips(tripRouter, simulation.getScenario(), null ) ;
+		this.editTrips = new EditTrips(tripRouter, simulation.getScenario(), null, timeInterpretation) ;
 		this.network = simulation.getScenario().getNetwork() ;
 		this.simTimer = simulation.getSimTimer() ;
 		this.eventsManager = simulation.getEventsManager() ;

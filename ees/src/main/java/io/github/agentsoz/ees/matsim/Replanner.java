@@ -13,6 +13,7 @@ import org.matsim.core.network.NetworkChangeEvent;
 import org.matsim.core.router.FastAStarLandmarksFactory;
 import org.matsim.core.router.TripRouter;
 import org.matsim.core.router.util.*;
+import org.matsim.core.utils.timing.TimeInterpretation;
 import org.matsim.withinday.trafficmonitoring.WithinDayTravelTime;
 import org.matsim.withinday.utils.EditPlans;
 import org.matsim.withinday.utils.EditRoutes;
@@ -65,7 +66,7 @@ public final class Replanner {
 			LeastCostPathCalculator pathCalculator = new FastAStarLandmarksFactory(1).createPathCalculator(scenario.getNetwork(), travelDisutility, travelTime);
 			this.editRoutes = new EditRoutes(scenario.getNetwork(), pathCalculator, scenario.getPopulation().getFactory());
 		}
-		this.editTrips = new EditTrips(tripRouter, qSim2.getScenario(), null ) ;
+		this.editTrips = new EditTrips(tripRouter, qSim2.getScenario(), null, TimeInterpretation.create(scenario.getConfig())) ;
 		this.editPlans = new EditPlans(qSim2, tripRouter, editTrips, scenario.getPopulation().getFactory() ) ;
 	}
 
