@@ -32,8 +32,8 @@
 
 	<module name="network">
 		<param name="inputNetworkFile" value="seqld_network_epsg_28356.xml.gz" />
-		<!--<param name= "timeVariantNetwork" value= "true" />-->
-		<!--<param name= "inputChangeEventsFile" value= "network_change_events_flood.xml" />-->
+		<param name= "timeVariantNetwork" value= "true" />
+		<param name= "inputChangeEventsFile" value= "cyclone_flood_hhmm_network_change_events.xml" />
 	</module>
 
 	<module name="plans">
@@ -59,8 +59,8 @@
 
 		<param name = "snapshotperiod"	value = "00:00:00"/> <!-- 00:00:00 means NO snapshot writing, 00:00:30 means every 30 secs -->
 
-		<param name= "flowCapacityFactor" value= "0.06" />
-		<param name= "storageCapacityFactor" value= "0.06" />
+		<param name= "flowCapacityFactor" value= "0.01" />
+		<param name= "storageCapacityFactor" value= "0.075" />
 
 		<param name="numberOfThreads" value="1" />
 	</module>
