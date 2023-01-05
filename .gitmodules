@@ -3,10 +3,8 @@
 	url = ../diffusion-model.git
 	branch = master
 	update = merge
-	ignore = dirty
 [submodule "libs/bdi-abm-integration"]
 	path = libs/bdi-abm-integration
 	url = ../bdi-abm-integration.git
 	branch = dev
 	update = merge
-	ignore = dirty
