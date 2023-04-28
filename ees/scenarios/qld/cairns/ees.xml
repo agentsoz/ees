@@ -105,6 +105,13 @@
       <opt id="zoneIdColumnName">SA1_CODE21</opt>
     </model>
 
+    <model id="flood">
+      <!-- Flood JSON file relative to examples/bushfire directory -->
+      <opt id="fileGeoJson">scenarios/qld/cairns/hazard.geojson</opt>
+      <opt id="timestampColumnName">timestamp</opt>
+      <!--Flood start time, this offset is added to the timestamps from the flood file -->
+      <opt id="offsetFromSimStart">00:00</opt>
+    </model>
   </models>
 
 </simulation>
