@@ -95,7 +95,7 @@ public final class Utils {
 
 			// Also get all activities and locations
 			for (PlanElement element : person.getSelectedPlan().getPlanElements()) {
-				if (element instanceof Activity) {
+				if (element instanceof Activity && ((Activity)element).getCoord() != null) {
 					String type = ((Activity)element).getType();
 					String xy = String.format("%f,%f", ((Activity)element).getCoord().getX(), ((Activity)element).getCoord().getY());
 					initArgs.add(new String[]{type,xy});
