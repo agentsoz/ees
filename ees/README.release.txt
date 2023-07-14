@@ -9,8 +9,8 @@ Copyright (C) 2014-2019 by its authors.
 To run the included example scenario do:
 
 ```
-java -Xms2g -Xmx2g \
-  -cp libs/*:eeslib-2.1.1-SNAPSHOT.jar \
-  io.github.agentsoz.ees.Run \
+java -Xms2g -Xmx2g \                 
+   -cp $(find libs/ -name "*.jar" | tr '\n' ':./'):eeslib-2.1.1-SNAPSHOT.jar \
+   io.github.agentsoz.ees.Run \
   --config scenarios/mount-alexander-shire/maldon-example/ees.xml
 ```
