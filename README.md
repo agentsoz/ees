@@ -35,7 +35,7 @@ To run the example scenario unzip the release archive and follow the instruction
 ## License
 
 Emergency Evacuation Simulator
-Copyright (C) 2014-2020 by its authors. See ees/AUTHORS file.
+Copyright (C) 2014-2023 by its authors. See ees/AUTHORS file.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License as published by
