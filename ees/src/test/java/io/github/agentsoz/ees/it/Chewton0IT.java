@@ -34,7 +34,7 @@ public class Chewton0IT {
 
     // have tests in separate classes so that they run, at least under maven, in separate JVMs.  kai, nov'17
 
-    private static final Logger log = LoggerFactory.getLogger(SouthEastQld0IT.class) ;
+    private static final Logger log = LoggerFactory.getLogger(Chewton0IT.class) ;
 
     @Rule
     public MatsimTestUtils utils = new MatsimTestUtils() ;
