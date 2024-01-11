@@ -124,7 +124,7 @@ public class MessagingModel implements DataSource<SortedMap<Double, EmergencyMes
 			Date date = format.parse(message.getBroadcastHHMM());
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(date);
-			double minutes = 60 * cal.get(Calendar.HOUR_OF_DAY) + cal.get(Calendar.MINUTE);
+			double minutes = 60 * 24 * (cal.get(Calendar.DAY_OF_YEAR) - 1) + 60 * cal.get(Calendar.HOUR_OF_DAY) + cal.get(Calendar.MINUTE);
 			// get the enclosing polygon for each zone
 			TreeMap<String,Double[][]> map = message.getBroadcastZones();
 			for (String zoneId : map.keySet()) {
