@@ -168,7 +168,7 @@ public class Run implements DataClient {
         DeckglTripsData deckglTripsData = null;
         String deckglCfg = cfg.getGlobalConfig(Config.eGlobalDeckGlOutFile);
         if (deckglCfg != null) {
-            deckglTripsData = new DeckglTripsData(cfg.getGlobalConfig(Config.eGlobalCoordinateSystem));
+            deckglTripsData = new DeckglTripsData(matsimEvacModel.getScenario().getConfig().global().getCoordinateSystem());
         }
 
         // --- initialize and start MATSim
