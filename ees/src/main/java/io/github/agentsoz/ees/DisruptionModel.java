@@ -105,7 +105,7 @@ public class DisruptionModel implements DataSource<SortedMap<Double, Disruption>
 			Date date = format.parse(disruption.getStartHHMM());
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(date);
-			double minutes = 60 * cal.get(Calendar.HOUR_OF_DAY) + cal.get(Calendar.MINUTE);
+			double minutes = 60 * 24 * (cal.get(Calendar.DAY_OF_YEAR) - 1) + 60 * cal.get(Calendar.HOUR_OF_DAY) + cal.get(Calendar.MINUTE);
 			if (disruptions.containsKey(minutes)) {
 				throw new RuntimeException("\n\nCONFIGURATION ERROR:" +
 						"\nFound multiple disruption blocks in " + file + " for time " + disruption.getStartHHMM() +
