@@ -14,7 +14,7 @@
 			<attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.0</attribute>
 		</attributes>
 		<plan selected="yes">
-			<activity type="home" x="251571.1921738536" y="5891005.042528489" end_time="00:10:00" >
+			<activity type="home" x="251571.1921738536" y="5891005.042528489" end_time="24:50:00" >
 			</activity>
 			<leg mode="car">
 			</leg>
@@ -24,6 +24,22 @@
 
 	</person>
 
+	<person id="1">
+		<attributes>
+			<attribute name="BDIAgentType" class="java.lang.String" >io.github.agentsoz.ees.agents.bushfire.Resident</attribute>
+			<attribute name="InitialResponseThreshold" class="java.lang.Double" >0.1</attribute>
+			<attribute name="FinalResponseThreshold"   class="java.lang.Double" >0.1</attribute>
+		</attributes>
+		<plan selected="yes">
+			<activity type="home" x="255731.5323264746" y="5886085.46646427" end_time="24:50:00" >
+			</activity>
+			<leg mode="car">
+			</leg>
+			<activity type="home" x="255731.5323264746" y="5886085.46646427" >
+			</activity>
+		</plan>
+
+	</person>
 <!-- ====================================================================== -->
 
 </population>

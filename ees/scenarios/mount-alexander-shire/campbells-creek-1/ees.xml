@@ -36,6 +36,9 @@
     <opt id="crs">EPSG:28355</opt>
     <!-- simulation start time in HH:MM format -->
     <opt id="startHHMM">00:01</opt>
+    <!-- Output file for trips written in DeckGL format -->
+    <opt id="deckGlOutFile">test/output/io/github/agentsoz/ees/BlockageCampbellsCreek01Test/test/matsim/trips.deckgl.json</opt>
+
   </global>
 
   <!-- model specific configuration -->
