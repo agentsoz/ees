@@ -42,7 +42,14 @@
         "20202102724" : null,
         "20202102725" : null,
         "20202102726" : null,
-        "20202102727" : null,
+        "20202102727" : null
+      }
+    },
+    {
+      "type" : "EVACUATE_NOW",
+      "content" : "Castlemaine,252145,5894310,Evacuate now if safe to do so",
+      "broadcastHHMM" : "2410",
+      "broadcastZones" : {
         "20202102801" : null,
         "20202102802" : null,
         "20202102803" : null,
@@ -70,6 +77,6 @@
         "20202102825" : null,
         "20202102826" : null
       }
-    },
+    }
   ]
 }

@@ -59,6 +59,12 @@ public class BlockageCampbellsCreek01Test {
 		TestUtils.comparingDepartures(primaryExpectedEventsFilename,actualEventsFilename,1.);
 		TestUtils.comparingArrivals(primaryExpectedEventsFilename,actualEventsFilename,1.);
 		TestUtils.comparingActivityStarts(primaryExpectedEventsFilename,actualEventsFilename, 1.);
+
+		// Compare the DeckGL file
+		final String actualDeckglFilename = utils.getOutputDirectory() + "/trips.deckgl.json";
+		final String expectedDeckglFilename = utils.getInputDirectory() + "/trips.deckgl.json";
+		TestUtils.compareFiles(expectedDeckglFilename,actualDeckglFilename);
+
 	}
 
 }

@@ -21,6 +21,14 @@
       "effectiveSpeed" : "0",
       "effectiveSpeedUnit" : "KMPH",
       "impactedLinks" : ["75276-75274-75272-75270", "75269-75271-75273-75275"]
+    },
+    {
+      "description" : "Road blocked again at -37.077504, 144.203915 due to car accident",
+      "startHHMM" : "2410",
+      "endHHMM" : "2450",
+      "effectiveSpeed" : "0",
+      "effectiveSpeedUnit" : "KMPH",
+      "impactedLinks" : ["75276-75274-75272-75270", "75269-75271-75273-75275"]
     }
   ]
 }
