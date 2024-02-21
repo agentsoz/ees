@@ -34,11 +34,11 @@ import org.slf4j.LoggerFactory;
  * @author dsingh
  *
  */
-public class ArchetypeAgentFireTestNewMode {
+public class ArchetypeAgentFireNewModeTest {
 
     // have tests in separate classes so that they run, at least under maven, in separate JVMs.  kai, nov'17
 
-    private static final Logger log = LoggerFactory.getLogger(ArchetypeAgentFireTestNewMode.class);
+    private static final Logger log = LoggerFactory.getLogger(ArchetypeAgentFireNewModeTest.class);
 
     @Rule
     public MatsimTestUtils matsimUtils = new MatsimTestUtils();
