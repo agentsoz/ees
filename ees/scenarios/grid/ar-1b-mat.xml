@@ -52,6 +52,8 @@
 	</module>
 
 	<module name="qsim">
+		<param name="mainMode" value="car,van"/> <!-- ensure van mode is simulated on the network -->
+		<param name="usePersonIdForMissingVehicleId" value="true" /> <!-- need this true until BDI agents know how to van, not just driveTo by car -->
 		<!-- "start/endTime" of MobSim (00:00:00 == take earliest activity time/ run as long as active vehicles exist) -->
 		<param name="startTime" value="00:00:00" />
 		<!--<param name="endTime" value="00:59:59" />-->

@@ -69,7 +69,8 @@ public class MonitorPersonsInDangerZone implements LinkEnterEventHandler {
 
     @Override
     public void handleEvent(LinkEnterEvent linkEnterEvent) {
-        PAAgent agent = agentManager.getAgent(linkEnterEvent.getVehicleId().toString());
+        // Get agent for vehicle IDs of the type 'id' or 'id_mode'
+        PAAgent agent = agentManager.getAgent(linkEnterEvent.getVehicleId().toString().split("_")[0]);
         if (agent != null) { // only do this if this is a BDI-like agent
             if(linksInFireBuffer.contains(linkEnterEvent.getLinkId())) {
                 PerceptContent pc = new PerceptContent(Constants.FIELD_OF_VIEW, Constants.SIGHTED_FIRE);
