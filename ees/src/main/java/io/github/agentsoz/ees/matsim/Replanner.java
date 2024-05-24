@@ -10,7 +10,7 @@ import org.matsim.core.mobsim.framework.MobsimAgent;
 import org.matsim.core.mobsim.qsim.QSim;
 import org.matsim.core.mobsim.qsim.agents.WithinDayAgentUtils;
 import org.matsim.core.network.NetworkChangeEvent;
-import org.matsim.core.router.FastAStarLandmarksFactory;
+import org.matsim.core.router.AStarLandmarksFactory;
 import org.matsim.core.router.TripRouter;
 import org.matsim.core.router.util.*;
 import org.matsim.core.utils.timing.TimeInterpretation;
@@ -62,8 +62,8 @@ public final class Replanner {
 		this.travelTimes = travelTimes ;
 		{
 			TravelTime travelTime = TravelTimeUtils.createFreeSpeedTravelTime();
-			TravelDisutility travelDisutility = TravelDisutilityUtils.createFreespeedTravelTimeAndDisutility(scenario.getConfig().planCalcScore());
-			LeastCostPathCalculator pathCalculator = new FastAStarLandmarksFactory(1).createPathCalculator(scenario.getNetwork(), travelDisutility, travelTime);
+			TravelDisutility travelDisutility = TravelDisutilityUtils.createFreespeedTravelTimeAndDisutility(scenario.getConfig().scoring());
+			LeastCostPathCalculator pathCalculator = new AStarLandmarksFactory(1).createPathCalculator(scenario.getNetwork(), travelDisutility, travelTime);
 			this.editRoutes = new EditRoutes(scenario.getNetwork(), pathCalculator, scenario.getPopulation().getFactory());
 		}
 		this.editTrips = new EditTrips(tripRouter, qSim2.getScenario(), null, TimeInterpretation.create(scenario.getConfig())) ;

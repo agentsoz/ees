@@ -24,6 +24,7 @@ package io.github.agentsoz.ees.matsim;
 
 import com.google.common.collect.ObjectArrays;
 import com.google.gson.Gson;
+import com.google.inject.Singleton;
 import io.github.agentsoz.bdiabm.ABMServerInterface;
 import io.github.agentsoz.bdiabm.v3.QueryPerceptInterface;
 import io.github.agentsoz.bdiabm.data.ActionContent;
@@ -71,7 +72,6 @@ import org.matsim.withinday.trafficmonitoring.WithinDayTravelTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Singleton;
 import java.util.*;
 import java.util.stream.Stream;
 

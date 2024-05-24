@@ -74,12 +74,28 @@
     </profile>
   </profiles>
 
+  <!-- DS 24/05/24: All these repositories are required for finding MATSim dependencies -->
   <repositories>
     <repository>
-      <!-- Geotools is not on Maven central -->
       <id>osgeo</id>
       <name>Geotools repository</name>
       <url>https://repo.osgeo.org/repository/release</url>
+    </repository>
+    <repository>
+      <id>matsim</id>
+      <url>https://repo.matsim.org/repository/matsim</url>
+    </repository>
+    <repository>
+      <id>jogl</id>
+      <url>https://jogamp.org/deployment/maven/</url>
+    </repository>
+    <repository>
+      <id>topobyte</id>
+      <url>https://mvn.topobyte.de</url>
+    </repository>
+    <repository>
+      <id>slimjars</id>
+      <url>https://mvn.slimjars.com</url>
     </repository>
   </repositories>
 
@@ -98,6 +114,12 @@
       <groupId>io.github.agentsoz</groupId>
       <artifactId>bdi-matsim</artifactId>
       <version>3.0.1-SNAPSHOT</version>
+      <exclusions>
+        <exclusion>
+          <artifactId>slf4j-api</artifactId>
+          <groupId>org.slf4j</groupId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>io.github.agentsoz</groupId>
@@ -132,17 +154,6 @@
       <artifactId>junit</artifactId>
       <version>4.13.1</version> 
       <!--<scope>test</scope>-->
-    </dependency>
-    <dependency>
-      <groupId>com.google.inject</groupId>
-      <artifactId>guice</artifactId>
-      <version>5.1.0</version>
-    </dependency>
-    <!-- for easy CSV parsing -->
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-csv</artifactId>
-      <version>1.6</version>
     </dependency>
     <!-- for easy EPSG transforms -->
     <dependency>

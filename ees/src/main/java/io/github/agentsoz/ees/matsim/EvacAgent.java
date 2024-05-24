@@ -70,8 +70,7 @@ import org.matsim.vehicles.Vehicle;
 import org.matsim.withinday.utils.EditTrips;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.inject.Inject;
+import com.google.inject.Inject;
 
 class EvacAgent implements MobsimDriverAgent, HasPerson, PlanAgent, HasModifiablePlan {
 

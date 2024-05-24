@@ -3,11 +3,6 @@
 
 <population>
 
-	<attributes>
-		<attribute name="coordinateReferenceSystem" class="java.lang.String">Atlantis</attribute>
-	</attributes>
-
-
 <!-- ====================================================================== -->
 
 	<person id="0">

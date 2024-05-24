@@ -50,7 +50,7 @@ class DisruptionWriter {
 	}
 	void write(double time, Id<Link> linkId, Coord coord, double speed ) {
 		if (writer == null) {
-			final String filename = config.controler().getOutputDirectory() + "/output_disruptionCoords.txt.gz";
+			final String filename = config.controller().getOutputDirectory() + "/output_disruptionCoords.txt.gz";
 			log.warn("writing disruption data to " + filename);
 			try {
 				writer = IOUtils.getPrintStream(new File(filename).toURI().toURL());

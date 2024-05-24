@@ -47,7 +47,7 @@ class Shape2XyWriter {
 	}
 	void write(double now, Geometry fire) {
 		if ( writer == null) {
-			final String filename = config.controler().getOutputDirectory() + "/output_" + name + "Coords.txt.gz";
+			final String filename = config.controller().getOutputDirectory() + "/output_" + name + "Coords.txt.gz";
 			log.info("writing " + name + " data to " + filename);
 			try {
 				writer = IOUtils.getPrintStream(new File(filename).toURI().toURL());
