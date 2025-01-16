@@ -4,7 +4,7 @@ package io.github.agentsoz.ees.util;
  * #%L
  * Emergency Evacuation Simulator
  * %%
- * Copyright (C) 2014 - 2024 EES code contributors.
+ * Copyright (C) 2014 - 2025 EES code contributors.
  * %%
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
