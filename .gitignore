@@ -10,3 +10,7 @@
 *.ipr
 *.iws
 .Rproj.user
+
+# local working artifacts (not part of the repo)
+/archived-runs/
+/_to_delete/

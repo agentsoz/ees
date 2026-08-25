@@ -17,7 +17,7 @@
 	</module>
 
 	<module name="plans">
-		<param name="inputPlansFile" value="demand-seasonal-40k-50it-epsg32754-7886c91.xml.gz" />
+		<param name="inputPlansFile" value="demand-seasonal-10k-50it-epsg32754-7886c91.xml.gz" />
 	</module>
 
 	<module name="controler">
@@ -35,7 +35,7 @@
 	<module name="qsim">
 		<!-- "start/endTime" of MobSim (00:00:00 == take earliest activity time/ run as long as active vehicles exist) -->
 		<param name="startTime" value="00:00:00" />
-		<param name="endTime" value="23:59:59" />
+		<param name="endTime" value="16:00:00" /> <!-- cut from 23:59:59 per Dhirendra, 2026-08-03: get close to 1min runtime -->
 
 		<param name = "snapshotperiod"	value = "00:00:00"/> <!-- 00:00:00 means NO snapshot writing, 00:00:30 means every 30 secs -->
 

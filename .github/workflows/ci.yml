@@ -21,14 +21,14 @@ jobs:
         java-version: '17'
 
     - name: Cache Maven packages
-      uses: actions/cache@v2
+      uses: actions/cache@v4
       with:
         path: ~/.m2
         key: cache-${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
         restore-keys: cache-${{ runner.os }}-m2
 
     - name: Clone agentsoz/ees
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
       with:
         repository: agentsoz/ees
         path: ees
